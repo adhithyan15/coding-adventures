@@ -1,0 +1,11 @@
+{
+  "id": "LA-C440-traicio",
+  "pathSegment": "LA-PATH-440-FLUCTUO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-440-FLUCTUO",
+      "order": 3
+    }
+  ]
+}

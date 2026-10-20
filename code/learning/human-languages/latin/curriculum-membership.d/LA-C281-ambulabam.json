@@ -1,0 +1,11 @@
+{
+  "id": "LA-C281-ambulabam",
+  "pathSegment": "LA-PATH-281-SCAENA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-281-SCAENA",
+      "order": 2
+    }
+  ]
+}

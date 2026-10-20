@@ -1,0 +1,11 @@
+{
+  "id": "LA-C358-consentio",
+  "pathSegment": "LA-PATH-358-ASSENSUS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-358-ASSENSUS",
+      "order": 2
+    }
+  ]
+}

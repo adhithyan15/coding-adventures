@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C339-agmen",
+    "language": "latin",
+    "chapter": 339,
+    "sequence": 18280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cc98db3b516b8275"
+  },
+  "findings": []
+}

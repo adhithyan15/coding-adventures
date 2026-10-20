@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C425-silex",
+    "language": "latin",
+    "chapter": 425,
+    "sequence": 22710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1d338bb9856d6ea"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C486-frigus",
+    "language": "latin",
+    "chapter": 486,
+    "sequence": 25830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38afa0c0f2449e72"
+  },
+  "findings": []
+}

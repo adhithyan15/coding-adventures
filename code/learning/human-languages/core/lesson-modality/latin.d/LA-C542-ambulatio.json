@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C542-ambulatio",
+    "language": "latin",
+    "chapter": 542,
+    "sequence": 28730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c2036de091fba1a6"
+  },
+  "findings": []
+}

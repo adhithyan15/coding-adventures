@@ -1,0 +1,11 @@
+{
+  "id": "LA-C536-donum",
+  "pathSegment": "LA-PATH-536-BLAN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-536-BLAN",
+      "order": 4
+    }
+  ]
+}

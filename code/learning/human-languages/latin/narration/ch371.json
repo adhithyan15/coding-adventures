@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 371,
+  "title": "At the Speakers' Platform",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2062eb99ddf981e7",
+  "lessons": [
+    {
+      "id": "LA-C371-rostra",
+      "sequence": 19910,
+      "title": "rōstra, rōstrōrum — the speakers' platform (in the Forum)",
+      "headword": "rōstra, rōstrōrum",
+      "romanization": "rōstra, rōstrōrum",
+      "gloss": "the speakers' platform (in the Forum)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:49669b2deb2ae82b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for lightness, then the Latin for rashness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: rōstra, rōstrōrum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rōstra, rōstrōrum — \"the speakers' platform (in the Forum)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Senex in rōstra ascendit. The old man went up onto the speakers' platform."
+            },
+            {
+              "kind": "speech",
+              "text": "rōstra, rōstrōrum n. pl. The platform in the Forum was decked with the bronze beaks (rōstra) of captured warships. English rostrum."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rōstra is the plural of rōstrum \"a beak, a ship's ram\", which is built on rōdō \"to gnaw\" (Lewis & Short). English rostrum comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rōstra, rōstrōrum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rōstra, rōstrōrum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rōstra, rōstrōrum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rōstra, rōstrōrum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with rōstra, rōstrōrum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *rōstra, rōstrōrum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for lightness, then the Latin for rashness, then say rōstra, rōstrōrum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for lightness, then the Latin for rashness, then say *rōstra, rōstrōrum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does rōstra, rōstrōrum mean? (\"The speakers' platform (in the Forum)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C371-contio",
+      "sequence": 19920,
+      "title": "cōntiō, cōntiōnis — a public meeting; a speech made to it",
+      "headword": "cōntiō, cōntiōnis",
+      "romanization": "cōntiō, cōntiōnis",
+      "gloss": "a public meeting; a speech made to it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bf181da45e5ba1f3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for rashness, then the Latin for the speakers' platform."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: cōntiō, cōntiōnis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cōntiō, cōntiōnis — \"a public meeting; a speech made to it\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Cōnsul cōntiōnem habuit. The consul held a public meeting."
+            },
+            {
+              "kind": "speech",
+              "text": "cōntiō, cōntiōnis f. A meeting of the people called to hear a magistrate, where no vote was taken; also the speech made there."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cōntiō is contracted from an old form coventiō \"a coming together\" (Lewis & Short), built from con- and veniō \"to come\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cōntiō, cōntiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cōntiō, cōntiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cōntiō, cōntiōnis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cōntiō, cōntiōnis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with cōntiō, cōntiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *cōntiō, cōntiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for rashness, then the Latin for the speakers' platform, then say cōntiō, cōntiōnis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for rashness, then the Latin for the speakers' platform, then say *cōntiō, cōntiōnis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does cōntiō, cōntiōnis mean? (\"A public meeting; a speech made to it\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C371-pronuntio",
+      "sequence": 19930,
+      "title": "prōnūntiō, prōnūntiāre — to proclaim, to announce; to deliver (a speech)",
+      "headword": "prōnūntiō, prōnūntiāre",
+      "romanization": "prōnūntiō, prōnūntiāre",
+      "gloss": "to proclaim, to announce; to deliver (a speech)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e47816326f86cccc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for the speakers' platform, then the Latin for a public meeting."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: prōnūntiō, prōnūntiāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "prōnūntiō, prōnūntiāre — \"to proclaim, to announce; to deliver (a speech)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Praecō sententiam iūdicum prōnūntiāvit. The herald announced the judges' verdict."
+            },
+            {
+              "kind": "speech",
+              "text": "prōnūntiō, prōnūntiāre, prōnūntiāvī, prōnūntiātum. Built on nūntiō, to announce. It is also a speaker's delivery. English pronounce."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "prōnūntiō is built from prō \"forth\" and nūntiō \"to announce\" (Lewis & Short). English pronounce comes from it through French."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prōnūntiō, prōnūntiāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prōnūntiō, prōnūntiāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prōnūntiō, prōnūntiāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prōnūntiō, prōnūntiāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with prōnūntiō, prōnūntiāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *prōnūntiō, prōnūntiāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for the speakers' platform, then the Latin for a public meeting, then say prōnūntiō, prōnūntiāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for the speakers' platform, then the Latin for a public meeting, then say *prōnūntiō, prōnūntiāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does prōnūntiō, prōnūntiāre mean? (\"To proclaim, to announce; to deliver (a speech)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C371-recito",
+      "sequence": 19940,
+      "title": "recitō, recitāre — to read aloud, to recite",
+      "headword": "recitō, recitāre",
+      "romanization": "recitō, recitāre",
+      "gloss": "to read aloud, to recite",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:45f83caa4f6df1d5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a public meeting, then the Latin for to proclaim."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: recitō, recitāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "recitō, recitāre — \"to read aloud, to recite\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Poēta carmina sua amīcīs recitāvit. The poet read his poems aloud to his friends."
+            },
+            {
+              "kind": "speech",
+              "text": "recitō, recitāre, recitāvī, recitātum. At Rome authors read new work aloud to invited listeners. English recite."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "recitō is built from re- and citō \"to call, to summon\" (EtymDB; Lewis & Short): to call words out again. English recite comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "recitō, recitāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *recitō, recitāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "recitō, recitāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *recitō, recitāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with recitō, recitāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *recitō, recitāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a public meeting, then the Latin for to proclaim, then say recitō, recitāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a public meeting, then the Latin for to proclaim, then say *recitō, recitāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does recitō, recitāre mean? (\"To read aloud, to recite\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C371-temere",
+      "sequence": 19950,
+      "title": "temerē — rashly, blindly; at random",
+      "headword": "temerē",
+      "romanization": "temerē",
+      "gloss": "rashly, blindly; at random",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0403071cee8b6ff4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to proclaim, then the Latin for to read aloud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: temerē",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "temerē — \"rashly, blindly; at random\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Nihil temerē faciēbat. He did nothing rashly."
+            },
+            {
+              "kind": "speech",
+              "text": "An adverb; its noun is temeritās, rashness. Nōn temerē, not without good reason."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "temerē is inherited from Proto-Italic temezi \"in the dark\" (EtymDB), kin to tenebrae \"darkness\" (Lewis & Short): to act blindly."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "temerē",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *temerē*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "temerē, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *temerē*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with temerē",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *temerē*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to proclaim, then the Latin for to read aloud, then say temerē again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to proclaim, then the Latin for to read aloud, then say *temerē* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does temerē mean? (\"Rashly, blindly; at random\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

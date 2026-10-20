@@ -1,0 +1,19 @@
+{
+  "chapter": 410,
+  "title": "Passing a Law",
+  "label": "ch:la-passing-a-law",
+  "canDo": "I can talk about a bill before the people, publishing and repealing a law, making it binding and laying down what must be done.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "LA-C410-praescribo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 410: I can talk about a bill before the people, publishing and repealing a law, making it binding and laying down what must be done.",
+    "assesses": [
+      "LA-LEX-C410-ROGATIO-03",
+      "LA-LEX-C410-ROGATIO-04",
+      "LA-LEX-C410-ROGATIO-05"
+    ]
+  }
+}

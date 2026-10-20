@@ -1,0 +1,11 @@
+{
+  "id": "LA-C378-fabricor",
+  "pathSegment": "LA-PATH-378-TEXO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-378-TEXO",
+      "order": 1
+    }
+  ]
+}

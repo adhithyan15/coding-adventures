@@ -1,0 +1,11 @@
+{
+  "id": "LA-C336-bestia",
+  "pathSegment": "LA-PATH-336-GLADIATOR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-336-GLADIATOR",
+      "order": 4
+    }
+  ]
+}

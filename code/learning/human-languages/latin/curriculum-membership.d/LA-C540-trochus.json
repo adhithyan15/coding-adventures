@@ -1,0 +1,11 @@
+{
+  "id": "LA-C540-trochus",
+  "pathSegment": "LA-PATH-540-PUPA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-540-PUPA",
+      "order": 1
+    }
+  ]
+}

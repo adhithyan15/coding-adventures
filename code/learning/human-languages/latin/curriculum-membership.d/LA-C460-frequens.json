@@ -1,0 +1,11 @@
+{
+  "id": "LA-C460-frequens",
+  "pathSegment": "LA-PATH-460-TURBA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-460-TURBA",
+      "order": 1
+    }
+  ]
+}

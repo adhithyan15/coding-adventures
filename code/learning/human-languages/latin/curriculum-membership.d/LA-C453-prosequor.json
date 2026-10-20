@@ -1,0 +1,11 @@
+{
+  "id": "LA-C453-prosequor",
+  "pathSegment": "LA-PATH-453-PERITUS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-453-PERITUS",
+      "order": 2
+    }
+  ]
+}

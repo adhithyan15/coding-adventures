@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C418-mutuus",
+    "language": "latin",
+    "chapter": 418,
+    "sequence": 22360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:65d061fce83619a6"
+  },
+  "findings": []
+}

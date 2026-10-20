@@ -1,0 +1,19 @@
+{
+  "chapter": 370,
+  "title": "Weight and Standing",
+  "label": "ch:la-weight-and-standing",
+  "canDo": "I can talk about authority, rank and seriousness, and about lightness and rashness of character.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C370-temeritas",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 370: I can talk about authority, rank and seriousness, and about lightness and rashness of character.",
+    "assesses": [
+      "LA-LEX-C370-AUCTORITAS-03",
+      "LA-LEX-C370-AUCTORITAS-04",
+      "LA-LEX-C370-AUCTORITAS-05"
+    ]
+  }
+}

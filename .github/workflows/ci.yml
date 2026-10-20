@@ -636,6 +636,10 @@ jobs:
           # lesson could be filed twice without git ever seeing a collision.
           python3 code/scripts/lessons.py validate
           python3 -m unittest discover -s code/scripts/tests -p 'test_lessons.py'
+          # LANG84 release inventories (`code/grammars/*/releases.csv`): the
+          # common header, date order, predecessor lineage and status claims.
+          python3 code/scripts/release_inventory.py check
+          python3 -m unittest discover -s code/scripts/tests -p 'test_release_inventory.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_forme_spec_map.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_package_parity_report.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_human_language_hot_files.py'
@@ -2276,7 +2280,21 @@ jobs:
           elif [ "$RUNNER_OS" = "macOS" ]; then
             brew install qpdf
           else
-            choco install qpdf -y --no-progress
+            # The community Chocolatey feed answers 504 often enough to fail
+            # a required job outright, and when it does choco installs
+            # "0/0 packages" and EXITS 0, so its status says nothing. Judge
+            # by the result instead: retry until qpdf is actually on PATH,
+            # three attempts with a growing pause. A feed that stays down
+            # still fails below, at `qpdf --version`, naming qpdf -- loud,
+            # not skipped.
+            for attempt in 1 2 3; do
+              choco install qpdf -y --no-progress || true
+              if command -v qpdf >/dev/null 2>&1; then break; fi
+              if [ "$attempt" -lt 3 ]; then
+                echo "choco attempt $attempt did not install qpdf; retrying in $((attempt * 30))s"
+                sleep $((attempt * 30))
+              fi
+            done
           fi
           qpdf --version
 

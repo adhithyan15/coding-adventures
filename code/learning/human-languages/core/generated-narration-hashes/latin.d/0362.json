@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 362,
+  "sourceHash": "fnv1a64:0bfe18f83c61bbc8",
+  "lessonIds": [
+    "LA-C362-refello",
+    "LA-C362-refuto",
+    "LA-C362-redarguo",
+    "LA-C362-convinco",
+    "LA-C362-coniectura"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch362.txt",
+  "json": "latin/narration/ch362.json",
+  "textHash": "fnv1a64:67804f4c557199f8",
+  "jsonHash": "fnv1a64:2bebc159b152eef7",
+  "findings": []
+}

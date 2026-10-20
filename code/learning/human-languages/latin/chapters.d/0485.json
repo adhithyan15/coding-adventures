@@ -1,0 +1,19 @@
+{
+  "chapter": 485,
+  "title": "Downpour, To be soaking wet, Rainy, Stormy, Turbulent",
+  "label": "ch:la-downpour-to-be-soaking-wet-rainy-stormy-turbulent",
+  "canDo": "I can describe rain and storms: a downpour, being soaked, rainy and stormy weather, and turbulent water.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C485-turbidus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 485: I can describe rain and storms: a downpour, being soaked, rainy and stormy weather, and turbulent water.",
+    "assesses": [
+      "LA-LEX-C485-IMBER-03",
+      "LA-LEX-C485-IMBER-04",
+      "LA-LEX-C485-IMBER-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C282-lectio",
+  "pathSegment": "LA-PATH-282-ORDO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-282-ORDO",
+      "order": 2
+    }
+  ]
+}

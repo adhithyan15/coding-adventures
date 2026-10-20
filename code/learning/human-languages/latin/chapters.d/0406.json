@@ -1,0 +1,19 @@
+{
+  "chapter": 406,
+  "title": "Good and Bad Pupils",
+  "label": "ch:la-good-and-bad-pupils",
+  "canDo": "I can call a pupil clever, attentive, slow, painstaking or careless.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "LA-C406-neglegens",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 406: I can call a pupil clever, attentive, slow, painstaking or careless.",
+    "assesses": [
+      "LA-LEX-C406-SEDULUS-03",
+      "LA-LEX-C406-SEDULUS-04",
+      "LA-LEX-C406-SEDULUS-05"
+    ]
+  }
+}

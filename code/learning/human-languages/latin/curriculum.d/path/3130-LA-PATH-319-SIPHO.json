@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-319-SIPHO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-319-SIPHO"
+  ],
+  "after": []
+}

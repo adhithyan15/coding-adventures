@@ -1,0 +1,11 @@
+{
+  "id": "LA-C548-speciosus",
+  "pathSegment": "LA-PATH-548-VENU",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-548-VENU",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 507,
+  "sourceHash": "fnv1a64:816811fcbf156fe6",
+  "lessonIds": [
+    "LA-C507-superbia",
+    "LA-C507-arrogans",
+    "LA-C507-arrogantia",
+    "LA-C507-insolens",
+    "LA-C507-vanitas"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch507.txt",
+  "json": "latin/narration/ch507.json",
+  "textHash": "fnv1a64:80cb85f3de697239",
+  "jsonHash": "fnv1a64:a0806d67ec883a52",
+  "findings": []
+}

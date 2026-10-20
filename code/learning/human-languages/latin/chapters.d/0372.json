@@ -1,0 +1,19 @@
+{
+  "chapter": 372,
+  "title": "What Sets Things Going",
+  "label": "ch:la-what-sets-things-going",
+  "canDo": "I can name the person behind an act and the impulse behind it, and say what brings a result about and what works.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "LA-R372-review-365-372",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 372: I can name the person behind an act and the impulse behind it, and say what brings a result about and what works.",
+    "assesses": [
+      "LA-LEX-C372-AUCTOR-03",
+      "LA-LEX-C372-AUCTOR-04",
+      "LA-LEX-C372-AUCTOR-05"
+    ]
+  }
+}

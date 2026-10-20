@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 424,
+  "sourceHash": "fnv1a64:073c4b11026a39f6",
+  "lessonIds": [
+    "LA-C424-compitum",
+    "LA-C424-bivium",
+    "LA-C424-flexus",
+    "LA-C424-anfractus",
+    "LA-C424-flecto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch424.txt",
+  "json": "latin/narration/ch424.json",
+  "textHash": "fnv1a64:dcb367580b80689d",
+  "jsonHash": "fnv1a64:9adeaddad9932557",
+  "findings": []
+}

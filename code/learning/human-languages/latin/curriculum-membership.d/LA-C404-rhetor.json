@@ -1,0 +1,11 @@
+{
+  "id": "LA-C404-rhetor",
+  "pathSegment": "LA-PATH-404-RHETORICA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-404-RHETORICA",
+      "order": 0
+    }
+  ]
+}

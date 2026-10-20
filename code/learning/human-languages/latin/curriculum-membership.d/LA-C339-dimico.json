@@ -1,0 +1,11 @@
+{
+  "id": "LA-C339-dimico",
+  "pathSegment": "LA-PATH-339-PROELIUM",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-339-PROELIUM",
+      "order": 4
+    }
+  ]
+}

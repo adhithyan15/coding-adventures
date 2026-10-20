@@ -1,0 +1,11 @@
+{
+  "id": "LA-C501-affectus",
+  "pathSegment": "LA-PATH-501-AFFE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-501-AFFE",
+      "order": 2
+    }
+  ]
+}

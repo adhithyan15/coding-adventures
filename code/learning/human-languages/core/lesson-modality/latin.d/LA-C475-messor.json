@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C475-messor",
+    "language": "latin",
+    "chapter": 475,
+    "sequence": 25270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:75f1731accd19c25"
+  },
+  "findings": []
+}

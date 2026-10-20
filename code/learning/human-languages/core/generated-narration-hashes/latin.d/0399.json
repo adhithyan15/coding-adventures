@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 399,
+  "sourceHash": "fnv1a64:8b03d91e34a88f2d",
+  "lessonIds": [
+    "LA-C399-perfidia",
+    "LA-C399-perfidus",
+    "LA-C399-fallacia",
+    "LA-C399-decipio",
+    "LA-C399-testor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch399.txt",
+  "json": "latin/narration/ch399.json",
+  "textHash": "fnv1a64:2ffdefc30b20d2b7",
+  "jsonHash": "fnv1a64:6af387e5ebe0a7ff",
+  "findings": []
+}

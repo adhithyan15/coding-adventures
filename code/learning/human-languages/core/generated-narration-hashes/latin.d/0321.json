@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:910e9ef54835b1dd",
+  "lessonIds": [
+    "LA-C321-minae",
+    "LA-C321-minitor",
+    "LA-C321-terreo",
+    "LA-C321-tumultus",
+    "LA-C321-clamor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch321.txt",
+  "json": "latin/narration/ch321.json",
+  "textHash": "fnv1a64:e806909ecfc31e8c",
+  "jsonHash": "fnv1a64:cd24818994159801",
+  "findings": []
+}

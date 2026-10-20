@@ -265,7 +265,7 @@ describe("corpus level summary", () => {
       expect(readdirSync(join(root, "core", entry.name)), entry.name).toEqual([]);
     }
   });
-  it("shows seventeen tracks have reached A2, and every track has now reached A1", () => {
+  it("shows sixteen tracks have reached A2, and every track has now reached A1", () => {
     const { lessons, curricula: paths, spine } = REAL_EVERYTHING;
     const summary = summarizeLevels(lessons, paths, spine);
     // `reach` is the highest level a track has ANY lesson at, so this names the tracks
@@ -280,8 +280,9 @@ describe("corpus level summary", () => {
     // Portuguese leaves it with chapters 259-268, which realize the five B1
     // spine nodes, so the list is 20. French leaves it with chapters 258-267,
     // the same five nodes, so the list is 19. German leaves it with chapters
-    // 252-261, the same five nodes, so the list is 18. Russian leaves it with
-    // chapters 261-270, the same five nodes, so the list is 17.
+    // 252-261, the same five nodes, so the list is 18. Latin leaves it with
+    // chapters 281-290, the same five nodes, so the list is 17. Russian leaves
+    // it with chapters 261-270, the same five nodes, so the list is 16.
     expect(
       summary.tracks.filter((track) => track.reach === "A2").map((track) => track.language),
     ).toEqual([
@@ -300,7 +301,6 @@ describe("corpus level summary", () => {
       // vocabulary and verb counts are met.
       "japanese",
       "kannada",
-      "latin",
       "malayalam",
       "marathi",
       "marwadi",
@@ -311,16 +311,16 @@ describe("corpus level summary", () => {
       "telugu",
       "urdu",
     ]);
-    // Six tracks now exceed A2, and naming them is stronger than a blanket
+    // Seven tracks now exceed A2, and naming them is stronger than a blanket
     // "nothing does" -- it says which rung was climbed and by whom. Italian joins
     // Spanish with its B1 core, chapters 263-272, Portuguese with its B1
     // core, chapters 259-268, French with its B1 core, chapters 258-267,
-    // German with its B1 core, chapters 252-261, and Russian with its B1 core,
-    // chapters 261-270.
+    // German with its B1 core, chapters 252-261, Latin with its B1 core,
+    // chapters 281-290, and Russian with its B1 core, chapters 261-270.
     expect(
       summary.tracks.filter((track) => track.reach !== null && levelRank(track.reach) > levelRank("A2"))
         .map((track) => track.language),
-    ).toEqual(["french", "german", "italian", "portuguese", "russian", "spanish"]);
+    ).toEqual(["french", "german", "italian", "latin", "portuguese", "russian", "spanish"]);
     expect(
       summary.tracks.filter((track) => track.reach === "pre-A1").map((track) => track.language),
       // HL-C230: chinese leaves this list. Its numerals chapter realizes

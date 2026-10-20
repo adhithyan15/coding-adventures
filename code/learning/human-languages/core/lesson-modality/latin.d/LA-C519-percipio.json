@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C519-percipio",
+    "language": "latin",
+    "chapter": 519,
+    "sequence": 27570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:335cbae94eecd47d"
+  },
+  "findings": []
+}

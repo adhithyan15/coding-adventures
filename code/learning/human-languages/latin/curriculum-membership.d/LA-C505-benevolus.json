@@ -1,0 +1,11 @@
+{
+  "id": "LA-C505-benevolus",
+  "pathSegment": "LA-PATH-505-CLEM",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-505-CLEM",
+      "order": 3
+    }
+  ]
+}

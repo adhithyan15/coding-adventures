@@ -1,0 +1,14 @@
+{
+  "language": "latin",
+  "chapter": 544,
+  "sourceHash": "fnv1a64:5a93674e148ea7be",
+  "lessonIds": [
+    "LA-C544-cithara",
+    "LA-C544-citharoedus",
+    "LA-C544-chorda",
+    "LA-C544-fidicen",
+    "LA-C544-psallo",
+    "LA-R544-review-537-544"
+  ],
+  "tex": "latin/book/chapters/ch544-strings.tex"
+}

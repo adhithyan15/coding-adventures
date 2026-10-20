@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C474-occo",
+    "language": "latin",
+    "chapter": 474,
+    "sequence": 25250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0574cb476009add"
+  },
+  "findings": []
+}

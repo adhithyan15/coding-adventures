@@ -1,0 +1,11 @@
+{
+  "id": "LA-C459-aedicula",
+  "pathSegment": "LA-PATH-459-PORTICUS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-459-PORTICUS",
+      "order": 2
+    }
+  ]
+}

@@ -43,7 +43,68 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
-## Prioritization run — 2026-09-30
+## VM-078 — LANG83 standard operation registry (2026-10-19)
+
+Owner direction: the dynamic frontends need a rich operation vocabulary, and
+every backend converts those operations into instructions it supports. There is
+no portable runtime and no shared or generated IIR helper library.
+[LANG83](LANG83-iir-standard-operation-registry.md) is the contract.
+
+**PR1a — contract (implemented on `claude/lang-vm-status-4xtyw8-op-registry`).**
+`interpreter_ir::op_registry::STANDARD_OPS` registers the operations existing
+frontends already rely on: output, strings, arithmetic and comparison, `f64`
+math and conversions. It also registers the PR1b ops `write_i64`,
+`i64_div_floor`, `i64_mod_floor` and `trap`. A unit test enforces the type-first
+naming rule. All nine backend crates declare `op_support`; the PR1b ops are
+`Refused` everywhere. `lang_aot::check_module_for` refuses unsupported ops at
+compile time before lowering. `lang-aot/tests/op_conformance.rs` compiles every
+`Lowered` case on six code-generation backends. It runs the cases on WASM, VM,
+JIT, LLVM and native. WASM, VM, JIT and BEAM output is now one ordered stream.
+Evidence: the ALGOL row mixing `print_i64` and `print_str` printed `ABC` on
+WASM/VM/JIT before the fix and prints `A1\nB-2\nC` after it.
+
+**VM-078b / PR1b — first op family on all nine backends (implemented on
+`claude/lang-vm-status-4xtyw8-op-lowering`, stacked on PR1a).** `write_i64`,
+`i64_div_floor`, `i64_mod_floor` and `trap` are `Lowered` on x86-64, AArch64,
+LLVM, WASM, JVM, CLR (textual IL), BEAM, VM and JIT. Every backend tests the
+zero divisor and `MIN / -1` explicitly before its hardware or library divide;
+none relies on a native divide for those edges. Every trap path flushes output
+first. Native traps call the new `__twig_trap` in `twig_runtime.c`. LLVM emits
+self-contained `linkonce_odr` `@__iir_trap` and `@__iir_write_i64`. WASM
+imports `env.__trap` and `env.__write_i64`. The JVM and CLR throw after
+flushing, BEAM calls `erlang:error('<kind>')`, the VM returns
+`VMError::Trap { kind }`, and the JIT's `TRAP` bytecode records the kind.
+`op_conformance` adds 10 PR1b cases and a real-`java` JVM column. It proves
+print-then-trap on WASM, VM, JIT, LLVM, native and JVM (276 compilations, 256
+executions locally). CLR and BEAM compile locally; CI executes them. AArch64
+is checked structurally against `aarch64-encoder`. vm-core's legacy `div`/`mod`
+no longer panic on `MIN / -1`: they wrap.
+
+**Next, in order:**
+
+1. **VM-078b follow-ups:** port `lang_matrix`'s data-less
+   `RunResult::Trapped` (and its WASM/VM/JIT hosts) to carry stdout and the
+   PR1b imports when the first language row emits a PR1b op (LANG83 PR2,
+   Ruby). The binary CLR `lower_iir_to_cil` path (32-bit simulator) refuses
+   the PR1b ops with a typed error. Make that refusal part of
+   `check_module_for` for `compile_iir_to_cil_artifact` if a frontend ever
+   targets it.
+2. **VM-078c (found by the PR1a conformance suite):** the native pipeline
+   miscompiles a `bool`-typed comparison with negative operands.
+   `jit_core::specialise` names the CIR op after the result hint
+   (`cmp_lt_bool`), so x86-64 compares at `bool` width. Twig
+   `(if (< (- 0 1) 2) 7 3)` exits 3 natively and 7 elsewhere. ALGOL's
+   `i64`-typed comparisons are unaffected.
+3. **VM-078d (found by the PR1a conformance suite):** the matrix JIT column
+   interprets every function that prints. `infer_type_status` does not count
+   `"void"` as concrete, so a function containing `call_builtin … : void` is
+   `PartiallyTyped`, and `execute_with_jit` never compiles it.
+   `op_conformance` compiles `main` explicitly; the matrix runner should do the
+   same, or the type-status rule should change.
+4. Register the bitwise family (`and or xor not shl shr`) with honest
+   declarations: LLVM lacks `shl`/`shr`, and the generic JIT lacks all six.
+   Replace the older builtin tables with derivations from `OP_SUPPORT`.
+
 
 PR #16208 delivered the first VM-067 guard and merged as
 `34a8061d145849dffdb6bb7cf90ce1b8fa638fa5` after required CI passed. The

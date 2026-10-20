@@ -1,0 +1,8 @@
+{
+  "id": "LA-EXT-307-VENENUM",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about poison and plots: poison, a poisoner, an ambush, a conspiracy and a traitor.",
+  "prerequisites": []
+}

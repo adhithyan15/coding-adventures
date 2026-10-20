@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-468-TINGO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "LA-EXT-468-TINGO"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C347-nympha",
+  "pathSegment": "LA-PATH-347-MONSTRUM",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-347-MONSTRUM",
+      "order": 3
+    }
+  ]
+}

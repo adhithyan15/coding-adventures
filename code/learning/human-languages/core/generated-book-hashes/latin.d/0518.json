@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 518,
+  "sourceHash": "fnv1a64:ec97558105fdd665",
+  "lessonIds": [
+    "LA-C518-latus",
+    "LA-C518-coxa",
+    "LA-C518-calx",
+    "LA-C518-planta",
+    "LA-C518-umbilicus"
+  ],
+  "tex": "latin/book/chapters/ch518-side-hip-and-foot.tex"
+}

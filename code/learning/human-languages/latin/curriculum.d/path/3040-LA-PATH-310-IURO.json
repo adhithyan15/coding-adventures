@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-310-IURO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-310-IURO"
+  ],
+  "after": []
+}

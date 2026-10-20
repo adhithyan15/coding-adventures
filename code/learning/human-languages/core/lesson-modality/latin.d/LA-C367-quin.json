@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C367-quin",
+    "language": "latin",
+    "chapter": 367,
+    "sequence": 19730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4b5fe70f7a9a8769"
+  },
+  "findings": []
+}

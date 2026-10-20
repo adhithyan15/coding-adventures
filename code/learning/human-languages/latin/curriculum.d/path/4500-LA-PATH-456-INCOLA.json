@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-456-INCOLA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "LA-EXT-456-INCOLA"
+  ],
+  "after": []
+}

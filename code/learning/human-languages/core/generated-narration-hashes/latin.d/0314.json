@@ -1,0 +1,20 @@
+{
+  "language": "latin",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:f139254141a958cf",
+  "lessonIds": [
+    "LA-C314-offendo",
+    "LA-C314-praeceps",
+    "LA-C314-praecipito",
+    "LA-C314-plaga",
+    "LA-C314-saucius",
+    "LA-R314-review-307-314"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "latin/narration/ch314.txt",
+  "json": "latin/narration/ch314.json",
+  "textHash": "fnv1a64:12fee7bbbb6ead8d",
+  "jsonHash": "fnv1a64:517e70291608321d",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C509-prudentia",
+    "language": "latin",
+    "chapter": 509,
+    "sequence": 27060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6151785491d5edb9"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C449-putidus",
+  "pathSegment": "LA-PATH-449-VAPPA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-449-VAPPA",
+      "order": 3
+    }
+  ]
+}

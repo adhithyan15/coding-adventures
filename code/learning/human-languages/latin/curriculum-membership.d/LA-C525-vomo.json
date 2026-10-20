@@ -1,0 +1,11 @@
+{
+  "id": "LA-C525-vomo",
+  "pathSegment": "LA-PATH-525-TUSS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-525-TUSS",
+      "order": 1
+    }
+  ]
+}

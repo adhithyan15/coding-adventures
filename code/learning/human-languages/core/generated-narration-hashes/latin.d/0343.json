@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:2f0272157d1f813a",
+  "lessonIds": [
+    "LA-C343-captivus",
+    "LA-C343-dedo",
+    "LA-C343-deditio",
+    "LA-C343-foedus",
+    "LA-C343-triumphus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch343.txt",
+  "json": "latin/narration/ch343.json",
+  "textHash": "fnv1a64:30ee9a68971061fb",
+  "jsonHash": "fnv1a64:66b279302cd0ca78",
+  "findings": []
+}

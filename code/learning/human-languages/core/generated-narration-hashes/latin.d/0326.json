@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 326,
+  "sourceHash": "fnv1a64:c61d8fcecfcb981a",
+  "lessonIds": [
+    "LA-C326-adulescentia",
+    "LA-C326-iuventus",
+    "LA-C326-senectus",
+    "LA-C326-orbus",
+    "LA-C326-pupillus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch326.txt",
+  "json": "latin/narration/ch326.json",
+  "textHash": "fnv1a64:930bc57dae1bfbcd",
+  "jsonHash": "fnv1a64:f095f3a07df912a5",
+  "findings": []
+}

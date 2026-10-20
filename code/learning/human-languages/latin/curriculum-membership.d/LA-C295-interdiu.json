@@ -1,0 +1,11 @@
+{
+  "id": "LA-C295-interdiu",
+  "pathSegment": "LA-PATH-295-NOCTU",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-295-NOCTU",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C549-versiculus",
+  "pathSegment": "LA-PATH-549-POEM",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-549-POEM",
+      "order": 2
+    }
+  ]
+}

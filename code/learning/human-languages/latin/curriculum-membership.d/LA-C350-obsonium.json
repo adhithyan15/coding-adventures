@@ -1,0 +1,11 @@
+{
+  "id": "LA-C350-obsonium",
+  "pathSegment": "LA-PATH-350-OBSONO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-350-OBSONO",
+      "order": 1
+    }
+  ]
+}

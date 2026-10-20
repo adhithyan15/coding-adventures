@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C471-polio",
+    "language": "latin",
+    "chapter": 471,
+    "sequence": 25080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6037d8f36b0fd76e"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 525,
+  "title": "Coughs and sore eyes",
+  "label": "ch:la-coughs-and-sore-eyes",
+  "canDo": "I can describe coughing, sickness, thirst and sore eyes.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C525-lippitudo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 525: I can describe coughing, sickness, thirst and sore eyes.",
+    "assesses": [
+      "LA-LEX-C525-TUSS-03",
+      "LA-LEX-C525-TUSS-04",
+      "LA-LEX-C525-TUSS-05"
+    ]
+  }
+}

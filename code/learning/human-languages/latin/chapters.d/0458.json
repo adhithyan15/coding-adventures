@@ -1,0 +1,19 @@
+{
+  "chapter": 458,
+  "title": "Alley, Neighbourhood, Privy, Sewer, Water tower",
+  "label": "ch:la-alley-neighbourhood-privy-sewer-water-tower",
+  "canDo": "I can talk about the back streets and services of a town: an alley, the neighbourhood, a privy, the sewer and a water tower.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C458-castellum",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 458: I can talk about the back streets and services of a town: an alley, the neighbourhood, a privy, the sewer and a water tower.",
+    "assesses": [
+      "LA-LEX-C458-ANGIPORTUM-03",
+      "LA-LEX-C458-ANGIPORTUM-04",
+      "LA-LEX-C458-ANGIPORTUM-05"
+    ]
+  }
+}

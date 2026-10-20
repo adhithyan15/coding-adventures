@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-R446-review-439-446",
+    "language": "latin",
+    "chapter": 446,
+    "sequence": 23820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0204451cf2ea3321"
+  },
+  "findings": []
+}

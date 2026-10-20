@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 446,
+  "title": "Little bed, Straw bedding, Mat, Pillow, Blanket",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:89a65d29fa4d7880",
+  "lessons": [
+    {
+      "id": "LA-C446-lectulus",
+      "sequence": 23770,
+      "title": "lectulus, lectulī — a little bed, a small couch",
+      "headword": "lectulus, lectulī",
+      "romanization": "lectulus, lectulī",
+      "gloss": "a little bed, a small couch",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:59d9c85f56f9bd7e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a stable-keeper, then the Latin for hospitable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: lectulus, lectulī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lectulus, lectulī — \"a little bed, a small couch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "In cubiculō parvō lectulus dūrus est. In the small bedroom there is a hard little bed."
+            },
+            {
+              "kind": "speech",
+              "text": "Second declension, masculine: lectulus, lectulī m., a diminutive of lectus 'bed'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lectulus is a diminutive of lectus 'bed, couch' (Lewis & Short), which is usually traced to PIE legʰ- 'to lie down'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lectulus, lectulī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lectulus, lectulī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lectulus, lectulī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lectulus, lectulī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with lectulus, lectulī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *lectulus, lectulī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a stable-keeper, then the Latin for hospitable, then say lectulus, lectulī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a stable-keeper, then the Latin for hospitable, then say *lectulus, lectulī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does lectulus, lectulī mean? (\"A little bed, a small couch\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C446-stramentum",
+      "sequence": 23780,
+      "title": "strāmentum, strāmentī — straw bedding, straw; a covering",
+      "headword": "strāmentum, strāmentī",
+      "romanization": "strāmentum, strāmentī",
+      "gloss": "straw bedding, straw; a covering",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bfd32850fa8a3871",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for hospitable, then the Latin for a little bed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: strāmentum, strāmentī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "strāmentum, strāmentī — \"straw bedding, straw; a covering\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Pauper in strāmentō dormit, nōn in lectō. The poor man sleeps on straw, not in a bed."
+            },
+            {
+              "kind": "speech",
+              "text": "Second declension, neuter: strāmentum, strāmentī n. Straw spread out for sleeping on, or for animals."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "strāmentum is built on sternō 'to spread' (Lewis & Short), from its participle strātus, with the suffix -mentum: something spread out to lie on."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "strāmentum, strāmentī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *strāmentum, strāmentī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "strāmentum, strāmentī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *strāmentum, strāmentī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with strāmentum, strāmentī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *strāmentum, strāmentī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for hospitable, then the Latin for a little bed, then say strāmentum, strāmentī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for hospitable, then the Latin for a little bed, then say *strāmentum, strāmentī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does strāmentum, strāmentī mean? (\"Straw bedding, straw; a covering\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C446-teges",
+      "sequence": 23790,
+      "title": "teges, tegetis — a mat, a rush mat; a covering",
+      "headword": "teges, tegetis",
+      "romanization": "teges, tegetis",
+      "gloss": "a mat, a rush mat; a covering",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ecb91d7a693e676c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a little bed, then the Latin for straw bedding."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: teges, tegetis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "teges, tegetis — \"a mat, a rush mat; a covering\"."
+            },
+            {
+              "kind": "speech",
+              "text": "In caupōnā parvā tantum teges in pavīmentō est. In a small inn there is only a mat on the floor."
+            },
+            {
+              "kind": "speech",
+              "text": "Third declension, feminine: teges, tegetis f. A coarse mat of rushes, the poor man's bed in Roman satire."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "teges is built on tegō 'to cover' (Lewis & Short): a covering, a mat."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "teges, tegetis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *teges, tegetis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "teges, tegetis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *teges, tegetis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with teges, tegetis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *teges, tegetis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a little bed, then the Latin for straw bedding, then say teges, tegetis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a little bed, then the Latin for straw bedding, then say *teges, tegetis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does teges, tegetis mean? (\"A mat, a rush mat; a covering\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C446-cervical",
+      "sequence": 23800,
+      "title": "cervīcal, cervīcālis — a pillow, a bolster",
+      "headword": "cervīcal, cervīcālis",
+      "romanization": "cervīcal, cervīcālis",
+      "gloss": "a pillow, a bolster",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:00b3aa009e5c5063",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for straw bedding, then the Latin for a mat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: cervīcal, cervīcālis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cervīcal, cervīcālis — \"a pillow, a bolster\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Hospes cervīcal sub caput pōnit et dormit. The guest puts a pillow under his head and sleeps."
+            },
+            {
+              "kind": "speech",
+              "text": "Third declension, neuter: cervīcal, cervīcālis n. Literally a thing for the neck."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cervīcal is built on cervīx, cervīcis 'neck' (EtymDB; Lewis & Short): a support for the neck. English cervical comes from cervīx."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cervīcal, cervīcālis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cervīcal, cervīcālis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cervīcal, cervīcālis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cervīcal, cervīcālis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with cervīcal, cervīcālis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *cervīcal, cervīcālis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for straw bedding, then the Latin for a mat, then say cervīcal, cervīcālis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for straw bedding, then the Latin for a mat, then say *cervīcal, cervīcālis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does cervīcal, cervīcālis mean? (\"A pillow, a bolster\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C446-lodix",
+      "sequence": 23810,
+      "title": "lōdīx, lōdīcis — a blanket, a coverlet",
+      "headword": "lōdīx, lōdīcis",
+      "romanization": "lōdīx, lōdīcis",
+      "gloss": "a blanket, a coverlet",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d603deb095c81eab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a mat, then the Latin for a pillow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: lōdīx, lōdīcis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lōdīx, lōdīcis — \"a blanket, a coverlet\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Nox frīgida est, sed lōdīx tenuis est. The night is cold, but the blanket is thin."
+            },
+            {
+              "kind": "speech",
+              "text": "Third declension, feminine: lōdīx, lōdīcis f. A wool blanket for a bed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of lōdīx is not settled: Lewis & Short give the sense, a blanket or coverlet, but no source, and EtymDB does not list it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lōdīx, lōdīcis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lōdīx, lōdīcis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lōdīx, lōdīcis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lōdīx, lōdīcis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with lōdīx, lōdīcis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *lōdīx, lōdīcis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a mat, then the Latin for a pillow, then say lōdīx, lōdīcis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a mat, then the Latin for a pillow, then say *lōdīx, lōdīcis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does lōdīx, lōdīcis mean? (\"A blanket, a coverlet\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-R446-review-439-446",
+      "sequence": 23820,
+      "title": "Words from chapters 439–446 — a review",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 439-446",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0204451cf2ea3321",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Latin for to put in and to step out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to put in, to step out, to haul ashore, to launch, navigable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to put in, to step out, to haul ashore, to launch, navigable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to toss on the waves, to be seasick, to carry down, to take across, to swim to safety",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to toss on the waves, to be seasick, to carry down, to take across, to swim to safety]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a harbour, a dockyard, a tidal inlet, a lighthouse, a headland",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a harbour, a dockyard, a tidal inlet, a lighthouse, a headland]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the open sea, the high sea, the level sea, of the sea, coastal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the open sea, the high sea, the level sea, of the sea, coastal]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sandbank, a billow, a shallow, a strait, to sail past",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sandbank, a billow, a shallow, a strait, to sail past]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a dead calm, calm weather, a peninsula, of the shore, to sail out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a dead calm, calm weather, a peninsula, of the shore, to sail out]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a roadside inn, to lodge, to spend the night, a stable-keeper, hospitable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a roadside inn, to lodge, to spend the night, a stable-keeper, hospitable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a little bed, straw bedding, a mat, a pillow, a blanket",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a little bed, straw bedding, a mat, a pillow, a blanket]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To put in? (appellō, appellere.) To step out? (ēgredior, ēgredī.) To haul ashore? (subdūcō, subdūcere.) To launch? (dēdūcō, dēdūcere.) Navigable? (nāvigābilis, nāvigābile.) To toss on the waves? (flūctuō, flūctuāre.) To be seasick? (nauseō, nauseāre.) To carry down? (dēferō, dēferre.) To take across? (trāiciō, trāicere.) To swim to safety? (ēnatō, ēnatāre.) A harbour? (portus, portūs.) A dockyard? (nāvāle, nāvālis.) A tidal inlet? (aestuārium, aestuāriī.) A lighthouse? (pharus, pharī.) A headland? (prōmunturium, prōmunturiī.) The open sea? (salum, salī.) The high sea? (pelagus, pelagī.) The level sea? (aequor, aequoris.) Of the sea? (marīnus, marīna, marīnum.) Coastal? (maritimus, maritima, maritimum.) A sandbank? (syrtis, syrtis.) A billow? (flūctus, flūctūs.) A shallow? (vadum, vadī.) A strait? (fretum, fretī.) To sail past? (praetervehor, praetervehī.) A dead calm? (malacia, malaciae.) Calm weather? (tranquillitās, tranquillitātis.) A peninsula? (paenīnsula, paenīnsulae.) Of the shore? (lītoreus, lītorea, lītoreum.) To sail out? (ēnāvigō, ēnāvigāre.) A roadside inn? (dēverticulum, dēverticulī.) To lodge? (dēversor, dēversārī.) To spend the night? (pernoctō, pernoctāre.) A stable-keeper? (stabulārius, stabulāriī.) Hospitable? (hospitālis, hospitāle.) A little bed? (lectulus, lectulī.) Straw bedding? (strāmentum, strāmentī.) A mat? (teges, tegetis.) A pillow? (cervīcal, cervīcālis.) A blanket? (lōdīx, lōdīcis.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

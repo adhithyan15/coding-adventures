@@ -1,0 +1,11 @@
+{
+  "id": "LA-C323-partus",
+  "pathSegment": "LA-PATH-323-PARTUS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-323-PARTUS",
+      "order": 1
+    }
+  ]
+}

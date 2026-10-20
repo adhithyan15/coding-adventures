@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-346-DEUS",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-346-DEUS"
+  ],
+  "after": []
+}

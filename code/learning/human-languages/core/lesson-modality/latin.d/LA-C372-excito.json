@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C372-excito",
+    "language": "latin",
+    "chapter": 372,
+    "sequence": 20000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a352950bc4230b17"
+  },
+  "findings": []
+}

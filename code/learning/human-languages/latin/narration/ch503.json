@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 503,
+  "title": "Temperament",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7bf64e169896ebfa",
+  "lessons": [
+    {
+      "id": "LA-C503-natura",
+      "sequence": 26710,
+      "title": "nātūra, nātūrae — nature, character",
+      "headword": "nātūra, nātūrae",
+      "romanization": "nātūra, nātūrae",
+      "gloss": "nature, character",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f711c282e568f96e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for funny, then the Latin for witty."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: nātūra, nātūrae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nātūra, nātūrae — \"nature, character\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Nātūra frātris meī placida est. My brother's nature is calm."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, first declension, from nāscor — to be born: what you are born with. English nature."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nātūra is built on nātus, the participle of nāscor \"to be born\" (Lewis & Short; EtymDB). English nature comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nātūra, nātūrae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nātūra, nātūrae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nātūra, nātūrae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nātūra, nātūrae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with nātūra, nātūrae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *nātūra, nātūrae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for funny, then the Latin for witty, then say nātūra, nātūrae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for funny, then the Latin for witty, then say *nātūra, nātūrae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does nātūra, nātūrae mean? (\"Nature, character\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C503-indoles",
+      "sequence": 26720,
+      "title": "indolēs, indolis — natural disposition, talent",
+      "headword": "indolēs, indolis",
+      "romanization": "indolēs, indolis",
+      "gloss": "natural disposition, talent",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f92d5780dd1eaafc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for witty, then the Latin for nature."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: indolēs, indolis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "indolēs, indolis — \"natural disposition, talent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Hic puer bonam indolem habet. This boy has a good disposition."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, third declension. Inborn character, often of a promising young person."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "indolēs is built on old indu \"within\" and the root of olēscō \"to grow\", a relative of alō \"to nourish\" (Lewis & Short; EtymDB): what grows from within."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "indolēs, indolis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *indolēs, indolis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "indolēs, indolis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *indolēs, indolis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with indolēs, indolis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *indolēs, indolis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for witty, then the Latin for nature, then say indolēs, indolis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for witty, then the Latin for nature, then say *indolēs, indolis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does indolēs, indolis mean? (\"Natural disposition, talent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C503-alacer",
+      "sequence": 26730,
+      "title": "alacer, alacris, alacre — lively, eager",
+      "headword": "alacer, alacris, alacre",
+      "romanization": "alacer, alacris, alacre",
+      "gloss": "lively, eager",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b945c145fc49ea50",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for nature, then the Latin for natural disposition."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: alacer, alacris, alacre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "alacer, alacris, alacre — \"lively, eager\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mīlitēs alacrēs ad pugnam currunt. The soldiers run eagerly to the fight."
+            },
+            {
+              "kind": "speech",
+              "text": "Three endings in the nominative, like ācer. English alacrity comes from alacritās."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "alacer is a native Latin adjective; Lewis & Short suggests a link with alō \"to nourish\", but the origin is not settled. English alacrity comes from alacritās, built on it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alacer, alacris, alacre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alacer, alacris, alacre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alacer, alacris, alacre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alacer, alacris, alacre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with alacer, alacris, alacre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *alacer, alacris, alacre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for nature, then the Latin for natural disposition, then say alacer, alacris, alacre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for nature, then the Latin for natural disposition, then say *alacer, alacris, alacre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does alacer, alacris, alacre mean? (\"Lively, eager\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C503-lepidus",
+      "sequence": 26740,
+      "title": "lepidus, lepida, lepidum — charming, delightful",
+      "headword": "lepidus, lepida, lepidum",
+      "romanization": "lepidus, lepida, lepidum",
+      "gloss": "charming, delightful",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d12590cc706b556b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for natural disposition, then the Latin for lively."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: lepidus, lepida, lepidum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lepidus, lepida, lepidum — \"charming, delightful\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Fābula lepida et brevis est. The story is charming and short."
+            },
+            {
+              "kind": "speech",
+              "text": "A word of comedy and of friendly letters: neat, pleasant, nicely done."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lepidus is built on lepōs \"charm, grace\" (Lewis & Short); the origin of lepōs is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lepidus, lepida, lepidum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lepidus, lepida, lepidum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lepidus, lepida, lepidum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lepidus, lepida, lepidum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with lepidus, lepida, lepidum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *lepidus, lepida, lepidum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for natural disposition, then the Latin for lively, then say lepidus, lepida, lepidum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for natural disposition, then the Latin for lively, then say *lepidus, lepida, lepidum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does lepidus, lepida, lepidum mean? (\"Charming, delightful\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C503-lascivus",
+      "sequence": 26750,
+      "title": "lascīvus, lascīva, lascīvum — playful, frisky",
+      "headword": "lascīvus, lascīva, lascīvum",
+      "romanization": "lascīvus, lascīva, lascīvum",
+      "gloss": "playful, frisky",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e6f45cb2ee08432a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for lively, then the Latin for charming."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: lascīvus, lascīva, lascīvum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lascīvus, lascīva, lascīvum — \"playful, frisky\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Catulī lascīvī in hortō lūdunt. The playful puppies play in the garden."
+            },
+            {
+              "kind": "speech",
+              "text": "Of animals and children, frisky; of grown-ups, sometimes naughty. English lascivious is narrower."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lascīvus is inherited and traced to a Proto-Indo-European root las- \"eager, wanton\" (EtymDB; Lewis & Short). English lascivious comes from it, with a narrower meaning."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lascīvus, lascīva, lascīvum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lascīvus, lascīva, lascīvum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lascīvus, lascīva, lascīvum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lascīvus, lascīva, lascīvum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with lascīvus, lascīva, lascīvum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *lascīvus, lascīva, lascīvum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for lively, then the Latin for charming, then say lascīvus, lascīva, lascīvum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for lively, then the Latin for charming, then say *lascīvus, lascīva, lascīvum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does lascīvus, lascīva, lascīvum mean? (\"Playful, frisky\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-398-PRAESTO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "LA-EXT-398-PRAESTO"
+  ],
+  "after": []
+}

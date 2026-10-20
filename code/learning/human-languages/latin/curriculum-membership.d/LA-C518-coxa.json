@@ -1,0 +1,11 @@
+{
+  "id": "LA-C518-coxa",
+  "pathSegment": "LA-PATH-518-LATU",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-518-LATU",
+      "order": 1
+    }
+  ]
+}

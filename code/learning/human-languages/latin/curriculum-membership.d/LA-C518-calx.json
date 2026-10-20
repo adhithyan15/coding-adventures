@@ -1,0 +1,11 @@
+{
+  "id": "LA-C518-calx",
+  "pathSegment": "LA-PATH-518-LATU",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-518-LATU",
+      "order": 2
+    }
+  ]
+}

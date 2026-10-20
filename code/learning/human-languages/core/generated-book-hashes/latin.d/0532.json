@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 532,
+  "sourceHash": "fnv1a64:6168797b65f9cb74",
+  "lessonIds": [
+    "LA-C532-manumissio",
+    "LA-C532-libertinus",
+    "LA-C532-vindicta",
+    "LA-C532-ingenuus",
+    "LA-C532-pilleus"
+  ],
+  "tex": "latin/book/chapters/ch532-freedom.tex"
+}

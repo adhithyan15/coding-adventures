@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C283-mea-sententia",
+    "language": "latin",
+    "chapter": 283,
+    "sequence": 15500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:633aef8f4dfe510c"
+  },
+  "findings": []
+}

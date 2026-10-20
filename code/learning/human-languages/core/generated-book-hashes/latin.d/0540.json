@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 540,
+  "sourceHash": "fnv1a64:4aa222df3b88af21",
+  "lessonIds": [
+    "LA-C540-pupa",
+    "LA-C540-trochus",
+    "LA-C540-turbo",
+    "LA-C540-harpastum",
+    "LA-C540-natatio"
+  ],
+  "tex": "latin/book/chapters/ch540-toys-and-play.tex"
+}

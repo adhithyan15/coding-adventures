@@ -1,0 +1,8 @@
+{
+  "id": "LA-EXT-390-CONDICIO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can set a condition, say but if, provided that and only if, and concede however much.",
+  "prerequisites": []
+}

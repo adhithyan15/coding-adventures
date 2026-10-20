@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-442-SALUM",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "LA-EXT-442-SALUM"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 448,
+  "sourceHash": "fnv1a64:746c04a1c821ec82",
+  "lessonIds": [
+    "LA-C448-sterto",
+    "LA-C448-strepo",
+    "LA-C448-obstrepo",
+    "LA-C448-potor",
+    "LA-C448-raucus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch448.txt",
+  "json": "latin/narration/ch448.json",
+  "textHash": "fnv1a64:daced2c24cb88268",
+  "jsonHash": "fnv1a64:38ce41fe91fdf180",
+  "findings": []
+}

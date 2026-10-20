@@ -1,0 +1,11 @@
+{
+  "id": "LA-C312-vinculum",
+  "pathSegment": "LA-PATH-312-SUPPLICIUM",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-312-SUPPLICIUM",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C455-accedo",
+    "language": "latin",
+    "chapter": 455,
+    "sequence": 24250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c9d8f72800ab2814"
+  },
+  "findings": []
+}

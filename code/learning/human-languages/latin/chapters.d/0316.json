@@ -1,0 +1,19 @@
+{
+  "chapter": 316,
+  "title": "Auxilium",
+  "label": "ch:la-auxilium",
+  "canDo": "I can tell how people were rescued: to snatch away, unharmed, to come to help, to run to help and help.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C316-auxilium",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 316: I can tell how people were rescued: to snatch away, unharmed, to come to help, to run to help and help.",
+    "assesses": [
+      "LA-LEX-C316-ERIPIO-03",
+      "LA-LEX-C316-ERIPIO-04",
+      "LA-LEX-C316-ERIPIO-05"
+    ]
+  }
+}

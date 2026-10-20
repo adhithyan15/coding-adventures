@@ -1,0 +1,11 @@
+{
+  "id": "LA-C302-patefacio",
+  "pathSegment": "LA-PATH-302-SPECULATOR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-302-SPECULATOR",
+      "order": 4
+    }
+  ]
+}

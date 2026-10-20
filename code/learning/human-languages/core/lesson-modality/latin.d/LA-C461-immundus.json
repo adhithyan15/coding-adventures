@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C461-immundus",
+    "language": "latin",
+    "chapter": 461,
+    "sequence": 24580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1c4c44502fee01bf"
+  },
+  "findings": []
+}

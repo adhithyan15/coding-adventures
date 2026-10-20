@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 461,
+  "title": "Hot-drinks bar, Hot water, To drink, Smoky, Filthy",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c17d4314557c55e3",
+  "lessons": [
+    {
+      "id": "LA-C461-thermopolium",
+      "sequence": 24540,
+      "title": "thermopōlium, thermopōliī — a hot-drinks bar, a tavern selling warm drinks",
+      "headword": "thermopōlium, thermopōliī",
+      "romanization": "thermopōlium, thermopōliī",
+      "gloss": "a hot-drinks bar, a tavern selling warm drinks",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6e012f2d645f0c46",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to go back and forth, then the Latin for near the city."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: thermopōlium, thermopōliī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "thermopōlium, thermopōliī — \"a hot-drinks bar, a tavern selling warm drinks\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Fabrī in thermopōliō vīnum calidum bibunt. The workmen drink warm wine in the hot-drinks bar."
+            },
+            {
+              "kind": "speech",
+              "text": "Second declension, neuter: thermopōlium, thermopōliī n. A word of comedy; such bars, with jars set in the counter, line the streets of excavated towns."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "thermopōlium comes from Greek, built from thermos 'hot' and pōleō 'to sell' (Lewis & Short give the sense, a place where warm drinks were sold). EtymDB does not list it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thermopōlium, thermopōliī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thermopōlium, thermopōliī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thermopōlium, thermopōliī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thermopōlium, thermopōliī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with thermopōlium, thermopōliī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *thermopōlium, thermopōliī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to go back and forth, then the Latin for near the city, then say thermopōlium, thermopōliī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to go back and forth, then the Latin for near the city, then say *thermopōlium, thermopōliī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does thermopōlium, thermopōliī mean? (\"A hot-drinks bar, a tavern selling warm drinks\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C461-calda",
+      "sequence": 24550,
+      "title": "calda, caldae — hot water (for mixing with wine)",
+      "headword": "calda, caldae",
+      "romanization": "calda, caldae",
+      "gloss": "hot water (for mixing with wine)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:97b54f82da9d25d3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for near the city, then the Latin for a hot-drinks bar."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: calda, caldae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "calda, caldae — \"hot water (for mixing with wine)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Hospes caldam et vīnum rogat. The guest asks for hot water and wine."
+            },
+            {
+              "kind": "speech",
+              "text": "First declension, feminine: calda, caldae f., short for (aqua) calida. Romans liked wine mixed with hot water in winter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "calda is a shortened form of (aqua) calida 'hot water', from calidus 'hot' (Lewis & Short), which is built on caleō 'to be warm'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "calda, caldae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *calda, caldae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "calda, caldae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *calda, caldae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with calda, caldae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *calda, caldae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for near the city, then the Latin for a hot-drinks bar, then say calda, caldae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for near the city, then the Latin for a hot-drinks bar, then say *calda, caldae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does calda, caldae mean? (\"Hot water (for mixing with wine)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C461-poto",
+      "sequence": 24560,
+      "title": "pōtō, pōtāre — to drink, to drink deep",
+      "headword": "pōtō, pōtāre",
+      "romanization": "pōtō, pōtāre",
+      "gloss": "to drink, to drink deep",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7f3b159265f2b55e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a hot-drinks bar, then the Latin for hot water."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: pōtō, pōtāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pōtō, pōtāre — \"to drink, to drink deep\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Pōtōrēs usque ad mediam noctem pōtant. The drinkers drink on until midnight."
+            },
+            {
+              "kind": "speech",
+              "text": "pōtō, pōtāre, pōtāvī, pōtātum or pōtum. Stronger than bibō: drinking hard, drinking for pleasure. English potion and potable come from the same root."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pōtō is inherited from PIE peh₃- 'to drink', with Greek pinō 'to drink' as a cousin (EtymDB; Lewis & Short). English potion and potable come from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōtō, pōtāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōtō, pōtāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōtō, pōtāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōtō, pōtāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with pōtō, pōtāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *pōtō, pōtāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a hot-drinks bar, then the Latin for hot water, then say pōtō, pōtāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a hot-drinks bar, then the Latin for hot water, then say *pōtō, pōtāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does pōtō, pōtāre mean? (\"To drink, to drink deep\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C461-fumosus",
+      "sequence": 24570,
+      "title": "fūmōsus, fūmōsa, fūmōsum — smoky, full of smoke",
+      "headword": "fūmōsus, fūmōsa, fūmōsum",
+      "romanization": "fūmōsus, fūmōsa, fūmōsum",
+      "gloss": "smoky, full of smoke",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ada1ae3ddee42bae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for hot water, then the Latin for to drink."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: fūmōsus, fūmōsa, fūmōsum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fūmōsus, fūmōsa, fūmōsum — \"smoky, full of smoke\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Popīna fūmōsa est, et oculī hospitum dolent. The cookshop is smoky, and the customers' eyes hurt."
+            },
+            {
+              "kind": "speech",
+              "text": "An adjective of three endings, from fūmus 'smoke' with -ōsus 'full of'. Poets mock the smoky tavern."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fūmōsus is built on fūmus 'smoke' with the suffix -ōsus 'full of' (Lewis & Short). English fume comes from fūmus."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fūmōsus, fūmōsa, fūmōsum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fūmōsus, fūmōsa, fūmōsum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fūmōsus, fūmōsa, fūmōsum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fūmōsus, fūmōsa, fūmōsum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with fūmōsus, fūmōsa, fūmōsum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *fūmōsus, fūmōsa, fūmōsum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for hot water, then the Latin for to drink, then say fūmōsus, fūmōsa, fūmōsum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for hot water, then the Latin for to drink, then say *fūmōsus, fūmōsa, fūmōsum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does fūmōsus, fūmōsa, fūmōsum mean? (\"Smoky, full of smoke\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C461-immundus",
+      "sequence": 24580,
+      "title": "immundus, immunda, immundum — filthy, dirty, unclean",
+      "headword": "immundus, immunda, immundum",
+      "romanization": "immundus, immunda, immundum",
+      "gloss": "filthy, dirty, unclean",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1c4c44502fee01bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to drink, then the Latin for smoky."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: immundus, immunda, immundum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "immundus, immunda, immundum — \"filthy, dirty, unclean\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mēnsae immundae sunt, et cibus malus est. The tables are filthy, and the food is bad."
+            },
+            {
+              "kind": "speech",
+              "text": "An adjective of three endings, from in- 'not' and mundus 'clean, neat'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "immundus is built from in- 'not' and the adjective mundus 'clean, neat' (EtymDB; Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "immundus, immunda, immundum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *immundus, immunda, immundum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "immundus, immunda, immundum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *immundus, immunda, immundum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with immundus, immunda, immundum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *immundus, immunda, immundum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to drink, then the Latin for smoky, then say immundus, immunda, immundum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to drink, then the Latin for smoky, then say *immundus, immunda, immundum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does immundus, immunda, immundum mean? (\"Filthy, dirty, unclean\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

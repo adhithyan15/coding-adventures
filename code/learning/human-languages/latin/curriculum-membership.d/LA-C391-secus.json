@@ -1,0 +1,11 @@
+{
+  "id": "LA-C391-secus",
+  "pathSegment": "LA-PATH-391-ETIAMSI",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-391-ETIAMSI",
+      "order": 3
+    }
+  ]
+}

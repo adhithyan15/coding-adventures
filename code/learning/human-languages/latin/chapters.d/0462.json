@@ -1,0 +1,19 @@
+{
+  "chapter": 462,
+  "title": "To trade at market, To keep shouting, To offer for sale, Goods, Hawker",
+  "label": "ch:la-to-trade-at-market-to-keep-shouting-to-offer-for-sale-goods-hawker",
+  "canDo": "I can describe market day: trading at the market, sellers shouting, goods offered for sale, and the hawker.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-R462-review-455-462",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 462: I can describe market day: trading at the market, sellers shouting, goods offered for sale, and the hawker.",
+    "assesses": [
+      "LA-LEX-C462-NUNDINOR-03",
+      "LA-LEX-C462-NUNDINOR-04",
+      "LA-LEX-C462-NUNDINOR-05"
+    ]
+  }
+}

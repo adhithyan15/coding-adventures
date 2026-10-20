@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C394-ordino",
+    "language": "latin",
+    "chapter": 394,
+    "sequence": 21110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eddb803e27fdbdf0"
+  },
+  "findings": []
+}

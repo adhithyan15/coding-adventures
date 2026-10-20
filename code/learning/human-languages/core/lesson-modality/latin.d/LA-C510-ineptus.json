@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C510-ineptus",
+    "language": "latin",
+    "chapter": 510,
+    "sequence": 27070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a1c1193d6e78140"
+  },
+  "findings": []
+}

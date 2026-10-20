@@ -1,0 +1,683 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 289,
+  "title": "If",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:006b73868afdfc1a",
+  "lessons": [
+    {
+      "id": "LA-C289-si",
+      "sequence": 15700,
+      "title": "sī — if",
+      "headword": "sī, nisi",
+      "romanization": "sī, nisi",
+      "gloss": "if, and if not — the two words that open a condition, and the sīs you have said since your first please",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:570266d48b0cb6b6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Your very first politeness gave you sīs, a squeezed sī vīs, \"if you wish\". And you own nisi, \"unless\"."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Both have the word for \"if\" inside them. Now it stands on its own."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: sī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sī — \"if\". It opens the condition, and the condition usually comes first:"
+            },
+            {
+              "kind": "speech",
+              "text": "Sī vīs, ambulāmus. — If you like, we'll go for a walk. Sī pluit, nōn ambulō. — If it rains, I don't go walking."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "nisi, \"unless, if not\", opens the same slot the other way round:"
+            },
+            {
+              "kind": "speech",
+              "text": "Nisi pluit, ambulō. — Unless it rains, I go walking."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Sī nōn also exists, and it puts the weight on the nōn. Nisi is the everyday way to say \"unless\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: sī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sī is inherited, usually traced to a small Proto-Indo-European word swe (EtymDB 2.1); Lewis & Short derive it from a pronoun stem and record an older spelling, seī. The details are not settled. nisi, as its own lesson said, is ne, \"not\", in front of sī."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sī, then nisi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sī*, then *nisi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Sī vīs, ambulāmus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Sī vīs, ambulāmus.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Sī pluit, nōn ambulō.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Sī pluit, nōn ambulō.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Nisi pluit, ambulō.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Nisi pluit, ambulō.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Sī vīs, iter Rōmam facimus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Sī vīs, iter Rōmam facimus.*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"if\". (Sī.) Say \"unless\". (Nisi.) What is sīs squeezed from? (Sī vīs, if you wish.) And where does the sī clause usually stand? (First.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C289-si-pluit",
+      "sequence": 15710,
+      "title": "sī pluit — a condition that may well be true",
+      "headword": "sī pluit, in vīllā manēmus",
+      "romanization": "sī pluit, in vīllā manēmus",
+      "gloss": "the real condition — sī with an ordinary verb in both halves, in whatever tense the facts need, or a command after it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:69458b38b6fe80bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"if it rains, I don't go walking\". (Sī pluit, nōn ambulō.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That is a real condition: it may well rain, and if it does, the second half follows. Latin keeps both halves plain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: ordinary verbs on both sides",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sī pluit, in vīllā manēmus. — If it rains, we stay in the farmhouse."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Each half has the tense the facts need. A real condition about a past event takes the perfect, as any event does; a past scene would take the imperfect:"
+            },
+            {
+              "kind": "speech",
+              "text": "Sī herī in forō fuistī, amīcum vīdistī. — If you were in the forum yesterday, you saw my friend."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The speaker does not know whether you were there. If you were, the seeing follows. Nothing in the verbs is pretending."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: advice with sī",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The second half can be a command, or the dēbēs of advice:"
+            },
+            {
+              "kind": "speech",
+              "text": "Sī fessus es, quiēsce. — If you are tired, rest. Sī aeger es, quiēscere dēbēs. — If you are ill, you should rest."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Quiēsce is the command of quiēscō: the stem with -e, like ignōsce in ignōsce mihi."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Sī pluit, in vīllā manēmus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Sī pluit, in vīllā manēmus.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Sī herī in forō fuistī, amīcum vīdistī.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Sī herī in forō fuistī, amīcum vīdistī.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Sī fessus es, quiēsce.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Sī fessus es, quiēsce.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Sī aeger es, quiēscere dēbēs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Sī aeger es, quiēscere dēbēs.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a real condition about tomorrow's weather, and what you do if it comes true",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a real condition about tomorrow's weather, and what you do if it comes true]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"if it rains, we stay in the farmhouse\". (Sī pluit, in vīllā manēmus.) Which tense goes after sī for a real past event? (The perfect, like any event.) Say \"if you are tired, rest\". (Sī fessus es, quiēsce.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C289-pendet-ex",
+      "sequence": 15720,
+      "title": "pendet ex — it depends",
+      "headword": "pendet ex",
+      "romanization": "pendet ex",
+      "gloss": "it depends on — literally 'it hangs from'; and in tuā potestāte est, it is up to you",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aa184f0e12b8efc6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You own pendeō, \"to hang\". Say \"if it rains, we stay in the farmhouse\". (Sī pluit, in vīllā manēmus.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Asked whether you will walk tomorrow, the honest answer is often neither yes nor no."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: pendet ex",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pendet ex — \"it depends on\", word for word \"it hangs from\". ex is \"out of, from\", and the thing it hangs from goes in the ablative:"
+            },
+            {
+              "kind": "speech",
+              "text": "Tōtum ex tempestāte pendet. — It all depends on the weather."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Cicero says it of hope: spēs pendet ex fortūnā, hope hangs on fortune (Lewis & Short quote it under pendeo). English \"depend\" is the same picture, dē-pendēre, to hang down from."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: in tuā potestāte est",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "When it depends on the person you are talking to:"
+            },
+            {
+              "kind": "speech",
+              "text": "In tuā potestāte est. — It is up to you; it is in your power."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You own potestās, \"power, the ability to act\"; in tuā potestāte is \"in your power\". Cicero, writing about fate, asks what is in nostrā potestāte, in our power."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pendeō, as its own lesson said, is the intransitive partner of pendō, \"to weigh, to hang up\", usually traced to Proto-Indo-European (s)pend-, \"to stretch, to pull\" (EtymDB 2.1). ex is inherited from Proto-Indo-European h₁eǵʰs, \"out\" (EtymDB 2.1), and English exit begins with it. A thing that pendet ex is held up by something else, and falls if that gives way."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pendet ex",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pendet ex*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Tōtum ex tempestāte pendet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Tōtum ex tempestāte pendet.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Spēs pendet ex fortūnā.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Spēs pendet ex fortūnā.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "In tuā potestāte est.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *In tuā potestāte est.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Sī pluit, in vīllā manēmus. Tōtum ex tempestāte pendet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Sī pluit, in vīllā manēmus. Tōtum ex tempestāte pendet.*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"it all depends on the weather\". (Tōtum ex tempestāte pendet.) Say \"it is up to you\". (In tuā potestāte est.) What does pendet ex say, word for word? (It hangs from.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-R289-if",
+      "sequence": 15730,
+      "title": "Review — if, and what it depends on",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "conditions that may well be true — sī and nisi, plain verbs on both sides, and what it all depends on",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:294a57eeda3bdefe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"if you like, we'll go for a walk\". (Sī vīs, ambulāmus.) Then \"unless it rains\". (Nisi pluit.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three lessons, and the real condition is yours. Sī or nisi first, then the result, and ordinary verbs on both sides: present, perfect, or a command. And when the answer is neither yes nor no: tōtum ex tempestāte pendet, or, handing it back, in tuā potestāte est."
+            },
+            {
+              "kind": "speech",
+              "text": "— Crās iter Rōmam facimus? — Ex tempestāte pendet. Sī pluit, in vīllā manēmus; nisi pluit, iter facimus."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Crās, \"tomorrow\", with a present verb: Latin speech often lets the present stand for a plan."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ex tempestāte pendet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ex tempestāte pendet.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Sī pluit, in vīllā manēmus; nisi pluit, iter facimus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Sī pluit, in vīllā manēmus; nisi pluit, iter facimus.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Sī abhinc trēs annōs Rōmae fuistī, forum vīdistī.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Sī abhinc trēs annōs Rōmae fuistī, forum vīdistī.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "In tuā potestāte est.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *In tuā potestāte est.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a plan of your own for tomorrow, with sī, nisi, and what it depends on",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a plan of your own for tomorrow, with *sī*, *nisi*, and what it depends on]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"it depends on the weather\". (Ex tempestāte pendet.) Say \"it is up to you\". (In tuā potestāte est.) Say \"unless\". (Nisi.) And from the last chapter, say \"better\". (Melior.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C425-silex",
+  "pathSegment": "LA-PATH-425-AGGER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-425-AGGER",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C400-instituo",
+  "pathSegment": "LA-PATH-400-DOCEO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-400-DOCEO",
+      "order": 2
+    }
+  ]
+}

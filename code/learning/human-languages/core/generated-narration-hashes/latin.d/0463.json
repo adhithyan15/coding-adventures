@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 463,
+  "sourceHash": "fnv1a64:f60c0da37dd7314a",
+  "lessonIds": [
+    "LA-C463-holitor",
+    "LA-C463-piscarius",
+    "LA-C463-sporta",
+    "LA-C463-corbis",
+    "LA-C463-canistrum"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch463.txt",
+  "json": "latin/narration/ch463.json",
+  "textHash": "fnv1a64:80d14d49da69d2b5",
+  "jsonHash": "fnv1a64:8bb3bb2959d63df0",
+  "findings": []
+}

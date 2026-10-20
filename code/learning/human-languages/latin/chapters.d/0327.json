@@ -1,0 +1,19 @@
+{
+  "chapter": 327,
+  "title": "Spōnsālia",
+  "label": "ch:la-sponsalia",
+  "canDo": "I can talk about getting engaged and married: the bride-to-be, the betrothal, to promise in marriage, the bride and marriage.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C327-matrimonium",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 327: I can talk about getting engaged and married: the bride-to-be, the betrothal, to promise in marriage, the bride and marriage.",
+    "assesses": [
+      "LA-LEX-C327-SPONSA-03",
+      "LA-LEX-C327-SPONSA-04",
+      "LA-LEX-C327-SPONSA-05"
+    ]
+  }
+}

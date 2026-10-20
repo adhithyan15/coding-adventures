@@ -1,0 +1,11 @@
+{
+  "id": "LA-C448-potor",
+  "pathSegment": "LA-PATH-448-STERTO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-448-STERTO",
+      "order": 3
+    }
+  ]
+}

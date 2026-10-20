@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 543,
+  "sourceHash": "fnv1a64:ee09ce7ed67caab0",
+  "lessonIds": [
+    "LA-C543-cantus",
+    "LA-C543-cantio",
+    "LA-C543-cantilena",
+    "LA-C543-concino",
+    "LA-C543-canorus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch543.txt",
+  "json": "latin/narration/ch543.json",
+  "textHash": "fnv1a64:0c2ececfadbf0191",
+  "jsonHash": "fnv1a64:134a8dc1d88dab32",
+  "findings": []
+}

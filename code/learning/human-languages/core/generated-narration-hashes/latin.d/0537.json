@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 537,
+  "sourceHash": "fnv1a64:d19f2967339b2e8e",
+  "lessonIds": [
+    "LA-C537-iurgium",
+    "LA-C537-reconcilio",
+    "LA-C537-dono",
+    "LA-C537-infidus",
+    "LA-C537-desero"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch537.txt",
+  "json": "latin/narration/ch537.json",
+  "textHash": "fnv1a64:f543b8cdca3ccd49",
+  "jsonHash": "fnv1a64:6d714c6bf763686e",
+  "findings": []
+}

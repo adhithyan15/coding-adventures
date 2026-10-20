@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 369,
+  "title": "Urging and Dissuading",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2c2c4b1e4954b711",
+  "lessons": [
+    {
+      "id": "LA-C369-hortor",
+      "sequence": 19810,
+      "title": "hortor, hortārī — to urge, to encourage",
+      "headword": "hortor, hortārī",
+      "romanization": "hortor, hortārī",
+      "gloss": "to urge, to encourage",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:718088bde9c29ee9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to discuss, then the Latin for to speak out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: hortor, hortārī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hortor, hortārī — \"to urge, to encourage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mīlitēs hortātus est ut fortiter pugnārent. He urged the soldiers to fight bravely."
+            },
+            {
+              "kind": "speech",
+              "text": "Deponent: hortor, hortārī, hortātus sum + accusative and ut (or nē) with the subjunctive. English exhort."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hortor comes from an old verb horior \"to urge on\" (EtymDB; Lewis & Short), traced to a root meaning \"to desire\" that Greek khairō \"to rejoice\" shares. English exhort comes from the compound exhortor."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hortor, hortārī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hortor, hortārī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hortor, hortārī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hortor, hortārī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with hortor, hortārī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *hortor, hortārī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to discuss, then the Latin for to speak out, then say hortor, hortārī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to discuss, then the Latin for to speak out, then say *hortor, hortārī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does hortor, hortārī mean? (\"To urge, to encourage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C369-dissuadeo",
+      "sequence": 19820,
+      "title": "dissuādeō, dissuādēre — to advise against, to dissuade",
+      "headword": "dissuādeō, dissuādēre",
+      "romanization": "dissuādeō, dissuādēre",
+      "gloss": "to advise against, to dissuade",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:40851aca796ff55c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to speak out, then the Latin for to urge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dissuādeō, dissuādēre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dissuādeō, dissuādēre — \"to advise against, to dissuade\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Amīcī mihi hoc iter dissuāsērunt. My friends advised me against this journey."
+            },
+            {
+              "kind": "speech",
+              "text": "dissuādeō, dissuādēre, dissuāsī, dissuāsum, with the dative of the person: the opposite of suādeō. English dissuade."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dissuādeō is built from dis- \"apart, away\" and suādeō \"to advise\" (EtymDB; Lewis & Short). English dissuade comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dissuādeō, dissuādēre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dissuādeō, dissuādēre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dissuādeō, dissuādēre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dissuādeō, dissuādēre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dissuādeō, dissuādēre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dissuādeō, dissuādēre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to speak out, then the Latin for to urge, then say dissuādeō, dissuādēre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to speak out, then the Latin for to urge, then say *dissuādeō, dissuādēre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dissuādeō, dissuādēre mean? (\"To advise against, to dissuade\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C369-persuasio",
+      "sequence": 19830,
+      "title": "persuāsiō, persuāsiōnis — persuasion; a conviction",
+      "headword": "persuāsiō, persuāsiōnis",
+      "romanization": "persuāsiō, persuāsiōnis",
+      "gloss": "persuasion; a conviction",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4329c28a2d4dccb8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to urge, then the Latin for to advise against."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: persuāsiō, persuāsiōnis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "persuāsiō, persuāsiōnis — \"persuasion; a conviction\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Persuāsiōne, nōn vī, vincere mālō. I prefer to win by persuasion, not by force."
+            },
+            {
+              "kind": "speech",
+              "text": "persuāsiō, persuāsiōnis f., the noun of persuādeō. English persuasion."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "persuāsiō is the noun built on persuādeō \"to persuade\" (EtymDB; Lewis & Short), itself per- \"thoroughly\" with suādeō \"to advise\". English persuasion comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "persuāsiō, persuāsiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *persuāsiō, persuāsiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "persuāsiō, persuāsiōnis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *persuāsiō, persuāsiōnis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with persuāsiō, persuāsiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *persuāsiō, persuāsiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to urge, then the Latin for to advise against, then say persuāsiō, persuāsiōnis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to urge, then the Latin for to advise against, then say *persuāsiō, persuāsiōnis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does persuāsiō, persuāsiōnis mean? (\"Persuasion; a conviction\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C369-excuso",
+      "sequence": 19840,
+      "title": "excūsō, excūsāre — to excuse; to plead as an excuse",
+      "headword": "excūsō, excūsāre",
+      "romanization": "excūsō, excūsāre",
+      "gloss": "to excuse; to plead as an excuse",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b306e623123009d5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to advise against, then the Latin for persuasion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: excūsō, excūsāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "excūsō, excūsāre — \"to excuse; to plead as an excuse\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Morbum excūsāvit. He pleaded illness as his excuse."
+            },
+            {
+              "kind": "speech",
+              "text": "excūsō, excūsāre, excūsāvī, excūsātum. Sē excūsāre, to excuse oneself. Built on causa: out of the case. English excuse."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "excūsō is built from ex \"out of\" and causa \"a case, a charge\" (EtymDB; Lewis & Short): to take someone out of the charge. English excuse comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "excūsō, excūsāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *excūsō, excūsāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "excūsō, excūsāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *excūsō, excūsāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with excūsō, excūsāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *excūsō, excūsāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to advise against, then the Latin for persuasion, then say excūsō, excūsāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to advise against, then the Latin for persuasion, then say *excūsō, excūsāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does excūsō, excūsāre mean? (\"To excuse; to plead as an excuse\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C369-excusatio",
+      "sequence": 19850,
+      "title": "excūsātiō, excūsātiōnis — an excuse, a plea",
+      "headword": "excūsātiō, excūsātiōnis",
+      "romanization": "excūsātiō, excūsātiōnis",
+      "gloss": "an excuse, a plea",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:abd9f04fe4dc8c32",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for persuasion, then the Latin for to excuse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: excūsātiō, excūsātiōnis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "excūsātiō, excūsātiōnis — \"an excuse, a plea\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Haec excūsātiō nōn accipitur. This excuse is not accepted."
+            },
+            {
+              "kind": "speech",
+              "text": "excūsātiō, excūsātiōnis f., the noun of excūsō."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "excūsātiō is the noun built on excūsō \"to excuse\" (EtymDB; Lewis & Short), from ex and causa."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "excūsātiō, excūsātiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *excūsātiō, excūsātiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "excūsātiō, excūsātiōnis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *excūsātiō, excūsātiōnis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with excūsātiō, excūsātiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *excūsātiō, excūsātiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for persuasion, then the Latin for to excuse, then say excūsātiō, excūsātiōnis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for persuasion, then the Latin for to excuse, then say *excūsātiō, excūsātiōnis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does excūsātiō, excūsātiōnis mean? (\"An excuse, a plea\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
