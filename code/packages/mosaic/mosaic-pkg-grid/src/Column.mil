@@ -14,9 +14,9 @@
 // declaration-only components.
 
 component Column {
-  slot key               : text ;
+  slot column-key        : text ;
   slot header            : text ;
-  slot width             : number ;
+  slot column-width      : number ;
   slot editable          : bool ;
   slot cell-type         : text ;
   slot default-alignment : text ;
