@@ -1091,6 +1091,134 @@ corpus.
   their line exist, and are then deleted. They are never selectable through
   the release API.
 
+### Python phase 7a: `py-int-print` on every backend
+
+Phase 7a is the first Python slice on the release path. It is a new subset,
+`py-int-print`, beside LANG79's float pilot (`py-float-print`), which keeps its
+own API and its legacy minor-line grammar until LANG83's float formatting
+lands (7b/7c).
+
+**The subset.** A module of `print` statements over integer arithmetic:
+
+```python
+print(1 + 2 * 3)          # 7
+print(-7 // 2, )          # -4   (floor division; trailing comma allowed)
+print(-7 % 2); print()    # 1, then an empty line
+print(1_000 * (2 - 5))    # -3000 (`_` separators where the release lexes them)
+```
+
+- Statements: `print(<expr>)` with exactly one positional argument (an
+  optional trailing comma), or `print()`. Statements are separated by
+  NEWLINE or `;` (a trailing `;` is allowed). Blank lines, `#` comments, a
+  `\`-newline continuation, and newlines inside parentheses are trivia, as
+  CPython's tokenizer makes them.
+- Expressions: decimal integer literals, parentheses, unary `+` and `-`, and
+  binary `+ - * // %` at Python's precedence (`* // %` above `+ -`, unary
+  above both), all left-associative.
+- Everything else is a typed error: a lexer error for tokens the release's
+  partial `.tokens` does not lex (strings, floats, hex/octal/binary
+  literals), a parse error for shapes its `.grammar` does not admit, and
+  `Unsupported` for shapes it parses but the subset excludes (`/`, which gives
+  a float, a callee other than `print`, keyword or multiple arguments,
+  `print(...)` used as a value, and literals outside `i64`).
+
+**Semantics and lowering.** Every value is an `i64`; the compiler emits only
+LANG83 registry ops plus the ungated `const` and `ret`:
+
+| Python | IIR |
+| --- | --- |
+| literal | `const` (a literal outside `i64` is `Unsupported`) |
+| `a + b`, `a - b`, `a * b` | `i64_add_ovf`, `i64_sub_ovf`, `i64_mul_ovf` |
+| `-a` | `i64_neg_ovf` |
+| `+a` | no instruction (`int.__pos__` is the identity) |
+| `a // b`, `a % b` | `i64_div_floor`, `i64_mod_floor` |
+| `a // -1`, `a % -1` (divisor known to be `-1`) | `i64_neg_ovf a`, `const 0` |
+| `print(a)` | `call_builtin print_i64 a` |
+| `print()` | `call_builtin putchar 10` |
+| end of module | `const 0`, `ret` (`main` returns `i64`) |
+
+- Python integers are unbounded; this subset's are not. Where CPython would
+  produce an `int` outside `[-2^63, 2^63-1]`, the program stops with
+  `Trap.Overflow` after the output so far, never a wrapped value. This is a
+  stated divergence from CPython. Promoting to a bignum on that trap is
+  later work (LANG83 PR4: "bignum promotion is a frontend decision made by
+  catching it, once traps are catchable").
+- A zero divisor stops the program with `Trap.DivZero` after the output so
+  far, as CPython's `ZeroDivisionError` does.
+- The divisor `-1` is folded. `a // -1 == -a` and `a % -1 == 0` hold for
+  every integer, so the compiler emits those forms when it knows the divisor
+  is `-1`. That keeps `i64::MIN // -1` and `i64::MIN % -1`, the two operands
+  a machine divide faults on, away from every backend's divide: the first
+  becomes `i64_neg_ovf i64::MIN`, which traps `Trap.Overflow` (CPython's
+  answer, 2^63, is outside `i64`); the second becomes `0`, CPython's answer.
+- Python evaluates a call's argument before `print` writes, so a trap inside
+  the argument prints nothing for that statement.
+
+**Releases.** `py-int-print` needs `print` as a function and `//`, so it
+starts at Python 3; the first Python 3 tag is 3.0a1. Phase 7a writes a
+materialized `python<release>.tokens`/`.grammar` pair for:
+
+| Release | Why | Oracle |
+| --- | --- | --- |
+| 3.0a1 | earliest tag with a Python 3 grammar | pinned historical source: `Grammar/Grammar`, `Parser/tokenizer.c`, `Objects/longobject.c`, `Python/bltinmodule.c` at the tag |
+| 3.11.17 | host `python3.11` | host interpreter, plus pinned source |
+| 3.12.3 | host `python3.12` | host interpreter, plus pinned source |
+| 3.13.16 | host `python3` and `DEFAULT_RELEASE` | host interpreter, plus pinned source |
+| 3.16.0a1 | newest inventory row | pinned historical source |
+
+`3.0` and `2.7` cannot have release pairs yet: their file names would be
+`python3.0.*` and `python2.7.*`, which are the legacy minor-line pairs. Python
+2 needs a `print` statement shape and a profile, so it is a later slice.
+
+Every pair is `partial`, stage `P`, `grammar_subset` `py-int-print`. The token
+file of each lexes the subset's neighbourhood: the release's operators,
+keywords (`Lib/keyword.py` at the tag), names, and decimal integers. It does
+not lex strings, floats, imaginary numbers or non-decimal integers. The
+grammar files keep `python3.12.grammar`'s rule names for the rules the subset
+uses (`file`, `statement`, `simple_stmt`, `small_stmt`, `expression`, `arith`,
+`term`, `factor`, `primary`, `suffix`, `arguments`, `argument`, `atom`,
+`paren_expr`, `paren_body`), so C8 can check them. They omit precedence levels
+that the subset never reaches, so each parenthesis costs 8 rule levels
+instead of about 18, and later subsets add those levels by name. The one known
+lexical difference inside the subset is PEP 515's `_` digit separator (3.6):
+3.0a1 lexes `1_000` as an error, as CPython 3.0a1 rejects it.
+
+All five rows name profile `py3` and claim `iir_status` `py-int-print`.
+`backend_status` is claimed for 3.13.16, the release the matrix rows compile.
+
+**Crates.**
+
+- `grammar-tools` compiles `python` as a release family. The legacy
+  minor-line pairs are still embedded, behind a separate `legacy_versions`
+  module that the release selector cannot reach.
+- `python-lexer` exposes `releases::{token_grammar, grammar_class,
+  SUPPORTED_RELEASES}`. `python-parser` gains the release API:
+  `parse_python_at`, `tokenize_python_at`, `resolve_release`,
+  `FrontendBudgets`, `PythonFrontendError`, and `DEFAULT_RELEASE = "3.13.16"`.
+  The legacy `tokenize_python`/`parse_python(source, "3.12")` API is
+  unchanged.
+- `python-iir-compiler` gains `compile_source_at(source, release,
+  module_name, &FrontendBudgets)`, `compile_cst`, `profiles.rs`, and
+  `run_source_at`. These compile `py-int-print`. LANG84 asks the existing
+  `compile_source` to delegate to `compile_source_at`. Here it cannot,
+  because `compile_source` is LANG79's float pilot. It keeps its signature,
+  its behaviour and its legacy 3.12 grammar until the float subset moves to
+  release pairs.
+- `lang-aot`: `Language::Python` (`python` or `py`, `.py` files) compiles
+  through `compile_source_at(.., None, ..)`. `lang_matrix` gets `py-int-print`
+  rows on all eight executable columns, `StdoutThenTrap` rows for
+  `Trap.DivZero` and `Trap.Overflow`, and an oracle test against host
+  `python3` 3.13.
+
+**Corpus and oracles.** `code/grammars/python/corpus/py-int-print`: each case
+is `<name>.py` with either `<name>.expect` or `<name>.reject`, plus a
+`<name>.cite`. `<name>.reject@<release>` names a release where an otherwise
+accepted case must be refused, with its category. That is how
+`int_underscores` records that 3.0a1 refuses it. For an `Overflow` case the
+`.expect` comes from the subset definition, not from CPython; the oracle test
+checks instead that host CPython prints the expected prefix and then an
+integer outside `i64`.
+
 ### Wire every IIR frontend into lang-aot
 
 Add `Language` variants with release support for Python, JavaScript, Ruby and
