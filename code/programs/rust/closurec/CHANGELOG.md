@@ -68,6 +68,10 @@ CLOC43.
   the count pin moves from 59 to 58, and SIMPLE parity is now 35/57.
 - The `simple-inline-variables` golden pinned our old output, which upstream
   never produced. It was re-captured from the jar.
+- Fixed (security review): a function, arrow, class-expression or catch
+  binding that shadows a top-level `const` no longer receives its value.
+  `tests/regression_expression_shadow.rs` runs six such programs under node
+  at both levels.
 
 ### Fixed - native Windows CI execution gate (CV02)
 

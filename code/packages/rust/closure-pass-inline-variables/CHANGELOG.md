@@ -18,8 +18,26 @@ or the test of a statement `?:`. So `const T=!0;T&&f()` still becomes
 
 `closed_world()` (ADVANCED) is unchanged.
 
+### Fixed — a shadow inside an expression blocks propagation (CCR-078 review)
+
+The shadow guard counted declarations at statement level only. So a binding
+inside a function or arrow expression, a method, a class expression or a
+catch clause was invisible to it. The rewrite then planted the const's value
+into references to that *shadowing* binding, at both levels. That was a
+miscompile:
+
+```js
+const T = true;
+(function (T) { if (T) a(); else b(); })(false);   // ran a() instead of b()
+```
+
+`count_binding_sites` now also counts binding sites over the serialized AST.
+A candidate must be bound exactly once in the whole program.
+
 Tests:
-- Three new unit tests.
+- `expression_scoped_shadows_block_propagation` covers 10 shapes in both
+  worlds.
+- Three new unit tests for the SIMPLE change.
 - The upstream-ported suite now runs closed-world, since upstream's
   `InlineVariablesTest` inlines globals.
 - Its `let`/`var` case now checks a *reassigned* binding.

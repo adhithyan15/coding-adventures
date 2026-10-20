@@ -347,6 +347,15 @@ fn inline_variables_program(
     // this `const`.
     let mut decl_counts: HashMap<String, usize> = HashMap::new();
     count_decl_names_program(program, &mut decl_counts, nodes_touched);
+    // The typed walk above sees declarations at statement level only; it
+    // does not descend into expressions. So a parameter or local of a
+    // function expression, arrow, method or class expression, a named
+    // function/class expression, or a catch parameter inside one could
+    // shadow a candidate unseen, and the rewrite would then reach a
+    // reference to the *shadowing* binding. Count binding sites over the
+    // serialized AST as well, which sees every one (see
+    // `count_binding_sites`).
+    let program_json = serde_json::to_value(&*program).unwrap_or(serde_json::Value::Null);
 
     // Phase 2 — collect candidates from top-level `const` declarators
     // whose initializer is a literal and whose name is declared once.
@@ -374,6 +383,9 @@ fn inline_variables_program(
         let BindingTarget::Identifier(id) = &d.id;
         if decl_counts.get(&id.name).copied().unwrap_or(0) != 1 {
             continue; // shadowed somewhere — can't resolve uses by name
+        }
+        if count_binding_sites(&program_json, &id.name) != 1 {
+            continue; // shadowed inside an expression (function, arrow, class, catch)
         }
         let init = match &d.init {
             Some(i) => i,
@@ -449,7 +461,7 @@ fn inline_variables_program(
     // `with` outright (`JSC_USE_OF_WITH`) — but closurec compiles it, so
     // the exposure is ours and the guard has to be ours too. This covers
     // the `const` path as well, where the same hole predates CLOC29.
-    if program_contains_with(&serde_json::to_value(&*program).unwrap_or(serde_json::Value::Null)) {
+    if program_contains_with(&program_json) {
         return false;
     }
     // Serialized ONCE for every strong-proof candidate, not once per
@@ -1308,6 +1320,56 @@ fn program_contains_with(v: &serde_json::Value) -> bool {
 /// nobody remembered to visit must fail *closed*, and here that means any
 /// node whose type is one of the write forms disqualifies the name if the
 /// name appears anywhere beneath the written side.
+/// How many places in the serialized program bind `name`?
+///
+/// The binding forms, in the AST's serde shape:
+///
+/// | form                                        | shape                          |
+/// |---------------------------------------------|--------------------------------|
+/// | `var`/`let`/`const`, function/class name    | `"id": {"name": N}`            |
+/// | parameter (plain, default, rest)            | `"params": [{"name": N} \| {"left": {"name": N}} \| {"argument": {"name": N}}]` |
+/// | catch parameter                             | `"param": {"name": N}`         |
+///
+/// It reaches every depth, including function and arrow expressions, methods
+/// and class expressions, which the typed `count_decl_names_*` walk skips.
+/// Over-counting is safe, since it can only decline a candidate. Labels live
+/// in their own namespace and are not counted.
+///
+/// ```js
+/// const T = true;
+/// (function (T) { if (T) a(); else b(); })(false);   // 2 sites: keep T
+/// ```
+fn count_binding_sites(v: &serde_json::Value, name: &str) -> usize {
+    let named = |b: Option<&serde_json::Value>| {
+        b.and_then(|b| b.get("name"))
+            .and_then(serde_json::Value::as_str)
+            == Some(name)
+    };
+    match v {
+        serde_json::Value::Object(map) => {
+            let mut n = 0;
+            if named(map.get("id")) {
+                n += 1;
+            }
+            if named(map.get("param")) {
+                n += 1;
+            }
+            if let Some(serde_json::Value::Array(params)) = map.get("params") {
+                for p in params {
+                    if named(Some(p)) || named(p.get("left")) || named(p.get("argument")) {
+                        n += 1;
+                    }
+                }
+            }
+            n + map.values().map(|child| count_binding_sites(child, name)).sum::<usize>()
+        }
+        serde_json::Value::Array(items) => {
+            items.iter().map(|child| count_binding_sites(child, name)).sum()
+        }
+        _ => 0,
+    }
+}
+
 fn has_write_occurrence(v: &serde_json::Value, name: &str) -> bool {
     match v {
         serde_json::Value::Object(map) => {
@@ -2646,6 +2708,38 @@ mod tests {
             ("const N = null; N ?? a();", "const N=null;N??a();"),
         ] {
             assert_eq!(propagate_source_open_world(src), unchanged, "{src}");
+        }
+    }
+
+    /// A binding inside a function expression, arrow, method, class
+    /// expression or catch clause shadows the top-level `const`; the typed
+    /// declaration count never saw these, so the rewrite reached the
+    /// shadowing binding's references (security review of CCR-078). Every
+    /// shape must now leave the program alone, in both worlds.
+    #[test]
+    fn expression_scoped_shadows_block_propagation() {
+        for src in [
+            "const T = true; (function (T) { if (T) a(); else b(); })(!1);",
+            "const T = true; (function () { var T = !1; if (T) a(); })();",
+            "const T = true; [0].forEach((T) => { T && a(); });",
+            "const T = true; [0].forEach((...T) => { T && a(); });",
+            "const T = true; [0].forEach((T = 0) => { T && a(); });",
+            "const T = true; var f = function T() { return typeof T; };",
+            "const T = true; var C = class T { m() { return typeof T; } };",
+            "const T = true; var o = { m: function (T) { if (T) a(); } };",
+            "const T = true; class K { m(T) { if (T) a(); } }",
+            "const T = true; [1].forEach(function () { try { x(); } catch (T) { if (T) a(); } });",
+        ] {
+            let open = propagate_source_open_world(src);
+            let closed = propagate_source(src);
+            for (world, out) in [("open", &open), ("closed", &closed)] {
+                assert!(
+                    !out.contains("if(!0)") && !out.contains("!0&&") && !out.contains("\"boolean\""),
+                    "{world} world rewrote a shadowed `T`: {src} -> {out}"
+                );
+            }
+            // Nothing changed at all: the only candidate was declined.
+            assert_eq!(open, closed, "{src}");
         }
     }
 

@@ -66,6 +66,20 @@ The TDZ guard (`prefix_is_inert`) and the single-declaration shadow guard
 still apply. The multi-use size budget doesn't, because nothing is duplicated
 into ordinary uses.
 
+## Shadowing guard
+
+A candidate must be bound exactly once in the whole program. The typed
+`count_decl_names_*` walk sees only statement-level declarations. Since this
+change, `count_binding_sites` also scans the serialized AST, so it counts the
+bindings that walk missed:
+
+- parameters and locals of function expressions, arrows and methods;
+- the names of named function and class expressions;
+- catch parameters.
+
+Before, such a shadow received the const's value at both levels. For example,
+`const T=true;(function(T){if(T)a();else b()})(false)` ran `a()`.
+
 ## Remaining gaps, deliberately out of scope
 
 - **Rule 1's flip side.** closurec doesn't propagate *locals* at SIMPLE
