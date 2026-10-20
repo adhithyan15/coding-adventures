@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-434-ZHALOBA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "RU-EXT-434-ZHALOBA"
+  ],
+  "after": []
+}

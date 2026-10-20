@@ -1,0 +1,11 @@
+{
+  "id": "RU-C284-kommentirovat",
+  "pathSegment": "RU-PATH-284-INTERVYU",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-284-INTERVYU",
+      "order": 3
+    }
+  ]
+}

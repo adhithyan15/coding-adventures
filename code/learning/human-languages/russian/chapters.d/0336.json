@@ -1,0 +1,19 @@
+{
+  "chapter": 336,
+  "title": "Serving up",
+  "label": "ch:ru-serving-up",
+  "canDo": "I can say what I added, laid out and took out, and describe food as boiled or fried.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-R336-review-final-336",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 336: I can say what I added, laid out and took out, and describe food as boiled or fried.",
+    "assesses": [
+      "RU-LEX-C336-GOTOVO-03",
+      "RU-LEX-C336-GOTOVO-04",
+      "RU-LEX-C336-GOTOVO-05"
+    ]
+  }
+}

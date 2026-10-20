@@ -1,0 +1,11 @@
+{
+  "id": "RU-C384-zauchivat",
+  "pathSegment": "RU-PATH-384-UCHYOBA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-384-UCHYOBA",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C487-zarazhatsya",
+  "pathSegment": "RU-PATH-487-RASH",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-487-RASH",
+      "order": 4
+    }
+  ]
+}

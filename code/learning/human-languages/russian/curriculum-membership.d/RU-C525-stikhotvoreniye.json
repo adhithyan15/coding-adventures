@@ -1,0 +1,11 @@
+{
+  "id": "RU-C525-stikhotvoreniye",
+  "pathSegment": "RU-PATH-525-POETRY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-525-POETRY",
+      "order": 1
+    }
+  ]
+}

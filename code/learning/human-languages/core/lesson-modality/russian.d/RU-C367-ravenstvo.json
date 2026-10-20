@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C367-ravenstvo",
+    "language": "russian",
+    "chapter": 367,
+    "sequence": 21340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:454da047982f76e1"
+  },
+  "findings": []
+}

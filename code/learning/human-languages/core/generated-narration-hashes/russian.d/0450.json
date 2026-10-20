@@ -1,0 +1,20 @@
+{
+  "language": "russian",
+  "chapter": 450,
+  "sourceHash": "fnv1a64:2714ed835f50375d",
+  "lessonIds": [
+    "RU-C450-spravka",
+    "RU-C450-blank",
+    "RU-C450-ochered",
+    "RU-C450-oformlyat",
+    "RU-C450-zaveryat",
+    "RU-R450-review-443-450"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "russian/narration/ch450.txt",
+  "json": "russian/narration/ch450.json",
+  "textHash": "fnv1a64:7786d5fd8185275d",
+  "jsonHash": "fnv1a64:27da7c1374bdc57c",
+  "findings": []
+}

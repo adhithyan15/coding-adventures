@@ -1,0 +1,878 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 534,
+  "title": "Mornings at Home",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:674bb26b8e6f47ba",
+  "lessons": [
+    {
+      "id": "RU-C534-budit",
+      "sequence": 29930,
+      "title": "будить (budít) — to wake (someone)",
+      "headword": "будить",
+      "romanization": "budít",
+      "gloss": "to wake (someone)",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:27ba7a908d53de31",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to burn out, then the Russian for insulating tape."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: будить",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "будить (budít) — \"to wake (someone)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Каждое утро мама будит меня в семь. Kázhdoye útro máma búdit menyá v sem. Every morning Mum wakes me at seven."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; present бужу, будишь (д becomes ж). Perfective разбудить."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "будить (budít) is inherited from Proto-Slavic buditi 'to awaken', which EtymDB traces to PIE bʰewdʰ- 'to awaken'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "budít",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *budít*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "budít, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *budít*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with budít",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *budít*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to burn out, then the Russian for insulating tape, then say budít again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to burn out, then the Russian for insulating tape, then say *budít* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does будить (budít) mean? (\"To wake (someone)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C534-vysypatsya",
+      "sequence": 29940,
+      "title": "высыпаться (vysypátsya) — to get enough sleep",
+      "headword": "высыпаться",
+      "romanization": "vysypátsya",
+      "gloss": "to get enough sleep",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f41dba9f2c358c1e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for insulating tape, then the Russian for to wake."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: высыпаться",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "высыпаться (vysypátsya) — \"to get enough sleep\"."
+            },
+            {
+              "kind": "speech",
+              "text": "В выходные я наконец высыпаюсь. V vykhodnýye ya nakonéts vysypáyus. At the weekend I finally get enough sleep."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; perfective выспаться (высплюсь), with the stress on вы-."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "высыпаться (vysypátsya) is built on вы- and the root of спать 'to sleep', with -ся; EtymDB has no entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vysypátsya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vysypátsya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vysypátsya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vysypátsya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with vysypátsya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *vysypátsya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for insulating tape, then the Russian for to wake, then say vysypátsya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for insulating tape, then the Russian for to wake, then say *vysypátsya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does высыпаться (vysypátsya) mean? (\"To get enough sleep\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C534-prichyosyvatsya",
+      "sequence": 29950,
+      "title": "причёсываться (prichyósyvatsya) — to do one's hair",
+      "headword": "причёсываться",
+      "romanization": "prichyósyvatsya",
+      "gloss": "to do one's hair",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:93a0e276348b6455",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to wake, then the Russian for to get enough sleep."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: причёсываться",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "причёсываться (prichyósyvatsya) — \"to do one's hair\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Сестра долго причёсывается перед зеркалом. Sestrá dólgo prichyósyvayetsya péred zérkalom. My sister spends a long time doing her hair in front of the mirror."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; perfective причесаться (причешусь)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "причёсываться (prichyósyvatsya) is built on при- and чесать 'to comb', which is inherited from Proto-Slavic česati (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prichyósyvatsya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prichyósyvatsya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prichyósyvatsya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prichyósyvatsya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with prichyósyvatsya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *prichyósyvatsya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to wake, then the Russian for to get enough sleep, then say prichyósyvatsya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to wake, then the Russian for to get enough sleep, then say *prichyósyvatsya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does причёсываться (prichyósyvatsya) mean? (\"To do one's hair\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C534-krasitsya",
+      "sequence": 29960,
+      "title": "краситься (krásitsya) — to put on make-up",
+      "headword": "краситься",
+      "romanization": "krásitsya",
+      "gloss": "to put on make-up",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:14732e5e7badb4fe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to get enough sleep, then the Russian for to do one's hair."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: краситься",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "краситься (krásitsya) — \"to put on make-up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Она не красится, когда сидит дома. Oná ne krásitsya, kogdá sidít dóma. She doesn't wear make-up when she's at home."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; perfective накраситься. Also to dye one's hair. The reflexive of красить — to paint."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "краситься (krásitsya) is the reflexive of красить 'to paint', built on краска 'paint', from the root of краса 'beauty'; EtymDB has no entry for the reflexive."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "krásitsya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *krásitsya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "krásitsya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *krásitsya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with krásitsya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *krásitsya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to get enough sleep, then the Russian for to do one's hair, then say krásitsya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to get enough sleep, then the Russian for to do one's hair, then say *krásitsya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does краситься (krásitsya) mean? (\"To put on make-up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C534-khalat",
+      "sequence": 29970,
+      "title": "халат (khalát) — a dressing gown; a white coat",
+      "headword": "халат",
+      "romanization": "khalát",
+      "gloss": "a dressing gown; a white coat",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:671df7267fd233bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to do one's hair, then the Russian for to put on make-up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: халат",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "халат (khalát) — \"a dressing gown; a white coat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Утром папа пьёт кофе в халате. Útrom pápa pyot kófe v khaláte. In the morning Dad drinks his coffee in his dressing gown."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine. Also a doctor's or a cook's white coat."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "EtymDB lists халат (khalát), glossed 'dressing gown; robe', without a source; it is usually traced through a Turkic language to Arabic xilʿa 'a robe of honour'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khalát",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khalát*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khalát, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khalát*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with khalát",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *khalát*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to do one's hair, then the Russian for to put on make-up, then say khalát again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to do one's hair, then the Russian for to put on make-up, then say *khalát* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does халат (khalát) mean? (\"A dressing gown; a white coat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-R534-review-533-534",
+      "sequence": 29980,
+      "title": "Leisure, the arts and home — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 533-534",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:34a92356b46dab75",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Russian for a screw and pliers."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a screw, pliers, to unscrew, to burn out, insulating tape",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a screw, pliers, to unscrew, to burn out, insulating tape]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to wake, to get enough sleep, to do one's hair, to put on make-up, a dressing gown",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to wake, to get enough sleep, to do one's hair, to put on make-up, a dressing gown]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A screw? (шуруп.) Pliers? (плоскогубцы.) To unscrew? (откручивать.) To burn out? (перегорать.) Insulating tape? (изолента.) To wake? (будить (budít).) To get enough sleep? (высыпаться (vysypátsya).) To do one's hair? (причёсываться (prichyósyvatsya).) To put on make-up? (краситься (krásitsya).) A dressing gown? (халат (khalát).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-R534-review-final-534",
+      "sequence": 29990,
+      "title": "Mornings at Home — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over chapter 534",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:124d0b823eaf80d2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Russian for to wake and to get enough sleep."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to wake, to get enough sleep, to do one's hair, to put on make-up, a dressing gown",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to wake, to get enough sleep, to do one's hair, to put on make-up, a dressing gown]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To wake? (будить (budít).) To get enough sleep? (высыпаться (vysypátsya).) To do one's hair? (причёсываться (prichyósyvatsya).) To put on make-up? (краситься (krásitsya).) A dressing gown? (халат (khalát).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

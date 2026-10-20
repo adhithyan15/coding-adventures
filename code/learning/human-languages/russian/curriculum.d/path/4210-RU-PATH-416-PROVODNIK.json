@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-416-PROVODNIK",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "RU-EXT-416-PROVODNIK"
+  ],
+  "after": []
+}

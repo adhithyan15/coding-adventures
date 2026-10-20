@@ -1,0 +1,14 @@
+{
+  "language": "russian",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:8b965c7c53486d5c",
+  "lessonIds": [
+    "RU-C500-vyazat",
+    "RU-C500-spitsy",
+    "RU-C500-klubok",
+    "RU-C500-vyshivat",
+    "RU-C500-kruzhevo",
+    "RU-R500-review-493-500"
+  ],
+  "tex": "russian/book/chapters/ch500-knitting-and-embroidery.tex"
+}

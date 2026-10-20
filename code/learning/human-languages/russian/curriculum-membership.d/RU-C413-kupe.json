@@ -1,0 +1,11 @@
+{
+  "id": "RU-C413-kupe",
+  "pathSegment": "RU-PATH-413-PROYEZD",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-413-PROYEZD",
+      "order": 2
+    }
+  ]
+}

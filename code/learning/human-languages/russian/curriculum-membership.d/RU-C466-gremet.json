@@ -1,0 +1,11 @@
+{
+  "id": "RU-C466-gremet",
+  "pathSegment": "RU-PATH-466-BURYA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-466-BURYA",
+      "order": 3
+    }
+  ]
+}

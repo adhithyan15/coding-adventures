@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 404,
+  "title": "Under the bonnet",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b97e5fa01107063b",
+  "lessons": [
+    {
+      "id": "RU-C404-kapot",
+      "sequence": 23250,
+      "title": "капот (kapót) — a bonnet (of a car); a hood",
+      "headword": "капот",
+      "romanization": "kapót",
+      "gloss": "a bonnet (of a car); a hood",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6ed7215452f31b1a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to speed up, then the Russian for to sound the horn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: капот",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "капот (kapót) — \"a bonnet (of a car); a hood\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Водитель вышел и открыл капот. Vodítel výshel i otkrýl kapót. The driver got out and opened the bonnet."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine. In American English, the hood."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "капот (kapót) was borrowed from French capote, a hooded cloak (EtymDB): the engine wears a hood. EtymDB traces capote back to Latin caput 'head'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kapót",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kapót*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kapót, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kapót*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with kapót",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *kapót*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to speed up, then the Russian for to sound the horn, then say kapót again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to speed up, then the Russian for to sound the horn, then say *kapót* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does капот (kapót) mean? (\"A bonnet (of a car); a hood\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C404-dvigatel",
+      "sequence": 23260,
+      "title": "двигатель (dvígatel) — an engine, a motor",
+      "headword": "двигатель",
+      "romanization": "dvígatel",
+      "gloss": "an engine, a motor",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c4f24747199f1d36",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to sound the horn, then the Russian for a bonnet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: двигатель",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "двигатель (dvígatel) — \"an engine, a motor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "У новой машины тихий двигатель. U nóvoy mashíny tíkhiy dvígatel. The new car has a quiet engine."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine, though it ends in -ь: мой двигатель (dvígatel)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "двигатель (dvígatel) is built on двигать 'to move' with the ending -тель, 'the thing that does it'. Двигать is inherited from Proto-Slavic dvigati 'to lift, to move' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dvígatel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dvígatel*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dvígatel, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dvígatel*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dvígatel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dvígatel*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to sound the horn, then the Russian for a bonnet, then say dvígatel again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to sound the horn, then the Russian for a bonnet, then say *dvígatel* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does двигатель (dvígatel) mean? (\"An engine, a motor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C404-akkumulyator",
+      "sequence": 23270,
+      "title": "аккумулятор (akkumulyátor) — a car battery; a rechargeable battery",
+      "headword": "аккумулятор",
+      "romanization": "akkumulyátor",
+      "gloss": "a car battery; a rechargeable battery",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eab20e61c4d89186",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a bonnet, then the Russian for an engine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: аккумулятор",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "аккумулятор (akkumulyátor) — \"a car battery; a rechargeable battery\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ночью был сильный холод, и аккумулятор сел. Nóchyu byl sílnyy khólod, i akkumulyátor sel. It was very cold in the night, and the battery went flat."
+            },
+            {
+              "kind": "speech",
+              "text": "Аккумулятор сел — the battery is flat. Small batteries for a remote are батарейки."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "аккумулятор (akkumulyátor) is usually traced to Latin accumulātor 'one who heaps up', from accumulāre 'to pile up' (EtymDB lists the Latin words): a battery stores up charge. EtymDB does not list the Russian word, and the route into Russian, probably through German, is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akkumulyátor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akkumulyátor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akkumulyátor, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akkumulyátor*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with akkumulyátor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *akkumulyátor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a bonnet, then the Russian for an engine, then say akkumulyátor again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a bonnet, then the Russian for an engine, then say *akkumulyátor* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does аккумулятор (akkumulyátor) mean? (\"A car battery; a rechargeable battery\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C404-zavodit",
+      "sequence": 23280,
+      "title": "заводить (zavodít) — to start (an engine); to wind up (a clock)",
+      "headword": "заводить",
+      "romanization": "zavodít",
+      "gloss": "to start (an engine); to wind up (a clock)",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ee8b75cc8a4a9e49",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for an engine, then the Russian for a car battery."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: заводить",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "заводить (zavodít) — \"to start (an engine); to wind up (a clock)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Каждое утро сосед заводит машину в семь часов. Kázhdoye útro soséd zavódit mashínu v sem chasóv. Every morning the neighbour starts his car at seven."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; the perfective is завести (заведу, заведёшь). Present завожу, заводишь. Машина не заводится — the car will not start."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "заводить (zavodít) is built from за- and водить 'to lead'. Водить is inherited from Proto-Slavic voditi 'to lead' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zavodít",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zavodít*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zavodít, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zavodít*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with zavodít",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *zavodít*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for an engine, then the Russian for a car battery, then say zavodít again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for an engine, then the Russian for a car battery, then say *zavodít* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does заводить (zavodít) mean? (\"To start (an engine); to wind up (a clock)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C404-glokhnut",
+      "sequence": 23290,
+      "title": "глохнуть (glókhnut) — to stall (of an engine); to go deaf",
+      "headword": "глохнуть",
+      "romanization": "glókhnut",
+      "gloss": "to stall (of an engine); to go deaf",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b142a161f4fdeb31",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a car battery, then the Russian for to start."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: глохнуть",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "глохнуть (glókhnut) — \"to stall (of an engine); to go deaf\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Старый мотор часто глохнет на светофоре. Stáryy motór chásto glókhnet na svetofóre. The old engine often stalls at the traffic lights."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; perfective заглохнуть. Past глох, глохла: the -ну- drops out."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "глохнуть (glókhnut) is inherited from Proto-Slavic glŭxnǫti (EtymDB), the verb that goes with глухой 'deaf': an engine that stalls goes silent."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "glókhnut",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *glókhnut*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "glókhnut, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *glókhnut*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with glókhnut",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *glókhnut*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a car battery, then the Russian for to start, then say glókhnut again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a car battery, then the Russian for to start, then say *glókhnut* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does глохнуть (glókhnut) mean? (\"To stall (of an engine); to go deaf\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

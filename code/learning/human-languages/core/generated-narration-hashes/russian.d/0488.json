@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 488,
+  "sourceHash": "fnv1a64:c09d9d442f0dd8d4",
+  "lessonIds": [
+    "RU-C488-bessonnitsa",
+    "RU-C488-khrapet",
+    "RU-C488-zevat",
+    "RU-C488-koshmar",
+    "RU-C488-dremat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch488.txt",
+  "json": "russian/narration/ch488.json",
+  "textHash": "fnv1a64:8e2fb6d8fedcc4ac",
+  "jsonHash": "fnv1a64:a7706c5911e5d9d9",
+  "findings": []
+}

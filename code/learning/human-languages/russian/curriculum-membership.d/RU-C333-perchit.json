@@ -1,0 +1,11 @@
+{
+  "id": "RU-C333-perchit",
+  "pathSegment": "RU-PATH-333-SOLIT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-333-SOLIT",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 408,
+  "title": "Speeding and fines",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:05fa81a2204a8d4b",
+  "lessons": [
+    {
+      "id": "RU-C408-skorost",
+      "sequence": 23450,
+      "title": "скорость (skórost) — speed",
+      "headword": "скорость",
+      "romanization": "skórost",
+      "gloss": "speed",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3e625b8087b1c463",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to turn round, then the Russian for a hard shoulder."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: скорость",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "скорость (skórost) — \"speed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "В городе можно ехать со скоростью до шестидесяти километров в час. V górode mózhno yékhat so skórostyu do shestidesyatí kilométrov v chas. In town you can drive at a speed of up to sixty kilometres an hour."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine. На большой скорости — at high speed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "скорость (skórost) is built on скорый 'fast' with the ending -ость. Скорый is inherited from Proto-Slavic skorŭ 'fast' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "skórost",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *skórost*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "skórost, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *skórost*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with skórost",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *skórost*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to turn round, then the Russian for a hard shoulder, then say skórost again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to turn round, then the Russian for a hard shoulder, then say *skórost* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does скорость (skórost) mean? (\"Speed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C408-prevyshat",
+      "sequence": 23460,
+      "title": "превышать (prevyshát) — to exceed",
+      "headword": "превышать",
+      "romanization": "prevyshát",
+      "gloss": "to exceed",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1df68015b2551795",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a hard shoulder, then the Russian for speed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: превышать",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "превышать (prevyshát) — \"to exceed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Мой брат никогда не превышает скорость. Moy brat nikogdá ne prevysháyet skórost. My brother never exceeds the speed limit."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; perfective превысить (превышу, превысишь). Formal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "превышать (prevyshát) is built from пре- 'beyond' and -вышать, on выше 'higher', the comparative of высокий 'high'. EtymDB does not list the verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prevyshát",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prevyshát*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prevyshát, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prevyshát*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with prevyshát",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *prevyshát*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a hard shoulder, then the Russian for speed, then say prevyshát again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a hard shoulder, then the Russian for speed, then say *prevyshát* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does превышать (prevyshát) mean? (\"To exceed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C408-inspektor",
+      "sequence": 23470,
+      "title": "инспектор (inspéktor) — an inspector; a traffic police officer",
+      "headword": "инспектор",
+      "romanization": "inspéktor",
+      "gloss": "an inspector; a traffic police officer",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5e7104fd963457ef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for speed, then the Russian for to exceed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: инспектор",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "инспектор (inspéktor) — \"an inspector; a traffic police officer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Инспектор попросил водителя выйти из машины. Inspéktor poprosíl vodítelya výyti iz mashíny. The inspector asked the driver to get out of the car."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine; plural инспекторы, in speech also инспектора."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "инспектор (inspéktor) is usually traced to Latin inspector 'an examiner', from inspicere 'to look into', built on specere 'to look' (Lewis & Short). EtymDB lists the Russian word without a source, so the route is hedged."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inspéktor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inspéktor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inspéktor, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inspéktor*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with inspéktor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *inspéktor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for speed, then the Russian for to exceed, then say inspéktor again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for speed, then the Russian for to exceed, then say *inspéktor* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does инспектор (inspéktor) mean? (\"An inspector; a traffic police officer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C408-prava",
+      "sequence": 23480,
+      "title": "права (pravá) — a driving licence; rights",
+      "headword": "права",
+      "romanization": "pravá",
+      "gloss": "a driving licence; rights",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3cc5f38d326306b1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to exceed, then the Russian for an inspector."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: права",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "права (pravá) — \"a driving licence; rights\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Инспектор проверил права и паспорт. Inspéktor provéril pravá i pásport. The inspector checked the driving licence and the passport."
+            },
+            {
+              "kind": "speech",
+              "text": "The plural of право (právo) — a right; the stress moves: права (pravá). In full, водительские права."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "права (pravá) is the plural of право 'a right', built on правый 'right, straight'. EtymDB lists право beside its Ukrainian cousin právo: a licence is the right to drive."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pravá",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pravá*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pravá, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pravá*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with pravá",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *pravá*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to exceed, then the Russian for an inspector, then say pravá again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to exceed, then the Russian for an inspector, then say *pravá* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does права (pravá) mean? (\"A driving licence; rights\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C408-shtrafovat",
+      "sequence": 23490,
+      "title": "штрафовать (shtrafovát) — to fine",
+      "headword": "штрафовать",
+      "romanization": "shtrafovát",
+      "gloss": "to fine",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a0d70f7a438278e7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for an inspector, then the Russian for a driving licence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: штрафовать",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "штрафовать (shtrafovát) — \"to fine\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Здесь часто штрафуют за скорость. Zdes chásto shtrafúyut za skórost. People often get fined for speeding here."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; perfective оштрафовать. Present штрафую. Takes the accusative and за: штрафовать (shtrafovát) водителя за скорость (skórost)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "штрафовать (shtrafovát) was borrowed from German strafen 'to punish' (EtymDB), alongside the noun штраф 'a fine' from German Strafe."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shtrafovát",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shtrafovát*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shtrafovát, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shtrafovát*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with shtrafovát",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *shtrafovát*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for an inspector, then the Russian for a driving licence, then say shtrafovát again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for an inspector, then the Russian for a driving licence, then say *shtrafovát* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does штрафовать (shtrafovát) mean? (\"To fine\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

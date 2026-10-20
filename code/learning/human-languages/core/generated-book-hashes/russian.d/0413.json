@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 413,
+  "sourceHash": "fnv1a64:4dac042fba0548be",
+  "lessonIds": [
+    "RU-C413-proyezd",
+    "RU-C413-platskart",
+    "RU-C413-kupe",
+    "RU-C413-tarif",
+    "RU-C413-lgota"
+  ],
+  "tex": "russian/book/chapters/ch413-a-train-ticket.tex"
+}

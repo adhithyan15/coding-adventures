@@ -662,18 +662,13 @@ struct RustVersionedFamilyTarget {
     family_name: String,
     generic_input: Option<PathBuf>,
     versions: Vec<RustVersionedSource>,
-    /// `Some` for an inventory-driven family (LANG84): every release ID in
-    /// the family's `releases.csv`, pending rows included, in canonical
-    /// inventory order. `versions` then holds only the non-pending rows, and
-    /// the renderer deduplicates identical grammars instead of emitting one
-    /// module per release.
-    inventory: Option<Vec<String>>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 enum RustCompileInputs {
     Flat { input_path: PathBuf },
     Versioned(RustVersionedFamilyTarget),
+    Release(RustReleaseFamilyTarget),
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -695,12 +690,7 @@ struct RustVersionedFamilySpec {
     input_dir: &'static str,
     input_prefix: &'static str,
     generic_stem: Option<&'static str>,
-    /// The hard-coded release list. Empty for an inventory-driven family.
     versions: &'static [&'static str],
-    /// LANG84: the inventory file, relative to `input_dir`, that supplies the
-    /// release list instead of `versions`. Its non-pending rows are compiled;
-    /// its pending rows are listed but have no grammar.
-    inventory: Option<&'static str>,
 }
 
 const CSHARP_VERSIONS: &[&str] = &[
@@ -759,7 +749,6 @@ fn rust_versioned_family_for_package(package_stem: &str) -> Option<RustVersioned
             input_prefix: "csharp",
             generic_stem: None,
             versions: CSHARP_VERSIONS,
-            inventory: None,
         }),
         "fsharp" => Some(RustVersionedFamilySpec {
             family_name: "fsharp",
@@ -768,7 +757,6 @@ fn rust_versioned_family_for_package(package_stem: &str) -> Option<RustVersioned
             input_prefix: "fsharp",
             generic_stem: None,
             versions: FSHARP_VERSIONS,
-            inventory: None,
         }),
         "haskell" => Some(RustVersionedFamilySpec {
             family_name: "haskell",
@@ -777,7 +765,6 @@ fn rust_versioned_family_for_package(package_stem: &str) -> Option<RustVersioned
             input_prefix: "haskell",
             generic_stem: None,
             versions: HASKELL_VERSIONS,
-            inventory: None,
         }),
         "java" => Some(RustVersionedFamilySpec {
             family_name: "java",
@@ -786,7 +773,6 @@ fn rust_versioned_family_for_package(package_stem: &str) -> Option<RustVersioned
             input_prefix: "java",
             generic_stem: None,
             versions: JAVA_VERSIONS,
-            inventory: None,
         }),
         "javascript" => Some(RustVersionedFamilySpec {
             family_name: "ecmascript",
@@ -795,22 +781,6 @@ fn rust_versioned_family_for_package(package_stem: &str) -> Option<RustVersioned
             input_prefix: "",
             generic_stem: Some("javascript"),
             versions: ECMASCRIPT_VERSIONS,
-            inventory: None,
-        }),
-        // LANG84 phase 4a: the first inventory-driven family. Perl has 776
-        // inventory rows and 117 checked partial pairs, but only a handful of
-        // distinct grammars, so the release list comes from `releases.csv`
-        // and identical grammars share one compiled module. The unversioned
-        // `perl.tokens`/`perl.grammar` pair (LANG81's execution grammar) is
-        // kept as `unversioned_*()`, never as the `""` release.
-        "perl" => Some(RustVersionedFamilySpec {
-            family_name: "perl",
-            filter_names: &["perl"],
-            input_dir: "perl",
-            input_prefix: "perl",
-            generic_stem: Some("perl"),
-            versions: &[],
-            inventory: Some("releases.csv"),
         }),
         "python" => Some(RustVersionedFamilySpec {
             family_name: "python",
@@ -819,7 +789,6 @@ fn rust_versioned_family_for_package(package_stem: &str) -> Option<RustVersioned
             input_prefix: "python",
             generic_stem: None,
             versions: PYTHON_VERSIONS,
-            inventory: None,
         }),
         "typescript" => Some(RustVersionedFamilySpec {
             family_name: "typescript",
@@ -828,7 +797,6 @@ fn rust_versioned_family_for_package(package_stem: &str) -> Option<RustVersioned
             input_prefix: "",
             generic_stem: Some("typescript"),
             versions: TYPESCRIPT_VERSIONS,
-            inventory: None,
         }),
         "verilog" => Some(RustVersionedFamilySpec {
             family_name: "verilog",
@@ -837,7 +805,6 @@ fn rust_versioned_family_for_package(package_stem: &str) -> Option<RustVersioned
             input_prefix: "verilog",
             generic_stem: None,
             versions: VERILOG_VERSIONS,
-            inventory: None,
         }),
         "vhdl" => Some(RustVersionedFamilySpec {
             family_name: "vhdl",
@@ -846,7 +813,6 @@ fn rust_versioned_family_for_package(package_stem: &str) -> Option<RustVersioned
             input_prefix: "vhdl",
             generic_stem: None,
             versions: VHDL_VERSIONS,
-            inventory: None,
         }),
         _ => None,
     }
@@ -897,25 +863,8 @@ fn build_versioned_family_target(
         None => None,
     };
 
-    // An inventory-driven family takes its releases from the CSV; the others
-    // keep their hard-coded lists. Either way each listed release must have
-    // its own materialized file — no release is an alias of another's.
-    let (release_ids, inventory): (Vec<String>, Option<Vec<String>>) = match spec.inventory {
-        Some(csv_name) => {
-            let rows = read_release_inventory(&input_dir.join(csv_name))?;
-            let compiled = rows
-                .iter()
-                .filter(|row| row.grammar_status != "pending")
-                .map(|row| row.release.clone())
-                .collect();
-            let all = rows.into_iter().map(|row| row.release).collect();
-            (compiled, Some(all))
-        }
-        None => (spec.versions.iter().map(|v| (*v).to_string()).collect(), None),
-    };
-
     let mut versions = Vec::new();
-    for version in &release_ids {
+    for version in spec.versions {
         let filename = format!("{}{}.{}", spec.input_prefix, version, kind.input_extension());
         let input_path = input_dir.join(&filename);
         if !input_path.exists() {
@@ -927,7 +876,7 @@ fn build_versioned_family_target(
         }
 
         versions.push(RustVersionedSource {
-            version: version.clone(),
+            version: (*version).to_string(),
             input_path,
             module_name: rust_module_name_for_version(version),
         });
@@ -937,50 +886,98 @@ fn build_versioned_family_target(
         family_name: spec.family_name.to_string(),
         generic_input,
         versions,
-        inventory,
     })
 }
 
-// ---------------------------------------------------------------------------
-// LANG84 release inventories
-// ---------------------------------------------------------------------------
+// ===========================================================================
+// LANG84 release families — the release list comes from releases.csv
+// ===========================================================================
 //
-// A `releases.csv` looks like this (Perl's, abridged; the URL cells are
-// shortened here):
+// A *versioned* family (above) hard-codes its edition list. LANG84
+// (`code/specs/LANG84-grammar-driven-versioned-frontends.md`, "Compiled tables
+// deduplicate identical grammars") instead makes `code/grammars/<dir>/
+// releases.csv` the source of truth: every row that has left stage `none`
+// owns a materialized `<prefix><release>.tokens` / `.grammar` pair, and the
+// generated `_grammar.rs` must agree with the CSV.
 //
-// ```text
-// # provenance comment lines start with '#'
-// release,date,channel,source_ref,source_sha,predecessor,grammar_status,grammar_stage,grammar_subset,iir_status,backend_status,profile,perlhist_line,lineage
-// 1.000,1987-12-18,final,https://…/tree/perl-1.0,8d063cd8…,,partial,P,pl-decimal-print,-,-,-,78,first
-// 1.001,1988-01-30,patch,https://…/perlhist.pod#L80,d97e2dc0…,1.000,pending,none,-,-,-,-,80,line
-// ```
+// Hundreds of releases share byte-identical syntax, so the generator embeds
+// one module per DISTINCT grammar rather than one per release:
 //
-// That is the common LANG84 header: twelve required columns, then the
-// language's extras (Perl keeps LANG82's `perlhist_line`). Perl's file had
-// the four-column LANG82 header `release,date,perlhist_line,grammar_status`
-// until LANG84 phase 2b migrated it.
+//   ruby0.49.tokens ─┐                       ┌─ mod g_1a2b3c4d5e6f  (0.49)
+//   ruby3.3.5.tokens ┤ canonicalize + SHA-256 ┤
+//   ruby3.3.6.tokens ┤ (comments and line     └─ mod g_9f8e7d6c5b4a  (3.3.5,
+//   ruby3.3.7.tokens ┘  numbers dropped)                              3.3.6, 3.3.7)
 //
-// The generator needs two columns: `release` (the ID, which becomes both a
-// file name and a Rust string literal) and `grammar_status` (whether a pair
-// exists to compile). Columns are found by header NAME, never by position:
-// the 2b migration moved `grammar_status` from the fourth column to the
-// seventh, and a positional reader would have read `channel` instead. The
-// cells are split on bare commas (inventory cells never quote), so every row
-// must have exactly as many fields as the header -- a row with a stray comma
-// would otherwise shift every later column without any error.
+// The canonical form is the generated Rust module itself, produced from a
+// copy of the grammar whose line numbers are zeroed and whose source name is
+// blank. Two releases therefore share a module exactly when the data they
+// would embed is identical, and adding a field to TokenGrammar or
+// ParserGrammar cannot be forgotten here because the compiler emits every
+// field. The module that IS embedded keeps the real line numbers of the first
+// release of its class, so diagnostics point at a real file.
 
-/// One inventory row, reduced to the two columns the generator reads.
-#[derive(Debug, Clone, PartialEq, Eq)]
-struct InventoryRow {
-    release: String,
-    grammar_status: String,
+/// A language whose compiled grammars follow its LANG84 `releases.csv`.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+struct RustReleaseFamilySpec {
+    family_name: &'static str,
+    input_dir: &'static str,
+    input_prefix: &'static str,
+    /// Also embed the unversioned `<prefix>.grammar` as
+    /// `unversioned_parser_grammar()` for consumers that have not moved to a
+    /// release (LANG84 C4.5 lets them keep it). Never selectable by release.
+    legacy_parser_grammar: bool,
+    /// The same for the unversioned `<prefix>.tokens`, embedded in the lexer
+    /// table as `unversioned_token_grammar()`. Perl needs it because LANG81's
+    /// execution grammar is a token/parser PAIR; Ruby's lexer is hand-written
+    /// around its unversioned tokens, so it leaves this off.
+    legacy_token_grammar: bool,
 }
 
-/// Is `release` a safe inventory ID? LANG84 fixes the charset to
-/// `[A-Za-z0-9._-]`. The ID is spliced into a file name
-/// (`<prefix><release>.tokens`), so a `/` or a `..` component would let a
-/// CSV row name a file outside the grammar directory; refuse both, and refuse
-/// the empty ID.
+/// Opt-in table. A language joins once its first pair exists; until then its
+/// crates keep whatever flat or versioned generation they had.
+fn rust_release_family_for_package(package_stem: &str) -> Option<RustReleaseFamilySpec> {
+    match package_stem {
+        "ruby" => Some(RustReleaseFamilySpec {
+            family_name: "ruby",
+            input_dir: "ruby",
+            input_prefix: "ruby",
+            legacy_parser_grammar: true,
+            legacy_token_grammar: false,
+        }),
+        // LANG84 phase 4a; phase 2b gave Perl's inventory the common header,
+        // `grammar_stage` included. Perl's checked partial pairs collapse to
+        // a handful of distinct grammars. Both halves of the unversioned
+        // `perl.tokens`/`perl.grammar` pair (LANG81's execution grammar) stay
+        // reachable as `unversioned_*()`, never as the `""` release.
+        "perl" => Some(RustReleaseFamilySpec {
+            family_name: "perl",
+            input_dir: "perl",
+            input_prefix: "perl",
+            legacy_parser_grammar: true,
+            legacy_token_grammar: true,
+        }),
+        _ => None,
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct RustReleaseRow {
+    release: String,
+    stage: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct RustReleaseFamilyTarget {
+    family_name: String,
+    /// Every inventory row, in inventory order.
+    inventory: Vec<RustReleaseRow>,
+    /// Rows with a pair, in inventory order, with the pair's directory stem.
+    paired: Vec<(String, PathBuf)>,
+    legacy_input: Option<PathBuf>,
+}
+
+/// Release IDs become file names and Rust string literals, so only the LANG84
+/// charset is accepted (the inventory checker enforces the same rule).
 fn is_safe_release_id(release: &str) -> bool {
     !release.is_empty()
         && !release.contains("..")
@@ -989,104 +986,365 @@ fn is_safe_release_id(release: &str) -> bool {
             .all(|c| c.is_ascii_alphanumeric() || matches!(c, '.' | '_' | '-'))
 }
 
-/// Read a LANG84 `releases.csv`: skip leading `#` comment lines, locate the
-/// `release` and `grammar_status` columns by header name, and return every row
-/// in file (= canonical inventory) order. Fails on an absent column, a row
-/// whose field count differs from the header's, an unsafe or duplicate ID, or
-/// a status outside `pending`, `partial`, `complete`.
-fn read_release_inventory(path: &Path) -> Result<Vec<InventoryRow>, String> {
+/// Read `release`, `grammar_status` and `grammar_stage` by header NAME.
+///
+/// Columns are found by name, never by position, because LANG84 adds required
+/// columns to every inventory and a positional reader would silently read the
+/// wrong one after that migration. Every row is checked before anything is
+/// built from it, because a release ID ends up in a file name and in a Rust
+/// string literal:
+///
+/// | Row defect                               | Result                |
+/// | ---------------------------------------- | --------------------- |
+/// | a `"` anywhere (the CSVs never quote)    | error: quoted         |
+/// | field count differs from the header's    | error: field count    |
+/// | ID outside `[A-Za-z0-9._-]`, empty, `..` | error: unsafe         |
+/// | ID seen on an earlier row                | error: duplicate      |
+/// | status not `pending/partial/complete`    | error: grammar_status |
+/// | stage not `none/G/P`                     | error: grammar_stage  |
+///
+/// A row "has a pair" when it left stage `none` or is not `pending` — the
+/// same rule `release_inventory.py check` applies.
+fn read_release_inventory(path: &Path) -> Result<(Vec<RustReleaseRow>, Vec<String>), String> {
     let text = std::fs::read_to_string(path)
-        .map_err(|e| format!("Failed to read inventory '{}': {}", path.display(), e))?;
+        .map_err(|e| format!("Failed to read {}: {}", path.display(), e))?;
     parse_release_inventory(&text).map_err(|e| format!("{}: {}", path.display(), e))
 }
 
-fn parse_release_inventory(text: &str) -> Result<Vec<InventoryRow>, String> {
+/// The body of [`read_release_inventory`], on text, so the tests can feed it
+/// hostile rows without touching the disk. A trailing `\r` is dropped from
+/// each line so a CRLF checkout reads the same as an LF one.
+fn parse_release_inventory(text: &str) -> Result<(Vec<RustReleaseRow>, Vec<String>), String> {
     let mut lines = text
         .lines()
-        .map(|line| line.trim_end_matches('\r'))
-        .filter(|line| !line.starts_with('#') && !line.trim().is_empty());
-    let header: Vec<&str> = lines
-        .next()
-        .ok_or("inventory has no header row")?
-        .split(',')
-        .collect();
+        .map(|line| line.strip_suffix('\r').unwrap_or(line))
+        .filter(|line| !line.starts_with('#'));
+    let header: Vec<&str> = lines.next().ok_or("no header")?.split(',').collect();
     let column = |name: &str| {
         header
             .iter()
-            .position(|h| h.trim() == name)
-            .ok_or(format!("inventory header has no '{name}' column"))
+            .position(|cell| *cell == name)
+            .ok_or_else(|| format!("no `{}` column", name))
     };
-    let release_col = column("release")?;
-    let status_col = column("grammar_status")?;
-
+    let (release_col, status_col, stage_col) =
+        (column("release")?, column("grammar_status")?, column("grammar_stage")?);
     let mut seen = HashSet::new();
     let mut rows = Vec::new();
-    for line in lines {
-        let fields: Vec<&str> = line.split(',').collect();
-        if fields.len() != header.len() {
-            return Err(format!(
-                "inventory row has {} fields, the header has {}: {line:?}",
-                fields.len(),
-                header.len()
-            ));
+    let mut paired = Vec::new();
+    for (index, line) in lines.enumerate() {
+        let row = index + 1;
+        if line.contains('"') {
+            return Err(format!("row {} is quoted", row));
         }
-        let (release, status) = (fields[release_col], fields[status_col]);
-        let (release, status) = (release.trim(), status.trim());
+        let cells: Vec<&str> = line.split(',').collect();
+        if cells.len() != header.len() {
+            return Err(format!("row {} has the wrong field count", row));
+        }
+        let release = cells[release_col];
         if !is_safe_release_id(release) {
-            return Err(format!("unsafe release ID {release:?}"));
+            return Err(format!("row {}: unsafe release ID {:?}", row, release));
         }
+        if !seen.insert(release) {
+            return Err(format!("row {}: duplicate release ID {:?}", row, release));
+        }
+        let status = cells[status_col];
         if !matches!(status, "pending" | "partial" | "complete") {
-            return Err(format!("release {release}: unknown grammar_status {status:?}"));
+            return Err(format!("release {}: unknown grammar_status {:?}", release, status));
         }
-        if !seen.insert(release.to_string()) {
-            return Err(format!("duplicate release ID {release:?}"));
+        let stage = cells[stage_col];
+        if !matches!(stage, "none" | "G" | "P") {
+            return Err(format!("release {}: unknown grammar_stage {:?}", release, stage));
         }
-        rows.push(InventoryRow {
+        if stage != "none" || status != "pending" {
+            paired.push(release.to_string());
+        }
+        rows.push(RustReleaseRow {
             release: release.to_string(),
-            grammar_status: status.to_string(),
+            stage: stage.to_string(),
         });
     }
-    if rows.is_empty() {
-        return Err("inventory has no release rows".to_string());
-    }
-    Ok(rows)
+    Ok((rows, paired))
 }
 
-/// The canonical form two compiled grammars are compared in (LANG84
-/// "Compiled tables deduplicate identical grammars"): the generated Rust with
-/// its `//` comment lines dropped and every `line_number: N` field zeroed.
-///
-/// Comments and line numbers are the only things that differ between two
-/// releases whose grammars are otherwise identical — each pair carries its
-/// own provenance header, which shifts every line number below it. Anything
-/// else (a pattern, a token name, a rule body, a skip definition) survives
-/// canonicalization and keeps the two in separate classes.
-fn canonical_compiled_grammar(code: &str) -> String {
-    let mut out = String::with_capacity(code.len());
-    for line in code.lines() {
-        let trimmed = line.trim_start();
-        if trimmed.starts_with("//") {
-            continue;
-        }
-        match trimmed.strip_prefix("line_number:") {
-            Some(_) => {
-                let indent = &line[..line.len() - trimmed.len()];
-                out.push_str(indent);
-                out.push_str("line_number: 0,");
+fn build_release_family_target(
+    grammars_dir: &Path,
+    spec: RustReleaseFamilySpec,
+    kind: RustGrammarKind,
+) -> Result<RustReleaseFamilyTarget, String> {
+    let input_dir = grammars_dir.join(spec.input_dir);
+    let (inventory, paired_ids) =
+        read_release_inventory(&input_dir.join("releases.csv"))?;
+    if paired_ids.is_empty() {
+        return Err(format!(
+            "Release family '{}' has no row past stage `none` in releases.csv.",
+            spec.family_name
+        ));
+    }
+    let mut paired = Vec::new();
+    for release in paired_ids {
+        let stem = input_dir.join(format!("{}{}", spec.input_prefix, release));
+        for extension in ["tokens", "grammar"] {
+            let path = stem.with_extension_appended(extension);
+            if !path.exists() {
+                return Err(format!(
+                    "releases.csv claims a pair for {} but '{}' does not exist.",
+                    release,
+                    path.display()
+                ));
             }
-            None => out.push_str(line),
         }
-        out.push('\n');
+        paired.push((release, stem));
     }
-    out
+    let legacy_extension = match kind {
+        RustGrammarKind::Grammar if spec.legacy_parser_grammar => Some("grammar"),
+        RustGrammarKind::Tokens if spec.legacy_token_grammar => Some("tokens"),
+        _ => None,
+    };
+    let legacy_input = match legacy_extension {
+        Some(extension) => {
+            let path = input_dir.join(format!("{}.{}", spec.input_prefix, extension));
+            if !path.exists() {
+                return Err(format!("Expected legacy grammar '{}'.", path.display()));
+            }
+            Some(path)
+        }
+        None => None,
+    };
+    Ok(RustReleaseFamilyTarget {
+        family_name: spec.family_name.to_string(),
+        inventory,
+        paired,
+        legacy_input,
+    })
 }
 
-/// `g_` plus the first 12 hex digits of the SHA-256 of the canonical form.
-/// Naming a class by its content rather than by its first release keeps the
-/// module name stable when an earlier release is backfilled into the class.
-fn dedup_module_name(canonical: &str) -> String {
-    let hex = coding_adventures_sha256::sha256_hex(canonical.as_bytes());
-    format!("g_{}", &hex[..12])
+/// `foo/ruby3.3.5` + `tokens` → `foo/ruby3.3.5.tokens`. `Path::with_extension`
+/// would replace the `.5`, so the extension is appended to the file name.
+trait AppendExtension {
+    fn with_extension_appended(&self, extension: &str) -> PathBuf;
+}
+
+impl AppendExtension for Path {
+    fn with_extension_appended(&self, extension: &str) -> PathBuf {
+        let mut name = self.as_os_str().to_os_string();
+        name.push(".");
+        name.push(extension);
+        PathBuf::from(name)
+    }
+}
+
+/// One release's grammar, validated, plus its canonical (line-free) form.
+fn release_module_source(
+    kind: RustGrammarKind,
+    stem: &Path,
+    force: bool,
+) -> Result<(String, String), String> {
+    let tokens_path = stem.with_extension_appended("tokens");
+    let grammar_path = stem.with_extension_appended("grammar");
+    let read = |path: &Path| {
+        std::fs::read_to_string(path).map_err(|e| format!("Failed to read {}: {}", path.display(), e))
+    };
+    let mut token_grammar = parse_token_grammar(&read(&tokens_path)?)
+        .map_err(|e| format!("Failed to parse {}: {}", tokens_path.display(), e))?;
+    let mut parser_grammar = parse_parser_grammar(&read(&grammar_path)?)
+        .map_err(|e| format!("Failed to parse {}: {}", grammar_path.display(), e))?;
+    if !force {
+        // LANG84 stage G: each file validates and the pair cross-validates.
+        let mut issues = validate_token_grammar(&token_grammar);
+        issues.extend(validate_parser_grammar(&parser_grammar, Some(&token_names(&token_grammar))));
+        issues.extend(cross_validate(&token_grammar, &parser_grammar));
+        let errors: Vec<String> = issues
+            .into_iter()
+            .filter(|issue| !issue.starts_with("Warning"))
+            .collect();
+        if !errors.is_empty() {
+            return Err(format!(
+                "Validation failed for {}.*:\n{}",
+                stem.display(),
+                format_issue_block(&errors)
+            ));
+        }
+    }
+    let file_name = |path: &Path| {
+        path.file_name()
+            .and_then(|n| n.to_str())
+            .unwrap_or_default()
+            .to_string()
+    };
+    Ok(match kind {
+        RustGrammarKind::Tokens => {
+            let embedded = compile_token_grammar(&token_grammar, &file_name(&tokens_path));
+            zero_token_lines(&mut token_grammar);
+            (embedded, compile_token_grammar(&token_grammar, ""))
+        }
+        RustGrammarKind::Grammar => {
+            let embedded = compile_parser_grammar(&parser_grammar, &file_name(&grammar_path));
+            for rule in &mut parser_grammar.rules {
+                rule.line_number = 0;
+            }
+            (embedded, compile_parser_grammar(&parser_grammar, ""))
+        }
+        RustGrammarKind::Combined => {
+            return Err("Release families are not supported for combined targets".to_string())
+        }
+    })
+}
+
+fn zero_token_lines(grammar: &mut grammar_tools::token_grammar::TokenGrammar) {
+    let groups = grammar.groups.values_mut().flat_map(|g| g.definitions.iter_mut());
+    for definition in grammar
+        .definitions
+        .iter_mut()
+        .chain(grammar.skip_definitions.iter_mut())
+        .chain(grammar.error_definitions.iter_mut())
+        .chain(groups)
+    {
+        definition.line_number = 0;
+    }
+    for transition in &mut grammar.transitions {
+        transition.line_number = 0;
+    }
+}
+
+fn render_release_rust_target(
+    target: &RustCompileTarget,
+    family: &RustReleaseFamilyTarget,
+    force: bool,
+) -> Result<String, String> {
+    let (grammar_type, selector, import) = match target.kind {
+        RustGrammarKind::Tokens => (
+            "TokenGrammar",
+            "token_grammar",
+            "grammar_tools::token_grammar::TokenGrammar",
+        ),
+        RustGrammarKind::Grammar => (
+            "ParserGrammar",
+            "parser_grammar",
+            "grammar_tools::parser_grammar::ParserGrammar",
+        ),
+        RustGrammarKind::Combined => {
+            return Err(format!(
+                "Release families are not supported for combined targets ({})",
+                target.package_name
+            ))
+        }
+    };
+
+    // Group releases into classes by canonical-form hash, keeping first-seen
+    // (inventory) order for both classes and their members.
+    let mut classes: Vec<(String, String, Vec<String>)> = Vec::new(); // (module, embedded, releases)
+    let mut canonical_by_module: Vec<String> = Vec::new();
+    for (release, stem) in &family.paired {
+        let (embedded, canonical) = release_module_source(target.kind, stem, force)?;
+        let digest = coding_adventures_sha256::sha256_hex(canonical.as_bytes());
+        let module = format!("g_{}", &digest[..12]);
+        match classes.iter().position(|(name, _, _)| *name == module) {
+            Some(index) => {
+                // A 48-bit prefix collision between different grammars would
+                // silently merge them; compare the full canonical text.
+                if canonical_by_module[index] != canonical {
+                    return Err(format!("module name collision on {} ({})", module, release));
+                }
+                classes[index].2.push(release.clone());
+            }
+            None => {
+                classes.push((module, embedded, vec![release.clone()]));
+                canonical_by_module.push(canonical);
+            }
+        }
+    }
+
+    let mut out = String::new();
+    out.push_str("// AUTO-GENERATED FILE - DO NOT EDIT\n");
+    out.push_str(&format!(
+        "// Source family: {} (LANG84 release family; release list from code/grammars/{}/releases.csv)\n",
+        family.family_name, family.family_name
+    ));
+    out.push_str(&format!(
+        "// Regenerate with: grammar-tools generate-rust-compiled-grammars {}\n",
+        target.package_stem
+    ));
+    out.push_str("//\n");
+    out.push_str(&format!(
+        "// {} release(s) have a pair; they compile to {} distinct {} value(s).\n",
+        family.paired.len(),
+        classes.len(),
+        grammar_type
+    ));
+    out.push_str("// Each distinct grammar is one module named g_<first 12 hex digits of the\n");
+    out.push_str("// SHA-256 of its canonical form (comments and line numbers dropped).\n\n");
+    out.push_str(&format!("use {};\n\n", import));
+
+    out.push_str("/// Releases that have a pair, in inventory (date) order.\n");
+    out.push_str("pub const SUPPORTED_RELEASES: &[&str] = &[\n");
+    for (release, _) in &family.paired {
+        out.push_str(&format!("    {:?},\n", release));
+    }
+    out.push_str("];\n\n");
+
+    if target.kind == RustGrammarKind::Grammar {
+        out.push_str("/// Every inventory row as (release, grammar_stage), in inventory order, so a\n");
+        out.push_str("/// frontend can tell an unknown release from one whose pair is not written yet.\n");
+        out.push_str("pub const INVENTORY: &[(&str, &str)] = &[\n");
+        for row in &family.inventory {
+            out.push_str(&format!("    ({:?}, {:?}),\n", row.release, row.stage));
+        }
+        out.push_str("];\n\n");
+    }
+
+    out.push_str(&format!(
+        "/// The {} of exactly `release`, or `None`. There is no default and no\n/// nearest-release fallback (LANG84 C4).\n",
+        grammar_type
+    ));
+    out.push_str(&format!(
+        "pub fn {}(release: &str) -> Option<{}> {{\n    match release {{\n",
+        selector, grammar_type
+    ));
+    for (module, _, releases) in &classes {
+        let pattern = releases
+            .iter()
+            .map(|release| format!("{:?}", release))
+            .collect::<Vec<_>>()
+            .join(" | ");
+        out.push_str(&format!("        {} => Some({}::{}()),\n", pattern, module, selector));
+    }
+    out.push_str("        _ => None,\n    }\n}\n\n");
+
+    out.push_str("/// The class (module name) of each release, for tests and tooling.\n");
+    out.push_str("pub fn grammar_class(release: &str) -> Option<&'static str> {\n    match release {\n");
+    for (module, _, releases) in &classes {
+        let pattern = releases
+            .iter()
+            .map(|release| format!("{:?}", release))
+            .collect::<Vec<_>>()
+            .join(" | ");
+        out.push_str(&format!("        {} => Some({:?}),\n", pattern, module));
+    }
+    out.push_str("        _ => None,\n    }\n}\n\n");
+
+    if let Some(legacy) = &family.legacy_input {
+        let code = compile_rust_input_source(target.kind, legacy, force)?;
+        out.push_str("/// The unversioned pair, kept for consumers that have not moved to a release.\n");
+        out.push_str("/// It is not reachable through the release selector above.\n");
+        out.push_str(&format!(
+            "pub fn unversioned_{}() -> {} {{\n    legacy::{}()\n}}\n\n",
+            selector, grammar_type, selector
+        ));
+        out.push_str("mod legacy {\n");
+        out.push_str(&indent_rust_code(&code, 4));
+        out.push_str("}\n\n");
+    }
+
+    for (module, embedded, _) in &classes {
+        out.push_str(&format!("mod {} {{\n", module));
+        out.push_str(&indent_rust_code(embedded, 4));
+        out.push_str("}\n\n");
+    }
+    // Drop the final blank line so the file ends with exactly one newline.
+    while out.ends_with("\n\n") {
+        out.pop();
+    }
+    Ok(out)
 }
 
 fn rust_target_matches_filters(target: &RustCompileTarget, filters: &HashSet<String>) -> bool {
@@ -1177,8 +1435,19 @@ fn find_rust_compile_targets(
             continue;
         }
 
+        let release_spec = rust_release_family_for_package(&package_stem);
         let versioned_spec = rust_versioned_family_for_package(&package_stem);
-        let (grammar_name, filter_names, inputs) = match versioned_spec {
+        let (grammar_name, filter_names, inputs) = match (release_spec, versioned_spec) {
+            (Some(spec), _) => (
+                spec.family_name.to_string(),
+                vec![spec.family_name.to_string()],
+                RustCompileInputs::Release(build_release_family_target(
+                    &grammars_dir,
+                    spec,
+                    kind,
+                )?),
+            ),
+            (None, versioned_spec) => match versioned_spec {
             Some(spec) => {
                 let mut filter_names = spec
                     .filter_names
@@ -1214,6 +1483,7 @@ fn find_rust_compile_targets(
                     RustCompileInputs::Flat { input_path },
                 )
             }
+            },
         };
 
         let target = RustCompileTarget {
@@ -1317,16 +1587,6 @@ fn render_versioned_rust_target(
         }
     };
 
-    if let Some(inventory) = &family.inventory {
-        return render_inventory_rust_target(
-            target,
-            family,
-            inventory,
-            (grammar_type, selector_name, import_path),
-            force,
-        );
-    }
-
     let mut output = String::new();
     output.push_str("// AUTO-GENERATED FILE - DO NOT EDIT\n");
     output.push_str(&format!("// Source family: {}\n", family.family_name));
@@ -1389,159 +1649,11 @@ fn render_versioned_rust_target(
     Ok(output)
 }
 
-/// Render an inventory-driven family (LANG84): one module per DISTINCT
-/// grammar, a `match` that maps every compiled release ID to its module, the
-/// inventory and supported-release lists, and the unversioned pair under its
-/// own function name.
-///
-/// ```text
-///   releases.csv rows ──► non-pending IDs ──► compile each pair
-///                                                │
-///                       canonical form ◄─────────┘ (comments dropped,
-///                            │                       line numbers zeroed)
-///                            ▼
-///                    SHA-256 → g_<12 hex>   (first release in a class
-///                                            supplies the emitted code)
-/// ```
-///
-/// The unversioned pair is deliberately NOT reachable as release `""`: LANG84
-/// C4.4 makes an empty release string an error rather than a default, so it
-/// gets `unversioned_<selector>()` instead.
-fn render_inventory_rust_target(
-    target: &RustCompileTarget,
-    family: &RustVersionedFamilyTarget,
-    inventory: &[String],
-    (grammar_type, selector_name, import_path): (&str, &str, &str),
-    force: bool,
-) -> Result<String, String> {
-    // Classes in first-seen (inventory) order, so the output is deterministic.
-    struct Class {
-        module_name: String,
-        canonical: String,
-        code: String,
-        releases: Vec<String>,
-    }
-    let mut classes: Vec<Class> = Vec::new();
-    for source in &family.versions {
-        let code = compile_rust_input_source(target.kind, &source.input_path, force)?;
-        let canonical = canonical_compiled_grammar(&code);
-        match classes.iter_mut().find(|class| class.canonical == canonical) {
-            Some(class) => class.releases.push(source.version.clone()),
-            None => {
-                let module_name = dedup_module_name(&canonical);
-                // Two different grammars sharing 48 bits of SHA-256 is not
-                // expected, but if it ever happens the two modules would
-                // collide silently, so check rather than assume.
-                if classes.iter().any(|class| class.module_name == module_name) {
-                    return Err(format!(
-                        "dedup module name {module_name} names two different grammars"
-                    ));
-                }
-                classes.push(Class {
-                    module_name,
-                    canonical,
-                    code,
-                    releases: vec![source.version.clone()],
-                });
-            }
-        }
-    }
-
-    let mut output = String::new();
-    output.push_str("// AUTO-GENERATED FILE - DO NOT EDIT\n");
-    output.push_str(&format!(
-        "// Source family: {} (release list from code/grammars/{}/releases.csv)\n",
-        family.family_name, family.family_name
-    ));
-    output.push_str(&format!(
-        "// Regenerate with: grammar-tools generate-rust-compiled-grammars {}\n",
-        target.package_stem
-    ));
-    output.push_str("//\n");
-    output.push_str(&format!(
-        "// {} compiled releases share {} distinct {} value(s) (LANG84 deduplication:\n",
-        family.versions.len(),
-        classes.len(),
-        grammar_type
-    ));
-    output.push_str("// grammars equal apart from comments and line numbers share one module, whose\n");
-    output.push_str("// line numbers come from the first release in the class).\n");
-    output.push_str(&format!(
-        "// Call `{}` instead of reading and parsing grammar files at runtime.\n\n",
-        selector_name
-    ));
-    output.push_str(&format!("use {};\n\n", import_path));
-
-    output.push_str("/// Every release in the inventory, pending rows included, in canonical\n");
-    output.push_str("/// inventory order. A pending release is known but has no grammar.\n");
-    output.push_str("pub const INVENTORY_RELEASES: &[&str] = &[\n");
-    for release in inventory {
-        output.push_str(&format!("    {:?},\n", release));
-    }
-    output.push_str("];\n\n");
-
-    output.push_str("/// Every release with a compiled grammar (non-pending rows), in inventory order.\n");
-    output.push_str("pub const SUPPORTED_RELEASES: &[&str] = &[\n");
-    for source in &family.versions {
-        output.push_str(&format!("    {:?},\n", source.version));
-    }
-    output.push_str("];\n\n");
-
-    output.push_str(&format!(
-        "/// The compiled {} of exactly one inventory release, or `None` when the\n",
-        grammar_type
-    ));
-    output.push_str("/// release is pending or not in the inventory. There is no fallback.\n");
-    output.push_str(&format!(
-        "pub fn {}(release: &str) -> Option<{}> {{\n",
-        selector_name, grammar_type
-    ));
-    output.push_str("    match release {\n");
-    for class in &classes {
-        for (index, release) in class.releases.iter().enumerate() {
-            let lead = if index == 0 { "        " } else { "        | " };
-            output.push_str(&format!("{lead}{release:?}\n"));
-        }
-        output.push_str(&format!(
-            "            => Some({}::{}()),\n",
-            class.module_name, selector_name
-        ));
-    }
-    output.push_str("        _ => None,\n");
-    output.push_str("    }\n");
-    output.push_str("}\n\n");
-
-    if let Some(generic_input) = &family.generic_input {
-        let code = compile_rust_input_source(target.kind, generic_input, force)?;
-        output.push_str(&format!(
-            "/// The unversioned pair. It is not an inventory release and is never\n\
-             /// returned for one; callers that use it must name it explicitly.\n\
-             pub fn unversioned_{}() -> {} {{\n    generic::{}()\n}}\n\n",
-            selector_name, grammar_type, selector_name
-        ));
-        output.push_str("mod generic {\n");
-        output.push_str(&indent_rust_code(&code, 4));
-        output.push_str("}\n\n");
-    }
-
-    for class in &classes {
-        output.push_str(&format!(
-            "// {} release(s), first {}\n",
-            class.releases.len(),
-            class.releases[0]
-        ));
-        output.push_str(&format!("mod {} {{\n", class.module_name));
-        output.push_str(&indent_rust_code(&class.code, 4));
-        output.push_str("}\n\n");
-    }
-
-    Ok(output)
-}
-
 fn compile_rust_target_to_string(target: &RustCompileTarget, force: bool) -> Result<String, String> {
     match &target.inputs {
         RustCompileInputs::Flat { input_path } => compile_rust_input_source(target.kind, input_path, force),
         RustCompileInputs::Versioned(family) => render_versioned_rust_target(target, family, force),
+        RustCompileInputs::Release(family) => render_release_rust_target(target, family, force),
     }
 }
 
@@ -1960,6 +2072,211 @@ mod tests {
         }
     }
 
+    // -----------------------------------------------------------------------
+    // LANG84 release families
+    // -----------------------------------------------------------------------
+
+    fn scratch_dir(tag: &str) -> PathBuf {
+        let dir = std::env::temp_dir().join(format!("gt-release-{}-{}", tag, std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        dir
+    }
+
+    #[test]
+    fn release_inventory_is_read_by_column_name() {
+        let dir = scratch_dir("inventory");
+        let path = dir.join("releases.csv");
+        std::fs::write(
+            &path,
+            "# provenance\nx,grammar_stage,release,grammar_status\n1,none,0.1,pending\n2,P,0.2,partial\n3,G,0.3,pending\n",
+        )
+        .unwrap();
+        let (rows, paired) = read_release_inventory(&path).unwrap();
+        assert_eq!(rows.len(), 3);
+        assert_eq!(rows[1], RustReleaseRow { release: "0.2".into(), stage: "P".into() });
+        assert_eq!(paired, vec!["0.2".to_string(), "0.3".to_string()]);
+
+        std::fs::write(&path, "release,grammar_status\n0.1,pending\n").unwrap();
+        assert!(read_release_inventory(&path).unwrap_err().contains("grammar_stage"));
+        std::fs::write(&path, "release,grammar_status,grammar_stage\n\"0.1\",pending,none\n").unwrap();
+        assert!(read_release_inventory(&path).unwrap_err().contains("quoted"));
+        std::fs::write(&path, "release,grammar_status,grammar_stage\n../x,partial,P\n").unwrap();
+        assert!(read_release_inventory(&path).unwrap_err().contains("unsafe"));
+        std::fs::write(&path, "release,grammar_status,grammar_stage\n0.1,partial\n").unwrap();
+        assert!(read_release_inventory(&path).unwrap_err().contains("field count"));
+        std::fs::remove_dir_all(dir).unwrap();
+    }
+
+    #[test]
+    fn release_inventory_refuses_bad_rows() {
+        let h = "release,grammar_status,grammar_stage\n";
+        for (csv, why) in [
+            (format!("{h}1.0,partial\n"), "field count"),
+            (format!("{h}1.0,partial,P,extra\n"), "field count"),
+            (format!("{h}a/b,partial,P\n"), "unsafe"),
+            (format!("{h},partial,P\n"), "unsafe"),
+            (format!("{h}1.0,done,P\n"), "grammar_status"),
+            (format!("{h}1.0,partial,Q\n"), "grammar_stage"),
+            (format!("{h}1.0,partial,P\n1.0,pending,none\n"), "duplicate"),
+            ("release,grammar_stage\n1.0,P\n".to_string(), "grammar_status"),
+            ("grammar_status,grammar_stage\npartial,P\n".to_string(), "release"),
+            ("# only a comment\n".to_string(), "no header"),
+        ] {
+            let error = parse_release_inventory(&csv).unwrap_err();
+            assert!(error.contains(why), "{csv:?}: {error}");
+        }
+    }
+
+    /// LANG84 phase 2b: Perl's inventory has the common header, with
+    /// `grammar_status` seventh, `grammar_stage` eighth and LANG82's
+    /// `perlhist_line` as an extra. Columns are found by name, and a CRLF
+    /// checkout reads like an LF one.
+    #[test]
+    fn release_inventory_reads_the_lang84_header() {
+        let csv = "# LANG84 release inventory: Perl\r\n\
+                   release,date,channel,source_ref,source_sha,predecessor,grammar_status,\
+                   grammar_stage,grammar_subset,iir_status,backend_status,profile,\
+                   perlhist_line,lineage\r\n\
+                   1.000,1987-12-18,final,https://x/perl-1.0,8d063cd8450e59ea1c611a2f4f5a21059a2804f1,\
+                   ,partial,P,pl-decimal-print,-,-,-,78,first\r\n\
+                   1.001,1988-01-30,patch,https://x/perlhist.pod#L80,\
+                   d97e2dc0ca5fcae83ac557cf21372672cd497510,1.000,pending,none,-,-,-,-,80,line\r\n";
+        let (rows, paired) = parse_release_inventory(csv).unwrap();
+        assert_eq!(
+            rows,
+            vec![
+                RustReleaseRow { release: "1.000".into(), stage: "P".into() },
+                RustReleaseRow { release: "1.001".into(), stage: "none".into() },
+            ]
+        );
+        assert_eq!(paired, ["1.000"]);
+        // The pre-2b four-column LANG82 header is now an error, not a guess.
+        let lang82 = "release,date,perlhist_line,grammar_status\n1.000,1987-Dec-18,78,partial\n";
+        let error = parse_release_inventory(lang82).unwrap_err();
+        assert!(error.contains("grammar_stage"), "{error}");
+    }
+
+    #[test]
+    fn appended_extension_keeps_dotted_release_ids() {
+        let stem = Path::new("ruby/ruby3.3.5");
+        assert_eq!(stem.with_extension_appended("tokens"), PathBuf::from("ruby/ruby3.3.5.tokens"));
+        assert!(is_safe_release_id("1.8.7-p374") && is_safe_release_id("1.1b9_07"));
+        assert!(!is_safe_release_id("") && !is_safe_release_id("a/b") && !is_safe_release_id(".."));
+    }
+
+    #[test]
+    fn release_family_deduplicates_identical_pairs_and_ignores_comments() {
+        let dir = scratch_dir("dedup");
+        let family = dir.join("toy");
+        std::fs::create_dir_all(&family).unwrap();
+        std::fs::write(
+            family.join("releases.csv"),
+            "release,grammar_status,grammar_stage\n1,partial,P\n2,partial,P\n3,partial,P\n4,pending,none\n",
+        )
+        .unwrap();
+        let tokens = "NUMBER = /[0-9]+/\nPLUS = \"+\"\n";
+        let grammar = "program = NUMBER { PLUS NUMBER } ;\n";
+        for (release, extra) in [("1", ""), ("2", "# only a comment differs\n\n"), ("3", "MINUS = \"-\"\n")] {
+            std::fs::write(family.join(format!("toy{release}.tokens")), format!("{extra}{tokens}")).unwrap();
+            let grammar_extra = if extra.starts_with('#') { extra } else { "" };
+            std::fs::write(family.join(format!("toy{release}.grammar")), format!("{grammar_extra}{grammar}"))
+                .unwrap();
+        }
+        let spec = RustReleaseFamilySpec {
+            family_name: "toy",
+            input_dir: "toy",
+            input_prefix: "toy",
+            legacy_parser_grammar: false,
+            legacy_token_grammar: false,
+        };
+        let family_target = build_release_family_target(&dir, spec, RustGrammarKind::Tokens).unwrap();
+        assert_eq!(family_target.inventory.len(), 4);
+        let target = RustCompileTarget {
+            package_name: "toy-lexer".into(),
+            package_stem: "toy".into(),
+            grammar_name: "toy".into(),
+            filter_names: vec![],
+            kind: RustGrammarKind::Tokens,
+            inputs: RustCompileInputs::Release(family_target.clone()),
+            output_path: dir.join("_grammar.rs"),
+            force: false,
+        };
+        let out = render_release_rust_target(&target, &family_target, false).unwrap();
+        assert!(out.contains("pub const SUPPORTED_RELEASES: &[&str] = &[\n    \"1\",\n    \"2\",\n    \"3\",\n];"));
+        assert!(out.contains("3 release(s) have a pair; they compile to 2 distinct TokenGrammar value(s)"));
+        // 1 and 2 differ only in comments and line numbers: one module.
+        let shared = out.lines().find(|l| l.trim_start().starts_with("\"1\" | \"2\" => Some(g_")).unwrap();
+        assert!(!shared.contains("\"3\""));
+        assert!(!out.contains("INVENTORY"), "only parser tables carry the inventory");
+        assert!(out.contains("_ => None,"));
+
+        // A row past `none` without its files is an error, not a skip.
+        std::fs::remove_file(family.join("toy3.grammar")).unwrap();
+        assert!(build_release_family_target(&dir, spec, RustGrammarKind::Tokens)
+            .unwrap_err()
+            .contains("toy3.grammar"));
+        std::fs::remove_dir_all(dir).unwrap();
+    }
+
+    #[test]
+    fn release_family_rejects_a_pair_that_does_not_cross_validate() {
+        let dir = scratch_dir("cross");
+        let family = dir.join("toy");
+        std::fs::create_dir_all(&family).unwrap();
+        std::fs::write(family.join("releases.csv"), "release,grammar_status,grammar_stage\n1,partial,P\n").unwrap();
+        std::fs::write(family.join("toy1.tokens"), "NUMBER = /[0-9]+/\n").unwrap();
+        std::fs::write(family.join("toy1.grammar"), "program = NUMBER UNDEFINED_TOKEN ;\n").unwrap();
+        let error = release_module_source(RustGrammarKind::Grammar, &family.join("toy1"), false).unwrap_err();
+        assert!(error.contains("UNDEFINED_TOKEN"), "{error}");
+        std::fs::remove_dir_all(dir).unwrap();
+    }
+
+    #[test]
+    fn committed_ruby_release_tables_match_regeneration() {
+        let root = find_root();
+        let targets = find_rust_compile_targets(&root, &["ruby".to_string()]).unwrap();
+        assert_eq!(targets.len(), 2);
+        for target in &targets {
+            assert!(matches!(target.inputs, RustCompileInputs::Release(_)), "{}", target.package_name);
+            let generated = compile_rust_target_to_string(target, target.force).unwrap();
+            let committed = std::fs::read_to_string(&target.output_path).unwrap();
+            assert!(
+                generated == committed,
+                "{} is stale; run grammar-tools generate-rust-compiled-grammars ruby",
+                target.output_path.display()
+            );
+        }
+    }
+
+    #[test]
+    fn committed_perl_release_tables_match_regeneration() {
+        let root = find_root();
+        let targets = find_rust_compile_targets(&root, &["perl".to_string()]).unwrap();
+        let names: Vec<_> = targets.iter().map(|t| t.package_name.as_str()).collect();
+        assert_eq!(names, ["perl-lexer", "perl-parser"]);
+        for target in &targets {
+            let RustCompileInputs::Release(family) = &target.inputs else {
+                panic!("{} must be a release family", target.package_name);
+            };
+            assert!(family.inventory.len() > family.paired.len());
+            assert_eq!(family.inventory[0].release, "1.000");
+            // Both halves of the unversioned pair are embedded.
+            assert!(family.legacy_input.is_some(), "{}", target.package_name);
+            let generated = compile_rust_target_to_string(target, target.force).unwrap();
+            let modules = generated.lines().filter(|l| l.starts_with("mod g_")).count();
+            assert!(modules >= 1 && modules < family.paired.len(), "{modules} modules");
+            // The unversioned pair is a named function, never the "" release.
+            assert!(generated.contains("pub fn unversioned_"));
+            assert!(!generated.contains("\"\" =>"));
+            let committed = std::fs::read_to_string(&target.output_path).unwrap();
+            assert!(
+                generated == committed,
+                "{} is stale; run grammar-tools generate-rust-compiled-grammars perl",
+                target.output_path.display()
+            );
+        }
+    }
+
     #[test]
     fn dispatch_validate_correct() {
         if !exists("json.tokens") || !exists("json.grammar") {
@@ -2118,115 +2435,5 @@ mod tests {
             ),
             0
         );
-    }
-
-    // -- LANG84 inventory-driven families ----------------------------------
-
-    #[test]
-    fn release_inventory_reads_columns_by_header_name() {
-        let csv = "# provenance\n\
-                   grammar_status,date,release\n\
-                   partial,1987,1.000\n\
-                   pending,1988,1.001\r\n";
-        let rows = parse_release_inventory(csv).unwrap();
-        assert_eq!(
-            rows,
-            vec![
-                InventoryRow { release: "1.000".into(), grammar_status: "partial".into() },
-                InventoryRow { release: "1.001".into(), grammar_status: "pending".into() },
-            ]
-        );
-    }
-
-    /// LANG84 phase 2b: Perl's inventory now has the common header, with
-    /// `grammar_status` seventh and LANG82's `perlhist_line` as an extra.
-    #[test]
-    fn release_inventory_reads_the_lang84_header() {
-        let csv = "# LANG84 release inventory: Perl\n\
-                   release,date,channel,source_ref,source_sha,predecessor,grammar_status,\
-                   grammar_stage,grammar_subset,iir_status,backend_status,profile,\
-                   perlhist_line,lineage\n\
-                   1.000,1987-12-18,final,https://x/perl-1.0,8d063cd8450e59ea1c611a2f4f5a21059a2804f1,\
-                   ,partial,P,pl-decimal-print,-,-,-,78,first\n\
-                   1.001,1988-01-30,patch,https://x/perlhist.pod#L80,\
-                   d97e2dc0ca5fcae83ac557cf21372672cd497510,1.000,pending,none,-,-,-,-,80,line\n";
-        let rows = parse_release_inventory(csv).unwrap();
-        assert_eq!(
-            rows,
-            vec![
-                InventoryRow { release: "1.000".into(), grammar_status: "partial".into() },
-                InventoryRow { release: "1.001".into(), grammar_status: "pending".into() },
-            ]
-        );
-    }
-
-    #[test]
-    fn release_inventory_refuses_bad_rows() {
-        for (csv, why) in [
-            ("release,date\n1.0,1987\n", "grammar_status"),
-            ("date,grammar_status\n1987,partial\n", "release"),
-            ("release,grammar_status\n../x,partial\n", "unsafe"),
-            ("release,grammar_status\na/b,partial\n", "unsafe"),
-            ("release,grammar_status\n,partial\n", "unsafe"),
-            ("release,grammar_status\n1.0,done\n", "grammar_status"),
-            ("release,grammar_status\n1.0,partial\n1.0,pending\n", "duplicate"),
-            ("release,grammar_status\n1.0\n", "1 fields, the header has 2"),
-            ("release,grammar_status\n1.0,partial,x\n", "3 fields, the header has 2"),
-            ("release,grammar_status\n", "no release rows"),
-            ("# only a comment\n", "no header"),
-        ] {
-            let error = parse_release_inventory(csv).unwrap_err();
-            assert!(error.contains(why), "{csv:?}: {error}");
-        }
-    }
-
-    #[test]
-    fn canonical_form_ignores_only_comments_and_line_numbers() {
-        let a = "// Source: a.tokens\nX {\n    line_number: 5,\n    name: \"A\",\n}\n";
-        let b = "// Source: b.tokens\nX {\n    line_number: 9,\n    name: \"A\",\n}\n";
-        let c = "// Source: a.tokens\nX {\n    line_number: 5,\n    name: \"B\",\n}\n";
-        assert_eq!(canonical_compiled_grammar(a), canonical_compiled_grammar(b));
-        assert_ne!(canonical_compiled_grammar(a), canonical_compiled_grammar(c));
-        assert_eq!(
-            dedup_module_name(&canonical_compiled_grammar(a)),
-            dedup_module_name(&canonical_compiled_grammar(b))
-        );
-        assert!(dedup_module_name("x").starts_with("g_"));
-        assert_eq!(dedup_module_name("x").len(), 14);
-    }
-
-    #[test]
-    fn perl_is_an_inventory_driven_family_with_deduplicated_modules() {
-        let root = find_root();
-        let targets = find_rust_compile_targets(&root, &["perl".to_string()]).unwrap();
-        let names: Vec<_> = targets.iter().map(|t| t.package_name.as_str()).collect();
-        assert_eq!(names, ["perl-lexer", "perl-parser"]);
-        for target in &targets {
-            let RustCompileInputs::Versioned(family) = &target.inputs else {
-                panic!("{} must be versioned", target.package_name);
-            };
-            let inventory = family.inventory.as_ref().expect("CSV-driven");
-            assert!(inventory.len() > family.versions.len());
-            assert_eq!(inventory[0], "1.000");
-            assert_eq!(family.versions[0].version, "1.000");
-            let code = compile_rust_target_to_string(target, target.force).unwrap();
-            let modules = code.lines().filter(|l| l.starts_with("mod g_")).count();
-            assert!(modules >= 1 && modules < family.versions.len(), "{modules} modules");
-            // Every compiled release appears exactly once as a match arm.
-            for source in &family.versions {
-                let arm = format!("{:?}\n", source.version);
-                let arms = code
-                    .lines()
-                    .filter(|l| {
-                        let l = l.trim_start().trim_start_matches("| ");
-                        format!("{l}\n") == arm
-                    })
-                    .count();
-                assert_eq!(arms, 1, "{}", source.version);
-            }
-            // The unversioned pair is a named function, never the "" release.
-            assert!(code.contains("pub fn unversioned_"));
-            assert!(!code.contains("\"\" =>"));
-        }
     }
 }

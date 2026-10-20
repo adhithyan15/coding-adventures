@@ -1,0 +1,11 @@
+{
+  "id": "RU-C336-vykladyvat",
+  "pathSegment": "RU-PATH-336-GOTOVO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-336-GOTOVO",
+      "order": 1
+    }
+  ]
+}

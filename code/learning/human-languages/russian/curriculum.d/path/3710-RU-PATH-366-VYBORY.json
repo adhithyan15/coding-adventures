@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-366-VYBORY",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "RU-EXT-366-VYBORY"
+  ],
+  "after": []
+}

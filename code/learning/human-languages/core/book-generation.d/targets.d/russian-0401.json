@@ -1,0 +1,7 @@
+{
+  "language": "russian",
+  "chapter": 401,
+  "output": "russian/book/chapters/ch401-apps.tex",
+  "unicodeScript": "Cyrillic",
+  "scriptCommand": "ru"
+}

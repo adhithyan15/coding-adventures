@@ -1,0 +1,19 @@
+{
+  "chapter": 350,
+  "title": "Consequences",
+  "label": "ch:ru-consequences",
+  "canDo": "I can speak about consequences and results, say that something tells on something else, and describe an effect.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C350-v-rezultate",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 350: I can speak about consequences and results, say that something tells on something else, and describe an effect.",
+    "assesses": [
+      "RU-LEX-C350-POSLEDSTVIYA-03",
+      "RU-LEX-C350-POSLEDSTVIYA-04",
+      "RU-LEX-C350-POSLEDSTVIYA-05"
+    ]
+  }
+}

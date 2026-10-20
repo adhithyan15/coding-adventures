@@ -1,0 +1,11 @@
+{
+  "id": "RU-C430-stelit",
+  "pathSegment": "RU-PATH-430-POSTEL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-430-POSTEL",
+      "order": 4
+    }
+  ]
+}

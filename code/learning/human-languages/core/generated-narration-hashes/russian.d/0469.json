@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 469,
+  "sourceHash": "fnv1a64:a33ed8a037e458da",
+  "lessonIds": [
+    "RU-C469-revnost",
+    "RU-C469-revnovat",
+    "RU-C469-revnivyy",
+    "RU-C469-zavist",
+    "RU-C469-zavidovat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch469.txt",
+  "json": "russian/narration/ch469.json",
+  "textHash": "fnv1a64:eb69b08f49e17c4d",
+  "jsonHash": "fnv1a64:f8e8deb077d08bef",
+  "findings": []
+}

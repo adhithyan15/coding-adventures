@@ -1,0 +1,11 @@
+{
+  "id": "RU-R376-review-369-376",
+  "pathSegment": "RU-PATH-376-ISKLYUCHENIYE",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "RU-EXT-376-ISKLYUCHENIYE",
+      "order": 5
+    }
+  ]
+}

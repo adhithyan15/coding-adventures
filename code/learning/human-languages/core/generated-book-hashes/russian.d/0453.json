@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 453,
+  "sourceHash": "fnv1a64:419e926fbac3c101",
+  "lessonIds": [
+    "RU-C453-primerochnaya",
+    "RU-C453-primeryat",
+    "RU-C453-razmer",
+    "RU-C453-zhat",
+    "RU-C453-obmenivat"
+  ],
+  "tex": "russian/book/chapters/ch453-trying-things-on.tex"
+}

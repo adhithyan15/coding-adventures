@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 499,
+  "sourceHash": "fnv1a64:85a1d811c8f5c294",
+  "lessonIds": [
+    "RU-C499-naveshchat",
+    "RU-C499-gostepriimnyy",
+    "RU-C499-gostepriimstvo",
+    "RU-C499-chayepitiye",
+    "RU-C499-gostit"
+  ],
+  "tex": "russian/book/chapters/ch499-visiting.tex"
+}

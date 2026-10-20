@@ -1,0 +1,11 @@
+{
+  "id": "RU-C292-dopros",
+  "pathSegment": "RU-PATH-292-DOPROS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-292-DOPROS",
+      "order": 3
+    }
+  ]
+}

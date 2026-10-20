@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-314-SALYUT",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-314-SALYUT"
+  ],
+  "after": []
+}

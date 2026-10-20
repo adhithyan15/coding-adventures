@@ -1,0 +1,11 @@
+{
+  "id": "RU-C436-trebovat",
+  "pathSegment": "RU-PATH-436-VOZVRAT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-436-VOZVRAT",
+      "order": 1
+    }
+  ]
+}

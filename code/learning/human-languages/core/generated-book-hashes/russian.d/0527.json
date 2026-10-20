@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 527,
+  "sourceHash": "fnv1a64:fa5a58557d55eb7a",
+  "lessonIds": [
+    "RU-C527-serial",
+    "RU-C527-epizod",
+    "RU-C527-subtitry",
+    "RU-C527-pereklyuchat",
+    "RU-C527-ekranizatsiya"
+  ],
+  "tex": "russian/book/chapters/ch527-series-and-subtitles.tex"
+}

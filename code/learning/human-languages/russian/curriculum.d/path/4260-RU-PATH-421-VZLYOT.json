@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-421-VZLYOT",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "RU-EXT-421-VZLYOT"
+  ],
+  "after": []
+}

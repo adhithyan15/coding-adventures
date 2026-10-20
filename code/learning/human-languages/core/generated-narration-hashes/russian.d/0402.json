@@ -1,0 +1,21 @@
+{
+  "language": "russian",
+  "chapter": 402,
+  "sourceHash": "fnv1a64:3319c074819885ee",
+  "lessonIds": [
+    "RU-C402-podklyuchat",
+    "RU-C402-zaryazhat",
+    "RU-C402-perepisyvatsya",
+    "RU-C402-peresylat",
+    "RU-C402-ustroystvo",
+    "RU-R402-review-401-402",
+    "RU-R402-review-final-402"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "russian/narration/ch402.txt",
+  "json": "russian/narration/ch402.json",
+  "textHash": "fnv1a64:0ab9ef7c855d83a8",
+  "jsonHash": "fnv1a64:b645e893d5c5559e",
+  "findings": []
+}

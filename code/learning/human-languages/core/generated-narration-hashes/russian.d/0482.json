@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 482,
+  "sourceHash": "fnv1a64:a53be700701854aa",
+  "lessonIds": [
+    "RU-C482-visok",
+    "RU-C482-zatylok",
+    "RU-C482-veko",
+    "RU-C482-nozdrya",
+    "RU-C482-chelyust"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch482.txt",
+  "json": "russian/narration/ch482.json",
+  "textHash": "fnv1a64:dc37225b61a1eba6",
+  "jsonHash": "fnv1a64:00ff1cc71676bfe8",
+  "findings": []
+}

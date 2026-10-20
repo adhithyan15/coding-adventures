@@ -164,6 +164,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "RU-W266-tvyordyy-znak",
+      "sourceHash": "fnv1a64:53527f28af7d9b02",
+      "svgHash": "fnv1a64:0c445bd033e8d14c",
+      "svg": "russian/book/figures/RU-W266-tvyordyy-znak-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "RU-W28-ya-small",
       "sourceHash": "fnv1a64:da6f7fbdc35483b5",
       "svgHash": "fnv1a64:3fd121460f438a21",

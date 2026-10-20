@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 274,
+  "title": "Little by little",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:eb48f507cdb77533",
+  "lessons": [
+    {
+      "id": "RU-C274-postepenno",
+      "sequence": 16550,
+      "title": "постепенно (postépenno) — gradually, little by little",
+      "headword": "постепенно",
+      "romanization": "postépenno",
+      "gloss": "gradually, little by little",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ed63d891d20c4e49",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to stop, then the Russian for to come."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: постепенно",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "постепенно (postépenno) — \"gradually, little by little\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Постепенно все поняли правила игры. Postépenno vse pónyali právila igrý. Gradually everyone understood the rules of the game."
+            },
+            {
+              "kind": "speech",
+              "text": "The adverb of постепенный (postépennyy) \"gradual\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "постепенно (postépenno) is built on по and степень \"a degree, a step\", inherited from Proto-Slavic stepenĭ (EtymDB): step by step."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "postépenno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *postépenno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "postépenno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *postépenno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with postépenno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *postépenno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to stop, then the Russian for to come, then say postépenno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to stop, then the Russian for to come, then say *postépenno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does постепенно (postépenno) mean? (\"Gradually, little by little\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C274-odnovremenno",
+      "sequence": 16560,
+      "title": "одновременно (odnovreménno) — at the same time, simultaneously",
+      "headword": "одновременно",
+      "romanization": "odnovreménno",
+      "gloss": "at the same time, simultaneously",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d8259ff7a72aadf6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to come, then the Russian for gradually."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: одновременно",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "одновременно (odnovreménno) — \"at the same time, simultaneously\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Они пришли одновременно. Oní prishlí odnovreménno. They arrived at the same time."
+            },
+            {
+              "kind": "speech",
+              "text": "Одновременно с + instrumental means \"at the same time as\": одновременно (odnovreménno) с нами."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "одновременно (odnovreménno) joins один \"one\", inherited from Proto-Slavic edinŭ (EtymDB), and время \"time\", usually taken as a Church Slavonic shape beside Old Russian веремя; EtymDB lists время with no parent."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "odnovreménno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *odnovreménno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "odnovreménno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *odnovreménno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with odnovreménno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *odnovreménno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to come, then the Russian for gradually, then say odnovreménno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to come, then the Russian for gradually, then say *odnovreménno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does одновременно (odnovreménno) mean? (\"At the same time, simultaneously\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C274-ponachalu",
+      "sequence": 16570,
+      "title": "поначалу (ponachálu) — at first",
+      "headword": "поначалу",
+      "romanization": "ponachálu",
+      "gloss": "at first",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5ac6b545e2d10d8f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for gradually, then the Russian for at the same time."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: поначалу",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "поначалу (ponachálu) — \"at first\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Поначалу мне было трудно. Ponachálu mne býlo trúdno. At first it was hard for me."
+            },
+            {
+              "kind": "speech",
+              "text": "Colloquial, and it hints that things changed later. The neutral word is сначала (snachála)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "поначалу (ponachálu) is built on по and начало \"beginning\", inherited through Old East Slavic načęlo from Proto-Slavic načędlo (EtymDB), the root of начать \"to begin\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ponachálu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ponachálu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ponachálu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ponachálu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ponachálu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ponachálu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for gradually, then the Russian for at the same time, then say ponachálu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for gradually, then the Russian for at the same time, then say *ponachálu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does поначалу (ponachálu) mean? (\"At first\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C274-vposledstvii",
+      "sequence": 16580,
+      "title": "впоследствии (vposlédstvii) — later on, subsequently",
+      "headword": "впоследствии",
+      "romanization": "vposlédstvii",
+      "gloss": "later on, subsequently",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:25beb3909ccc0e89",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for at the same time, then the Russian for at first."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: впоследствии",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "впоследствии (vposlédstvii) — \"later on, subsequently\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Впоследствии он стал известным врачом. Vposlédstvii on stal izvéstnym vrachóm. Later on he became a well-known doctor."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal and written. In speech: потом, позже."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "впоследствии (vposlédstvii) is built on в and последствие \"a consequence\", from след \"a track, a trace\" (EtymDB): what comes in the footsteps of an event."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vposlédstvii",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vposlédstvii*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vposlédstvii, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vposlédstvii*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with vposlédstvii",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *vposlédstvii*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for at the same time, then the Russian for at first, then say vposlédstvii again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for at the same time, then the Russian for at first, then say *vposlédstvii* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does впоследствии (vposlédstvii) mean? (\"Later on, subsequently\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C274-naposledok",
+      "sequence": 16590,
+      "title": "напоследок (naposlédok) — at the very end, last of all",
+      "headword": "напоследок",
+      "romanization": "naposlédok",
+      "gloss": "at the very end, last of all",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e78353fa138b4611",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for at first, then the Russian for later on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: напоследок",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "напоследок (naposlédok) — \"at the very end, last of all\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Напоследок он улыбнулся и ушёл. Naposlédok on ulybnúlsya i ushyól. At the very end he smiled and left."
+            },
+            {
+              "kind": "speech",
+              "text": "Colloquial: the last thing before parting."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "напоследок (naposlédok) is built on на and последок \"the last bit\", from последний \"last\", which goes back to след \"a track\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naposlédok",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naposlédok*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naposlédok, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naposlédok*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with naposlédok",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *naposlédok*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for at first, then the Russian for later on, then say naposlédok again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for at first, then the Russian for later on, then say *naposlédok* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does напоследок (naposlédok) mean? (\"At the very end, last of all\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

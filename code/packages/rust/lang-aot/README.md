@@ -27,7 +27,11 @@ name-formal result is also allowed when its actual has the same proof.
 Whole-number additive offsets may remain inside that bounded transform while
 their checked total stays within `2^53 - 1` units, so every path value remains
 an exact binary64 integer; the budget is tracked through parentheses and
-supported wrappers and applied per conditional path. Unary
+supported wrappers and applied per conditional path. Exact whole-number
+factors may also scale the sign-rooted integer transform through magnitude
+`2^53`, including exact additive composition; fractional factors, non-unit
+divisors, denominator roots, repeated roots, and oversized products stay
+conservative. Unary
 signs, arithmetic composition with finite static operands, and real-valued
 standard functions preserve it, while a finite static real actual is safe
 directly. Variable-free exact `sign` and exact-range `entier`

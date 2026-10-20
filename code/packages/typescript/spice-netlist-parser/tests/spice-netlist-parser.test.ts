@@ -162,23 +162,42 @@ R2 out 0 1k
         id: string;
         kind: string;
         analysis: "op" | "dc" | "ac" | "tran" | "tf";
-        sample: "op-node" | "dc-final-node" | "ac-first-magnitude" | "tran-final-node" | "tf-ratio";
+        sample: "op-node" | "dc-final-node" | "ac-first-magnitude" | "tran-final-node" | "tf-ratio" | "temperature-op-node";
         deck: string;
         probe: string;
-        expected: { min: number; max: number };
+        expected: { min: number; max: number } | {
+          temperaturesKelvin: readonly number[];
+          windows: readonly { min: number; max: number }[];
+        };
       }[];
     };
 
     expect(corpus.schemaVersion).toBe(1);
     expect(corpus.suite).toBe("berkeley-v1-core");
     expect(corpus.cases.map((testCase) => testCase.analysis)).toEqual([
-      "op", "op", "op", "op", "op", "op", "op", "op", "op", "ac", "ac", "ac", "ac", "ac",
+      "op", "op", "op", "op", "op", "op", "op", "op", "op", "op", "ac", "ac", "ac", "ac", "ac",
       "ac", "ac", "ac", "tran", "tran", "tran", "tran", "tran", "tran", "tran", "dc", "dc", "dc", "dc", "dc",
       "dc", "dc", "dc", "tf", "tf", "tf", "tf", "tf", "tf", "tf", "tf",
     ]);
 
     for (const testCase of corpus.cases) {
       const results = parseNetlist(testCase.deck).runAnalysisPlan();
+      if (testCase.sample === "temperature-op-node") {
+        const expected = testCase.expected as {
+          temperaturesKelvin: readonly number[];
+          windows: readonly { min: number; max: number }[];
+        };
+        expect(results.map((result) => result.kind), testCase.id)
+          .toEqual(Array.from({ length: expected.temperaturesKelvin.length }, () => testCase.analysis));
+        expect(results.map((result) => result.temperatureKelvin), testCase.id)
+          .toEqual(expected.temperaturesKelvin);
+        for (const [index, execution] of results.entries()) {
+          const value = (execution.result as { voltage(node: string): number | undefined }).voltage(testCase.probe);
+          expect(value, testCase.id).toBeGreaterThanOrEqual(expected.windows[index].min);
+          expect(value, testCase.id).toBeLessThanOrEqual(expected.windows[index].max);
+        }
+        continue;
+      }
       expect(results.map((result) => result.kind), testCase.id).toEqual([testCase.analysis]);
       const result = results[0].result;
       let value: number | undefined;
@@ -197,8 +216,9 @@ R2 out 0 1k
       } else {
         value = (result as { transferRatio: number }).transferRatio;
       }
-      expect(value, testCase.id).toBeGreaterThanOrEqual(testCase.expected.min);
-      expect(value, testCase.id).toBeLessThanOrEqual(testCase.expected.max);
+      const expected = testCase.expected as { min: number; max: number };
+      expect(value, testCase.id).toBeGreaterThanOrEqual(expected.min);
+      expect(value, testCase.id).toBeLessThanOrEqual(expected.max);
     }
   });
 
@@ -413,6 +433,12 @@ R2 mid 0 1k
     expect(() => parseNetlist(".temp 27").operatingTemperatureKelvin(3)).toThrow(
       /temperature index 3 exceeds \.temp entries/,
     );
+  });
+
+  it("rejects analysis temperatures below absolute zero", () => {
+    const parsed = parseNetlist(".temp -274\n.op");
+
+    expect(() => parsed.analysisTemperaturesKelvin()).toThrow(/finite positive Kelvin/);
   });
 
   it("rejects .temp cards without temperatures", () => {

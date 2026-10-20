@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C494-izmenyat",
+    "language": "russian",
+    "chapter": 494,
+    "sequence": 27910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e90897ec36bd3aa1"
+  },
+  "findings": []
+}

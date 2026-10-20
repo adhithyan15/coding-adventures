@@ -1,0 +1,11 @@
+{
+  "id": "RU-C518-repetirovat",
+  "pathSegment": "RU-PATH-518-REHEARSAL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-518-REHEARSAL",
+      "order": 3
+    }
+  ]
+}

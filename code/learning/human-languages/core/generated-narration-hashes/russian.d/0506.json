@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 506,
+  "sourceHash": "fnv1a64:6ee6b722c61e22da",
+  "lessonIds": [
+    "RU-C506-gryadka",
+    "RU-C506-leyka",
+    "RU-C506-polot",
+    "RU-C506-sornyak",
+    "RU-C506-urozhay"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch506.txt",
+  "json": "russian/narration/ch506.json",
+  "textHash": "fnv1a64:3b4c43590a94304c",
+  "jsonHash": "fnv1a64:46c1c5cf194df0ac",
+  "findings": []
+}

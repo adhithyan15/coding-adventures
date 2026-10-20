@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C312-pozdravlyat",
+    "language": "russian",
+    "chapter": 312,
+    "sequence": 18500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9501c452de3a2552"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C504-peshka",
+  "pathSegment": "RU-PATH-504-BOARDGAMES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-504-BOARDGAMES",
+      "order": 1
+    }
+  ]
+}

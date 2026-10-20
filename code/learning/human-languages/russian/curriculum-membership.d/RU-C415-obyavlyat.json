@@ -1,0 +1,11 @@
+{
+  "id": "RU-C415-obyavlyat",
+  "pathSegment": "RU-PATH-415-OTPRAVLYATSYA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-415-OTPRAVLYATSYA",
+      "order": 3
+    }
+  ]
+}

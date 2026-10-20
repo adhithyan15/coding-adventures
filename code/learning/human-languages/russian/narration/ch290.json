@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 290,
+  "title": "Tricks and hiding",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:518c1d4fa3e7b936",
+  "lessons": [
+    {
+      "id": "RU-C290-moshennik",
+      "sequence": 17370,
+      "title": "мошенник (moshénnik) — a swindler, a fraudster",
+      "headword": "мошенник",
+      "romanization": "moshénnik",
+      "gloss": "a swindler, a fraudster",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:38489145ba7b73b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for an attack, then the Russian for to attack."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: мошенник",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "мошенник (moshénnik) — \"a swindler, a fraudster\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Мошенник позвонил бабушке. Moshénnik pozvoníl bábushke. A swindler phoned Grandma."
+            },
+            {
+              "kind": "speech",
+              "text": "Мошенничество — fraud."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "мошенник (moshénnik) is usually traced to the old word мошна \"a purse\", so first \"a cutpurse\"; EtymDB lists no parent."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshénnik",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshénnik*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshénnik, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshénnik*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with moshénnik",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *moshénnik*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for an attack, then the Russian for to attack, then say moshénnik again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for an attack, then the Russian for to attack, then say *moshénnik* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does мошенник (moshénnik) mean? (\"A swindler, a fraudster\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C290-obmanyvat",
+      "sequence": 17380,
+      "title": "обманывать (obmányvat) — to deceive, to cheat",
+      "headword": "обманывать",
+      "romanization": "obmányvat",
+      "gloss": "to deceive, to cheat",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:543335ddadd6b437",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to attack, then the Russian for a swindler."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: обманывать",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "обманывать (obmányvat) — \"to deceive, to cheat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Он никогда не обманывает друзей. On nikogdá ne obmányvayet druzéy. He never deceives his friends."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; perfective обмануть (obmanút). Обман — a deceit, a trick."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "обманывать (obmányvat) is built on об- and манить \"to lure, to beckon\", which is inherited from Proto-Slavic maniti \"to deceive\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "obmányvat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *obmányvat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "obmányvat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *obmányvat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with obmányvat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *obmányvat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to attack, then the Russian for a swindler, then say obmányvat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to attack, then the Russian for a swindler, then say *obmányvat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does обманывать (obmányvat) mean? (\"To deceive, to cheat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C290-ugonyat",
+      "sequence": 17390,
+      "title": "угонять (ugonyát) — to hijack, to steal (a vehicle)",
+      "headword": "угонять",
+      "romanization": "ugonyát",
+      "gloss": "to hijack, to steal (a vehicle)",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e54746010e1a7d97",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a swindler, then the Russian for to deceive."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: угонять",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "угонять (ugonyát) — \"to hijack, to steal (a vehicle)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ночью у соседа угнали машину. Nóchyu u soséda ugnáli mashínu. During the night the neighbour's car was stolen."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; perfective угнать (ugnát), угоню. For a car or a plane; угон — a car theft."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "угонять (ugonyát) is built on у- \"away\" and гнать \"to drive\", which is inherited from Proto-Slavic gŭnati, from PIE gʷʰen- \"to strike\" (EtymDB): to drive away."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ugonyát",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ugonyát*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ugonyát, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ugonyát*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ugonyát",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ugonyát*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a swindler, then the Russian for to deceive, then say ugonyát again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a swindler, then the Russian for to deceive, then say *ugonyát* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does угонять (ugonyát) mean? (\"To hijack, to steal (a vehicle)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C290-pokhishchat",
+      "sequence": 17400,
+      "title": "похищать (pokhishchát) — to kidnap, to abduct; to steal",
+      "headword": "похищать",
+      "romanization": "pokhishchát",
+      "gloss": "to kidnap, to abduct; to steal",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c1a4b21112b00c31",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to deceive, then the Russian for to hijack."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: похищать",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "похищать (pokhishchát) — \"to kidnap, to abduct; to steal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "В фильме похитили дочь богатого человека. V fílme pokhítili doch bogátovo chelovéka. In the film the daughter of a rich man was kidnapped."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; perfective похитить (pokhítit), я похищу. Bookish."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "похищать (pokhishchát) is built on по- and an old verb хитить \"to seize\", the root of хищник \"a predator\"; EtymDB lists no parent."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pokhishchát",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pokhishchát*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pokhishchát, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pokhishchát*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with pokhishchát",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *pokhishchát*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to deceive, then the Russian for to hijack, then say pokhishchát again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to deceive, then the Russian for to hijack, then say *pokhishchát* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does похищать (pokhishchát) mean? (\"To kidnap, to abduct; to steal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C290-pryatatsya",
+      "sequence": 17410,
+      "title": "прятаться (pryátatsya) — to hide (oneself)",
+      "headword": "прятаться",
+      "romanization": "pryátatsya",
+      "gloss": "to hide (oneself)",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b55a0995c25f27d7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to hijack, then the Russian for to kidnap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: прятаться",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "прятаться (pryátatsya) — \"to hide (oneself)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Кошка прячется под кроватью. Kóshka pryáchetsya pod krovátyu. The cat is hiding under the bed."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; perfective спрятаться (spryátatsya). Present прячусь, прячешься. Without -ся, прятать hides something else."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "прятаться (pryátatsya) is прятать \"to hide\" with the reflexive -ся (EtymDB): to hide oneself. The origin of прятать is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pryátatsya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pryátatsya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pryátatsya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pryátatsya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with pryátatsya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *pryátatsya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to hijack, then the Russian for to kidnap, then say pryátatsya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to hijack, then the Russian for to kidnap, then say *pryátatsya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does прятаться (pryátatsya) mean? (\"To hide (oneself)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

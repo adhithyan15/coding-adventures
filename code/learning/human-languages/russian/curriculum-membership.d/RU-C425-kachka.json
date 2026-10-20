@@ -1,0 +1,11 @@
+{
+  "id": "RU-C425-kachka",
+  "pathSegment": "RU-PATH-425-KACHKA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-425-KACHKA",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C374-rasschityvat",
+    "language": "russian",
+    "chapter": 374,
+    "sequence": 21690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8b2b20f4886a2356"
+  },
+  "findings": []
+}

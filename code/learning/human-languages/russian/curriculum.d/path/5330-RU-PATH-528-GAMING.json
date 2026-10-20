@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-528-GAMING",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "RU-EXT-528-GAMING"
+  ],
+  "after": []
+}

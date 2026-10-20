@@ -1,0 +1,237 @@
+# Ruby 3.3.7 (2025-01-15) tokens: LANG84 R0 lexical slice.
+# @version 1
+# PARTIAL: lexes only the R0 constructs listed below; see code/grammars/ruby/README.md.
+# source_ref: https://github.com/ruby/ruby/tree/v3_3_7
+# source_sha: be31f993d7fa0219d85f7b3c694d454da4ecc10b
+# evidence: parse.y blob baf391e52d2d2c094af2e6b4b236101c4c0f07fc; keywords blob -; defs/keywords blob a1b1f4f60fff880c554c017720298b550ce36529; prism/config.yml blob d3b6b08709c4924dc61ae375fe0030a574e14266
+# basis: mechanical copy of ruby3.3.6.tokens; every syntax blob above is
+#   identical to release 3.3.6's (LANG84 "Materialized pair per release").
+
+# ---------------------------------------------------------------------------
+# R0 lexical slice (LANG84 phase 3.2). What this pair lexes, and what it does
+# not, is spelled out here so a reader never has to guess.
+#
+# Lexed: integers (decimal, 0x, 0b, 0o / leading 0 / 0_, 0d, `_` separators),
+# floats, identifiers (with `?`/`!` method suffixes), constants, @ivar,
+# @@cvar, $gvar ($-w, $~ ..., $& backrefs, $1 nth refs), `:sym` as
+# SYMBEG + name, `?c` character literals, keywords, every operator and
+# punctuator, `#` comments, `\` line continuation, NEWLINE and `;`.
+#
+# NOT lexed (later LANG84 slices). These either raise a lexer error or are
+# documented divergences:
+#   R1  strings '...' "..." , =begin/=end, __END__        -> lexer error
+#   R2  interpolation, backticks, :"...", char escapes ?\n -> lexer error
+#   R3  %w %i %q %r ... percent literals                   -> lexes as `%` op
+#   R4  regexp /re/ (lexes as division), newline state reset (see below)
+#   R5  heredocs <<ID                                       -> lexes as `<<`
+#   R6  local-variable-dependent forms (`x ?a :b` with x a local; space-
+#       sensitive `foo -1`, `foo (1, 2)`)
+#   R7  later per-release literals: 1r, 1i (lexer error), hash labels `a:`
+#
+# Known R0 divergences from the release's own lexer (each has a test):
+#   * `x!=y` / `x!~y` with no space before the operator lexes as FID `x!`.
+#     Ruby only folds `!`/`?` into an identifier when `=` does not follow;
+#     the regex engine has no lookahead, so this needs a later extension.
+#   * `:foo=`, `:@iv`, `:$g`, `:+` (operator / variable symbols) lex as
+#     COLON plus the operand, not SYMBEG.
+#   * F10 transitions do not fire on the engine's built-in NEWLINE token, so
+#     a line that STARTS with `?c` or `:sym` after a line that ended in a
+#     value keeps the previous line's mode.
+#   * A digit run immediately followed by an identifier character (`1if`,
+#     `1r`) is a lexer error (Ruby accepts `1if`).
+#   * `foo +1` (space before `+`, none after) lexes as PLUS NUMBER; Ruby
+#     folds it into one literal. See the mode table below.
+# ---------------------------------------------------------------------------
+
+# --- numeric literals (parse.y parse_numeric) -------------------------------
+# `\b` closes every number so that `1_`, `1__2`, `0x`, `08`, `1r` and `1i`
+# are lexer errors instead of silently splitting into number + identifier.
+HEX_INTEGER              = /0[xX][0-9a-fA-F]+(?:_[0-9a-fA-F]+)*\b/
+BINARY_INTEGER           = /0[bB][01]+(?:_[01]+)*\b/
+DECIMAL_PREFIXED_INTEGER = /0[dD][0-9]+(?:_[0-9]+)*\b/
+OCTAL_INTEGER            = /0[oO_]?[0-7]+(?:_[0-7]+)*\b/
+FLOAT                    = /(?:0|[1-9][0-9]*(?:_[0-9]+)*)(?:\.[0-9]+(?:_[0-9]+)*(?:[eE][-+]?[0-9]+(?:_[0-9]+)*)?|[eE][-+]?[0-9]+(?:_[0-9]+)*)\b/
+NUMBER                   = /(?:0|[1-9][0-9]*(?:_[0-9]+)*)\b/
+
+# --- identifiers (parse.y parse_ident, defs/keywords) -----------------------
+# `defined?` is the only keyword spelled with a suffix; BEGIN and END are the
+# only upper-case keywords. Both are matched before the general forms.
+DEFINED_KEYWORD = /defined\?/ -> KEYWORD
+UPPER_KEYWORD   = /(?:BEGIN|END)\b/ -> KEYWORD
+FID             = /[A-Za-z_][A-Za-z0-9_]*[?!]/
+CONSTANT        = /[A-Z][A-Za-z0-9_]*/
+NAME            = /[a-z_][A-Za-z0-9_]*/
+
+# --- variables (parse_atmark, parse_gvar) -----------------------------------
+CVAR         = /@@[A-Za-z_][A-Za-z0-9_]*/
+IVAR         = /@[A-Za-z_][A-Za-z0-9_]*/
+GVAR         = /\$[A-Za-z_][A-Za-z0-9_]*/
+GVAR_OPTION  = /\$-[A-Za-z0-9_]/ -> GVAR
+NTH_REF      = /\$[1-9][0-9]*/
+BACK_REF     = /\$[&`'+]/
+GVAR_SPECIAL = /\$[~*$?!@\/\;,.=:<>"0]/ -> GVAR
+
+# --- operators, longest spelling first --------------------------------------
+STAR_STAR_EQUALS   = "**="
+STAR_STAR          = "**"
+STAR_EQUALS        = "*="
+STAR               = "*"
+NOT_EQUALS         = "!="
+NOT_MATCH          = "!~"
+BANG               = "!"
+CASE_EQUALS        = "==="
+EQUALS_EQUALS      = "=="
+MATCH              = "=~"
+HASH_ROCKET        = "=>"
+EQUALS             = "="
+SPACESHIP          = "<=>"
+LEFT_SHIFT_EQUALS  = "<<="
+LEFT_SHIFT         = "<<"
+LESS_EQUALS        = "<="
+LESS_THAN          = "<"
+GREATER_EQUALS     = ">="
+RIGHT_SHIFT_EQUALS = ">>="
+RIGHT_SHIFT        = ">>"
+GREATER_THAN       = ">"
+AND_AND_EQUALS     = "&&="
+AND_AND            = "&&"
+AMPERSAND_EQUALS   = "&="
+SAFE_NAVIGATION    = "&."
+AMPERSAND          = "&"
+OR_OR_EQUALS       = "||="
+OR_OR              = "||"
+PIPE_EQUALS        = "|="
+PIPE               = "|"
+PLUS_EQUALS        = "+="
+PLUS               = "+"
+MINUS_EQUALS       = "-="
+LAMBDA             = "->"
+MINUS              = "-"
+DOT3               = "..."
+DOT2               = ".."
+DOT                = "."
+COLON_COLON        = "::"
+COLON              = ":"
+SLASH_EQUALS       = "/="
+SLASH              = "/"
+CARET_EQUALS       = "^="
+CARET              = "^"
+PERCENT_EQUALS     = "%="
+PERCENT            = "%"
+TILDE              = "~"
+QUESTION           = "?"
+COMMA              = ","
+SEMICOLON          = ";"
+LPAREN             = "("
+RPAREN             = ")"
+LBRACKET           = "["
+RBRACKET           = "]"
+LBRACE             = "{"
+RBRACE             = "}"
+
+# --- lexer states as F10 flat modes -----------------------------------------
+# parse.y decides `?` (ternary vs character literal) and `:` (operator vs
+# symbol start) from lex_state. R0 needs three of its states:
+#
+#   mode      parse.y states it stands for     `?x`      `:x`     `+1`
+#   default   EXPR_END*  (after a value)       QUESTION  COLON    PLUS NUMBER
+#   beg       EXPR_BEG/MID/DOT/VALUE           CHAR      SYMBEG   NUMBER "+1"
+#   arg       EXPR_ARG/CMDARG (after a name)   CHAR      SYMBEG   PLUS NUMBER
+#   fname     EXPR_FNAME (after `def`, `:`)    CHAR      SYMBEG   PLUS NUMBER
+#
+# parse.y folds a `+` into the numeric literal that follows it in EXPR_BEG,
+# and in EXPR_ARG only when a space precedes the `+` and none follows
+# (`foo +1`). Token adjacency is an E6 concern, so `arg` never folds: `a+1`
+# and `a + 1` lex as Ruby lexes them, `foo +1` does not (R6). A `-` is never
+# folded (tUMINUS_NUM is its own token).
+#
+# An identifier leaves the lexer in ARG/CMDARG unless it names a local
+# variable (END). Locals are an R6 concern, so identifiers go to `arg`, which
+# is what Ripper reports for a name it has not seen assigned.
+start_mode: beg
+
+group beg:
+  CHAR                            = /\?(?:[A-Za-z0-9_]\b|[!-\/:-@\[\]^`{|}~])/
+  SYMBEG                          = /:\b/
+  PLUS_HEX_INTEGER                = /\+0[xX][0-9a-fA-F]+(?:_[0-9a-fA-F]+)*\b/ -> HEX_INTEGER
+  PLUS_BINARY_INTEGER             = /\+0[bB][01]+(?:_[01]+)*\b/ -> BINARY_INTEGER
+  PLUS_DECIMAL_PREFIXED_INTEGER   = /\+0[dD][0-9]+(?:_[0-9]+)*\b/ -> DECIMAL_PREFIXED_INTEGER
+  PLUS_OCTAL_INTEGER              = /\+0[oO_]?[0-7]+(?:_[0-7]+)*\b/ -> OCTAL_INTEGER
+  PLUS_FLOAT                      = /\+(?:0|[1-9][0-9]*(?:_[0-9]+)*)(?:\.[0-9]+(?:_[0-9]+)*(?:[eE][-+]?[0-9]+(?:_[0-9]+)*)?|[eE][-+]?[0-9]+(?:_[0-9]+)*)\b/ -> FLOAT
+  PLUS_NUMBER                     = /\+(?:0|[1-9][0-9]*(?:_[0-9]+)*)\b/ -> NUMBER
+
+group arg:
+  ARG_CHAR   = /\?(?:[A-Za-z0-9_]\b|[!-\/:-@\[\]^`{|}~])/ -> CHAR
+  ARG_SYMBEG = /:\b/ -> SYMBEG
+
+group fname:
+  FNAME_CHAR   = /\?(?:[A-Za-z0-9_]\b|[!-\/:-@\[\]^`{|}~])/ -> CHAR
+  FNAME_SYMBEG = /:\b/ -> SYMBEG
+
+skip:
+  LINE_CONTINUATION = /\\\r?\n/
+  WHITESPACE        = /[ \t\f\v\r]+/
+  COMMENT           = /#[^\n]*/
+
+transitions:
+  on (NAME | FID | CONSTANT | KEYWORD | IVAR | CVAR | GVAR | NTH_REF | BACK_REF) in fname -> set-mode default
+  on KEYWORD="def"          -> set-mode fname
+  on KEYWORD="alias"        -> set-mode fname
+  on KEYWORD="undef"        -> set-mode fname
+  on KEYWORD="end"          -> set-mode default
+  on KEYWORD="self"         -> set-mode default
+  on KEYWORD="nil"          -> set-mode default
+  on KEYWORD="true"         -> set-mode default
+  on KEYWORD="false"        -> set-mode default
+  on KEYWORD="redo"         -> set-mode default
+  on KEYWORD="retry"        -> set-mode default
+  on KEYWORD="__FILE__"     -> set-mode default
+  on KEYWORD="__LINE__"     -> set-mode default
+  on KEYWORD="__ENCODING__" -> set-mode default
+  on KEYWORD="BEGIN"        -> set-mode default
+  on KEYWORD="END"          -> set-mode default
+  on KEYWORD                -> set-mode beg
+  on SYMBEG                 -> set-mode fname
+  on (NUMBER | FLOAT | HEX_INTEGER | BINARY_INTEGER | OCTAL_INTEGER | DECIMAL_PREFIXED_INTEGER | CHAR | IVAR | CVAR | GVAR | NTH_REF | BACK_REF | RPAREN | RBRACKET | RBRACE) -> set-mode default
+  on (NAME | FID | CONSTANT) -> set-mode arg
+  on (STAR_STAR_EQUALS | STAR_STAR | STAR_EQUALS | STAR | NOT_EQUALS | NOT_MATCH | BANG | CASE_EQUALS | EQUALS_EQUALS | MATCH | HASH_ROCKET | EQUALS | SPACESHIP | LEFT_SHIFT_EQUALS | LEFT_SHIFT | LESS_EQUALS | LESS_THAN | GREATER_EQUALS | RIGHT_SHIFT_EQUALS | RIGHT_SHIFT | GREATER_THAN | AND_AND_EQUALS | AND_AND | AMPERSAND_EQUALS | SAFE_NAVIGATION | AMPERSAND | OR_OR_EQUALS | OR_OR | PIPE_EQUALS | PIPE | PLUS_EQUALS | PLUS | MINUS_EQUALS | LAMBDA | MINUS | DOT3 | DOT2 | DOT | COLON_COLON | COLON | SLASH_EQUALS | SLASH | CARET_EQUALS | CARET | PERCENT_EQUALS | PERCENT | TILDE | QUESTION | COMMA | SEMICOLON | LPAREN | LBRACKET | LBRACE) -> set-mode beg
+
+keywords:
+  __ENCODING__
+  __LINE__
+  __FILE__
+  alias
+  and
+  begin
+  break
+  case
+  class
+  def
+  do
+  else
+  elsif
+  end
+  ensure
+  false
+  for
+  if
+  in
+  module
+  next
+  nil
+  not
+  or
+  redo
+  rescue
+  retry
+  return
+  self
+  super
+  then
+  true
+  undef
+  unless
+  until
+  when
+  while
+  yield

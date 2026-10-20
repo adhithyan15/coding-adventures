@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 358,
+  "title": "Looking for a job",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:df2cfc3b0f2e8b35",
+  "lessons": [
+    {
+      "id": "RU-C358-vakansiya",
+      "sequence": 20870,
+      "title": "вакансия (vakánsiya) — a vacancy, a job opening",
+      "headword": "вакансия",
+      "romanization": "vakánsiya",
+      "gloss": "a vacancy, a job opening",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3e61b46a0f199d45",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to manage, then the Russian for a team."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: вакансия",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "вакансия (vakánsiya) — \"a vacancy, a job opening\"."
+            },
+            {
+              "kind": "speech",
+              "text": "В этой компании есть вакансия бухгалтера. V étoy kompánii yest vakánsiya bukhgáltera. This company has a vacancy for an accountant."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine. Открытая вакансия (vakánsiya) — an open position."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "вакансия (vakánsiya) was borrowed from French vacance, from Latin vacantia \"emptiness, vacancy\" (EtymDB), built on vacāre \"to be empty\" (Lewis & Short). A vacancy is an empty place."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vakánsiya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vakánsiya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vakánsiya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vakánsiya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with vakánsiya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *vakánsiya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to manage, then the Russian for a team, then say vakánsiya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to manage, then the Russian for a team, then say *vakánsiya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does вакансия (vakánsiya) mean? (\"A vacancy, a job opening\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C358-sobesedovanie",
+      "sequence": 20880,
+      "title": "собеседование (sobesédovaniye) — a job interview",
+      "headword": "собеседование",
+      "romanization": "sobesédovaniye",
+      "gloss": "a job interview",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:778486cf8779e90d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a team, then the Russian for a vacancy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: собеседование",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "собеседование (sobesédovaniye) — \"a job interview\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Завтра у меня собеседование в банке. Závtra u menyá sobesédovaniye v bánke. Tomorrow I have a job interview at the bank."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter. Пройти собеседование (sobesédovaniye) — to get through an interview."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "собеседование (sobesédovaniye) is built on собеседник \"the person you talk with\", from со- \"together\" and беседа \"a conversation\". The origin of беседа is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sobesédovaniye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sobesédovaniye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sobesédovaniye, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sobesédovaniye*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with sobesédovaniye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *sobesédovaniye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a team, then the Russian for a vacancy, then say sobesédovaniye again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a team, then the Russian for a vacancy, then say *sobesédovaniye* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does собеседование (sobesédovaniye) mean? (\"A job interview\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C358-kandidat",
+      "sequence": 20890,
+      "title": "кандидат (kandidát) — a candidate",
+      "headword": "кандидат",
+      "romanization": "kandidát",
+      "gloss": "a candidate",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:caf666064df5e3d8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a vacancy, then the Russian for a job interview."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: кандидат",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "кандидат (kandidát) — \"a candidate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "На эту должность пять кандидатов. Na étu dólzhnost pyat kandidátov. There are five candidates for this post."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine. Кандидат наук is also a Russian academic degree, close to a doctorate."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "кандидат (kandidát) was borrowed from Polish kandydat, from Latin candidātus (EtymDB) \"clothed in white\", since Roman candidates for office wore a white toga (Lewis & Short); the root is candidus \"white\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kandidát",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kandidát*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kandidát, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kandidát*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with kandidát",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *kandidát*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a vacancy, then the Russian for a job interview, then say kandidát again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a vacancy, then the Russian for a job interview, then say *kandidát* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does кандидат (kandidát) mean? (\"A candidate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C358-nanimat",
+      "sequence": 20900,
+      "title": "нанимать (nanimát) — to hire, to take on",
+      "headword": "нанимать",
+      "romanization": "nanimát",
+      "gloss": "to hire, to take on",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:856cfb235f9f1f1d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a job interview, then the Russian for a candidate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: нанимать",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "нанимать (nanimát) — \"to hire, to take on\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Фирма нанимает новых сотрудников. Fírma nanimáyet nóvykh sotrúdnikov. The firm is hiring new employees."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; perfective нанять (найму, наймёшь). An older use is to rent: нанять квартиру."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "нанимать (nanimát) is built from на- and -нимать, from an old verb \"to take\" that also stands in снимать and занимать. To hire someone is to take them on."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nanimát",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nanimát*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nanimát, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nanimát*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with nanimát",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *nanimát*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a job interview, then the Russian for a candidate, then say nanimát again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a job interview, then the Russian for a candidate, then say *nanimát* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does нанимать (nanimát) mean? (\"To hire, to take on\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C358-stazh",
+      "sequence": 20910,
+      "title": "стаж (stazh) — length of service, work experience",
+      "headword": "стаж",
+      "romanization": "stazh",
+      "gloss": "length of service, work experience",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:02a81dc48372d353",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a candidate, then the Russian for to hire."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: стаж",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "стаж (stazh) — \"length of service, work experience\"."
+            },
+            {
+              "kind": "speech",
+              "text": "У него большой стаж работы. U negó bolshóy stazh rabóty. He has many years of work experience."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine. Стаж работы — the years someone has worked, counted for a job or a pension."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "стаж (stazh) was borrowed from French stage \"a period of training\", from Medieval Latin stagium, from Latin stāre \"to stand\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stazh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *stazh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stazh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *stazh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with stazh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *stazh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a candidate, then the Russian for to hire, then say stazh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a candidate, then the Russian for to hire, then say *stazh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does стаж (stazh) mean? (\"Length of service, work experience\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

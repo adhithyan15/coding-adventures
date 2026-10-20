@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-347-ODNAKO",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "RU-EXT-347-ODNAKO"
+  ],
+  "after": []
+}

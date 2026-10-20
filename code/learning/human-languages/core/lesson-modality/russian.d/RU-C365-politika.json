@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C365-politika",
+    "language": "russian",
+    "chapter": 365,
+    "sequence": 21260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed84a267eaa4d493"
+  },
+  "findings": []
+}

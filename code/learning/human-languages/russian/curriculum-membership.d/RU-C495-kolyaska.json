@@ -1,0 +1,11 @@
+{
+  "id": "RU-C495-kolyaska",
+  "pathSegment": "RU-PATH-495-EXPECTING",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-495-EXPECTING",
+      "order": 3
+    }
+  ]
+}

@@ -1,4 +1,14 @@
 # Changelog — `x86_64-backend`
+
+## 0.41.0 - 2026-10-19 - fail-closed real-to-integer narrowing
+
+`real_to_int_trunc` and `real_to_int_floor` now trap with `ud2` instead of
+storing a wrong integer. `cvttsd2si` returns the integer-indefinite `i64::MIN`
+on NaN, ±∞ and out-of-range input, so `entier(exp(exp(4)))` printed a large
+*negative* number. The input is rounded in place (`roundsd` mode 1 for floor,
+3 for trunc), converted, converted back with `cvtsi2sd` and compared with
+`ucomisd`. An unordered or unequal compare falls through to the trap.
+
 ## Unreleased — LANG83 PR1b — floor division, `trap`, `write_i64`
 
 - **`i64_div_floor` / `i64_mod_floor`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)): both

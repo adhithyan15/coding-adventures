@@ -1,0 +1,11 @@
+{
+  "id": "RU-C399-ssylka",
+  "pathSegment": "RU-PATH-399-SET",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-399-SET",
+      "order": 2
+    }
+  ]
+}

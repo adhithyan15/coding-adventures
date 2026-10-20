@@ -1,0 +1,11 @@
+{
+  "id": "RU-C456-brakovannyy",
+  "pathSegment": "RU-PATH-456-OBMENNIK",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-456-OBMENNIK",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C272-spustya",
+  "pathSegment": "RU-PATH-272-ZARANEE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-272-ZARANEE",
+      "order": 4
+    }
+  ]
+}

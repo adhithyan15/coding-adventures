@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 393,
+  "sourceHash": "fnv1a64:7693c124913dfb3d",
+  "lessonIds": [
+    "RU-C393-zayavlenie",
+    "RU-C393-podavat",
+    "RU-C393-notarius",
+    "RU-C393-doverennost",
+    "RU-C393-zaveshchanie"
+  ],
+  "tex": "russian/book/chapters/ch393-applications-and-wills.tex"
+}

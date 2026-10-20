@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 376,
+  "title": "Exceptions",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:ebb3b64f93793b5e",
+  "lessons": [
+    {
+      "id": "RU-C376-isklyuchenie",
+      "sequence": 21790,
+      "title": "исключение (isklyuchéniye) — an exception",
+      "headword": "исключение",
+      "romanization": "isklyuchéniye",
+      "gloss": "an exception",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1f73694a6b188a0f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for necessity, then the Russian for enough."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: исключение",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "исключение (isklyuchéniye) — \"an exception\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Все пришли, за исключением одного студента. Vse prishlí, za isklyuchéniyem odnogó studénta. Everyone came except for one student."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter. За исключением + genitive — except for. Без исключения — without exception."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "исключение (isklyuchéniye) is built on исключить \"to exclude\", from из- \"out\" and ключ \"a key\", inherited from Proto-Slavic ključĭ: to lock someone out."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "isklyuchéniye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *isklyuchéniye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "isklyuchéniye, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *isklyuchéniye*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with isklyuchéniye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *isklyuchéniye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for necessity, then the Russian for enough, then say isklyuchéniye again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for necessity, then the Russian for enough, then say *isklyuchéniye* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does исключение (isklyuchéniye) mean? (\"An exception\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C376-lish-by",
+      "sequence": 21800,
+      "title": "лишь бы (lish by) — as long as, if only",
+      "headword": "лишь бы",
+      "romanization": "lish by",
+      "gloss": "as long as, if only",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0a29d4ad284e8fc5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for enough, then the Russian for an exception."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: лишь бы",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "лишь бы (lish by) — \"as long as, if only\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Я согласен на любую работу, лишь бы только она была интересной. Ya soglásen na lyubúyu rabótu, lish by tólko oná bylá interésnoy. I will take any job, as long as it is interesting."
+            },
+            {
+              "kind": "speech",
+              "text": "Лишь бы + past tense or infinitive names the one thing that matters: лишь бы (lish by) успеть."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "лишь бы (lish by) is built from лишь \"only\", which is usually related to лишний \"extra, too many\", and бы, the particle of the conditional."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lish by",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lish by*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lish by, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lish by*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with lish by",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *lish by*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for enough, then the Russian for an exception, then say lish by again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for enough, then the Russian for an exception, then say *lish by* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does лишь бы (lish by) mean? (\"As long as, if only\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C376-razve-chto",
+      "sequence": 21810,
+      "title": "разве что (rázve chto) — except perhaps, unless maybe",
+      "headword": "разве что",
+      "romanization": "rázve chto",
+      "gloss": "except perhaps, unless maybe",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:17653e0e90ecba76",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for an exception, then the Russian for as long as."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: разве что",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "разве что (rázve chto) — \"except perhaps, unless maybe\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Я ничего не хочу, разве что чаю. Ya nichegó ne khochú, rázve chto cháyu. I do not want anything, except perhaps some tea."
+            },
+            {
+              "kind": "speech",
+              "text": "It names a small exception: никто не знает, разве что (rázve chto) мама."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "разве что (rázve chto) is built from the particle разве and что \"what\". The origin of разве is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rázve chto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rázve chto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rázve chto, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rázve chto*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with rázve chto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *rázve chto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for an exception, then the Russian for as long as, then say rázve chto again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for an exception, then the Russian for as long as, then say *rázve chto* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does разве что (rázve chto) mean? (\"Except perhaps, unless maybe\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C376-khotya-by",
+      "sequence": 21820,
+      "title": "хотя бы (khotyá by) — at least",
+      "headword": "хотя бы",
+      "romanization": "khotyá by",
+      "gloss": "at least",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:247827190e69c0d5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for as long as, then the Russian for except perhaps."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: хотя бы",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "хотя бы (khotyá by) — \"at least\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Он мог бы хотя бы позвонить. On mog by khotyá by pozvonít. He could at least have called."
+            },
+            {
+              "kind": "speech",
+              "text": "It sets a minimum: хотя бы (khotyá by) немного — at least a little. Not the same as хотя, although."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "хотя бы (khotyá by) is built from хотя, the old gerund of хотеть \"to want\", and бы, the particle of the conditional: wanting it to be so, at the very least."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khotyá by",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khotyá by*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khotyá by, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khotyá by*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with khotyá by",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *khotyá by*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for as long as, then the Russian for except perhaps, then say khotyá by again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for as long as, then the Russian for except perhaps, then say *khotyá by* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does хотя бы (khotyá by) mean? (\"At least\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C376-na-vsyakiy-sluchay",
+      "sequence": 21830,
+      "title": "на всякий случай (na vsyákiy slúchay) — in case, to be on the safe side",
+      "headword": "на всякий случай",
+      "romanization": "na vsyákiy slúchay",
+      "gloss": "in case, to be on the safe side",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b2b1b18af8c92cd9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for except perhaps, then the Russian for at least."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: на всякий случай",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "на всякий случай (na vsyákiy slúchay) — \"in case, to be on the safe side\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Я возьму зонтик на всякий случай. Ya vozmú zóntik na vsyákiy slúchay. I will take an umbrella, to be on the safe side."
+            },
+            {
+              "kind": "speech",
+              "text": "A fixed phrase; всякий means any."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "на всякий случай (na vsyákiy slúchay) is \"for any case\": всякий \"any\" and случай \"a case\", inherited from Proto-Slavic sŭlučajĭ (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "na vsyákiy slúchay",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *na vsyákiy slúchay*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "na vsyákiy slúchay, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *na vsyákiy slúchay*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with na vsyákiy slúchay",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *na vsyákiy slúchay*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for except perhaps, then the Russian for at least, then say na vsyákiy slúchay again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for except perhaps, then the Russian for at least, then say *na vsyákiy slúchay* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does на всякий случай (na vsyákiy slúchay) mean? (\"In case, to be on the safe side\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-R376-review-369-376",
+      "sequence": 21840,
+      "title": "Words from chapters 369–376 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 369-376",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0cb35b9b9a5e1c0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Russian for ecology and pollution."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ecology, pollution, to pollute, to recycle, to look after",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ecology, pollution, to pollute, to recycle, to look after]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a condition, on condition, in case of, otherwise, even if",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a condition, on condition, in case of, otherwise, even if]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a hypothesis, to suppose, let us suppose, let us say, a supposition",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a hypothesis, to suppose, let us suppose, let us say, a supposition]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "probably, probability, unlikely, a chance, a risk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: probably, probability, unlikely, a chance, a risk]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to take a risk, to fear, to avoid, to threaten, to prevent",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to take a risk, to fear, to avoid, to threaten, to prevent]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to count on, to expect, an expectation, to succeed, to work out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to count on, to expect, an expectation, to succeed, to work out]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to guarantee, definitely, necessary, necessity, enough",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to guarantee, definitely, necessary, necessity, enough]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an exception, as long as, except perhaps, at least, in case",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an exception, as long as, except perhaps, at least, in case]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ecology? (экология.) Pollution? (загрязнение.) To pollute? (загрязнять.) To recycle? (перерабатывать.) To look after? (беречь.) A condition? (условие.) On condition? (при условии.) In case of? (в случае.) Otherwise? (в противном случае.) Even if? (даже если.) A hypothesis? (гипотеза.) To suppose? (предполагать.) Let us suppose? (предположим.) Let us say? (допустим.) A supposition? (предположение.) Probably? (вероятно.) Probability? (вероятность.) Unlikely? (маловероятный.) A chance? (шанс.) A risk? (риск.) To take a risk? (рисковать.) To fear? (опасаться.) To avoid? (избегать.) To threaten? (угрожать.) To prevent? (предотвращать.) To count on? (рассчитывать.) To expect? (ожидать.) An expectation? (ожидание.) To succeed? (удаваться.) To work out? (получаться.) To guarantee? (гарантировать.) Definitely? (обязательно.) Necessary? (необходимый.) Necessity? (необходимость.) Enough? (достаточно.) An exception? (исключение (isklyuchéniye).) As long as? (лишь бы (lish by).) Except perhaps? (разве что (rázve chto).) At least? (хотя бы (khotyá by).) In case? (на всякий случай (na vsyákiy slúchay).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

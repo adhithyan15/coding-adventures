@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C493-vlyublyonnyy",
+    "language": "russian",
+    "chapter": 493,
+    "sequence": 27830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cf6116acc9d41e9c"
+  },
+  "findings": []
+}

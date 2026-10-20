@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-R508-review-501-508",
+    "language": "russian",
+    "chapter": 508,
+    "sequence": 28640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:be0cd0c50a651d0d"
+  },
+  "findings": []
+}

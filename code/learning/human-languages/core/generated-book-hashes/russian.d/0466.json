@@ -1,0 +1,14 @@
+{
+  "language": "russian",
+  "chapter": 466,
+  "sourceHash": "fnv1a64:e59bcd0985a48809",
+  "lessonIds": [
+    "RU-C466-burya",
+    "RU-C466-uragan",
+    "RU-C466-poryv",
+    "RU-C466-gremet",
+    "RU-C466-sverkat",
+    "RU-R466-review-459-466"
+  ],
+  "tex": "russian/book/chapters/ch466-storms.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 517,
+  "sourceHash": "fnv1a64:74c2771203660ee3",
+  "lessonIds": [
+    "RU-C517-khor",
+    "RU-C517-orkestr",
+    "RU-C517-dirizhyor",
+    "RU-C517-dirizhirovat",
+    "RU-C517-kompozitor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch517.txt",
+  "json": "russian/narration/ch517.json",
+  "textHash": "fnv1a64:7426303560d51d76",
+  "jsonHash": "fnv1a64:6a56c5a97b0f70e2",
+  "findings": []
+}

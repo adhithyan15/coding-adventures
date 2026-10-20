@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C291-rassledovat",
+    "language": "russian",
+    "chapter": 291,
+    "sequence": 17440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:01f4255059ae1a4d"
+  },
+  "findings": []
+}

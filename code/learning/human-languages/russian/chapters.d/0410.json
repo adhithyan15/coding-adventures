@@ -1,0 +1,19 @@
+{
+  "chapter": 410,
+  "title": "A small accident",
+  "label": "ch:ru-a-small-accident",
+  "canDo": "I can describe a small accident: a collision, colliding, crashing into something, knocking someone down and a dent.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-R410-review-403-410",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 410: I can describe a small accident: a collision, colliding, crashing into something, knocking someone down and a dent.",
+    "assesses": [
+      "RU-LEX-C410-STOLKNOVENIYE-03",
+      "RU-LEX-C410-STOLKNOVENIYE-04",
+      "RU-LEX-C410-STOLKNOVENIYE-05"
+    ]
+  }
+}

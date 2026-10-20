@@ -1,0 +1,11 @@
+{
+  "id": "RU-C448-shtopat",
+  "pathSegment": "RU-PATH-448-KHIMCHISTKA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-448-KHIMCHISTKA",
+      "order": 2
+    }
+  ]
+}

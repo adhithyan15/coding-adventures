@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:ea4a14b7478deeea",
+  "lessonIds": [
+    "RU-C315-ugoshcheniye",
+    "RU-C315-ugoshchat",
+    "RU-C315-zastolye",
+    "RU-C315-chokatsya",
+    "RU-C315-shampanskoye"
+  ],
+  "tex": "russian/book/chapters/ch315-treats-and-feasts.tex"
+}

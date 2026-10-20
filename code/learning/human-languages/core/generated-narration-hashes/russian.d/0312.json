@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:8f442a9b9431703d",
+  "lessonIds": [
+    "RU-C312-pozdravlyat",
+    "RU-C312-pozdravleniye",
+    "RU-C312-pozhelaniye",
+    "RU-C312-zhelat",
+    "RU-C312-tost"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch312.txt",
+  "json": "russian/narration/ch312.json",
+  "textHash": "fnv1a64:9a80ed27af851c36",
+  "jsonHash": "fnv1a64:341fe9cbd2ef6073",
+  "findings": []
+}

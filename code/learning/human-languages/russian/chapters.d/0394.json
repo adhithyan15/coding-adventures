@@ -1,0 +1,19 @@
+{
+  "chapter": 394,
+  "title": "Debts and loans",
+  "label": "ch:ru-debts-and-loans",
+  "canDo": "I can talk about a debt and a loan, lend and borrow money, pay it back and say what interest a bank pays.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "RU-C394-procent",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 394: I can talk about a debt and a loan, lend and borrow money, pay it back and say what interest a bank pays.",
+    "assesses": [
+      "RU-LEX-C394-DOLG-03",
+      "RU-LEX-C394-DOLG-04",
+      "RU-LEX-C394-DOLG-05"
+    ]
+  }
+}

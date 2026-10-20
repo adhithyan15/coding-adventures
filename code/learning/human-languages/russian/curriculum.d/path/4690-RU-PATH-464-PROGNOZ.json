@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-464-PROGNOZ",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "RU-EXT-464-PROGNOZ"
+  ],
+  "after": []
+}

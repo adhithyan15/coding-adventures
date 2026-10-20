@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 438,
+  "sourceHash": "fnv1a64:def93b37cc2bfe41",
+  "lessonIds": [
+    "RU-C438-ukazatel",
+    "RU-C438-tablichka",
+    "RU-C438-strelka",
+    "RU-C438-oriyentir",
+    "RU-C438-skhema"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch438.txt",
+  "json": "russian/narration/ch438.json",
+  "textHash": "fnv1a64:8e1f90fdbd94a207",
+  "jsonHash": "fnv1a64:1c4c0e589cf48f4a",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 309,
+  "sourceHash": "fnv1a64:95c76c49f155cd5f",
+  "lessonIds": [
+    "RU-C309-pokhorony",
+    "RU-C309-khoronit",
+    "RU-C309-smert",
+    "RU-C309-vdova",
+    "RU-C309-naslednik"
+  ],
+  "tex": "russian/book/chapters/ch309-death-and-mourning.tex"
+}

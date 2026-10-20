@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C347-prichyom",
+    "language": "russian",
+    "chapter": 347,
+    "sequence": 20330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7979228361e855a0"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 298,
+  "sourceHash": "fnv1a64:c7e048ca0644f0d3",
+  "lessonIds": [
+    "RU-C298-nayezd",
+    "RU-C298-postradavshiy",
+    "RU-C298-razbivatsya",
+    "RU-C298-utselet",
+    "RU-C298-perevernutsya"
+  ],
+  "tex": "russian/book/chapters/ch298-on-the-road.tex"
+}

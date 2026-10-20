@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 473,
+  "title": "Disappointment and Relief",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c1ccd8049ccab312",
+  "lessons": [
+    {
+      "id": "RU-C473-razocharovaniye",
+      "sequence": 26800,
+      "title": "разочарование (razocharovániye) — disappointment",
+      "headword": "разочарование",
+      "romanization": "razocharovániye",
+      "gloss": "disappointment",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b90e81447b1b0851",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for fury, then the Russian for quick-tempered."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: разочарование",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "разочарование (razocharovániye) — \"disappointment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Фильм стал для нас большим разочарованием. Film stal dlya nas bolshím razocharovániyem. The film was a big disappointment for us."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter. The verbs are разочаровываться / разочароваться — to be disappointed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "разочарование (razocharovániye) is built on разочаровать 'to break the spell', from очаровать 'to enchant' and чары 'spells'; EtymDB traces чары to Proto-Slavic čarъ 'magic, sorcery'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "razocharovániye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *razocharovániye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "razocharovániye, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *razocharovániye*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with razocharovániye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *razocharovániye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for fury, then the Russian for quick-tempered, then say razocharovániye again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for fury, then the Russian for quick-tempered, then say *razocharovániye* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does разочарование (razocharovániye) mean? (\"Disappointment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C473-razocharovannyy",
+      "sequence": 26810,
+      "title": "разочарованный (razocharóvannyy) — disappointed",
+      "headword": "разочарованный",
+      "romanization": "razocharóvannyy",
+      "gloss": "disappointed",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c3ec1e21634a0d4c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for quick-tempered, then the Russian for disappointment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: разочарованный",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "разочарованный (razocharóvannyy) — \"disappointed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Он вышел из кабинета разочарованный. On výshel iz kabinéta razocharóvannyy. He came out of the office disappointed."
+            },
+            {
+              "kind": "speech",
+              "text": "Past participle of разочаровать, used as an adjective. Short form: разочарован в ком — disappointed in someone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "разочарованный (razocharóvannyy) is the past participle of разочаровать, built on очаровать 'to enchant' and чары 'spells', which EtymDB traces to Proto-Slavic čarъ 'magic'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "razocharóvannyy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *razocharóvannyy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "razocharóvannyy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *razocharóvannyy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with razocharóvannyy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *razocharóvannyy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for quick-tempered, then the Russian for disappointment, then say razocharóvannyy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for quick-tempered, then the Russian for disappointment, then say *razocharóvannyy* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does разочарованный (razocharóvannyy) mean? (\"Disappointed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C473-oblegcheniye",
+      "sequence": 26820,
+      "title": "облегчение (oblegchéniye) — relief",
+      "headword": "облегчение",
+      "romanization": "oblegchéniye",
+      "gloss": "relief",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:29eff572b54c1626",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for disappointment, then the Russian for disappointed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: облегчение",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "облегчение (oblegchéniye) — \"relief\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Когда врач сказал, что всё в порядке, я почувствовал облегчение. Kogdá vrach skazál, chto vsyo v poryádke, ya pochúvstvoval oblegchéniye. When the doctor said everything was fine, I felt relief."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter. С облегчением — with relief."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "облегчение (oblegchéniye) is built on облегчить 'to lighten', from лёгкий 'light, easy'; EtymDB lists облегчить without a source, and лёгкий is inherited from Proto-Slavic lьgъkъ (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oblegchéniye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oblegchéniye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oblegchéniye, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oblegchéniye*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with oblegchéniye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *oblegchéniye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for disappointment, then the Russian for disappointed, then say oblegchéniye again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for disappointment, then the Russian for disappointed, then say *oblegchéniye* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does облегчение (oblegchéniye) mean? (\"Relief\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C473-otchayaniye",
+      "sequence": 26830,
+      "title": "отчаяние (otcháyaniye) — despair",
+      "headword": "отчаяние",
+      "romanization": "otcháyaniye",
+      "gloss": "despair",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:594d37b5004ff3b0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for disappointed, then the Russian for relief."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: отчаяние",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "отчаяние (otcháyaniye) — \"despair\"."
+            },
+            {
+              "kind": "speech",
+              "text": "В отчаянии она позвонила сестре. V otcháyanii oná pozvoníla sestré. In despair she phoned her sister."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter. The verbs are отчаиваться / отчаяться — to despair."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "отчаяние (otcháyaniye) is built on отчаяться 'to give up hope', from от- and чаять 'to hope', which is inherited from Proto-Slavic čajati 'to expect, to wait' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "otcháyaniye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *otcháyaniye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "otcháyaniye, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *otcháyaniye*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with otcháyaniye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *otcháyaniye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for disappointed, then the Russian for relief, then say otcháyaniye again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for disappointed, then the Russian for relief, then say *otcháyaniye* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does отчаяние (otcháyaniye) mean? (\"Despair\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C473-vzdykhat",
+      "sequence": 26840,
+      "title": "вздыхать (vzdykhát) — to sigh",
+      "headword": "вздыхать",
+      "romanization": "vzdykhát",
+      "gloss": "to sigh",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f164df5b7e30ce03",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for relief, then the Russian for despair."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: вздыхать",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "вздыхать (vzdykhát) — \"to sigh\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Бабушка вздыхает и смотрит в окно. Bábushka vzdykháyet i smótrit v oknó. Grandma sighs and gazes out of the window."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; perfective вздохнуть. The noun is вздох — a sigh."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "вздыхать (vzdykhát) is built on вз- 'up' and the root of дышать 'to breathe' and дух 'breath', which EtymDB traces to Proto-Slavic duxъ 'breath, spirit'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vzdykhát",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vzdykhát*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vzdykhát, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vzdykhát*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with vzdykhát",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *vzdykhát*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for relief, then the Russian for despair, then say vzdykhát again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for relief, then the Russian for despair, then say *vzdykhát* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does вздыхать (vzdykhát) mean? (\"To sigh\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

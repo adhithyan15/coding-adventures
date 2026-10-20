@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-525-POETRY",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about poems and learning them by heart.",
+  "prerequisites": []
+}

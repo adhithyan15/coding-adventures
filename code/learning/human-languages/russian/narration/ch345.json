@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 345,
+  "title": "Fair and unfair",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ffbbd048235fdfab",
+  "lessons": [
+    {
+      "id": "RU-C345-spravedlivyy",
+      "sequence": 20210,
+      "title": "справедливый (spravedlívyy) — fair, even-handed",
+      "headword": "справедливый",
+      "romanization": "spravedlívyy",
+      "gloss": "fair, even-handed",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bcec8171897b35f8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to reason, then the Russian for obvious."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: справедливый",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "справедливый (spravedlívyy) — \"fair, even-handed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Наш учитель строгий, но справедливый. Nash uchítel strógiy, no spravedlívyy. Our teacher is strict but fair."
+            },
+            {
+              "kind": "speech",
+              "text": "Справедливо — fairly, or it is fair."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "справедливый (spravedlívyy) is usually traced to the root of правда \"truth\" and право \"right\", Proto-Slavic pravŭ \"right, correct\" (EtymDB), through a Church Slavonic formation."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "spravedlívyy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *spravedlívyy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "spravedlívyy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *spravedlívyy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with spravedlívyy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *spravedlívyy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to reason, then the Russian for obvious, then say spravedlívyy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to reason, then the Russian for obvious, then say *spravedlívyy* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does справедливый (spravedlívyy) mean? (\"Fair, even-handed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C345-nespravedlivyy",
+      "sequence": 20220,
+      "title": "несправедливый (nespravedlívyy) — unfair",
+      "headword": "несправедливый",
+      "romanization": "nespravedlívyy",
+      "gloss": "unfair",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0b2ecab4696ec75",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for obvious, then the Russian for fair."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: несправедливый",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "несправедливый (nespravedlívyy) — \"unfair\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Это несправедливо: он работал больше всех. Éto nespravedlívo: on rabótal bólshe vsekh. That is unfair: he worked more than anyone."
+            },
+            {
+              "kind": "speech",
+              "text": "Short form несправедлив. Несправедливо — it is unfair."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "несправедливый (nespravedlívyy) is не- \"not\" in front of справедливый (spravedlívyy) \"fair\", which is usually traced to the root of право, Proto-Slavic pravŭ \"right, correct\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nespravedlívyy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nespravedlívyy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nespravedlívyy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nespravedlívyy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with nespravedlívyy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *nespravedlívyy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for obvious, then the Russian for fair, then say nespravedlívyy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for obvious, then the Russian for fair, then say *nespravedlívyy* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does несправедливый (nespravedlívyy) mean? (\"Unfair\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C345-spravedlivost",
+      "sequence": 20230,
+      "title": "справедливость (spravedlívost) — fairness, justice",
+      "headword": "справедливость",
+      "romanization": "spravedlívost",
+      "gloss": "fairness, justice",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aad0b02773f786dd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for fair, then the Russian for unfair."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: справедливость",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "справедливость (spravedlívost) — \"fairness, justice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Люди хотят справедливости. Lyúdi khotyát spravedlívosti. People want justice."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine. After хотеть in this sense it takes the genitive."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "справедливость (spravedlívost) is built on справедливый (spravedlívyy) \"fair\" with the abstract suffix -ость; the root is that of право, Proto-Slavic pravŭ (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "spravedlívost",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *spravedlívost*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "spravedlívost, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *spravedlívost*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with spravedlívost",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *spravedlívost*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for fair, then the Russian for unfair, then say spravedlívost again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for fair, then the Russian for unfair, then say *spravedlívost* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does справедливость (spravedlívost) mean? (\"Fairness, justice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C345-razumnyy",
+      "sequence": 20240,
+      "title": "разумный (razúmnyy) — reasonable, sensible",
+      "headword": "разумный",
+      "romanization": "razúmnyy",
+      "gloss": "reasonable, sensible",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8974b6f6ddce1b50",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for unfair, then the Russian for fairness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: разумный",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "разумный (razúmnyy) — \"reasonable, sensible\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Это разумное решение. Éto razúmnoye reshéniye. That is a sensible decision."
+            },
+            {
+              "kind": "speech",
+              "text": "Short form разумен. В разумных пределах — within reason."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "разумный (razúmnyy) is built on разум \"reason\", which Russian borrowed from Church Slavonic; it comes from Proto-Slavic orzumŭ, built on umŭ \"mind\", the word that gives ум (EtymDB). The ра- at the start is the Church Slavonic shape where Russian also has роз-."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "razúmnyy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *razúmnyy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "razúmnyy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *razúmnyy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with razúmnyy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *razúmnyy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for unfair, then the Russian for fairness, then say razúmnyy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for unfair, then the Russian for fairness, then say *razúmnyy* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does разумный (razúmnyy) mean? (\"Reasonable, sensible\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C345-istina",
+      "sequence": 20250,
+      "title": "истина (ístina) — the truth (in a deep sense)",
+      "headword": "истина",
+      "romanization": "ístina",
+      "gloss": "the truth (in a deep sense)",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9402594e1b015938",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for fairness, then the Russian for reasonable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: истина",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "истина (ístina) — \"the truth (in a deep sense)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Он думает, что знает истину. On dúmayet, chto znáyet ístinu. He thinks he knows the truth."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine. More solemn than правда: a truth in philosophy or science."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "истина (ístina) is built on the old adjective истый \"true, genuine\"; EtymDB sets Latvian īstens \"real, true\" beside it as a cousin (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ístina",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ístina*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ístina, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ístina*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ístina",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ístina*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for fairness, then the Russian for reasonable, then say ístina again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for fairness, then the Russian for reasonable, then say *ístina* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does истина (ístina) mean? (\"The truth (in a deep sense)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

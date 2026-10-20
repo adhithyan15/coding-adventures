@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 419,
+  "sourceHash": "fnv1a64:082ace748d5f0c79",
+  "lessonIds": [
+    "RU-C419-registratsiya",
+    "RU-C419-registrirovatsya",
+    "RU-C419-reys",
+    "RU-C419-kladi",
+    "RU-C419-posadochnyy"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch419.txt",
+  "json": "russian/narration/ch419.json",
+  "textHash": "fnv1a64:a3c7ca7a040ef4c2",
+  "jsonHash": "fnv1a64:7fdbe4aead95c72b",
+  "findings": []
+}

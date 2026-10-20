@@ -1,0 +1,11 @@
+{
+  "id": "RU-C441-razyskivat",
+  "pathSegment": "RU-PATH-441-PROKHOZHIY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-441-PROKHOZHIY",
+      "order": 3
+    }
+  ]
+}

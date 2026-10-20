@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:92079bfa045d902b",
+  "lessonIds": [
+    "RU-C441-prokhozhiy",
+    "RU-C441-rassprashivat",
+    "RU-C441-podskazyvat",
+    "RU-C441-razyskivat",
+    "RU-C441-peresprashivat"
+  ],
+  "tex": "russian/book/chapters/ch441-asking-the-way.tex"
+}
