@@ -8,10 +8,10 @@ const fallbackProps = {
   "editContent": "Sample EditContent",
   "editable": false,
   "editorLabel": "Cell value",
-  "height": 32.0,
   "isEditing": false,
   "isSelected": false,
   "row": 0,
+  "rowHeight": 32.0,
   "value": "Sample Value"
 };
 const emitPayloads = {

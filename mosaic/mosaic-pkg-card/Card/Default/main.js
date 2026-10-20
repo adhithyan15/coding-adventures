@@ -2,7 +2,7 @@
 // Fork the file (remove this banner) to customise.
 const componentName = "Card";
 const fallbackProps = {
-  "body": "Sample Body",
+  "bodyText": "Sample BodyText",
   "footer": "Sample Footer",
   "title": "Sample Title"
 };

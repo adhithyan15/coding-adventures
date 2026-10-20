@@ -3,11 +3,11 @@
 const componentName = "Column";
 const fallbackProps = {
   "cellType": "Sample CellType",
+  "columnKey": "Sample ColumnKey",
+  "columnWidth": 0,
   "defaultAlignment": "Sample DefaultAlignment",
   "editable": false,
-  "header": "Sample Header",
-  "key": "Sample Key",
-  "width": 0
+  "header": "Sample Header"
 };
 const emitPayloads = {};
 const MOSAIC_HOST_READY_EVENT = "mosaic-host-ready";
