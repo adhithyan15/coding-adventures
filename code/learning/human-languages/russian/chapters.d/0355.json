@@ -1,0 +1,19 @@
+{
+  "chapter": 355,
+  "title": "Chance and coincidence",
+  "label": "ch:ru-chance-and-coincidence",
+  "canDo": "I can say whether something happened by chance or was bound to happen, talk about a coincidence and say that a problem arises.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C355-voznikat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 355: I can say whether something happened by chance or was bound to happen, talk about a coincidence and say that a problem arises.",
+    "assesses": [
+      "RU-LEX-C355-SLUCHAYNO-03",
+      "RU-LEX-C355-SLUCHAYNO-04",
+      "RU-LEX-C355-SLUCHAYNO-05"
+    ]
+  }
+}

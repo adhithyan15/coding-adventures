@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C340-soglashatsya",
+    "language": "russian",
+    "chapter": 340,
+    "sequence": 19950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d4ed311d215520f"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C451-banderol",
+  "pathSegment": "RU-PATH-451-POSOLSTVO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-451-POSOLSTVO",
+      "order": 2
+    }
+  ]
+}

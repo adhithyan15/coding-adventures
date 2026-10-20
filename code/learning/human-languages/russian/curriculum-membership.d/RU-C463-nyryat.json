@@ -1,0 +1,11 @@
+{
+  "id": "RU-C463-nyryat",
+  "pathSegment": "RU-PATH-463-PRILIV",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-463-PRILIV",
+      "order": 4
+    }
+  ]
+}

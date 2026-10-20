@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 348,
+  "sourceHash": "fnv1a64:3cb2c6d64c88334e",
+  "lessonIds": [
+    "RU-C348-povod",
+    "RU-C348-osnovanie",
+    "RU-C348-faktor",
+    "RU-C348-motiv",
+    "RU-C348-proiskhozhdenie"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch348.txt",
+  "json": "russian/narration/ch348.json",
+  "textHash": "fnv1a64:bd47fcf2d3f4f520",
+  "jsonHash": "fnv1a64:2bb6c8e221229d17",
+  "findings": []
+}

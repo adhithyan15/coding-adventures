@@ -1,0 +1,19 @@
+{
+  "chapter": 343,
+  "title": "Criticising and approving",
+  "label": "ch:ru-criticising-and-approving",
+  "canDo": "I can criticise and take criticism, say that I approve or disapprove of something, and reproach someone.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C343-uprekat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 343: I can criticise and take criticism, say that I approve or disapprove of something, and reproach someone.",
+    "assesses": [
+      "RU-LEX-C343-KRITIKA-03",
+      "RU-LEX-C343-KRITIKA-04",
+      "RU-LEX-C343-KRITIKA-05"
+    ]
+  }
+}

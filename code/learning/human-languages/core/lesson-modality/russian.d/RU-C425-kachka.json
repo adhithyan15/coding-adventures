@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C425-kachka",
+    "language": "russian",
+    "chapter": 425,
+    "sequence": 24340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf5eaef7891a90a6"
+  },
+  "findings": []
+}

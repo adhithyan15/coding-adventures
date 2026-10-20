@@ -1,0 +1,11 @@
+{
+  "id": "RU-C457-dostavlyat",
+  "pathSegment": "RU-PATH-457-DOSTAVKA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-457-DOSTAVKA",
+      "order": 3
+    }
+  ]
+}

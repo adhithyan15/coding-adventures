@@ -1,0 +1,11 @@
+{
+  "id": "RU-C507-rassada",
+  "pathSegment": "RU-PATH-507-BLOSSOM",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-507-BLOSSOM",
+      "order": 0
+    }
+  ]
+}

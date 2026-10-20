@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-441-PROKHOZHIY",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "RU-EXT-441-PROKHOZHIY"
+  ],
+  "after": []
+}

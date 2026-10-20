@@ -1,0 +1,19 @@
+{
+  "chapter": 517,
+  "title": "Choir and Orchestra",
+  "label": "ch:ru-choir-and-orchestra",
+  "canDo": "I can talk about choirs, orchestras and composers.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C517-kompozitor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 517: I can talk about choirs, orchestras and composers.",
+    "assesses": [
+      "RU-LEX-C517-ORCHESTRA-03",
+      "RU-LEX-C517-ORCHESTRA-04",
+      "RU-LEX-C517-ORCHESTRA-05"
+    ]
+  }
+}

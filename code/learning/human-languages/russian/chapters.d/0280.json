@@ -1,0 +1,19 @@
+{
+  "chapter": 280,
+  "title": "Reporting and denying",
+  "label": "ch:ru-reporting-and-denying",
+  "canDo": "I can say that someone reported, denied, published, confirmed or refuted something.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C280-oprovergat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 280: I can say that someone reported, denied, published, confirmed or refuted something.",
+    "assesses": [
+      "RU-LEX-C280-SOOBSHCHAT-03",
+      "RU-LEX-C280-SOOBSHCHAT-04",
+      "RU-LEX-C280-SOOBSHCHAT-05"
+    ]
+  }
+}

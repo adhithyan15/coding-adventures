@@ -1,0 +1,11 @@
+{
+  "id": "RU-C396-kurs",
+  "pathSegment": "RU-PATH-396-TSENY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-396-TSENY",
+      "order": 3
+    }
+  ]
+}

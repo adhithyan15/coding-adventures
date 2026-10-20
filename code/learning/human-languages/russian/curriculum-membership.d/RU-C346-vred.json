@@ -1,0 +1,11 @@
+{
+  "id": "RU-C346-vred",
+  "pathSegment": "RU-PATH-346-PLYUSY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-346-PLYUSY",
+      "order": 3
+    }
+  ]
+}

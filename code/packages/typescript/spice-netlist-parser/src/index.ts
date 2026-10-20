@@ -1099,10 +1099,15 @@ function evaluateMeasure(card: MeasureAnalysis, execution: AnalysisExecutionResu
   if (samples.length === 0) {
     throw new NetlistParseError(`.measure ${JSON.stringify(card.name)} has no samples`);
   }
-  if (card.operation === "find") {
-    if (execution.kind === "op" && card.at === undefined) {
-      return measureNumericValue(samples[0][1]);
+  if (execution.kind === "op" && card.operation === "find") {
+    if (card.at !== undefined && card.at !== 0) {
+      throw new NetlistParseError(
+        `.measure ${JSON.stringify(card.name)} operating-point FIND AT must be 0`,
+      );
     }
+    return measureNumericValue(samples[0][1]);
+  }
+  if (card.operation === "find") {
     if (card.at === undefined) {
       throw new NetlistParseError(`.measure ${JSON.stringify(card.name)} FIND requires AT=<value>`);
     }

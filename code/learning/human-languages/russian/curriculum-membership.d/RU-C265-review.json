@@ -1,0 +1,11 @@
+{
+  "id": "RU-C265-review",
+  "pathSegment": "RU-PATH-265-WAY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-265-WAY",
+      "order": 2
+    }
+  ]
+}

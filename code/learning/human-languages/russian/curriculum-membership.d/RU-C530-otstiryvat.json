@@ -1,0 +1,11 @@
+{
+  "id": "RU-C530-otstiryvat",
+  "pathSegment": "RU-PATH-530-LAUNDRY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-530-LAUNDRY",
+      "order": 4
+    }
+  ]
+}

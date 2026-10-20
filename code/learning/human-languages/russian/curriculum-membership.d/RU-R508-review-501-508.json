@@ -1,0 +1,11 @@
+{
+  "id": "RU-R508-review-501-508",
+  "pathSegment": "RU-PATH-508-FANS",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "RU-EXT-508-FANS",
+      "order": 5
+    }
+  ]
+}

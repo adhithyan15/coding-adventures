@@ -1,0 +1,14 @@
+# oracle: Ripper.lex, ruby 3.3.6 (2024-11-05 revision 75015d4c1f)
+1	0	on_comment	# leading comment\n
+2	0	on_ident	x
+2	2	on_op	=
+2	4	on_int	1
+2	6	on_op	+
+3	2	on_int	2
+3	4	on_comment	# trailing\n
+4	0	on_ignored_nl	\n
+5	0	on_comment	# blank lines above\n
+6	0	on_ident	y
+6	2	on_op	=
+6	4	on_ident	x
+6	5	on_nl	\n

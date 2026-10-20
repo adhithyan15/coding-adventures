@@ -4,6 +4,17 @@ All notable changes to the `coding-adventures-closure-pass-constant-fold` crate 
 
 ## [Unreleased]
 
+### Changed — fold worker stack 128 MiB → 1 GiB (CLOC42, #16009)
+
+`fold_call` keeps a large frame, about 31 KiB per level in a debug build on
+aarch64, so call chains overflowed the 128 MiB worker near 4,150 calls.
+That was below closurec's new chain bound. At 1 GiB:
+
+- call chains fold to about 33,000 levels;
+- operator and member chains fold past 90,000.
+
+The size is a reservation, not an allocation: pages fault in lazily.
+
 ### Fixed — CV02 boundary review
 
 - Reject and dispose of a failed deep candidate inside the large-stack worker

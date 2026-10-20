@@ -1,0 +1,11 @@
+{
+  "id": "RU-C458-vershina",
+  "pathSegment": "RU-PATH-458-DOLINA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-458-DOLINA",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C482-chelyust",
+  "pathSegment": "RU-PATH-482-HEAD",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-482-HEAD",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 491,
+  "sourceHash": "fnv1a64:8ea8ec2a8cf4b307",
+  "lessonIds": [
+    "RU-C491-svekrov",
+    "RU-C491-tyoshcha",
+    "RU-C491-svyokor",
+    "RU-C491-test",
+    "RU-C491-zyat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch491.txt",
+  "json": "russian/narration/ch491.json",
+  "textHash": "fnv1a64:20d0e401702909e8",
+  "jsonHash": "fnv1a64:fe3ff9e880f8950f",
+  "findings": []
+}

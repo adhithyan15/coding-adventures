@@ -1,0 +1,20 @@
+{
+  "chapter": 263,
+  "title": "What I Think, and So",
+  "label": "ch:ru-what-i-think-and-so",
+  "canDo": "I can give my opinion with я думаю, что, по-моему and мне кажется, что, and draw a result with поэтому and так что.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C263-review",
+    "kind": "production",
+    "summary": "Complete RU-C263-review: an opinion said three ways and one reason turned round, потому что into поэтому and так что.",
+    "assesses": [
+      "RU-GRAMMAR-PO-MOEMU-01",
+      "RU-GRAMMAR-MNE-KAZHETSYA-01",
+      "RU-GRAMMAR-POETOMU-RESULT-01",
+      "RU-LEX-TAK-CHTO-01"
+    ]
+  }
+}

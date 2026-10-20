@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-424-PAROM",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "RU-EXT-424-PAROM"
+  ],
+  "after": []
+}

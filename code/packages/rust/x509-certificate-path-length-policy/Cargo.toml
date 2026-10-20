@@ -1,0 +1,12 @@
+[package]
+name = "x509-certificate-path-length-policy"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded RFC 5280 certificate path-length policy state"
+
+[dependencies]
+x509-certificate-policy = { path = "../x509-certificate-policy" }
+
+[dev-dependencies]
+der-asn1 = { path = "../der-asn1" }
+x509-certificate = { path = "../x509-certificate" }

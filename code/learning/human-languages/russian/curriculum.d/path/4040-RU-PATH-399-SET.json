@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-399-SET",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "RU-EXT-399-SET"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C293-prigovor",
+  "pathSegment": "RU-PATH-293-SUD",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-293-SUD",
+      "order": 2
+    }
+  ]
+}

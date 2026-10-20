@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C425-yakor",
+    "language": "russian",
+    "chapter": 425,
+    "sequence": 24360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3b438dcdc5c98a47"
+  },
+  "findings": []
+}

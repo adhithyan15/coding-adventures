@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 359,
+  "sourceHash": "fnv1a64:abb7ed34cd74aec3",
+  "lessonIds": [
+    "RU-C359-obyazannost",
+    "RU-C359-poruchat",
+    "RU-C359-poruchenie",
+    "RU-C359-vypolnyat",
+    "RU-C359-spravlyatsya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch359.txt",
+  "json": "russian/narration/ch359.json",
+  "textHash": "fnv1a64:88f71bd2ef0dffa8",
+  "jsonHash": "fnv1a64:237beb085173b1a8",
+  "findings": []
+}

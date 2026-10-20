@@ -1,0 +1,11 @@
+{
+  "id": "RU-C417-marshrutka",
+  "pathSegment": "RU-PATH-417-MARSHRUTKA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-417-MARSHRUTKA",
+      "order": 4
+    }
+  ]
+}

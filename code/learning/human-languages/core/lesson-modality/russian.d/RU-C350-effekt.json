@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C350-effekt",
+    "language": "russian",
+    "chapter": 350,
+    "sequence": 20490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f70f3a480434da38"
+  },
+  "findings": []
+}

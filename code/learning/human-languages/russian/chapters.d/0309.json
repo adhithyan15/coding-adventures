@@ -1,0 +1,19 @@
+{
+  "chapter": 309,
+  "title": "Death and mourning",
+  "label": "ch:ru-death-and-mourning",
+  "canDo": "I can talk about a funeral, burying someone, death, a widow and an heir.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C309-naslednik",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 309: I can talk about a funeral, burying someone, death, a widow and an heir.",
+    "assesses": [
+      "RU-LEX-C309-POKHORONY-03",
+      "RU-LEX-C309-POKHORONY-04",
+      "RU-LEX-C309-POKHORONY-05"
+    ]
+  }
+}

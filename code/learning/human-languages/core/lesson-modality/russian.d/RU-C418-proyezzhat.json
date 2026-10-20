@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C418-proyezzhat",
+    "language": "russian",
+    "chapter": 418,
+    "sequence": 23990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:06e58eb62a7eaf4a"
+  },
+  "findings": []
+}

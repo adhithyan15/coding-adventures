@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 342,
+  "sourceHash": "fnv1a64:016b56f7e622b338",
+  "lessonIds": [
+    "RU-C342-obsuzhdat",
+    "RU-C342-obsuzhdenie",
+    "RU-C342-diskussiya",
+    "RU-C342-vyskazyvatsya",
+    "RU-C342-delitsya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch342.txt",
+  "json": "russian/narration/ch342.json",
+  "textHash": "fnv1a64:be8eef7a6d0902a3",
+  "jsonHash": "fnv1a64:77f0b7cfd04086b9",
+  "findings": []
+}

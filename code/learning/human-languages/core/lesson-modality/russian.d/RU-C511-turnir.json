@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C511-turnir",
+    "language": "russian",
+    "chapter": 511,
+    "sequence": 28750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:54b4837dcf218e7e"
+  },
+  "findings": []
+}

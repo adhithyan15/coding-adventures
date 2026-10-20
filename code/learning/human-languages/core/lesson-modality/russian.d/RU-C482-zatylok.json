@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C482-zatylok",
+    "language": "russian",
+    "chapter": 482,
+    "sequence": 27270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9e525ec6864a4ec5"
+  },
+  "findings": []
+}

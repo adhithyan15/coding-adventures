@@ -1,0 +1,19 @@
+{
+  "chapter": 397,
+  "title": "Paying for things",
+  "label": "ch:ru-paying-for-things",
+  "canDo": "I can say who pays for something, talk about a payment, and say whether something is free, paid for or a good deal.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "RU-C397-vygodnyy",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 397: I can say who pays for something, talk about a payment, and say whether something is free, paid for or a good deal.",
+    "assesses": [
+      "RU-LEX-C397-OPLATA-03",
+      "RU-LEX-C397-OPLATA-04",
+      "RU-LEX-C397-OPLATA-05"
+    ]
+  }
+}

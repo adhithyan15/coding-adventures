@@ -1,0 +1,11 @@
+{
+  "id": "RU-C376-lish-by",
+  "pathSegment": "RU-PATH-376-ISKLYUCHENIYE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-376-ISKLYUCHENIYE",
+      "order": 1
+    }
+  ]
+}

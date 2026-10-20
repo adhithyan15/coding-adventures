@@ -1,0 +1,19 @@
+{
+  "chapter": 488,
+  "title": "A Sleepless Night",
+  "label": "ch:ru-a-sleepless-night",
+  "canDo": "I can describe a bad night: insomnia, snoring and nightmares.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C488-dremat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 488: I can describe a bad night: insomnia, snoring and nightmares.",
+    "assesses": [
+      "RU-LEX-C488-NIGHT-03",
+      "RU-LEX-C488-NIGHT-04",
+      "RU-LEX-C488-NIGHT-05"
+    ]
+  }
+}

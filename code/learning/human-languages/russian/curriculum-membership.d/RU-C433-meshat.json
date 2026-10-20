@@ -1,0 +1,11 @@
+{
+  "id": "RU-C433-meshat",
+  "pathSegment": "RU-PATH-433-SHUM",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-433-SHUM",
+      "order": 1
+    }
+  ]
+}

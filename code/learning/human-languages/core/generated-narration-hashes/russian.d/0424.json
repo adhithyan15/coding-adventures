@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 424,
+  "sourceHash": "fnv1a64:74d73e7678bb393d",
+  "lessonIds": [
+    "RU-C424-parom",
+    "RU-C424-paluba",
+    "RU-C424-kayuta",
+    "RU-C424-prichal",
+    "RU-C424-pristan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch424.txt",
+  "json": "russian/narration/ch424.json",
+  "textHash": "fnv1a64:dbe2604055e05541",
+  "jsonHash": "fnv1a64:cbb5e3e2cef8583a",
+  "findings": []
+}

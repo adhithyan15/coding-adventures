@@ -1,0 +1,19 @@
+{
+  "chapter": 318,
+  "title": "Customs and festivities",
+  "label": "ch:ru-customs-and-festivities",
+  "canDo": "I can talk about a tradition, a custom, a rite, a ball and public festivities.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-R318-review-311-318",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 318: I can talk about a tradition, a custom, a rite, a ball and public festivities.",
+    "assesses": [
+      "RU-LEX-C318-TRADITSIYA-03",
+      "RU-LEX-C318-TRADITSIYA-04",
+      "RU-LEX-C318-TRADITSIYA-05"
+    ]
+  }
+}

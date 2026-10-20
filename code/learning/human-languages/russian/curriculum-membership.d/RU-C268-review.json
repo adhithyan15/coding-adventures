@@ -1,0 +1,11 @@
+{
+  "id": "RU-C268-review",
+  "pathSegment": "RU-PATH-268-COMPARE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-268-COMPARE",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 292,
+  "title": "Search and questioning",
+  "label": "ch:ru-search-and-questioning",
+  "canDo": "I can say that the police searched and arrested someone, and talk about questioning and statements.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C292-pokazaniya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 292: I can say that the police searched and arrested someone, and talk about questioning and statements.",
+    "assesses": [
+      "RU-LEX-C292-DOPROS-03",
+      "RU-LEX-C292-DOPROS-04",
+      "RU-LEX-C292-DOPROS-05"
+    ]
+  }
+}

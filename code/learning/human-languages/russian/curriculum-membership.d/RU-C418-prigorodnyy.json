@@ -1,0 +1,11 @@
+{
+  "id": "RU-C418-prigorodnyy",
+  "pathSegment": "RU-PATH-418-PERESADKA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-418-PERESADKA",
+      "order": 2
+    }
+  ]
+}

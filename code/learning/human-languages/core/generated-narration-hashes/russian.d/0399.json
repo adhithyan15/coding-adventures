@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 399,
+  "sourceHash": "fnv1a64:63154204baaf2c3e",
+  "lessonIds": [
+    "RU-C399-set",
+    "RU-C399-sayt",
+    "RU-C399-ssylka",
+    "RU-C399-brauzer",
+    "RU-C399-poiskovik"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch399.txt",
+  "json": "russian/narration/ch399.json",
+  "textHash": "fnv1a64:a0e050509cf498c9",
+  "jsonHash": "fnv1a64:d7747859c2cd6bdb",
+  "findings": []
+}

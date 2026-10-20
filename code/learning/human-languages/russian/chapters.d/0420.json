@@ -1,0 +1,19 @@
+{
+  "chapter": 420,
+  "title": "Security and customs",
+  "label": "ch:ru-security-and-customs",
+  "canDo": "I can go through security and the border: the security check, searching bags, the border guard and the declaration.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C420-deklarirovat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 420: I can go through security and the border: the security check, searching bags, the border guard and the declaration.",
+    "assesses": [
+      "RU-LEX-C420-DOSMOTR-03",
+      "RU-LEX-C420-DOSMOTR-04",
+      "RU-LEX-C420-DOSMOTR-05"
+    ]
+  }
+}

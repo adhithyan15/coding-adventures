@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 401,
+  "sourceHash": "fnv1a64:ca6bab859f298720",
+  "lessonIds": [
+    "RU-C401-prilozhenie",
+    "RU-C401-ustanavlivat",
+    "RU-C401-obnovlyat",
+    "RU-C401-udalyat",
+    "RU-C401-zagruzhat"
+  ],
+  "tex": "russian/book/chapters/ch401-apps.tex"
+}

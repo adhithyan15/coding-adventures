@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 298,
+  "sourceHash": "fnv1a64:ce2911e75bdfb77c",
+  "lessonIds": [
+    "RU-C298-nayezd",
+    "RU-C298-postradavshiy",
+    "RU-C298-razbivatsya",
+    "RU-C298-utselet",
+    "RU-C298-perevernutsya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch298.txt",
+  "json": "russian/narration/ch298.json",
+  "textHash": "fnv1a64:f33b0fd3fa5d44e7",
+  "jsonHash": "fnv1a64:53f559ab1217742b",
+  "findings": []
+}

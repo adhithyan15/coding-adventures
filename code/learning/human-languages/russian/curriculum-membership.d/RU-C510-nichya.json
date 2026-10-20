@@ -1,0 +1,11 @@
+{
+  "id": "RU-C510-nichya",
+  "pathSegment": "RU-PATH-510-RESULTS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-510-RESULTS",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C361-ubytok",
+    "language": "russian",
+    "chapter": 361,
+    "sequence": 21050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6296875d0cbc4165"
+  },
+  "findings": []
+}

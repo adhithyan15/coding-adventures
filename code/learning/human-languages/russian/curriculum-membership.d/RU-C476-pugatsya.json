@@ -1,0 +1,11 @@
+{
+  "id": "RU-C476-pugatsya",
+  "pathSegment": "RU-PATH-476-FRIGHT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-476-FRIGHT",
+      "order": 1
+    }
+  ]
+}

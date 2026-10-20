@@ -1181,9 +1181,13 @@ def _evaluate_measure(card: MeasureAnalysis, result: AnalysisExecutionResult) ->
     samples = _measure_samples(card, result)
     if not samples:
         raise NetlistParseError(f".measure {card.name!r} has no samples")
+    if result.kind == "op" and card.operation == "find":
+        if card.at is not None and card.at != 0.0:
+            raise NetlistParseError(
+                f".measure {card.name!r} operating-point FIND AT must be 0"
+            )
+        return _measure_numeric_value(samples[0][1])
     if card.operation == "find":
-        if result.kind == "op" and card.at is None:
-            return _measure_numeric_value(samples[0][1])
         if card.at is None:
             raise NetlistParseError(f".measure {card.name!r} FIND requires AT=<value>")
         return _measure_numeric_value(_interpolate_measure_value(samples, card.at, card))

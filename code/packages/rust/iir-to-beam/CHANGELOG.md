@@ -1,5 +1,22 @@
 # Changelog — iir-to-beam
 
+## [0.22.0] — 2026-10-20 (LANG83 PR4 — overflow-checked arithmetic)
+
+- **`i64_add_ovf` / `i64_sub_ovf` / `i64_mul_ovf` / `i64_neg_ovf`**
+  ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR4).
+  BEAM integers never overflow, they become bignums, so the lowering computes
+  the *exact* result with one `gc_bif2` (`erlang:'+'`, `'-'`, `'*'`; negation
+  is `0 - a`) into the destination register, then range-checks it:
+  `is_lt {f,LO_OK} rd MIN` and `is_lt {f,DONE} MAX rd`, each followed by
+  `erlang:error('Trap.Overflow')`. An out-of-range bignum reaches only the
+  raise. The destination is a variable register below `live`, so the bignum
+  survives a GC.
+- `op_support`: all four `Lowered`.
+- `tests/lang83_pr1b.rs`'s opcode model gains `erlang:*/2` (in `i128`, exact
+  like a bignum) and runs the sequences: exact results at the range edges,
+  `Trap.Overflow` for 11 overflowing inputs (including `MIN * MIN`), the
+  instruction shape, and a destination that aliases an operand.
+
 ## [0.21.0] — 2026-10-19 (LANG83 PR1b — floor division, `trap`, `write_i64`)
 
 - **`i64_div_floor` / `i64_mod_floor`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)): Erlang's

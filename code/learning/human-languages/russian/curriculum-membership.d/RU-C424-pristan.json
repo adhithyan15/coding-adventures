@@ -1,0 +1,11 @@
+{
+  "id": "RU-C424-pristan",
+  "pathSegment": "RU-PATH-424-PAROM",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-424-PAROM",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C349-vozdeystvie",
+  "pathSegment": "RU-PATH-349-VLIYANIYE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-349-VLIYANIYE",
+      "order": 4
+    }
+  ]
+}

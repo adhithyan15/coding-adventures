@@ -1,0 +1,655 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 261,
+  "title": "The Past, Seen Two Ways",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:95e16a62621d51e6",
+  "lessons": [
+    {
+      "id": "RU-C261-chital",
+      "sequence": 16000,
+      "title": "читал, читала, читали (chitál, chitála, chitáli) — the past, and who did it",
+      "headword": "читал, читала, читали",
+      "romanization": "chitál, chitála, chitáli",
+      "gloss": "the past tense — the infinitive's -ть becomes -л, and the ending agrees with who did it: -л for a man, -ла for a woman, -ли for more than one",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0e5ae9d07369a448",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"recently\" and \"yesterday\". (Nedávno. Vcherá.) The first came with one past sentence: Nedávno ya chitál knígu. This lesson takes that -л apart."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: -ть becomes -л",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Drop the infinitive's -ть and put -л in its place: читать, читал; работать, работал. The past has no endings for I or you. It changes for who did it: -л for a man, -ла for a woman, -ло for a neuter noun."
+            },
+            {
+              "kind": "speech",
+              "text": "Вчера я читал. — vcherá ya chitál — Yesterday I read; a man says it. Вчера я читала. — vcherá ya chitála — the same, from a woman. Мама работала, а папа читал. — máma rabótala, a pápa chitál — Mum was working and Dad was reading."
+            },
+            {
+              "kind": "speech",
+              "text": "Папа ends in -а and still takes -л: a father is a man."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: -ли for more than one",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "For more than one, gender drops away: -ли. Мы гуляли в парке. — my gulyáli v párke — We went for a walk in the park. The polite вы takes -ли even for one person: Вы читали? — vy chitáli?"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: был, была, было, были",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Быть is silent in the present, but its past follows the same pattern: был (byl), была (bylá), было (býlo), были (býli). The stress moves to the end for a woman."
+            },
+            {
+              "kind": "speech",
+              "text": "Я была в музее. — ya bylá v muzéye — I was at the museum."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "By the usual historical account, the -л form was once a describing word, \"having read\", said beside a present form of быть: Old Russian čitalŭ jesmĭ. The helping verb wore away and the describing word stayed, so the past still agrees like an adjective. Быть goes back to Proto-Indo-European bʰuH-, \"to become\" (EtymDB 2.1); English be comes from the same root."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Vcherá ya chitál, then Vcherá ya chitála",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Vcherá ya chitál*, then *Vcherá ya chitála*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Máma rabótala, a pápa chitál.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Máma rabótala, a pápa chitál.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "My gulyáli v párke.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *My gulyáli v párke.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "byl, bylá, býlo, býli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *byl, bylá, býlo, býli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "Gde ty byl vcherá? Ya byl or Ya bylá, and a place",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: *Gde ty byl vcherá?* *Ya byl* or *Ya bylá*, and a place]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What replaces -ть in the past? (-л.) What does a woman add? (-а: читала.) More than one person, or polite вы? (-ли.) \"She was at the museum\"? (Она была в музее.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C261-prochital",
+      "sequence": 16010,
+      "title": "читал or прочитал — the reading, and the book read through",
+      "headword": "читал / прочитал",
+      "romanization": "chitál / prochitál",
+      "gloss": "aspect in the past — the imperfective for the reading itself, a habit or the bare fact; the perfective for the book read to the end, with a result",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:add3b03ddb39aa1b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the partners you met with the first verbs: читать, прочитать; писать, написать. One is the doing, the other the deed done. In the present only the doing is used. In the past both are, and the choice decides the story."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the doing, or the deed done",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Вчера я читал книгу. — vcherá ya chitál knígu — Yesterday I was reading a book. Вчера я прочитал книгу. — vcherá ya prochitál knígu — Yesterday I read the book, to the end."
+            },
+            {
+              "kind": "speech",
+              "text": "The imperfective shows the reading going on, and says nothing about the last page. The perfective sees the deed whole: finished, with a result. The book is read."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: a habit, and a bare fact",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The imperfective has two more jobs. A habit: Я часто читал газету. — ya chásto chitál gazétu — I often read the paper. And the bare fact that something happened at all:"
+            },
+            {
+              "kind": "speech",
+              "text": "— Ты читал эту книгу? — Да, читал. — ty chitál étu knígu? da, chitál — Have you read this book? Yes, I have."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: more pairs",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Мы посмотрели фильм. — my posmotréli film — We watched the film, all of it. Я писал сообщение, но не написал. — ya pisál soobshchéniye, no ne napisál — I was writing a message, but did not get it written."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Russian grammar calls aspect вид, \"a look, a view\", which EtymDB 2.1 takes through Proto-Slavic vidŭ to PIE weyd-, \"to see, to know\": the root of видеть and of English wit. Two aspects, two views of one deed: from inside, while it goes on, or from outside, whole. The prefix про- means \"through\": прочитать, to read through."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Vcherá ya chitál knígu. The reading went on",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Vcherá ya chitál knígu.* The reading went on]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Vcherá ya prochitál knígu. The book is finished",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Vcherá ya prochitál knígu.* The book is finished]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ya chásto chitál gazétu. A habit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ya chásto chitál gazétu.* A habit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "Ty chitál étu knígu? Da, chitál or Net, ne chitál",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: *Ty chitál étu knígu?* *Da, chitál* or *Net, ne chitál*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "My posmotréli film.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *My posmotréli film.*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I finished the book\": which verb? (Прочитал.) \"I often read the paper\"? (Читал, a habit.) What does Russian call aspect? (Вид, a view.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C261-poka",
+      "sequence": 16020,
+      "title": "когда and пока — the scene, and what cut into it",
+      "headword": "когда …, …; пока …, …",
+      "romanization": "kogdá …, …; poká …, …",
+      "gloss": "when and while in a story — пока with the imperfective for two things going on at once, когда with a perfective for the moment that cut in or came next",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0fadeeeec0df3da1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"yesterday I was reading a book\", then \"yesterday I read the book to the end\". (Vcherá ya chitál knígu. Vcherá ya prochitál knígu.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And the hinge from the present: kogdá ya chitáyu, ya dúmayu. In the past, the aspect on each side tells how the halves fit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one going on, one cutting in",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Когда я читал, позвонил брат. — kogdá ya chitál, pozvoníl brat — When I was reading, my brother rang."
+            },
+            {
+              "kind": "speech",
+              "text": "The reading is imperfective: it was going on. Позвонил, the perfective of звонить, is one call that cut into it."
+            },
+            {
+              "kind": "speech",
+              "text": "Put a perfective on both sides and the events come one after the other:"
+            },
+            {
+              "kind": "speech",
+              "text": "Когда я прочитал книгу, я позвонил брату. — kogdá ya prochitál knígu, ya pozvoníl brátu — When I had finished the book, I rang my brother."
+            },
+            {
+              "kind": "speech",
+              "text": "First the book was finished, then the call. Брату is брат with -у: a man you ring takes that ending, and Mum would be маме."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: пока, for two things at once",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The goodbye пока has a second job: \"while, for as long as\". Inside a story it usually takes the imperfective, and it lays two scenes side by side:"
+            },
+            {
+              "kind": "speech",
+              "text": "Пока я читал, брат спал. — poká ya chitál, brat spal — While I was reading, my brother was asleep."
+            },
+            {
+              "kind": "speech",
+              "text": "Neither half is finished; both went on through the same hour. Когда я читал, брат спал says it too; пока stresses the stretch of time, and its other half may be one deed inside it: Пока я читал, позвонил брат."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "пока is по- with an old pronoun meaning \"which, what kind\", the ancestor of какой, on the question-root PIE kʷo- of как and of English who and when. By the usual account \"for as long as\" is its old sense, and the goodbye, \"for now\", grew out of it in the twentieth century. Когда comes off the same root."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Kogdá ya chitál, pozvoníl brat. One call cut in",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Kogdá ya chitál, pozvoníl brat.* One call cut in]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Kogdá ya prochitál knígu, ya pozvoníl brátu. One after the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Kogdá ya prochitál knígu, ya pozvoníl brátu.* One after the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Poká ya chitál, brat spal. Two at once",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Poká ya chitál, brat spal.* Two at once]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a woman's version: Poká ya chitála, brat spal.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a woman's version: *Poká ya chitála, brat spal.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one of your own: Poká ya …, …, two things that went on together",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one of your own: *Poká ya …, …*, two things that went on together]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word puts two scenes side by side? (Пока.) \"When I was reading, my brother rang\": which verb is perfective? (Позвонил, the call that cut in.) Perfective on both sides of когда: at once, or one after the other? (One after the other.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C261-review",
+      "sequence": 16030,
+      "title": "Review — what went on, and what got done",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "the past and its two views — -л, -ла, -ли; the imperfective for what went on, the perfective for what got done; когда and пока",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5562e2d74a15bc14",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I was at the museum\", as a man, then as a woman. (Ya byl v muzéye. Ya bylá v muzéye.) Then \"we were at the museum\". (My býli v muzéye.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three lessons, and Russian can now look back. The past swaps the infinitive's -ть for -л, agreeing with who did it. Nearly every verb in it shows one of two views: the imperfective for what went on, again and again or at all; the perfective for one deed done, with a result. Пока lays two scenes side by side; когда with a perfective marks the moment that cut in, or the next step."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One evening, told both ways:"
+            },
+            {
+              "kind": "speech",
+              "text": "Пока мама ужинала, папа смотрел фильм. — poká máma úzhinala, pápa smotrél film — While Mum was having dinner, Dad was watching a film. Когда мама поужинала, она позвонила бабушке. — kogdá máma poúzhinala, oná pozvoníla bábushke — When Mum had finished her dinner, she rang Grandma."
+            },
+            {
+              "kind": "speech",
+              "text": "The first pair went on together. The second pair came one after the other, each one finished: поужинала is the perfective of ужинать, made with по-."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Poká máma úzhinala, pápa smotrél film.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Poká máma úzhinala, pápa smotrél film.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Kogdá ya chitál, pozvoníl brat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Kogdá ya chitál, pozvoníl brat.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Kogdá my posmotréli film, my pozvoníli máme.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Kogdá my posmotréli film, my pozvoníli máme.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "Ty chitál étu knígu? Da, chitál.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: *Ty chitál étu knígu?* *Da, chitál.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "your own evening: one thing that went on, with poká, and one that got done",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: your own evening: one thing that went on, with *poká*, and one that got done]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"She was reading\"? (Она читала.) \"We watched the film to the end\"? (Мы посмотрели фильм.) Two scenes at once: which word? (Пока.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

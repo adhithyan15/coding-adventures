@@ -1,0 +1,19 @@
+{
+  "chapter": 494,
+  "title": "Marriage and Break-ups",
+  "label": "ch:ru-marriage-and-break-ups",
+  "canDo": "I can talk about marriage, infidelity and breaking up.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C494-rasstavaniye",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 494: I can talk about marriage, infidelity and breaking up.",
+    "assesses": [
+      "RU-LEX-C494-MARRIAGE-03",
+      "RU-LEX-C494-MARRIAGE-04",
+      "RU-LEX-C494-MARRIAGE-05"
+    ]
+  }
+}

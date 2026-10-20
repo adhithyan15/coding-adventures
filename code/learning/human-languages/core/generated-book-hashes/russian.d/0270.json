@@ -1,0 +1,12 @@
+{
+  "language": "russian",
+  "chapter": 270,
+  "sourceHash": "fnv1a64:183ef2dee1ec5cd3",
+  "lessonIds": [
+    "RU-C270-ya-by-khotel",
+    "RU-C270-yesli-by",
+    "RU-C270-review",
+    "RU-W270-pismo"
+  ],
+  "tex": "russian/book/chapters/ch270-would-and-a-letter-about-a-trip.tex"
+}

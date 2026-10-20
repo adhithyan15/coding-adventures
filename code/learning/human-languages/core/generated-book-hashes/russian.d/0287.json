@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 287,
+  "sourceHash": "fnv1a64:19c0f079baef2f41",
+  "lessonIds": [
+    "RU-C287-prestupleniye",
+    "RU-C287-prestupnik",
+    "RU-C287-zhertva",
+    "RU-C287-ulika",
+    "RU-C287-svidetel"
+  ],
+  "tex": "russian/book/chapters/ch287-crime-and-its-witnesses.tex"
+}

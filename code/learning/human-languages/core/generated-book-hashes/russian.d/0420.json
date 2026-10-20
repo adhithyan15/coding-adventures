@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:ac32661f278c4ced",
+  "lessonIds": [
+    "RU-C420-dosmotr",
+    "RU-C420-dosmatrivat",
+    "RU-C420-pogranichnik",
+    "RU-C420-deklaratsiya",
+    "RU-C420-deklarirovat"
+  ],
+  "tex": "russian/book/chapters/ch420-security-and-customs.tex"
+}

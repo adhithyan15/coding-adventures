@@ -1,0 +1,11 @@
+{
+  "id": "RU-C430-prostynya",
+  "pathSegment": "RU-PATH-430-POSTEL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-430-POSTEL",
+      "order": 1
+    }
+  ]
+}

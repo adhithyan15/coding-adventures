@@ -1,0 +1,19 @@
+{
+  "chapter": 516,
+  "title": "Tune and Rhythm",
+  "label": "ch:ru-tune-and-rhythm",
+  "canDo": "I can talk about tunes, rhythm and singing in tune.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-R516-review-509-516",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 516: I can talk about tunes, rhythm and singing in tune.",
+    "assesses": [
+      "RU-LEX-C516-MELODY-03",
+      "RU-LEX-C516-MELODY-04",
+      "RU-LEX-C516-MELODY-05"
+    ]
+  }
+}

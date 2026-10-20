@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C434-pretenziya",
+    "language": "russian",
+    "chapter": 434,
+    "sequence": 24800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:70d9df349aa7b6d1"
+  },
+  "findings": []
+}

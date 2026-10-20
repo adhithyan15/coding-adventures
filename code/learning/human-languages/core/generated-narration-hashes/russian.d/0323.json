@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:c983c5df2c861381",
+  "lessonIds": [
+    "RU-C323-voyna",
+    "RU-C323-bitva",
+    "RU-C323-srazheniye",
+    "RU-C323-srazhatsya",
+    "RU-C323-vrag"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch323.txt",
+  "json": "russian/narration/ch323.json",
+  "textHash": "fnv1a64:e98b8c05296e2e22",
+  "jsonHash": "fnv1a64:04261f11deeb7d06",
+  "findings": []
+}

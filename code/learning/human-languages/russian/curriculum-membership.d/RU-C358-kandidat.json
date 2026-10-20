@@ -1,0 +1,11 @@
+{
+  "id": "RU-C358-kandidat",
+  "pathSegment": "RU-PATH-358-VAKANSIYA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-358-VAKANSIYA",
+      "order": 2
+    }
+  ]
+}

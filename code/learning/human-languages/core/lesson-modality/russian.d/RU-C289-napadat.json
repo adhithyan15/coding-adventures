@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C289-napadat",
+    "language": "russian",
+    "chapter": 289,
+    "sequence": 17360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:37fbc604252e15e0"
+  },
+  "findings": []
+}

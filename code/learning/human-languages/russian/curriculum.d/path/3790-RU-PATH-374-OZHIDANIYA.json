@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-374-OZHIDANIYA",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "RU-EXT-374-OZHIDANIYA"
+  ],
+  "after": []
+}

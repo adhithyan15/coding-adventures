@@ -1,0 +1,19 @@
+{
+  "chapter": 388,
+  "title": "The law",
+  "label": "ch:ru-the-law",
+  "canDo": "I can talk about a law, say whether something is legal or illegal, and say that someone breaks a rule.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "RU-C388-narushenie",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 388: I can talk about a law, say whether something is legal or illegal, and say that someone breaks a rule.",
+    "assesses": [
+      "RU-LEX-C388-ZAKON-03",
+      "RU-LEX-C388-ZAKON-04",
+      "RU-LEX-C388-ZAKON-05"
+    ]
+  }
+}
