@@ -1959,6 +1959,1447 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+  # ── Job 14b: Mosaic Linux runtime acceptance ─────────────────────
+  #
+  # Builds each Mosaic app through the standard Qt, Flutter and Compose
+  # bindings with its real Rust engine, builds the Android APKs, and
+  # launches them on an emulator (UI89). None of it depends on the package
+  # build: every step builds what it needs from source.
+  #
+  # Why a job of its own rather than steps of `build`:
+  #
+  #   - `build` is a matrix. On main it is 15 shards, and a step inside it
+  #     runs on every shard. On the 2026-10-20 green main run these steps
+  #     took ~35 minutes of each shard's ~93: ~520 runner-minutes per merge
+  #     spent proving the same thing fifteen times.
+  #   - They write ~18 GB of APKs, Flutter and Gradle projects into
+  #     RUNNER_TEMP. Every shard carried that before its own build started,
+  #     and the shards that died with "No space left on device" died late,
+  #     in Rust archive writes, with that 18 GB still on disk.
+  #
+  # So this job runs once per workflow run, beside the build rather than
+  # inside it, and installs only the toolchains these steps use. The step
+  # conditions are unchanged, so each lane still runs exactly when the
+  # detect job's Mosaic acceptance probes say it is required.
+  mosaic-linux-runtime:
+    needs: detect
+    name: Mosaic Linux runtime acceptance
+    if: needs.detect.outputs.needs_mosaic_qt_runtime == 'true' || needs.detect.outputs.needs_mosaic_flutter_runtime == 'true' || needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+          allow-prereleases: true
+
+      # Every lane builds a Rust engine. cargo-ndk and the Android targets
+      # are added by the Android steps themselves.
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # stable
+
+      # cairo is a transitive native dependency of the Mosaic engines (see
+      # "Install native Paint VM dependencies" in `build`).
+      - name: Install native Paint VM dependencies
+        timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
+        run: |
+          bash code/scripts/ci/apt-install.sh libcairo2-dev
+
+      - name: Install Qt for the Mosaic Qt runtime
+        if: needs.detect.outputs.needs_mosaic_qt_runtime == 'true'
+        uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730 # v4.3.1
+        with:
+          version: '6.8.3'
+          cache: true
+
+      - name: Set up Dart
+        if: needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
+        uses: dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d # v1.8.1
+        with:
+          sdk: '3.12.2'
+
+      - name: Set up Flutter
+        if: needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
+        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with:
+          flutter-version: '3.44.0'
+          channel: stable
+          cache: true
+
+      - name: Enable Flutter native assets
+        if: needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
+        run: flutter config --enable-native-assets
+
+      # The Compose lane builds desktop and Android apps with Gradle; the
+      # runner image's preinstalled Android SDK is reused, not downloaded.
+      - name: Set up JDK 21
+        if: needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
+        uses: actions/setup-java@v6
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Set up Gradle
+        if: needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
+        uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
+
+      - name: Set up Android SDK
+        if: needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
+        uses: android-actions/setup-android@40fd30fb8d7440372e1316f5d1809ec01dcd3699 # v4.0.1
+        with:
+          packages: 'platform-tools'
+
+      - name: Round-trip Rust engine through standard Qt binding
+        if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_qt_runtime == 'true'
+        shell: bash
+        timeout-minutes: 15
+        run: |
+          set -euo pipefail
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
+          runtime_library="$(pwd)/code/packages/rust/target/debug/libmosaic_app_conformance.so"
+
+          bundled_output="$RUNNER_TEMP/mosaic-qt-bundled-conformance"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-app-conformance/package --backend qt --output "$bundled_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$bundled_output/qt/mosaic-degradations.json"
+          cmake -S "$bundled_output/qt" -B "$bundled_output/qt/build" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$bundled_output/install"
+          cmake --build "$bundled_output/qt/build" --config Release --parallel
+          cmake --install "$bundled_output/qt/build" --config Release
+
+          installed_runtime="$(find "$bundled_output/install" -type f -name libmosaic_app.so -print -quit)"
+          test -n "$installed_runtime"
+          cmp "$runtime_library" "$installed_runtime"
+
+          installed_app="$(dirname "$installed_runtime")/Counter"
+          bundled_log="$RUNNER_TEMP/mosaic-qt-bundled-launch.log"
+          set +e
+          env -u MOSAIC_APP_LIBRARY QT_QPA_PLATFORM=offscreen \
+            timeout 5s "$installed_app" >"$bundled_log" 2>&1
+          bundled_status=$?
+          set -e
+          test "$bundled_status" -eq 124
+          ! grep -F "Mosaic Rust runtime unavailable" "$bundled_log"
+
+          harness="$RUNNER_TEMP/mosaic-qt-runtime-conformance"
+          cp -R code/packages/rust/mosaic-app-bindings/conformance/qt "$harness"
+          cp "$bundled_output/qt/MosaicHost.cpp" "$harness/MosaicHost.cpp"
+          cp "$bundled_output/qt/MosaicHost.h" "$harness/MosaicHost.h"
+
+          cmake -S "$harness" -B "$harness/build" -DCMAKE_BUILD_TYPE=Release
+          cmake --build "$harness/build" --config Release --parallel
+          installed_harness="$(dirname "$installed_runtime")/mosaic_qt_runtime_conformance"
+          cp "$harness/build/mosaic_qt_runtime_conformance" "$installed_harness"
+          (
+            cd /
+            state_path="$RUNNER_TEMP/mosaic-qt-runtime-state.json"
+            rm -f "$state_path" "$state_path.corrupt" "$state_path.tmp"
+            env -u MOSAIC_APP_LIBRARY MOSAIC_APP_STATE_PATH="$state_path" "$installed_harness"
+            env -u MOSAIC_APP_LIBRARY MOSAIC_APP_STATE_PATH="$state_path" MOSAIC_EXPECT_RESTORED=1 "$installed_harness"
+            printf '{}' > "$state_path"
+            env -u MOSAIC_APP_LIBRARY MOSAIC_APP_STATE_PATH="$state_path" \
+              MOSAIC_EXPECT_PERSISTENCE_WARNING=1 "$installed_harness"
+            env -u MOSAIC_APP_LIBRARY "$installed_harness" --expect-missing-prop-failure
+          )
+
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p task-mosaic-app
+          task_runtime_library="$(pwd)/code/packages/rust/target/debug/libtask_mosaic_app.so"
+
+          taskapp_output="$RUNNER_TEMP/mosaic-qt-taskapp"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend qt --output "$taskapp_output" --emit-project --profile native-complete --runtime-library "$task_runtime_library"
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$taskapp_output/qt/mosaic-degradations.json"
+          python3 code/scripts/taskapp_native_control_contract.py --backend qt --generated-dir "$taskapp_output/qt"
+          cmake -S "$taskapp_output/qt" -B "$taskapp_output/qt/build" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$taskapp_output/install"
+          cmake --build "$taskapp_output/qt/build" --config Release --parallel
+          cmake --install "$taskapp_output/qt/build" --config Release
+          installed_taskapp_runtime="$(find "$taskapp_output/install" -type f -name libmosaic_app.so -print -quit)"
+          test -n "$installed_taskapp_runtime"
+          cmp "$task_runtime_library" "$installed_taskapp_runtime"
+          installed_taskapp="$(dirname "$installed_taskapp_runtime")/TaskApp"
+          taskapp_log="$RUNNER_TEMP/mosaic-qt-taskapp-launch.log"
+          set +e
+          env -u MOSAIC_APP_LIBRARY QT_QPA_PLATFORM=offscreen timeout 5s "$installed_taskapp" >"$taskapp_log" 2>&1
+          taskapp_status=$?
+          set -e
+          test "$taskapp_status" -eq 124
+          ! grep -F "Mosaic Rust runtime unavailable" "$taskapp_log"
+          ! grep -E "missing required MIL prop|ReferenceError|TypeError" "$taskapp_log"
+
+          # Rebuild the exact generated shell with its compile-time acceptance
+          # seam, force runtime loading to fail, and drive the emitted Try again
+          # button. The probe exits successfully only after the second visible
+          # failure, proving retry creates a fresh host instead of merely
+          # checking source markers around a blank window.
+          task_startup_source="$RUNNER_TEMP/mosaic-qt-taskapp-startup-conformance"
+          cp -R "$taskapp_output/qt" "$task_startup_source"
+          cmake -S "$task_startup_source" -B "$task_startup_source/startup-build" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_CXX_FLAGS=-DMOSAIC_STARTUP_CONFORMANCE=1
+          cmake --build "$task_startup_source/startup-build" --config Release --parallel
+          task_startup_log="$RUNNER_TEMP/mosaic-qt-taskapp-startup.log"
+          env QT_QPA_PLATFORM=offscreen \
+            MOSAIC_APP_LIBRARY="$RUNNER_TEMP/does-not-exist/libtask_mosaic_app.so" \
+            MOSAIC_APP_STATE_PATH="$RUNNER_TEMP/mosaic-qt-taskapp-startup-state.json" \
+            timeout 10s "$task_startup_source/startup-build/TaskApp" >"$task_startup_log" 2>&1
+          grep -F "Qt startup failure/retry conformance passed" "$task_startup_log"
+
+          task_ui_source="$RUNNER_TEMP/mosaic-qt-taskapp-ui-conformance"
+          cp -R "$taskapp_output/qt" "$task_ui_source"
+          cp code/packages/rust/task-mosaic-app/conformance/qt/ui-main.cpp "$task_ui_source/main.cpp"
+          cmake -S "$task_ui_source" -B "$task_ui_source/acceptance-build" -DCMAKE_BUILD_TYPE=Release
+          cmake --build "$task_ui_source/acceptance-build" --config Release --parallel
+          task_ui_binary="$task_ui_source/acceptance-build/TaskApp"
+          test -x "$task_ui_binary"
+          task_state_path="$RUNNER_TEMP/mosaic-qt-taskapp-state.json"
+          rm -f "$task_state_path" "$task_state_path.corrupt" "$task_state_path.tmp"
+          env -u MOSAIC_APP_LIBRARY QT_QPA_PLATFORM=offscreen MOSAIC_APP_STATE_PATH="$task_state_path" \
+            "$task_ui_binary"
+          env -u MOSAIC_APP_LIBRARY QT_QPA_PLATFORM=offscreen MOSAIC_APP_STATE_PATH="$task_state_path" \
+            MOSAIC_EXPECT_RESTORED=1 "$task_ui_binary"
+
+          # ---- Journal: build, install and LAUNCH (J5a, #14416). --------------
+          #
+          # The first native host Journal runs in. Same shape as TaskApp above:
+          # the strict standard binding (native-complete + runtime library), the
+          # built runtime is the one installed, and the installed app must stay
+          # up for five seconds without the runtime or a required prop missing.
+          # It launches twice against one state file, so the second start
+          # restores whatever the first saved. Journal raises no effects and
+          # ships no host assets, so no harness files are needed.
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p journal-mosaic-app
+          journal_runtime_library="$(pwd)/code/packages/rust/target/debug/libjournal_mosaic_app.so"
+          test -f "$journal_runtime_library"
+
+          journal_output="$RUNNER_TEMP/mosaic-qt-journal"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/journal-app --backend qt --output "$journal_output" --emit-project --profile native-complete --runtime-library "$journal_runtime_library"
+          jq -e '.replacedGeneratedFiles == []' "$journal_output/qt/mosaic-degradations.json"
+          jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$journal_output/qt/mosaic-degradations.json"
+          cmake -S "$journal_output/qt" -B "$journal_output/qt/build" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$journal_output/install"
+          cmake --build "$journal_output/qt/build" --config Release --parallel
+          cmake --install "$journal_output/qt/build" --config Release
+          installed_journal_runtime="$(find "$journal_output/install" -type f -name libmosaic_app.so -print -quit)"
+          test -n "$installed_journal_runtime"
+          cmp "$journal_runtime_library" "$installed_journal_runtime"
+          installed_journal="$(dirname "$installed_journal_runtime")/JournalApp"
+          test -x "$installed_journal"
+          journal_state_path="$RUNNER_TEMP/mosaic-qt-journal-state.json"
+          rm -f "$journal_state_path" "$journal_state_path.corrupt" "$journal_state_path.tmp"
+          for journal_launch in first restored; do
+            journal_log="$RUNNER_TEMP/mosaic-qt-journal-launch-$journal_launch.log"
+            set +e
+            env -u MOSAIC_APP_LIBRARY QT_QPA_PLATFORM=offscreen MOSAIC_APP_STATE_PATH="$journal_state_path" \
+              timeout 5s "$installed_journal" >"$journal_log" 2>&1
+            journal_status=$?
+            set -e
+            cat "$journal_log"
+            test "$journal_status" -eq 124
+            # Explicit exits, not `! grep`: bash's `set -e` ignores a command
+            # whose status is inverted with `!`, so a bare `! grep` that
+            # matches would not fail this step.
+            if grep -F "Mosaic Rust runtime unavailable" "$journal_log"; then exit 1; fi
+            if grep -E "missing required MIL prop|ReferenceError|TypeError" "$journal_log"; then exit 1; fi
+          done
+
+          # Journal's own suite (the package opts out of the workspace).
+          cargo test --manifest-path code/programs/mosaic/journal-app/Cargo.toml
+
+          # ---- Engram: prove the Qt emission COMPILES. ------------------------
+          #
+          # Nothing compiled Engram's Qt output before this. Its own suite is
+          # substring assertions over emitted text, so a project that could not
+          # build would have looked entirely healthy.
+          #
+          # NOW --profile native-complete WITH --runtime-library, which the
+          # comment here used to say was impossible.
+          #
+          # It was, and the reason is worth keeping: those flags switch the
+          # generated main.cpp to the strict standard-binding shape, calling
+          # registerTypes/requireRuntime/configureRequiredProps/attach, and
+          # Engram used to replace MosaicHost.h/.cpp through [host_assets] with
+          # its own engram-capi binding exposing props/handleEvent/ensureLoaded
+          # instead. Combining them emitted a project that did not compile:
+          #
+          #   main.cpp:26: error: 'registerTypes' is not a member of 'MosaicHost'
+          #
+          # #13728 removed that override for Qt. Props, events, snapshot and
+          # restore go through engram-mosaic-app and the generated binding now,
+          # and the file dialogs ride Effect through [host_effects] (UI47 §5.5).
+          # So the incoherent combination became the coherent one, and this lane
+          # gates the configuration Engram will actually ship.
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p engram-mosaic-app
+
+          engram_output="$RUNNER_TEMP/mosaic-qt-engram"
+          # `.so` and absolute, matching the TaskApp lane above: this job runs on
+          # Linux, and `.dylib` would be a macOS-only path that fails here.
+          engram_runtime_library="$(pwd)/code/packages/rust/target/debug/libengram_mosaic_app.so"
+          test -f "$engram_runtime_library"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/engram-app --backend qt --output "$engram_output" --emit-project --profile native-complete --runtime-library "$engram_runtime_library"
+
+          # Empty, and pinned empty. This assertion used to name
+          # ["MosaicHost.cpp", "MosaicHost.h"] precisely so #13728 could not be
+          # forgotten -- updating it was the migration's definition of done
+          # (UI47 §5.5.5). Pinned rather than dropped: a package that starts
+          # overriding the generated host again has undone this, and that must
+          # fail here rather than pass quietly.
+          jq -e '.replacedGeneratedFiles == []' "$engram_output/qt/mosaic-degradations.json"
+
+          # And native-complete means zero degradations, not merely few.
+          # `type == "array"` first: `null | length` is 0 in jq, so a report that
+          # lost the key entirely would satisfy a bare length check.
+          jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$engram_output/qt/mosaic-degradations.json"
+
+          # The handler is wired into the generated entry point, which is the
+          # half a text assertion over the manifest cannot see.
+          grep -q 'installEngramEffects(mosaicHost);' "$engram_output/qt/main.cpp"
+          # Mosaic's Qt platform library (UI87 §7.4a) wraps it, routing the two
+          # kinds Engram's manifest claims to it (UI87 §7.2), and is in the
+          # build the cmake step below compiles.
+          grep -qF 'installMosaicPlatformEffects(mosaicHost, QSet<QString>{QStringLiteral("importAnki"), QStringLiteral("exportAnki")});' "$engram_output/qt/main.cpp"
+          grep -q 'MosaicHost.h MosaicPlatformEffects.cpp MosaicPlatformEffects.h)' "$engram_output/qt/CMakeLists.txt"
+
+          # UI48 §7.10 (ENV2/ENV3): Engram is the one package with a layout
+          # variant (EngramApp.touch.mll). Both roots must be in the QML
+          # module, each its own type, and main.cpp must carry the selector, so
+          # the build below proves they compile together. Each check names
+          # itself when it fails.
+          qt_layout_expect() {
+            if ! grep -qF -- "$2" "$1"; then
+              echo "::error::Qt layout variants: expected $3 -- '$2' is not in $1"
+              exit 1
+            fi
+          }
+          qt_layout_expect "$engram_output/qt/CMakeLists.txt" 'set_source_files_properties(EngramApp.touch.qml PROPERTIES QT_QML_SOURCE_TYPENAME EngramAppTouch)' "the touch root's QML type"
+          qt_layout_expect "$engram_output/qt/CMakeLists.txt" 'qt_target_qml_sources(EngramApp QML_FILES EngramApp.touch.qml)' "the touch root in the module"
+          qt_layout_expect "$engram_output/qt/EngramApp.touch.qml" 'required property var mosaicHost' "a strict touch root"
+          qt_layout_expect "$engram_output/qt/main.cpp" '{"touch", "qrc:/qt/qml/Mosaic/EngramApp/EngramApp.touch.qml", {{"pointer", "coarse"}}},' "the conventional touch rule"
+          qt_layout_expect "$engram_output/qt/main.cpp" 'if (!layoutSwitch->isActive()) layoutSwitch->start(0);' "the observer queueing the root switch"
+          if grep -qF 'const QUrl url(QStringLiteral("qrc:/qt/qml/Mosaic/EngramApp/EngramApp.qml"));' "$engram_output/qt/main.cpp"; then
+            echo "::error::Qt layout variants: main.cpp still mounts EngramApp.qml unconditionally"
+            exit 1
+          fi
+
+          # The gate: it builds.
+          cmake -S "$engram_output/qt" -B "$engram_output/qt/build" -DCMAKE_BUILD_TYPE=Release
+          cmake --build "$engram_output/qt/build" --config Release --parallel
+
+          # UI48 §7.10: the resize gate §7 asks for. The fixture has a default
+          # and a `compact` layout; its harness compiles the generated main.cpp
+          # verbatim, runs it offscreen, resizes the window across 600 logical
+          # pixels and asserts the root swaps and keeps its props, so a shell
+          # frozen on one layout fails here. No runtime: the sample shell's
+          # host reports to nobody.
+          layout_variants_output="$RUNNER_TEMP/mosaic-qt-layout-variants"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-qt/fixtures/layout-variants --backend qt --output "$layout_variants_output" --emit-project
+          mv "$layout_variants_output/qt/main.cpp" "$layout_variants_output/qt/generated_main.cpp"
+          cp code/packages/rust/mosaic-emit-qt/fixtures/layout-variants-test/main.cpp "$layout_variants_output/qt/main.cpp"
+          cmake -S "$layout_variants_output/qt" -B "$layout_variants_output/qt/build" -DCMAKE_BUILD_TYPE=Release
+          cmake --build "$layout_variants_output/qt/build" --config Release --parallel
+          layout_variants_log="$RUNNER_TEMP/mosaic-qt-layout-variants.log"
+          set +e
+          env -u MOSAIC_APP_LIBRARY QT_QPA_PLATFORM=offscreen \
+            timeout 60s "$layout_variants_output/qt/build/LayoutProbe" >"$layout_variants_log" 2>&1
+          layout_variants_status=$?
+          set -e
+          cat "$layout_variants_log"
+          if [ "$layout_variants_status" -ne 0 ]; then
+            echo "::error::Qt layout-variant resize gate exited $layout_variants_status"
+            exit 1
+          fi
+          qt_layout_expect "$layout_variants_log" 'Qt layout-variant resize gate passed' "the resize gate to pass"
+
+          # Engram's own suite, which the parent workspace cannot reach: the
+          # package opts OUT of it (`[workspace]` empty in its Cargo.toml), so
+          # `cargo test` at the workspace root never sees these tests and the
+          # epic's "changing Engram triggers executing verification" stayed
+          # false even after the tests existed.
+          #
+          # `native_complete_gate.rs` is the one that matters here: it asserts
+          # Engram lowers with ZERO capability degradations on all five native
+          # backends, and pins the XAML style drops by property so a new one
+          # cannot arrive unnoticed (#14132).
+          #
+          # That gate and the emission above now agree rather than needing to be
+          # reconciled: this comment used to explain why Engram could reach
+          # native-complete in capability analysis while failing it in project
+          # emission, which was true only while the [host_assets] override
+          # existed. It does not, for Qt, since #13728.
+          cargo test --manifest-path code/programs/mosaic/engram-app/Cargo.toml
+
+          toolkit_output="$RUNNER_TEMP/mosaic-qt-toolkit"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-toolkit --backend qt --output "$toolkit_output" --emit-project
+          cmake -S "$toolkit_output/qt" -B "$toolkit_output/qt/build" -DCMAKE_BUILD_TYPE=Release
+          cmake --build "$toolkit_output/qt/build" --config Release --parallel
+
+          MOSAIC_APP_LIBRARY="$RUNNER_TEMP/mosaic-app-does-not-exist.so" \
+            "$harness/build/mosaic_qt_runtime_conformance" --expect-required-failure
+
+          strict_output="$RUNNER_TEMP/mosaic-qt-native-complete-rating-controls"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-rating-controls --backend qt --output "$strict_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$strict_output/qt/mosaic-degradations.json"
+          cmake -S "$strict_output/qt" -B "$strict_output/qt/build" -DCMAKE_BUILD_TYPE=Release
+          cmake --build "$strict_output/qt/build" --config Release --parallel
+
+          slider_output="$RUNNER_TEMP/mosaic-qt-host-slider"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-qt/fixtures/host-slider --backend qt --output "$slider_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$slider_output/qt/mosaic-degradations.json"
+          cmake -S "$slider_output/qt" -B "$slider_output/qt/build" -DCMAKE_BUILD_TYPE=Release
+          cmake --build "$slider_output/qt/build" --config Release --parallel
+
+          # UI29-6 (#15481) slice K-qt: HostNavigationSplit lowers to a
+          # real Qt Quick Controls SplitView. Qt's static-collapse limitation
+          # stays visible on the non-gating behavior axis; the nested fixture
+          # also proves collapse: never adds no second entry.
+          navigation_split_output="$RUNNER_TEMP/mosaic-qt-host-navigation-split"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-qt/fixtures/host-navigation-split --backend qt --output "$navigation_split_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
+          jq -e '.nativeComplete == true and (.degradations | length == 0) and ([.behaviorDegradations[].code] == ["interaction.navigation-split-collapse-static"])' "$navigation_split_output/qt/mosaic-degradations.json"
+          grep -q 'SplitView {' "$navigation_split_output/qt/Shell.qml"
+          grep -q 'Accessible.role: Accessible.Pane' "$navigation_split_output/qt/Shell.qml"
+          cmake -S "$navigation_split_output/qt" -B "$navigation_split_output/qt/build" -DCMAKE_BUILD_TYPE=Release
+          cmake --build "$navigation_split_output/qt/build" --config Release --parallel
+
+          # #15833 -- and now measure it, because none of the above could.
+          #
+          # The greps and the cmake build all passed for months against a
+          # split that laid out to 0 x 0 and drew nothing at any window size:
+          # `Layout.fillWidth` is inert outside a Layout, QML warns about it
+          # in silence, and a component that measures nothing still compiles
+          # perfectly. This loads the generated QML at a known window size and
+          # asserts the split fills it and the detail area is real.
+          cp code/scripts/qt-navigation-split-render-check.qml "$navigation_split_output/qt/"
+          (
+            cd "$navigation_split_output/qt"
+            QT_QPA_PLATFORM=offscreen qml qt-navigation-split-render-check.qml
+          )
+
+          # qt_main_with_startup_states (this PR) made every native-complete Qt
+          # shell keep a missing/failed runtime visible in the window and
+          # retryable instead of exiting, so RatingControls no longer exits
+          # non-zero here either. Rebuild it with the same compile-time
+          # acceptance seam TaskApp's startup probe uses above: it self-drives
+          # two attempts and only exits (0) once the second failure is
+          # observed, proving the missing-runtime path is actually reached
+          # and recovered rather than merely not crashing.
+          strict_startup_source="$RUNNER_TEMP/mosaic-qt-rating-controls-startup-conformance"
+          cp -R "$strict_output/qt" "$strict_startup_source"
+          cmake -S "$strict_startup_source" -B "$strict_startup_source/startup-build" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_CXX_FLAGS=-DMOSAIC_STARTUP_CONFORMANCE=1
+          cmake --build "$strict_startup_source/startup-build" --config Release --parallel
+          strict_log="$RUNNER_TEMP/mosaic-qt-native-complete-missing-runtime.log"
+          env QT_QPA_PLATFORM=offscreen \
+            MOSAIC_APP_LIBRARY="$RUNNER_TEMP/mosaic-app-does-not-exist.so" \
+            timeout 15s "$strict_startup_source/startup-build/RatingControls" >"$strict_log" 2>&1
+          grep -F "Qt startup failure/retry conformance passed" "$strict_log"
+
+      - name: Round-trip Rust engine through standard Flutter binding
+        if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
+        shell: bash
+        timeout-minutes: 25
+        run: |
+          set -euo pipefail
+          sudo apt-get install -y libgtk-3-dev xvfb
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
+          runtime_library="$(pwd)/code/packages/rust/target/debug/libmosaic_app_conformance.so"
+          bundled_output="$RUNNER_TEMP/mosaic-flutter-bundled-conformance"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-app-conformance/package --backend flutter --output "$bundled_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$bundled_output/flutter/mosaic-degradations.json"
+          (
+            cd "$bundled_output/flutter"
+            flutter create --platforms=linux --project-name mosaic_flutter_runtime_conformance .
+            flutter pub get
+            flutter analyze
+            flutter build linux --debug
+          )
+
+          installed="$(find "$bundled_output/flutter/build/linux" -type f -path '*/bundle/mosaic_flutter_runtime_conformance' -perm -111 -print -quit)"
+          test -n "$installed"
+          bundled_runtime="$(find "$(dirname "$installed")" -type f -name 'libmosaic_app.so' -print -quit)"
+          test -n "$bundled_runtime"
+          cmp "$runtime_library" "$bundled_runtime"
+
+          mkdir -p "$bundled_output/flutter/bin"
+          sed 's|package:mosaic_flutter_runtime_conformance/mosaic_host.dart|package:mosaic_counter/mosaic_host.dart|' \
+            code/packages/rust/mosaic-app-bindings/conformance/flutter/bin/conformance.dart \
+            > "$bundled_output/flutter/bin/mosaic_runtime_conformance.dart"
+          (
+            cd "$bundled_output/flutter"
+            unset MOSAIC_APP_LIBRARY
+            state_path="$RUNNER_TEMP/mosaic-flutter-runtime-state.json"
+            rm -f "$state_path" "$state_path.corrupt" "$state_path.tmp"
+            dart analyze bin/mosaic_runtime_conformance.dart
+            MOSAIC_APP_STATE_PATH="$state_path" dart run bin/mosaic_runtime_conformance.dart
+            MOSAIC_APP_STATE_PATH="$state_path" MOSAIC_EXPECT_RESTORED=1 \
+              dart run bin/mosaic_runtime_conformance.dart
+            printf '{}' > "$state_path"
+            MOSAIC_APP_STATE_PATH="$state_path" MOSAIC_EXPECT_PERSISTENCE_WARNING=1 \
+              dart run bin/mosaic_runtime_conformance.dart
+          )
+
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p task-mosaic-app
+          task_runtime_library="$(pwd)/code/packages/rust/target/debug/libtask_mosaic_app.so"
+          taskapp_output="$RUNNER_TEMP/mosaic-flutter-taskapp"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend flutter --output "$taskapp_output" --emit-project --profile native-complete --runtime-library "$task_runtime_library"
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$taskapp_output/flutter/mosaic-degradations.json"
+          python3 code/scripts/taskapp_native_control_contract.py --backend flutter --generated-dir "$taskapp_output/flutter"
+          (
+            cd "$taskapp_output/flutter"
+            flutter create --platforms=linux --project-name mosaic_taskapp_acceptance .
+            flutter pub get
+            flutter analyze
+            flutter build linux --debug
+          )
+
+          installed_taskapp="$(find "$taskapp_output/flutter/build/linux" -type f -path '*/bundle/mosaic_taskapp_acceptance' -perm -111 -print -quit)"
+          test -n "$installed_taskapp"
+          bundled_taskapp_runtime="$(find "$(dirname "$installed_taskapp")" -type f -name 'libmosaic_app.so' -print -quit)"
+          test -n "$bundled_taskapp_runtime"
+          cmp "$task_runtime_library" "$bundled_taskapp_runtime"
+          taskapp_log="$RUNNER_TEMP/mosaic-flutter-taskapp-launch.log"
+          set +e
+          env -u MOSAIC_APP_LIBRARY bash "$GITHUB_WORKSPACE/code/scripts/run-under-xvfb.sh" timeout 8s "$installed_taskapp" >"$taskapp_log" 2>&1
+          taskapp_status=$?
+          set -e
+          test "$taskapp_status" -eq 124
+          ! grep -F "Mosaic Rust runtime unavailable" "$taskapp_log"
+          ! grep -E "Unhandled Exception|MissingPluginException|NoSuchMethodError|TypeError" "$taskapp_log"
+
+          mkdir -p "$taskapp_output/flutter/bin"
+          cp code/packages/rust/task-mosaic-app/conformance/flutter/task_app_conformance.dart \
+            "$taskapp_output/flutter/bin/task_app_conformance.dart"
+          cp code/packages/rust/task-mosaic-app/conformance/flutter/widget_test.dart \
+            "$taskapp_output/flutter/test/task_app_lifecycle_test.dart"
+          (
+            cd "$taskapp_output/flutter"
+            unset MOSAIC_APP_LIBRARY
+            host_state_path="$RUNNER_TEMP/mosaic-flutter-taskapp-host-state.json"
+            rm -f "$host_state_path" "$host_state_path.corrupt" "$host_state_path.tmp"
+            MOSAIC_APP_STATE_PATH="$host_state_path" dart run bin/task_app_conformance.dart
+            MOSAIC_APP_STATE_PATH="$host_state_path" MOSAIC_EXPECT_RESTORED=1 \
+              dart run bin/task_app_conformance.dart
+            ui_state_path="$RUNNER_TEMP/mosaic-flutter-taskapp-ui-state.json"
+            rm -f "$ui_state_path" "$ui_state_path.corrupt" "$ui_state_path.tmp"
+            MOSAIC_APP_STATE_PATH="$ui_state_path" flutter test test/task_app_lifecycle_test.dart
+            MOSAIC_APP_STATE_PATH="$ui_state_path" MOSAIC_EXPECT_RESTORED=1 \
+              flutter test test/task_app_lifecycle_test.dart
+            # UI87 §7.7: on Linux the platform library asks before a save
+            # replaces a file (GTK's chooser, as file_selector opens it, does
+            # not). Drive that "Replace it?" dialog with the widget tester.
+            cp "$GITHUB_WORKSPACE/code/packages/rust/mosaic-app-bindings/conformance/flutter-replace-dialog/replace_dialog_test.dart" \
+              test/mosaic_replace_dialog_test.dart
+            flutter test test/mosaic_replace_dialog_test.dart
+          )
+
+          # UI29-1 §3.3: every HostDialog lowers to _MosaicDialogHost, which
+          # pushes its own DialogRoute (never showDialog, whose windowing path
+          # breaks macOS AOT builds). Drive the helper, exactly as emitted,
+          # with the widget tester: one dialog per open, one close per open,
+          # and no other route popped or left behind.
+          MOSAIC_REQUIRE_FLUTTER=1 cargo test --manifest-path code/packages/rust/mosaic-emit-flutter/Cargo.toml \
+            --test flutter_dialog_host -- --nocapture
+
+          # UI87 §7.7: every Flutter app gets Mosaic's platform library
+          # (files.open / files.save and the router), installed on each started
+          # host right after it is assigned. The TaskApp build above compiled
+          # and analysed its file_selector dialogs; this runs the rest -- the
+          # plain-Dart core, exactly as generated -- headless on the Dart VM
+          # with a fake host and fake dialogs.
+          python3 - "$taskapp_output/flutter/lib/main.dart" <<'PY'
+          import sys
+
+          text = open(sys.argv[1], encoding="utf-8").read()
+          assert "import 'mosaic_platform_effects.dart';" in text, "the platform library is never imported"
+          assign = text.index("_mosaicHost = host;")
+          install = text.index("installMosaicPlatformEffects(host, appKinds: null);")
+          props = text.index("host.setPropsChangedHandler")
+          assert assign < install < props, "the platform library is not installed on the started host"
+          PY
+          platform_harness="$RUNNER_TEMP/mosaic-flutter-platform-effects"
+          rm -rf "$platform_harness"
+          cp -R code/packages/rust/mosaic-app-bindings/conformance/flutter-platform-effects "$platform_harness"
+          mkdir -p "$platform_harness/lib"
+          cp "$taskapp_output/flutter/lib/mosaic_host.dart" \
+            "$taskapp_output/flutter/lib/mosaic_platform_effects_core.dart" \
+            "$platform_harness/lib/"
+          (
+            cd "$platform_harness"
+            dart pub get
+            dart analyze --fatal-infos
+            dart run bin/conformance.dart | tee "$RUNNER_TEMP/mosaic-flutter-platform-effects.log"
+          )
+          grep -F "Mosaic Flutter platform effects conformance passed" "$RUNNER_TEMP/mosaic-flutter-platform-effects.log"
+
+          strict_output="$RUNNER_TEMP/mosaic-flutter-native-complete-rating-controls"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-rating-controls --backend flutter --output "$strict_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$strict_output/flutter/mosaic-degradations.json"
+          (
+            cd "$strict_output/flutter"
+            flutter pub get
+            flutter analyze
+          )
+
+          slider_output="$RUNNER_TEMP/mosaic-flutter-host-slider"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-flutter/fixtures/host-slider --backend flutter --output "$slider_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$slider_output/flutter/mosaic-degradations.json"
+          (
+            cd "$slider_output/flutter"
+            cp "$GITHUB_WORKSPACE/code/packages/rust/mosaic-emit-flutter/fixtures/host-slider-test/widget_test.dart" test/widget_test.dart
+            flutter pub get
+            flutter analyze
+            flutter test test/widget_test.dart
+          )
+
+          navigation_split_output="$RUNNER_TEMP/mosaic-flutter-host-navigation-split"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-flutter/fixtures/host-navigation-split --backend flutter --output "$navigation_split_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
+          jq -e '.nativeComplete == true and (.degradations | length == 0) and (.behaviorDegradations | length == 1) and .behaviorDegradations[0].code == "interaction.navigation-split-collapse-static"' "$navigation_split_output/flutter/mosaic-degradations.json"
+          (
+            cd "$navigation_split_output/flutter"
+            cp "$GITHUB_WORKSPACE/code/packages/rust/mosaic-emit-flutter/fixtures/host-navigation-split-test/widget_test.dart" test/widget_test.dart
+            flutter pub get
+            flutter analyze
+            flutter test test/widget_test.dart
+          )
+
+          pinned_navigation_split_output="$RUNNER_TEMP/mosaic-flutter-host-navigation-split-never"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-flutter/fixtures/host-navigation-split-never --backend flutter --output "$pinned_navigation_split_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
+          jq -e '.nativeComplete == true and (.degradations | length == 0) and (.behaviorDegradations | length == 0)' "$pinned_navigation_split_output/flutter/mosaic-degradations.json"
+          (
+            cd "$pinned_navigation_split_output/flutter"
+            cp "$GITHUB_WORKSPACE/code/packages/rust/mosaic-emit-flutter/fixtures/host-navigation-split-never-test/widget_test.dart" test/widget_test.dart
+            flutter pub get
+            flutter analyze
+            flutter test test/widget_test.dart
+          )
+
+          nested_conditional_output="$RUNNER_TEMP/mosaic-flutter-nested-row-conditional"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-flutter/fixtures/nested-row-conditional --backend flutter --output "$nested_conditional_output" --emit-project
+          (
+            cd "$nested_conditional_output/flutter"
+            cp "$GITHUB_WORKSPACE/code/packages/rust/mosaic-emit-flutter/fixtures/nested-row-conditional-test/widget_test.dart" test/widget_test.dart
+            flutter pub get
+            flutter analyze
+            flutter test test/widget_test.dart
+          )
+
+          # UI48 §7.9 (ENV2/ENV3): the resize gate §7 asks for. The fixture has
+          # a default and a `compact` layout; its widget test changes the
+          # window's size across 600 logical pixels and asserts the root
+          # swaps, so a shell frozen on one layout fails here.
+          layout_variants_output="$RUNNER_TEMP/mosaic-flutter-layout-variants"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-flutter/fixtures/layout-variants --backend flutter --output "$layout_variants_output" --emit-project
+          (
+            cd "$layout_variants_output/flutter"
+            cp "$GITHUB_WORKSPACE/code/packages/rust/mosaic-emit-flutter/fixtures/layout-variants-test/widget_test.dart" test/widget_test.dart
+            flutter pub get
+            flutter analyze
+            flutter test test/widget_test.dart
+          )
+
+          toolkit_output="$RUNNER_TEMP/mosaic-flutter-toolkit"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-toolkit --backend flutter --output "$toolkit_output" --emit-project
+          (
+            cd "$toolkit_output/flutter"
+            flutter create --platforms=linux --project-name mosaic_toolkit_acceptance .
+            flutter pub get
+            flutter analyze
+            flutter test
+            flutter build linux --debug
+          )
+
+          drag_output="$RUNNER_TEMP/mosaic-flutter-drag-board"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-flutter/fixtures/drag-board --backend flutter --output "$drag_output" --emit-project
+          (
+            cd "$drag_output/flutter"
+            flutter create --platforms=linux --project-name mosaic_drag_board .
+            cp "$GITHUB_WORKSPACE/code/packages/rust/mosaic-emit-flutter/fixtures/drag-board-test/widget_test.dart" test/widget_test.dart
+            flutter pub get
+            flutter analyze
+            flutter test test/widget_test.dart
+          )
+
+          table_output="$RUNNER_TEMP/mosaic-flutter-data-grid"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-flutter/fixtures/data-grid --backend flutter --output "$table_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$table_output/flutter/mosaic-degradations.json"
+          (
+            cd "$table_output/flutter"
+            flutter create --platforms=linux --project-name mosaic_data_grid_acceptance .
+            cp "$GITHUB_WORKSPACE/code/packages/rust/mosaic-emit-flutter/fixtures/data-grid-test/widget_test.dart" test/widget_test.dart
+            flutter pub get
+            flutter analyze
+            flutter test test/widget_test.dart
+          )
+
+          # Engram on Flutter, the mirror of the Qt, SwiftUI and Compose Engram
+          # lanes.
+          #
+          # This block is what was missing. `engram-app` was not in the Flutter
+          # acceptance set, so nothing ever emitted Engram on this backend with
+          # `--profile native-complete` -- and when something finally did, it
+          # did not compile: the hand-written `mosaic_host.dart` overrode the
+          # generated host without defining `loadRequired`, which the
+          # native-complete `main.dart` calls. The lane was green throughout,
+          # because it built task-app.
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p engram-mosaic-app
+          engram_runtime_library="$(pwd)/code/packages/rust/target/debug/libengram_mosaic_app.so"
+          test -f "$engram_runtime_library"
+          engram_output="$RUNNER_TEMP/mosaic-flutter-engram"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/engram-app --backend flutter --output "$engram_output" --emit-project --profile native-complete --runtime-library "$engram_runtime_library"
+
+          # Pinned empty, exactly as the Qt, SwiftUI and Compose Engram lanes
+          # pin it: the `mosaic_host.dart` override is retired, and a package
+          # that starts overriding the generated host again has undone that and
+          # must fail here rather than pass quietly.
+          jq -e '.replacedGeneratedFiles == []' "$engram_output/flutter/mosaic-degradations.json"
+          # `type == "array"` first: `null | length` is 0 in jq, so a report
+          # that lost the key entirely would satisfy a bare length check.
+          jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$engram_output/flutter/mosaic-degradations.json"
+
+          # The handler is wired into the generated app, and wired in the one
+          # place that works.
+          #
+          # A grep for `installEngramEffects(` is not enough on its own: Dart
+          # compiles everything under `lib/`, so the handler file ships and
+          # compiles whether or not anything calls it, and an install that
+          # landed in the wrong scope would still satisfy the grep while the
+          # first symptom at runtime is an `Await` going unanswered. So the
+          # import and the call site are both checked, and the call is required
+          # to come after the fresh local host is assigned to app state.
+          python3 - "$engram_output/flutter/lib/main.dart" <<'PY'
+          import sys
+
+          text = open(sys.argv[1], encoding="utf-8").read()
+          assert "import 'engram_effects.dart';" in text, "handler is never imported"
+          assign = text.index("_mosaicHost = host;")
+          install = text.index("installEngramEffects(host);")
+          assert install > assign, "handler is installed before the host exists"
+          PY
+
+          # UI48 §7.9 (ENV2/ENV3): Engram is the one package with a layout
+          # variant (EngramApp.touch.mll). Both roots and the selector must be
+          # in lib/, so the analyze and build below prove they coexist.
+          grep -q '^class EngramAppTouch extends StatelessWidget {$' "$engram_output/flutter/lib/EngramApp.touch.dart"
+          if grep -q '^sealed class EngramAppEvent' "$engram_output/flutter/lib/EngramApp.touch.dart"; then exit 1; fi
+          grep -q "^import 'EngramApp.touch.dart';$" "$engram_output/flutter/lib/main.dart"
+          grep -q 'switch (mosaicLayoutVariant(environment))' "$engram_output/flutter/lib/main.dart"
+          grep -q 'return EngramAppTouch($' "$engram_output/flutter/lib/main.dart"
+
+          (
+            cd "$engram_output/flutter"
+            flutter create --platforms=linux --project-name mosaic_engram_app .
+            flutter pub get
+            flutter analyze
+            flutter build linux --debug
+          )
+
+      - name: Round-trip Rust engine through standard Compose binding
+        if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
+        shell: bash
+        timeout-minutes: 20
+        run: |
+          set -euo pipefail
+          sudo apt-get install -y xvfb
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
+          runtime_library="$(pwd)/code/packages/rust/target/debug/libmosaic_app_conformance.so"
+
+          bundled_output="$RUNNER_TEMP/mosaic-compose-bundled-conformance"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-app-conformance/package --backend compose --output "$bundled_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$bundled_output/compose/mosaic-degradations.json"
+          gradle --no-daemon --stacktrace -Pcompose.desktop.packaging.checkJdkVendor=false -p "$bundled_output/compose" compileKotlin createDistributable
+          installed_runtime="$(find "$bundled_output/compose/build/compose/binaries/main/app" -path '*/resources/libmosaic_app.so' -print -quit)"
+          test -n "$installed_runtime"
+          cmp "$runtime_library" "$installed_runtime"
+
+          harness="$RUNNER_TEMP/mosaic-compose-runtime-conformance"
+          cp -R code/packages/rust/mosaic-app-bindings/conformance/compose "$harness"
+          cp "$bundled_output/compose/src/main/kotlin/MosaicRuntimeHost.kt" "$harness/src/main/kotlin/MosaicRuntimeHost.kt"
+
+          unset MOSAIC_APP_LIBRARY
+          state_path="$RUNNER_TEMP/mosaic-compose-runtime-state.json"
+          rm -f "$state_path" "$state_path.corrupt" "$state_path.tmp"
+          MOSAIC_APP_STATE_PATH="$state_path" \
+            JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_runtime")" \
+            gradle --no-daemon --stacktrace -p "$harness" run
+          MOSAIC_APP_STATE_PATH="$state_path" MOSAIC_EXPECT_RESTORED=1 \
+            JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_runtime")" \
+            gradle --no-daemon --stacktrace -p "$harness" run
+          printf '{}' > "$state_path"
+          MOSAIC_APP_STATE_PATH="$state_path" MOSAIC_EXPECT_PERSISTENCE_WARNING=1 \
+            JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_runtime")" \
+            gradle --no-daemon --stacktrace -p "$harness" run
+
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p task-mosaic-app
+          task_runtime_library="$(pwd)/code/packages/rust/target/debug/libtask_mosaic_app.so"
+          taskapp_output="$RUNNER_TEMP/mosaic-compose-taskapp"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend compose --output "$taskapp_output" --emit-project --profile native-complete --runtime-library "$task_runtime_library"
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$taskapp_output/compose/mosaic-degradations.json"
+          python3 code/scripts/taskapp_native_control_contract.py --backend compose --generated-dir "$taskapp_output/compose"
+          gradle --no-daemon --stacktrace -Pcompose.desktop.packaging.checkJdkVendor=false -p "$taskapp_output/compose" compileKotlin createDistributable
+          installed_taskapp_runtime="$(find "$taskapp_output/compose/build/compose/binaries/main/app" -path '*/resources/libmosaic_app.so' -print -quit)"
+          test -n "$installed_taskapp_runtime"
+          cmp "$task_runtime_library" "$installed_taskapp_runtime"
+          installed_taskapp="$(find "$taskapp_output/compose/build/compose/binaries/main/app" -type f -path '*/bin/task_app' -perm -111 -print -quit)"
+          test -n "$installed_taskapp"
+          taskapp_log="$RUNNER_TEMP/mosaic-compose-taskapp-launch.log"
+          set +e
+          env -u MOSAIC_APP_LIBRARY bash "$GITHUB_WORKSPACE/code/scripts/run-under-xvfb.sh" timeout 8s "$installed_taskapp" >"$taskapp_log" 2>&1
+          taskapp_status=$?
+          set -e
+          test "$taskapp_status" -eq 124
+          ! grep -F "Mosaic Rust runtime unavailable" "$taskapp_log"
+          ! grep -E "missing required MIL prop|Exception in thread|NoClassDefFoundError|UnsatisfiedLinkError" "$taskapp_log"
+
+          task_host_harness="$RUNNER_TEMP/mosaic-compose-taskapp-runtime-conformance"
+          cp -R code/packages/rust/task-mosaic-app/conformance/compose "$task_host_harness"
+          cp "$taskapp_output/compose/src/main/kotlin/MosaicRuntimeHost.kt" "$task_host_harness/MosaicRuntimeHost.kt"
+          mkdir -p "$task_host_harness/src/main/kotlin"
+          mv "$task_host_harness/Conformance.kt" "$task_host_harness/src/main/kotlin/Conformance.kt"
+          mv "$task_host_harness/MosaicRuntimeHost.kt" "$task_host_harness/src/main/kotlin/MosaicRuntimeHost.kt"
+          rm -f "$task_host_harness/TaskAppUiTest.kt"
+          host_state_path="$RUNNER_TEMP/mosaic-compose-taskapp-host-state.json"
+          rm -f "$host_state_path" "$host_state_path.corrupt" "$host_state_path.tmp"
+          MOSAIC_APP_STATE_PATH="$host_state_path" \
+            JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_taskapp_runtime")" \
+            gradle --no-daemon --stacktrace -p "$task_host_harness" run
+          MOSAIC_APP_STATE_PATH="$host_state_path" MOSAIC_EXPECT_RESTORED=1 \
+            JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_taskapp_runtime")" \
+            gradle --no-daemon --stacktrace -p "$task_host_harness" run
+
+          mkdir -p "$taskapp_output/compose/src/test/kotlin"
+          cp code/packages/rust/task-mosaic-app/conformance/compose/TaskAppUiTest.kt \
+            "$taskapp_output/compose/src/test/kotlin/TaskAppUiTest.kt"
+          taskapp_ui_state="$RUNNER_TEMP/mosaic-compose-taskapp-ui-state.json"
+          rm -f "$taskapp_ui_state" "$taskapp_ui_state.corrupt" "$taskapp_ui_state.tmp"
+          MOSAIC_APP_STATE_PATH="$taskapp_ui_state" \
+            JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_taskapp_runtime")" \
+            bash "$GITHUB_WORKSPACE/code/scripts/run-under-xvfb.sh" gradle --no-daemon --stacktrace -p "$taskapp_output/compose" \
+              test --tests TaskAppUiTest
+          MOSAIC_APP_STATE_PATH="$taskapp_ui_state" MOSAIC_EXPECT_RESTORED=1 \
+            JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_taskapp_runtime")" \
+            bash "$GITHUB_WORKSPACE/code/scripts/run-under-xvfb.sh" gradle --no-daemon --stacktrace --rerun-tasks -p "$taskapp_output/compose" \
+              test --tests TaskAppUiTest.generatedControlsDriveRustSchedulingLifecycle
+
+          # Engram on Compose, the mirror of the SwiftUI and Qt Engram lanes.
+          #
+          # `.so`, not `.dylib`: this block is Linux-gated, unlike the SwiftUI
+          # one.
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p engram-mosaic-app
+          engram_runtime_library="$(pwd)/code/packages/rust/target/debug/libengram_mosaic_app.so"
+          test -f "$engram_runtime_library"
+          engram_output="$RUNNER_TEMP/mosaic-compose-engram"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/engram-app --backend compose --output "$engram_output" --emit-project --profile native-complete --runtime-library "$engram_runtime_library"
+
+          # Pinned empty, exactly as the Qt and SwiftUI lanes pin it: Compose's
+          # `MosaicHost.kt` override is retired, and a package that starts
+          # overriding the generated host again has undone that and must fail
+          # here rather than pass quietly.
+          jq -e '.replacedGeneratedFiles == []' "$engram_output/compose/mosaic-degradations.json"
+          # `type == "array"` first: `null | length` is 0 in jq, so a report that
+          # lost the key entirely would satisfy a bare length check.
+          jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$engram_output/compose/mosaic-degradations.json"
+
+          # The handler is wired into the generated app. This is the half no
+          # assertion over a source file can reach -- and as on SwiftUI it
+          # matters more than on Qt, because Gradle compiles everything under
+          # `src/main/kotlin`, so an uninstalled handler still compiles, links
+          # and ships with no diagnostic at all. The failure only appears at
+          # runtime, when an unanswered `Await` disables snapshot and restore
+          # for the rest of the process.
+          grep -q 'installEngramEffects(it)' "$engram_output/compose/src/main/kotlin/Main.kt"
+          python3 - "$engram_output/compose/src/main/kotlin/Main.kt" <<'PY'
+          import sys
+
+          text = open(sys.argv[1]).read()
+          install = text.index("installEngramEffects(it)")
+
+          # After the host exists and before the loader returns it: installing
+          # onto a host that has not been loaded yet would not compile, while
+          # returning the host first would let the initial composition raise
+          # effects before the handler is attached.
+          creation = text.index("val mosaicHost =")
+          assert creation < install, "install must follow the host's creation"
+          returned = text.index("return mosaicHost", creation)
+          assert install < returned, "install must precede returning the host"
+          PY
+
+          # UI48 §7.5 (ENV2/ENV3): Engram is the one package with a layout
+          # variant (EngramApp.touch.mll). Both roots and the selector must be
+          # in the source set, so the compile below proves they coexist.
+          grep -q '^fun EngramAppTouch($' "$engram_output/compose/src/main/kotlin/EngramApp.touch.kt"
+          if grep -q '^sealed class EngramAppEvent' "$engram_output/compose/src/main/kotlin/EngramApp.touch.kt"; then exit 1; fi
+          grep -q 'when (mosaicLayoutVariant(environmentReport))' "$engram_output/compose/src/main/kotlin/MosaicAppShell.kt"
+          grep -q '"touch" -> EngramAppTouch(' "$engram_output/compose/src/main/kotlin/MosaicAppShell.kt"
+
+          # The gate: it builds. `compileKotlin` is enough -- this lane already
+          # exercises `createDistributable` on task-app, and what is new here is
+          # the handler source, not the packaging.
+          gradle --no-daemon --stacktrace -p "$engram_output/compose" compileKotlin
+
+          # ---- Journal: emit and COMPILE on Compose (J5b, #14416). -----------
+          # Same gate as Engram above, minus the effects handler Journal does
+          # not have.
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p journal-mosaic-app
+          journal_runtime_library="$(pwd)/code/packages/rust/target/debug/libjournal_mosaic_app.so"
+          test -f "$journal_runtime_library"
+          journal_output="$RUNNER_TEMP/mosaic-compose-journal"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/journal-app --backend compose --output "$journal_output" --emit-project --profile native-complete --runtime-library "$journal_runtime_library"
+          jq -e '.replacedGeneratedFiles == []' "$journal_output/compose/mosaic-degradations.json"
+          jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$journal_output/compose/mosaic-degradations.json"
+          gradle --no-daemon --stacktrace -Pcompose.desktop.packaging.checkJdkVendor=false -p "$journal_output/compose" compileKotlin createDistributable
+          installed_journal_runtime="$(find "$journal_output/compose/build/compose/binaries/main/app" -path '*/resources/libmosaic_app.so' -print -quit)"
+          test -n "$installed_journal_runtime"
+          cmp "$journal_runtime_library" "$installed_journal_runtime"
+
+          # Drive the generated app, not just compile it (J5, #14416):
+          # JournalUiTest writes and saves entries through the generated
+          # editor, then a second launch on the same state file must find the
+          # survivor. Same two-launch shape as TaskAppUiTest above.
+          mkdir -p "$journal_output/compose/src/test/kotlin"
+          cp code/packages/rust/journal-mosaic-app/conformance/compose/JournalUiTest.kt \
+            "$journal_output/compose/src/test/kotlin/JournalUiTest.kt"
+          journal_ui_state="$RUNNER_TEMP/mosaic-compose-journal-ui-state.json"
+          rm -f "$journal_ui_state" "$journal_ui_state.corrupt" "$journal_ui_state.tmp"
+          MOSAIC_APP_STATE_PATH="$journal_ui_state" \
+            JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_journal_runtime")" \
+            bash "$GITHUB_WORKSPACE/code/scripts/run-under-xvfb.sh" gradle --no-daemon --stacktrace -p "$journal_output/compose" \
+              test --tests JournalUiTest
+          MOSAIC_APP_STATE_PATH="$journal_ui_state" MOSAIC_EXPECT_RESTORED=1 \
+            JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_journal_runtime")" \
+            bash "$GITHUB_WORKSPACE/code/scripts/run-under-xvfb.sh" gradle --no-daemon --stacktrace --rerun-tasks -p "$journal_output/compose" \
+              test --tests JournalUiTest
+
+          # The platform library's own behaviour (UI87 §7): every Compose app
+          # gets MosaicFileEffects.kt and MosaicPlatformEffects.kt, and this
+          # drives their open/save logic, limits, routing and the asynchronous
+          # picker path (UI89 §3.8) with fakes -- no display needed.
+          cp code/packages/rust/mosaic-app-bindings/conformance/compose/MosaicPlatformEffectsTest.kt \
+            "$journal_output/compose/src/test/kotlin/MosaicPlatformEffectsTest.kt"
+          gradle --no-daemon --stacktrace -p "$journal_output/compose" \
+            test --tests MosaicPlatformEffectsTest
+
+          toolkit_output="$RUNNER_TEMP/mosaic-compose-toolkit"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-toolkit --backend compose --output "$toolkit_output" --emit-project
+          gradle --no-daemon --stacktrace -p "$toolkit_output/compose" compileKotlin
+
+          slider_output="$RUNNER_TEMP/mosaic-compose-host-slider"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-compose/tests/fixtures/host-slider-package --backend compose --output "$slider_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$slider_output/compose/mosaic-degradations.json"
+          gradle --no-daemon --stacktrace -p "$slider_output/compose" compileKotlin
+
+          navigation_split_output="$RUNNER_TEMP/mosaic-compose-host-navigation-split"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-compose/tests/fixtures/host-navigation-split-package --backend compose --output "$navigation_split_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
+          jq -e '.nativeComplete == true and (.degradations | length == 0) and (.behaviorDegradations | length == 0)' "$navigation_split_output/compose/mosaic-degradations.json"
+          gradle --no-daemon --stacktrace -p "$navigation_split_output/compose" compileKotlin
+
+          strict_output="$RUNNER_TEMP/mosaic-compose-native-complete-rating-controls"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-rating-controls --backend compose --output "$strict_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$strict_output/compose/mosaic-degradations.json"
+          gradle --no-daemon --stacktrace -p "$strict_output/compose" compileKotlin
+
+      # UI89 step 4: the Compose build of TaskApp above also wrote
+      # compose/android/, an Android project over the same shared Kotlin, with
+      # its own activity and the Android half of the platform seams. Gate: it
+      # builds a debug APK that carries the app's identity, launches
+      # MosaicActivity, and compiled the shared sources. The Rust runtime
+      # joins in step 5, and the emulator with it.
+      - name: Build Trestle for Android (UI89 step 4)
+        if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
+        shell: bash
+        timeout-minutes: 25
+        run: |
+          set -euo pipefail
+          android_project="$RUNNER_TEMP/mosaic-compose-taskapp/compose/android"
+          test -f "$android_project/src/main/kotlin/mosaic/android/MosaicActivity.kt"
+          test -f "$android_project/src/main/kotlin/TaskApp.kt"
+          test ! -e "$android_project/src/main/kotlin/Main.kt"
+          # UI89 §3.8: the platform library's shared half, and Android's own
+          # half in place of the desktop's AWT dialogs.
+          test -f "$android_project/src/main/kotlin/MosaicFileEffects.kt"
+          if ! grep -q 'class MosaicAndroidDocumentPicker' "$android_project/src/main/kotlin/MosaicPlatformEffects.kt"; then
+            echo "::error::the Android project's MosaicPlatformEffects.kt is not Android's"
+            exit 1
+          fi
+          if grep -rl 'java\.awt' "$android_project/src"; then
+            echo "::error::desktop-only AWT reached the Android sources"
+            exit 1
+          fi
+
+          # The project names its Gradle in gradle-wrapper.properties. Write
+          # the wrapper's jar with whatever Gradle is installed, in
+          # an empty directory so that Gradle never configures the Android
+          # plugin it may not support.
+          gradle_version="$(sed -n 's|^distributionUrl=.*/gradle-\(.*\)-bin\.zip$|\1|p' "$android_project/gradle/wrapper/gradle-wrapper.properties")"
+          test -n "$gradle_version"
+          wrapper_seed="$RUNNER_TEMP/mosaic-android-gradle-wrapper"
+          rm -rf "$wrapper_seed"
+          mkdir -p "$wrapper_seed"
+          touch "$wrapper_seed/settings.gradle.kts"
+          gradle --no-daemon -q -p "$wrapper_seed" wrapper --gradle-version "$gradle_version"
+          cp "$wrapper_seed/gradle/wrapper/gradle-wrapper.jar" "$android_project/gradle/wrapper/gradle-wrapper.jar"
+          # Refuse to run a wrapper jar that is not the one Gradle published.
+          bash code/scripts/verify-gradle-wrapper-jar.sh "$android_project/gradle/wrapper/gradle-wrapper.jar"
+          # Run the verified jar itself, with gradlew's JVM options, rather
+          # than the generated gradlew script: Gradle publishes no checksum for
+          # the script, so it is the one part of the wrapper nothing can
+          # verify. Naming the main class (not `-jar`) works with every
+          # Gradle's wrapper jar, including old ones without a Main-Class.
+          (
+            cd "$android_project"
+            "${JAVA_HOME:+$JAVA_HOME/bin/}java" -Xmx64m -Xms64m -Dorg.gradle.appname=gradlew \
+              -cp gradle/wrapper/gradle-wrapper.jar org.gradle.wrapper.GradleWrapperMain \
+              --no-daemon --stacktrace assembleDebug
+          )
+
+          apk="$(find "$android_project/build/outputs/apk/debug" -name '*.apk' -print -quit)"
+          test -n "$apk"
+          aapt2="$(find "$ANDROID_HOME/build-tools" -name aapt2 -type f | sort -V | tail -n 1)"
+          test -n "$aapt2"
+          badging="$RUNNER_TEMP/mosaic-trestle-android-badging.txt"
+          "$aapt2" dump badging "$apk" > "$badging"
+          # Every check names what it wanted and shows what it got: a bare
+          # `grep -q` under `set -e` fails the step without saying which line.
+          expect_badging() {
+            if ! grep -Eq "$1" "$badging"; then
+              echo "::error::the APK's badging has no line matching $1"
+              cat "$badging"
+              exit 1
+            fi
+          }
+          expect_badging "^package: name='dev\.codingadventures\.trestle'"
+          expect_badging "^application-label:'Trestle'"
+          expect_badging "^launchable-activity: name='mosaic\.android\.MosaicActivity'"
+          # aapt prints `sdkVersion:`, newer aapt2 `minSdkVersion:`.
+          expect_badging "^(min)?[sS]dkVersion:'26'"
+          expect_badging "^targetSdkVersion:'36'"
+          # The shared sources and the Android seams are in the dex, and JNA
+          # brought its dispatcher for the emulator's ABI.
+          dex="$RUNNER_TEMP/mosaic-trestle-android-dex"
+          rm -rf "$dex"
+          unzip -q -o "$apk" 'classes*.dex' 'lib/*' -d "$dex"
+          for class in 'Lmosaic/android/MosaicActivity;' 'LTaskAppKt;' 'LMosaicAppShellKt;' 'LMosaicRuntimeHost;' 'LMosaicPlatformKt;' \
+            'LMosaicPlatformRouter;' 'LMosaicFileEffectsKt;' 'LMosaicAndroidDocumentPicker;'; do
+            if ! grep -a -q -F "$class" "$dex"/classes*.dex; then
+              echo "::error::no $class in the APK's dex"
+              ls -l "$dex"
+              exit 1
+            fi
+          done
+          if ! test -f "$dex/lib/x86_64/libjnidispatch.so"; then
+            echo "::error::no lib/x86_64/libjnidispatch.so in the APK"
+            find "$dex/lib" -type f
+            exit 1
+          fi
+
+      # UI89 step 5: the Android app carries its Rust runtime. The TaskApp
+      # engine is built for every Android ABI with cargo-ndk
+      # (build-mosaic-android-libs.sh), handed to the Compose build as
+      # --runtime-library, and installed into the Android project's jniLibs.
+      # Gate: the APK carries libmosaic_app.so for all four ABIs, and each one
+      # exports mosaic_app_create. The emulator launch follows.
+      - name: Build Trestle for Android with its Rust runtime (UI89 step 5)
+        if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
+        shell: bash
+        timeout-minutes: 45
+        run: |
+          set -euo pipefail
+          ndk="${ANDROID_NDK_LATEST_HOME:-${ANDROID_NDK_HOME:-}}"
+          if [ -z "$ndk" ] || [ ! -d "$ndk" ]; then
+            echo "::error::this runner has no Android NDK (ANDROID_NDK_LATEST_HOME / ANDROID_NDK_HOME)"
+            exit 1
+          fi
+          export ANDROID_NDK_HOME="$ndk"
+          rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android i686-linux-android
+          cargo install --locked cargo-ndk --version 4.1.2
+
+          jni_libs="$RUNNER_TEMP/mosaic-trestle-jnilibs"
+          bash code/scripts/build-mosaic-android-libs.sh task-mosaic-app "$jni_libs"
+
+          output="$RUNNER_TEMP/mosaic-compose-taskapp-android-runtime"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend compose --output "$output" --emit-project --profile native-complete --runtime-library "$jni_libs"
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$output/compose/mosaic-degradations.json"
+          android_project="$output/compose/android"
+          # Trestle's instrumented UI test (UI89 §4.4) lives with the app, as
+          # the desktop TaskAppUiTest does; the emulator step runs it.
+          mkdir -p "$android_project/src/androidTest/kotlin"
+          cp code/packages/rust/task-mosaic-app/conformance/compose-android/TrestleAndroidUiTest.kt "$android_project/src/androidTest/kotlin/"
+
+          # The wrapper, written outside the project as in the step above.
+          gradle_version="$(sed -n 's|^distributionUrl=.*/gradle-\(.*\)-bin\.zip$|\1|p' "$android_project/gradle/wrapper/gradle-wrapper.properties")"
+          test -n "$gradle_version"
+          wrapper_seed="$RUNNER_TEMP/mosaic-android-runtime-gradle-wrapper"
+          rm -rf "$wrapper_seed"
+          mkdir -p "$wrapper_seed"
+          touch "$wrapper_seed/settings.gradle.kts"
+          gradle --no-daemon -q -p "$wrapper_seed" wrapper --gradle-version "$gradle_version"
+          cp "$wrapper_seed/gradle/wrapper/gradle-wrapper.jar" "$android_project/gradle/wrapper/gradle-wrapper.jar"
+          # Refuse to run a wrapper jar that is not the one Gradle published.
+          bash code/scripts/verify-gradle-wrapper-jar.sh "$android_project/gradle/wrapper/gradle-wrapper.jar"
+          # Run the verified jar itself, with gradlew's JVM options, rather
+          # than the generated gradlew script: Gradle publishes no checksum for
+          # the script, so it is the one part of the wrapper nothing can
+          # verify. Naming the main class (not `-jar`) works with every
+          # Gradle's wrapper jar, including old ones without a Main-Class.
+          (
+            cd "$android_project"
+            "${JAVA_HOME:+$JAVA_HOME/bin/}java" -Xmx64m -Xms64m -Dorg.gradle.appname=gradlew \
+              -cp gradle/wrapper/gradle-wrapper.jar org.gradle.wrapper.GradleWrapperMain \
+              --no-daemon --stacktrace assembleDebug assembleDebugAndroidTest
+          )
+          test_apk="$(find "$android_project/build/outputs/apk/androidTest/debug" -name '*-debug-androidTest.apk' -print -quit)"
+          test -n "$test_apk"
+
+          apk="$(find "$android_project/build/outputs/apk/debug" -name '*.apk' -print -quit)"
+          test -n "$apk"
+          unpacked="$RUNNER_TEMP/mosaic-trestle-android-runtime-apk"
+          rm -rf "$unpacked"
+          unzip -q -o "$apk" 'lib/*' -d "$unpacked"
+          llvm_nm="$ndk/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-nm"
+          test -x "$llvm_nm"
+          for abi in arm64-v8a armeabi-v7a x86_64 x86; do
+            library="$unpacked/lib/$abi/libmosaic_app.so"
+            if ! test -f "$library"; then
+              echo "::error::the APK has no lib/$abi/libmosaic_app.so"
+              find "$unpacked/lib" -type f
+              exit 1
+            fi
+            symbols="$RUNNER_TEMP/mosaic-trestle-$abi-symbols.txt"
+            "$llvm_nm" -D --defined-only "$library" > "$symbols"
+            if ! grep -Eq ' T mosaic_app_create$' "$symbols"; then
+              echo "::error::lib/$abi/libmosaic_app.so does not export mosaic_app_create"
+              head -n 40 "$symbols"
+              exit 1
+            fi
+          done
+
+      # UI89 step 7 (§3.9): Journal is the second app on Android. Its engine
+      # is built for every ABI and packaged exactly as Trestle's above; the
+      # APK is assembled through the same verified wrapper jar, by
+      # assemble-mosaic-android-debug.sh. Gate: native-complete with no
+      # degradations, Journal's own identity in the badging, and
+      # libmosaic_app.so exporting mosaic_app_create for each ABI.
+      - name: Build Journal for Android with its Rust runtime (UI89 step 7)
+        if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
+        shell: bash
+        timeout-minutes: 45
+        run: |
+          set -euo pipefail
+          ndk="${ANDROID_NDK_LATEST_HOME:-${ANDROID_NDK_HOME:-}}"
+          if [ -z "$ndk" ] || [ ! -d "$ndk" ]; then
+            echo "::error::this runner has no Android NDK (ANDROID_NDK_LATEST_HOME / ANDROID_NDK_HOME)"
+            exit 1
+          fi
+          export ANDROID_NDK_HOME="$ndk"
+          # Both no-ops after the Trestle step; kept so this step stands alone.
+          rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android i686-linux-android
+          cargo install --locked cargo-ndk --version 4.1.2
+
+          jni_libs="$RUNNER_TEMP/mosaic-journal-jnilibs"
+          rm -rf "$jni_libs"
+          bash code/scripts/build-mosaic-android-libs.sh journal-mosaic-app "$jni_libs"
+
+          output="$RUNNER_TEMP/mosaic-compose-journal-android-runtime"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/journal-app --backend compose --output "$output" --emit-project --profile native-complete --runtime-library "$jni_libs"
+          jq -e '.replacedGeneratedFiles == []' "$output/compose/mosaic-degradations.json"
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$output/compose/mosaic-degradations.json"
+          android_project="$output/compose/android"
+          # Journal's instrumented UI test (UI89 §4.2) lives with the app, as
+          # the desktop JournalUiTest does; the emulator step runs it.
+          mkdir -p "$android_project/src/androidTest/kotlin"
+          cp code/packages/rust/journal-mosaic-app/conformance/compose-android/JournalAndroidUiTest.kt "$android_project/src/androidTest/kotlin/"
+          bash code/scripts/assemble-mosaic-android-debug.sh "$android_project" --with-android-test
+          test_apk="$(find "$android_project/build/outputs/apk/androidTest/debug" -name '*-debug-androidTest.apk' -print -quit)"
+          test -n "$test_apk"
+
+          apk="$(find "$android_project/build/outputs/apk/debug" -name '*-debug.apk' -print -quit)"
+          test -n "$apk"
+          aapt2="$(find "$ANDROID_HOME/build-tools" -name aapt2 -type f | sort -V | tail -n 1)"
+          test -n "$aapt2"
+          badging="$RUNNER_TEMP/mosaic-journal-android-badging.txt"
+          "$aapt2" dump badging "$apk" > "$badging"
+          expect_badging() {
+            if ! grep -Eq "$1" "$badging"; then
+              echo "::error::Journal's APK badging has no line matching $1"
+              cat "$badging"
+              exit 1
+            fi
+          }
+          # The defaults Journal's manifest leaves in place (UI89 §3.9).
+          expect_badging "^package: name='dev\.codingadventures\.journalapp'"
+          expect_badging "^application-label:'JournalApp'"
+          expect_badging "^launchable-activity: name='mosaic\.android\.MosaicActivity'"
+          # aapt prints `sdkVersion:`, newer aapt2 `minSdkVersion:`.
+          expect_badging "^(min)?[sS]dkVersion:'26'"
+          expect_badging "^targetSdkVersion:'36'"
+
+          unpacked="$RUNNER_TEMP/mosaic-journal-android-runtime-apk"
+          rm -rf "$unpacked"
+          unzip -q -o "$apk" 'classes*.dex' 'lib/*' -d "$unpacked"
+          for class in 'LJournalAppKt;' 'LMosaicRuntimeHost;' 'Lmosaic/android/MosaicActivity;'; do
+            if ! grep -a -q -F "$class" "$unpacked"/classes*.dex; then
+              echo "::error::no $class in Journal's dex"
+              exit 1
+            fi
+          done
+          if ! test -f "$unpacked/lib/x86_64/libjnidispatch.so"; then
+            echo "::error::Journal's APK has no lib/x86_64/libjnidispatch.so"
+            find "$unpacked/lib" -type f
+            exit 1
+          fi
+          llvm_nm="$ndk/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-nm"
+          test -x "$llvm_nm"
+          for abi in arm64-v8a armeabi-v7a x86_64 x86; do
+            library="$unpacked/lib/$abi/libmosaic_app.so"
+            if ! test -f "$library"; then
+              echo "::error::Journal's APK has no lib/$abi/libmosaic_app.so"
+              find "$unpacked/lib" -type f
+              exit 1
+            fi
+            symbols="$RUNNER_TEMP/mosaic-journal-$abi-symbols.txt"
+            "$llvm_nm" -D --defined-only "$library" > "$symbols"
+            if ! grep -Eq ' T mosaic_app_create$' "$symbols"; then
+              echo "::error::Journal's lib/$abi/libmosaic_app.so does not export mosaic_app_create"
+              head -n 40 "$symbols"
+              exit 1
+            fi
+          done
+
+      # UI89 step 7 (§3.10): Engram is the third app on Android, built and
+      # checked exactly as Journal's above. Its touch layout variant reaches
+      # the Android project with the default one. Its Anki import and export
+      # are its own `compose-android` [host_effects] handler (§3.12), which
+      # MosaicActivity installs ahead of the platform library and which must
+      # reach the dex; the desktop handler (EngramEffectsKt) must not.
+      - name: Build Engram for Android with its Rust runtime (UI89 step 7)
+        if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
+        shell: bash
+        timeout-minutes: 45
+        run: |
+          set -euo pipefail
+          ndk="${ANDROID_NDK_LATEST_HOME:-${ANDROID_NDK_HOME:-}}"
+          if [ -z "$ndk" ] || [ ! -d "$ndk" ]; then
+            echo "::error::this runner has no Android NDK (ANDROID_NDK_LATEST_HOME / ANDROID_NDK_HOME)"
+            exit 1
+          fi
+          export ANDROID_NDK_HOME="$ndk"
+          # Both no-ops after the steps above; kept so this step stands alone.
+          rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android i686-linux-android
+          cargo install --locked cargo-ndk --version 4.1.2
+
+          jni_libs="$RUNNER_TEMP/mosaic-engram-jnilibs"
+          rm -rf "$jni_libs"
+          bash code/scripts/build-mosaic-android-libs.sh engram-mosaic-app "$jni_libs"
+
+          output="$RUNNER_TEMP/mosaic-compose-engram-android-runtime"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/engram-app --backend compose --output "$output" --emit-project --profile native-complete --runtime-library "$jni_libs"
+          jq -e '.replacedGeneratedFiles == []' "$output/compose/mosaic-degradations.json"
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$output/compose/mosaic-degradations.json"
+          android_project="$output/compose/android"
+          # Installed as the host loads, before the platform library, which
+          # wraps it and routes the kinds it claims to it (UI89 §3.12).
+          grep -q -F 'installEngramAndroidEffects(it); platformRouter = installMosaicPlatformEffects(it, documentPicker, setOf("importAnki", "exportAnki"))' \
+            "$android_project/src/main/kotlin/mosaic/android/MosaicActivity.kt"
+          # Engram's instrumented UI test (UI89 §4.4) answers the document
+          # picker itself; the emulator step runs it.
+          mkdir -p "$android_project/src/androidTest/kotlin"
+          cp code/programs/mosaic/engram-app/conformance/compose-android/EngramAndroidUiTest.kt "$android_project/src/androidTest/kotlin/"
+          bash code/scripts/assemble-mosaic-android-debug.sh "$android_project" --with-android-test
+          test_apk="$(find "$android_project/build/outputs/apk/androidTest/debug" -name '*-debug-androidTest.apk' -print -quit)"
+          test -n "$test_apk"
+
+          apk="$(find "$android_project/build/outputs/apk/debug" -name '*-debug.apk' -print -quit)"
+          test -n "$apk"
+          aapt2="$(find "$ANDROID_HOME/build-tools" -name aapt2 -type f | sort -V | tail -n 1)"
+          test -n "$aapt2"
+          badging="$RUNNER_TEMP/mosaic-engram-android-badging.txt"
+          "$aapt2" dump badging "$apk" > "$badging"
+          expect_badging() {
+            if ! grep -Eq "$1" "$badging"; then
+              echo "::error::Engram's APK badging has no line matching $1"
+              cat "$badging"
+              exit 1
+            fi
+          }
+          # The defaults Engram's manifest leaves in place (UI89 §3.10).
+          expect_badging "^package: name='dev\.codingadventures\.engramapp'"
+          expect_badging "^application-label:'EngramApp'"
+          expect_badging "^launchable-activity: name='mosaic\.android\.MosaicActivity'"
+          # aapt prints `sdkVersion:`, newer aapt2 `minSdkVersion:`.
+          expect_badging "^(min)?[sS]dkVersion:'26'"
+          expect_badging "^targetSdkVersion:'36'"
+
+          unpacked="$RUNNER_TEMP/mosaic-engram-android-runtime-apk"
+          rm -rf "$unpacked"
+          unzip -q -o "$apk" 'classes*.dex' 'lib/*' -d "$unpacked"
+          # Engram's own Android handler, which MosaicActivity installs
+          # (UI89 §3.12): its class and its install function.
+          for class in 'LEngramAppKt;' 'LMosaicRuntimeHost;' 'Lmosaic/android/MosaicActivity;' 'LEngramAndroidEffectsKt;' 'installEngramAndroidEffects'; do
+            if ! grep -a -q -F "$class" "$unpacked"/classes*.dex; then
+              echo "::error::no $class in Engram's dex"
+              exit 1
+            fi
+          done
+          # The desktop Anki handler stays out (UI89 §3.10, §3.12): its
+          # Swing dialogs are not Android's. Both its class and its install
+          # function are looked for, so a renamed file or an added
+          # `@file:JvmName` cannot slip past; neither is a substring of the
+          # Android handler's names. grep's exit is read whole: 1 is
+          # "absent", anything else (no dex, unreadable) is a failure, never
+          # a pass.
+          for needle in 'LEngramEffectsKt;' 'installEngramEffects'; do
+            found=0
+            grep -a -q -F "$needle" "$unpacked"/classes*.dex || found=$?
+            if [ "$found" -eq 0 ]; then
+              echo "::error::Engram's desktop effect handler ($needle) reached the Android dex"
+              exit 1
+            fi
+            if [ "$found" -ne 1 ]; then
+              echo "::error::could not scan Engram's dex for $needle (grep exit $found)"
+              exit 1
+            fi
+          done
+          if ! test -f "$unpacked/lib/x86_64/libjnidispatch.so"; then
+            echo "::error::Engram's APK has no lib/x86_64/libjnidispatch.so"
+            find "$unpacked/lib" -type f
+            exit 1
+          fi
+          llvm_nm="$ndk/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-nm"
+          test -x "$llvm_nm"
+          for abi in arm64-v8a armeabi-v7a x86_64 x86; do
+            library="$unpacked/lib/$abi/libmosaic_app.so"
+            if ! test -f "$library"; then
+              echo "::error::Engram's APK has no lib/$abi/libmosaic_app.so"
+              find "$unpacked/lib" -type f
+              exit 1
+            fi
+            symbols="$RUNNER_TEMP/mosaic-engram-$abi-symbols.txt"
+            "$llvm_nm" -D --defined-only "$library" > "$symbols"
+            if ! grep -Eq ' T mosaic_app_create$' "$symbols"; then
+              echo "::error::Engram's lib/$abi/libmosaic_app.so does not export mosaic_app_create"
+              head -n 40 "$symbols"
+              exit 1
+            fi
+          done
+
+      # UI89 §7 (steps 2 and 4): Trestle, Journal and Engram through the
+      # Flutter backend, on Android. Each app's per-ABI engines (built for
+      # its Compose APK above) go into a Flutter phone runtime
+      # (android/<abi>/libmosaic_app.so). build-mosaic-flutter-phone-app.sh
+      # builds it with the README's `flutter create`, sets allowBackup false,
+      # builds the debug APK and checks it:
+      # - the manifest says allowBackup false;
+      # - every packaged ABI's library has its input's ELF machine and
+      #   exported symbols, with x86_64 (the emulator's) and arm64-v8a there.
+      # The emulator step below runs each one through the same gate as its
+      # Compose APK.
+      - name: Build Trestle, Journal and Engram for Android with Flutter (UI89 §7)
+        if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_compose_runtime == 'true' && needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
+        shell: bash
+        timeout-minutes: 50
+        run: |
+          set -euo pipefail
+          # program | jniLibs built by its Compose step above | project name.
+          # Read on fd 3: flutter, cargo and gradle must not eat the list
+          # from stdin.
+          while read -r program jni_libs name <&3; do
+            test -d "$jni_libs"
+            phone_runtime="$RUNNER_TEMP/mosaic-$name-flutter-phone-runtime"
+            rm -rf "$phone_runtime"
+            mkdir -p "$phone_runtime"
+            cp -R "$jni_libs" "$phone_runtime/android"
+            echo "::group::$name (Flutter, Android)"
+            bash code/scripts/build-mosaic-flutter-phone-app.sh android "$program" "$phone_runtime" "$RUNNER_TEMP/mosaic-flutter-$name-android" dev.codingadventures "$name"
+            echo "::endgroup::"
+          done 3<<EOF
+          code/programs/mosaic/task-app $RUNNER_TEMP/mosaic-trestle-jnilibs trestle
+          code/programs/mosaic/journal-app $RUNNER_TEMP/mosaic-journal-jnilibs journalapp
+          code/programs/mosaic/engram-app $RUNNER_TEMP/mosaic-engram-jnilibs engramapp
+          EOF
+
+      - name: Launch Trestle, Journal and Engram on an Android emulator (UI89 steps 5, 7)
+        if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
+        shell: bash
+        # Each app's gate, then each one's UI test in two cold launches (§4),
+        # then each Flutter app's gate (§7) when its lane built them.
+        timeout-minutes: 65
+        env:
+          MOSAIC_FLUTTER_LANE: ${{ needs.detect.outputs.needs_mosaic_flutter_runtime }}
+        run: |
+          set -euo pipefail
+          # Let the runner's user open /dev/kvm (GitHub's documented recipe).
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules > /dev/null
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+          export PATH="$ANDROID_HOME/platform-tools:$PATH"
+
+          apk="$(find "$RUNNER_TEMP/mosaic-compose-taskapp-android-runtime/compose/android/build/outputs/apk/debug" -name '*-debug.apk' -print -quit)"
+          test -n "$apk"
+          emulator_log="$RUNNER_TEMP/mosaic-android-emulator.log"
+          # However the step ends: stop the emulator, and on failure show why.
+          finish() {
+            local status=$?
+            adb emu kill > /dev/null 2>&1 || true
+            if [ "$status" -ne 0 ]; then
+              echo "---- emulator log ----"
+              tail -n 80 "$emulator_log" || true
+              df -h "$RUNNER_TEMP" "$HOME" || true
+            fi
+          }
+          trap finish EXIT
+          bash code/scripts/start-mosaic-android-emulator.sh "$emulator_log"
+          bash code/scripts/mosaic-android-emulator-gate.sh "$apk" dev.codingadventures.trestle task-app
+          # Then a person's use of it (UI89 §4.4): add, complete, reopen and
+          # delete a task through the generated controls, and find a saved
+          # task again after a cold relaunch.
+          trestle_test_apk="$(find "$RUNNER_TEMP/mosaic-compose-taskapp-android-runtime/compose/android/build/outputs/apk/androidTest/debug" -name '*-debug-androidTest.apk' -print -quit)"
+          test -n "$trestle_test_apk"
+          bash code/scripts/mosaic-android-ui-test.sh "$apk" "$trestle_test_apk" dev.codingadventures.trestle dev.codingadventures.trestle.uitest.TrestleAndroidUiTest
+
+          journal_apk="$(find "$RUNNER_TEMP/mosaic-compose-journal-android-runtime/compose/android/build/outputs/apk/debug" -name '*-debug.apk' -print -quit)"
+          test -n "$journal_apk"
+          bash code/scripts/mosaic-android-emulator-gate.sh "$journal_apk" dev.codingadventures.journalapp journal-app
+          # Then a person's use of it (UI89 §4.2): write, save and delete
+          # entries through the generated controls, and find the survivor
+          # again after a cold relaunch.
+          journal_test_apk="$(find "$RUNNER_TEMP/mosaic-compose-journal-android-runtime/compose/android/build/outputs/apk/androidTest/debug" -name '*-debug-androidTest.apk' -print -quit)"
+          test -n "$journal_test_apk"
+          bash code/scripts/mosaic-android-ui-test.sh "$journal_apk" "$journal_test_apk" dev.codingadventures.journalapp dev.codingadventures.journalapp.uitest.JournalAndroidUiTest
+
+          engram_apk="$(find "$RUNNER_TEMP/mosaic-compose-engram-android-runtime/compose/android/build/outputs/apk/debug" -name '*-debug.apk' -print -quit)"
+          test -n "$engram_apk"
+          bash code/scripts/mosaic-android-emulator-gate.sh "$engram_apk" dev.codingadventures.engramapp engram-app
+          # Then Anki export and import through the document picker, which
+          # the test answers with a file in the app's cache (UI89 §4.4), and
+          # the imported deck again after a cold relaunch.
+          engram_test_apk="$(find "$RUNNER_TEMP/mosaic-compose-engram-android-runtime/compose/android/build/outputs/apk/androidTest/debug" -name '*-debug-androidTest.apk' -print -quit)"
+          test -n "$engram_test_apk"
+          bash code/scripts/mosaic-android-ui-test.sh "$engram_apk" "$engram_test_apk" dev.codingadventures.engramapp dev.codingadventures.engramapp.uitest.EngramAndroidUiTest
+
+          # Trestle, Journal and Engram through Flutter (UI89 §7.5), built by
+          # their own step when the Flutter lane runs. Same gate, launched
+          # through Flutter's .MainActivity. Each Compose app has the same
+          # package, so it is uninstalled first: neither its data nor its
+          # signing key carry over.
+          if [ "$MOSAIC_FLUTTER_LANE" = true ]; then
+            # Read on fd 3: `adb shell` reads stdin and would eat the list.
+            while read -r name package application_id <&3; do
+              flutter_apk="$RUNNER_TEMP/mosaic-flutter-$name-android/flutter/build/app/outputs/flutter-apk/app-debug.apk"
+              test -f "$flutter_apk"
+              adb uninstall "$package" > /dev/null
+              bash code/scripts/mosaic-android-emulator-gate.sh "$flutter_apk" "$package" "$application_id" .MainActivity
+            done 3<<EOF
+          trestle dev.codingadventures.trestle task-app
+          journalapp dev.codingadventures.journalapp journal-app
+          engramapp dev.codingadventures.engramapp engram-app
+          EOF
+          fi
+
   # ── Job 15: Build and test ─────────────────────────────────────
   #
   # Installs only the toolchains flagged by the detect job, then
@@ -3390,1345 +4831,12 @@ jobs:
           engram-mosaic-app code/programs/mosaic/engram-app engramapp engram-app
           EOF
 
-      - name: Round-trip Rust engine through standard Qt binding
-        if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_qt_runtime == 'true'
-        shell: bash
-        timeout-minutes: 15
-        run: |
-          set -euo pipefail
-          cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
-          runtime_library="$(pwd)/code/packages/rust/target/debug/libmosaic_app_conformance.so"
-
-          bundled_output="$RUNNER_TEMP/mosaic-qt-bundled-conformance"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-app-conformance/package --backend qt --output "$bundled_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
-          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$bundled_output/qt/mosaic-degradations.json"
-          cmake -S "$bundled_output/qt" -B "$bundled_output/qt/build" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$bundled_output/install"
-          cmake --build "$bundled_output/qt/build" --config Release --parallel
-          cmake --install "$bundled_output/qt/build" --config Release
-
-          installed_runtime="$(find "$bundled_output/install" -type f -name libmosaic_app.so -print -quit)"
-          test -n "$installed_runtime"
-          cmp "$runtime_library" "$installed_runtime"
-
-          installed_app="$(dirname "$installed_runtime")/Counter"
-          bundled_log="$RUNNER_TEMP/mosaic-qt-bundled-launch.log"
-          set +e
-          env -u MOSAIC_APP_LIBRARY QT_QPA_PLATFORM=offscreen \
-            timeout 5s "$installed_app" >"$bundled_log" 2>&1
-          bundled_status=$?
-          set -e
-          test "$bundled_status" -eq 124
-          ! grep -F "Mosaic Rust runtime unavailable" "$bundled_log"
-
-          harness="$RUNNER_TEMP/mosaic-qt-runtime-conformance"
-          cp -R code/packages/rust/mosaic-app-bindings/conformance/qt "$harness"
-          cp "$bundled_output/qt/MosaicHost.cpp" "$harness/MosaicHost.cpp"
-          cp "$bundled_output/qt/MosaicHost.h" "$harness/MosaicHost.h"
-
-          cmake -S "$harness" -B "$harness/build" -DCMAKE_BUILD_TYPE=Release
-          cmake --build "$harness/build" --config Release --parallel
-          installed_harness="$(dirname "$installed_runtime")/mosaic_qt_runtime_conformance"
-          cp "$harness/build/mosaic_qt_runtime_conformance" "$installed_harness"
-          (
-            cd /
-            state_path="$RUNNER_TEMP/mosaic-qt-runtime-state.json"
-            rm -f "$state_path" "$state_path.corrupt" "$state_path.tmp"
-            env -u MOSAIC_APP_LIBRARY MOSAIC_APP_STATE_PATH="$state_path" "$installed_harness"
-            env -u MOSAIC_APP_LIBRARY MOSAIC_APP_STATE_PATH="$state_path" MOSAIC_EXPECT_RESTORED=1 "$installed_harness"
-            printf '{}' > "$state_path"
-            env -u MOSAIC_APP_LIBRARY MOSAIC_APP_STATE_PATH="$state_path" \
-              MOSAIC_EXPECT_PERSISTENCE_WARNING=1 "$installed_harness"
-            env -u MOSAIC_APP_LIBRARY "$installed_harness" --expect-missing-prop-failure
-          )
-
-          cargo build --manifest-path code/packages/rust/Cargo.toml -p task-mosaic-app
-          task_runtime_library="$(pwd)/code/packages/rust/target/debug/libtask_mosaic_app.so"
-
-          taskapp_output="$RUNNER_TEMP/mosaic-qt-taskapp"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend qt --output "$taskapp_output" --emit-project --profile native-complete --runtime-library "$task_runtime_library"
-          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$taskapp_output/qt/mosaic-degradations.json"
-          python3 code/scripts/taskapp_native_control_contract.py --backend qt --generated-dir "$taskapp_output/qt"
-          cmake -S "$taskapp_output/qt" -B "$taskapp_output/qt/build" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$taskapp_output/install"
-          cmake --build "$taskapp_output/qt/build" --config Release --parallel
-          cmake --install "$taskapp_output/qt/build" --config Release
-          installed_taskapp_runtime="$(find "$taskapp_output/install" -type f -name libmosaic_app.so -print -quit)"
-          test -n "$installed_taskapp_runtime"
-          cmp "$task_runtime_library" "$installed_taskapp_runtime"
-          installed_taskapp="$(dirname "$installed_taskapp_runtime")/TaskApp"
-          taskapp_log="$RUNNER_TEMP/mosaic-qt-taskapp-launch.log"
-          set +e
-          env -u MOSAIC_APP_LIBRARY QT_QPA_PLATFORM=offscreen timeout 5s "$installed_taskapp" >"$taskapp_log" 2>&1
-          taskapp_status=$?
-          set -e
-          test "$taskapp_status" -eq 124
-          ! grep -F "Mosaic Rust runtime unavailable" "$taskapp_log"
-          ! grep -E "missing required MIL prop|ReferenceError|TypeError" "$taskapp_log"
-
-          # Rebuild the exact generated shell with its compile-time acceptance
-          # seam, force runtime loading to fail, and drive the emitted Try again
-          # button. The probe exits successfully only after the second visible
-          # failure, proving retry creates a fresh host instead of merely
-          # checking source markers around a blank window.
-          task_startup_source="$RUNNER_TEMP/mosaic-qt-taskapp-startup-conformance"
-          cp -R "$taskapp_output/qt" "$task_startup_source"
-          cmake -S "$task_startup_source" -B "$task_startup_source/startup-build" \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_CXX_FLAGS=-DMOSAIC_STARTUP_CONFORMANCE=1
-          cmake --build "$task_startup_source/startup-build" --config Release --parallel
-          task_startup_log="$RUNNER_TEMP/mosaic-qt-taskapp-startup.log"
-          env QT_QPA_PLATFORM=offscreen \
-            MOSAIC_APP_LIBRARY="$RUNNER_TEMP/does-not-exist/libtask_mosaic_app.so" \
-            MOSAIC_APP_STATE_PATH="$RUNNER_TEMP/mosaic-qt-taskapp-startup-state.json" \
-            timeout 10s "$task_startup_source/startup-build/TaskApp" >"$task_startup_log" 2>&1
-          grep -F "Qt startup failure/retry conformance passed" "$task_startup_log"
-
-          task_ui_source="$RUNNER_TEMP/mosaic-qt-taskapp-ui-conformance"
-          cp -R "$taskapp_output/qt" "$task_ui_source"
-          cp code/packages/rust/task-mosaic-app/conformance/qt/ui-main.cpp "$task_ui_source/main.cpp"
-          cmake -S "$task_ui_source" -B "$task_ui_source/acceptance-build" -DCMAKE_BUILD_TYPE=Release
-          cmake --build "$task_ui_source/acceptance-build" --config Release --parallel
-          task_ui_binary="$task_ui_source/acceptance-build/TaskApp"
-          test -x "$task_ui_binary"
-          task_state_path="$RUNNER_TEMP/mosaic-qt-taskapp-state.json"
-          rm -f "$task_state_path" "$task_state_path.corrupt" "$task_state_path.tmp"
-          env -u MOSAIC_APP_LIBRARY QT_QPA_PLATFORM=offscreen MOSAIC_APP_STATE_PATH="$task_state_path" \
-            "$task_ui_binary"
-          env -u MOSAIC_APP_LIBRARY QT_QPA_PLATFORM=offscreen MOSAIC_APP_STATE_PATH="$task_state_path" \
-            MOSAIC_EXPECT_RESTORED=1 "$task_ui_binary"
-
-          # ---- Journal: build, install and LAUNCH (J5a, #14416). --------------
-          #
-          # The first native host Journal runs in. Same shape as TaskApp above:
-          # the strict standard binding (native-complete + runtime library), the
-          # built runtime is the one installed, and the installed app must stay
-          # up for five seconds without the runtime or a required prop missing.
-          # It launches twice against one state file, so the second start
-          # restores whatever the first saved. Journal raises no effects and
-          # ships no host assets, so no harness files are needed.
-          cargo build --manifest-path code/packages/rust/Cargo.toml -p journal-mosaic-app
-          journal_runtime_library="$(pwd)/code/packages/rust/target/debug/libjournal_mosaic_app.so"
-          test -f "$journal_runtime_library"
-
-          journal_output="$RUNNER_TEMP/mosaic-qt-journal"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/journal-app --backend qt --output "$journal_output" --emit-project --profile native-complete --runtime-library "$journal_runtime_library"
-          jq -e '.replacedGeneratedFiles == []' "$journal_output/qt/mosaic-degradations.json"
-          jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$journal_output/qt/mosaic-degradations.json"
-          cmake -S "$journal_output/qt" -B "$journal_output/qt/build" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$journal_output/install"
-          cmake --build "$journal_output/qt/build" --config Release --parallel
-          cmake --install "$journal_output/qt/build" --config Release
-          installed_journal_runtime="$(find "$journal_output/install" -type f -name libmosaic_app.so -print -quit)"
-          test -n "$installed_journal_runtime"
-          cmp "$journal_runtime_library" "$installed_journal_runtime"
-          installed_journal="$(dirname "$installed_journal_runtime")/JournalApp"
-          test -x "$installed_journal"
-          journal_state_path="$RUNNER_TEMP/mosaic-qt-journal-state.json"
-          rm -f "$journal_state_path" "$journal_state_path.corrupt" "$journal_state_path.tmp"
-          for journal_launch in first restored; do
-            journal_log="$RUNNER_TEMP/mosaic-qt-journal-launch-$journal_launch.log"
-            set +e
-            env -u MOSAIC_APP_LIBRARY QT_QPA_PLATFORM=offscreen MOSAIC_APP_STATE_PATH="$journal_state_path" \
-              timeout 5s "$installed_journal" >"$journal_log" 2>&1
-            journal_status=$?
-            set -e
-            cat "$journal_log"
-            test "$journal_status" -eq 124
-            # Explicit exits, not `! grep`: bash's `set -e` ignores a command
-            # whose status is inverted with `!`, so a bare `! grep` that
-            # matches would not fail this step.
-            if grep -F "Mosaic Rust runtime unavailable" "$journal_log"; then exit 1; fi
-            if grep -E "missing required MIL prop|ReferenceError|TypeError" "$journal_log"; then exit 1; fi
-          done
-
-          # Journal's own suite (the package opts out of the workspace).
-          cargo test --manifest-path code/programs/mosaic/journal-app/Cargo.toml
-
-          # ---- Engram: prove the Qt emission COMPILES. ------------------------
-          #
-          # Nothing compiled Engram's Qt output before this. Its own suite is
-          # substring assertions over emitted text, so a project that could not
-          # build would have looked entirely healthy.
-          #
-          # NOW --profile native-complete WITH --runtime-library, which the
-          # comment here used to say was impossible.
-          #
-          # It was, and the reason is worth keeping: those flags switch the
-          # generated main.cpp to the strict standard-binding shape, calling
-          # registerTypes/requireRuntime/configureRequiredProps/attach, and
-          # Engram used to replace MosaicHost.h/.cpp through [host_assets] with
-          # its own engram-capi binding exposing props/handleEvent/ensureLoaded
-          # instead. Combining them emitted a project that did not compile:
-          #
-          #   main.cpp:26: error: 'registerTypes' is not a member of 'MosaicHost'
-          #
-          # #13728 removed that override for Qt. Props, events, snapshot and
-          # restore go through engram-mosaic-app and the generated binding now,
-          # and the file dialogs ride Effect through [host_effects] (UI47 §5.5).
-          # So the incoherent combination became the coherent one, and this lane
-          # gates the configuration Engram will actually ship.
-          cargo build --manifest-path code/packages/rust/Cargo.toml -p engram-mosaic-app
-
-          engram_output="$RUNNER_TEMP/mosaic-qt-engram"
-          # `.so` and absolute, matching the TaskApp lane above: this job runs on
-          # Linux, and `.dylib` would be a macOS-only path that fails here.
-          engram_runtime_library="$(pwd)/code/packages/rust/target/debug/libengram_mosaic_app.so"
-          test -f "$engram_runtime_library"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/engram-app --backend qt --output "$engram_output" --emit-project --profile native-complete --runtime-library "$engram_runtime_library"
-
-          # Empty, and pinned empty. This assertion used to name
-          # ["MosaicHost.cpp", "MosaicHost.h"] precisely so #13728 could not be
-          # forgotten -- updating it was the migration's definition of done
-          # (UI47 §5.5.5). Pinned rather than dropped: a package that starts
-          # overriding the generated host again has undone this, and that must
-          # fail here rather than pass quietly.
-          jq -e '.replacedGeneratedFiles == []' "$engram_output/qt/mosaic-degradations.json"
-
-          # And native-complete means zero degradations, not merely few.
-          # `type == "array"` first: `null | length` is 0 in jq, so a report that
-          # lost the key entirely would satisfy a bare length check.
-          jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$engram_output/qt/mosaic-degradations.json"
-
-          # The handler is wired into the generated entry point, which is the
-          # half a text assertion over the manifest cannot see.
-          grep -q 'installEngramEffects(mosaicHost);' "$engram_output/qt/main.cpp"
-          # Mosaic's Qt platform library (UI87 §7.4a) wraps it, routing the two
-          # kinds Engram's manifest claims to it (UI87 §7.2), and is in the
-          # build the cmake step below compiles.
-          grep -qF 'installMosaicPlatformEffects(mosaicHost, QSet<QString>{QStringLiteral("importAnki"), QStringLiteral("exportAnki")});' "$engram_output/qt/main.cpp"
-          grep -q 'MosaicHost.h MosaicPlatformEffects.cpp MosaicPlatformEffects.h)' "$engram_output/qt/CMakeLists.txt"
-
-          # UI48 §7.10 (ENV2/ENV3): Engram is the one package with a layout
-          # variant (EngramApp.touch.mll). Both roots must be in the QML
-          # module, each its own type, and main.cpp must carry the selector, so
-          # the build below proves they compile together. Each check names
-          # itself when it fails.
-          qt_layout_expect() {
-            if ! grep -qF -- "$2" "$1"; then
-              echo "::error::Qt layout variants: expected $3 -- '$2' is not in $1"
-              exit 1
-            fi
-          }
-          qt_layout_expect "$engram_output/qt/CMakeLists.txt" 'set_source_files_properties(EngramApp.touch.qml PROPERTIES QT_QML_SOURCE_TYPENAME EngramAppTouch)' "the touch root's QML type"
-          qt_layout_expect "$engram_output/qt/CMakeLists.txt" 'qt_target_qml_sources(EngramApp QML_FILES EngramApp.touch.qml)' "the touch root in the module"
-          qt_layout_expect "$engram_output/qt/EngramApp.touch.qml" 'required property var mosaicHost' "a strict touch root"
-          qt_layout_expect "$engram_output/qt/main.cpp" '{"touch", "qrc:/qt/qml/Mosaic/EngramApp/EngramApp.touch.qml", {{"pointer", "coarse"}}},' "the conventional touch rule"
-          qt_layout_expect "$engram_output/qt/main.cpp" 'if (!layoutSwitch->isActive()) layoutSwitch->start(0);' "the observer queueing the root switch"
-          if grep -qF 'const QUrl url(QStringLiteral("qrc:/qt/qml/Mosaic/EngramApp/EngramApp.qml"));' "$engram_output/qt/main.cpp"; then
-            echo "::error::Qt layout variants: main.cpp still mounts EngramApp.qml unconditionally"
-            exit 1
-          fi
-
-          # The gate: it builds.
-          cmake -S "$engram_output/qt" -B "$engram_output/qt/build" -DCMAKE_BUILD_TYPE=Release
-          cmake --build "$engram_output/qt/build" --config Release --parallel
-
-          # UI48 §7.10: the resize gate §7 asks for. The fixture has a default
-          # and a `compact` layout; its harness compiles the generated main.cpp
-          # verbatim, runs it offscreen, resizes the window across 600 logical
-          # pixels and asserts the root swaps and keeps its props, so a shell
-          # frozen on one layout fails here. No runtime: the sample shell's
-          # host reports to nobody.
-          layout_variants_output="$RUNNER_TEMP/mosaic-qt-layout-variants"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-qt/fixtures/layout-variants --backend qt --output "$layout_variants_output" --emit-project
-          mv "$layout_variants_output/qt/main.cpp" "$layout_variants_output/qt/generated_main.cpp"
-          cp code/packages/rust/mosaic-emit-qt/fixtures/layout-variants-test/main.cpp "$layout_variants_output/qt/main.cpp"
-          cmake -S "$layout_variants_output/qt" -B "$layout_variants_output/qt/build" -DCMAKE_BUILD_TYPE=Release
-          cmake --build "$layout_variants_output/qt/build" --config Release --parallel
-          layout_variants_log="$RUNNER_TEMP/mosaic-qt-layout-variants.log"
-          set +e
-          env -u MOSAIC_APP_LIBRARY QT_QPA_PLATFORM=offscreen \
-            timeout 60s "$layout_variants_output/qt/build/LayoutProbe" >"$layout_variants_log" 2>&1
-          layout_variants_status=$?
-          set -e
-          cat "$layout_variants_log"
-          if [ "$layout_variants_status" -ne 0 ]; then
-            echo "::error::Qt layout-variant resize gate exited $layout_variants_status"
-            exit 1
-          fi
-          qt_layout_expect "$layout_variants_log" 'Qt layout-variant resize gate passed' "the resize gate to pass"
-
-          # Engram's own suite, which the parent workspace cannot reach: the
-          # package opts OUT of it (`[workspace]` empty in its Cargo.toml), so
-          # `cargo test` at the workspace root never sees these tests and the
-          # epic's "changing Engram triggers executing verification" stayed
-          # false even after the tests existed.
-          #
-          # `native_complete_gate.rs` is the one that matters here: it asserts
-          # Engram lowers with ZERO capability degradations on all five native
-          # backends, and pins the XAML style drops by property so a new one
-          # cannot arrive unnoticed (#14132).
-          #
-          # That gate and the emission above now agree rather than needing to be
-          # reconciled: this comment used to explain why Engram could reach
-          # native-complete in capability analysis while failing it in project
-          # emission, which was true only while the [host_assets] override
-          # existed. It does not, for Qt, since #13728.
-          cargo test --manifest-path code/programs/mosaic/engram-app/Cargo.toml
-
-          toolkit_output="$RUNNER_TEMP/mosaic-qt-toolkit"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-toolkit --backend qt --output "$toolkit_output" --emit-project
-          cmake -S "$toolkit_output/qt" -B "$toolkit_output/qt/build" -DCMAKE_BUILD_TYPE=Release
-          cmake --build "$toolkit_output/qt/build" --config Release --parallel
-
-          MOSAIC_APP_LIBRARY="$RUNNER_TEMP/mosaic-app-does-not-exist.so" \
-            "$harness/build/mosaic_qt_runtime_conformance" --expect-required-failure
-
-          strict_output="$RUNNER_TEMP/mosaic-qt-native-complete-rating-controls"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-rating-controls --backend qt --output "$strict_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
-          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$strict_output/qt/mosaic-degradations.json"
-          cmake -S "$strict_output/qt" -B "$strict_output/qt/build" -DCMAKE_BUILD_TYPE=Release
-          cmake --build "$strict_output/qt/build" --config Release --parallel
-
-          slider_output="$RUNNER_TEMP/mosaic-qt-host-slider"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-qt/fixtures/host-slider --backend qt --output "$slider_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
-          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$slider_output/qt/mosaic-degradations.json"
-          cmake -S "$slider_output/qt" -B "$slider_output/qt/build" -DCMAKE_BUILD_TYPE=Release
-          cmake --build "$slider_output/qt/build" --config Release --parallel
-
-          # UI29-6 (#15481) slice K-qt: HostNavigationSplit lowers to a
-          # real Qt Quick Controls SplitView. Qt's static-collapse limitation
-          # stays visible on the non-gating behavior axis; the nested fixture
-          # also proves collapse: never adds no second entry.
-          navigation_split_output="$RUNNER_TEMP/mosaic-qt-host-navigation-split"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-qt/fixtures/host-navigation-split --backend qt --output "$navigation_split_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
-          jq -e '.nativeComplete == true and (.degradations | length == 0) and ([.behaviorDegradations[].code] == ["interaction.navigation-split-collapse-static"])' "$navigation_split_output/qt/mosaic-degradations.json"
-          grep -q 'SplitView {' "$navigation_split_output/qt/Shell.qml"
-          grep -q 'Accessible.role: Accessible.Pane' "$navigation_split_output/qt/Shell.qml"
-          cmake -S "$navigation_split_output/qt" -B "$navigation_split_output/qt/build" -DCMAKE_BUILD_TYPE=Release
-          cmake --build "$navigation_split_output/qt/build" --config Release --parallel
-
-          # #15833 -- and now measure it, because none of the above could.
-          #
-          # The greps and the cmake build all passed for months against a
-          # split that laid out to 0 x 0 and drew nothing at any window size:
-          # `Layout.fillWidth` is inert outside a Layout, QML warns about it
-          # in silence, and a component that measures nothing still compiles
-          # perfectly. This loads the generated QML at a known window size and
-          # asserts the split fills it and the detail area is real.
-          cp code/scripts/qt-navigation-split-render-check.qml "$navigation_split_output/qt/"
-          (
-            cd "$navigation_split_output/qt"
-            QT_QPA_PLATFORM=offscreen qml qt-navigation-split-render-check.qml
-          )
-
-          # qt_main_with_startup_states (this PR) made every native-complete Qt
-          # shell keep a missing/failed runtime visible in the window and
-          # retryable instead of exiting, so RatingControls no longer exits
-          # non-zero here either. Rebuild it with the same compile-time
-          # acceptance seam TaskApp's startup probe uses above: it self-drives
-          # two attempts and only exits (0) once the second failure is
-          # observed, proving the missing-runtime path is actually reached
-          # and recovered rather than merely not crashing.
-          strict_startup_source="$RUNNER_TEMP/mosaic-qt-rating-controls-startup-conformance"
-          cp -R "$strict_output/qt" "$strict_startup_source"
-          cmake -S "$strict_startup_source" -B "$strict_startup_source/startup-build" \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_CXX_FLAGS=-DMOSAIC_STARTUP_CONFORMANCE=1
-          cmake --build "$strict_startup_source/startup-build" --config Release --parallel
-          strict_log="$RUNNER_TEMP/mosaic-qt-native-complete-missing-runtime.log"
-          env QT_QPA_PLATFORM=offscreen \
-            MOSAIC_APP_LIBRARY="$RUNNER_TEMP/mosaic-app-does-not-exist.so" \
-            timeout 15s "$strict_startup_source/startup-build/RatingControls" >"$strict_log" 2>&1
-          grep -F "Qt startup failure/retry conformance passed" "$strict_log"
-
-      - name: Round-trip Rust engine through standard Flutter binding
-        if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
-        shell: bash
-        timeout-minutes: 25
-        run: |
-          set -euo pipefail
-          sudo apt-get install -y libgtk-3-dev xvfb
-          cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
-          runtime_library="$(pwd)/code/packages/rust/target/debug/libmosaic_app_conformance.so"
-          bundled_output="$RUNNER_TEMP/mosaic-flutter-bundled-conformance"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-app-conformance/package --backend flutter --output "$bundled_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
-          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$bundled_output/flutter/mosaic-degradations.json"
-          (
-            cd "$bundled_output/flutter"
-            flutter create --platforms=linux --project-name mosaic_flutter_runtime_conformance .
-            flutter pub get
-            flutter analyze
-            flutter build linux --debug
-          )
-
-          installed="$(find "$bundled_output/flutter/build/linux" -type f -path '*/bundle/mosaic_flutter_runtime_conformance' -perm -111 -print -quit)"
-          test -n "$installed"
-          bundled_runtime="$(find "$(dirname "$installed")" -type f -name 'libmosaic_app.so' -print -quit)"
-          test -n "$bundled_runtime"
-          cmp "$runtime_library" "$bundled_runtime"
-
-          mkdir -p "$bundled_output/flutter/bin"
-          sed 's|package:mosaic_flutter_runtime_conformance/mosaic_host.dart|package:mosaic_counter/mosaic_host.dart|' \
-            code/packages/rust/mosaic-app-bindings/conformance/flutter/bin/conformance.dart \
-            > "$bundled_output/flutter/bin/mosaic_runtime_conformance.dart"
-          (
-            cd "$bundled_output/flutter"
-            unset MOSAIC_APP_LIBRARY
-            state_path="$RUNNER_TEMP/mosaic-flutter-runtime-state.json"
-            rm -f "$state_path" "$state_path.corrupt" "$state_path.tmp"
-            dart analyze bin/mosaic_runtime_conformance.dart
-            MOSAIC_APP_STATE_PATH="$state_path" dart run bin/mosaic_runtime_conformance.dart
-            MOSAIC_APP_STATE_PATH="$state_path" MOSAIC_EXPECT_RESTORED=1 \
-              dart run bin/mosaic_runtime_conformance.dart
-            printf '{}' > "$state_path"
-            MOSAIC_APP_STATE_PATH="$state_path" MOSAIC_EXPECT_PERSISTENCE_WARNING=1 \
-              dart run bin/mosaic_runtime_conformance.dart
-          )
-
-          cargo build --manifest-path code/packages/rust/Cargo.toml -p task-mosaic-app
-          task_runtime_library="$(pwd)/code/packages/rust/target/debug/libtask_mosaic_app.so"
-          taskapp_output="$RUNNER_TEMP/mosaic-flutter-taskapp"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend flutter --output "$taskapp_output" --emit-project --profile native-complete --runtime-library "$task_runtime_library"
-          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$taskapp_output/flutter/mosaic-degradations.json"
-          python3 code/scripts/taskapp_native_control_contract.py --backend flutter --generated-dir "$taskapp_output/flutter"
-          (
-            cd "$taskapp_output/flutter"
-            flutter create --platforms=linux --project-name mosaic_taskapp_acceptance .
-            flutter pub get
-            flutter analyze
-            flutter build linux --debug
-          )
-
-          installed_taskapp="$(find "$taskapp_output/flutter/build/linux" -type f -path '*/bundle/mosaic_taskapp_acceptance' -perm -111 -print -quit)"
-          test -n "$installed_taskapp"
-          bundled_taskapp_runtime="$(find "$(dirname "$installed_taskapp")" -type f -name 'libmosaic_app.so' -print -quit)"
-          test -n "$bundled_taskapp_runtime"
-          cmp "$task_runtime_library" "$bundled_taskapp_runtime"
-          taskapp_log="$RUNNER_TEMP/mosaic-flutter-taskapp-launch.log"
-          set +e
-          env -u MOSAIC_APP_LIBRARY bash "$GITHUB_WORKSPACE/code/scripts/run-under-xvfb.sh" timeout 8s "$installed_taskapp" >"$taskapp_log" 2>&1
-          taskapp_status=$?
-          set -e
-          test "$taskapp_status" -eq 124
-          ! grep -F "Mosaic Rust runtime unavailable" "$taskapp_log"
-          ! grep -E "Unhandled Exception|MissingPluginException|NoSuchMethodError|TypeError" "$taskapp_log"
-
-          mkdir -p "$taskapp_output/flutter/bin"
-          cp code/packages/rust/task-mosaic-app/conformance/flutter/task_app_conformance.dart \
-            "$taskapp_output/flutter/bin/task_app_conformance.dart"
-          cp code/packages/rust/task-mosaic-app/conformance/flutter/widget_test.dart \
-            "$taskapp_output/flutter/test/task_app_lifecycle_test.dart"
-          (
-            cd "$taskapp_output/flutter"
-            unset MOSAIC_APP_LIBRARY
-            host_state_path="$RUNNER_TEMP/mosaic-flutter-taskapp-host-state.json"
-            rm -f "$host_state_path" "$host_state_path.corrupt" "$host_state_path.tmp"
-            MOSAIC_APP_STATE_PATH="$host_state_path" dart run bin/task_app_conformance.dart
-            MOSAIC_APP_STATE_PATH="$host_state_path" MOSAIC_EXPECT_RESTORED=1 \
-              dart run bin/task_app_conformance.dart
-            ui_state_path="$RUNNER_TEMP/mosaic-flutter-taskapp-ui-state.json"
-            rm -f "$ui_state_path" "$ui_state_path.corrupt" "$ui_state_path.tmp"
-            MOSAIC_APP_STATE_PATH="$ui_state_path" flutter test test/task_app_lifecycle_test.dart
-            MOSAIC_APP_STATE_PATH="$ui_state_path" MOSAIC_EXPECT_RESTORED=1 \
-              flutter test test/task_app_lifecycle_test.dart
-            # UI87 §7.7: on Linux the platform library asks before a save
-            # replaces a file (GTK's chooser, as file_selector opens it, does
-            # not). Drive that "Replace it?" dialog with the widget tester.
-            cp "$GITHUB_WORKSPACE/code/packages/rust/mosaic-app-bindings/conformance/flutter-replace-dialog/replace_dialog_test.dart" \
-              test/mosaic_replace_dialog_test.dart
-            flutter test test/mosaic_replace_dialog_test.dart
-          )
-
-          # UI29-1 §3.3: every HostDialog lowers to _MosaicDialogHost, which
-          # pushes its own DialogRoute (never showDialog, whose windowing path
-          # breaks macOS AOT builds). Drive the helper, exactly as emitted,
-          # with the widget tester: one dialog per open, one close per open,
-          # and no other route popped or left behind.
-          MOSAIC_REQUIRE_FLUTTER=1 cargo test --manifest-path code/packages/rust/mosaic-emit-flutter/Cargo.toml \
-            --test flutter_dialog_host -- --nocapture
-
-          # UI87 §7.7: every Flutter app gets Mosaic's platform library
-          # (files.open / files.save and the router), installed on each started
-          # host right after it is assigned. The TaskApp build above compiled
-          # and analysed its file_selector dialogs; this runs the rest -- the
-          # plain-Dart core, exactly as generated -- headless on the Dart VM
-          # with a fake host and fake dialogs.
-          python3 - "$taskapp_output/flutter/lib/main.dart" <<'PY'
-          import sys
-
-          text = open(sys.argv[1], encoding="utf-8").read()
-          assert "import 'mosaic_platform_effects.dart';" in text, "the platform library is never imported"
-          assign = text.index("_mosaicHost = host;")
-          install = text.index("installMosaicPlatformEffects(host, appKinds: null);")
-          props = text.index("host.setPropsChangedHandler")
-          assert assign < install < props, "the platform library is not installed on the started host"
-          PY
-          platform_harness="$RUNNER_TEMP/mosaic-flutter-platform-effects"
-          rm -rf "$platform_harness"
-          cp -R code/packages/rust/mosaic-app-bindings/conformance/flutter-platform-effects "$platform_harness"
-          mkdir -p "$platform_harness/lib"
-          cp "$taskapp_output/flutter/lib/mosaic_host.dart" \
-            "$taskapp_output/flutter/lib/mosaic_platform_effects_core.dart" \
-            "$platform_harness/lib/"
-          (
-            cd "$platform_harness"
-            dart pub get
-            dart analyze --fatal-infos
-            dart run bin/conformance.dart | tee "$RUNNER_TEMP/mosaic-flutter-platform-effects.log"
-          )
-          grep -F "Mosaic Flutter platform effects conformance passed" "$RUNNER_TEMP/mosaic-flutter-platform-effects.log"
-
-          strict_output="$RUNNER_TEMP/mosaic-flutter-native-complete-rating-controls"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-rating-controls --backend flutter --output "$strict_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
-          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$strict_output/flutter/mosaic-degradations.json"
-          (
-            cd "$strict_output/flutter"
-            flutter pub get
-            flutter analyze
-          )
-
-          slider_output="$RUNNER_TEMP/mosaic-flutter-host-slider"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-flutter/fixtures/host-slider --backend flutter --output "$slider_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
-          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$slider_output/flutter/mosaic-degradations.json"
-          (
-            cd "$slider_output/flutter"
-            cp "$GITHUB_WORKSPACE/code/packages/rust/mosaic-emit-flutter/fixtures/host-slider-test/widget_test.dart" test/widget_test.dart
-            flutter pub get
-            flutter analyze
-            flutter test test/widget_test.dart
-          )
-
-          navigation_split_output="$RUNNER_TEMP/mosaic-flutter-host-navigation-split"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-flutter/fixtures/host-navigation-split --backend flutter --output "$navigation_split_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
-          jq -e '.nativeComplete == true and (.degradations | length == 0) and (.behaviorDegradations | length == 1) and .behaviorDegradations[0].code == "interaction.navigation-split-collapse-static"' "$navigation_split_output/flutter/mosaic-degradations.json"
-          (
-            cd "$navigation_split_output/flutter"
-            cp "$GITHUB_WORKSPACE/code/packages/rust/mosaic-emit-flutter/fixtures/host-navigation-split-test/widget_test.dart" test/widget_test.dart
-            flutter pub get
-            flutter analyze
-            flutter test test/widget_test.dart
-          )
-
-          pinned_navigation_split_output="$RUNNER_TEMP/mosaic-flutter-host-navigation-split-never"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-flutter/fixtures/host-navigation-split-never --backend flutter --output "$pinned_navigation_split_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
-          jq -e '.nativeComplete == true and (.degradations | length == 0) and (.behaviorDegradations | length == 0)' "$pinned_navigation_split_output/flutter/mosaic-degradations.json"
-          (
-            cd "$pinned_navigation_split_output/flutter"
-            cp "$GITHUB_WORKSPACE/code/packages/rust/mosaic-emit-flutter/fixtures/host-navigation-split-never-test/widget_test.dart" test/widget_test.dart
-            flutter pub get
-            flutter analyze
-            flutter test test/widget_test.dart
-          )
-
-          nested_conditional_output="$RUNNER_TEMP/mosaic-flutter-nested-row-conditional"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-flutter/fixtures/nested-row-conditional --backend flutter --output "$nested_conditional_output" --emit-project
-          (
-            cd "$nested_conditional_output/flutter"
-            cp "$GITHUB_WORKSPACE/code/packages/rust/mosaic-emit-flutter/fixtures/nested-row-conditional-test/widget_test.dart" test/widget_test.dart
-            flutter pub get
-            flutter analyze
-            flutter test test/widget_test.dart
-          )
-
-          # UI48 §7.9 (ENV2/ENV3): the resize gate §7 asks for. The fixture has
-          # a default and a `compact` layout; its widget test changes the
-          # window's size across 600 logical pixels and asserts the root
-          # swaps, so a shell frozen on one layout fails here.
-          layout_variants_output="$RUNNER_TEMP/mosaic-flutter-layout-variants"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-flutter/fixtures/layout-variants --backend flutter --output "$layout_variants_output" --emit-project
-          (
-            cd "$layout_variants_output/flutter"
-            cp "$GITHUB_WORKSPACE/code/packages/rust/mosaic-emit-flutter/fixtures/layout-variants-test/widget_test.dart" test/widget_test.dart
-            flutter pub get
-            flutter analyze
-            flutter test test/widget_test.dart
-          )
-
-          toolkit_output="$RUNNER_TEMP/mosaic-flutter-toolkit"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-toolkit --backend flutter --output "$toolkit_output" --emit-project
-          (
-            cd "$toolkit_output/flutter"
-            flutter create --platforms=linux --project-name mosaic_toolkit_acceptance .
-            flutter pub get
-            flutter analyze
-            flutter test
-            flutter build linux --debug
-          )
-
-          drag_output="$RUNNER_TEMP/mosaic-flutter-drag-board"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-flutter/fixtures/drag-board --backend flutter --output "$drag_output" --emit-project
-          (
-            cd "$drag_output/flutter"
-            flutter create --platforms=linux --project-name mosaic_drag_board .
-            cp "$GITHUB_WORKSPACE/code/packages/rust/mosaic-emit-flutter/fixtures/drag-board-test/widget_test.dart" test/widget_test.dart
-            flutter pub get
-            flutter analyze
-            flutter test test/widget_test.dart
-          )
-
-          table_output="$RUNNER_TEMP/mosaic-flutter-data-grid"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-flutter/fixtures/data-grid --backend flutter --output "$table_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
-          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$table_output/flutter/mosaic-degradations.json"
-          (
-            cd "$table_output/flutter"
-            flutter create --platforms=linux --project-name mosaic_data_grid_acceptance .
-            cp "$GITHUB_WORKSPACE/code/packages/rust/mosaic-emit-flutter/fixtures/data-grid-test/widget_test.dart" test/widget_test.dart
-            flutter pub get
-            flutter analyze
-            flutter test test/widget_test.dart
-          )
-
-          # Engram on Flutter, the mirror of the Qt, SwiftUI and Compose Engram
-          # lanes.
-          #
-          # This block is what was missing. `engram-app` was not in the Flutter
-          # acceptance set, so nothing ever emitted Engram on this backend with
-          # `--profile native-complete` -- and when something finally did, it
-          # did not compile: the hand-written `mosaic_host.dart` overrode the
-          # generated host without defining `loadRequired`, which the
-          # native-complete `main.dart` calls. The lane was green throughout,
-          # because it built task-app.
-          cargo build --manifest-path code/packages/rust/Cargo.toml -p engram-mosaic-app
-          engram_runtime_library="$(pwd)/code/packages/rust/target/debug/libengram_mosaic_app.so"
-          test -f "$engram_runtime_library"
-          engram_output="$RUNNER_TEMP/mosaic-flutter-engram"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/engram-app --backend flutter --output "$engram_output" --emit-project --profile native-complete --runtime-library "$engram_runtime_library"
-
-          # Pinned empty, exactly as the Qt, SwiftUI and Compose Engram lanes
-          # pin it: the `mosaic_host.dart` override is retired, and a package
-          # that starts overriding the generated host again has undone that and
-          # must fail here rather than pass quietly.
-          jq -e '.replacedGeneratedFiles == []' "$engram_output/flutter/mosaic-degradations.json"
-          # `type == "array"` first: `null | length` is 0 in jq, so a report
-          # that lost the key entirely would satisfy a bare length check.
-          jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$engram_output/flutter/mosaic-degradations.json"
-
-          # The handler is wired into the generated app, and wired in the one
-          # place that works.
-          #
-          # A grep for `installEngramEffects(` is not enough on its own: Dart
-          # compiles everything under `lib/`, so the handler file ships and
-          # compiles whether or not anything calls it, and an install that
-          # landed in the wrong scope would still satisfy the grep while the
-          # first symptom at runtime is an `Await` going unanswered. So the
-          # import and the call site are both checked, and the call is required
-          # to come after the fresh local host is assigned to app state.
-          python3 - "$engram_output/flutter/lib/main.dart" <<'PY'
-          import sys
-
-          text = open(sys.argv[1], encoding="utf-8").read()
-          assert "import 'engram_effects.dart';" in text, "handler is never imported"
-          assign = text.index("_mosaicHost = host;")
-          install = text.index("installEngramEffects(host);")
-          assert install > assign, "handler is installed before the host exists"
-          PY
-
-          # UI48 §7.9 (ENV2/ENV3): Engram is the one package with a layout
-          # variant (EngramApp.touch.mll). Both roots and the selector must be
-          # in lib/, so the analyze and build below prove they coexist.
-          grep -q '^class EngramAppTouch extends StatelessWidget {$' "$engram_output/flutter/lib/EngramApp.touch.dart"
-          if grep -q '^sealed class EngramAppEvent' "$engram_output/flutter/lib/EngramApp.touch.dart"; then exit 1; fi
-          grep -q "^import 'EngramApp.touch.dart';$" "$engram_output/flutter/lib/main.dart"
-          grep -q 'switch (mosaicLayoutVariant(environment))' "$engram_output/flutter/lib/main.dart"
-          grep -q 'return EngramAppTouch($' "$engram_output/flutter/lib/main.dart"
-
-          (
-            cd "$engram_output/flutter"
-            flutter create --platforms=linux --project-name mosaic_engram_app .
-            flutter pub get
-            flutter analyze
-            flutter build linux --debug
-          )
-
-      - name: Round-trip Rust engine through standard Compose binding
-        if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
-        shell: bash
-        timeout-minutes: 20
-        run: |
-          set -euo pipefail
-          sudo apt-get install -y xvfb
-          cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
-          runtime_library="$(pwd)/code/packages/rust/target/debug/libmosaic_app_conformance.so"
-
-          bundled_output="$RUNNER_TEMP/mosaic-compose-bundled-conformance"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-app-conformance/package --backend compose --output "$bundled_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
-          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$bundled_output/compose/mosaic-degradations.json"
-          gradle --no-daemon --stacktrace -Pcompose.desktop.packaging.checkJdkVendor=false -p "$bundled_output/compose" compileKotlin createDistributable
-          installed_runtime="$(find "$bundled_output/compose/build/compose/binaries/main/app" -path '*/resources/libmosaic_app.so' -print -quit)"
-          test -n "$installed_runtime"
-          cmp "$runtime_library" "$installed_runtime"
-
-          harness="$RUNNER_TEMP/mosaic-compose-runtime-conformance"
-          cp -R code/packages/rust/mosaic-app-bindings/conformance/compose "$harness"
-          cp "$bundled_output/compose/src/main/kotlin/MosaicRuntimeHost.kt" "$harness/src/main/kotlin/MosaicRuntimeHost.kt"
-
-          unset MOSAIC_APP_LIBRARY
-          state_path="$RUNNER_TEMP/mosaic-compose-runtime-state.json"
-          rm -f "$state_path" "$state_path.corrupt" "$state_path.tmp"
-          MOSAIC_APP_STATE_PATH="$state_path" \
-            JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_runtime")" \
-            gradle --no-daemon --stacktrace -p "$harness" run
-          MOSAIC_APP_STATE_PATH="$state_path" MOSAIC_EXPECT_RESTORED=1 \
-            JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_runtime")" \
-            gradle --no-daemon --stacktrace -p "$harness" run
-          printf '{}' > "$state_path"
-          MOSAIC_APP_STATE_PATH="$state_path" MOSAIC_EXPECT_PERSISTENCE_WARNING=1 \
-            JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_runtime")" \
-            gradle --no-daemon --stacktrace -p "$harness" run
-
-          cargo build --manifest-path code/packages/rust/Cargo.toml -p task-mosaic-app
-          task_runtime_library="$(pwd)/code/packages/rust/target/debug/libtask_mosaic_app.so"
-          taskapp_output="$RUNNER_TEMP/mosaic-compose-taskapp"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend compose --output "$taskapp_output" --emit-project --profile native-complete --runtime-library "$task_runtime_library"
-          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$taskapp_output/compose/mosaic-degradations.json"
-          python3 code/scripts/taskapp_native_control_contract.py --backend compose --generated-dir "$taskapp_output/compose"
-          gradle --no-daemon --stacktrace -Pcompose.desktop.packaging.checkJdkVendor=false -p "$taskapp_output/compose" compileKotlin createDistributable
-          installed_taskapp_runtime="$(find "$taskapp_output/compose/build/compose/binaries/main/app" -path '*/resources/libmosaic_app.so' -print -quit)"
-          test -n "$installed_taskapp_runtime"
-          cmp "$task_runtime_library" "$installed_taskapp_runtime"
-          installed_taskapp="$(find "$taskapp_output/compose/build/compose/binaries/main/app" -type f -path '*/bin/task_app' -perm -111 -print -quit)"
-          test -n "$installed_taskapp"
-          taskapp_log="$RUNNER_TEMP/mosaic-compose-taskapp-launch.log"
-          set +e
-          env -u MOSAIC_APP_LIBRARY bash "$GITHUB_WORKSPACE/code/scripts/run-under-xvfb.sh" timeout 8s "$installed_taskapp" >"$taskapp_log" 2>&1
-          taskapp_status=$?
-          set -e
-          test "$taskapp_status" -eq 124
-          ! grep -F "Mosaic Rust runtime unavailable" "$taskapp_log"
-          ! grep -E "missing required MIL prop|Exception in thread|NoClassDefFoundError|UnsatisfiedLinkError" "$taskapp_log"
-
-          task_host_harness="$RUNNER_TEMP/mosaic-compose-taskapp-runtime-conformance"
-          cp -R code/packages/rust/task-mosaic-app/conformance/compose "$task_host_harness"
-          cp "$taskapp_output/compose/src/main/kotlin/MosaicRuntimeHost.kt" "$task_host_harness/MosaicRuntimeHost.kt"
-          mkdir -p "$task_host_harness/src/main/kotlin"
-          mv "$task_host_harness/Conformance.kt" "$task_host_harness/src/main/kotlin/Conformance.kt"
-          mv "$task_host_harness/MosaicRuntimeHost.kt" "$task_host_harness/src/main/kotlin/MosaicRuntimeHost.kt"
-          rm -f "$task_host_harness/TaskAppUiTest.kt"
-          host_state_path="$RUNNER_TEMP/mosaic-compose-taskapp-host-state.json"
-          rm -f "$host_state_path" "$host_state_path.corrupt" "$host_state_path.tmp"
-          MOSAIC_APP_STATE_PATH="$host_state_path" \
-            JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_taskapp_runtime")" \
-            gradle --no-daemon --stacktrace -p "$task_host_harness" run
-          MOSAIC_APP_STATE_PATH="$host_state_path" MOSAIC_EXPECT_RESTORED=1 \
-            JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_taskapp_runtime")" \
-            gradle --no-daemon --stacktrace -p "$task_host_harness" run
-
-          mkdir -p "$taskapp_output/compose/src/test/kotlin"
-          cp code/packages/rust/task-mosaic-app/conformance/compose/TaskAppUiTest.kt \
-            "$taskapp_output/compose/src/test/kotlin/TaskAppUiTest.kt"
-          taskapp_ui_state="$RUNNER_TEMP/mosaic-compose-taskapp-ui-state.json"
-          rm -f "$taskapp_ui_state" "$taskapp_ui_state.corrupt" "$taskapp_ui_state.tmp"
-          MOSAIC_APP_STATE_PATH="$taskapp_ui_state" \
-            JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_taskapp_runtime")" \
-            bash "$GITHUB_WORKSPACE/code/scripts/run-under-xvfb.sh" gradle --no-daemon --stacktrace -p "$taskapp_output/compose" \
-              test --tests TaskAppUiTest
-          MOSAIC_APP_STATE_PATH="$taskapp_ui_state" MOSAIC_EXPECT_RESTORED=1 \
-            JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_taskapp_runtime")" \
-            bash "$GITHUB_WORKSPACE/code/scripts/run-under-xvfb.sh" gradle --no-daemon --stacktrace --rerun-tasks -p "$taskapp_output/compose" \
-              test --tests TaskAppUiTest.generatedControlsDriveRustSchedulingLifecycle
-
-          # Engram on Compose, the mirror of the SwiftUI and Qt Engram lanes.
-          #
-          # `.so`, not `.dylib`: this block is Linux-gated, unlike the SwiftUI
-          # one.
-          cargo build --manifest-path code/packages/rust/Cargo.toml -p engram-mosaic-app
-          engram_runtime_library="$(pwd)/code/packages/rust/target/debug/libengram_mosaic_app.so"
-          test -f "$engram_runtime_library"
-          engram_output="$RUNNER_TEMP/mosaic-compose-engram"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/engram-app --backend compose --output "$engram_output" --emit-project --profile native-complete --runtime-library "$engram_runtime_library"
-
-          # Pinned empty, exactly as the Qt and SwiftUI lanes pin it: Compose's
-          # `MosaicHost.kt` override is retired, and a package that starts
-          # overriding the generated host again has undone that and must fail
-          # here rather than pass quietly.
-          jq -e '.replacedGeneratedFiles == []' "$engram_output/compose/mosaic-degradations.json"
-          # `type == "array"` first: `null | length` is 0 in jq, so a report that
-          # lost the key entirely would satisfy a bare length check.
-          jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$engram_output/compose/mosaic-degradations.json"
-
-          # The handler is wired into the generated app. This is the half no
-          # assertion over a source file can reach -- and as on SwiftUI it
-          # matters more than on Qt, because Gradle compiles everything under
-          # `src/main/kotlin`, so an uninstalled handler still compiles, links
-          # and ships with no diagnostic at all. The failure only appears at
-          # runtime, when an unanswered `Await` disables snapshot and restore
-          # for the rest of the process.
-          grep -q 'installEngramEffects(it)' "$engram_output/compose/src/main/kotlin/Main.kt"
-          python3 - "$engram_output/compose/src/main/kotlin/Main.kt" <<'PY'
-          import sys
-
-          text = open(sys.argv[1]).read()
-          install = text.index("installEngramEffects(it)")
-
-          # After the host exists and before the loader returns it: installing
-          # onto a host that has not been loaded yet would not compile, while
-          # returning the host first would let the initial composition raise
-          # effects before the handler is attached.
-          creation = text.index("val mosaicHost =")
-          assert creation < install, "install must follow the host's creation"
-          returned = text.index("return mosaicHost", creation)
-          assert install < returned, "install must precede returning the host"
-          PY
-
-          # UI48 §7.5 (ENV2/ENV3): Engram is the one package with a layout
-          # variant (EngramApp.touch.mll). Both roots and the selector must be
-          # in the source set, so the compile below proves they coexist.
-          grep -q '^fun EngramAppTouch($' "$engram_output/compose/src/main/kotlin/EngramApp.touch.kt"
-          if grep -q '^sealed class EngramAppEvent' "$engram_output/compose/src/main/kotlin/EngramApp.touch.kt"; then exit 1; fi
-          grep -q 'when (mosaicLayoutVariant(environmentReport))' "$engram_output/compose/src/main/kotlin/MosaicAppShell.kt"
-          grep -q '"touch" -> EngramAppTouch(' "$engram_output/compose/src/main/kotlin/MosaicAppShell.kt"
-
-          # The gate: it builds. `compileKotlin` is enough -- this lane already
-          # exercises `createDistributable` on task-app, and what is new here is
-          # the handler source, not the packaging.
-          gradle --no-daemon --stacktrace -p "$engram_output/compose" compileKotlin
-
-          # ---- Journal: emit and COMPILE on Compose (J5b, #14416). -----------
-          # Same gate as Engram above, minus the effects handler Journal does
-          # not have.
-          cargo build --manifest-path code/packages/rust/Cargo.toml -p journal-mosaic-app
-          journal_runtime_library="$(pwd)/code/packages/rust/target/debug/libjournal_mosaic_app.so"
-          test -f "$journal_runtime_library"
-          journal_output="$RUNNER_TEMP/mosaic-compose-journal"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/journal-app --backend compose --output "$journal_output" --emit-project --profile native-complete --runtime-library "$journal_runtime_library"
-          jq -e '.replacedGeneratedFiles == []' "$journal_output/compose/mosaic-degradations.json"
-          jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$journal_output/compose/mosaic-degradations.json"
-          gradle --no-daemon --stacktrace -Pcompose.desktop.packaging.checkJdkVendor=false -p "$journal_output/compose" compileKotlin createDistributable
-          installed_journal_runtime="$(find "$journal_output/compose/build/compose/binaries/main/app" -path '*/resources/libmosaic_app.so' -print -quit)"
-          test -n "$installed_journal_runtime"
-          cmp "$journal_runtime_library" "$installed_journal_runtime"
-
-          # Drive the generated app, not just compile it (J5, #14416):
-          # JournalUiTest writes and saves entries through the generated
-          # editor, then a second launch on the same state file must find the
-          # survivor. Same two-launch shape as TaskAppUiTest above.
-          mkdir -p "$journal_output/compose/src/test/kotlin"
-          cp code/packages/rust/journal-mosaic-app/conformance/compose/JournalUiTest.kt \
-            "$journal_output/compose/src/test/kotlin/JournalUiTest.kt"
-          journal_ui_state="$RUNNER_TEMP/mosaic-compose-journal-ui-state.json"
-          rm -f "$journal_ui_state" "$journal_ui_state.corrupt" "$journal_ui_state.tmp"
-          MOSAIC_APP_STATE_PATH="$journal_ui_state" \
-            JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_journal_runtime")" \
-            bash "$GITHUB_WORKSPACE/code/scripts/run-under-xvfb.sh" gradle --no-daemon --stacktrace -p "$journal_output/compose" \
-              test --tests JournalUiTest
-          MOSAIC_APP_STATE_PATH="$journal_ui_state" MOSAIC_EXPECT_RESTORED=1 \
-            JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_journal_runtime")" \
-            bash "$GITHUB_WORKSPACE/code/scripts/run-under-xvfb.sh" gradle --no-daemon --stacktrace --rerun-tasks -p "$journal_output/compose" \
-              test --tests JournalUiTest
-
-          # The platform library's own behaviour (UI87 §7): every Compose app
-          # gets MosaicFileEffects.kt and MosaicPlatformEffects.kt, and this
-          # drives their open/save logic, limits, routing and the asynchronous
-          # picker path (UI89 §3.8) with fakes -- no display needed.
-          cp code/packages/rust/mosaic-app-bindings/conformance/compose/MosaicPlatformEffectsTest.kt \
-            "$journal_output/compose/src/test/kotlin/MosaicPlatformEffectsTest.kt"
-          gradle --no-daemon --stacktrace -p "$journal_output/compose" \
-            test --tests MosaicPlatformEffectsTest
-
-          toolkit_output="$RUNNER_TEMP/mosaic-compose-toolkit"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-toolkit --backend compose --output "$toolkit_output" --emit-project
-          gradle --no-daemon --stacktrace -p "$toolkit_output/compose" compileKotlin
-
-          slider_output="$RUNNER_TEMP/mosaic-compose-host-slider"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-compose/tests/fixtures/host-slider-package --backend compose --output "$slider_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
-          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$slider_output/compose/mosaic-degradations.json"
-          gradle --no-daemon --stacktrace -p "$slider_output/compose" compileKotlin
-
-          navigation_split_output="$RUNNER_TEMP/mosaic-compose-host-navigation-split"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-compose/tests/fixtures/host-navigation-split-package --backend compose --output "$navigation_split_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
-          jq -e '.nativeComplete == true and (.degradations | length == 0) and (.behaviorDegradations | length == 0)' "$navigation_split_output/compose/mosaic-degradations.json"
-          gradle --no-daemon --stacktrace -p "$navigation_split_output/compose" compileKotlin
-
-          strict_output="$RUNNER_TEMP/mosaic-compose-native-complete-rating-controls"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-rating-controls --backend compose --output "$strict_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
-          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$strict_output/compose/mosaic-degradations.json"
-          gradle --no-daemon --stacktrace -p "$strict_output/compose" compileKotlin
-
-      # UI89 step 4: the Compose build of TaskApp above also wrote
-      # compose/android/, an Android project over the same shared Kotlin, with
-      # its own activity and the Android half of the platform seams. Gate: it
-      # builds a debug APK that carries the app's identity, launches
-      # MosaicActivity, and compiled the shared sources. The Rust runtime
-      # joins in step 5, and the emulator with it.
-      - name: Build Trestle for Android (UI89 step 4)
-        if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
-        shell: bash
-        timeout-minutes: 25
-        run: |
-          set -euo pipefail
-          android_project="$RUNNER_TEMP/mosaic-compose-taskapp/compose/android"
-          test -f "$android_project/src/main/kotlin/mosaic/android/MosaicActivity.kt"
-          test -f "$android_project/src/main/kotlin/TaskApp.kt"
-          test ! -e "$android_project/src/main/kotlin/Main.kt"
-          # UI89 §3.8: the platform library's shared half, and Android's own
-          # half in place of the desktop's AWT dialogs.
-          test -f "$android_project/src/main/kotlin/MosaicFileEffects.kt"
-          if ! grep -q 'class MosaicAndroidDocumentPicker' "$android_project/src/main/kotlin/MosaicPlatformEffects.kt"; then
-            echo "::error::the Android project's MosaicPlatformEffects.kt is not Android's"
-            exit 1
-          fi
-          if grep -rl 'java\.awt' "$android_project/src"; then
-            echo "::error::desktop-only AWT reached the Android sources"
-            exit 1
-          fi
-
-          # The project names its Gradle in gradle-wrapper.properties. Write
-          # the wrapper's jar with whatever Gradle is installed, in
-          # an empty directory so that Gradle never configures the Android
-          # plugin it may not support.
-          gradle_version="$(sed -n 's|^distributionUrl=.*/gradle-\(.*\)-bin\.zip$|\1|p' "$android_project/gradle/wrapper/gradle-wrapper.properties")"
-          test -n "$gradle_version"
-          wrapper_seed="$RUNNER_TEMP/mosaic-android-gradle-wrapper"
-          rm -rf "$wrapper_seed"
-          mkdir -p "$wrapper_seed"
-          touch "$wrapper_seed/settings.gradle.kts"
-          gradle --no-daemon -q -p "$wrapper_seed" wrapper --gradle-version "$gradle_version"
-          cp "$wrapper_seed/gradle/wrapper/gradle-wrapper.jar" "$android_project/gradle/wrapper/gradle-wrapper.jar"
-          # Refuse to run a wrapper jar that is not the one Gradle published.
-          bash code/scripts/verify-gradle-wrapper-jar.sh "$android_project/gradle/wrapper/gradle-wrapper.jar"
-          # Run the verified jar itself, with gradlew's JVM options, rather
-          # than the generated gradlew script: Gradle publishes no checksum for
-          # the script, so it is the one part of the wrapper nothing can
-          # verify. Naming the main class (not `-jar`) works with every
-          # Gradle's wrapper jar, including old ones without a Main-Class.
-          (
-            cd "$android_project"
-            "${JAVA_HOME:+$JAVA_HOME/bin/}java" -Xmx64m -Xms64m -Dorg.gradle.appname=gradlew \
-              -cp gradle/wrapper/gradle-wrapper.jar org.gradle.wrapper.GradleWrapperMain \
-              --no-daemon --stacktrace assembleDebug
-          )
-
-          apk="$(find "$android_project/build/outputs/apk/debug" -name '*.apk' -print -quit)"
-          test -n "$apk"
-          aapt2="$(find "$ANDROID_HOME/build-tools" -name aapt2 -type f | sort -V | tail -n 1)"
-          test -n "$aapt2"
-          badging="$RUNNER_TEMP/mosaic-trestle-android-badging.txt"
-          "$aapt2" dump badging "$apk" > "$badging"
-          # Every check names what it wanted and shows what it got: a bare
-          # `grep -q` under `set -e` fails the step without saying which line.
-          expect_badging() {
-            if ! grep -Eq "$1" "$badging"; then
-              echo "::error::the APK's badging has no line matching $1"
-              cat "$badging"
-              exit 1
-            fi
-          }
-          expect_badging "^package: name='dev\.codingadventures\.trestle'"
-          expect_badging "^application-label:'Trestle'"
-          expect_badging "^launchable-activity: name='mosaic\.android\.MosaicActivity'"
-          # aapt prints `sdkVersion:`, newer aapt2 `minSdkVersion:`.
-          expect_badging "^(min)?[sS]dkVersion:'26'"
-          expect_badging "^targetSdkVersion:'36'"
-          # The shared sources and the Android seams are in the dex, and JNA
-          # brought its dispatcher for the emulator's ABI.
-          dex="$RUNNER_TEMP/mosaic-trestle-android-dex"
-          rm -rf "$dex"
-          unzip -q -o "$apk" 'classes*.dex' 'lib/*' -d "$dex"
-          for class in 'Lmosaic/android/MosaicActivity;' 'LTaskAppKt;' 'LMosaicAppShellKt;' 'LMosaicRuntimeHost;' 'LMosaicPlatformKt;' \
-            'LMosaicPlatformRouter;' 'LMosaicFileEffectsKt;' 'LMosaicAndroidDocumentPicker;'; do
-            if ! grep -a -q -F "$class" "$dex"/classes*.dex; then
-              echo "::error::no $class in the APK's dex"
-              ls -l "$dex"
-              exit 1
-            fi
-          done
-          if ! test -f "$dex/lib/x86_64/libjnidispatch.so"; then
-            echo "::error::no lib/x86_64/libjnidispatch.so in the APK"
-            find "$dex/lib" -type f
-            exit 1
-          fi
-
-      # UI89 step 5: the Android app carries its Rust runtime. The TaskApp
-      # engine is built for every Android ABI with cargo-ndk
-      # (build-mosaic-android-libs.sh), handed to the Compose build as
-      # --runtime-library, and installed into the Android project's jniLibs.
-      # Gate: the APK carries libmosaic_app.so for all four ABIs, and each one
-      # exports mosaic_app_create. The emulator launch follows.
-      - name: Build Trestle for Android with its Rust runtime (UI89 step 5)
-        if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
-        shell: bash
-        timeout-minutes: 45
-        run: |
-          set -euo pipefail
-          ndk="${ANDROID_NDK_LATEST_HOME:-${ANDROID_NDK_HOME:-}}"
-          if [ -z "$ndk" ] || [ ! -d "$ndk" ]; then
-            echo "::error::this runner has no Android NDK (ANDROID_NDK_LATEST_HOME / ANDROID_NDK_HOME)"
-            exit 1
-          fi
-          export ANDROID_NDK_HOME="$ndk"
-          rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android i686-linux-android
-          cargo install --locked cargo-ndk --version 4.1.2
-
-          jni_libs="$RUNNER_TEMP/mosaic-trestle-jnilibs"
-          bash code/scripts/build-mosaic-android-libs.sh task-mosaic-app "$jni_libs"
-
-          output="$RUNNER_TEMP/mosaic-compose-taskapp-android-runtime"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend compose --output "$output" --emit-project --profile native-complete --runtime-library "$jni_libs"
-          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$output/compose/mosaic-degradations.json"
-          android_project="$output/compose/android"
-          # Trestle's instrumented UI test (UI89 §4.4) lives with the app, as
-          # the desktop TaskAppUiTest does; the emulator step runs it.
-          mkdir -p "$android_project/src/androidTest/kotlin"
-          cp code/packages/rust/task-mosaic-app/conformance/compose-android/TrestleAndroidUiTest.kt "$android_project/src/androidTest/kotlin/"
-
-          # The wrapper, written outside the project as in the step above.
-          gradle_version="$(sed -n 's|^distributionUrl=.*/gradle-\(.*\)-bin\.zip$|\1|p' "$android_project/gradle/wrapper/gradle-wrapper.properties")"
-          test -n "$gradle_version"
-          wrapper_seed="$RUNNER_TEMP/mosaic-android-runtime-gradle-wrapper"
-          rm -rf "$wrapper_seed"
-          mkdir -p "$wrapper_seed"
-          touch "$wrapper_seed/settings.gradle.kts"
-          gradle --no-daemon -q -p "$wrapper_seed" wrapper --gradle-version "$gradle_version"
-          cp "$wrapper_seed/gradle/wrapper/gradle-wrapper.jar" "$android_project/gradle/wrapper/gradle-wrapper.jar"
-          # Refuse to run a wrapper jar that is not the one Gradle published.
-          bash code/scripts/verify-gradle-wrapper-jar.sh "$android_project/gradle/wrapper/gradle-wrapper.jar"
-          # Run the verified jar itself, with gradlew's JVM options, rather
-          # than the generated gradlew script: Gradle publishes no checksum for
-          # the script, so it is the one part of the wrapper nothing can
-          # verify. Naming the main class (not `-jar`) works with every
-          # Gradle's wrapper jar, including old ones without a Main-Class.
-          (
-            cd "$android_project"
-            "${JAVA_HOME:+$JAVA_HOME/bin/}java" -Xmx64m -Xms64m -Dorg.gradle.appname=gradlew \
-              -cp gradle/wrapper/gradle-wrapper.jar org.gradle.wrapper.GradleWrapperMain \
-              --no-daemon --stacktrace assembleDebug assembleDebugAndroidTest
-          )
-          test_apk="$(find "$android_project/build/outputs/apk/androidTest/debug" -name '*-debug-androidTest.apk' -print -quit)"
-          test -n "$test_apk"
-
-          apk="$(find "$android_project/build/outputs/apk/debug" -name '*.apk' -print -quit)"
-          test -n "$apk"
-          unpacked="$RUNNER_TEMP/mosaic-trestle-android-runtime-apk"
-          rm -rf "$unpacked"
-          unzip -q -o "$apk" 'lib/*' -d "$unpacked"
-          llvm_nm="$ndk/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-nm"
-          test -x "$llvm_nm"
-          for abi in arm64-v8a armeabi-v7a x86_64 x86; do
-            library="$unpacked/lib/$abi/libmosaic_app.so"
-            if ! test -f "$library"; then
-              echo "::error::the APK has no lib/$abi/libmosaic_app.so"
-              find "$unpacked/lib" -type f
-              exit 1
-            fi
-            symbols="$RUNNER_TEMP/mosaic-trestle-$abi-symbols.txt"
-            "$llvm_nm" -D --defined-only "$library" > "$symbols"
-            if ! grep -Eq ' T mosaic_app_create$' "$symbols"; then
-              echo "::error::lib/$abi/libmosaic_app.so does not export mosaic_app_create"
-              head -n 40 "$symbols"
-              exit 1
-            fi
-          done
-
-      # UI89 step 7 (§3.9): Journal is the second app on Android. Its engine
-      # is built for every ABI and packaged exactly as Trestle's above; the
-      # APK is assembled through the same verified wrapper jar, by
-      # assemble-mosaic-android-debug.sh. Gate: native-complete with no
-      # degradations, Journal's own identity in the badging, and
-      # libmosaic_app.so exporting mosaic_app_create for each ABI.
-      - name: Build Journal for Android with its Rust runtime (UI89 step 7)
-        if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
-        shell: bash
-        timeout-minutes: 45
-        run: |
-          set -euo pipefail
-          ndk="${ANDROID_NDK_LATEST_HOME:-${ANDROID_NDK_HOME:-}}"
-          if [ -z "$ndk" ] || [ ! -d "$ndk" ]; then
-            echo "::error::this runner has no Android NDK (ANDROID_NDK_LATEST_HOME / ANDROID_NDK_HOME)"
-            exit 1
-          fi
-          export ANDROID_NDK_HOME="$ndk"
-          # Both no-ops after the Trestle step; kept so this step stands alone.
-          rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android i686-linux-android
-          cargo install --locked cargo-ndk --version 4.1.2
-
-          jni_libs="$RUNNER_TEMP/mosaic-journal-jnilibs"
-          rm -rf "$jni_libs"
-          bash code/scripts/build-mosaic-android-libs.sh journal-mosaic-app "$jni_libs"
-
-          output="$RUNNER_TEMP/mosaic-compose-journal-android-runtime"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/journal-app --backend compose --output "$output" --emit-project --profile native-complete --runtime-library "$jni_libs"
-          jq -e '.replacedGeneratedFiles == []' "$output/compose/mosaic-degradations.json"
-          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$output/compose/mosaic-degradations.json"
-          android_project="$output/compose/android"
-          # Journal's instrumented UI test (UI89 §4.2) lives with the app, as
-          # the desktop JournalUiTest does; the emulator step runs it.
-          mkdir -p "$android_project/src/androidTest/kotlin"
-          cp code/packages/rust/journal-mosaic-app/conformance/compose-android/JournalAndroidUiTest.kt "$android_project/src/androidTest/kotlin/"
-          bash code/scripts/assemble-mosaic-android-debug.sh "$android_project" --with-android-test
-          test_apk="$(find "$android_project/build/outputs/apk/androidTest/debug" -name '*-debug-androidTest.apk' -print -quit)"
-          test -n "$test_apk"
-
-          apk="$(find "$android_project/build/outputs/apk/debug" -name '*-debug.apk' -print -quit)"
-          test -n "$apk"
-          aapt2="$(find "$ANDROID_HOME/build-tools" -name aapt2 -type f | sort -V | tail -n 1)"
-          test -n "$aapt2"
-          badging="$RUNNER_TEMP/mosaic-journal-android-badging.txt"
-          "$aapt2" dump badging "$apk" > "$badging"
-          expect_badging() {
-            if ! grep -Eq "$1" "$badging"; then
-              echo "::error::Journal's APK badging has no line matching $1"
-              cat "$badging"
-              exit 1
-            fi
-          }
-          # The defaults Journal's manifest leaves in place (UI89 §3.9).
-          expect_badging "^package: name='dev\.codingadventures\.journalapp'"
-          expect_badging "^application-label:'JournalApp'"
-          expect_badging "^launchable-activity: name='mosaic\.android\.MosaicActivity'"
-          # aapt prints `sdkVersion:`, newer aapt2 `minSdkVersion:`.
-          expect_badging "^(min)?[sS]dkVersion:'26'"
-          expect_badging "^targetSdkVersion:'36'"
-
-          unpacked="$RUNNER_TEMP/mosaic-journal-android-runtime-apk"
-          rm -rf "$unpacked"
-          unzip -q -o "$apk" 'classes*.dex' 'lib/*' -d "$unpacked"
-          for class in 'LJournalAppKt;' 'LMosaicRuntimeHost;' 'Lmosaic/android/MosaicActivity;'; do
-            if ! grep -a -q -F "$class" "$unpacked"/classes*.dex; then
-              echo "::error::no $class in Journal's dex"
-              exit 1
-            fi
-          done
-          if ! test -f "$unpacked/lib/x86_64/libjnidispatch.so"; then
-            echo "::error::Journal's APK has no lib/x86_64/libjnidispatch.so"
-            find "$unpacked/lib" -type f
-            exit 1
-          fi
-          llvm_nm="$ndk/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-nm"
-          test -x "$llvm_nm"
-          for abi in arm64-v8a armeabi-v7a x86_64 x86; do
-            library="$unpacked/lib/$abi/libmosaic_app.so"
-            if ! test -f "$library"; then
-              echo "::error::Journal's APK has no lib/$abi/libmosaic_app.so"
-              find "$unpacked/lib" -type f
-              exit 1
-            fi
-            symbols="$RUNNER_TEMP/mosaic-journal-$abi-symbols.txt"
-            "$llvm_nm" -D --defined-only "$library" > "$symbols"
-            if ! grep -Eq ' T mosaic_app_create$' "$symbols"; then
-              echo "::error::Journal's lib/$abi/libmosaic_app.so does not export mosaic_app_create"
-              head -n 40 "$symbols"
-              exit 1
-            fi
-          done
-
-      # UI89 step 7 (§3.10): Engram is the third app on Android, built and
-      # checked exactly as Journal's above. Its touch layout variant reaches
-      # the Android project with the default one. Its Anki import and export
-      # are its own `compose-android` [host_effects] handler (§3.12), which
-      # MosaicActivity installs ahead of the platform library and which must
-      # reach the dex; the desktop handler (EngramEffectsKt) must not.
-      - name: Build Engram for Android with its Rust runtime (UI89 step 7)
-        if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
-        shell: bash
-        timeout-minutes: 45
-        run: |
-          set -euo pipefail
-          ndk="${ANDROID_NDK_LATEST_HOME:-${ANDROID_NDK_HOME:-}}"
-          if [ -z "$ndk" ] || [ ! -d "$ndk" ]; then
-            echo "::error::this runner has no Android NDK (ANDROID_NDK_LATEST_HOME / ANDROID_NDK_HOME)"
-            exit 1
-          fi
-          export ANDROID_NDK_HOME="$ndk"
-          # Both no-ops after the steps above; kept so this step stands alone.
-          rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android i686-linux-android
-          cargo install --locked cargo-ndk --version 4.1.2
-
-          jni_libs="$RUNNER_TEMP/mosaic-engram-jnilibs"
-          rm -rf "$jni_libs"
-          bash code/scripts/build-mosaic-android-libs.sh engram-mosaic-app "$jni_libs"
-
-          output="$RUNNER_TEMP/mosaic-compose-engram-android-runtime"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/engram-app --backend compose --output "$output" --emit-project --profile native-complete --runtime-library "$jni_libs"
-          jq -e '.replacedGeneratedFiles == []' "$output/compose/mosaic-degradations.json"
-          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$output/compose/mosaic-degradations.json"
-          android_project="$output/compose/android"
-          # Installed as the host loads, before the platform library, which
-          # wraps it and routes the kinds it claims to it (UI89 §3.12).
-          grep -q -F 'installEngramAndroidEffects(it); platformRouter = installMosaicPlatformEffects(it, documentPicker, setOf("importAnki", "exportAnki"))' \
-            "$android_project/src/main/kotlin/mosaic/android/MosaicActivity.kt"
-          # Engram's instrumented UI test (UI89 §4.4) answers the document
-          # picker itself; the emulator step runs it.
-          mkdir -p "$android_project/src/androidTest/kotlin"
-          cp code/programs/mosaic/engram-app/conformance/compose-android/EngramAndroidUiTest.kt "$android_project/src/androidTest/kotlin/"
-          bash code/scripts/assemble-mosaic-android-debug.sh "$android_project" --with-android-test
-          test_apk="$(find "$android_project/build/outputs/apk/androidTest/debug" -name '*-debug-androidTest.apk' -print -quit)"
-          test -n "$test_apk"
-
-          apk="$(find "$android_project/build/outputs/apk/debug" -name '*-debug.apk' -print -quit)"
-          test -n "$apk"
-          aapt2="$(find "$ANDROID_HOME/build-tools" -name aapt2 -type f | sort -V | tail -n 1)"
-          test -n "$aapt2"
-          badging="$RUNNER_TEMP/mosaic-engram-android-badging.txt"
-          "$aapt2" dump badging "$apk" > "$badging"
-          expect_badging() {
-            if ! grep -Eq "$1" "$badging"; then
-              echo "::error::Engram's APK badging has no line matching $1"
-              cat "$badging"
-              exit 1
-            fi
-          }
-          # The defaults Engram's manifest leaves in place (UI89 §3.10).
-          expect_badging "^package: name='dev\.codingadventures\.engramapp'"
-          expect_badging "^application-label:'EngramApp'"
-          expect_badging "^launchable-activity: name='mosaic\.android\.MosaicActivity'"
-          # aapt prints `sdkVersion:`, newer aapt2 `minSdkVersion:`.
-          expect_badging "^(min)?[sS]dkVersion:'26'"
-          expect_badging "^targetSdkVersion:'36'"
-
-          unpacked="$RUNNER_TEMP/mosaic-engram-android-runtime-apk"
-          rm -rf "$unpacked"
-          unzip -q -o "$apk" 'classes*.dex' 'lib/*' -d "$unpacked"
-          # Engram's own Android handler, which MosaicActivity installs
-          # (UI89 §3.12): its class and its install function.
-          for class in 'LEngramAppKt;' 'LMosaicRuntimeHost;' 'Lmosaic/android/MosaicActivity;' 'LEngramAndroidEffectsKt;' 'installEngramAndroidEffects'; do
-            if ! grep -a -q -F "$class" "$unpacked"/classes*.dex; then
-              echo "::error::no $class in Engram's dex"
-              exit 1
-            fi
-          done
-          # The desktop Anki handler stays out (UI89 §3.10, §3.12): its
-          # Swing dialogs are not Android's. Both its class and its install
-          # function are looked for, so a renamed file or an added
-          # `@file:JvmName` cannot slip past; neither is a substring of the
-          # Android handler's names. grep's exit is read whole: 1 is
-          # "absent", anything else (no dex, unreadable) is a failure, never
-          # a pass.
-          for needle in 'LEngramEffectsKt;' 'installEngramEffects'; do
-            found=0
-            grep -a -q -F "$needle" "$unpacked"/classes*.dex || found=$?
-            if [ "$found" -eq 0 ]; then
-              echo "::error::Engram's desktop effect handler ($needle) reached the Android dex"
-              exit 1
-            fi
-            if [ "$found" -ne 1 ]; then
-              echo "::error::could not scan Engram's dex for $needle (grep exit $found)"
-              exit 1
-            fi
-          done
-          if ! test -f "$unpacked/lib/x86_64/libjnidispatch.so"; then
-            echo "::error::Engram's APK has no lib/x86_64/libjnidispatch.so"
-            find "$unpacked/lib" -type f
-            exit 1
-          fi
-          llvm_nm="$ndk/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-nm"
-          test -x "$llvm_nm"
-          for abi in arm64-v8a armeabi-v7a x86_64 x86; do
-            library="$unpacked/lib/$abi/libmosaic_app.so"
-            if ! test -f "$library"; then
-              echo "::error::Engram's APK has no lib/$abi/libmosaic_app.so"
-              find "$unpacked/lib" -type f
-              exit 1
-            fi
-            symbols="$RUNNER_TEMP/mosaic-engram-$abi-symbols.txt"
-            "$llvm_nm" -D --defined-only "$library" > "$symbols"
-            if ! grep -Eq ' T mosaic_app_create$' "$symbols"; then
-              echo "::error::Engram's lib/$abi/libmosaic_app.so does not export mosaic_app_create"
-              head -n 40 "$symbols"
-              exit 1
-            fi
-          done
-
-      # UI89 §7 (steps 2 and 4): Trestle, Journal and Engram through the
-      # Flutter backend, on Android. Each app's per-ABI engines (built for
-      # its Compose APK above) go into a Flutter phone runtime
-      # (android/<abi>/libmosaic_app.so). build-mosaic-flutter-phone-app.sh
-      # builds it with the README's `flutter create`, sets allowBackup false,
-      # builds the debug APK and checks it:
-      # - the manifest says allowBackup false;
-      # - every packaged ABI's library has its input's ELF machine and
-      #   exported symbols, with x86_64 (the emulator's) and arm64-v8a there.
-      # The emulator step below runs each one through the same gate as its
-      # Compose APK.
-      - name: Build Trestle, Journal and Engram for Android with Flutter (UI89 §7)
-        if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_compose_runtime == 'true' && needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
-        shell: bash
-        timeout-minutes: 50
-        run: |
-          set -euo pipefail
-          # program | jniLibs built by its Compose step above | project name.
-          # Read on fd 3: flutter, cargo and gradle must not eat the list
-          # from stdin.
-          while read -r program jni_libs name <&3; do
-            test -d "$jni_libs"
-            phone_runtime="$RUNNER_TEMP/mosaic-$name-flutter-phone-runtime"
-            rm -rf "$phone_runtime"
-            mkdir -p "$phone_runtime"
-            cp -R "$jni_libs" "$phone_runtime/android"
-            echo "::group::$name (Flutter, Android)"
-            bash code/scripts/build-mosaic-flutter-phone-app.sh android "$program" "$phone_runtime" "$RUNNER_TEMP/mosaic-flutter-$name-android" dev.codingadventures "$name"
-            echo "::endgroup::"
-          done 3<<EOF
-          code/programs/mosaic/task-app $RUNNER_TEMP/mosaic-trestle-jnilibs trestle
-          code/programs/mosaic/journal-app $RUNNER_TEMP/mosaic-journal-jnilibs journalapp
-          code/programs/mosaic/engram-app $RUNNER_TEMP/mosaic-engram-jnilibs engramapp
-          EOF
-
-      - name: Launch Trestle, Journal and Engram on an Android emulator (UI89 steps 5, 7)
-        if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
-        shell: bash
-        # Each app's gate, then each one's UI test in two cold launches (§4),
-        # then each Flutter app's gate (§7) when its lane built them.
-        timeout-minutes: 65
-        env:
-          MOSAIC_FLUTTER_LANE: ${{ needs.detect.outputs.needs_mosaic_flutter_runtime }}
-        run: |
-          set -euo pipefail
-          # Let the runner's user open /dev/kvm (GitHub's documented recipe).
-          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules > /dev/null
-          sudo udevadm control --reload-rules
-          sudo udevadm trigger --name-match=kvm
-          export PATH="$ANDROID_HOME/platform-tools:$PATH"
-
-          apk="$(find "$RUNNER_TEMP/mosaic-compose-taskapp-android-runtime/compose/android/build/outputs/apk/debug" -name '*-debug.apk' -print -quit)"
-          test -n "$apk"
-          emulator_log="$RUNNER_TEMP/mosaic-android-emulator.log"
-          # However the step ends: stop the emulator, and on failure show why.
-          finish() {
-            local status=$?
-            adb emu kill > /dev/null 2>&1 || true
-            if [ "$status" -ne 0 ]; then
-              echo "---- emulator log ----"
-              tail -n 80 "$emulator_log" || true
-              df -h "$RUNNER_TEMP" "$HOME" || true
-            fi
-          }
-          trap finish EXIT
-          bash code/scripts/start-mosaic-android-emulator.sh "$emulator_log"
-          bash code/scripts/mosaic-android-emulator-gate.sh "$apk" dev.codingadventures.trestle task-app
-          # Then a person's use of it (UI89 §4.4): add, complete, reopen and
-          # delete a task through the generated controls, and find a saved
-          # task again after a cold relaunch.
-          trestle_test_apk="$(find "$RUNNER_TEMP/mosaic-compose-taskapp-android-runtime/compose/android/build/outputs/apk/androidTest/debug" -name '*-debug-androidTest.apk' -print -quit)"
-          test -n "$trestle_test_apk"
-          bash code/scripts/mosaic-android-ui-test.sh "$apk" "$trestle_test_apk" dev.codingadventures.trestle dev.codingadventures.trestle.uitest.TrestleAndroidUiTest
-
-          journal_apk="$(find "$RUNNER_TEMP/mosaic-compose-journal-android-runtime/compose/android/build/outputs/apk/debug" -name '*-debug.apk' -print -quit)"
-          test -n "$journal_apk"
-          bash code/scripts/mosaic-android-emulator-gate.sh "$journal_apk" dev.codingadventures.journalapp journal-app
-          # Then a person's use of it (UI89 §4.2): write, save and delete
-          # entries through the generated controls, and find the survivor
-          # again after a cold relaunch.
-          journal_test_apk="$(find "$RUNNER_TEMP/mosaic-compose-journal-android-runtime/compose/android/build/outputs/apk/androidTest/debug" -name '*-debug-androidTest.apk' -print -quit)"
-          test -n "$journal_test_apk"
-          bash code/scripts/mosaic-android-ui-test.sh "$journal_apk" "$journal_test_apk" dev.codingadventures.journalapp dev.codingadventures.journalapp.uitest.JournalAndroidUiTest
-
-          engram_apk="$(find "$RUNNER_TEMP/mosaic-compose-engram-android-runtime/compose/android/build/outputs/apk/debug" -name '*-debug.apk' -print -quit)"
-          test -n "$engram_apk"
-          bash code/scripts/mosaic-android-emulator-gate.sh "$engram_apk" dev.codingadventures.engramapp engram-app
-          # Then Anki export and import through the document picker, which
-          # the test answers with a file in the app's cache (UI89 §4.4), and
-          # the imported deck again after a cold relaunch.
-          engram_test_apk="$(find "$RUNNER_TEMP/mosaic-compose-engram-android-runtime/compose/android/build/outputs/apk/androidTest/debug" -name '*-debug-androidTest.apk' -print -quit)"
-          test -n "$engram_test_apk"
-          bash code/scripts/mosaic-android-ui-test.sh "$engram_apk" "$engram_test_apk" dev.codingadventures.engramapp dev.codingadventures.engramapp.uitest.EngramAndroidUiTest
-
-          # Trestle, Journal and Engram through Flutter (UI89 §7.5), built by
-          # their own step when the Flutter lane runs. Same gate, launched
-          # through Flutter's .MainActivity. Each Compose app has the same
-          # package, so it is uninstalled first: neither its data nor its
-          # signing key carry over.
-          if [ "$MOSAIC_FLUTTER_LANE" = true ]; then
-            # Read on fd 3: `adb shell` reads stdin and would eat the list.
-            while read -r name package application_id <&3; do
-              flutter_apk="$RUNNER_TEMP/mosaic-flutter-$name-android/flutter/build/app/outputs/flutter-apk/app-debug.apk"
-              test -f "$flutter_apk"
-              adb uninstall "$package" > /dev/null
-              bash code/scripts/mosaic-android-emulator-gate.sh "$flutter_apk" "$package" "$application_id" .MainActivity
-            done 3<<EOF
-          trestle dev.codingadventures.trestle task-app
-          journalapp dev.codingadventures.journalapp journal-app
-          engramapp dev.codingadventures.engramapp engram-app
-          EOF
-          fi
+      # The Linux Mosaic runtime acceptance (Qt, Flutter and Compose round
+      # trips, the Android builds and the emulator launch) lives in its own
+      # job, `mosaic-linux-runtime`, above. It used to sit here, and main's
+      # full build ran it once per shard: fifteen identical copies, ~520
+      # runner-minutes and ~18 GB of RUNNER_TEMP on every shard of every
+      # merge, on runners that were already running out of disk.
 
       - name: Build concrete Mosaic TaskApp WinUI shell
         if: runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'
@@ -5310,7 +5418,7 @@ jobs:
   # accepts skipped required checks.
   ci-gate:
     name: ${{ github.event_name == 'pull_request' && 'CI gate' || 'CI push gate' }}
-    needs: [detect, contracts, ocaml-capability-gate, phy00-phy01-fixture-consumers, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, d18t-durable-epoch-activation-conformance, ruby-grammar-regen-check, mosaic-grammar-regen-check, rust-grammar-regen-check, unicode17-elixir-conformance, unicode17-lua-conformance, unicode17-perl-conformance, unicode17-haskell-conformance, unicode17-swift-conformance, unicode17-dart-conformance, mosaic-flutter-platform-library, forme-release-platform, forme-release-verdict, build]
+    needs: [detect, contracts, ocaml-capability-gate, phy00-phy01-fixture-consumers, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, d18t-durable-epoch-activation-conformance, ruby-grammar-regen-check, mosaic-grammar-regen-check, rust-grammar-regen-check, unicode17-elixir-conformance, unicode17-lua-conformance, unicode17-perl-conformance, unicode17-haskell-conformance, unicode17-swift-conformance, unicode17-dart-conformance, mosaic-flutter-platform-library, forme-release-platform, forme-release-verdict, build, mosaic-linux-runtime]
     if: always()
     runs-on: ubuntu-latest
     permissions:
@@ -5347,6 +5455,7 @@ jobs:
           FORME_RELEASE_PLATFORM_RESULT: ${{ needs['forme-release-platform'].result }}
           FORME_RELEASE_VERDICT_RESULT: ${{ needs['forme-release-verdict'].result }}
           BUILD_RESULT: ${{ needs.build.result }}
+          MOSAIC_LINUX_RUNTIME_RESULT: ${{ needs['mosaic-linux-runtime'].result }}
         run: |
           set -euo pipefail
           if [ "$EVENT_NAME" = "pull_request" ]; then
@@ -5374,9 +5483,9 @@ jobs:
             fi
           fi
 
-          echo "detect=$DETECT_RESULT contracts=$CONTRACTS_RESULT ocaml_capability=$OCAML_CAPABILITY_RESULT phy=$PHY_RESULT d18f=$D18F_RESULT d18p=$D18P_RESULT d18q=$D18Q_RESULT d18t=$D18T_RESULT ruby_grammar_regen=$RUBY_GRAMMAR_REGEN_RESULT mosaic_grammar_regen=$MOSAIC_GRAMMAR_REGEN_RESULT rust_grammar_regen=$RUST_GRAMMAR_REGEN_RESULT unicode17_elixir=$UNICODE17_ELIXIR_RESULT unicode17_lua=$UNICODE17_LUA_RESULT unicode17_perl=$UNICODE17_PERL_RESULT unicode17_haskell=$UNICODE17_HASKELL_RESULT unicode17_swift=$UNICODE17_SWIFT_RESULT unicode17_dart=$UNICODE17_DART_RESULT mosaic_flutter_platform_library=$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT forme_release_platform=$FORME_RELEASE_PLATFORM_RESULT forme_release_verdict=$FORME_RELEASE_VERDICT_RESULT build=$BUILD_RESULT"
+          echo "detect=$DETECT_RESULT contracts=$CONTRACTS_RESULT ocaml_capability=$OCAML_CAPABILITY_RESULT phy=$PHY_RESULT d18f=$D18F_RESULT d18p=$D18P_RESULT d18q=$D18Q_RESULT d18t=$D18T_RESULT ruby_grammar_regen=$RUBY_GRAMMAR_REGEN_RESULT mosaic_grammar_regen=$MOSAIC_GRAMMAR_REGEN_RESULT rust_grammar_regen=$RUST_GRAMMAR_REGEN_RESULT unicode17_elixir=$UNICODE17_ELIXIR_RESULT unicode17_lua=$UNICODE17_LUA_RESULT unicode17_perl=$UNICODE17_PERL_RESULT unicode17_haskell=$UNICODE17_HASKELL_RESULT unicode17_swift=$UNICODE17_SWIFT_RESULT unicode17_dart=$UNICODE17_DART_RESULT mosaic_flutter_platform_library=$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT forme_release_platform=$FORME_RELEASE_PLATFORM_RESULT forme_release_verdict=$FORME_RELEASE_VERDICT_RESULT build=$BUILD_RESULT mosaic_linux_runtime=$MOSAIC_LINUX_RUNTIME_RESULT"
           fail=0
-          for r in "$DETECT_RESULT" "$CONTRACTS_RESULT" "$OCAML_CAPABILITY_RESULT" "$PHY_RESULT" "$D18F_RESULT" "$D18P_RESULT" "$D18Q_RESULT" "$D18T_RESULT" "$RUBY_GRAMMAR_REGEN_RESULT" "$MOSAIC_GRAMMAR_REGEN_RESULT" "$RUST_GRAMMAR_REGEN_RESULT" "$UNICODE17_ELIXIR_RESULT" "$UNICODE17_LUA_RESULT" "$UNICODE17_PERL_RESULT" "$UNICODE17_HASKELL_RESULT" "$UNICODE17_SWIFT_RESULT" "$UNICODE17_DART_RESULT" "$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT" "$FORME_RELEASE_PLATFORM_RESULT" "$FORME_RELEASE_VERDICT_RESULT" "$BUILD_RESULT"; do
+          for r in "$DETECT_RESULT" "$CONTRACTS_RESULT" "$OCAML_CAPABILITY_RESULT" "$PHY_RESULT" "$D18F_RESULT" "$D18P_RESULT" "$D18Q_RESULT" "$D18T_RESULT" "$RUBY_GRAMMAR_REGEN_RESULT" "$MOSAIC_GRAMMAR_REGEN_RESULT" "$RUST_GRAMMAR_REGEN_RESULT" "$UNICODE17_ELIXIR_RESULT" "$UNICODE17_LUA_RESULT" "$UNICODE17_PERL_RESULT" "$UNICODE17_HASKELL_RESULT" "$UNICODE17_SWIFT_RESULT" "$UNICODE17_DART_RESULT" "$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT" "$FORME_RELEASE_PLATFORM_RESULT" "$FORME_RELEASE_VERDICT_RESULT" "$BUILD_RESULT" "$MOSAIC_LINUX_RUNTIME_RESULT"; do
             case "$r" in
               success|skipped) ;;
               *) echo "::error::a required job did not pass (result: $r)"; fail=1 ;;
