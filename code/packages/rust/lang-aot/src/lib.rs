@@ -16,7 +16,7 @@
 //!
 //! ## Supported languages today
 //!
-//! All ten variants below are wired through the shared IIR driver. Coverage is
+//! Every variant below is wired through the shared IIR driver. Coverage is
 //! feature-specific; see `code/specs/LANG-VM-FEATURE-COVERAGE.md` for executable
 //! proofs, backend exclusions and follow-up work.
 //!
@@ -32,6 +32,7 @@
 //! | ALGOL 60 | `algol-iir-compiler` |
 //! | FLOW-MATIC | `flow-matic-iir-compiler` |
 //! | COBOL-60 | `cobol-iir-compiler` |
+//! | Ruby | `ruby-iir-compiler` (LANG84 phase 5a; default release `3.3.6`) |
 //! | Macsyma | `macsyma-iir-compiler` |
 //!
 //! ## How to add a language
@@ -111,6 +112,14 @@ pub enum Language {
     /// WORKING-STORAGE via the `cobol-iir-compiler` frontend; `main` returns an
     /// i64 exit code.
     Cobol60,
+    /// Ruby — the `rb-int-puts` subset (`puts` of `+ - * / %` integer
+    /// arithmetic) via `ruby-iir-compiler`, compiled against the frontend's
+    /// default release (`3.3.6`, LANG84 phase 5a). The compiler walks the
+    /// tree that the generic `GrammarLexer`/`GrammarParser` build from
+    /// `ruby3.3.6.tokens`/`.grammar`, and emits only LANG83 registry ops:
+    /// `/` is `i64_div_floor`, `%` is `i64_mod_floor` (a zero divisor traps
+    /// `Trap.DivZero`), `puts` is `print_i64`. No backend has Ruby code.
+    Ruby,
     /// Macsyma — the v0 integer-arithmetic/assignment/unevaluated-symbolic-
     /// `Apply` slice via the `macsyma-iir-compiler` frontend, over the same
     /// tagged-word `dynval-runtime` value model McCarthy Lisp uses (see
@@ -134,6 +143,7 @@ impl fmt::Display for Language {
             Language::Algol60 => write!(f, "algol60"),
             Language::FlowMatic => write!(f, "flow-matic"),
             Language::Cobol60 => write!(f, "cobol60"),
+            Language::Ruby => write!(f, "ruby"),
             Language::Macsyma => write!(f, "macsyma"),
         }
     }
@@ -156,9 +166,10 @@ impl Language {
             "algol" | "algol60" | "algol-60" | "a60" => Ok(Self::Algol60),
             "flow-matic" | "flowmatic" | "flow" | "fm" | "b0" => Ok(Self::FlowMatic),
             "cobol" | "cobol60" | "cobol-60" | "cob" => Ok(Self::Cobol60),
+            "ruby" | "rb" => Ok(Self::Ruby),
             "macsyma" | "mac" => Ok(Self::Macsyma),
             other => Err(format!(
-                "unknown language {other:?}; expected one of: twig, nib, \
+                "unknown language {other:?}; expected one of: twig, nib, ruby (or rb), \
                  brainfuck (or bf), dartmouth-basic (or basic / bas), oct, macrooct, \
                  mccarthy-lisp (or mccarthy / mcl / lisp), algol60 \
                  (or algol / algol-60 / a60), flow-matic (or fm / b0), \
@@ -183,6 +194,7 @@ pub fn detect_language_from_path(path: &Path) -> Option<Language> {
         "algol" | "alg" | "a60" => Some(Language::Algol60),
         "flowmatic" | "fm" | "b0" => Some(Language::FlowMatic),
         "cobol" | "cob" | "cbl" => Some(Language::Cobol60),
+        "rb" => Some(Language::Ruby),
         "mac" => Some(Language::Macsyma),
         _ => None,
     }
@@ -504,6 +516,20 @@ pub fn compile_source_to_iir(
                     message: format!("{e}"),
                 })
         }
+        // LANG84 phase 5a: the frontend's default release with the untrusted
+        // budgets. `compile_source_at` already selects any profiled release;
+        // the lang-aot half of that (`compile_source_to_iir_at`, `--lang
+        // ruby@<release>`) is shared with Perl's phase 4b and lands there.
+        Language::Ruby => ruby_iir_compiler::compile_source_at(
+            source,
+            None,
+            module_name,
+            &ruby_iir_compiler::FrontendBudgets::default(),
+        )
+        .map_err(|e| LangAotError::FrontendError {
+            language,
+            message: format!("{e}"),
+        }),
         Language::Macsyma => {
             macsyma_iir_compiler::compile_source(source, module_name)
                 .map_err(|e| LangAotError::FrontendError {
@@ -2993,6 +3019,27 @@ mod tests {
         assert_eq!(
             Language::parse(&Language::McCarthyLisp.to_string()).unwrap(),
             Language::McCarthyLisp
+        );
+    }
+
+    /// LANG84 phase 5a: `--lang ruby`/`rb` and `.rb` reach `ruby-iir-compiler`
+    /// on its default release, and its typed errors surface as frontend errors.
+    #[test]
+    fn ruby_language_parses_displays_detects_and_compiles() {
+        for alias in ["ruby", "rb"] {
+            assert_eq!(Language::parse(alias).unwrap(), Language::Ruby);
+        }
+        assert_eq!(Language::Ruby.to_string(), "ruby");
+        assert_eq!(Language::parse(&Language::Ruby.to_string()).unwrap(), Language::Ruby);
+        assert_eq!(detect_language_from_path(Path::new("prog.rb")), Some(Language::Ruby));
+        assert!(Language::parse("bogus").unwrap_err().contains("ruby (or rb)"));
+        let module = compile_source_to_iir(Language::Ruby, "puts(7 / -2, 7 % -2)", "m").unwrap();
+        let ops: Vec<_> = module.functions[0].instructions.iter().map(|i| i.op.as_str()).collect();
+        assert!(ops.contains(&"i64_div_floor") && ops.contains(&"i64_mod_floor"), "{ops:?}");
+        let error = compile_source_to_iir(Language::Ruby, "puts -7", "m").unwrap_err();
+        assert!(
+            matches!(&error, LangAotError::FrontendError { language: Language::Ruby, message } if message.contains("3.3.6")),
+            "{error:?}"
         );
     }
 

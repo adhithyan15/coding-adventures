@@ -651,6 +651,37 @@ host — via the same `x86_64-backend` and `elf_object` / `pe_object` /
 No backend changes needed — every frontend gets x86-64 Linux, x86-64
 Windows, and ARM64 macOS for free.
 
+## Ruby (LANG84 phase 5a)
+
+`--lang ruby` (or `rb`, or a `.rb` file) compiles Ruby's `rb-int-puts`
+subset — `puts` of `+ - * / %` integer arithmetic — with `ruby-iir-compiler`
+on its default release, `3.3.6`. That frontend walks the parse tree the
+generic `GrammarLexer`/`GrammarParser` build from `ruby3.3.6.tokens` and
+`.grammar` (no hand-written lexer) and emits only LANG83 registry operations:
+`/` is `i64_div_floor`, `%` is `i64_mod_floor`, `puts` is `print_i64`, and
+`puts()` is `putchar 10`. So no backend has Ruby-specific code, and a zero
+divisor stops the program the LANG83 way: the output so far, then
+`Trap.DivZero`.
+
+Twelve `lang_matrix` rows (each a case of
+`code/grammars/ruby/corpus/rb-int-puts/`) declare all eight executable
+columns. Four of them are the matrix's first `Expect::StdoutThenTrap` rows,
+which check the output written before the trap *and* the kind each column
+reports (stderr on native/LLVM/JVM/CLR, `env.__trap` on WASM,
+`VMError::Trap` on the VM and JIT, a caught `erlang:error` on BEAM):
+
+```sh
+cargo test -p lang-aot --test lang_matrix ruby_rows_ -- --nocapture
+```
+
+`ruby_rows_agree_with_the_host_ruby_oracle` re-checks every expectation
+against a host ruby 3.3 (the compiled programs never run on it),
+`ruby_rows_are_rb_int_puts_corpus_cases` ties the rows to the corpus, and
+`ruby_rows_pass_the_lang83_check_on_all_nine_backends` runs
+`check_module_for` on all nine backends. Selecting another release through
+lang-aot (`--lang ruby@<release>`) waits for the shared lang-aot release API;
+the frontend already does it (`ruby_iir_compiler::compile_source_at`).
+
 ## Standard operations and compile-time refusal (LANG83)
 
 A frontend that needs a new operation (floor division, output without a
