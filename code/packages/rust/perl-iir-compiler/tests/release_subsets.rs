@@ -181,9 +181,19 @@ fn the_crlf_case_keeps_its_carriage_returns() {
 /// case may be any Perl at all, since only the compiler has to refuse it, so
 /// it must not be able to hang the suite or read the caller's environment.
 fn run_host_perl(path: &std::path::Path) -> std::process::Output {
+    use std::io::Read;
+    use std::sync::atomic::{AtomicUsize, Ordering};
     const LIMIT: Duration = Duration::from_secs(20);
-    let scratch = std::env::temp_dir().join(format!("perl-oracle-{}", std::process::id()));
-    std::fs::create_dir_all(&scratch).unwrap();
+    static RUNS: AtomicUsize = AtomicUsize::new(0);
+    // A fresh directory per run: `create_dir` fails if the path already
+    // exists (or is a planted symlink), and the counter keeps concurrent
+    // test threads of this process apart.
+    let scratch = std::env::temp_dir().join(format!(
+        "perl-oracle-{}-{}",
+        std::process::id(),
+        RUNS.fetch_add(1, Ordering::Relaxed)
+    ));
+    std::fs::create_dir(&scratch).unwrap_or_else(|e| panic!("{}: {e}", scratch.display()));
     let mut command = Command::new("perl");
     command.env_clear().current_dir(&scratch).stdin(Stdio::null()).stdout(Stdio::piped()).stderr(Stdio::piped());
     // `PATH` finds `perl`; Windows programs also expect `SYSTEMROOT`.
@@ -194,17 +204,32 @@ fn run_host_perl(path: &std::path::Path) -> std::process::Output {
     }
     // The file path as one argument: no shell, no interpolation.
     let mut child = command.arg(path).spawn().expect("perl ran once already");
+    // Drain both pipes while waiting, so a chatty program cannot block on a
+    // full pipe and be mistaken for a hang.
+    let drain = |mut pipe: Box<dyn Read + Send>| {
+        std::thread::spawn(move || {
+            let mut bytes = Vec::new();
+            pipe.read_to_end(&mut bytes).ok();
+            bytes
+        })
+    };
+    let stdout = drain(Box::new(child.stdout.take().unwrap()));
+    let stderr = drain(Box::new(child.stderr.take().unwrap()));
     let started = Instant::now();
-    while child.try_wait().unwrap().is_none() {
+    let status = loop {
+        if let Some(status) = child.try_wait().unwrap() {
+            break status;
+        }
         if started.elapsed() > LIMIT {
             child.kill().ok();
+            child.wait().ok();
+            std::fs::remove_dir_all(&scratch).ok();
             panic!("host perl ran {} for more than {LIMIT:?}", path.display());
         }
         std::thread::sleep(Duration::from_millis(10));
-    }
-    let output = child.wait_with_output().unwrap();
+    };
     std::fs::remove_dir_all(&scratch).ok();
-    output
+    std::process::Output { status, stdout: stdout.join().unwrap(), stderr: stderr.join().unwrap() }
 }
 
 /// The host interpreter for this record: `perl` on PATH, on the 5.38 line

@@ -34,8 +34,10 @@
     define and refuse two overrides for one profile; every claiming release
     must run the baseline `add` case; `the_crlf_case_keeps_its_carriage_returns`
     pins the CRLF bytes and the `.gitattributes` line; the host-`perl` oracle
-    runs each corpus file with a cleared environment (only `PATH`), a scratch
-    working directory, no stdin and a 20 s limit.
+    runs each corpus file with a cleared environment (only `PATH` and
+    Windows' `SYSTEMROOT`), a fresh scratch directory per run (`create_dir`,
+    so an existing or planted path fails), no stdin, both pipes drained on
+    threads, and a 20 s limit after which the child is killed and reaped.
   - `the_selected_release_decides_what_lexes` pins the corrected bounds:
     5.38.2 refuses a 251-digit literal; 5.44.0 and 5.45.3 lex 1018 digits and
     refuse 1019.
