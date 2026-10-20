@@ -12,9 +12,15 @@ the same block never runs. At SIMPLE and ADVANCED:
   as upstream does.
 - The CCR-053 residual `for(…){continue;debugger}` matches upstream again.
 
-The `tail_is_safe_to_truncate` hoisting guard is unchanged, so a dead `var` or
-`function` still keeps its tail. Upstream instead hoists such a `var` into the
-`for` head; that remains open.
+A dead `var` or `function` still keeps its tail. Upstream instead hoists such
+a `var` into the `for` head; that remains open.
+
+`tail_is_safe_to_truncate` also changed, from the security review: a dead
+`let`/`const` now keeps its tail too. It previously counted as safe to drop,
+but a dead `let x` still binds `x` (in its TDZ) across the whole block. So
+`var x=5; for(;;){ try{log(x)}catch(e){log("TDZ")} break; let x; }` printed
+`TDZ` from source but `5` once compiled. `return` and `throw` tails already had
+this problem on main.
 
 Tests:
 

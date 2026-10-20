@@ -17,7 +17,9 @@ module-level docs in `src/lib.rs` for the authoritative description.)
   `continue` joined in CCR-082 (#15878), so `for(…){continue;g()}` empties to
   `for(…);`. **Hoisting guard:** the tail is dropped
   only when *every* statement in it is provably free of a hoisted binding
-  (expression / empty / break / continue / return / throw / `let` / `const`).
+  (expression / empty / break / continue / return / throw / `debugger`). A dead
+  `let`/`const` is kept too: it still shadows its name, TDZ included, across the
+  whole block (CCR-082 security review).
   A `var` or `function` declaration — or any compound statement that could wrap
   a hoisted `var` (`if (c) var y;`, `for (var i …)`, blocks, switch) — preserves
   the tail, since those bindings hoist to function-top and remain observable

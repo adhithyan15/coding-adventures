@@ -1237,9 +1237,19 @@ fn is_terminator(stmt: &Statement) -> bool {
 /// - `debugger` (declares nothing, and an UNREACHABLE one can never fire, so
 ///   dropping it is a genuine no-op — CCR-053 stopped removing *reachable*
 ///   `debugger` statements precisely because those are observable, and this is
-///   the other side of that line),
-/// - `let` / `const` declarations (block-scoped, TDZ — not hoisted; a
-///   reference before the declaration throws either way).
+///   the other side of that line).
+///
+/// Not `let` / `const`, though they are block-scoped and not hoisted. A dead
+/// `let x` still creates this block's binding for `x` from the block's start,
+/// so code *before* the terminator that reads `x` hits the TDZ and throws.
+/// Dropping the declaration would silently send that read to an outer `x`
+/// instead, a behaviour change:
+///
+/// ```js
+/// var x = 5;
+/// for (;;) { try { log(x) } catch (e) { log("TDZ") } break; let x; }
+/// // source prints "TDZ"; without `let x` it would print 5
+/// ```
 ///
 /// Every other form — a `function` declaration, a `var` declaration, or ANY
 /// compound statement (`if` / `while` / `for` / block / `switch` / labeled)
@@ -1260,8 +1270,10 @@ fn tail_is_safe_to_truncate(stmts: &[Statement]) -> bool {
                 | TaggedStatement::ThrowStatement(_)
                 | TaggedStatement::DebuggerStatement(_)
         ),
-        // `let` / `const` are block-scoped (safe to drop); `var` hoists (unsafe).
-        Statement::Declaration(Declaration::VariableDeclaration(vd)) => vd.kind != VarKind::Var,
+        // `var` hoists, and a dead `let`/`const` still shadows (and TDZ-guards)
+        // its name across the whole block, so any declaration is unsafe. A
+        // genuinely unused one is removed downstream by remove-unused-vars.
+        Statement::Declaration(Declaration::VariableDeclaration(_)) => false,
         // A `function` declaration is itself a hoisted binding — unsafe.
         Statement::Declaration(Declaration::FunctionDeclaration(_)) => false,
         // A `class` declaration binds a name too — treated as unsafe like a
@@ -2490,17 +2502,15 @@ mod tests {
     }
 
     #[test]
-    fn drops_tail_of_let_declarations_after_terminator() {
-        // `let`/`const` are block-scoped (not hoisted), so a tail of only
-        // `let`/`const` declarations (here a `let`) IS safe to drop. Uses a
-        // `var`-free declaration to confirm the whitelist admits non-`var`
-        // declarations.
+    fn keeps_tail_of_let_declarations_after_terminator() {
+        // A dead `let k` still binds `k` (in its TDZ) across the whole block,
+        // so a read of `k` before the terminator throws. Dropping it would
+        // redirect that read to an outer `k`, so the tail is kept.
         let body = vec![return_stmt(), let_decl_stmt("k")];
         let prog = program_with_function(body, Some("block.1"));
-        let (out, _contribs, changed, _) = run_pass(prog);
-        assert!(changed, "a let-only tail after a terminator is safe to drop");
+        let (out, _contribs, _changed, _) = run_pass(prog);
         let new_block = extract_function_body(&out);
-        assert_eq!(new_block.body.len(), 1, "only the terminator should remain");
+        assert_eq!(new_block.body.len(), 2, "the let-bearing tail must survive");
     }
 
     #[test]
