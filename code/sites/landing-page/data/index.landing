@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "site": {
     "title": "Coding Adventures — Build the stack",
-    "description": "Coding Adventures is a learning-first monorepo with 5,197 package implementations, 217 programs, and 23 human-language tracks, spanning hardware, compilers, scientific computing, UI systems, and applications.",
+    "description": "Coding Adventures is a learning-first monorepo with 5,209 package implementations, 217 programs, and 23 human-language tracks, spanning hardware, compilers, scientific computing, UI systems, and applications.",
     "shortDescription": "A learning-first computing lab where every layer is built to be inspected.",
     "canonicalUrl": "https://adhithyan15.github.io/coding-adventures/",
     "repositoryUrl": "https://github.com/adhithyan15/coding-adventures",
     "ogImage": "assets/og.jpg",
     "ogImageWidth": 1731,
     "ogImageHeight": 909,
-    "updated": "2026-10-11"
+    "updated": "2026-10-20"
   },
   "hero": {
     "eyebrow": "A learning-first monorepo",
@@ -35,12 +35,12 @@
   },
   "snapshot": {
     "items": [
-      { "value": "5,197", "label": "Package implementation directories" },
+      { "value": "5,209", "label": "Package implementation directories" },
       { "value": "217", "label": "Program and application directories" },
       { "value": "57", "label": "Grammar families" },
-      { "value": "1,722", "label": "Specifications and roadmaps" }
+      { "value": "1,778", "label": "Specifications and roadmaps" }
     ],
-    "note": "A dated count of tracked directories and top-level specification files at e32e3584bf. Language mirrors count separately; the README explains the counting rules."
+    "note": "A dated count of tracked directories and top-level specification files at 96d45dfff5. Language mirrors count separately; the README explains the counting rules."
   },
   "paths": [
     {

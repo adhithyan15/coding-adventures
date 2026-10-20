@@ -35,19 +35,19 @@ and current direction; it deliberately avoids a hand-maintained package
 inventory. Run the [package parity report](./code/scripts/package_parity_report.py)
 for a live cross-language view.
 
-### Repository snapshot — October 11, 2026
+### Repository snapshot — October 20, 2026
 
 | Surface | Current scale |
 |---|---:|
-| Package implementation directories | 5,197 |
+| Package implementation directories | 5,209 |
 | Program and application directories | 217 |
 | Grammar families | 57 |
-| Top-level Markdown specifications and roadmaps | 1,722 |
+| Top-level Markdown specifications and roadmaps | 1,778 |
 | Human-language curriculum tracks | 23 |
 | TypeScript Forme packages | 81 |
 | CI, release, and deployment workflows | 46 |
 
-Measured from tracked paths at `e32e3584bf` on `main`: packages and programs
+Measured from tracked paths at `96d45dfff5` on `main`: packages and programs
 count distinct `code/{packages,programs}/<ecosystem>/<name>` directories;
 grammars count `code/grammars/<family>` directories; specifications count
 `code/specs/*.md`; Forme counts TypeScript `forme-*` directories; workflows
@@ -309,8 +309,11 @@ cumulative tasks with explicit chapter payoffs.
 
 Spanish leads the shared course spine and Tamil leads the script addendum;
 other tracks adapt that structure to their own sounds, grammar, and writing
-systems. Pre-A1 through C2 is the course design target. Chapter and assessment
-ledgers track the actual coverage in each language.
+systems. Pre-A1 through C2 is the course design target. The strict level gate
+certifies a level only when every criterion holds there and at every level
+below it. It currently places Spanish, Italian, Portuguese, French, German, and
+Latin at B1, twelve tracks at A2, and four at A1; Chinese has not yet closed
+pre-A1. Chapter and assessment ledgers track the remaining coverage.
 
 Start with the [human-language index](./code/learning/human-languages/README.md),
 [curriculum framework](./code/specs/HL00-human-language-curriculum-framework.md),
