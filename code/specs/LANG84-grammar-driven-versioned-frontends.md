@@ -911,7 +911,7 @@ noted.
 | Maxima | re-exports Macsyma | — | CST | none of its own | No grammar of its own | Own `maxima<release>` pairs from Maxima tags before any `Language::Maxima`. Until then `--lang maxima` is an error, not a silent Macsyma alias |
 | Maple, Reduce | GL | GP | CST | unversioned | Compliant, not in lang-aot | Inventory; `Language` variants |
 | Nib, Oct | GL | GP | CST | unversioned | Compliant (in-repo languages) | Single-row inventory (see open questions) |
-| Python | GL (indentation mode) | GP | CST | 2.7, 3.0, 3.6, 3.8, 3.10, 3.12 + unversioned; no CSV | Compliant; selection hard-coded to `"3.12"` | Phase 7 |
+| Python | GL (indentation mode) | GP | CST | 5 release pairs (3.0a1, 3.11.17, 3.12.3, 3.13.16, 3.16.0a1) + legacy minor lines 2.7, 3.0, 3.6, 3.8, 3.10, 3.12 + unversioned | **Compliant; release selection real since phase 7a** for `py-int-print` (`compile_source_at`, I for all five, `Language::Python` on all nine backends). LANG79's float pilot still uses the legacy `"3.12"` minor line | 7b/7c |
 | Perl | GL | GP | CST | 117 partial versioned pairs; `releases.csv` 776 rows | Compliant; frontend uses the **unversioned** pair, no selection | Phase 4 |
 | COBOL-60 | GL + `strip_cobol_columns` | GP | CST | unversioned | Compliant (C3 hook) | Inventory (60, 61, 61-ext, 65, 68, 74, 85, 2002, 2014, 2023); `Cobol60` → `Cobol` |
 | Dartmouth BASIC | GL + 2 hooks (`lib.rs`: 391 non-test lines incl. docs) | GP | CST | unversioned | Compliant (C3 hooks) | Inventory (editions 1–7) |
@@ -1219,6 +1219,58 @@ accepted case must be refused, with its category. That is how
 checks instead that host CPython prints the expected prefix and then an
 integer outside `i64`.
 
+**Status (7a, 2026-10-20).** Landed as planned above, with these results and
+decisions:
+
+- **Pairs and evidence.** The five pairs, `pair-evidence.csv`, and the README
+  section "Release pairs" in `code/grammars/python/`. Three token classes:
+  3.0a1 (no `_`, 33 keywords, 45 operators); 3.11.17 (47 operators, no `!`);
+  and 3.12.3 = 3.13.16 = 3.16.0a1 (48). There is one grammar class. Stage G
+  is `grammar-tools validate` on each pair, and generation now always
+  validates release pairs. Stage P is `python-parser`'s `release_probes`.
+  `tokenize_differential` checks the three host releases' token tables
+  against the exact token streams that CPython 3.11.17, 3.12.3 and 3.13.16's
+  own `tokenize` recorded for six fixtures. Kinds, spellings and 1-based
+  positions all match.
+- **Generator.** `python` is a release family. Its six minor-line pairs are
+  embedded in a separate `legacy_versions` module that no release ID
+  reaches, so `parse_python(source, "3.12")` is unchanged. The CI regen gate
+  covers `python-lexer` and `python-parser`.
+- **Stage I** is `cargo test -p python-iir-compiler --test release_subsets`.
+  It runs 36 corpus cases on each of the five releases on vm-core, comparing
+  stdout and trap kind; for 3.0a1 `int_underscores` is a `Lex` error by its
+  `.reject@3.0a1` override. It also checks C7, the `profile` column against
+  `profiles.rs`, and IIR identity across all five releases. The host-CPython
+  oracle checks every case under 3.11.17, 3.12.3 and 3.13.16, and they all
+  agree. C8 is `cst_contract`, C5 `hostile_release`, and C2/C4.5 `iir_path`.
+- **Backends.** `Language::Python` has 18 `lang_matrix` rows, one per accepted
+  corpus case, on all eight executable columns, and `check_module_for`
+  passes on all nine. The `StdoutThenTrap` matrix support is the same code as
+  phase 5a's, ported unchanged so the two branches merge cleanly. Locally,
+  native x86-64, LLVM, WASM, JVM, VM and JIT executed all 108 of their
+  Python cells, 54 of them trapping with the right stdout and kind. CLR and
+  BEAM execute in CI only, because the authoring host had neither `dotnet`
+  nor `erl`. The JIT column runs printing functions on the vm-core tier (the
+  known matrix limitation, VM-078d).
+
+Decisions and deviations:
+
+- **`compile_source` does not delegate to `compile_source_at`.** It is
+  LANG79's float pilot and keeps the legacy `"3.12"` grammar. LANG84 C4.5
+  ("the IIR path MUST NOT use the unversioned pair") holds for the release
+  path; the float pilot is a separate, older path that moves in 7b/7c.
+- **A lean subset grammar.** Rule names are `python3.12.grammar`'s, but the
+  precedence levels the subset never reaches are left out, so the release
+  parser admits more than 15 nested parentheses under the 190-level cap
+  where the legacy grammar admits 9.
+- **No folding of constants into `const`.** Every operation is emitted and
+  checked at run time. The one exception is a divisor known to be `-1`,
+  which is folded to `i64_neg_ovf` or `const 0`, as planned.
+- **Not in 7a:** `IIRModule.release`, `compile_source_to_iir_at`,
+  `--lang python@<release>`, the lang-aot `UnknownRelease` and
+  `ReleaseNotAvailable` variants, and matrix rows on releases other than
+  the default. These are the shared lang-aot release API (phases 4b and 5b).
+
 ### Wire every IIR frontend into lang-aot
 
 Add `Language` variants with release support for Python, JavaScript, Ruby and
@@ -1300,7 +1352,7 @@ are rough estimates of reviewed diff size, not counting regenerated
 | 4 | 4a–4c | **Perl on all backends** (= LANG83 PR3, after LANG83 PR1b): compile versioned pairs; `compile_source_at`; `perl5.38.0` pair; `print` → `write_i64`; `Language::Perl`; matrix rows; release sweep. Fastest win, because Perl is already compliant | ~1,500 lines over 3 PRs |
 | 5 | 5a–5b | **Ruby integer subset on all backends** (= LANG83 PR2), on R0 pairs: `rb_int_div` → `i64_div_floor`, `puts` → `print_i64`, `StdoutThenTrap` rows; `Language::Ruby`; the IIR path drops `ruby-lexer` | ~1,200 lines over 2 PRs |
 | 6 | 6a–6e | JavaScript CST rewrite (see above; 6c, the compiler rewrite, done in `javascript-iir-compiler` 0.3.0) | ~3,000 lines over 5 PRs |
-| 7 | 7a–7c | Python: inventory pairs for the subset, `compile_source_at`, `Language::Python`, matrix rows. The float subset depends on LANG83 float formatting; an int subset depends on the LANG83 `*_ovf` family | ~2,000 lines over 3 PRs |
+| 7 | 7a–7c | Python: inventory pairs for the subset, `compile_source_at`, `Language::Python`, matrix rows. The float subset depends on LANG83 float formatting; an int subset depends on the LANG83 `*_ovf` family. **7a done:** `py-int-print` on five release pairs (3.0a1 … 3.16.0a1), PR4 `*_ovf` ops, `StdoutThenTrap` rows for `Trap.DivZero` and `Trap.Overflow`, I for all five, B for 3.13.16. **7b/7c:** lang-aot release selection and the boundary sweep, Python 2 (print statement, classic `/`), more releases, and the float subset after LANG83 float formatting | ~2,000 lines over 3 PRs |
 | 8 | 8.x | Twig CST rewrite (≈5,700-line compiler, ~6–10 PRs by construct family, IIR-identity gate; done in one, `twig-ir-compiler` 0.46.0). McCarthy Lisp CST rewrite (~3 PRs; done in one, `mccarthy-lisp-iir-compiler` 0.9.0) | large |
 | 9 | ongoing | Release backfill, earliest first: per-release pairs and subset status for every language; remaining inventories (BASIC, ALGOL, COBOL and others); remaining lang-aot variants | many small PRs |
 
