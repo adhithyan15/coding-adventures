@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-521-PAINTING",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "RU-EXT-521-PAINTING"
+  ],
+  "after": []
+}

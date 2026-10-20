@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 292,
+  "sourceHash": "fnv1a64:311cc8b0958ad983",
+  "lessonIds": [
+    "RU-C292-obyskivat",
+    "RU-C292-arestovyvat",
+    "RU-C292-doprashivat",
+    "RU-C292-dopros",
+    "RU-C292-pokazaniya"
+  ],
+  "tex": "russian/book/chapters/ch292-search-and-questioning.tex"
+}

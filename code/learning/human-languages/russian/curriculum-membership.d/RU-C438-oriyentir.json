@@ -1,0 +1,11 @@
+{
+  "id": "RU-C438-oriyentir",
+  "pathSegment": "RU-PATH-438-UKAZATEL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-438-UKAZATEL",
+      "order": 3
+    }
+  ]
+}

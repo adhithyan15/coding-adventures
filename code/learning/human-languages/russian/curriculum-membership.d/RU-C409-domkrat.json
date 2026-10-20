@@ -1,0 +1,11 @@
+{
+  "id": "RU-C409-domkrat",
+  "pathSegment": "RU-PATH-409-POLOMKA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-409-POLOMKA",
+      "order": 3
+    }
+  ]
+}

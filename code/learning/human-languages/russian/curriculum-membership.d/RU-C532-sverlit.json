@@ -1,0 +1,11 @@
+{
+  "id": "RU-C532-sverlit",
+  "pathSegment": "RU-PATH-532-DIY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-532-DIY",
+      "order": 2
+    }
+  ]
+}

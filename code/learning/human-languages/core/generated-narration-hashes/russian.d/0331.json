@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 331,
+  "sourceHash": "fnv1a64:4ceed4b12753e84d",
+  "lessonIds": [
+    "RU-C331-testo",
+    "RU-C331-mesit",
+    "RU-C331-raskatyvat",
+    "RU-C331-lepit",
+    "RU-C331-nachinka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch331.txt",
+  "json": "russian/narration/ch331.json",
+  "textHash": "fnv1a64:63d9c236127d92d0",
+  "jsonHash": "fnv1a64:9b3b952b0c4dd83b",
+  "findings": []
+}

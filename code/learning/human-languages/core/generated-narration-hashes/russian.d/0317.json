@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 317,
+  "sourceHash": "fnv1a64:03ce2e94661c851b",
+  "lessonIds": [
+    "RU-C317-imeninnik",
+    "RU-C317-imeniny",
+    "RU-C317-zagadyvat",
+    "RU-C317-zaduvat",
+    "RU-C317-veselitsya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch317.txt",
+  "json": "russian/narration/ch317.json",
+  "textHash": "fnv1a64:f3815e9ad84baa15",
+  "jsonHash": "fnv1a64:9734323ad9953975",
+  "findings": []
+}

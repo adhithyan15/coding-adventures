@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 362,
+  "sourceHash": "fnv1a64:6891aed7d560fb37",
+  "lessonIds": [
+    "RU-C362-povyshenie",
+    "RU-C362-premiya",
+    "RU-C362-navyk",
+    "RU-C362-specialist",
+    "RU-C362-uvolnyat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch362.txt",
+  "json": "russian/narration/ch362.json",
+  "textHash": "fnv1a64:eee028c504ff0e4d",
+  "jsonHash": "fnv1a64:97856715259e48ef",
+  "findings": []
+}

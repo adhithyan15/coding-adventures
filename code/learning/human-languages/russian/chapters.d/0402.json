@@ -1,0 +1,19 @@
+{
+  "chapter": 402,
+  "title": "Staying connected",
+  "label": "ch:ru-staying-connected",
+  "canDo": "I can connect a device, charge my phone, message a friend and forward a letter.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "RU-R402-review-final-402",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 402: I can connect a device, charge my phone, message a friend and forward a letter.",
+    "assesses": [
+      "RU-LEX-C402-SVYAZ-03",
+      "RU-LEX-C402-SVYAZ-04",
+      "RU-LEX-C402-SVYAZ-05"
+    ]
+  }
+}

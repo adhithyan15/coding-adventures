@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C443-mostovaya",
+    "language": "russian",
+    "chapter": 443,
+    "sequence": 25290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:48b62aaff92ff751"
+  },
+  "findings": []
+}

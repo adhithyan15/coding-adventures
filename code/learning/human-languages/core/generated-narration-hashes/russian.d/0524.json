@@ -1,0 +1,20 @@
+{
+  "language": "russian",
+  "chapter": 524,
+  "sourceHash": "fnv1a64:5d05e2289e120cf8",
+  "lessonIds": [
+    "RU-C524-detektiv",
+    "RU-C524-fantastika",
+    "RU-C524-biografiya",
+    "RU-C524-povest",
+    "RU-C524-memuary",
+    "RU-R524-review-517-524"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "russian/narration/ch524.txt",
+  "json": "russian/narration/ch524.json",
+  "textHash": "fnv1a64:c17d6c2037d9bbbe",
+  "jsonHash": "fnv1a64:622ab834177b9236",
+  "findings": []
+}

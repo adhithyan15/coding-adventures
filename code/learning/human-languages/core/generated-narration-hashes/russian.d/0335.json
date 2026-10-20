@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:03cdf0d8c53a1df5",
+  "lessonIds": [
+    "RU-C335-ostyvat",
+    "RU-C335-razmorazhivat",
+    "RU-C335-okhlazhdat",
+    "RU-C335-rastaplivat",
+    "RU-C335-perevorachivat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch335.txt",
+  "json": "russian/narration/ch335.json",
+  "textHash": "fnv1a64:959614d6e98f179a",
+  "jsonHash": "fnv1a64:342a362110165ba8",
+  "findings": []
+}

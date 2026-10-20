@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-372-VEROYATNO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "RU-EXT-372-VEROYATNO"
+  ],
+  "after": []
+}

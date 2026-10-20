@@ -1,0 +1,11 @@
+{
+  "id": "RU-C377-peredumyvat",
+  "pathSegment": "RU-PATH-377-PLANY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-377-PLANY",
+      "order": 1
+    }
+  ]
+}

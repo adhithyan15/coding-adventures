@@ -1,0 +1,11 @@
+{
+  "id": "RU-C388-zakonnyy",
+  "pathSegment": "RU-PATH-388-ZAKON",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-388-ZAKON",
+      "order": 1
+    }
+  ]
+}

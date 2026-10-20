@@ -1,0 +1,19 @@
+{
+  "chapter": 505,
+  "title": "Gone Fishing",
+  "label": "ch:ru-gone-fishing",
+  "canDo": "I can talk about a fishing trip.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C505-ulov",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 505: I can talk about a fishing trip.",
+    "assesses": [
+      "RU-LEX-C505-FISHING-03",
+      "RU-LEX-C505-FISHING-04",
+      "RU-LEX-C505-FISHING-05"
+    ]
+  }
+}

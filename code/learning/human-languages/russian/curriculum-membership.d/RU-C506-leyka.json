@@ -1,0 +1,11 @@
+{
+  "id": "RU-C506-leyka",
+  "pathSegment": "RU-PATH-506-VEGETABLES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-506-VEGETABLES",
+      "order": 1
+    }
+  ]
+}

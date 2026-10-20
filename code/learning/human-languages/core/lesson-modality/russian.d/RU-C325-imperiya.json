@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C325-imperiya",
+    "language": "russian",
+    "chapter": 325,
+    "sequence": 19160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:08ee1e754519d9a9"
+  },
+  "findings": []
+}

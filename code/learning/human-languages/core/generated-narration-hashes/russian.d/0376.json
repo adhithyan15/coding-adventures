@@ -1,0 +1,20 @@
+{
+  "language": "russian",
+  "chapter": 376,
+  "sourceHash": "fnv1a64:ebb3b64f93793b5e",
+  "lessonIds": [
+    "RU-C376-isklyuchenie",
+    "RU-C376-lish-by",
+    "RU-C376-razve-chto",
+    "RU-C376-khotya-by",
+    "RU-C376-na-vsyakiy-sluchay",
+    "RU-R376-review-369-376"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "russian/narration/ch376.txt",
+  "json": "russian/narration/ch376.json",
+  "textHash": "fnv1a64:503bcef21b35e707",
+  "jsonHash": "fnv1a64:e4c24b237ce76ebe",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:fdb92fe91488f0dc",
+  "lessonIds": [
+    "RU-C345-spravedlivyy",
+    "RU-C345-nespravedlivyy",
+    "RU-C345-spravedlivost",
+    "RU-C345-razumnyy",
+    "RU-C345-istina"
+  ],
+  "tex": "russian/book/chapters/ch345-fair-and-unfair.tex"
+}

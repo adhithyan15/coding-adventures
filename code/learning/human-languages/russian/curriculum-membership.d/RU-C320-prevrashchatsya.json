@@ -1,0 +1,11 @@
+{
+  "id": "RU-C320-prevrashchatsya",
+  "pathSegment": "RU-PATH-320-VOLSHEBNIK",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-320-VOLSHEBNIK",
+      "order": 4
+    }
+  ]
+}

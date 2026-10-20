@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 511,
+  "sourceHash": "fnv1a64:48c483015ee692f7",
+  "lessonIds": [
+    "RU-C511-turnir",
+    "RU-C511-chempionat",
+    "RU-C511-chempion",
+    "RU-C511-medal",
+    "RU-C511-nagrazhdat"
+  ],
+  "tex": "russian/book/chapters/ch511-medals-and-champions.tex"
+}

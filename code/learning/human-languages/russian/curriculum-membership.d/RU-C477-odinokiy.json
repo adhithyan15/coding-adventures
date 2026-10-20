@@ -1,0 +1,11 @@
+{
+  "id": "RU-C477-odinokiy",
+  "pathSegment": "RU-PATH-477-LONGING",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-477-LONGING",
+      "order": 3
+    }
+  ]
+}

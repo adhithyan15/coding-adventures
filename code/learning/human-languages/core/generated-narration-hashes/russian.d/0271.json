@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 271,
+  "sourceHash": "fnv1a64:5942c25a4e1e7652",
+  "lessonIds": [
+    "RU-C271-vnezapno",
+    "RU-C271-mgnovenno",
+    "RU-C271-totchas",
+    "RU-C271-nemedlenno",
+    "RU-C271-mgnovenie"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch271.txt",
+  "json": "russian/narration/ch271.json",
+  "textHash": "fnv1a64:ac23c2aa8d8355cb",
+  "jsonHash": "fnv1a64:a94e157fb1a73910",
+  "findings": []
+}

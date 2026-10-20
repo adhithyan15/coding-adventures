@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C363-konkurent",
+    "language": "russian",
+    "chapter": 363,
+    "sequence": 21160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4c54c7c7b149e4bd"
+  },
+  "findings": []
+}

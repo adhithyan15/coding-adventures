@@ -1,0 +1,19 @@
+{
+  "chapter": 374,
+  "title": "Expectations",
+  "label": "ch:ru-expectations",
+  "canDo": "I can say what I count on and what I expect, and whether I manage to do something or it works out.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "RU-C374-poluchatsya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 374: I can say what I count on and what I expect, and whether I manage to do something or it works out.",
+    "assesses": [
+      "RU-LEX-C374-OZHIDANIYA-03",
+      "RU-LEX-C374-OZHIDANIYA-04",
+      "RU-LEX-C374-OZHIDANIYA-05"
+    ]
+  }
+}

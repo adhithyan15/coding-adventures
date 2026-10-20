@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 421,
+  "sourceHash": "fnv1a64:592ee1ce42ab79cd",
+  "lessonIds": [
+    "RU-C421-vzletat",
+    "RU-C421-vzlyot",
+    "RU-C421-prizemlyatsya",
+    "RU-C421-illyuminator",
+    "RU-C421-trap"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch421.txt",
+  "json": "russian/narration/ch421.json",
+  "textHash": "fnv1a64:b937f55e8403f87e",
+  "jsonHash": "fnv1a64:3b8647512bf8b8b8",
+  "findings": []
+}

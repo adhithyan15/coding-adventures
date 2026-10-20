@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 277,
+  "title": "The one before and the next",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e50c1ba1868639d0",
+  "lessons": [
+    {
+      "id": "RU-C277-predydushchiy",
+      "sequence": 16700,
+      "title": "предыдущий (predydúshchiy) — previous",
+      "headword": "предыдущий",
+      "romanization": "predydúshchiy",
+      "gloss": "previous",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:db6c561f5d906091",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for an interval, then the Russian for a deadline."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: предыдущий",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "предыдущий (predydúshchiy) — \"previous\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Предыдущий урок был очень длинным. Predydúshchiy urók byl óchen dlínnym. The previous lesson was very long."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal; in speech also прошлый. The opposite is следующий."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "предыдущий (predydúshchiy) is usually described as a Church Slavonic participle, built on пред- \"before\" and идти \"to go\", inherited from Proto-Slavic jĭti \"to go\" (EtymDB): the one going before."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "predydúshchiy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *predydúshchiy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "predydúshchiy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *predydúshchiy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with predydúshchiy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *predydúshchiy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for an interval, then the Russian for a deadline, then say predydúshchiy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for an interval, then the Russian for a deadline, then say *predydúshchiy* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does предыдущий (predydúshchiy) mean? (\"Previous\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C277-posleduyushchiy",
+      "sequence": 16710,
+      "title": "последующий (posléduyushchiy) — following, subsequent",
+      "headword": "последующий",
+      "romanization": "posléduyushchiy",
+      "gloss": "following, subsequent",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9c9efc5e24a39a03",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a deadline, then the Russian for previous."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: последующий",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "последующий (posléduyushchiy) — \"following, subsequent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "В последующие дни было тепло. V posléduyushchiye dni býlo tepló. In the following days it was warm."
+            },
+            {
+              "kind": "speech",
+              "text": "More formal than следующий."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "последующий (posléduyushchiy) is the participle of последовать \"to follow\", built on след \"a track\" (EtymDB): coming in the footsteps."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "posléduyushchiy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *posléduyushchiy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "posléduyushchiy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *posléduyushchiy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with posléduyushchiy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *posléduyushchiy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a deadline, then the Russian for previous, then say posléduyushchiy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a deadline, then the Russian for previous, then say *posléduyushchiy* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does последующий (posléduyushchiy) mean? (\"Following, subsequent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C277-ocherednoy",
+      "sequence": 16720,
+      "title": "очередной (ocherednóy) — next (in a series), yet another",
+      "headword": "очередной",
+      "romanization": "ocherednóy",
+      "gloss": "next (in a series), yet another",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f475a59f44aa0dfa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for previous, then the Russian for following."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: очередной",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "очередной (ocherednóy) — \"next (in a series), yet another\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Он рассказал очередную смешную историю. On rasskazál ocherednúyu smeshnúyu istóriyu. He told yet another funny story."
+            },
+            {
+              "kind": "speech",
+              "text": "The next in a regular series, or \"one more\", often a little ironic."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "очередной (ocherednóy) is built on очередь \"a queue, a turn\", from черёд, череда \"a row, a turn\", which EtymDB traces to Proto-Slavic čerda \"a file, a herd\"; EtymDB lists no parent for очередной (ocherednóy) itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ocherednóy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ocherednóy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ocherednóy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ocherednóy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ocherednóy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ocherednóy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for previous, then the Russian for following, then say ocherednóy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for previous, then the Russian for following, then say *ocherednóy* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does очередной (ocherednóy) mean? (\"Next (in a series), yet another\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C277-yezhegodnyy",
+      "sequence": 16730,
+      "title": "ежегодный (yezhegódnyy) — annual, yearly",
+      "headword": "ежегодный",
+      "romanization": "yezhegódnyy",
+      "gloss": "annual, yearly",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fb1dc0649e351f5f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for following, then the Russian for next."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ежегодный",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ежегодный (yezhegódnyy) — \"annual, yearly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ежегодный концерт будет в мае. Yezhegódnyy kontsért búdet v máye. The annual concert will be in May."
+            },
+            {
+              "kind": "speech",
+              "text": "Also ежедневный — daily, еженедельный — weekly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ежегодный (yezhegódnyy) is built on еже- \"each\" and год \"year\", which is inherited through Old East Slavic godŭ from Proto-Slavic godŭ \"the right time\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yezhegódnyy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yezhegódnyy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yezhegódnyy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yezhegódnyy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with yezhegódnyy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *yezhegódnyy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for following, then the Russian for next, then say yezhegódnyy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for following, then the Russian for next, then say *yezhegódnyy* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ежегодный (yezhegódnyy) mean? (\"Annual, yearly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C277-dalneyshiy",
+      "sequence": 16740,
+      "title": "дальнейший (dalnéyshiy) — further, subsequent",
+      "headword": "дальнейший",
+      "romanization": "dalnéyshiy",
+      "gloss": "further, subsequent",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ad169d66a6a0db51",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for next, then the Russian for annual."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: дальнейший",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "дальнейший (dalnéyshiy) — \"further, subsequent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "О дальнейших планах он не говорил. O dalnéyshikh plánakh on ne govoríl. He did not talk about further plans."
+            },
+            {
+              "kind": "speech",
+              "text": "В дальнейшем — in future, later on."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "дальнейший (dalnéyshiy) is built on дальний \"distant\" with the superlative suffix -ейш-; дальний comes from даль \"distance\", which is inherited from Proto-Slavic dalĭ (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dalnéyshiy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dalnéyshiy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dalnéyshiy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dalnéyshiy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dalnéyshiy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dalnéyshiy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for next, then the Russian for annual, then say dalnéyshiy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for next, then the Russian for annual, then say *dalnéyshiy* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does дальнейший (dalnéyshiy) mean? (\"Further, subsequent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

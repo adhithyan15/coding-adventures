@@ -1,0 +1,11 @@
+{
+  "id": "RU-C534-vysypatsya",
+  "pathSegment": "RU-PATH-534-MORNING",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-534-MORNING",
+      "order": 1
+    }
+  ]
+}

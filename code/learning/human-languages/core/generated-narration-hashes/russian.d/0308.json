@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:6f9bc430c1d65ee6",
+  "lessonIds": [
+    "RU-C308-vypusknik",
+    "RU-C308-postupat",
+    "RU-C308-okanchivat",
+    "RU-C308-diplom",
+    "RU-C308-attestat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch308.txt",
+  "json": "russian/narration/ch308.json",
+  "textHash": "fnv1a64:f8d5959d08222a5c",
+  "jsonHash": "fnv1a64:91fbd52547db83c2",
+  "findings": []
+}

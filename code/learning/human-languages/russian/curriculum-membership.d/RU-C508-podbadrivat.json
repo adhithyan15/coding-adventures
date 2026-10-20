@@ -1,0 +1,11 @@
+{
+  "id": "RU-C508-podbadrivat",
+  "pathSegment": "RU-PATH-508-FANS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-508-FANS",
+      "order": 3
+    }
+  ]
+}

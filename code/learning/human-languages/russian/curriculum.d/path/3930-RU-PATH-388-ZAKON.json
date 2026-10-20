@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-388-ZAKON",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "RU-EXT-388-ZAKON"
+  ],
+  "after": []
+}

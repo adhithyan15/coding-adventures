@@ -1,0 +1,11 @@
+{
+  "id": "RU-C438-strelka",
+  "pathSegment": "RU-PATH-438-UKAZATEL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-438-UKAZATEL",
+      "order": 2
+    }
+  ]
+}

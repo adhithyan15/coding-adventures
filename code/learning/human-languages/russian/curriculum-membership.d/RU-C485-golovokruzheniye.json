@@ -1,0 +1,11 @@
+{
+  "id": "RU-C485-golovokruzheniye",
+  "pathSegment": "RU-PATH-485-NAUSEA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-485-NAUSEA",
+      "order": 2
+    }
+  ]
+}

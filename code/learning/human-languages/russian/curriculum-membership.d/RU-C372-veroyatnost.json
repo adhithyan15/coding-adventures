@@ -1,0 +1,11 @@
+{
+  "id": "RU-C372-veroyatnost",
+  "pathSegment": "RU-PATH-372-VEROYATNO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-372-VEROYATNO",
+      "order": 1
+    }
+  ]
+}

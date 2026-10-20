@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-413-PROYEZD",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "RU-EXT-413-PROYEZD"
+  ],
+  "after": []
+}

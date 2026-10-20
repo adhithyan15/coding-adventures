@@ -1,0 +1,11 @@
+{
+  "id": "RU-C529-vytirat",
+  "pathSegment": "RU-PATH-529-CLEANING",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-529-CLEANING",
+      "order": 4
+    }
+  ]
+}

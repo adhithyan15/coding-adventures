@@ -1,0 +1,7 @@
+{
+  "language": "russian",
+  "chapter": 500,
+  "output": "russian/book/chapters/ch500-knitting-and-embroidery.tex",
+  "unicodeScript": "Cyrillic",
+  "scriptCommand": "ru"
+}

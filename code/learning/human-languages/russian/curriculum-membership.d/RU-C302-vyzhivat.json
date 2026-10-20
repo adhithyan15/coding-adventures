@@ -1,0 +1,11 @@
+{
+  "id": "RU-C302-vyzhivat",
+  "pathSegment": "RU-PATH-302-ZADYKHATSYA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-302-ZADYKHATSYA",
+      "order": 1
+    }
+  ]
+}

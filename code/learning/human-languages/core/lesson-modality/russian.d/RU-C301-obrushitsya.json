@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C301-obrushitsya",
+    "language": "russian",
+    "chapter": 301,
+    "sequence": 17960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dcf286ea1e0fe942"
+  },
+  "findings": []
+}

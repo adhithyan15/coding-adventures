@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 409,
+  "sourceHash": "fnv1a64:aaa031ddef7e14cd",
+  "lessonIds": [
+    "RU-C409-polomka",
+    "RU-C409-evakuator",
+    "RU-C409-buksirovat",
+    "RU-C409-domkrat",
+    "RU-C409-avtoservis"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch409.txt",
+  "json": "russian/narration/ch409.json",
+  "textHash": "fnv1a64:0b50c8fdb526f74c",
+  "jsonHash": "fnv1a64:8871f66891fc7992",
+  "findings": []
+}

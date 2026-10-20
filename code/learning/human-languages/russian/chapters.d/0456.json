@@ -1,0 +1,19 @@
+{
+  "chapter": 456,
+  "title": "Currency and warranties",
+  "label": "ch:ru-currency-and-warranties",
+  "canDo": "I can deal with money and guarantees: a bureau de change, foreign currency, a warranty, faulty goods and saving money.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C456-ekonomit",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 456: I can deal with money and guarantees: a bureau de change, foreign currency, a warranty, faulty goods and saving money.",
+    "assesses": [
+      "RU-LEX-C456-OBMENNIK-03",
+      "RU-LEX-C456-OBMENNIK-04",
+      "RU-LEX-C456-OBMENNIK-05"
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "language": "russian",
+  "chapter": 350,
+  "output": "russian/book/chapters/ch350-consequences.tex",
+  "unicodeScript": "Cyrillic",
+  "scriptCommand": "ru"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 281,
+  "sourceHash": "fnv1a64:0ae94a65f277d416",
+  "lessonIds": [
+    "RU-C281-korrespondent",
+    "RU-C281-reportazh",
+    "RU-C281-vedushchiy",
+    "RU-C281-efir",
+    "RU-C281-telekanal"
+  ],
+  "tex": "russian/book/chapters/ch281-on-the-air.tex"
+}

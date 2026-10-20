@@ -1,0 +1,19 @@
+{
+  "chapter": 287,
+  "title": "Crime and its witnesses",
+  "label": "ch:ru-crime-and-its-witnesses",
+  "canDo": "I can talk about a crime: the crime, the criminal, the victim, a clue and a witness.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C287-svidetel",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 287: I can talk about a crime: the crime, the criminal, the victim, a clue and a witness.",
+    "assesses": [
+      "RU-LEX-C287-PRESTUPLENIYE-03",
+      "RU-LEX-C287-PRESTUPLENIYE-04",
+      "RU-LEX-C287-PRESTUPLENIYE-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C494-suprug",
+  "pathSegment": "RU-PATH-494-MARRIAGE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-494-MARRIAGE",
+      "order": 0
+    }
+  ]
+}

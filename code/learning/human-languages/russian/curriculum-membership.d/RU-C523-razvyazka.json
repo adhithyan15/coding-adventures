@@ -1,0 +1,11 @@
+{
+  "id": "RU-C523-razvyazka",
+  "pathSegment": "RU-PATH-523-PLOT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-523-PLOT",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-373-OSTOROZHNO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "RU-EXT-373-OSTOROZHNO"
+  ],
+  "after": []
+}

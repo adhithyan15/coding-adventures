@@ -1,0 +1,18 @@
+{
+  "language": "russian",
+  "chapter": 270,
+  "sourceHash": "fnv1a64:da4d4ebbe690e26d",
+  "lessonIds": [
+    "RU-C270-ya-by-khotel",
+    "RU-C270-yesli-by",
+    "RU-C270-review",
+    "RU-W270-pismo"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "russian/narration/ch270.txt",
+  "json": "russian/narration/ch270.json",
+  "textHash": "fnv1a64:cb96fcba7c5c99b4",
+  "jsonHash": "fnv1a64:c35d19a347ae87da",
+  "findings": []
+}

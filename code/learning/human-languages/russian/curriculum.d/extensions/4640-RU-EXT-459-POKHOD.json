@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-459-POKHOD",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can go hiking: a hike, a trail, a rest stop, scrambling up and stumbling.",
+  "prerequisites": []
+}

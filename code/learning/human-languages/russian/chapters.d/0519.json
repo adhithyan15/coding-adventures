@@ -1,0 +1,19 @@
+{
+  "chapter": 519,
+  "title": "Curtain Up",
+  "label": "ch:ru-curtain-up",
+  "canDo": "I can talk about an evening at the theatre.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C519-klanyatsya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 519: I can talk about an evening at the theatre.",
+    "assesses": [
+      "RU-LEX-C519-CURTAIN-03",
+      "RU-LEX-C519-CURTAIN-04",
+      "RU-LEX-C519-CURTAIN-05"
+    ]
+  }
+}

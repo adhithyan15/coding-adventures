@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:e67c1a3c5d19957a",
+  "lessonIds": [
+    "RU-C311-prazdnovat",
+    "RU-C311-otmechat",
+    "RU-C311-torzhestvo",
+    "RU-C311-torzhestvennyy",
+    "RU-C311-prazdnichnyy"
+  ],
+  "tex": "russian/book/chapters/ch311-celebrating.tex"
+}

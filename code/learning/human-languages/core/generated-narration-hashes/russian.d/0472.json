@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 472,
+  "sourceHash": "fnv1a64:9ccbee41718b7908",
+  "lessonIds": [
+    "RU-C472-razdrazhat",
+    "RU-C472-razdrazheniye",
+    "RU-C472-zlitsya",
+    "RU-C472-yarost",
+    "RU-C472-vspylchivyy"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch472.txt",
+  "json": "russian/narration/ch472.json",
+  "textHash": "fnv1a64:09c08613b15725c0",
+  "jsonHash": "fnv1a64:d7c5cf52f34aa39f",
+  "findings": []
+}

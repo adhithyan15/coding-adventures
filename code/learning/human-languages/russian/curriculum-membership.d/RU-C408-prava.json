@@ -1,0 +1,11 @@
+{
+  "id": "RU-C408-prava",
+  "pathSegment": "RU-PATH-408-SKOROST",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-408-SKOROST",
+      "order": 3
+    }
+  ]
+}

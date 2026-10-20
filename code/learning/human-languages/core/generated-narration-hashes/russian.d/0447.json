@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 447,
+  "sourceHash": "fnv1a64:e1a8485654a029d2",
+  "lessonIds": [
+    "RU-C447-masterskaya",
+    "RU-C447-sapozhnik",
+    "RU-C447-chasovshchik",
+    "RU-C447-slesar",
+    "RU-C447-remont"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch447.txt",
+  "json": "russian/narration/ch447.json",
+  "textHash": "fnv1a64:e5b601adefe39d41",
+  "jsonHash": "fnv1a64:1eb658256d65c5af",
+  "findings": []
+}

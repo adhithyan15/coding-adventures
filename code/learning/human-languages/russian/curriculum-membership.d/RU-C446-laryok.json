@@ -1,0 +1,11 @@
+{
+  "id": "RU-C446-laryok",
+  "pathSegment": "RU-PATH-446-VITRINA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-446-VITRINA",
+      "order": 4
+    }
+  ]
+}

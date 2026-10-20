@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 465,
+  "sourceHash": "fnv1a64:4e31e710ff245b72",
+  "lessonIds": [
+    "RU-C465-liven",
+    "RU-C465-morosit",
+    "RU-C465-promokat",
+    "RU-C465-luzha",
+    "RU-C465-lit"
+  ],
+  "tex": "russian/book/chapters/ch465-a-downpour.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C317-veselitsya",
+  "pathSegment": "RU-PATH-317-IMENINNIK",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-317-IMENINNIK",
+      "order": 4
+    }
+  ]
+}

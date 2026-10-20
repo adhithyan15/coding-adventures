@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-344-LOGIKA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can follow the logic of an argument, say whether it is logical, draw a conclusion, reason aloud and call something obvious.",
+  "prerequisites": []
+}
