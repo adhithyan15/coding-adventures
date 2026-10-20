@@ -1,0 +1,11 @@
+{
+  "id": "GE-C436-einbahnstrasse",
+  "pathSegment": "GE-PATH-436-GASSE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-436-GASSE",
+      "order": 3
+    }
+  ]
+}

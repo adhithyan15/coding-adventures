@@ -1,0 +1,11 @@
+{
+  "id": "GE-C500-kreuzwortraetsel",
+  "pathSegment": "GE-PATH-500-SAMMELN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-500-SAMMELN",
+      "order": 4
+    }
+  ]
+}

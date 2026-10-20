@@ -1,0 +1,11 @@
+{
+  "id": "FR-C356-chomeur",
+  "pathSegment": "FR-PATH-356-CHOMAGE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-356-CHOMAGE",
+      "order": 2
+    }
+  ]
+}

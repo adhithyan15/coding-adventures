@@ -1,0 +1,11 @@
+{
+  "id": "GE-C507-abseits",
+  "pathSegment": "GE-PATH-507-SPIEL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-507-SPIEL",
+      "order": 4
+    }
+  ]
+}

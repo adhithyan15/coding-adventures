@@ -1,0 +1,11 @@
+{
+  "id": "GE-C411-entwerten",
+  "pathSegment": "GE-PATH-411-FAHRSCHEIN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-411-FAHRSCHEIN",
+      "order": 3
+    }
+  ]
+}

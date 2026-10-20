@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-264-DAMALS",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can place events in time: back then, long ago, the other day, recently and the day before yesterday.",
+  "prerequisites": []
+}

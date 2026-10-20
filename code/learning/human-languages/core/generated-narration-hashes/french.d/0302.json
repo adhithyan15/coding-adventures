@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:58e2c359357405d1",
+  "lessonIds": [
+    "FR-C302-incendie",
+    "FR-C302-extincteur",
+    "FR-C302-explosion",
+    "FR-C302-exploser",
+    "FR-C302-etincelle"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch302.txt",
+  "json": "french/narration/ch302.json",
+  "textHash": "fnv1a64:bffe36dd657c9611",
+  "jsonHash": "fnv1a64:7f621abdc8d6f435",
+  "findings": []
+}

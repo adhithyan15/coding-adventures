@@ -1,0 +1,11 @@
+{
+  "id": "FR-C529-debarrasser",
+  "pathSegment": "FR-PATH-529-TABLE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-529-TABLE",
+      "order": 2
+    }
+  ]
+}

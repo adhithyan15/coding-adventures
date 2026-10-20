@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C398-landstrasse",
+    "language": "german",
+    "chapter": 398,
+    "sequence": 21500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:17a325f6872eaa57"
+  },
+  "findings": []
+}

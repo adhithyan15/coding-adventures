@@ -1,0 +1,11 @@
+{
+  "id": "GE-C533-kommode",
+  "pathSegment": "GE-PATH-533-GEMUETLICH",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-533-GEMUETLICH",
+      "order": 1
+    }
+  ]
+}

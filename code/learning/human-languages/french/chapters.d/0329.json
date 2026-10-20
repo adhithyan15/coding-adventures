@@ -1,0 +1,19 @@
+{
+  "chapter": 329,
+  "title": "Battre les œufs",
+  "label": "ch:fr-battre-les-ufs",
+  "canDo": "I can describe mixing: the mixing bowl, pouring, beating, the whisk and whisking.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C329-fouetter",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 329: I can describe mixing: the mixing bowl, pouring, beating, the whisk and whisking.",
+    "assesses": [
+      "FR-LEX-C329-FOUETTER-03",
+      "FR-LEX-C329-FOUETTER-04",
+      "FR-LEX-C329-FOUETTER-05"
+    ]
+  }
+}

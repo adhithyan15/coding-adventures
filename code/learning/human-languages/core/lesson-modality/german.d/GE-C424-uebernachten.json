@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C424-uebernachten",
+    "language": "german",
+    "chapter": 424,
+    "sequence": 22850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:60f97ff1827769a7"
+  },
+  "findings": []
+}

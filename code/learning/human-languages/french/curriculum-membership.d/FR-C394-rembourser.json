@@ -1,0 +1,11 @@
+{
+  "id": "FR-C394-rembourser",
+  "pathSegment": "FR-PATH-394-FAILLITE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-394-FAILLITE",
+      "order": 3
+    }
+  ]
+}

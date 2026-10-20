@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C524-realisateur",
+    "language": "french",
+    "chapter": 524,
+    "sequence": 28700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:40ee769baca02ce4"
+  },
+  "findings": []
+}

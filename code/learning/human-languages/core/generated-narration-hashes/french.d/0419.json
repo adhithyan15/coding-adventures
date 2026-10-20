@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 419,
+  "sourceHash": "fnv1a64:0f79e1b695d21e52",
+  "lessonIds": [
+    "FR-C419-decoller",
+    "FR-C419-decollage",
+    "FR-C419-atterrissage",
+    "FR-C419-atterrir",
+    "FR-C419-survoler"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch419.txt",
+  "json": "french/narration/ch419.json",
+  "textHash": "fnv1a64:f0e14dae1777690a",
+  "jsonHash": "fnv1a64:6af31c83b280271f",
+  "findings": []
+}

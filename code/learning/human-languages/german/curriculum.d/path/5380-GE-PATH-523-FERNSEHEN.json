@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-523-FERNSEHEN",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GE-EXT-523-FERNSEHEN"
+  ],
+  "after": []
+}

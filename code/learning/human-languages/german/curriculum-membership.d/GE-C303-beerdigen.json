@@ -1,0 +1,11 @@
+{
+  "id": "GE-C303-beerdigen",
+  "pathSegment": "GE-PATH-303-BEERDIGUNG",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-303-BEERDIGUNG",
+      "order": 1
+    }
+  ]
+}

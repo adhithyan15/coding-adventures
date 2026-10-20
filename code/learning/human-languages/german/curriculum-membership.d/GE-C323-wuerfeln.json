@@ -1,0 +1,11 @@
+{
+  "id": "GE-C323-wuerfeln",
+  "pathSegment": "GE-PATH-323-SCHAELEN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-323-SCHAELEN",
+      "order": 2
+    }
+  ]
+}

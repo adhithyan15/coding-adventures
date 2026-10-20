@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:5516ce665589cbbd",
+  "lessonIds": [
+    "FR-C371-annuler",
+    "FR-C371-reporter",
+    "FR-C371-provisoire",
+    "FR-C371-definitif",
+    "FR-C371-programmer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch371.txt",
+  "json": "french/narration/ch371.json",
+  "textHash": "fnv1a64:6287e13bda930443",
+  "jsonHash": "fnv1a64:dd4b783b98b5b174",
+  "findings": []
+}

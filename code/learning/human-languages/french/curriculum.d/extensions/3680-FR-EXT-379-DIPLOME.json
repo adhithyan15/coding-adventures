@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-379-DIPLOME",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about qualifications: a diploma, an exam paper, a grade with honours, a doctorate and a grant.",
+  "prerequisites": []
+}

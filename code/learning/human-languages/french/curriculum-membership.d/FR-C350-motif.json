@@ -1,0 +1,11 @@
+{
+  "id": "FR-C350-motif",
+  "pathSegment": "FR-PATH-350-IMPACT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-350-IMPACT",
+      "order": 4
+    }
+  ]
+}

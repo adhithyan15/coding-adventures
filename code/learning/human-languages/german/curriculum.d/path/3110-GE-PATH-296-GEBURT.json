@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-296-GEBURT",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GE-EXT-296-GEBURT"
+  ],
+  "after": []
+}

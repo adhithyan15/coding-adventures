@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 423,
+  "sourceHash": "fnv1a64:0fc07c62b601a0f3",
+  "lessonIds": [
+    "GE-C423-anker",
+    "GE-C423-ankern",
+    "GE-C423-leuchtturm",
+    "GE-C423-matrose",
+    "GE-C423-kentern"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch423.txt",
+  "json": "german/narration/ch423.json",
+  "textHash": "fnv1a64:627dc92b77c1f632",
+  "jsonHash": "fnv1a64:276ec45b693b22fa",
+  "findings": []
+}

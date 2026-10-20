@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:7e9500e0e6c9dd4a",
+  "lessonIds": [
+    "FR-C312-demenagement",
+    "FR-C312-emmenager",
+    "FR-C312-cremaillere",
+    "FR-C312-locataire",
+    "FR-C312-bail"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch312.txt",
+  "json": "french/narration/ch312.json",
+  "textHash": "fnv1a64:c701b3e6adfb6754",
+  "jsonHash": "fnv1a64:78671de365945314",
+  "findings": []
+}

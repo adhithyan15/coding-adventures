@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C342-evaluer",
+    "language": "french",
+    "chapter": 342,
+    "sequence": 19310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cdef218731fa79e6"
+  },
+  "findings": []
+}

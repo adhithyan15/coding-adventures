@@ -1,0 +1,19 @@
+{
+  "chapter": 283,
+  "title": "À l'antenne",
+  "label": "ch:fr-a-l-antenne",
+  "canDo": "I can say that something was broadcast, filmed or interviewed, and that someone spoke on air.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-R283-revision-276-283",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 283: I can say that something was broadcast, filmed or interviewed, and that someone spoke on air.",
+    "assesses": [
+      "FR-LEX-C283-ANTENNE-03",
+      "FR-LEX-C283-ANTENNE-04",
+      "FR-LEX-C283-ANTENNE-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C474-gaiete",
+  "pathSegment": "FR-PATH-474-GAIETE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-474-GAIETE",
+      "order": 0
+    }
+  ]
+}

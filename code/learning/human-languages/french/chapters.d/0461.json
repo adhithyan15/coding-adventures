@@ -1,0 +1,19 @@
+{
+  "chapter": 461,
+  "title": "Bruine et averses",
+  "label": "ch:fr-bruine-et-averses",
+  "canDo": "I can talk about showers: drizzle, drizzling, the shower, the bright spell and the sky clearing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C461-degager",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 461: I can talk about showers: drizzle, drizzling, the shower, the bright spell and the sky clearing.",
+    "assesses": [
+      "FR-LEX-C461-BRUINE-03",
+      "FR-LEX-C461-BRUINE-04",
+      "FR-LEX-C461-BRUINE-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C450-debiter",
+    "language": "french",
+    "chapter": 450,
+    "sequence": 24880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:80982a9618a6e03f"
+  },
+  "findings": []
+}

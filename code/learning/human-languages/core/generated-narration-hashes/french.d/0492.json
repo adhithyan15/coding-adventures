@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 492,
+  "sourceHash": "fnv1a64:e78cc8c2e9e2848f",
+  "lessonIds": [
+    "FR-C492-recompose",
+    "FR-C492-adopter",
+    "FR-C492-adoption",
+    "FR-C492-fratrie",
+    "FR-C492-famille-nombreuse"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch492.txt",
+  "json": "french/narration/ch492.json",
+  "textHash": "fnv1a64:71188b8c405d368b",
+  "jsonHash": "fnv1a64:c0ff53ba310c0500",
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-372-VEREINBARUNG",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can agree on a date or an arrangement, keep to a schedule and change my plans.",
+  "prerequisites": []
+}

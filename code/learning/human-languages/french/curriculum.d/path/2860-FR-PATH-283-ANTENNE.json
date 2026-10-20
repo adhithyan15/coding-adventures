@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-283-ANTENNE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-283-ANTENNE"
+  ],
+  "after": []
+}

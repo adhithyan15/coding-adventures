@@ -1,0 +1,11 @@
+{
+  "id": "FR-C305-catastrophe",
+  "pathSegment": "FR-PATH-305-NAUFRAGE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-305-NAUFRAGE",
+      "order": 4
+    }
+  ]
+}

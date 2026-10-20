@@ -1,0 +1,11 @@
+{
+  "id": "FR-C344-raisonner",
+  "pathSegment": "FR-PATH-344-RAISONNEMENT",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-344-RAISONNEMENT",
+      "order": 0
+    }
+  ]
+}

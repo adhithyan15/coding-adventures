@@ -1,0 +1,11 @@
+{
+  "id": "FR-C306-etouffer",
+  "pathSegment": "FR-PATH-306-PIQURES",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-306-PIQURES",
+      "order": 0
+    }
+  ]
+}

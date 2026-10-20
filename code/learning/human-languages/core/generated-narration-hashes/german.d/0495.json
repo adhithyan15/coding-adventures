@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 495,
+  "sourceHash": "fnv1a64:325060a00ca4c6ff",
+  "lessonIds": [
+    "GE-C495-erziehen",
+    "GE-C495-erziehung",
+    "GE-C495-verwoehnen",
+    "GE-C495-gehorchen",
+    "GE-C495-pubertaet"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch495.txt",
+  "json": "german/narration/ch495.json",
+  "textHash": "fnv1a64:a07448d1b912f7d0",
+  "jsonHash": "fnv1a64:8d3b8ff4e991bdaa",
+  "findings": []
+}

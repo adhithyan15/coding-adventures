@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 476,
+  "sourceHash": "fnv1a64:1f81f4d0ef74a0b6",
+  "lessonIds": [
+    "GE-C476-stur",
+    "GE-C476-hartnaeckig",
+    "GE-C476-launisch",
+    "GE-C476-gereizt",
+    "GE-C476-empfindlich"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch476.txt",
+  "json": "german/narration/ch476.json",
+  "textHash": "fnv1a64:4ec1029492f33d9d",
+  "jsonHash": "fnv1a64:9888d97740b28b6b",
+  "findings": []
+}

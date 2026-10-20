@@ -1,0 +1,11 @@
+{
+  "id": "FR-C483-migraine",
+  "pathSegment": "FR-PATH-483-NAUSEE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-483-NAUSEE",
+      "order": 2
+    }
+  ]
+}

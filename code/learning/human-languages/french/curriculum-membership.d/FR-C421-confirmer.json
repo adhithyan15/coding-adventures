@@ -1,0 +1,11 @@
+{
+  "id": "FR-C421-confirmer",
+  "pathSegment": "FR-PATH-421-ANNULATION",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-421-ANNULATION",
+      "order": 2
+    }
+  ]
+}

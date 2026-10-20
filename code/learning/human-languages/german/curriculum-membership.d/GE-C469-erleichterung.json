@@ -1,0 +1,11 @@
+{
+  "id": "GE-C469-erleichterung",
+  "pathSegment": "GE-PATH-469-ENTTAEUSCHUNG",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-469-ENTTAEUSCHUNG",
+      "order": 2
+    }
+  ]
+}

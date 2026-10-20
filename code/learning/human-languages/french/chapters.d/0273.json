@@ -1,0 +1,19 @@
+{
+  "chapter": 273,
+  "title": "La veille et le lendemain",
+  "label": "ch:fr-la-veille-et-le-lendemain",
+  "canDo": "I can place an event the day before or the day after another, two days later, and say lately or soon.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C273-prochainement",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 273: I can place an event the day before or the day after another, two days later, and say lately or soon.",
+    "assesses": [
+      "FR-LEX-C273-VEILLE-03",
+      "FR-LEX-C273-VEILLE-04",
+      "FR-LEX-C273-VEILLE-05"
+    ]
+  }
+}

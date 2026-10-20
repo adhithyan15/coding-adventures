@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:93572a47c3163cbb",
+  "lessonIds": [
+    "GE-C502-angeln",
+    "GE-C502-koeder",
+    "GE-C502-anbeissen",
+    "GE-C502-objektiv",
+    "GE-C502-knipsen"
+  ],
+  "tex": "german/book/chapters/ch502-angeln-und-fotografieren.tex"
+}

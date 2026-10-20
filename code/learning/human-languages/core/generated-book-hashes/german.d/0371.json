@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:c96df8f9ce7b36ba",
+  "lessonIds": [
+    "GE-C371-zusagen",
+    "GE-C371-zusage",
+    "GE-C371-absagen",
+    "GE-C371-absage",
+    "GE-C371-bestaetigung"
+  ],
+  "tex": "german/book/chapters/ch371-zusagen-und-absagen.tex"
+}

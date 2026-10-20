@@ -1,0 +1,11 @@
+{
+  "id": "GE-C505-muskelkater",
+  "pathSegment": "GE-PATH-505-TRAINING",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-505-TRAINING",
+      "order": 4
+    }
+  ]
+}

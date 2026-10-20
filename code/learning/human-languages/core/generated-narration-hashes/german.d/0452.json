@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 452,
+  "sourceHash": "fnv1a64:3ec0a6242fe19caa",
+  "lessonIds": [
+    "GE-C452-verpackung",
+    "GE-C452-verpacken",
+    "GE-C452-karton",
+    "GE-C452-liefern",
+    "GE-C452-umtauschen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch452.txt",
+  "json": "german/narration/ch452.json",
+  "textHash": "fnv1a64:e39ed5ecacaaec75",
+  "jsonHash": "fnv1a64:262daea036eb66bd",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C382-sanctionner",
+  "pathSegment": "FR-PATH-382-INFRACTION",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-382-INFRACTION",
+      "order": 4
+    }
+  ]
+}

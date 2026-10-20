@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-291-GENDARMES",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-291-GENDARMES"
+  ],
+  "after": []
+}

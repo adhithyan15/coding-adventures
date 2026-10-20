@@ -1,0 +1,11 @@
+{
+  "id": "FR-C394-faillite",
+  "pathSegment": "FR-PATH-394-FAILLITE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-394-FAILLITE",
+      "order": 2
+    }
+  ]
+}

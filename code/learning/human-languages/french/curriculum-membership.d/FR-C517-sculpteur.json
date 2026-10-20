@@ -1,0 +1,11 @@
+{
+  "id": "FR-C517-sculpteur",
+  "pathSegment": "FR-PATH-517-SCULPTURE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-517-SCULPTURE",
+      "order": 4
+    }
+  ]
+}

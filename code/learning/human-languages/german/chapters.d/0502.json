@@ -1,0 +1,19 @@
+{
+  "chapter": 502,
+  "title": "Angeln und fotografieren",
+  "label": "ch:ge-angeln-und-fotografieren",
+  "canDo": "I can talk about fishing and taking photos.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C502-knipsen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 502: I can talk about fishing and taking photos.",
+    "assesses": [
+      "GE-LEX-C502-ANGELN-03",
+      "GE-LEX-C502-ANGELN-04",
+      "GE-LEX-C502-ANGELN-05"
+    ]
+  }
+}

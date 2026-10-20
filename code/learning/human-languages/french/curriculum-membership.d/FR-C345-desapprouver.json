@@ -1,0 +1,11 @@
+{
+  "id": "FR-C345-desapprouver",
+  "pathSegment": "FR-PATH-345-PARTISAN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-345-PARTISAN",
+      "order": 1
+    }
+  ]
+}

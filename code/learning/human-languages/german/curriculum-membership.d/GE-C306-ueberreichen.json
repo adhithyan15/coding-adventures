@@ -1,0 +1,11 @@
+{
+  "id": "GE-C306-ueberreichen",
+  "pathSegment": "GE-PATH-306-GLUECKWUNSCH",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-306-GLUECKWUNSCH",
+      "order": 2
+    }
+  ]
+}

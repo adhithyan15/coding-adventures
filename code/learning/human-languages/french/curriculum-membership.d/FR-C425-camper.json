@@ -1,0 +1,11 @@
+{
+  "id": "FR-C425-camper",
+  "pathSegment": "FR-PATH-425-CAMPING",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-425-CAMPING",
+      "order": 3
+    }
+  ]
+}

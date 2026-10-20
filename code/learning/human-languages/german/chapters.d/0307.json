@@ -1,0 +1,19 @@
+{
+  "chapter": 307,
+  "title": "Der Gastgeber",
+  "label": "ch:ge-der-gastgeber",
+  "canDo": "I can talk about hosts and guests: a host, to treat guests, a guest of honour, a speech and a toast.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C307-trinkspruch",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 307: I can talk about hosts and guests: a host, to treat guests, a guest of honour, a speech and a toast.",
+    "assesses": [
+      "GE-LEX-C307-GASTGEBER-03",
+      "GE-LEX-C307-GASTGEBER-04",
+      "GE-LEX-C307-GASTGEBER-05"
+    ]
+  }
+}

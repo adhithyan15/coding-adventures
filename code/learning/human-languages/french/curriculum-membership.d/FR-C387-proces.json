@@ -1,0 +1,11 @@
+{
+  "id": "FR-C387-proces",
+  "pathSegment": "FR-PATH-387-PROCES",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-387-PROCES",
+      "order": 0
+    }
+  ]
+}

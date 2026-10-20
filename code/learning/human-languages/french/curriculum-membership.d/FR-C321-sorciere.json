@@ -1,0 +1,11 @@
+{
+  "id": "FR-C321-sorciere",
+  "pathSegment": "FR-PATH-321-CONTE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-321-CONTE",
+      "order": 2
+    }
+  ]
+}

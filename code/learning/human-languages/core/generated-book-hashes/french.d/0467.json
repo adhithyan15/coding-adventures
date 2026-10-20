@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 467,
+  "sourceHash": "fnv1a64:b35a85825a2490c5",
+  "lessonIds": [
+    "FR-C467-tetu",
+    "FR-C467-paresse",
+    "FR-C467-avare",
+    "FR-C467-maladroit",
+    "FR-C467-etourdi"
+  ],
+  "tex": "french/book/chapters/ch467-qualites-et-defauts.tex"
+}

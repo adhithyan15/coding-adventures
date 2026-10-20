@@ -1,0 +1,11 @@
+{
+  "id": "GE-C494-versoehnung",
+  "pathSegment": "GE-PATH-494-STREIT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-494-STREIT",
+      "order": 4
+    }
+  ]
+}

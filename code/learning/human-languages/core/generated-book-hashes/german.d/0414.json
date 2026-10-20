@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:5d8abb50b2265c98",
+  "lessonIds": [
+    "GE-C414-anschluss",
+    "GE-C414-nahverkehr",
+    "GE-C414-fernverkehr",
+    "GE-C414-pendeln",
+    "GE-C414-pendler"
+  ],
+  "tex": "german/book/chapters/ch414-jeden-tag-mit-dem-zug.tex"
+}

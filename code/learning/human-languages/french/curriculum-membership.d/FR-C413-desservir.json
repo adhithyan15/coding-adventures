@@ -1,0 +1,11 @@
+{
+  "id": "FR-C413-desservir",
+  "pathSegment": "FR-PATH-413-QUAI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-413-QUAI",
+      "order": 4
+    }
+  ]
+}

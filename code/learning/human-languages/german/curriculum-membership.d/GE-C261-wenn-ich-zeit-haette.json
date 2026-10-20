@@ -1,0 +1,11 @@
+{
+  "id": "GE-C261-wenn-ich-zeit-haette",
+  "pathSegment": "GE-PATH-261-KONJUNKTIV",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-261-KONJUNKTIV",
+      "order": 2
+    }
+  ]
+}

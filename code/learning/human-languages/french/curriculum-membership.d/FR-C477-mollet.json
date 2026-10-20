@@ -1,0 +1,11 @@
+{
+  "id": "FR-C477-mollet",
+  "pathSegment": "FR-PATH-477-JAMBE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-477-JAMBE",
+      "order": 1
+    }
+  ]
+}

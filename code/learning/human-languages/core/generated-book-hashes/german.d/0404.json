@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 404,
+  "sourceHash": "fnv1a64:401160a6edb4f735",
+  "lessonIds": [
+    "GE-C404-reifen",
+    "GE-C404-platten",
+    "GE-C404-aufpumpen",
+    "GE-C404-wagenheber",
+    "GE-C404-warndreieck"
+  ],
+  "tex": "german/book/chapters/ch404-ein-platter-reifen.tex"
+}

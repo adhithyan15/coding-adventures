@@ -1,0 +1,11 @@
+{
+  "id": "GE-C525-zocken",
+  "pathSegment": "GE-PATH-525-STREAMEN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-525-STREAMEN",
+      "order": 3
+    }
+  ]
+}

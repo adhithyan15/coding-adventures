@@ -1,0 +1,11 @@
+{
+  "id": "GE-C424-uebernachten",
+  "pathSegment": "GE-PATH-424-GASTHOF",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-424-GASTHOF",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C388-darlehen",
+  "pathSegment": "GE-PATH-388-KREDIT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-388-KREDIT",
+      "order": 1
+    }
+  ]
+}

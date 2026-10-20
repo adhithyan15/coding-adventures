@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-459-ANIMAUX",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name animals of the woods: the squirrel, the hedgehog, the wild boar, the stag and the doe.",
+  "prerequisites": []
+}

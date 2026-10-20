@@ -1,0 +1,11 @@
+{
+  "id": "GE-C421-ueberfahrt",
+  "pathSegment": "GE-PATH-421-FAEHRE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-421-FAEHRE",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C484-salle-d-attente",
+  "pathSegment": "FR-PATH-484-URGENCES",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-484-URGENCES",
+      "order": 4
+    }
+  ]
+}

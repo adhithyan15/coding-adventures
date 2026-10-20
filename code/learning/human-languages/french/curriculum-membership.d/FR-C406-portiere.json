@@ -1,0 +1,11 @@
+{
+  "id": "FR-C406-portiere",
+  "pathSegment": "FR-PATH-406-CARROSSERIE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-406-CARROSSERIE",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 474,
+  "title": "Staunen und Neugier",
+  "label": "ch:ge-staunen-und-neugier",
+  "canDo": "I can talk about surprise, confusion and curiosity.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C474-sprachlos",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 474: I can talk about surprise, confusion and curiosity.",
+    "assesses": [
+      "GE-LEX-C474-STAUNEN-03",
+      "GE-LEX-C474-STAUNEN-04",
+      "GE-LEX-C474-STAUNEN-05"
+    ]
+  }
+}

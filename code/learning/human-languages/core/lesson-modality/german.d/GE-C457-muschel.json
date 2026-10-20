@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C457-muschel",
+    "language": "german",
+    "chapter": 457,
+    "sequence": 24560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6d2c8153dc07e763"
+  },
+  "findings": []
+}

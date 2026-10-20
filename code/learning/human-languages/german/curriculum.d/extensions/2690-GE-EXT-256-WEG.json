@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-256-WEG",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can ask the way with wie komme ich zum or zur, and follow an answer with geradeaus, links and rechts.",
+  "prerequisites": []
+}

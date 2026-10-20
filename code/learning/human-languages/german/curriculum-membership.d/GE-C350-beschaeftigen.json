@@ -1,0 +1,11 @@
+{
+  "id": "GE-C350-beschaeftigen",
+  "pathSegment": "GE-PATH-350-ARBEITGEBER",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-350-ARBEITGEBER",
+      "order": 3
+    }
+  ]
+}

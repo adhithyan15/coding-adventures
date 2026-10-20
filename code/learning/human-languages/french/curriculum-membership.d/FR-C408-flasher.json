@@ -1,0 +1,11 @@
+{
+  "id": "FR-C408-flasher",
+  "pathSegment": "FR-PATH-408-RADAR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-408-RADAR",
+      "order": 2
+    }
+  ]
+}

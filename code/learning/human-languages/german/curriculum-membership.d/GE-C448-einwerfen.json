@@ -1,0 +1,11 @@
+{
+  "id": "GE-C448-einwerfen",
+  "pathSegment": "GE-PATH-448-POST",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-448-POST",
+      "order": 2
+    }
+  ]
+}

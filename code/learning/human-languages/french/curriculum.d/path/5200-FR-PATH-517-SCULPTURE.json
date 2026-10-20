@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-517-SCULPTURE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-517-SCULPTURE"
+  ],
+  "after": []
+}

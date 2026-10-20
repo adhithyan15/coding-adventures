@@ -1,0 +1,11 @@
+{
+  "id": "GE-C316-kapitel",
+  "pathSegment": "GE-PATH-316-ERZAEHLER",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-316-ERZAEHLER",
+      "order": 3
+    }
+  ]
+}

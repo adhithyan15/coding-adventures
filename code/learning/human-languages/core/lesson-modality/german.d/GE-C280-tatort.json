@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C280-tatort",
+    "language": "german",
+    "chapter": 280,
+    "sequence": 15460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:967da20afce88c78"
+  },
+  "findings": []
+}

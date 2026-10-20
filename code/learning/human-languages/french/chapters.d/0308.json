@@ -1,0 +1,19 @@
+{
+  "chapter": 308,
+  "title": "Une naissance",
+  "label": "ch:fr-une-naissance",
+  "canDo": "I can talk about a birth: the birth, being pregnant, the delivery, breastfeeding and the cradle.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C308-berceau",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 308: I can talk about a birth: the birth, being pregnant, the delivery, breastfeeding and the cradle.",
+    "assesses": [
+      "FR-LEX-C308-NAISSANCE-03",
+      "FR-LEX-C308-NAISSANCE-04",
+      "FR-LEX-C308-NAISSANCE-05"
+    ]
+  }
+}

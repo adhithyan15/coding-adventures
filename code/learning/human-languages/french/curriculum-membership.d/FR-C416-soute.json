@@ -1,0 +1,11 @@
+{
+  "id": "FR-C416-soute",
+  "pathSegment": "FR-PATH-416-AEROGARE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-416-AEROGARE",
+      "order": 3
+    }
+  ]
+}

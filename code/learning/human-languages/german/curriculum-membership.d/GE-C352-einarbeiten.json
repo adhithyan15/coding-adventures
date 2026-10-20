@@ -1,0 +1,11 @@
+{
+  "id": "GE-C352-einarbeiten",
+  "pathSegment": "GE-PATH-352-ARBEITSLOS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-352-ARBEITSLOS",
+      "order": 4
+    }
+  ]
+}

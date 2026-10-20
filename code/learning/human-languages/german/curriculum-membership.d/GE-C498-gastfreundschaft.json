@@ -1,0 +1,11 @@
+{
+  "id": "GE-C498-gastfreundschaft",
+  "pathSegment": "GE-PATH-498-FREUNDE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-498-FREUNDE",
+      "order": 4
+    }
+  ]
+}

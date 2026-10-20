@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 509,
+  "sourceHash": "fnv1a64:8cdcb0d33f2fcfd5",
+  "lessonIds": [
+    "GE-C509-wettkampf",
+    "GE-C509-meisterschaft",
+    "GE-C509-pokal",
+    "GE-C509-medaille",
+    "GE-C509-siegerehrung"
+  ],
+  "tex": "german/book/chapters/ch509-pokal-und-medaille.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 270,
+  "sourceHash": "fnv1a64:aa8f3b4b11bfca43",
+  "lessonIds": [
+    "FR-C270-tout-a-coup",
+    "FR-C270-subitement",
+    "FR-C270-brusquement",
+    "FR-C270-sur-le-coup",
+    "FR-C270-dans-la-foulee"
+  ],
+  "tex": "french/book/chapters/ch270-tout-a-coup.tex"
+}

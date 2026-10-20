@@ -1,0 +1,11 @@
+{
+  "id": "FR-C278-hebdomadaire",
+  "pathSegment": "FR-PATH-278-PRESSE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-278-PRESSE",
+      "order": 3
+    }
+  ]
+}

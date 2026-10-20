@@ -1,0 +1,11 @@
+{
+  "id": "GE-C521-reim",
+  "pathSegment": "GE-PATH-521-GEDICHT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-521-GEDICHT",
+      "order": 2
+    }
+  ]
+}

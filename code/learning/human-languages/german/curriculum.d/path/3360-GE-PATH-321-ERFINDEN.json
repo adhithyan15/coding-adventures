@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-321-ERFINDEN",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GE-EXT-321-ERFINDEN"
+  ],
+  "after": []
+}

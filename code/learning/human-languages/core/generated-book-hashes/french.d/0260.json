@@ -1,0 +1,11 @@
+{
+  "language": "french",
+  "chapter": 260,
+  "sourceHash": "fnv1a64:31c404899b62777b",
+  "lessonIds": [
+    "FR-C260-je-pense-que",
+    "FR-C260-donc",
+    "FR-C260-revision-opinion"
+  ],
+  "tex": "french/book/chapters/ch260-what-i-think.tex"
+}

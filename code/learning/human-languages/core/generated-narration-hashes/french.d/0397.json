@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 397,
+  "sourceHash": "fnv1a64:8bbf3732524778aa",
+  "lessonIds": [
+    "FR-C397-fichier",
+    "FR-C397-supprimer",
+    "FR-C397-copier",
+    "FR-C397-coller",
+    "FR-C397-sauvegarder",
+    "FR-R397-revision-390-397"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch397.txt",
+  "json": "french/narration/ch397.json",
+  "textHash": "fnv1a64:368bb3f88ef3c396",
+  "jsonHash": "fnv1a64:3d9288eb3aaca4ed",
+  "findings": []
+}

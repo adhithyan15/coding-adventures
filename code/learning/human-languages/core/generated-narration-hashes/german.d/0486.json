@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 486,
+  "sourceHash": "fnv1a64:b9dab5a41190c0b0",
+  "lessonIds": [
+    "GE-C486-muedigkeit",
+    "GE-C486-erschoepft",
+    "GE-C486-gaehnen",
+    "GE-C486-schnarchen",
+    "GE-C486-albtraum"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch486.txt",
+  "json": "german/narration/ch486.json",
+  "textHash": "fnv1a64:eba16a5d8395b63e",
+  "jsonHash": "fnv1a64:6834ae4bcb441105",
+  "findings": []
+}

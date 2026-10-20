@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-413-NACHTZUG",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can travel on a night train: the sleeping car, the dining car, the end of the line, booking and travelling on.",
+  "prerequisites": []
+}

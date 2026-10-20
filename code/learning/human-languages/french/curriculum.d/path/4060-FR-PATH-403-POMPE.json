@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-403-POMPE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-403-POMPE"
+  ],
+  "after": []
+}

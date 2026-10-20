@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 316,
+  "sourceHash": "fnv1a64:f4fb579119b3e7be",
+  "lessonIds": [
+    "FR-C316-celebrer",
+    "FR-C316-celebration",
+    "FR-C316-cortege",
+    "FR-C316-fanfare",
+    "FR-C316-jour-ferie"
+  ],
+  "tex": "french/book/chapters/ch316-celebrer.tex"
+}

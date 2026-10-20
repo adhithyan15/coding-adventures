@@ -1,0 +1,11 @@
+{
+  "id": "GE-C461-schauer",
+  "pathSegment": "GE-PATH-461-NIESELREGEN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-461-NIESELREGEN",
+      "order": 2
+    }
+  ]
+}

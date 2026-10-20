@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-289-AGRESSION",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-289-AGRESSION"
+  ],
+  "after": []
+}

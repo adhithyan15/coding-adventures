@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C472-bouleverser",
+    "language": "french",
+    "chapter": 472,
+    "sequence": 26040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9c2824dfd64ed71"
+  },
+  "findings": []
+}

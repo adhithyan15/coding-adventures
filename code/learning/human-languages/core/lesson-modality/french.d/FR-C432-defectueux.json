@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C432-defectueux",
+    "language": "french",
+    "chapter": 432,
+    "sequence": 23980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c3b52fd76fe9b0a4"
+  },
+  "findings": []
+}

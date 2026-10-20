@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 372,
+  "sourceHash": "fnv1a64:18c4b2896406b4e2",
+  "lessonIds": [
+    "GE-C372-vereinbaren",
+    "GE-C372-vereinbarung",
+    "GE-C372-ausmachen",
+    "GE-C372-zeitplan",
+    "GE-C372-umplanen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch372.txt",
+  "json": "german/narration/ch372.json",
+  "textHash": "fnv1a64:e77f61f616647f06",
+  "jsonHash": "fnv1a64:cd3799a8db314ac9",
+  "findings": []
+}

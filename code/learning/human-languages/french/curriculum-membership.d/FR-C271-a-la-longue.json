@@ -1,0 +1,11 @@
+{
+  "id": "FR-C271-a-la-longue",
+  "pathSegment": "FR-PATH-271-PEU",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-271-PEU",
+      "order": 3
+    }
+  ]
+}

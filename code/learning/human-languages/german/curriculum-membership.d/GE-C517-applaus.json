@@ -1,0 +1,11 @@
+{
+  "id": "GE-C517-applaus",
+  "pathSegment": "GE-PATH-517-THEATER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-517-THEATER",
+      "order": 4
+    }
+  ]
+}

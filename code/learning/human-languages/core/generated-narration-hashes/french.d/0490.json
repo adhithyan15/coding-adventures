@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 490,
+  "sourceHash": "fnv1a64:6b59530ecf9a1647",
+  "lessonIds": [
+    "FR-C490-parrain",
+    "FR-C490-marraine",
+    "FR-C490-filleul",
+    "FR-C490-aine",
+    "FR-C490-cadet"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch490.txt",
+  "json": "french/narration/ch490.json",
+  "textHash": "fnv1a64:a1ace7244eb3e165",
+  "jsonHash": "fnv1a64:05b78ee2d47c905b",
+  "findings": []
+}

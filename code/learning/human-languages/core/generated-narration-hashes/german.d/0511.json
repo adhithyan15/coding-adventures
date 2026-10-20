@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 511,
+  "sourceHash": "fnv1a64:0f738b7a1ae06afa",
+  "lessonIds": [
+    "GE-C511-freibad",
+    "GE-C511-kraulen",
+    "GE-C511-tauchen",
+    "GE-C511-paddeln",
+    "GE-C511-kanu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch511.txt",
+  "json": "german/narration/ch511.json",
+  "textHash": "fnv1a64:30a56282253f7b55",
+  "jsonHash": "fnv1a64:c3b82f61ede365d7",
+  "findings": []
+}

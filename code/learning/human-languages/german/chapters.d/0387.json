@@ -1,0 +1,19 @@
+{
+  "chapter": 387,
+  "title": "Auf dem Konto",
+  "label": "ch:ge-auf-dem-konto",
+  "canDo": "I can talk about my bank balance and credit, going overdrawn, money taken from my account, and an amount due.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GE-C387-betrag",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 387: I can talk about my bank balance and credit, going overdrawn, money taken from my account, and an amount due.",
+    "assesses": [
+      "GE-LEX-C387-KONTO-03",
+      "GE-LEX-C387-KONTO-04",
+      "GE-LEX-C387-KONTO-05"
+    ]
+  }
+}

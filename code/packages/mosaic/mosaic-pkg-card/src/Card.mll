@@ -6,7 +6,7 @@
 //     Box [ card-title ]            ← the title region (stylable)
 //       Text ( content: slot: title )
 //     Box [ card-body ]             ← the body region (stylable)
-//       Text ( content: slot: body )
+//       Text ( content: slot: body-text )
 //     Box [ card-footer ]           ← the footer region (stylable)
 //       Text ( content: slot: footer )
 //
@@ -39,7 +39,7 @@ layout Card {
       Text ( content: slot: title )
     }
     Box [ card-body ] {
-      Text ( content: slot: body )
+      Text ( content: slot: body-text )
     }
     Box [ card-footer ] {
       Text ( content: slot: footer )

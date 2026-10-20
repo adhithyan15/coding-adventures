@@ -1,0 +1,11 @@
+{
+  "id": "FR-C267-ce-serait",
+  "pathSegment": "FR-PATH-267-CONDITIONNEL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-267-CONDITIONNEL",
+      "order": 1
+    }
+  ]
+}

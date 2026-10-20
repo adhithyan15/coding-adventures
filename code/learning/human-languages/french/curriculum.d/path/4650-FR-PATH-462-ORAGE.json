@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-462-ORAGE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-462-ORAGE"
+  ],
+  "after": []
+}

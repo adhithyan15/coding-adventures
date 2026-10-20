@@ -1,0 +1,11 @@
+{
+  "id": "GE-C326-braeunen",
+  "pathSegment": "GE-PATH-326-VORHEIZEN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-326-VORHEIZEN",
+      "order": 4
+    }
+  ]
+}

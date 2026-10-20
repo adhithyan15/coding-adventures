@@ -1,0 +1,11 @@
+{
+  "id": "FR-C335-persuader",
+  "pathSegment": "FR-PATH-335-DEBAT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-335-DEBAT",
+      "order": 4
+    }
+  ]
+}

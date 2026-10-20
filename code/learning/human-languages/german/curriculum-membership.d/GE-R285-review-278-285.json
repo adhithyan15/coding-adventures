@@ -1,0 +1,11 @@
+{
+  "id": "GE-R285-review-278-285",
+  "pathSegment": "GE-PATH-285-BETRUG",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-285-BETRUG",
+      "order": 5
+    }
+  ]
+}

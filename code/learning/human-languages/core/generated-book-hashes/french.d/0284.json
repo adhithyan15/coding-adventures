@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 284,
+  "sourceHash": "fnv1a64:f08ef63dbb6d826f",
+  "lessonIds": [
+    "FR-C284-reveler",
+    "FR-C284-rapporter",
+    "FR-C284-dementir",
+    "FR-C284-relater",
+    "FR-C284-commenter"
+  ],
+  "tex": "french/book/chapters/ch284-ce-que-disent-les-journaux.tex"
+}

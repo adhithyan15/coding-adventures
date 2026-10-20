@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-503-JARDIN",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-503-JARDIN"
+  ],
+  "after": []
+}

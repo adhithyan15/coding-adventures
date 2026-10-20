@@ -1,0 +1,11 @@
+{
+  "id": "GE-C390-verschwenden",
+  "pathSegment": "GE-PATH-390-VERSCHWENDUNG",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-390-VERSCHWENDUNG",
+      "order": 0
+    }
+  ]
+}

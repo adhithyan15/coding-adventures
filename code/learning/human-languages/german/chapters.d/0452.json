@@ -1,0 +1,19 @@
+{
+  "chapter": 452,
+  "title": "Bestellt und geliefert",
+  "label": "ch:ge-bestellt-und-geliefert",
+  "canDo": "I can send and return things: the packaging, wrapping up, the cardboard box, delivering and exchanging.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C452-umtauschen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 452: I can send and return things: the packaging, wrapping up, the cardboard box, delivering and exchanging.",
+    "assesses": [
+      "GE-LEX-C452-LIEFERUNG-03",
+      "GE-LEX-C452-LIEFERUNG-04",
+      "GE-LEX-C452-LIEFERUNG-05"
+    ]
+  }
+}

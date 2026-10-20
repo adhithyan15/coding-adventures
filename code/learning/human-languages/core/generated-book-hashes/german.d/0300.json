@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:3c08fd13486fbc03",
+  "lessonIds": [
+    "GE-C300-scheidung",
+    "GE-C300-scheiden",
+    "GE-C300-trennung",
+    "GE-C300-adoptieren",
+    "GE-C300-erleben"
+  ],
+  "tex": "german/book/chapters/ch300-neue-wege.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 384,
+  "sourceHash": "fnv1a64:8c5d665b8f8fa2a2",
+  "lessonIds": [
+    "FR-C384-expirer",
+    "FR-C384-valable",
+    "FR-C384-valide",
+    "FR-C384-renouveler",
+    "FR-C384-renouvellement"
+  ],
+  "tex": "french/book/chapters/ch384-des-papiers-en-regle.tex"
+}

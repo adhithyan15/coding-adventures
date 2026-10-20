@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 362,
+  "sourceHash": "fnv1a64:7ba11f0a3582f0bb",
+  "lessonIds": [
+    "GE-C362-ehrenamt",
+    "GE-C362-ehrenamtlich",
+    "GE-C362-freiwillig",
+    "GE-C362-spenden",
+    "GE-C362-engagieren"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch362.txt",
+  "json": "german/narration/ch362.json",
+  "textHash": "fnv1a64:9d1d95b4a63b0615",
+  "jsonHash": "fnv1a64:e339fd3fb4986146",
+  "findings": []
+}

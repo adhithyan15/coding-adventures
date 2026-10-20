@@ -1,0 +1,11 @@
+{
+  "id": "FR-C283-interviewer",
+  "pathSegment": "FR-PATH-283-ANTENNE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-283-ANTENNE",
+      "order": 3
+    }
+  ]
+}

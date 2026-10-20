@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-416-FLUGSTEIG",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-416-FLUGSTEIG"
+  ],
+  "after": []
+}

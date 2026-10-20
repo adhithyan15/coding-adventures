@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 396,
+  "sourceHash": "fnv1a64:60ed50096580fdbf",
+  "lessonIds": [
+    "FR-C396-installer",
+    "FR-C396-desinstaller",
+    "FR-C396-appareil",
+    "FR-C396-logiciel",
+    "FR-C396-mise-a-jour"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch396.txt",
+  "json": "french/narration/ch396.json",
+  "textHash": "fnv1a64:c15080a37fdae0fa",
+  "jsonHash": "fnv1a64:6a6931f604b56125",
+  "findings": []
+}

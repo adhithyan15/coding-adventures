@@ -1,0 +1,19 @@
+{
+  "chapter": 410,
+  "title": "Ein kleiner Unfall",
+  "label": "ch:ge-ein-kleiner-unfall",
+  "canDo": "I can describe a small accident: the rear-end collision, driving into a car, skidding, the pedestrian and the cyclist.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C410-radfahrer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 410: I can describe a small accident: the rear-end collision, driving into a car, skidding, the pedestrian and the cyclist.",
+    "assesses": [
+      "GE-LEX-C410-UNFALL-03",
+      "GE-LEX-C410-UNFALL-04",
+      "GE-LEX-C410-UNFALL-05"
+    ]
+  }
+}

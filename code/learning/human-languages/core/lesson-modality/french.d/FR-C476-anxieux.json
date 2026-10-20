@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C476-anxieux",
+    "language": "french",
+    "chapter": 476,
+    "sequence": 26220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd14b6ab6a10a9bb"
+  },
+  "findings": []
+}

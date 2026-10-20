@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-438-FLANER",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-438-FLANER"
+  ],
+  "after": []
+}

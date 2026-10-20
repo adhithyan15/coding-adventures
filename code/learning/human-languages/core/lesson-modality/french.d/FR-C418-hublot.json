@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C418-hublot",
+    "language": "french",
+    "chapter": 418,
+    "sequence": 23250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c2745a26f29400d0"
+  },
+  "findings": []
+}

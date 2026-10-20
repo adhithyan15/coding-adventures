@@ -1,0 +1,11 @@
+{
+  "id": "FR-C350-declencher",
+  "pathSegment": "FR-PATH-350-IMPACT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-350-IMPACT",
+      "order": 2
+    }
+  ]
+}

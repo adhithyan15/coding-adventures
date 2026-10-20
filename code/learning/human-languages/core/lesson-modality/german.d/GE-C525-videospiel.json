@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C525-videospiel",
+    "language": "german",
+    "chapter": 525,
+    "sequence": 28040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c9ddd6522434698"
+  },
+  "findings": []
+}

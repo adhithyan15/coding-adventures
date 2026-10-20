@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C264-jetais-content",
+    "language": "french",
+    "chapter": 264,
+    "sequence": 15320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:195e9da29eaaea80"
+  },
+  "findings": []
+}

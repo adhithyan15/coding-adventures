@@ -1,0 +1,11 @@
+{
+  "id": "FR-C391-epargne",
+  "pathSegment": "FR-PATH-391-EPARGNE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-391-EPARGNE",
+      "order": 0
+    }
+  ]
+}

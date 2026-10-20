@@ -1,0 +1,14 @@
+{
+  "language": "french",
+  "chapter": 299,
+  "sourceHash": "fnv1a64:6680a7ab297f05d3",
+  "lessonIds": [
+    "FR-C299-chute",
+    "FR-C299-fouler",
+    "FR-C299-contusion",
+    "FR-C299-hematome",
+    "FR-C299-plaie",
+    "FR-R299-revision-292-299"
+  ],
+  "tex": "french/book/chapters/ch299-une-mauvaise-chute.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C494-zanken",
+    "language": "german",
+    "chapter": 494,
+    "sequence": 26430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e398917ae419e980"
+  },
+  "findings": []
+}

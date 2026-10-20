@@ -1,0 +1,11 @@
+{
+  "id": "FR-C476-anxieux",
+  "pathSegment": "FR-PATH-476-INQUIETUDE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-476-INQUIETUDE",
+      "order": 1
+    }
+  ]
+}

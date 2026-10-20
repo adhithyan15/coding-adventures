@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-406-CARROSSERIE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the outside and inside of a car: the bodywork, the bonnet, the car door, the boot and the back seat.",
+  "prerequisites": []
+}

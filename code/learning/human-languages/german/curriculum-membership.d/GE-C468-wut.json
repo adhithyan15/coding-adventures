@@ -1,0 +1,11 @@
+{
+  "id": "GE-C468-wut",
+  "pathSegment": "GE-PATH-468-WUT",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-468-WUT",
+      "order": 0
+    }
+  ]
+}

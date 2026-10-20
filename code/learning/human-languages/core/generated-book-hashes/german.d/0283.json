@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 283,
+  "sourceHash": "fnv1a64:b71710ead85f7004",
+  "lessonIds": [
+    "GE-C283-zeuge",
+    "GE-C283-aussagen",
+    "GE-C283-aussage",
+    "GE-C283-beobachten",
+    "GE-C283-schildern"
+  ],
+  "tex": "german/book/chapters/ch283-der-zeuge.tex"
+}

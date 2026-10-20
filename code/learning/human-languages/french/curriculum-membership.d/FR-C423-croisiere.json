@@ -1,0 +1,11 @@
+{
+  "id": "FR-C423-croisiere",
+  "pathSegment": "FR-PATH-423-CROISIERE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-423-CROISIERE",
+      "order": 0
+    }
+  ]
+}

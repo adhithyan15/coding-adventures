@@ -1,0 +1,11 @@
+{
+  "id": "GE-C309-aufhaengen",
+  "pathSegment": "GE-PATH-309-SCHMUECKEN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-309-SCHMUECKEN",
+      "order": 2
+    }
+  ]
+}

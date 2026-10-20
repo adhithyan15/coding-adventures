@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 354,
+  "sourceHash": "fnv1a64:090ca9277d6d2cac",
+  "lessonIds": [
+    "FR-C354-cv",
+    "FR-C354-candidat",
+    "FR-C354-candidature",
+    "FR-C354-postuler",
+    "FR-C354-embauche"
+  ],
+  "tex": "french/book/chapters/ch354-je-cherche-du-travail.tex"
+}

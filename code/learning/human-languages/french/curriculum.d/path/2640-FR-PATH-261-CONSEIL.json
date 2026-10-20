@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-261-CONSEIL",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "FR-EXT-261-CONSEIL"
+  ],
+  "after": []
+}

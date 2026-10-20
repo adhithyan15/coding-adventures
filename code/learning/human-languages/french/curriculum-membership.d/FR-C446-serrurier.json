@@ -1,0 +1,11 @@
+{
+  "id": "FR-C446-serrurier",
+  "pathSegment": "FR-PATH-446-CORDONNIER",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-446-CORDONNIER",
+      "order": 3
+    }
+  ]
+}

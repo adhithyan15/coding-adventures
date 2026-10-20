@@ -1,0 +1,14 @@
+{
+  "language": "german",
+  "chapter": 361,
+  "sourceHash": "fnv1a64:2cf621e72a7506d8",
+  "lessonIds": [
+    "GE-C361-einwanderung",
+    "GE-C361-flucht",
+    "GE-C361-fluechtling",
+    "GE-C361-integrieren",
+    "GE-C361-gewalt",
+    "GE-R361-review-354-361"
+  ],
+  "tex": "german/book/chapters/ch361-ein-neues-land.tex"
+}

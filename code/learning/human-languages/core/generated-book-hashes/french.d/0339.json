@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 339,
+  "sourceHash": "fnv1a64:b24430b41bb8bc56",
+  "lessonIds": [
+    "FR-C339-preuve",
+    "FR-C339-evident",
+    "FR-C339-evidence",
+    "FR-C339-incontestable",
+    "FR-C339-manifeste"
+  ],
+  "tex": "french/book/chapters/ch339-les-preuves.tex"
+}

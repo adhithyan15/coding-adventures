@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C357-employeur",
+    "language": "french",
+    "chapter": 357,
+    "sequence": 20110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:60c45819f7d085b2"
+  },
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-432-GERANT",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can take a problem to the manager: the manager, the inconvenience, reporting a problem, the cleaning and something faulty.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C477-hanche",
+  "pathSegment": "FR-PATH-477-JAMBE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-477-JAMBE",
+      "order": 4
+    }
+  ]
+}

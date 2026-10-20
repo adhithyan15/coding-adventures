@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C443-egout",
+    "language": "french",
+    "chapter": 443,
+    "sequence": 24500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a50b6f98fcd0be30"
+  },
+  "findings": []
+}

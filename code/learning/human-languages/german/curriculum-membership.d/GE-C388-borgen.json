@@ -1,0 +1,11 @@
+{
+  "id": "GE-C388-borgen",
+  "pathSegment": "GE-PATH-388-KREDIT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-388-KREDIT",
+      "order": 4
+    }
+  ]
+}

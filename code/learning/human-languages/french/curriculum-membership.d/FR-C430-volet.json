@@ -1,0 +1,11 @@
+{
+  "id": "FR-C430-volet",
+  "pathSegment": "FR-PATH-430-BESTIOLES",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-430-BESTIOLES",
+      "order": 3
+    }
+  ]
+}

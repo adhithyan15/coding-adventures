@@ -1,0 +1,19 @@
+{
+  "chapter": 491,
+  "title": "Paten und Nachwuchs",
+  "label": "ch:ge-paten-und-nachwuchs",
+  "canDo": "I can talk about godparents, partners and babies.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C491-nachwuchs",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 491: I can talk about godparents, partners and babies.",
+    "assesses": [
+      "GE-LEX-C491-PATEN-03",
+      "GE-LEX-C491-PATEN-04",
+      "GE-LEX-C491-PATEN-05"
+    ]
+  }
+}

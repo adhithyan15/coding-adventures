@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-428-ABFLUSS",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can report a bathroom problem: the drain, a blockage, dripping, a leak and the plumber.",
+  "prerequisites": []
+}

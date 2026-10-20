@@ -1,0 +1,11 @@
+{
+  "id": "FR-C309-bapteme",
+  "pathSegment": "FR-PATH-309-BAPTEME",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-309-BAPTEME",
+      "order": 1
+    }
+  ]
+}

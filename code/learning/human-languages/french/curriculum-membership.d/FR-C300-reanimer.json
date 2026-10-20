@@ -1,0 +1,11 @@
+{
+  "id": "FR-C300-reanimer",
+  "pathSegment": "FR-PATH-300-SECOURS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-300-SECOURS",
+      "order": 2
+    }
+  ]
+}

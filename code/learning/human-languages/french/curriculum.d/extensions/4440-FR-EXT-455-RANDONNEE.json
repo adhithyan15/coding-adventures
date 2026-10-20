@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-455-RANDONNEE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about a hike: the hike, the hiker, the slope, climbing up and stumbling.",
+  "prerequisites": []
+}

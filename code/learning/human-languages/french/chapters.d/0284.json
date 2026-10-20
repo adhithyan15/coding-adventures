@@ -1,0 +1,19 @@
+{
+  "chapter": 284,
+  "title": "Ce que disent les journaux",
+  "label": "ch:fr-ce-que-disent-les-journaux",
+  "canDo": "I can report what people said and found out: revealing, reporting, denying, recounting and commenting.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C284-commenter",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 284: I can report what people said and found out: revealing, reporting, denying, recounting and commenting.",
+    "assesses": [
+      "FR-LEX-C284-RAPPORTER-03",
+      "FR-LEX-C284-RAPPORTER-04",
+      "FR-LEX-C284-RAPPORTER-05"
+    ]
+  }
+}

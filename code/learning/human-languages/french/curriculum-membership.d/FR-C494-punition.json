@@ -1,0 +1,11 @@
+{
+  "id": "FR-C494-punition",
+  "pathSegment": "FR-PATH-494-EDUCATION",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-494-EDUCATION",
+      "order": 2
+    }
+  ]
+}

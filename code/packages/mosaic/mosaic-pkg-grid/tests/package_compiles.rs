@@ -135,7 +135,7 @@ fn manifest_declares_expected_exports() {
         .and_then(|p| p.get("version"))
         .and_then(|v| v.as_str())
         .expect("[package].version must be set");
-    assert_eq!(version, "0.2.3", "[package].version must be 0.2.3 for the Cell onClick row/col payload (UI37)");
+    assert_eq!(version, "0.3.0", "[package].version must be 0.3.0: Column's `column-key`/`column-width` and Cell's `row-height` slots");
 
     // [components].exports names exactly the interfaces in src/: an
     // unexported .mil is dead source, and an export with no .mil fails

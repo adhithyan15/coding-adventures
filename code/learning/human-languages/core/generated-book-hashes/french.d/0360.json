@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:d08010f162b51d8f",
+  "lessonIds": [
+    "FR-C360-augmentation",
+    "FR-C360-promotion",
+    "FR-C360-qualification",
+    "FR-C360-competence",
+    "FR-C360-formation"
+  ],
+  "tex": "french/book/chapters/ch360-faire-carriere.tex"
+}

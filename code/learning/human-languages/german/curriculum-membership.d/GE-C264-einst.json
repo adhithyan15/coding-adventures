@@ -1,0 +1,11 @@
+{
+  "id": "GE-C264-einst",
+  "pathSegment": "GE-PATH-264-DAMALS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-264-DAMALS",
+      "order": 1
+    }
+  ]
+}

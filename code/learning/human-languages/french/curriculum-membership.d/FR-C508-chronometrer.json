@@ -1,0 +1,11 @@
+{
+  "id": "FR-C508-chronometrer",
+  "pathSegment": "FR-PATH-508-COURSE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-508-COURSE",
+      "order": 4
+    }
+  ]
+}

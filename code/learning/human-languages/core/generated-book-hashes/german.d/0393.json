@@ -1,0 +1,14 @@
+{
+  "language": "german",
+  "chapter": 393,
+  "sourceHash": "fnv1a64:4ba2a3d3744aa223",
+  "lessonIds": [
+    "GE-C393-datei",
+    "GE-C393-speichern",
+    "GE-C393-ordner",
+    "GE-C393-anhang",
+    "GE-C393-anhaengen",
+    "GE-R393-review-386-393"
+  ],
+  "tex": "german/book/chapters/ch393-dateien-und-ordner.tex"
+}

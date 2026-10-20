@@ -1,0 +1,11 @@
+{
+  "id": "GE-C502-objektiv",
+  "pathSegment": "GE-PATH-502-ANGELN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-502-ANGELN",
+      "order": 3
+    }
+  ]
+}

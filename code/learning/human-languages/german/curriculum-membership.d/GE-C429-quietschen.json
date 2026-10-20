@@ -1,0 +1,11 @@
+{
+  "id": "GE-C429-quietschen",
+  "pathSegment": "GE-PATH-429-SCHIMMEL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-429-SCHIMMEL",
+      "order": 3
+    }
+  ]
+}

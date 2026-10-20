@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C439-viertel",
+    "language": "german",
+    "chapter": 439,
+    "sequence": 23610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d8178ec20596365f"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C506-stuermer",
+  "pathSegment": "GE-PATH-506-FUSSBALL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-506-FUSSBALL",
+      "order": 1
+    }
+  ]
+}

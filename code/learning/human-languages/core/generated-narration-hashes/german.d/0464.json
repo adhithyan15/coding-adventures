@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 464,
+  "sourceHash": "fnv1a64:6c85c2b2d012510a",
+  "lessonIds": [
+    "GE-C464-hitzewelle",
+    "GE-C464-duerre",
+    "GE-C464-luftfeuchtigkeit",
+    "GE-C464-schwuel",
+    "GE-C464-austrocknen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch464.txt",
+  "json": "german/narration/ch464.json",
+  "textHash": "fnv1a64:fc606972c4d3325c",
+  "jsonHash": "fnv1a64:9fbaa54c19471457",
+  "findings": []
+}

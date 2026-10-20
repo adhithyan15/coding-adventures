@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C305-feierlich",
+    "language": "german",
+    "chapter": 305,
+    "sequence": 16710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:30763509586862a7"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C414-anschluss",
+    "language": "german",
+    "chapter": 414,
+    "sequence": 22320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:022c24facee7c6ea"
+  },
+  "findings": []
+}

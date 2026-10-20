@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 310,
+  "sourceHash": "fnv1a64:f083bf9f2b2a3681",
+  "lessonIds": [
+    "GE-C310-karneval",
+    "GE-C310-fasching",
+    "GE-C310-kostuem",
+    "GE-C310-verkleiden",
+    "GE-C310-brauch"
+  ],
+  "tex": "german/book/chapters/ch310-karneval.tex"
+}

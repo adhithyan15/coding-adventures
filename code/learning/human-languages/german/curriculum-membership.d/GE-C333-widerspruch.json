@@ -1,0 +1,11 @@
+{
+  "id": "GE-C333-widerspruch",
+  "pathSegment": "GE-PATH-333-WIDERSPRUCH",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-333-WIDERSPRUCH",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 286,
+  "sourceHash": "fnv1a64:89ae1d1f0d355901",
+  "lessonIds": [
+    "FR-C286-sondage",
+    "FR-C286-bilan",
+    "FR-C286-hausse",
+    "FR-C286-baisse",
+    "FR-C286-statistique"
+  ],
+  "tex": "french/book/chapters/ch286-les-chiffres.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 443,
+  "title": "L'hiver en ville",
+  "label": "ch:fr-l-hiver-en-ville",
+  "canDo": "I can talk about a town in winter: the sewer, the gutter in the street, clearing the snow, salting the roads and snow-ploughing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C443-deneiger",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 443: I can talk about a town in winter: the sewer, the gutter in the street, clearing the snow, salting the roads and snow-ploughing.",
+    "assesses": [
+      "FR-LEX-C443-HIVER-03",
+      "FR-LEX-C443-HIVER-04",
+      "FR-LEX-C443-HIVER-05"
+    ]
+  }
+}

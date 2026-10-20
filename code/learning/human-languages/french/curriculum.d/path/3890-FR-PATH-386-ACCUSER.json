@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-386-ACCUSER",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "FR-EXT-386-ACCUSER"
+  ],
+  "after": []
+}

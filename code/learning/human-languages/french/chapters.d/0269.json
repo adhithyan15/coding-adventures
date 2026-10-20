@@ -1,0 +1,19 @@
+{
+  "chapter": 269,
+  "title": "Au moment où",
+  "label": "ch:fr-au-moment-ou",
+  "canDo": "I can link two events in time: when, as soon as, at the moment when, at once and while.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C269-tandis-que",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 269: I can link two events in time: when, as soon as, at the moment when, at once and while.",
+    "assesses": [
+      "FR-LEX-C269-QUAND-03",
+      "FR-LEX-C269-QUAND-04",
+      "FR-LEX-C269-QUAND-05"
+    ]
+  }
+}

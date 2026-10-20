@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 359,
+  "sourceHash": "fnv1a64:3420a8b53051cdaa",
+  "lessonIds": [
+    "GE-C359-gerechtigkeit",
+    "GE-C359-ungleichheit",
+    "GE-C359-armut",
+    "GE-C359-reichtum",
+    "GE-C359-benachteiligen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch359.txt",
+  "json": "german/narration/ch359.json",
+  "textHash": "fnv1a64:38855f17b07e3e66",
+  "jsonHash": "fnv1a64:fa7823f7348f4940",
+  "findings": []
+}

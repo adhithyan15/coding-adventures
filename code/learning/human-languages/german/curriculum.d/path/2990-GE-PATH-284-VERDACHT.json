@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-284-VERDACHT",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GE-EXT-284-VERDACHT"
+  ],
+  "after": []
+}

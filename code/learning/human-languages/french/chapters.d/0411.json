@@ -1,0 +1,19 @@
+{
+  "chapter": 411,
+  "title": "Un petit accident",
+  "label": "ch:fr-un-petit-accident",
+  "canDo": "I can describe a small road accident: hitting something, bumping into it, the pedestrian, the cyclist and writing up what happened.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C411-constater",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 411: I can describe a small road accident: hitting something, bumping into it, the pedestrian, the cyclist and writing up what happened.",
+    "assesses": [
+      "FR-LEX-C411-ACCIDENT-03",
+      "FR-LEX-C411-ACCIDENT-04",
+      "FR-LEX-C411-ACCIDENT-05"
+    ]
+  }
+}

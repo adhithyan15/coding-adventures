@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-397-ABSTURZ",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that a computer has crashed or needs updating, read out an error message, and say how data was restored from a backup.",
+  "prerequisites": []
+}

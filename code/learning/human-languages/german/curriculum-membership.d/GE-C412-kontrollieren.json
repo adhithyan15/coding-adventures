@@ -1,0 +1,11 @@
+{
+  "id": "GE-C412-kontrollieren",
+  "pathSegment": "GE-PATH-412-BAHNSTEIG",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-412-BAHNSTEIG",
+      "order": 4
+    }
+  ]
+}

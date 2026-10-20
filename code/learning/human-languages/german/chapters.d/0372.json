@@ -1,0 +1,19 @@
+{
+  "chapter": 372,
+  "title": "Etwas vereinbaren",
+  "label": "ch:ge-etwas-vereinbaren",
+  "canDo": "I can agree on a date or an arrangement, keep to a schedule and change my plans.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GE-C372-umplanen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 372: I can agree on a date or an arrangement, keep to a schedule and change my plans.",
+    "assesses": [
+      "GE-LEX-C372-VEREINBARUNG-03",
+      "GE-LEX-C372-VEREINBARUNG-04",
+      "GE-LEX-C372-VEREINBARUNG-05"
+    ]
+  }
+}

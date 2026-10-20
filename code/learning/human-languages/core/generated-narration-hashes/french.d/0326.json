@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 326,
+  "sourceHash": "fnv1a64:54ca2d55ed2276be",
+  "lessonIds": [
+    "FR-C326-liberer",
+    "FR-C326-liberation",
+    "FR-C326-resister",
+    "FR-C326-resistance",
+    "FR-C326-commemorer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch326.txt",
+  "json": "french/narration/ch326.json",
+  "textHash": "fnv1a64:d9286d43ffd620db",
+  "jsonHash": "fnv1a64:2bac513f539ba355",
+  "findings": []
+}

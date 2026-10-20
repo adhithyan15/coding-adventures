@@ -1,0 +1,19 @@
+{
+  "chapter": 400,
+  "title": "Autour de la ville en voiture",
+  "label": "ch:fr-autour-de-la-ville-en-voiture",
+  "canDo": "I can talk about the big roads round a town: the ring road, the outskirts, the interchange, the slip road and turning off.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C400-bifurquer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 400: I can talk about the big roads round a town: the ring road, the outskirts, the interchange, the slip road and turning off.",
+    "assesses": [
+      "FR-LEX-C400-PERIPH-03",
+      "FR-LEX-C400-PERIPH-04",
+      "FR-LEX-C400-PERIPH-05"
+    ]
+  }
+}

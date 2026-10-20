@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:74a91bbd4d8924cf",
+  "lessonIds": [
+    "FR-C441-banc",
+    "FR-C441-lampadaire",
+    "FR-C441-reverbere",
+    "FR-C441-kiosque",
+    "FR-C441-pave"
+  ],
+  "tex": "french/book/chapters/ch441-dans-la-rue.tex"
+}

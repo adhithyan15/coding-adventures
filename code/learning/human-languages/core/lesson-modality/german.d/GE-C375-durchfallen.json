@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C375-durchfallen",
+    "language": "german",
+    "chapter": 375,
+    "sequence": 20310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aa2974bb6b9f6be2"
+  },
+  "findings": []
+}

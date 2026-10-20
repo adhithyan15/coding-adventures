@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 273,
+  "sourceHash": "fnv1a64:25455409c0ea006d",
+  "lessonIds": [
+    "GE-C273-veroeffentlichen",
+    "GE-C273-erwaehnen",
+    "GE-C273-aeussern",
+    "GE-C273-ankuendigen",
+    "GE-C273-bekanntgeben"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch273.txt",
+  "json": "german/narration/ch273.json",
+  "textHash": "fnv1a64:35d917bf03a5036c",
+  "jsonHash": "fnv1a64:8a34d38d82056f97",
+  "findings": []
+}

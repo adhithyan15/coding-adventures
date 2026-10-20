@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-469-HUMEUR",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-469-HUMEUR"
+  ],
+  "after": []
+}

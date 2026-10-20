@@ -1,0 +1,11 @@
+{
+  "id": "FR-C439-basilique",
+  "pathSegment": "FR-PATH-439-CLOCHERS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-439-CLOCHERS",
+      "order": 1
+    }
+  ]
+}

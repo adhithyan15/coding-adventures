@@ -1,0 +1,11 @@
+{
+  "id": "FR-C262-tout-droit",
+  "pathSegment": "FR-PATH-262-CHEMIN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-262-CHEMIN",
+      "order": 1
+    }
+  ]
+}

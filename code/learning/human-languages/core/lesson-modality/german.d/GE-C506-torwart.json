@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C506-torwart",
+    "language": "german",
+    "chapter": 506,
+    "sequence": 27050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a2221449b8404044"
+  },
+  "findings": []
+}

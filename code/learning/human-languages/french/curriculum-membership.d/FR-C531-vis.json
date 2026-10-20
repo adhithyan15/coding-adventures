@@ -1,0 +1,11 @@
+{
+  "id": "FR-C531-vis",
+  "pathSegment": "FR-PATH-531-BRICOLAGE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-531-BRICOLAGE",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C266-sil-pleut",
+  "pathSegment": "FR-PATH-266-SI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-266-SI",
+      "order": 1
+    }
+  ]
+}

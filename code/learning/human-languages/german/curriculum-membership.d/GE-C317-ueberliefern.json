@@ -1,0 +1,11 @@
+{
+  "id": "GE-C317-ueberliefern",
+  "pathSegment": "GE-PATH-317-ERZAEHLUNG",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-317-ERZAEHLUNG",
+      "order": 3
+    }
+  ]
+}
