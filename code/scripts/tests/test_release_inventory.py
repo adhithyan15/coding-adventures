@@ -12,6 +12,7 @@ import contextlib
 import io
 import sys
 import tempfile
+import time
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -484,6 +485,28 @@ class MatrixTest(Fixture):
         rows = release_inventory.matrix_rows(source)
         self.assertEqual([r["release"] for r in rows], ["1.0", "2.0"])
         self.assertEqual([r["line"] for r in rows], ["2", "4"])
+
+    def test_raw_and_byte_string_values_are_read(self) -> None:
+        value = release_inventory.rust_string_value
+        self.assertEqual(value('r#"1.0"#'), "1.0")
+        self.assertEqual(value('r"1.0"'), "1.0")
+        self.assertEqual(value('"1.0"'), "1.0")
+        self.assertIsNone(value('"unterminated'))
+        self.assertIsNone(value("'x'"))
+
+    def test_hostile_matrix_source_is_read_in_linear_time(self) -> None:
+        # Each of these is quadratic for a regex or per-match brace scan.
+        n = 120_000
+        for source in (
+            "Prog {" * (n // 6),
+            'r#"' * (n // 3),
+            "Prog { lang: Language::Perl, " * (n // 30) + "}" * (n // 30),
+            "Prog { lang: Language::Perl, x: " + "{" * n + "}" * n + "}",
+            '"' + "\\" * n,
+        ):
+            started = time.monotonic()
+            release_inventory.matrix_rows(source)
+            self.assertLess(time.monotonic() - started, 5.0, source[:40])
 
     def test_matrix_value_with_escape_is_unreadable(self) -> None:
         rows = release_inventory.matrix_rows(

@@ -101,6 +101,7 @@ USAGE
 from __future__ import annotations
 
 import argparse
+import bisect
 import csv
 import re
 import sys
@@ -510,6 +511,8 @@ def check_pairs(
     for release, row in releases.items():
         if row["grammar_stage"] == "none" and row["grammar_status"] == "pending":
             continue
+        if not RELEASE_RE.match(release) or ".." in release:
+            continue  # already an error; never build a path from it
         for suffix in (".tokens", ".grammar"):
             if not (directory / f"{prefix}{release}{suffix}").is_file():
                 report.error(
@@ -530,61 +533,122 @@ def check_pairs(
 # --matrix
 # ---------------------------------------------------------------------------
 
-# A Rust string literal: "..." with escapes, or a raw r"..." / r#"..."#.
-# Character literals ('"', '\'') are consumed too, so a quote inside one
-# cannot open a phantom string; a lifetime ('static) matches neither.
-RUST_STRING_RE = re.compile(
-    r'r(#*)".*?"\1|"(?:[^"\\]|\\.)*"|\'(?:[^\'\\\n]|\\.)\'', re.DOTALL
-)
+# `lang_matrix.rs` is read without a Rust parser, so the reader below is
+# written to be LINEAR in the size of the file, whatever the file holds. A
+# regex such as r'r(#*)".*?"\1' rescans to the end of the input from every
+# unterminated `r#"`, and a brace scan started at every `Prog {` rescans
+# the rest of the file for each one: both are quadratic on hostile input.
+#
+#   1. mask_rust_literals  one left-to-right pass; every string and char
+#                          literal becomes a placeholder `$S<n>$`
+#   2. top-level bodies    one pass over the braces with a stack; each
+#                          character lands in exactly one frame's buffer
+#   3. field regexes       run on those buffers, whose total size is the
+#                          file size
+
+
+def _is_ident(char: str) -> bool:
+    return char.isalnum() or char == "_"
+
+
+def mask_rust_literals(source: str) -> tuple[str, list[str]]:
+    """Replace each Rust string/char literal with `$S<n>$`, linearly.
+
+    Handles "..." with escapes, raw r"..." and r#"..."# (also after `b`),
+    and char literals such as '"' or '\\''. A lifetime ('static) is not a
+    literal. An unterminated string swallows the rest of the file, which is
+    what rustc would report too. Each placeholder keeps the literal's
+    newlines so that line numbers stay true.
+    """
+    out: list[str] = []
+    strings: list[str] = []
+    i, n = 0, len(source)
+
+    def stash(start: int, end: int) -> None:
+        literal = source[start:end]
+        strings.append(literal)
+        out.append(f"$S{len(strings) - 1}$" + "\n" * literal.count("\n"))
+
+    while i < n:
+        char = source[i]
+        prev = source[i - 1] if i else ""
+        if char == "r" and not (_is_ident(prev) and prev != "b"):
+            j = i + 1
+            while j < n and source[j] == "#":
+                j += 1
+            if j < n and source[j] == '"':
+                close = source.find('"' + "#" * (j - i - 1), j + 1)
+                end = n if close < 0 else close + 1 + (j - i - 1)
+                stash(i, end)
+                i = end
+                continue
+        if char == '"':
+            j = i + 1
+            while j < n and source[j] != '"':
+                j += 2 if source[j] == "\\" else 1
+            end = min(j + 1, n)
+            stash(i, end)
+            i = end
+            continue
+        if char == "'":
+            if source.startswith("\\", i + 1) and source.startswith("'", i + 3):
+                stash(i, i + 4)
+                i += 4
+                continue
+            if i + 2 < n and source[i + 1] not in "\\\n'" and source[i + 2] == "'":
+                stash(i, i + 3)
+                i += 3
+                continue
+        out.append(char)
+        i += 1
+    return "".join(out), strings
 
 
 def rust_string_value(literal: str) -> str | None:
     """The text of a plain or raw Rust string literal without escapes.
 
     Release IDs and case names never need escapes, so a literal that has one
-    is reported as unreadable (None) instead of being half-decoded.
+    (or a char literal, or an unterminated string) is reported as unreadable
+    (None) instead of being half-decoded.
     """
-    if literal.startswith("'"):
+    match = re.fullmatch(r'b?r(#*)"(.*)"\1|b?"([^"\\]*)"', literal, re.DOTALL)
+    if not match:
         return None
-    if literal.startswith("r"):
-        return literal.strip("r#")[1:-1]
-    inner = literal[1:-1]
-    return None if "\\" in inner else inner
+    return match.group(2) if match.group(2) is not None else match.group(3)
 
 
 def matrix_rows(source: str) -> list[dict[str, str]]:
     """`Prog { .. }` literals of `lang_matrix.rs` that name a release or case.
 
-    String literals are swapped for placeholders before the field regexes
-    run, so text inside a program's `src` (which may itself contain `{`, `}`
-    or `release:`) can never be mistaken for a field.
+    String literals are masked before the field regexes run, so text inside
+    a program's `src` (which may itself contain `{`, `}` or `release:`) can
+    never be mistaken for a field. Only a Prog's top-level fields count: a
+    nested `{ .. }` such as a struct-variant `expect` is skipped.
     """
-    strings: list[str] = []
-
-    def stash(match: re.Match[str]) -> str:
-        strings.append(match.group(0))
-        # Keep the literal's newlines so line numbers stay true.
-        return f"$S{len(strings) - 1}$" + "\n" * match.group(0).count("\n")
-
-    text = RUST_STRING_RE.sub(stash, source)
-    # Line comments may hold example rows; drop them after strings are safe.
+    text, strings = mask_rust_literals(source)
+    # Line comments may hold example rows; drop them now strings are masked.
     text = re.sub(r"//[^\n]*", "", text)
+    opens = {match.end() - 1 for match in re.finditer(r"\bProg\s*\{", text)}
+    newlines = [i for i, char in enumerate(text) if char == "\n"]
+
+    bodies: list[tuple[int, str]] = []
+    stack: list[tuple[int, list[str]]] = []
+    for index, char in enumerate(text):
+        if char == "{":
+            stack.append((index, []))
+        elif char == "}" and stack:
+            start, buffer = stack.pop()
+            if start in opens:
+                bodies.append((start, "".join(buffer)))
+        elif stack:
+            stack[-1][1].append(char)
+
     rows = []
-    for match in re.finditer(r"\bProg\s*\{", text):
-        # Balanced scan to the matching `}`: a field such as a struct-variant
-        # `expect: Expect::X { .. }` may nest braces of its own.
-        depth, end = 1, match.end()
-        while depth and end < len(text):
-            depth += {"{": 1, "}": -1}.get(text[end], 0)
-            end += 1
-        body = text[match.end() : end - 1]
-        # Only top-level fields count: blank out nested `{ .. }` groups.
-        while re.search(r"\{[^{}]*\}", body):
-            body = re.sub(r"\{[^{}]*\}", "", body)
+    for start, body in sorted(bodies):
         language = re.search(r"\blang\s*:\s*Language::(\w+)", body)
         if not language:
             continue  # `struct Prog { .. }` itself
-        line = text.count("\n", 0, match.start()) + 1
+        line = bisect.bisect_left(newlines, start) + 1
         row = {"lang": language.group(1), "line": str(line)}
         for name in ("release", "case"):
             found = re.search(rf"\b{name}\s*:\s*Some\(\s*\$S(\d+)\$\s*\)", body)
