@@ -381,7 +381,9 @@ and the legacy-schema skip (`LEGACY_SCHEMA`) is gone. CI runs
   `.cite`, and an `.expect@<profile>` override has a plain `.expect`.
 - **`--matrix`** (contract for 4c). For each release R claiming B(S), each
   positive case C of S needs one of three things. `release_classes.csv` can
-  mark (C, R) `rejected`, meaning R's grammar does not parse C. A
+  mark (C, R) `rejected`, meaning R does not accept C: R's grammar does not
+  parse it, or a `.reject@<profile>` override puts it outside R's profile
+  (the second reading added in 4c). A
   `lang_matrix` row can run C on R. Or `release_classes.csv` can put (C, R) in
   an IIR-identity class whose representative (its first release in inventory
   order) has such a row. `release_classes.csv` (`subset,case,release,class`,
@@ -493,7 +495,10 @@ The corpus lives under `code/grammars/<dir>/corpus/<subset>/`. Each case is
 `<name>.cite`. A case may carry `<name>.expect@<profile>` overrides. A case
 applies to a release when the release lists the subset and its grammar parses
 the case. Negative probes live in `<name>.reject`, with the expected error
-category.
+category. A positive case may also carry `<name>.reject@<profile>`: under that
+profile the case is outside the subset and must be refused with the named
+category, because the release's own semantics for it are not established
+(Perl's negative zero, below). *(Added in 4c.)*
 
 Every `.expect` file MUST have an oracle record in its `.cite`. One of:
 
@@ -1241,14 +1246,39 @@ Divergences from this spec in 4b:
   have unbounded `INT` rules, and their evidence is pod files, not
   `toke.c`. Correcting them is a separate LANG82 follow-up.
 
-Remaining phase 4 slice:
+**Phase 4c (release sweep).** B(`pl-int-print`) for the checked releases,
+bounded per [CI bounding](#ci-bounding):
 
-- **4c.** Release sweep: B(pl-int-print) for every checked release on the
-  backends, bounded per [CI bounding](#ci-bounding), with the corpus under
-  `code/grammars/perl/corpus/pl-int-print/`. 2b declared the subset in
-  `subsets.csv`. 4c writes `release_classes.csv`, adds `release` and `case`
-  to the 11 Perl `lang_matrix` rows, and then fills `iir_status`,
-  `backend_status` and `profile`, which `check --matrix` verifies.
+- **Corpus.** `code/grammars/perl/corpus/pl-int-print/` holds the eleven
+  `lang_matrix` programs as positive cases, a CRLF layout case, and negative
+  cases whose category is the same under every checked release. Every case
+  has a `.cite`. `.expect` holds the exact stdout plus one final LF that is
+  not part of it (Perl's `print` subset never writes a newline).
+- **Profiles.** `perl-iir-compiler/src/profiles.rs` defines the
+  `ReleaseProfile`s the `profile` column names, mapped from exact IDs only.
+  The one semantic switch the subset needs is the sign of a computed zero.
+  Before PERL_PRESERVE_IVUV, Perl evaluates `+`, `-`, `*` and unary minus on
+  C doubles, so `-0` and `0 * -3` are IEEE negative zeros, and whether
+  `print` shows `0` or `-0` depends on the release's constant folding and on
+  the platform's `printf`/`Gconvert` (pinned sources in `profiles.rs`). Under
+  that profile the compiler tracks each value's zero sign and refuses to
+  print a negative zero (`Unsupported`), so a program whose output the
+  release does not pin down never compiles. Cases that print one carry
+  `.reject@<profile>`.
+- **Sweep.** `perl-iir-compiler/tests/release_sweep.rs` compiles every case
+  under every checked release, groups the releases into IIR-identity classes
+  (releases whose outcome, IIR digest or rejection, is the same for every
+  case; the `release` field is not serialised), and compares the result with
+  the committed `code/grammars/perl/release_classes.csv`
+  (`PERL_RELEASE_SWEEP_WRITE=1` rewrites it). A class's `class` cell is the
+  first 16 hex digits of the SHA-256 of its whole outcome vector; a case the
+  release does not accept is `rejected`. `tests/release_subsets.rs` proves
+  stage I for every release whose `iir_status` claims the subset.
+- **Matrix.** `lang_matrix`'s `Prog` gains `release` and `case`. The eleven
+  Perl rows name `5.38.0` and their case; new rows run every case each class
+  representative accepts, on all eight executable columns.
+- **CSV.** `iir_status`, `backend_status` and `profile` are filled for every
+  release the sweep, the stage-I test and `check --matrix` prove.
 
 ### Wire every IIR frontend into lang-aot
 
