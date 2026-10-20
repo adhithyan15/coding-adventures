@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- **Every stylesheet is compiled.** `each_msl_compiles_against_its_part_map` compiled only `Grid.dark.msl` and `Cell.dark.msl`, a list written before the light theme and `RowHeaderGrid` existed, so four of the package's six stylesheets were never compiled by its own test. The loop now follows the manifest's exports and compiles both themes. A component must ship both themes or neither.
+- **The test reads the manifest instead of copying it.** The test's own `COMPONENTS` list and the hard-coded export assertion are gone. The manifest's exports must equal the `src/*.mil` interfaces on disk. Every file in `src/` must belong to an export, or be the crate's `lib.rs`.
+- **README export table is checked.** It said "Three components" and left out `RowHeaderGrid`. It now has a row for every export, and `readme_describes_every_export` fails if a row goes missing or names something the manifest doesn't export.
+
 ## 2026-09-24
 
 - **A light theme.** `Grid.light.msl`, `Cell.light.msl` and `RowHeaderGrid.light.msl` carry the dark theme's parts and states, one for one, in the light palette of VisiCalc's own `Grid.light.msl`. The package shipped only a dark theme, so every light-themed consumer embedded a VS Code-dark grid: Trestle's Sheet view, and VisiCalc's light build around its `RowHeaderGrid`.
