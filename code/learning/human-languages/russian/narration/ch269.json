@@ -1,0 +1,589 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 269,
+  "title": "If, and It Depends",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:78b9bc5bea248990",
+  "lessons": [
+    {
+      "id": "RU-C269-yesli",
+      "sequence": 16260,
+      "title": "если — if, and the if that is a question",
+      "headword": "если …, …",
+      "romanization": "yésli …, …",
+      "gloss": "if — если joins a condition to the rest with a comma at the seam, in either order; an 'if' that means 'whether' takes ли instead",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b35cb5d17ee9b040",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"if\". (Yésli.) Then \"I've been learning Russian for two years\". (Ya uzhé dva góda uchú rússkiy.) The word for \"if\" has waited since the joining words of the A2 chapters. Now it joins."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: a condition and a comma",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Если works like когда: it hangs one half on the other, and the comma sits at the seam, whichever half comes first."
+            },
+            {
+              "kind": "speech",
+              "text": "Если хочешь, мы можем пойти в кино. — yésli khóchesh, my mózhem poytí v kinó — If you like, we can go to the cinema. Мы можем пойти в кино, если хочешь. — the same, turned round. Если ты устал, отдохни. — yésli ty ustál, otdokhní — If you're tired, have a rest."
+            },
+            {
+              "kind": "speech",
+              "text": "Пойти is \"to go, to set off\", the partner of идти; отдохни is отдохнуть to a friend."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: \"if\" that means \"whether\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English \"if\" has a second job: \"I don't know if the museum is open\". That \"if\" is a question, \"whether\", and Russian answers it with ли, not если:"
+            },
+            {
+              "kind": "speech",
+              "text": "Я не знаю, работает ли музей. — ya ne znáyu, rabótayet li muzéy — I don't know if the museum is open."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb comes first, then ли: \"is-it-working, the museum\". A museum that is open, in Russian, \"works\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "если was once есть ли, \"is it?\": есть, \"is\", with the asking word ли. EtymDB 2.1 records it as a compound of есть and ли, though it glosses that есть as \"to eat\", the other word with the same spelling; \"is\", the form of быть, is the one that fits. A condition began as a question."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Yésli khóchesh, my mózhem poytí v kinó.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Yésli khóchesh, my mózhem poytí v kinó.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same, turned round: My mózhem poytí v kinó, yésli khóchesh.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same, turned round: *My mózhem poytí v kinó, yésli khóchesh.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Yésli ty ustál, otdokhní.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Yésli ty ustál, otdokhní.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ya ne znáyu, rabótayet li muzéy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ya ne znáyu, rabótayet li muzéy.*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does the comma go with если? (At the seam, either order.) \"I don't know if he understands\": если or ли? (Ли: Я не знаю, понимает ли он.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C269-yesli-budet",
+      "sequence": 16270,
+      "title": "если будет дождь — the future on both sides of if",
+      "headword": "если будет дождь, мы пойдём …",
+      "romanization": "yésli búdet dozhd, my poydyóm …",
+      "gloss": "a real condition about what lies ahead — the future in both halves, будет for 'will be', and a perfective's present-looking form for one deed to come",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5247bef2f43c4283",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"if you like, we can go to the cinema\". (Yésli khóchesh, my mózhem poytí v kinó.) Then \"I hope the weather will be good\". (Ya nadéyus, shto pogóda búdet khoróshaya.) That будет is the key to this lesson."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the future on both sides",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Если в субботу будет дождь, мы пойдём в музей. — yésli v subbótu búdet dozhd, my poydyóm v muzéy — If it rains on Saturday, we'll go to the museum."
+            },
+            {
+              "kind": "speech",
+              "text": "English puts the \"if\" half in the present: \"if it rains\". When the condition lies ahead, Russian usually puts it in the future as well: \"if there will be rain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Если будет время, я позвоню. — yésli búdet vrémya, ya pozvonyú — If I have time, I'll ring."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: a perfective points forward",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Позвоню, пойдём: these look like present forms, and they are future. A perfective verb has no present, because a deed seen whole cannot be under way now; its present-looking forms point to one deed to come."
+            },
+            {
+              "kind": "speech",
+              "text": "Если я прочитаю книгу, я расскажу тебе. — yésli ya prochitáyu knígu, ya rasskazhú tebé — If I finish the book, I'll tell you."
+            },
+            {
+              "kind": "speech",
+              "text": "The imperfective builds its future with буду and the infinitive, as met beside будущий: Я буду читать — I will be reading."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "будет is the future of быть, which EtymDB 2.1 takes back to Proto-Indo-European bʰuH-, \"to become\". The future of \"to be\" keeps a root that meant becoming: what will be is what becomes."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Yésli v subbótu búdet dozhd, my poydyóm v muzéy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Yésli v subbótu búdet dozhd, my poydyóm v muzéy.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Yésli búdet vrémya, ya pozvonyú.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Yésli búdet vrémya, ya pozvonyú.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Yésli ya prochitáyu knígu, ya rasskazhú tebé.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Yésli ya prochitáyu knígu, ya rasskazhú tebé.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a plan for the weekend of your own, with yésli búdet and one perfective",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a plan for the weekend of your own, with *yésli búdet* and one perfective]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"If it rains\": present or future in Russian? (Future: если будет дождь.) Is позвоню now or later? (Later: a perfective, one call to come.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C269-zavisit",
+      "sequence": 16280,
+      "title": "это зависит от … (éto zavísit ot …) — it depends",
+      "headword": "это зависит от …",
+      "romanization": "éto zavísit ot …",
+      "gloss": "it depends on … — the answer when the answer is a condition, with от and the 'of' form of what it hangs on",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a0cf9299a754ce3a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"if it rains on Saturday, we'll go to the museum\". (Yésli v subbótu búdet dozhd, my poydyóm v muzéy.) Then \"the weather\". (Pogóda.) Sometimes the honest answer to a question is a condition."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: это зависит от …",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "— Ты пойдёшь в парк? — Не знаю. Это зависит от погоды. — ty poydyósh v park? ne znáyu. éto zavísit ot pogódy — Are you going to the park? I don't know. It depends on the weather."
+            },
+            {
+              "kind": "speech",
+              "text": "Зависит is \"it depends\", from зависеть. In quick conversation it can shrink to Зависит. — \"It depends.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: от and the \"of\" form",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "от — ot — \"from, on\". What a thing depends on takes the same form as after до: погода, от погоды; цена, от цены."
+            },
+            {
+              "kind": "speech",
+              "text": "Это зависит от цены. — éto zavísit ot tsený — It depends on the price. Это зависит от времени. — éto zavísit ot vrémeni — It depends on the time. Время has its own shape here: времени. Это зависит от тебя. — éto zavísit ot tebyá — It's up to you."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "зависеть is за- with висеть, \"to hang\", which EtymDB 2.1 traces through Old East Slavic visěti to Proto-Slavic visěti. To depend is to hang on something. English draws the same picture: depend is Latin dēpendēre, \"to hang down from\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Éto zavísit ot pogódy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Éto zavísit ot pogódy.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Éto zavísit ot tsený, then ot vrémeni",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Éto zavísit ot tsený*, then *ot vrémeni*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "Ty poydyósh v park? Ne znáyu. Éto zavísit ot …",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: *Ty poydyósh v park?* *Ne znáyu. Éto zavísit ot …*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mne kázhetsya, shto éto zavísit ot tebyá.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mne kázhetsya, shto éto zavísit ot tebyá.*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"It depends on the weather\"? (Это зависит от погоды.) \"It's up to you\"? (Это зависит от тебя.) What verb is inside зависеть? (One meaning \"to hang\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C269-review",
+      "sequence": 16290,
+      "title": "Review — if, and it depends",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "a weekend plan — если with the future on both sides, ли for whether, and an answer that depends on something",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:78c1a0e1d9e42678",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"if you like, we can go to the cinema\". (Yésli khóchesh, my mózhem poytí v kinó.) Then \"I don't know if the museum is open\". (Ya ne znáyu, rabótayet li muzéy.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three lessons, and Russian can now look ahead on a condition. Если with a comma at the seam. The future on both sides when the condition lies ahead, with будет and a perfective's forward-pointing forms. Ли when \"if\" means \"whether\". And это зависит от with the \"of\" form."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "— Ты пойдёшь в музей в субботу? — Это зависит от погоды. Если будет дождь, пойду."
+            },
+            {
+              "kind": "speech",
+              "text": "Poydú, \"I'll go\": the perfective, one visit to come. The answer depends, and then says on what."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Éto zavísit ot pogódy. Yésli búdet dozhd, poydú.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Éto zavísit ot pogódy. Yésli búdet dozhd, poydú.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Yésli búdet vrémya, ya pozvonyú.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Yésli búdet vrémya, ya pozvonyú.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Póyezd deshévle, chem samolyót, no samolyót bystréye.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Póyezd deshévle, chem samolyót, no samolyót bystréye.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "Ty poydyósh v park? Make it depend on something, then add one yésli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: *Ty poydyósh v park?* Make it depend on something, then add one *yésli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Dva góda nazád ya byl v Moskvé, i ya uzhé dva góda uchú rússkiy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Dva góda nazád ya byl v Moskvé, i ya uzhé dva góda uchú rússkiy.*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"If there's time\", for tomorrow? (Если будет время.) \"Whether\": если or ли? (Ли.) \"It depends on the price\"? (Это зависит от цены.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,440 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 268,
+  "title": "Better Than, and Years Ago",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:4ae95187c78d5987",
+  "lessons": [
+    {
+      "id": "RU-C268-bolshe-chem",
+      "sequence": 16230,
+      "title": "быстрее, чем; лучше, хуже — comparing two things",
+      "headword": "быстрее, чем …; больше, лучше, хуже",
+      "romanization": "bystréye, chem …; bólshe, lúchshe, khúzhe",
+      "gloss": "comparing — most adjectives add -ее, a few change shape (больше, меньше, лучше, хуже, дороже, дешевле), and чем after a comma is 'than'",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5ddd7397107e1faf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"fast\", \"expensive\" and \"cheap\". (Býstryy. Dorogóy. Deshyóvyy.) Then \"you'd better take a taxi\". (Tebé lúchshe vzyat taksí.) That лучше was already a comparison: \"better\"."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: -ее, and чем",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Most adjectives compare by swapping their ending for -ее: быстрый, быстрее (bystréye); тёплый, теплее (tepléye); интересный, интереснее (interésneye). The form does not change for gender or number."
+            },
+            {
+              "kind": "speech",
+              "text": "\"Than\" is чем, with a comma in front:"
+            },
+            {
+              "kind": "speech",
+              "text": "Поезд быстрее, чем автобус. — póyezd bystréye, chem avtóbus — The train is faster than the bus."
+            },
+            {
+              "kind": "speech",
+              "text": "In a short adjective the stress usually moves onto -ее: bystréye. In a longer one it usually stays where it was: interésneye."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the ones that change shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A few common ones are learned whole: большой, больше (bólshe), bigger, more; маленький, меньше (ménshe), smaller, less; хороший, лучше (lúchshe), better; плохой, хуже (khúzhe), worse; дорогой, дороже (dorózhe); дешёвый, дешевле (deshévle)."
+            },
+            {
+              "kind": "speech",
+              "text": "Самолёт быстрее, но поезд дешевле. — samolyót bystréye, no póyezd deshévle — The plane is faster, but the train is cheaper. По-моему, поезд лучше. — po-móyemu, póyezd lúchshe — In my view the train is better."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "чем is a form of что, the \"by what\" form, on the question-root PIE kʷo- behind что, кто and English what. EtymDB 2.1 lists чем without taking it apart, so the link to что is the plain reading of the forms."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Póyezd bystréye, chem avtóbus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Póyezd bystréye, chem avtóbus.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Samolyót bystréye, no póyezd deshévle.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Samolyót bystréye, no póyezd deshévle.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bólshe, ménshe, lúchshe, khúzhe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bólshe, ménshe, lúchshe, khúzhe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "Shto lúchshe: póyezd íli samolyót? \"Which is better?\" Give one reason with potomú shto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: *Shto lúchshe: póyezd íli samolyót?* \"Which is better?\" Give one reason with *potomú shto*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Warmer\"? (Теплее.) \"Than\"? (Чем, with a comma.) \"Worse\"? (Хуже.) \"Cheaper\"? (Дешевле.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C268-uzhe-let",
+      "sequence": 16240,
+      "title": "уже два года; два года назад (uzhé dva góda; dva góda nazád) — how long, and how long ago",
+      "headword": "уже два года; два года назад",
+      "romanization": "uzhé dva góda; dva góda nazád",
+      "gloss": "how long, and how long ago — уже with the present for what is still going on, назад with the past for when it happened, and год, года, лет for counting years",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a1305672f09c5656",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"already\", \"back\" and \"a year\". (Uzhé. Nazád. God.) Then \"more\" and \"less\". (Bólshe. Ménshe.) Comparing things leads to comparing times: how long, and how long ago."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: how long, in the present",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Я уже два года учу русский. — ya uzhé dva góda uchú rússkiy — I've been learning Russian for two years."
+            },
+            {
+              "kind": "speech",
+              "text": "English says \"I have been learning\". Russian keeps the present, because the learning is still going on; уже, \"already\", marks how far it has come. In the same way: Я давно живу здесь. — ya davnó zhivú zdes — I've lived here for a long time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: how long ago, in the past",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Назад, \"back\", follows a stretch of time to mean \"ago\":"
+            },
+            {
+              "kind": "speech",
+              "text": "Два года назад я был в Москве. — dva góda nazád ya byl v Moskvé — Two years ago I was in Moscow. Час назад позвонила мама. — chas nazád pozvoníla máma — Mum rang an hour ago."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: год, года, лет",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "After a number, the word for a year changes: один год; два, три, четыре года; from пять to двадцать, лет. Ask someone's age with it: Сколько тебе лет? — skólko tebé let? And answer: Мне двадцать лет. — mne dvádtsat let — I'm twenty."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "лет is the counting form of лето, \"summer\". EtymDB 2.1 traces лето to Proto-Slavic lěto, which already meant \"year\", so a long count of years is a count of summers. год goes back through Old East Slavic godŭ, \"time, year\", to Proto-Slavic godŭ, \"the suitable time\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ya uzhé dva góda uchú rússkiy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ya uzhé dva góda uchú rússkiy.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Dva góda nazád ya byl v Moskvé.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Dva góda nazád ya byl v Moskvé.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "odín god, dva góda, pyat let",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *odín god, dva góda, pyat let*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "Skólko tebé let? Mne …, then Skólko let ty uchísh rússkiy?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: *Skólko tebé let?* *Mne …*, then *Skólko let ty uchísh rússkiy?*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I've been learning Russian for two years\": which tense? (The present, with уже.) \"Two years ago\"? (Два года назад.) \"Five years\"? (Пять лет.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C268-review",
+      "sequence": 16250,
+      "title": "Review — better than, and years ago",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "two ways to travel compared, then how long and how long ago — -ее and чем, лучше and дешевле, уже два года and два года назад",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ed6e0f537781b0e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"the train is faster than the bus\". (Póyezd bystréye, chem avtóbus.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two lessons, and an experience can be measured. -ее and чем for most comparisons, and six to learn whole: больше, меньше, лучше, хуже, дороже, дешевле. The present with уже for what is still going on, the past with назад for when it happened, and год, года, лет to count."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A trip, measured:"
+            },
+            {
+              "kind": "speech",
+              "text": "Два года назад я был в Москве. Поезд был дешевле, чем самолёт, и мне было интересно. Я уже два года мечтаю вернуться."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Dva góda nazád ya byl v Moskvé.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Dva góda nazád ya byl v Moskvé.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Póyezd byl deshévle, chem samolyót.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Póyezd byl deshévle, chem samolyót.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ya uzhé dva góda mechtáyu vernútsya.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ya uzhé dva góda mechtáyu vernútsya.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "Shto lúchshe, po-tvóyemu: móre íli góry? Answer with po-móyemu and one comparison",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: *Shto lúchshe, po-tvóyemu: móre íli góry?* Answer with *po-móyemu* and one comparison]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"More expensive\"? (Дороже.) \"An hour ago\"? (Час назад.) \"Twenty years\"? (Двадцать лет.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

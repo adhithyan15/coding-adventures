@@ -22,7 +22,7 @@ it("pins Russian's writing ladder IN ORDER, pre-A1 through A1", () => {
   expect(russian.defects).toEqual([]);
   // The pre-A1 runway is привет, observed, copied, copied blind and dictated;
   // the chapter-one checkpoint is a second dictation block. Then chapters
-  // 258-260. ORDER is the point: `missing-stage-prerequisite` rejects a timed
+  // 258-260, and chapter 270's B1 letter. ORDER is the point: `missing-stage-prerequisite` rejects a timed
   // or connected paper that sits before a controlled one, so a set-equality
   // assertion would pass on a ladder whose rungs prove nothing.
   expect(russian.validEvidence.map(({ lessonId, stage }) => [lessonId, stage])).toEqual([
@@ -34,6 +34,8 @@ it("pins Russian's writing ladder IN ORDER, pre-A1 through A1", () => {
     ["RU-W258-own-line", "controlled-composition"],
     ["RU-W259-with-a-clock", "timed-assessment-production"],
     ["RU-W260-four-lines", "connected-composition"],
+    // Chapter 270's six lines about a trip, the first B1 connected writing.
+    ["RU-W270-pismo", "connected-composition"],
   ]);
   expect(russian.levels[0]).toMatchObject({ level: "pre-A1", missingStages: [], complete: true });
   expect(russian.levels.find((level) => level.level === "A1")?.missingStages).toEqual([]);
@@ -84,7 +86,10 @@ it("pins Russian lesson-content budgets", () =>
     // introduces nothing: no idiom, sense or culture claim.
     // 1339 -> 1342: chapters 258-260, the A1 writing stages Russian had not
     // proved. No new word or atom.
-    lessons: 1342,
+    // 1342 -> 1376: chapters 261-270, the B1 core that realizes all five B1
+    // spine nodes (aspect in the past, reasons, travel, experience, бы): 34
+    // lessons, one reading and one writing. No idiom, sense or culture claim.
+    lessons: 1376,
     idioms: 0,
     senses: 4,
     cultureClaims: 10,

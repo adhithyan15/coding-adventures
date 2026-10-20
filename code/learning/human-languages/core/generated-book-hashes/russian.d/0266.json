@@ -1,0 +1,11 @@
+{
+  "language": "russian",
+  "chapter": 266,
+  "sourceHash": "fnv1a64:fd170ba8e5a7ed86",
+  "lessonIds": [
+    "RU-C266-tuda-i-obratno",
+    "RU-C266-opozdal",
+    "RU-C266-review"
+  ],
+  "tex": "russian/book/chapters/ch266-a-ticket-and-a-missed-train.tex"
+}

@@ -1,0 +1,464 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 267,
+  "title": "Glad, Tired, Hopeful",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:e9e3dfbc6f0df242",
+  "lessons": [
+    {
+      "id": "RU-C267-ya-byl-rad",
+      "sequence": 16200,
+      "title": "я был рад, я устал, мне было скучно (ya byl rad, ya ustál, mne býlo skúchno) — how it felt",
+      "headword": "я был рад, я устал, мне было скучно",
+      "romanization": "ya byl rad, ya ustál, mne býlo skúchno",
+      "gloss": "how it felt — рад, glad, a short adjective that agrees; я устал, I'm tired, a perfective past for a state now; мне было скучно, it felt boring to me",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:278a1ddeb52693bb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"joy\", \"happy\" and \"sad\". (Rádost. Schastlívyy. Grústnyy.) Then \"I've missed the train\". (Ya opozdál na póyezd.) A trip has problems, and it has feelings."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: рад, glad",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "рад — rad — \"glad\". It is a short adjective: it does not stand before a noun, only after the person, and it agrees: рад for a man, рада (ráda) for a woman, рады (rády) for more than one."
+            },
+            {
+              "kind": "speech",
+              "text": "Я рад, что ты позвонил. — ya rad, shto ty pozvoníl — I'm glad you rang. Я была рада, что ты позвонил. — ya bylá ráda, shto ty pozvoníl — I was glad you rang."
+            },
+            {
+              "kind": "speech",
+              "text": "In the present there is no verb; in the past, был agrees with it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: я устал, I'm tired",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Я устал. — ya ustál — I'm tired. A woman: Я устала."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the perfective past of устать, the partner of уставать: \"I have got tired\". The result is the state you are in now, so a past form says \"I am tired\" today. Усталый is the adjective for a tired face or a tired voice."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: мне было скучно",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "How a thing felt goes on the \"to me\" form, with an -о word and было:"
+            },
+            {
+              "kind": "speech",
+              "text": "На концерте мне было скучно. — na kontsérte mne býlo skúchno — I was bored at the concert. Мне было интересно и весело. — mne býlo interésno i véselo — It was interesting, and I had fun."
+            },
+            {
+              "kind": "speech",
+              "text": "Скучно is said skúshno: the ч is said as ш in this word."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "рад goes back to Proto-Slavic radŭ, \"glad\" (EtymDB 2.1). Радость, \"joy\", is the same root with a noun ending: the gladness itself."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ya rad, shto ty pozvoníl, then a woman, in the past: Ya bylá ráda, shto ty pozvoníl.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ya rad, shto ty pozvoníl*, then a woman, in the past: *Ya bylá ráda, shto ty pozvoníl.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ya ustál, then Ya ustála.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ya ustál*, then *Ya ustála.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Na kontsérte mne býlo skúchno.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Na kontsérte mne býlo skúchno.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "Tebé býlo interésno? Answer with mne býlo and one -o word",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: *Tebé býlo interésno?* Answer with *mne býlo* and one *-o* word]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"She was glad\"? (Она была рада.) \"I'm tired\", in the past form? (Я устал, or я устала.) \"I was bored\"? (Мне было скучно.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C267-mechtat",
+      "sequence": 16210,
+      "title": "мечтать (mechtát) — to dream of, to long to",
+      "headword": "мечтать",
+      "romanization": "mechtát",
+      "gloss": "to dream of, to long to — with an infinitive or о and a thing; and я надеюсь, что … for a hope about what will be",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bc4ed5701e376927",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I was glad\" and \"I had fun\". (Ya byl rad. Mne býlo véselo.) Then \"to hope\". (Nadéyatsya.) A trip told in the past leaves something for the future: a hope, a dream."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: мечтать",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "мечтать — mechtát — \"to dream of, to long to\". It takes an infinitive, as хотеть does:"
+            },
+            {
+              "kind": "speech",
+              "text": "Я мечтаю путешествовать. — ya mechtáyu puteshéstvovat — I dream of travelling."
+            },
+            {
+              "kind": "speech",
+              "text": "Or о and a thing, with the thing's ending changed:"
+            },
+            {
+              "kind": "speech",
+              "text": "Я мечтаю о море. — ya mechtáyu o móre — I dream of the sea."
+            },
+            {
+              "kind": "speech",
+              "text": "This is a waking dream, a wish. A dream at night is сон, the word you have for sleep."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: я надеюсь, что …",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A dream may never come; a hope is about what may well happen. Я надеюсь, что … takes a whole clause, and a hope about tomorrow puts it in the future:"
+            },
+            {
+              "kind": "speech",
+              "text": "Я надеюсь, что погода будет хорошая. — ya nadéyus, shto pogóda búdet khoróshaya — I hope the weather will be good."
+            },
+            {
+              "kind": "speech",
+              "text": "Будет, \"will be\", is the future of быть: the буду inside будущий. Short and spoken: Надеюсь! — \"I hope so!\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "мечтать (mechtát) is inherited from Proto-Slavic mĭčĭtati, and the noun мечта, \"a dream, a wish\", from mĭčĭta, \"dream\" (EtymDB 2.1). EtymDB derives that noun from a Proto-Slavic verb mikati and gives it no meaning; by the usual account it is the verb of blinking and flickering, so a dream was first a flicker before the eyes."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ya mechtáyu puteshéstvovat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ya mechtáyu puteshéstvovat.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ya mechtáyu o móre.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ya mechtáyu o móre.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ya nadéyus, shto pogóda búdet khoróshaya.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ya nadéyus, shto pogóda búdet khoróshaya.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "O chyom ty mechtáyesh? \"What do you dream of?\" Answer with an infinitive or with o",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: *O chyom ty mechtáyesh?* \"What do you dream of?\" Answer with an infinitive or with *o*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I dream of travelling\"? (Я мечтаю путешествовать.) A dream at night? (Сон.) \"I hope the weather will be good\"? (Я надеюсь, что погода будет хорошая.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C267-review",
+      "sequence": 16220,
+      "title": "Review — how it felt, and what comes next",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "how a trip felt and what comes next — рад and устал, мне было интересно, then a hope with надеюсь, что and a dream with мечтаю",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1e07f74313000043",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I'm glad\", as a man and as a woman. (Ya rad. Ya ráda.) Then \"I'm tired\". (Ya ustál. Ya ustála.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two lessons, and an experience now has a feeling and a future. Рад, рада, рады, with был in the past. Я устал, a past form for a state now. Мне было with an -о word for how a thing felt. And two ways forward: я надеюсь, что … будет, and я мечтаю with an infinitive or о."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A day at a museum, in three lines:"
+            },
+            {
+              "kind": "speech",
+              "text": "В музее мне было интересно. Вечером я устала, но я была рада. Я мечтаю вернуться туда."
+            },
+            {
+              "kind": "speech",
+              "text": "Вернуться, the partner of возвращаться, came with Anna's passport: \"I dream of going back there\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "V muzéye mne býlo interésno.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *V muzéye mne býlo interésno.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ya opozdál na póyezd, no mne né bylo grústno.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ya opozdál na póyezd, no mne né bylo grústno.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ya nadéyus, shto pogóda búdet khoróshaya.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ya nadéyus, shto pogóda búdet khoróshaya.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "Kak býlo na kontsérte? \"How was the concert?\" Answer with mne býlo and one feeling",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: *Kak býlo na kontsérte?* \"How was the concert?\" Answer with *mne býlo* and one feeling]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"It was interesting for me\"? (Мне было интересно.) \"I dream of the sea\"? (Я мечтаю о море.) A hope about tomorrow: which verb form? (Будет, the future.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

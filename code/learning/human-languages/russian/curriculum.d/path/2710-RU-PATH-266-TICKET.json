@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-266-TICKET",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "RU-EXT-266-TICKET"
+  ],
+  "after": []
+}

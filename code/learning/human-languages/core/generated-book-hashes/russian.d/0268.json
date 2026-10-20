@@ -1,0 +1,11 @@
+{
+  "language": "russian",
+  "chapter": 268,
+  "sourceHash": "fnv1a64:49f2653bec1cbb85",
+  "lessonIds": [
+    "RU-C268-bolshe-chem",
+    "RU-C268-uzhe-let",
+    "RU-C268-review"
+  ],
+  "tex": "russian/book/chapters/ch268-better-than-and-years-ago.tex"
+}

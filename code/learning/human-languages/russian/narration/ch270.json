@@ -1,0 +1,597 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 270,
+  "title": "Would, and a Letter About a Trip",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:88cc150fbbddcefc",
+  "lessons": [
+    {
+      "id": "RU-C270-ya-by-khotel",
+      "sequence": 16300,
+      "title": "я бы хотел — would, and the polite request",
+      "headword": "я бы хотел, я бы хотела",
+      "romanization": "ya by khotél, ya by khotéla",
+      "gloss": "would — the little word бы with the -л form of a verb, whatever the time: я бы хотел, I'd like; вы не могли бы …?, could you …?",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8c935df27ba4d091",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I want a coffee\". (Ya khochú kófe.) Then \"if I have time, I'll ring\". (Yésli búdet vrémya, ya pozvonyú.) That was a real plan. Now a softer world: what would be."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: бы and the -л form",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "бы — by — is a small word that makes \"would\". It goes with the past form of the verb, the -л form, and here that form says nothing about the past:"
+            },
+            {
+              "kind": "speech",
+              "text": "Я бы хотел кофе. — ya by khotél kófe — I'd like a coffee. Я бы хотела чай. — ya by khotéla chay — I'd like tea; a woman says it. Я бы пошёл в кино. — ya by poshól v kinó — I'd go to the cinema."
+            },
+            {
+              "kind": "speech",
+              "text": "Бы can also follow the verb: Я хотел бы кофе. It agrees with nothing; the -л form does the agreeing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the polite request",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Я хочу is direct; я бы хотел is the polite way to ask for a thing. For asking someone to do something, Russian says \"could you not …\":"
+            },
+            {
+              "kind": "speech",
+              "text": "Вы не могли бы говорить медленно? — vy ne moglí by govorít médlenno? — Could you speak slowly? With повторить: Вы не могли бы повторить?"
+            },
+            {
+              "kind": "speech",
+              "text": "Могли is the -ли form of мочь, for polite вы; повторить is the partner of повторять. The не makes it gentler, not negative."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "бы is, by the usual account, a worn-down old form of быть, left over from a past tense Russian no longer has; EtymDB 2.1 lists бы without a parent. It is the same бы that sits inside чтобы, \"in order to\", a wish fastened to что."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ya by khotél kófe, then a woman: Ya by khotéla kófe.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ya by khotél kófe*, then a woman: *Ya by khotéla kófe.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ya khotél by chay. The by after the verb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ya khotél by chay.* The *by* after the verb]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Vy ne moglí by govorít médlenno?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Vy ne moglí by govorít médlenno?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "at a café the waiter asks Shto vy khotítye? Answer politely with ya by khotél or ya by khotéla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: at a café the waiter asks *Shto vy khotítye?* Answer politely with *ya by khotél* or *ya by khotéla*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I'd like a coffee\", a woman? (Я бы хотела кофе.) Which verb form goes with бы? (The -л form, but it is not past.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C270-yesli-by",
+      "sequence": 16310,
+      "title": "если бы — the condition that is not so",
+      "headword": "если бы у меня было время, я бы …",
+      "romanization": "yésli by u menyá býlo vrémya, ya by …",
+      "gloss": "a condition that is not so — бы and the -л form on both sides, for now or for the past alike; у меня было, I had",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9e9632d8c94b7193",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I'd like a coffee\". (Ya by khotél kófe.) Then the real plan: \"if I have time, I'll ring\". (Yésli búdet vrémya, ya pozvonyú.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: у меня было, I had",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have said у меня проблема, \"at me, a problem\". \"I have time\" is built the same way: у меня есть время. In the past, the thing you had is the subject, and было agrees with it: время is neuter, so у меня было время — u menyá býlo vrémya — I had time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: бы on both sides",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Если бы у меня было время, я бы позвонил. — yésli by u menyá býlo vrémya, ya by pozvoníl — If I had time, I would ring. Если бы я знал, я бы помог. — yésli by ya znal, ya by pomóg — If I had known, I would have helped."
+            },
+            {
+              "kind": "speech",
+              "text": "Бы stands on both sides, each time with the past form: знал, позвонил, and помог, one of the few without an л. Russian marks no time here: the first can mean \"if I had time now\" or \"if I had had time then\", and the story around it decides. Помог, \"helped\", is the past of помочь, the partner of помогать."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: real, or not real",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Если будет время, я позвоню. — It may well happen: a plan. Если бы было время, я бы позвонил. — It is not so: a wish, or a regret."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "U menyá býlo vrémya.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *U menyá býlo vrémya.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Yésli by u menyá býlo vrémya, ya by pozvoníl.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Yésli by u menyá býlo vrémya, ya by pozvoníl.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Yésli by ya znal, ya by pomóg, then a woman: Yésli by ya znála, ya by pomoglá.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Yésli by ya znal, ya by pomóg*, then a woman: *Yésli by ya znála, ya by pomoglá.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one wish of your own: Yésli by u menyá býlo vrémya, ya by …",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one wish of your own: *Yésli by u menyá býlo vrémya, ya by …*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I had time\"? (У меня было время.) A plan or a wish: если бы было время? (A wish: it is not so.) How many times does бы appear? (Twice, once on each side.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C270-review",
+      "sequence": 16320,
+      "title": "Review — what will be, and what would be",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "real and not real — если with the future for a plan, если бы and бы for what is not so, and я бы хотел for asking politely",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:efaf2f17476c9e40",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask politely for a tea, as a woman. (Ya by khotéla chay.) Then ask someone to speak slowly. (Vy ne moglí by govorít médlenno?)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two lessons, and Russian can now say what is not so. Бы with the -л form, whatever the time. Я бы хотел to ask for a thing, вы не могли бы to ask for a favour. And two kinds of если: the future for a plan, бы on both sides for a wish."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The same dream, two ways:"
+            },
+            {
+              "kind": "speech",
+              "text": "Если у меня будут деньги, я буду путешествовать. — a plan. Если бы у меня были деньги, я бы путешествовал. — a wish."
+            },
+            {
+              "kind": "speech",
+              "text": "Деньги, \"money\", is plural, so будут and были. Путешествовать is imperfective, so its future is буду and the infinitive."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Yésli by u menyá býli déngi, ya by puteshéstvoval.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Yésli by u menyá býli déngi, ya by puteshéstvoval.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Yésli by ya znála, ya by pomoglá.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Yésli by ya znála, ya by pomoglá.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "Ty búdesh puteshéstvovat létom? Éto zavísit ot déneg, then one line with yésli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: *Ty búdesh puteshéstvovat létom?* *Éto zavísit ot déneg*, then one line with *yésli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ya mechtáyu o móre. Yésli by u menyá býlo vrémya, ya by puteshéstvoval.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ya mechtáyu o móre. Yésli by u menyá býlo vrémya, ya by puteshéstvoval.*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A plan, or a wish: если бы у меня были деньги? (A wish.) \"Could you …?\", politely? (Вы не могли бы …?) \"I had time\"? (У меня было время.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-W270-pismo",
+      "sequence": 16330,
+      "title": "Six lines about a trip",
+      "headword": "(six lines)",
+      "romanization": "(six lines)",
+      "gloss": "six connected lines to one reader about a trip — the scene in the imperfective, the steps in order in the perfective, a feeling, and a last line with бы",
+      "script": "cyrillic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:2ae7f68a944edec1",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The four-line writing step held together with и, но, а and потому что. This time there are six, and they tell a story, as Anna's rainy Saturday did."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Pick one person who will read it: друг, подруга, someone in your family."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A told trip is more than a list of events. It has a scene, in the imperfective: было, шёл дождь, мы жили в гостинице. It has steps in order, each one finished, in the perfective. It has a feeling. And a good one ends by looking forward, or wishing."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A past verb agrees with who did it: -л, -ла, -ли, or, in a few such as мог, the same endings without the л: мог, могла, могли. A verb after бы takes the same forms."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — connected composition",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "On paper, write six lines to your reader about a trip, real or invented, one line for each of these:"
+            },
+            {
+              "kind": "speech",
+              "text": "the scene: when, with назад (год назад), and what it was like, in the imperfective;"
+            },
+            {
+              "kind": "speech",
+              "text": "the first step, with сначала, in the perfective;"
+            },
+            {
+              "kind": "speech",
+              "text": "the next step, with потом or затем, and a reason, with потому что, поэтому or так что; a problem works well here: я опоздал на поезд;"
+            },
+            {
+              "kind": "speech",
+              "text": "something that cut in, with когда or пока, and how it ended, with наконец;"
+            },
+            {
+              "kind": "speech",
+              "text": "how you felt, with я был рад, что …, я устал or мне было …, or what you thought, with по-моему and a comparison: лучше, чем …;"
+            },
+            {
+              "kind": "speech",
+              "text": "one line forward, with если бы у меня было время, я бы … (yésli by u menyá býlo vrémya, ya by …), or я бы хотел …, or a hope: я надеюсь, что …, я мечтаю …."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Use only words you already write. The exercise is the joining, and the aspect of each verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now go through your lines and find every verb. In line one, is it imperfective, a scene? In lines two, three and four, is each step perfective, one deed done? That is the slip to check first."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then the endings: -л for a man, -ла for a woman, -ли for more than one, after бы as well."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Last, the commas: one before что, потому что and чем, one before поэтому or так что when they join inside a sentence, and one at the seam after a когда, пока or если half. If line six uses если бы, does бы stand on both sides of the comma?"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

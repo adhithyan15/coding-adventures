@@ -1,0 +1,18 @@
+{
+  "language": "russian",
+  "chapter": 262,
+  "sourceHash": "fnv1a64:aac63f345803e760",
+  "lessonIds": [
+    "RU-C262-snachala-potom",
+    "RU-C262-rasskazat",
+    "RU-C262-chtenie",
+    "RU-C262-review"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 2,
+  "text": "russian/narration/ch262.txt",
+  "json": "russian/narration/ch262.json",
+  "textHash": "fnv1a64:92c816399bee985f",
+  "jsonHash": "fnv1a64:6ecc7a375fe33e8e",
+  "findings": []
+}

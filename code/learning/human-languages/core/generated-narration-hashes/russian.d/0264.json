@@ -1,0 +1,17 @@
+{
+  "language": "russian",
+  "chapter": 264,
+  "sourceHash": "fnv1a64:2b5a476ab102a8a5",
+  "lessonIds": [
+    "RU-C264-tebe-stoit",
+    "RU-C264-prichina-v-tom",
+    "RU-C264-review"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "russian/narration/ch264.txt",
+  "json": "russian/narration/ch264.json",
+  "textHash": "fnv1a64:5d7c311607c20feb",
+  "jsonHash": "fnv1a64:23be8e81e2ebfcc0",
+  "findings": []
+}

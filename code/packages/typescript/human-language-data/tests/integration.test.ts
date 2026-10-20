@@ -386,7 +386,9 @@ describe("real curriculum", () => {
       // attains A2.
       // 257 -> 260: chapters 258-260, the three A1 writing stages Russian had
       // not proved (my own line, a three-minute timed task, four lines).
-    ).toEqual(Array.from({ length: 260 }, (_, index) => index + 1));
+      // 260 -> 270: chapters 261-270, the B1 core that realizes the five B1
+      // spine nodes.
+    ).toEqual(Array.from({ length: 270 }, (_, index) => index + 1));
     expect(
       books.books.every((book) =>
         book.chapters.every((chapter) => chapter.tex.length > 100),

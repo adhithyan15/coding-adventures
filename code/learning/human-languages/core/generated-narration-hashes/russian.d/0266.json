@@ -1,0 +1,17 @@
+{
+  "language": "russian",
+  "chapter": 266,
+  "sourceHash": "fnv1a64:2b77883e79de6948",
+  "lessonIds": [
+    "RU-C266-tuda-i-obratno",
+    "RU-C266-opozdal",
+    "RU-C266-review"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "russian/narration/ch266.txt",
+  "json": "russian/narration/ch266.json",
+  "textHash": "fnv1a64:5c9b14b6b3c66649",
+  "jsonHash": "fnv1a64:e055ccd103b6b8b4",
+  "findings": []
+}

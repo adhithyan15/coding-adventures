@@ -1,0 +1,17 @@
+{
+  "language": "russian",
+  "chapter": 268,
+  "sourceHash": "fnv1a64:4ae95187c78d5987",
+  "lessonIds": [
+    "RU-C268-bolshe-chem",
+    "RU-C268-uzhe-let",
+    "RU-C268-review"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "russian/narration/ch268.txt",
+  "json": "russian/narration/ch268.json",
+  "textHash": "fnv1a64:9ea45fa1e62f87ea",
+  "jsonHash": "fnv1a64:4b14741f58a967d3",
+  "findings": []
+}

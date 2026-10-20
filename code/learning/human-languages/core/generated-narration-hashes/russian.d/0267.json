@@ -1,0 +1,17 @@
+{
+  "language": "russian",
+  "chapter": 267,
+  "sourceHash": "fnv1a64:e9e3dfbc6f0df242",
+  "lessonIds": [
+    "RU-C267-ya-byl-rad",
+    "RU-C267-mechtat",
+    "RU-C267-review"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "russian/narration/ch267.txt",
+  "json": "russian/narration/ch267.json",
+  "textHash": "fnv1a64:14778fd32a7a87c1",
+  "jsonHash": "fnv1a64:9eee7f908d67ced1",
+  "findings": []
+}

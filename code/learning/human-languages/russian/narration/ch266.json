@@ -1,0 +1,469 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 266,
+  "title": "A Ticket, and a Missed Train",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:2b77883e79de6948",
+  "lessons": [
+    {
+      "id": "RU-C266-tuda-i-obratno",
+      "sequence": 16170,
+      "title": "билет туда и обратно (bilét tudá i obrátno) — a return ticket",
+      "headword": "билет туда и обратно",
+      "romanization": "bilét tudá i obrátno",
+      "gloss": "a return ticket — literally 'a ticket there and back'; a ticket до a place and на a train, bought at the till",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:762731526516077c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"a ticket\", \"a train\" and \"the till\". (Bilét. Póyezd. Kássa.) Then ask the way to the till. (Kak proytí k kásse?)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: туда и обратно",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "туда и обратно — tudá i obrátno — \"there and back\". At the till it is a return ticket:"
+            },
+            {
+              "kind": "speech",
+              "text": "— Один билет до Москвы, пожалуйста. — Туда и обратно? — odín bilét do Moskvý, pozhálusta. tudá i obrátno? — One ticket to Moscow, please. Return? — Да, туда и обратно. — da, tudá i obrátno — Yes, a return."
+            },
+            {
+              "kind": "speech",
+              "text": "A single is в одну сторону — v odnú stóronu — \"in one direction\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: до a place, на a train",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A ticket goes до the place, as far as it, and the place changes as it did after до in the street: светофор, до светофора; Москва, до Москвы."
+            },
+            {
+              "kind": "speech",
+              "text": "A ticket is на the train or the bus, and поезд and автобус keep their plain form: билет на поезд, билет на автобус — bilét na póyezd, bilét na avtóbus."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "— Сколько стоит билет? — Тысяча рублей."
+            },
+            {
+              "kind": "speech",
+              "text": "Skólko stóit bilét? — \"How much is the ticket?\" Týsyacha rubléy — \"A thousand roubles.\" After тысяча, рубль takes the counting form рублей."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "обратно is the adverb of обратный, \"reverse, return\". EtymDB 2.1 lists обратный without a parent; by the usual account it is об-, \"around\", with the root of вертеть, \"to turn\", from Proto-Indo-European wert-: a ticket that turns round. туда is \"to that place\", on the same pointing stem as тот."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Odín bilét do Moskvý, pozhálusta.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Odín bilét do Moskvý, pozhálusta.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Tudá i obrátno. Then a single: V odnú stóronu.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Tudá i obrátno.* Then a single: *V odnú stóronu.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Dva biléta na póyezd.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Dva biléta na póyezd.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "Skólko stóit bilét? Týsyacha rubléy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: *Skólko stóit bilét?* *Týsyacha rubléy.*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"A return ticket\"? (Билет туда и обратно.) \"A ticket to Moscow\"? (Билет до Москвы.) \"A ticket for the train\"? (Билет на поезд.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C266-opozdal",
+      "sequence": 16180,
+      "title": "я опоздал на поезд (ya opozdál na póyezd) — I've missed the train",
+      "headword": "я опоздал на поезд",
+      "romanization": "ya opozdál na póyezd",
+      "gloss": "I've missed the train — literally 'I was late for the train'; reporting a problem with the perfective past, the result that is still true now",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6ee18095edf1f733",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"to be late\" and \"to lose\". (Opázdyvat. Teryát.) Then \"a return ticket for the train\". (Bilét na póyezd tudá i obrátno.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: я опоздал на поезд",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Я опоздал на поезд. — ya opozdál na póyezd — I've missed the train. A woman says Я опоздала на поезд."
+            },
+            {
+              "kind": "speech",
+              "text": "Russian says \"I was late for the train\", with на, as on a ticket. Опоздать is the perfective partner of опаздывать: one lateness, and the train is gone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: a problem is a result",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English often reports a problem with \"I have\": I've lost, it has gone. Russian uses the perfective past, because the result is still true now:"
+            },
+            {
+              "kind": "speech",
+              "text": "К сожалению, я потерял билет. — k sozhaléniyu, ya poteryál bilét — Unfortunately I've lost my ticket. Поезд уже ушёл. — póyezd uzhé ushól — The train has already left."
+            },
+            {
+              "kind": "speech",
+              "text": "Потерял is the partner of терять; ушёл, of уходить."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "— Извините, у меня проблема. Я опоздал на поезд. — Ничего. Есть поезд через час."
+            },
+            {
+              "kind": "speech",
+              "text": "U menyá probléma — \"I have a problem\", literally \"at me, a problem\". Nichevó. Yest póyezd chérez chas — \"Never mind. There's a train in an hour.\" Есть, \"there is\", is the present of быть that Russian does say aloud. When it is serious: Помогите, пожалуйста!"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "опоздать is о- with the root of поздно, \"late\". EtymDB 2.1 lists опоздать without a parent; the usual account takes поздно back to a Proto-Slavic pozdŭ and relates it to Latin post, \"after\"."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ya opozdál na póyezd, then a woman: Ya opozdála na póyezd.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ya opozdál na póyezd*, then a woman: *Ya opozdála na póyezd.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "K sozhaléniyu, ya poteryál bilét.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *K sozhaléniyu, ya poteryál bilét.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Izvinítye, u menyá probléma. Póyezd uzhé ushól.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Izvinítye, u menyá probléma. Póyezd uzhé ushól.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a problem of your own at a station, with one perfective verb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a problem of your own at a station, with one perfective verb]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I've missed the train\"? (Я опоздал на поезд.) \"I've lost my ticket\": which aspect? (Perfective, потерял: it is still lost.) \"I have a problem\"? (У меня проблема.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C266-review",
+      "sequence": 16190,
+      "title": "Review — a ticket, and a train that left without you",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "at the station — a return ticket до a place and на a train, then a missed train and a lost ticket reported in the perfective",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:51d8d9326ee6e2db",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask for one return ticket to Moscow. (Odín bilét do Moskvý, tudá i obrátno, pozhálusta.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two lessons, and the station can be handled out loud. A ticket goes до a place and на a train; a return is туда и обратно. And when it goes wrong, the perfective past says what happened and is still true: я опоздал на поезд (ya opozdál na póyezd), я потерял билет."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "— Извините, я опоздала на поезд. Как пройти к кассе? — Идите прямо, потом налево."
+            },
+            {
+              "kind": "speech",
+              "text": "The whole trip so far in two lines: a problem in the perfective, a question about the way, and an answer in two steps."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Izvinítye, ya opozdála na póyezd. Kak proytí k kásse?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Izvinítye, ya opozdála na póyezd. Kak proytí k kásse?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Dva biléta na póyezd, tudá i obrátno.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Dva biléta na póyezd, tudá i obrátno.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "K sozhaléniyu, ya poteryál bilét.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *K sozhaléniyu, ya poteryál bilét.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "Pochemú ty opozdál? Explain what happened, then what followed, with poétomu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: *Pochemú ty opozdál?* Explain what happened, then what followed, with *poétomu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "the cashier asks Tudá i obrátno? Answer for a single: Nyet, v odnú stóronu.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: the cashier asks *Tudá i obrátno?* Answer for a single: *Nyet, v odnú stóronu.*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"She's missed the train\"? (Она опоздала на поезд.) \"Two tickets for the bus\"? (Два билета на автобус.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
