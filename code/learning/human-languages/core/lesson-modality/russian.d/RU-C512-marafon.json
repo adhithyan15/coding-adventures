@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C512-marafon",
+    "language": "russian",
+    "chapter": 512,
+    "sequence": 28800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:530c005ad7f0a6a2"
+  },
+  "findings": []
+}

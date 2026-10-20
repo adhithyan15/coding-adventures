@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-478-STUBBORN",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "RU-EXT-478-STUBBORN"
+  ],
+  "after": []
+}

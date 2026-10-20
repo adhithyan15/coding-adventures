@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:2272c7ad652f2609",
+  "lessonIds": [
+    "RU-C420-dosmotr",
+    "RU-C420-dosmatrivat",
+    "RU-C420-pogranichnik",
+    "RU-C420-deklaratsiya",
+    "RU-C420-deklarirovat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch420.txt",
+  "json": "russian/narration/ch420.json",
+  "textHash": "fnv1a64:4956b16a1918f4fa",
+  "jsonHash": "fnv1a64:4ea1e26c61cbee7c",
+  "findings": []
+}

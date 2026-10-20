@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:cf842171ae98e121",
+  "lessonIds": [
+    "RU-C333-solit",
+    "RU-C333-perchit",
+    "RU-C333-posypat",
+    "RU-C333-priprava",
+    "RU-C333-marinovat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch333.txt",
+  "json": "russian/narration/ch333.json",
+  "textHash": "fnv1a64:f17a756d264f6a1c",
+  "jsonHash": "fnv1a64:0e49f0beee65ac3b",
+  "findings": []
+}

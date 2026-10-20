@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C455-oplata",
+    "language": "russian",
+    "chapter": 455,
+    "sequence": 25870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d40c5ba23e610df"
+  },
+  "findings": []
+}

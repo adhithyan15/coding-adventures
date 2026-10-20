@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-313-YOLKA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-313-YOLKA"
+  ],
+  "after": []
+}

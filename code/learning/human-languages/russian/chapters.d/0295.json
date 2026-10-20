@@ -1,0 +1,19 @@
+{
+  "chapter": 295,
+  "title": "Fire",
+  "label": "ch:ru-fire",
+  "canDo": "I can talk about a fire: a blaze, smoke, burning, catching fire and a fire extinguisher.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C295-ognetushitel",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 295: I can talk about a fire: a blaze, smoke, burning, catching fire and a fire extinguisher.",
+    "assesses": [
+      "RU-LEX-C295-POZHAR-03",
+      "RU-LEX-C295-POZHAR-04",
+      "RU-LEX-C295-POZHAR-05"
+    ]
+  }
+}

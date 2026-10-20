@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C521-kholst",
+    "language": "russian",
+    "chapter": 521,
+    "sequence": 29270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ad0c2c6b3c5d620b"
+  },
+  "findings": []
+}

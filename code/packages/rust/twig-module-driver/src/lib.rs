@@ -352,6 +352,10 @@ pub fn compile_module_tree(
     // give false positives for shared dependencies (e.g. both lib_a and
     // lib_b importing shared.tw).
     let mut discovered: Vec<(PathBuf, Program, String)> = Vec::new();
+    // LANG84: each module's parse tree (CST), kept for Phase 4.  The IIR
+    // compiler's only input is the CST; the typed `Program` above serves
+    // this driver's own analyses (imports, function names, type checking).
+    let mut parse_trees = std::collections::HashMap::new();
     // Maps canonical path → direct resolved imports: [(import_name, resolved)]
     let mut adjacency: std::collections::HashMap<PathBuf, Vec<(String, PathBuf)>> =
         std::collections::HashMap::new();
@@ -372,11 +376,16 @@ pub fn compile_module_tree(
 
         let module_name = derive_module_name(&current_path, search_roots);
 
-        // Parse.
-        let program = twig_parser::parse(&source).map_err(|e| ModuleDriverError::Parse {
+        // Parse: source → CST (for the IIR compiler) → typed AST (for the
+        // driver's own analyses).  Together these are exactly
+        // `twig_parser::parse`, with the same errors.
+        let parse_error = |e| ModuleDriverError::Parse {
             path: current_path.clone(),
             error: e,
-        })?;
+        };
+        let cst = twig_parser::parse_to_ast(&source).map_err(parse_error)?;
+        let program = twig_parser::extract_program(&cst).map_err(parse_error)?;
+        parse_trees.insert(current_path.clone(), cst);
 
         // Collect import names declared in `(module … (import …))`.
         let import_names: Vec<String> = program
@@ -613,7 +622,7 @@ pub fn compile_module_tree(
         let mut env_cache: HMap<PathBuf, (Program, twig_type_checker::TypeEnv)> = HMap::new();
 
         // Also store the per-module extra_globals so Phase 4 can pass them to
-        // `compile_program_with_externs_and_globals`, avoiding a duplicate
+        // `compile_ast_with_externs_and_globals`, avoiding a duplicate
         // "unresolved variable" error from the IR compiler's internal type-check
         // (which does not have access to cross-module names otherwise).
         //
@@ -677,7 +686,8 @@ pub fn compile_module_tree(
 
     // ── Phase 4: Compile each module with all extern names pre-registered ─────
     //
-    // Uses `compile_program_with_externs_and_globals` (LANG72) so that the IR
+    // Uses `compile_ast_with_externs_and_globals` (LANG72; the CST entry
+    // point since LANG84) so that the IR
     // compiler's internal type-check pre-pass runs with the same cross-module
     // globals that Phase 3.5 used.  Without the globals, a strict module that
     // calls `(lex-source …)` from an imported module would fail the IR
@@ -686,11 +696,12 @@ pub fn compile_module_tree(
         std::collections::HashMap::new();
     let mut modules: Vec<IIRModule> = Vec::new();
 
-    for (path, program, module_name) in &discovered {
+    for (path, _program, module_name) in &discovered {
         let globals_for_path = module_extra_globals.get(path).unwrap_or(&empty_globals);
+        let cst = &parse_trees[path];
         let mut iir_mod =
-            twig_ir_compiler::compile_program_with_externs_and_globals(
-                program,
+            twig_ir_compiler::compile_ast_with_externs_and_globals(
+                cst,
                 module_name,
                 &extern_refs,
                 globals_for_path,
@@ -921,15 +932,15 @@ mod tests {
         // (module mymod (export sq)) should populate IIRExport for "sq" in
         // the compiled module.  Note: iir_linker::link clears exports on the
         // merged output (the merged module is self-contained by design), so
-        // we test via `twig_ir_compiler::compile_program` directly.
-        use twig_parser::parse;
+        // we test via `twig_ir_compiler::compile_ast` directly.
+        use twig_parser::parse_to_ast;
         let src = "
             (module mymod (export sq))
             (define (sq x) (* x x))
             (sq 5)
         ";
-        let program = parse(src).unwrap();
-        let m = twig_ir_compiler::compile_program(&program, "mymod").unwrap();
+        let cst = parse_to_ast(src).unwrap();
+        let m = twig_ir_compiler::compile_ast(&cst, "mymod").unwrap();
         assert!(m.exports.iter().any(|e| e.public_name() == "sq"),
             "expected IIRExport for 'sq', got: {:?}", m.exports);
     }
@@ -1043,15 +1054,15 @@ mod tests {
         // Functions not listed in (export …) should NOT appear in IIRExport.
         // Test at the compiler level (pre-link) because the linker clears
         // exports on the merged output.
-        use twig_parser::parse;
+        use twig_parser::parse_to_ast;
         let src = "
             (module mod (export public_fn))
             (define (public_fn x) (internal x))
             (define (internal x) (* x 2))
             (public_fn 3)
         ";
-        let program = parse(src).unwrap();
-        let m = twig_ir_compiler::compile_program(&program, "mod").unwrap();
+        let cst = parse_to_ast(src).unwrap();
+        let m = twig_ir_compiler::compile_ast(&cst, "mod").unwrap();
         // public_fn is exported
         assert!(m.exports.iter().any(|e| e.public_name() == "public_fn"),
             "public_fn should be exported");

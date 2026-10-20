@@ -1,0 +1,19 @@
+{
+  "chapter": 462,
+  "title": "A night in a tent",
+  "label": "ch:ru-a-night-in-a-tent",
+  "canDo": "I can go camping: a tent, a sleeping bag, a campfire, lighting a fire and putting it out.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C462-tushit",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 462: I can go camping: a tent, a sleeping bag, a campfire, lighting a fire and putting it out.",
+    "assesses": [
+      "RU-LEX-C462-KOSTYOR-03",
+      "RU-LEX-C462-KOSTYOR-04",
+      "RU-LEX-C462-KOSTYOR-05"
+    ]
+  }
+}

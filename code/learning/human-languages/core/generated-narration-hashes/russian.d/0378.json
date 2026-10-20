@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 378,
+  "sourceHash": "fnv1a64:372b6d01e8723bb4",
+  "lessonIds": [
+    "RU-C378-dogovarivatsya",
+    "RU-C378-dogovoryonnost",
+    "RU-C378-variant",
+    "RU-C378-alternativa",
+    "RU-C378-okonchatelnyy"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch378.txt",
+  "json": "russian/narration/ch378.json",
+  "textHash": "fnv1a64:ac0d9ea6cabd05ba",
+  "jsonHash": "fnv1a64:41b82ce56a8c057c",
+  "findings": []
+}

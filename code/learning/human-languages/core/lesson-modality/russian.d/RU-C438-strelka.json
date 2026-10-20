@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C438-strelka",
+    "language": "russian",
+    "chapter": 438,
+    "sequence": 25010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2dd2d0e0dc4b0632"
+  },
+  "findings": []
+}

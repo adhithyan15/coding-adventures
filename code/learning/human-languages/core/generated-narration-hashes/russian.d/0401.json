@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 401,
+  "sourceHash": "fnv1a64:d0da5d30463cc967",
+  "lessonIds": [
+    "RU-C401-prilozhenie",
+    "RU-C401-ustanavlivat",
+    "RU-C401-obnovlyat",
+    "RU-C401-udalyat",
+    "RU-C401-zagruzhat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch401.txt",
+  "json": "russian/narration/ch401.json",
+  "textHash": "fnv1a64:de39db83dbba2d6f",
+  "jsonHash": "fnv1a64:2b2a6b3bb01514f2",
+  "findings": []
+}

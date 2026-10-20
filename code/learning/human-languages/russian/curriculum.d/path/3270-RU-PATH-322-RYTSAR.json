@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-322-RYTSAR",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-322-RYTSAR"
+  ],
+  "after": []
+}

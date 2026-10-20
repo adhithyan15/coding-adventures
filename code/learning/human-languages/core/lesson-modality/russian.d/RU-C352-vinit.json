@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C352-vinit",
+    "language": "russian",
+    "chapter": 352,
+    "sequence": 20580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6b91c66b8cbd0e49"
+  },
+  "findings": []
+}

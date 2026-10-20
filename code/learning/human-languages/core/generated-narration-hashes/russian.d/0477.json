@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 477,
+  "sourceHash": "fnv1a64:3ff4b870b6034c41",
+  "lessonIds": [
+    "RU-C477-toska",
+    "RU-C477-toskovat",
+    "RU-C477-odinochestvo",
+    "RU-C477-odinokiy",
+    "RU-C477-sozhalet"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch477.txt",
+  "json": "russian/narration/ch477.json",
+  "textHash": "fnv1a64:5335c8d07c020d53",
+  "jsonHash": "fnv1a64:8dfb0133335232af",
+  "findings": []
+}

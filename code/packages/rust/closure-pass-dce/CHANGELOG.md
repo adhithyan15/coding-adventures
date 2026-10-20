@@ -2,6 +2,25 @@
 
 ## [Unreleased]
 
+### Fixed - a nested `break` keeps its switch (#17842)
+
+The constant-discriminant switch collapse stripped only the case's *trailing*
+`break`. A `break` deeper in the case (`if (x) break;`) exited the switch,
+but after the collapse it exited the enclosing loop instead, or failed to
+parse outside one:
+
+```js
+while (c--) { switch (1) { case 1: if (x) break; b(); break; } d(); }
+// collapsed: for(;c--;){if(x)break;b();d()}  -> d() never ran
+```
+
+The collapse is now declined while `has_break_targeting_enclosing` finds
+another unlabelled `break` aimed at the switch. That check doesn't enter
+loops, nested switches or functions. Upstream rewrites the case instead
+(`x||b()`), which is a smaller output we don't produce yet.
+
+Three new unit tests cover this.
+
 ### Fixed - drop the dead tail after `continue` and `break` (CCR-082, #15878)
 
 `is_terminator` now includes `ContinueStatement` and `BreakStatement`, labelled

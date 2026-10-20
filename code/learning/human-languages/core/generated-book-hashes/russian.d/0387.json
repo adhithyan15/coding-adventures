@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:ffd5b0846866a81c",
+  "lessonIds": [
+    "RU-C387-znanie",
+    "RU-C387-umenie",
+    "RU-C387-usvaivat",
+    "RU-C387-otchislyat",
+    "RU-C387-obrazovannyy"
+  ],
+  "tex": "russian/book/chapters/ch387-knowledge-and-skills.tex"
+}

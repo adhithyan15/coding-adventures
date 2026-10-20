@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C522-statuya",
+    "language": "russian",
+    "chapter": 522,
+    "sequence": 29340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0c651e6c7d4d94fe"
+  },
+  "findings": []
+}

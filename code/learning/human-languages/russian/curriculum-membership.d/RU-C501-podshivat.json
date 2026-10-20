@@ -1,0 +1,11 @@
+{
+  "id": "RU-C501-podshivat",
+  "pathSegment": "RU-PATH-501-SEWING",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-501-SEWING",
+      "order": 4
+    }
+  ]
+}

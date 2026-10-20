@@ -1,0 +1,20 @@
+{
+  "language": "russian",
+  "chapter": 368,
+  "sourceHash": "fnv1a64:670bdac3dd00cfca",
+  "lessonIds": [
+    "RU-C368-blagotvoritelnost",
+    "RU-C368-volontyor",
+    "RU-C368-posobie",
+    "RU-C368-zhertvovat",
+    "RU-C368-nuzhdatsya",
+    "RU-R368-review-361-368"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "russian/narration/ch368.txt",
+  "json": "russian/narration/ch368.json",
+  "textHash": "fnv1a64:324061875822dbe8",
+  "jsonHash": "fnv1a64:17c9ef722f705e40",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 288,
+  "sourceHash": "fnv1a64:5f279e94c8a4efc4",
+  "lessonIds": [
+    "RU-C288-krazha",
+    "RU-C288-vor",
+    "RU-C288-krast",
+    "RU-C288-karmannik",
+    "RU-C288-vzlom"
+  ],
+  "tex": "russian/book/chapters/ch288-theft.tex"
+}

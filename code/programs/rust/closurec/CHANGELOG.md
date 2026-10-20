@@ -73,6 +73,25 @@ A child-PATH shadow regression verifies the native utility and intended denial;
 a missing setup path remains fatal. No production publication checks change.
 Fresh complete validation, exact-head review and three-platform CI are required.
 
+### Added - ladder rung for an array spread before an index read (#15942)
+
+`ladder_t6_array_spread_index_{ws,simple,advanced}` compiles
+`var a = [..."xy", 5]; console.log(a[1]);`. Its `expected.stdout` was captured
+from the pinned `v20260915` jar, verified by sha256 and byte length, using the
+manifest's `closure-flags-file-v1` argv under Java 21.0.10. This is the shape
+behind the CLOC28 miscompile, where folding past the spread printed `5`
+instead of `y`. Until now no rung covered it.
+
+- WHITESPACE_ONLY and SIMPLE match upstream byte for byte.
+- ADVANCED is a known divergence: closurec doesn't inline the single-use
+  array (CCR-068), but its output is still correct.
+
+The other changes that go with the new rung:
+
+- The ledger gains one entry; its count pin moves from 59 to 60.
+- The fixture tripwire moves from 797 to 800.
+- The parity figures are now 55/58, 36/58 and 24/58.
+
 ### Fixed - token-independent OWNER RIGHTS admission (CV02)
 
 Native Windows CI at `c76de302f8` reached compiler tests and failed the inherited
@@ -178,14 +197,21 @@ Every input is scanned before compilation, and a refused program produces:
 The ladder gains a third verdict, `DeclinedIdentically`. A rung upstream
 refuses records `expected.exit` and `expected.stderr` from the jar, and
 counts as agreement when closurec declines identically. The three
-`private_field` rungs moved there: the ledger drops from 58 to 55, and parity
-is now 55/57, 36/57 and 25/57. The four CCR-081 `simple-private-*` fixtures
+`private_field` rungs moved there: the ledger drops from 59 to 56, and parity
+is now 56/58, 37/58 and 25/58. The four CCR-081 `simple-private-*` fixtures
 now assert the identical refusal. They had pinned closurec's old output.
 
 Diagnostics stay byte-identical up to 16 MiB. Past that, closurec stops
 printing error blocks but keeps the true count and exit status, because
 upstream's output grows with errors × line length on a hostile line. Memory
 stays proportional to the input. See CLOC44 for both.
+
+### Fixed - a constant `switch` no longer loses a nested `break` (#17842)
+
+`while(c--){switch(1){case 1:if(x)break;b();break}d()}` collapsed the switch,
+so its inner `break` exited the loop and `d()` never ran. The fix is in
+`closure-pass-dce`. `tests/regression_switch_collapse_break.rs` runs both
+shapes under node at SIMPLE and ADVANCED.
 
 ### Fixed locally - verified Windows publication policies (CV02)
 
@@ -1025,6 +1051,15 @@ conditionally registered passes (`inline`, `remove-unused-vars`, `treeshake`,
 `rename-globals`, `rename-properties`) appear in the trace exactly when they
 were registered, that every reported name is a known pass, and pinning the
 scheduler's real order so a future fix to #15829 must consciously update it.
+
+### Fixed - outer binding shadowed in a `switch` case survives (#17836)
+
+`var x = 1; switch (1) { case 1: let x = 2; } console.log(x);` compiled at
+SIMPLE and ADVANCED without `var x = 1;` and threw `ReferenceError`. The fix
+is in `closure-scope-analyzer` 0.22.0, which gives the case block its own
+scope. `tests/regression_switch_case_shadow.rs` pins four shapes at both
+levels and, when `node` is present, checks that the output prints what the
+source prints.
 
 ### Fixed - strict clippy passes on closurec (#15939)
 

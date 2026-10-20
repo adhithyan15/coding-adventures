@@ -1,0 +1,19 @@
+{
+  "chapter": 466,
+  "title": "Storms",
+  "label": "ch:ru-storms",
+  "canDo": "I can talk about storms: a storm, a hurricane, a gust, thunder rumbling and lightning flashing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-R466-review-459-466",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 466: I can talk about storms: a storm, a hurricane, a gust, thunder rumbling and lightning flashing.",
+    "assesses": [
+      "RU-LEX-C466-BURYA-03",
+      "RU-LEX-C466-BURYA-04",
+      "RU-LEX-C466-BURYA-05"
+    ]
+  }
+}

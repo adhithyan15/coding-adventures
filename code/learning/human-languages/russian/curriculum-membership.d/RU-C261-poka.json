@@ -1,0 +1,11 @@
+{
+  "id": "RU-C261-poka",
+  "pathSegment": "RU-PATH-261-PAST",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-261-PAST",
+      "order": 2
+    }
+  ]
+}

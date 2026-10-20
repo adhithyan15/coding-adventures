@@ -1,0 +1,19 @@
+{
+  "chapter": 370,
+  "title": "On one condition",
+  "label": "ch:ru-on-one-condition",
+  "canDo": "I can set a condition: on condition that, in case of, otherwise and even if, and know what each one takes.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "RU-C370-dazhe-esli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 370: I can set a condition: on condition that, in case of, otherwise and even if, and know what each one takes.",
+    "assesses": [
+      "RU-LEX-C370-USLOVIYE-03",
+      "RU-LEX-C370-USLOVIYE-04",
+      "RU-LEX-C370-USLOVIYE-05"
+    ]
+  }
+}

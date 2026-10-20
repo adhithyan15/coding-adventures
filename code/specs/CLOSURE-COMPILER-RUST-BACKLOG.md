@@ -90,14 +90,14 @@ Standing owner directions remain in force:
 map), pass (optimization behavior), build (modules, chunks, externs, maps,
 reports) and operational (deterministic on Linux, macOS and Windows).
 
-The differential ladder (`tests/diff/ladder_*`, 57 rungs × 3 levels, #15837)
+The differential ladder (`tests/diff/ladder_*`, 58 rungs × 3 levels, #15837)
 measures agreement with the pinned oracle:
 
 | Level | Rungs agreeing |
 |---|---:|
-| `WHITESPACE_ONLY` | 55 / 57 |
-| `SIMPLE` | 36 / 57 |
-| `ADVANCED` | 25 / 57 |
+| `WHITESPACE_ONLY` | 56 / 58 |
+| `SIMPLE` | 37 / 58 |
+| `ADVANCED` | 25 / 58 |
 
 WHITESPACE_ONLY is strong. SIMPLE is real but partial. ADVANCED is mostly
 scaffolding: the pass slots exist, but most of the transformations that define

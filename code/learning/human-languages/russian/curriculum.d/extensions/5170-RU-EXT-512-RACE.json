@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-512-RACE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about running a race.",
+  "prerequisites": []
+}

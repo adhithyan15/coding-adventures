@@ -1,0 +1,20 @@
+{
+  "language": "russian",
+  "chapter": 294,
+  "sourceHash": "fnv1a64:0ef87a1ca3cfcafc",
+  "lessonIds": [
+    "RU-C294-vinovnyy",
+    "RU-C294-nakazaniye",
+    "RU-C294-nakazyvat",
+    "RU-C294-priznavatsya",
+    "RU-C294-opravdyvat",
+    "RU-R294-review-287-294"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "russian/narration/ch294.txt",
+  "json": "russian/narration/ch294.json",
+  "textHash": "fnv1a64:8604ed1ab26a6e58",
+  "jsonHash": "fnv1a64:2874dc1631725d3b",
+  "findings": []
+}

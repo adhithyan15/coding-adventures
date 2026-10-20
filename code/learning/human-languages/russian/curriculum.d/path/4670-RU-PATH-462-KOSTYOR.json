@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-462-KOSTYOR",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "RU-EXT-462-KOSTYOR"
+  ],
+  "after": []
+}

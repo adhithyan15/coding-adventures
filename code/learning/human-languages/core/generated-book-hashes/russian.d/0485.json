@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 485,
+  "sourceHash": "fnv1a64:022a89aa466af88b",
+  "lessonIds": [
+    "RU-C485-toshnit",
+    "RU-C485-toshnota",
+    "RU-C485-golovokruzheniye",
+    "RU-C485-obmorok",
+    "RU-C485-znobit"
+  ],
+  "tex": "russian/book/chapters/ch485-feeling-sick-and-faint.tex"
+}

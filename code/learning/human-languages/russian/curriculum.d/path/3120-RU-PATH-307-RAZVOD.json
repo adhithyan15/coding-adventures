@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-307-RAZVOD",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-307-RAZVOD"
+  ],
+  "after": []
+}

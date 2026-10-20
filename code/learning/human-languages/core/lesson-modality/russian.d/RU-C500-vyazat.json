@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C500-vyazat",
+    "language": "russian",
+    "chapter": 500,
+    "sequence": 28180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ba411ba7c97ef1b0"
+  },
+  "findings": []
+}

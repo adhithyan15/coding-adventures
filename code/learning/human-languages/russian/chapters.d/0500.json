@@ -1,0 +1,19 @@
+{
+  "chapter": 500,
+  "title": "Knitting and Embroidery",
+  "label": "ch:ru-knitting-and-embroidery",
+  "canDo": "I can talk about knitting, embroidery and lace.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-R500-review-493-500",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 500: I can talk about knitting, embroidery and lace.",
+    "assesses": [
+      "RU-LEX-C500-KNITTING-03",
+      "RU-LEX-C500-KNITTING-04",
+      "RU-LEX-C500-KNITTING-05"
+    ]
+  }
+}

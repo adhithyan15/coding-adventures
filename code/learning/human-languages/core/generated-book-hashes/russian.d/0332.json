@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 332,
+  "sourceHash": "fnv1a64:d12b8d3ce827b9b3",
+  "lessonIds": [
+    "RU-C332-zapekat",
+    "RU-C332-protiven",
+    "RU-C332-razogrevat",
+    "RU-C332-podgorat",
+    "RU-C332-obzharivat"
+  ],
+  "tex": "russian/book/chapters/ch332-in-the-oven.tex"
+}

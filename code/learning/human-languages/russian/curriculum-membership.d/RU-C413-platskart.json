@@ -1,0 +1,11 @@
+{
+  "id": "RU-C413-platskart",
+  "pathSegment": "RU-PATH-413-PROYEZD",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-413-PROYEZD",
+      "order": 1
+    }
+  ]
+}

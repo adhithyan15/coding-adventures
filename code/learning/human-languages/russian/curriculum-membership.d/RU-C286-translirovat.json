@@ -1,0 +1,11 @@
+{
+  "id": "RU-C286-translirovat",
+  "pathSegment": "RU-PATH-286-OSVESHCHAT",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-286-OSVESHCHAT",
+      "order": 0
+    }
+  ]
+}

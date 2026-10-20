@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 339,
+  "sourceHash": "fnv1a64:5eb2218ef1056be8",
+  "lessonIds": [
+    "RU-C339-ubezhdat",
+    "RU-C339-pereubezhdat",
+    "RU-C339-ubezhdenie",
+    "RU-C339-uverennost",
+    "RU-C339-somnevatsya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch339.txt",
+  "json": "russian/narration/ch339.json",
+  "textHash": "fnv1a64:8d163e98c1650908",
+  "jsonHash": "fnv1a64:d29bb35bf706702d",
+  "findings": []
+}

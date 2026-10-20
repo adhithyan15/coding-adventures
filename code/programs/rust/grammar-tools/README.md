@@ -23,6 +23,17 @@ and `*-parser` crates with matching files under `code/grammars`, and writes
 `src/_grammar.rs` for each target. Optional arguments filter by package name
 (`sql-lexer`), package stem (`sql`), or grammar stem (`dartmouth_basic`).
 
+Languages with a LANG84 release inventory (`code/grammars/<dir>/releases.csv`;
+today Ruby) are generated as **release families**: the release list comes from
+the CSV, each row past stage `none` must have its own `<prefix><release>.tokens`
+and `.grammar`, and releases whose pairs are identical apart from comments and
+line numbers share one embedded module named `g_<first 12 hex of SHA-256>`.
+The generated file exposes `SUPPORTED_RELEASES`, `token_grammar(release)` or
+`parser_grammar(release)` (exact IDs only, `None` otherwise) and
+`grammar_class(release)`; parser tables also carry the full `INVENTORY` so a
+frontend can tell an unknown release from one whose pair is not written yet.
+See `code/specs/LANG84-grammar-driven-versioned-frontends.md`.
+
 Known validator gaps that are already handled safely by the consuming crates
 are encoded in the Rust command itself, so repo regeneration does not require a
 shell wrapper.

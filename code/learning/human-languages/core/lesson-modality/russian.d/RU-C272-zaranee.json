@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C272-zaranee",
+    "language": "russian",
+    "chapter": 272,
+    "sequence": 16450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:deea2b6cfd0e04f6"
+  },
+  "findings": []
+}

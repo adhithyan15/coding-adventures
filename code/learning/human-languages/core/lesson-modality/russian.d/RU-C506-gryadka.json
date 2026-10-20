@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C506-gryadka",
+    "language": "russian",
+    "chapter": 506,
+    "sequence": 28490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fbda3201ba74bcf8"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:c75c861eb99f197c",
+  "lessonIds": [
+    "RU-C510-porazheniye",
+    "RU-C510-nichya",
+    "RU-C510-sopernik",
+    "RU-C510-proigrysh",
+    "RU-C510-lidirovat"
+  ],
+  "tex": "russian/book/chapters/ch510-winning-and-losing.tex"
+}

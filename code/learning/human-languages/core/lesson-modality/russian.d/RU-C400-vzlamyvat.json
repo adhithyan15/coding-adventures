@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C400-vzlamyvat",
+    "language": "russian",
+    "chapter": 400,
+    "sequence": 23050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c9501863b62da1f7"
+  },
+  "findings": []
+}

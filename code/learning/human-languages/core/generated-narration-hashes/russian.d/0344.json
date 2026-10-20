@@ -1,0 +1,20 @@
+{
+  "language": "russian",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:5a0bebbe922647c4",
+  "lessonIds": [
+    "RU-C344-logika",
+    "RU-C344-logichnyy",
+    "RU-C344-vyvod",
+    "RU-C344-rassuzhdat",
+    "RU-C344-ochevidnyy",
+    "RU-R344-review-337-344"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "russian/narration/ch344.txt",
+  "json": "russian/narration/ch344.json",
+  "textHash": "fnv1a64:0cd5e8868055d5a3",
+  "jsonHash": "fnv1a64:4674f1bc95dfd675",
+  "findings": []
+}

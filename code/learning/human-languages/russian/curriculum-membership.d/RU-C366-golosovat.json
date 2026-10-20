@@ -1,0 +1,11 @@
+{
+  "id": "RU-C366-golosovat",
+  "pathSegment": "RU-PATH-366-VYBORY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-366-VYBORY",
+      "order": 1
+    }
+  ]
+}

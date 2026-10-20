@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 354,
+  "sourceHash": "fnv1a64:9f965cf3752a5e0b",
+  "lessonIds": [
+    "RU-C354-uluchshat",
+    "RU-C354-uvelichivatsya",
+    "RU-C354-umenshatsya",
+    "RU-C354-snizhat",
+    "RU-C354-povyshat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch354.txt",
+  "json": "russian/narration/ch354.json",
+  "textHash": "fnv1a64:c770b882d447dc05",
+  "jsonHash": "fnv1a64:d71adc3bdb98306b",
+  "findings": []
+}

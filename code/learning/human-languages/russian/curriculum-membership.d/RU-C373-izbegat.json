@@ -1,0 +1,11 @@
+{
+  "id": "RU-C373-izbegat",
+  "pathSegment": "RU-PATH-373-OSTOROZHNO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-373-OSTOROZHNO",
+      "order": 2
+    }
+  ]
+}

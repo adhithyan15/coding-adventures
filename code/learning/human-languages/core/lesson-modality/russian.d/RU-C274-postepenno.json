@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C274-postepenno",
+    "language": "russian",
+    "chapter": 274,
+    "sequence": 16550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed63d891d20c4e49"
+  },
+  "findings": []
+}

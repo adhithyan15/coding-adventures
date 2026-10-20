@@ -1,0 +1,11 @@
+{
+  "id": "RU-C479-doveryat",
+  "pathSegment": "RU-PATH-479-TRUST",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-479-TRUST",
+      "order": 1
+    }
+  ]
+}

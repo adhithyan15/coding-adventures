@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C503-kollektsionirovat",
+    "language": "russian",
+    "chapter": 503,
+    "sequence": 28340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e4274538f23a6707"
+  },
+  "findings": []
+}

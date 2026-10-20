@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-451-POSOLSTVO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "RU-EXT-451-POSOLSTVO"
+  ],
+  "after": []
+}

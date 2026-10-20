@@ -1,0 +1,11 @@
+{
+  "id": "RU-C433-tarakan",
+  "pathSegment": "RU-PATH-433-SHUM",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-433-SHUM",
+      "order": 2
+    }
+  ]
+}

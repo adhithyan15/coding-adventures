@@ -1,0 +1,7 @@
+{
+  "language": "russian",
+  "chapter": 303,
+  "output": "russian/book/chapters/ch303-birth.tex",
+  "unicodeScript": "Cyrillic",
+  "scriptCommand": "ru"
+}

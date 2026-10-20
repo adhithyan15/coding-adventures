@@ -1,0 +1,11 @@
+{
+  "id": "RU-C368-zhertvovat",
+  "pathSegment": "RU-PATH-368-POMOSHCH",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-368-POMOSHCH",
+      "order": 3
+    }
+  ]
+}

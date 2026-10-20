@@ -1,0 +1,11 @@
+{
+  "id": "RU-C325-vosstaniye",
+  "pathSegment": "RU-PATH-325-IMPERIYA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-325-IMPERIYA",
+      "order": 2
+    }
+  ]
+}

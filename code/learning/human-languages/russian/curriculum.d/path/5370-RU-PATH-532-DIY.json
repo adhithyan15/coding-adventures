@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-532-DIY",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "RU-EXT-532-DIY"
+  ],
+  "after": []
+}

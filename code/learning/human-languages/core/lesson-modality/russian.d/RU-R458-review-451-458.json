@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-R458-review-451-458",
+    "language": "russian",
+    "chapter": 458,
+    "sequence": 26060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f794b7a262d2a02a"
+  },
+  "findings": []
+}

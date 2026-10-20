@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 429,
+  "sourceHash": "fnv1a64:145f46cc92a197b6",
+  "lessonIds": [
+    "RU-C429-administrator",
+    "RU-C429-zaselyatsya",
+    "RU-C429-vyselyatsya",
+    "RU-C429-zalog",
+    "RU-C429-prodlevat"
+  ],
+  "tex": "russian/book/chapters/ch429-checking-in-and-out.tex"
+}

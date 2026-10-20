@@ -1,0 +1,11 @@
+{
+  "id": "RU-C512-finish",
+  "pathSegment": "RU-PATH-512-RACE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-512-RACE",
+      "order": 2
+    }
+  ]
+}

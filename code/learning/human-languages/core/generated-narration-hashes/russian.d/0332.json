@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 332,
+  "sourceHash": "fnv1a64:d96d6ad187b9c0ce",
+  "lessonIds": [
+    "RU-C332-zapekat",
+    "RU-C332-protiven",
+    "RU-C332-razogrevat",
+    "RU-C332-podgorat",
+    "RU-C332-obzharivat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch332.txt",
+  "json": "russian/narration/ch332.json",
+  "textHash": "fnv1a64:23c9610ac889bf4d",
+  "jsonHash": "fnv1a64:ccbdb5776f9e06b5",
+  "findings": []
+}

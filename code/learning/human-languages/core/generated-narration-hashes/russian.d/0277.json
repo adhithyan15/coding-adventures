@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 277,
+  "sourceHash": "fnv1a64:e50c1ba1868639d0",
+  "lessonIds": [
+    "RU-C277-predydushchiy",
+    "RU-C277-posleduyushchiy",
+    "RU-C277-ocherednoy",
+    "RU-C277-yezhegodnyy",
+    "RU-C277-dalneyshiy"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch277.txt",
+  "json": "russian/narration/ch277.json",
+  "textHash": "fnv1a64:5c034cce8e8b880c",
+  "jsonHash": "fnv1a64:00ebefc56aa2cb7c",
+  "findings": []
+}

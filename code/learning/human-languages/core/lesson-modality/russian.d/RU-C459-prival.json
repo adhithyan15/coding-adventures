@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C459-prival",
+    "language": "russian",
+    "chapter": 459,
+    "sequence": 26090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:627ce654f3bf24ee"
+  },
+  "findings": []
+}

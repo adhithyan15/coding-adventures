@@ -1,0 +1,19 @@
+{
+  "chapter": 474,
+  "title": "Worry and Calm",
+  "label": "ch:ru-worry-and-calm",
+  "canDo": "I can talk about nerves, worry and calming down.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C474-uspokaivatsya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 474: I can talk about nerves, worry and calming down.",
+    "assesses": [
+      "RU-LEX-C474-WORRY-03",
+      "RU-LEX-C474-WORRY-04",
+      "RU-LEX-C474-WORRY-05"
+    ]
+  }
+}

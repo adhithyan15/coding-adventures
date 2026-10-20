@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C397-besplatnyy",
+    "language": "russian",
+    "chapter": 397,
+    "sequence": 22890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:acb3bc08e2853512"
+  },
+  "findings": []
+}

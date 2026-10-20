@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-276-DESYATILETIYE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-276-DESYATILETIYE"
+  ],
+  "after": []
+}

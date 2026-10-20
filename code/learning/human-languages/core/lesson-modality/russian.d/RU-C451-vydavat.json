@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C451-vydavat",
+    "language": "russian",
+    "chapter": 451,
+    "sequence": 25700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7618082327e52b9f"
+  },
+  "findings": []
+}

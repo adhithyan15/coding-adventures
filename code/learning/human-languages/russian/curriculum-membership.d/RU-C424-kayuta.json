@@ -1,0 +1,11 @@
+{
+  "id": "RU-C424-kayuta",
+  "pathSegment": "RU-PATH-424-PAROM",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-424-PAROM",
+      "order": 2
+    }
+  ]
+}

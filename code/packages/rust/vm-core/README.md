@@ -245,3 +245,6 @@ cargo test -p vm-core
 module that uses a refused op at compile time, with a typed error. Since LANG83 PR1b every registry op is lowered here, including `write_i64`
 (no newline), `i64_div_floor`/`i64_mod_floor` (defined `Trap.DivZero` /
 `Trap.Overflow` edges) and `trap`, which surfaces as `VMError::Trap { kind }`.
+LANG83 PR4 adds the overflow-checked `i64_add_ovf`, `i64_sub_ovf`, `i64_mul_ovf`
+and `i64_neg_ovf` (Rust `checked_*`; an out-of-range result is
+`VMError::Trap { kind: "Trap.Overflow" }`).

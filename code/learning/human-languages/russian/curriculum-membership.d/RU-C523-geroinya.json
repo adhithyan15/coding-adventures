@@ -1,0 +1,11 @@
+{
+  "id": "RU-C523-geroinya",
+  "pathSegment": "RU-PATH-523-PLOT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-523-PLOT",
+      "order": 2
+    }
+  ]
+}

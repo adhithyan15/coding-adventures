@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 437,
+  "sourceHash": "fnv1a64:472fcf0edcd69239",
+  "lessonIds": [
+    "RU-C437-zabluditsya",
+    "RU-C437-oriyentirovatsya",
+    "RU-C437-bluzhdat",
+    "RU-C437-kompas",
+    "RU-C437-navigator"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch437.txt",
+  "json": "russian/narration/ch437.json",
+  "textHash": "fnv1a64:7442d1e20b37527f",
+  "jsonHash": "fnv1a64:78ef4d9b1baba199",
+  "findings": []
+}

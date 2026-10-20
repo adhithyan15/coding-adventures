@@ -1,0 +1,19 @@
+{
+  "chapter": 529,
+  "title": "Cleaning Day",
+  "label": "ch:ru-cleaning-day",
+  "canDo": "I can talk about cleaning the house.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C529-vytirat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 529: I can talk about cleaning the house.",
+    "assesses": [
+      "RU-LEX-C529-CLEANING-03",
+      "RU-LEX-C529-CLEANING-04",
+      "RU-LEX-C529-CLEANING-05"
+    ]
+  }
+}

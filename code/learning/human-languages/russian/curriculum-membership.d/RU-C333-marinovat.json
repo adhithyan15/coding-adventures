@@ -1,0 +1,11 @@
+{
+  "id": "RU-C333-marinovat",
+  "pathSegment": "RU-PATH-333-SOLIT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-333-SOLIT",
+      "order": 4
+    }
+  ]
+}

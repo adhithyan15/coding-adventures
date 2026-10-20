@@ -1,0 +1,11 @@
+{
+  "id": "RU-C411-vysazhivat",
+  "pathSegment": "RU-PATH-411-POPUTCHIK",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-411-POPUTCHIK",
+      "order": 3
+    }
+  ]
+}

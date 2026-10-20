@@ -1,0 +1,11 @@
+{
+  "id": "RU-C404-dvigatel",
+  "pathSegment": "RU-PATH-404-KAPOT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-404-KAPOT",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 475,
+  "sourceHash": "fnv1a64:9509b7b0ae36f865",
+  "lessonIds": [
+    "RU-C475-vostorg",
+    "RU-C475-voskhishchatsya",
+    "RU-C475-gorditsya",
+    "RU-C475-gordost",
+    "RU-C475-khvastatsya"
+  ],
+  "tex": "russian/book/chapters/ch475-delight-and-pride.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C410-vmyatina",
+  "pathSegment": "RU-PATH-410-STOLKNOVENIYE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-410-STOLKNOVENIYE",
+      "order": 4
+    }
+  ]
+}

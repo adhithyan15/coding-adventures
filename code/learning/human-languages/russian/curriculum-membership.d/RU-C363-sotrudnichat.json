@@ -1,0 +1,11 @@
+{
+  "id": "RU-C363-sotrudnichat",
+  "pathSegment": "RU-PATH-363-PEREGOVORY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-363-PEREGOVORY",
+      "order": 4
+    }
+  ]
+}

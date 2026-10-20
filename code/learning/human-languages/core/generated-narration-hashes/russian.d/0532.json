@@ -1,0 +1,20 @@
+{
+  "language": "russian",
+  "chapter": 532,
+  "sourceHash": "fnv1a64:37c8cbd977bcadf3",
+  "lessonIds": [
+    "RU-C532-oboi",
+    "RU-C532-kleit",
+    "RU-C532-sverlit",
+    "RU-C532-drel",
+    "RU-C532-otvyortka",
+    "RU-R532-review-525-532"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "russian/narration/ch532.txt",
+  "json": "russian/narration/ch532.json",
+  "textHash": "fnv1a64:fbc2dc181a8af5c9",
+  "jsonHash": "fnv1a64:563df71c2eafb941",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C364-socialnyy",
+    "language": "russian",
+    "chapter": 364,
+    "sequence": 21210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0e8fa130f2dcd945"
+  },
+  "findings": []
+}

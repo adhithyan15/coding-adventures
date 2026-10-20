@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C494-izmena",
+    "language": "russian",
+    "chapter": 494,
+    "sequence": 27900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8dd59f977bb1b459"
+  },
+  "findings": []
+}

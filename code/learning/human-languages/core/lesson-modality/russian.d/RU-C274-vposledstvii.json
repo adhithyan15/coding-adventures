@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C274-vposledstvii",
+    "language": "russian",
+    "chapter": 274,
+    "sequence": 16580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:25beb3909ccc0e89"
+  },
+  "findings": []
+}

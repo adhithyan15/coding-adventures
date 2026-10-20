@@ -1,0 +1,11 @@
+{
+  "id": "RU-C283-upominat",
+  "pathSegment": "RU-PATH-283-UTVERZHDAT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-283-UTVERZHDAT",
+      "order": 1
+    }
+  ]
+}

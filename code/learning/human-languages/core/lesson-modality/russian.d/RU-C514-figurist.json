@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C514-figurist",
+    "language": "russian",
+    "chapter": 514,
+    "sequence": 28910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c8951bf3fd4ad487"
+  },
+  "findings": []
+}
