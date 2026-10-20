@@ -25,7 +25,9 @@ use crate::globs;
 use crate::whitespace_only;
 use crate::wrapper;
 use coding_adventures_javascript_lexer::tokenize_javascript_typed;
-use coding_adventures_javascript_parser::{bridge, bridge::BridgeError, parse_javascript_typed};
+use coding_adventures_javascript_parser::{
+    bridge, bridge::BridgeError, check_chain_spine, parse_javascript_typed,
+};
 use coding_adventures_javascript_tokens::EsVersion;
 use lexer::token::TokenType;
 use std::fs;
@@ -654,6 +656,13 @@ pub fn transform_source_with_cv(
             let node = parse_result.map_err(|message| {
                 TypedPipelineFailure::Parse(message).into_compiler_error(level)
             })?;
+            // CLOC42 (#16009): bound operator / member / call chains before
+            // the bridge folds them into a deep typed AST that every
+            // recursive pass would walk. Past the bound, fail cleanly at the
+            // parse stage instead of overflowing the stack.
+            check_chain_spine(&node, MAX_CHAIN_SPINE).map_err(|error| {
+                TypedPipelineFailure::Parse(error.to_string()).into_compiler_error(level)
+            })?;
             let program = bridge::grammar_to_program(&node, es_version)
                 .map_err(|error| match error {
                     BridgeError::UnsupportedSyntax { rule, location } => {
@@ -946,6 +955,11 @@ fn externs_do_not_rename(config: &CompilerConfig) -> std::collections::HashSet<S
             Ok(n) => n,
             Err(_) => continue,
         };
+        // CLOC42: an externs file deeper than the chain bound is skipped like
+        // any other externs file that fails to parse.
+        if check_chain_spine(&node, MAX_CHAIN_SPINE).is_err() {
+            continue;
+        }
         let program = match bridge::grammar_to_program(&node, es) {
             Ok(p) => p,
             Err(_) => continue,
@@ -1021,17 +1035,59 @@ fn collect_externs_property_names(
         // risk renaming an external property.
         let src = fs::read_to_string(&path).ok()?;
         let node = parse_javascript_typed(&src, es).ok()?;
+        // CLOC42: too deep to bound safely → no boundary → no property renaming.
+        check_chain_spine(&node, MAX_CHAIN_SPINE).ok()?;
         let program = bridge::grammar_to_program(&node, es).ok()?;
         names.extend(collect_property_names(&program));
     }
     Some(names)
 }
 
-/// Run the compiler with `config`.
+/// The deepest operator / member / call chain closurec compiles (CLOC42,
+/// #16009), in [`check_chain_spine`] units.
+///
+/// A binary or member link costs two units and a call link costs one, so this
+/// admits about 8,000 `+` operands or 16,000 calls. Calls are the costliest
+/// shape. In a debug build on aarch64 they compiled to about 33,400 links, so
+/// the bound keeps 2× headroom. The `regression_chain_depth` test compiles
+/// every shape at this bound.
+pub const MAX_CHAIN_SPINE: usize = 16_384;
+
+/// Stack reserved for the compiler thread (CLOC42).
+///
+/// Recursive passes use stack in proportion to AST depth. Running the whole
+/// compile on a thread with a fixed, generous stack makes the reachable depth
+/// the same on every platform; the main thread gets 8 MiB on macOS and Linux
+/// but 1 MiB on Windows. This is a reservation: pages are touched only as deep
+/// inputs need them. The reference compiler also runs on a thread with an
+/// enlarged stack.
+const COMPILER_STACK_SIZE: usize = 1024 * 1024 * 1024;
+
+/// Run the compiler with `config`, on a dedicated thread with
+/// [`COMPILER_STACK_SIZE`] of stack (CLOC42). A panic inside the compile is
+/// re-raised on the caller, exactly as if it had run here.
+pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerError> {
+    std::thread::scope(|scope| {
+        let worker = std::thread::Builder::new()
+            .name("closurec-compiler".to_string())
+            .stack_size(COMPILER_STACK_SIZE)
+            .spawn_scoped(scope, || run_compiler_on_this_stack(config));
+        match worker {
+            Ok(handle) => handle
+                .join()
+                .unwrap_or_else(|panic| std::panic::resume_unwind(panic)),
+            // No thread (address space exhausted, thread limit hit): compile
+            // here rather than fail — shallow inputs never needed the stack.
+            Err(_) => run_compiler_on_this_stack(config),
+        }
+    })
+}
+
+/// The compile itself. [`run_compiler`] runs this on the compiler thread.
 ///
 /// CLOC11.02: glob-expanded inputs, identity pipeline body. See the
 /// module docstring for the future expansion plan.
-pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerError> {
+fn run_compiler_on_this_stack(config: &CompilerConfig) -> Result<CompilerOutput, CompilerError> {
     config.special_modes.correlation_vector_limits.validate()
         .map_err(provenance_error("configuration"))?;
     // Step 0: identity-banner fallback. Empty argv → friendly

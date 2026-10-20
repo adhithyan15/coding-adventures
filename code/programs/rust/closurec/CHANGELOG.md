@@ -4,6 +4,28 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - long expression chains fail cleanly instead of aborting (#16009, CLOC42)
+
+`console.log(x + x + … + x)` with about 1,000 or more terms used to overflow
+the stack in a debug build, and 10,000 or more in release. The process died
+with SIGABRT (exit 134) and gave no diagnostic. Two changes fix this:
+
+- **Chain bound.** closurec now measures chain depth with
+  `javascript_parser::check_chain_spine` before building the typed AST. Past
+  `MAX_CHAIN_SPINE` (16,384 units, about 8,000 `+` operands or 16,000 calls),
+  SIMPLE and ADVANCED fail at the parse stage. They print a located
+  diagnostic, exit 1 and write no output. Externs files past the bound are
+  treated like externs files that fail to parse.
+- **Compiler thread.** `run_compiler` runs the compile on a worker thread with
+  a 1 GiB stack reservation. Every chain within the bound therefore compiles
+  on every platform, including Windows, where the main thread only has 1 MiB.
+
+`tests/regression_chain_depth.rs` checks both changes in a debug build:
+
+- The issue's 10,000-term reproduction fails cleanly.
+- For six chain shapes, the deepest chain the bound admits compiles at SIMPLE
+  and ADVANCED, and one link deeper fails cleanly.
+
 ### Added - actual bounded provenance chronology (CV03)
 
 Traced compilation starts a fresh checked chronology log before input graph
