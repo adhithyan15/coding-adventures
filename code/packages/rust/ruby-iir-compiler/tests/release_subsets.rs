@@ -225,7 +225,11 @@ fn corpus_expectations_agree_with_the_host_ruby_oracle() {
     for case in corpus() {
         // The file path as one argument: no shell, no interpolation.
         let out = Command::new("ruby").arg(dir.join(format!("{}.rb", case.name))).output().unwrap();
-        let stdout = String::from_utf8_lossy(&out.stdout).into_owned();
+        // Ruby on Windows writes stdout in text mode, so every `puts`
+        // ends in "\r\n" there. The `.expect` files record the
+        // language's output ("\n"), so fold the platform's line ending
+        // back before comparing.
+        let stdout = String::from_utf8_lossy(&out.stdout).replace("\r\n", "\n");
         let stderr = String::from_utf8_lossy(&out.stderr);
         match case.outcome {
             Outcome::Runs { stdout: want, trap } => {

@@ -50,7 +50,8 @@
 - `DISPATCHED_RULES` / `DISPATCHED_TOKENS` and `tests/cst_contract.rs`
   (LANG84 C8); `tests/release_subsets.rs` (stage I over the new
   `code/grammars/ruby/corpus/rb-int-puts` corpus, IIR identity across
-  3.3.5–3.3.7, CSV/profile agreement, host-ruby oracle);
+  3.3.5–3.3.7, CSV/profile agreement, host-ruby oracle; the oracle folds
+  Windows' `\r\n` stdout back to `\n` before comparing with `.expect`);
   `tests/hostile.rs` (C5 probes in a child process).
 - `rubyvm --release <id>`; a trap prints the output so far, then
   `trap: <kind>` on stderr, exit 1.
