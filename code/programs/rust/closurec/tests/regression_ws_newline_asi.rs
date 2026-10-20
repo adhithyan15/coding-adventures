@@ -68,6 +68,14 @@ const CASES: &[(&str, &str)] = &[
     ("if (a) b(); else if (c)\n++d", "if(a)b();else if(c)++d;"),
     ("class A{m(){}\nstatic x=1\nn(){}}", "class A{m(){}static x=1;n(){}};"),
     ("class A{static {a()}\nm(){}}", "class A{static{a()}m(){}};"),
+    // `for await (…)` is a header too (review round 2).
+    (
+        "async function f(y){for await (const x of y)\ng(x)}",
+        "async function f(y){for await(const x of y)g(x)};",
+    ),
+    ("x = {}\ny()", "x={};y();"),
+    ("class A{*g(){}\nh(){}}", "class A{*g(){}h(){}};"),
+    ("class A{async m(){}\nn(){}}", "class A{async m(){}n(){}};"),
     // CCR-080 (#15867): the program-final `;` after a `do…while`.
     ("do{console.log(1)}while(0)", "do console.log(1);while(0);"),
     ("x=1;do{a()}while(b)", "x=1;do a();while(b);"),
@@ -81,6 +89,7 @@ const PARSE_ONLY: &[&str] = &[
     "class A{x=1\ny=2}",
     "class A{x\ny}",
     "class A{x = function(){}\ny = 1}",
+    "class A{x=function*g(){}\ny=2}",
 ];
 
 fn compile_ws(source: &str, tag: usize) -> String {

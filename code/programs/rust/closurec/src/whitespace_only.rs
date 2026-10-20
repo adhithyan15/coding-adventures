@@ -3135,6 +3135,22 @@ pub fn whitespace_only_minify(
     // body), and whether the `}` most recently closed was one. See the
     // class-body ASI note at the top of the emit loop.
     let mut brace_is_member_body: Vec<bool> = Vec::new();
+    // `)` index in `kept` → its `(` index, computed once (the emit loop never
+    // mutates `kept`), so the member-body test is O(1) per brace.
+    let kept_open_paren: Vec<usize> = {
+        let mut table = vec![usize::MAX; kept.len()];
+        let mut stack = Vec::new();
+        for (k, t) in kept.iter().enumerate() {
+            if is_structural_punct(t, "(") {
+                stack.push(k);
+            } else if is_structural_punct(t, ")") {
+                if let Some(o) = stack.pop() {
+                    table[k] = o;
+                }
+            }
+        }
+        table
+    };
     let mut closed_member_body = false;
     // ^ for each open `{`, the kind of block it opens.
     //   `BlockKind::Function` triggers gap-030 rule-B (emit
@@ -3930,25 +3946,19 @@ pub fn whitespace_only_minify(
             // `(` is not a `function` expression's (`x = function(){}` is
             // a field).
             // (`prev_emitted_tok` is already this `{`, so look at `kept`.)
+            // A method's `(` is preceded by its name, perhaps behind `*`,
+            // `async`, `get`/`set` or `static`. A field initialised with a
+            // function expression has `function` among those few tokens
+            // (`x = function*g(){}`, `x = async function(){}`).
             let member_body = brace_stack.last() == Some(&BlockKind::Class)
                 && idx >= 1
-                && Some(kept[idx - 1]).is_some_and(|p| {
-                    p.value == "static"
-                        || (is_structural_punct(p, ")") && {
-                            let open = (0..idx).rev().scan(0i32, |depth, k| {
-                                if is_structural_punct(kept[k], ")") {
-                                    *depth += 1;
-                                } else if is_structural_punct(kept[k], "(") {
-                                    *depth -= 1;
-                                }
-                                Some((k, *depth))
-                            }).find(|&(_, d)| d == 0).map(|(k, _)| k);
-                            open.is_some_and(|p| {
-                                let not_function = |k: usize| kept[k].value != "function";
-                                p >= 1 && not_function(p - 1) && (p < 2 || not_function(p - 2))
-                            })
-                        })
-                });
+                && (kept[idx - 1].value == "static"
+                    || (is_structural_punct(kept[idx - 1], ")")
+                        && kept_open_paren[idx - 1] != usize::MAX
+                        && {
+                            let p = kept_open_paren[idx - 1];
+                            (p.saturating_sub(4)..p).all(|k| kept[k].value != "function")
+                        }));
             brace_is_member_body.push(member_body);
             brace_stack.push(kind);
             next_block_is_try_chain = false;
