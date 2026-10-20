@@ -250,9 +250,10 @@ Exact whole-number multiplication may scale the sign-rooted integer transform
 through magnitude `2^53`, including composition with exact additive terms, as
 long as every intermediate magnitude stays in that exact binary64 range.
 Fractional factors, oversized products, repeated roots, and variable factors
-remain conservative.
-Exact unit division is also permitted when the bounded result is the numerator;
-non-unit or variable divisors and a bounded denominator remain conservative.
+remain conservative. Exact whole-number division is also permitted when the
+bounded result is the numerator and every possible transformed integer is
+divisible by the static nonzero divisor. Inexact or variable divisors and a
+bounded denominator remain conservative.
 An exact variable-free exponent chain evaluating to one may preserve the
 bounded result before `entier`; other or dynamic exponents remain conservative.
 Additional built-in `entier` calls may wrap that already integral bounded
