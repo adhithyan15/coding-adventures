@@ -917,7 +917,7 @@ noted.
 | Dartmouth BASIC | GL + 2 hooks (`lib.rs`: 391 non-test lines incl. docs) | GP | CST | unversioned | Compliant (C3 hooks) | Inventory (editions 1–7) |
 | Derive, Wolfram | GL + `drop_bracketed_newlines` | GP | CST | unversioned | Compliant (C3 hook) | Optional E3 replacement; inventories |
 | MacroOct, MacroNib | GL + Oct/Nib GP | GP | CST | — | Base parse compliant; directive layer is a preprocessor | See [Preprocessor dialects](#preprocessor-dialects) |
-| McCarthy Lisp | GL | GP, then `extract_program` → `Vec<LispExpr>` | typed lift | unversioned | **Non-compliant (C2 typed lift)** | Phase 8 rewrite |
+| McCarthy Lisp | GL | GP | CST | unversioned | Compliant since `mccarthy-lisp-iir-compiler` 0.9.0 (was C2 typed lift via `extract_program` → `Vec<LispExpr>`) | Phase 8 CST rewrite done; inventory (LISP 1, 1.5) |
 | Twig | GL | GP, then `ast_extract.rs` (1,401) + `ast_nodes.rs` (636) → `twig_parser::Program` | typed lift | unversioned | **Non-compliant (C2 typed lift)** | Phase 8 rewrite |
 | JavaScript | GL with runtime `REGEX`/`BAD_REGEX` deletion | GP over `es*.grammar` + `asi.rs` (≈338) | `bridge.rs` (≈4,214) → `javascript_ast::Program` | 14 pairs (es1, es3, es5, es2015–es2025) + unversioned; no CSV; hard-coded `Es2020` | **Non-compliant (C2 mutation, hook size, typed lift)** | Phase 6 |
 | Ruby | hand-written `ruby-lexer` (≈2,200 lines) driving `ruby-1.8.lexer.states.toml` (1,917 lines; 15 eras share it, the era list stops at 3.3) | GP over `ruby.grammar` (919 lines) | CST | unversioned; stale 79-line `ruby.tokens` | **Non-compliant (C2 hand-written lexer)** | Phases 3 and 5 |
@@ -984,7 +984,14 @@ corpus.
 - The Twig type-check pre-pass (TW05-B) currently consumes the typed AST.
   See [Open questions](#open-questions).
 - McCarthy Lisp's `extract_program` is replaced by borrowed views over the
-  CST.
+  CST. **Done** in `mccarthy-lisp-iir-compiler` 0.9.0, as one PR: the
+  compiler takes `parse_to_cst`'s `GrammarASTNode` (`compile_ast`), reads
+  `'X` and `list_body` children as cons structure through borrowed cursors
+  (no owned tree), runs capture analysis over the CST (C1.7), and keeps the
+  extractor's error cases in a validation pass. IIR identity was checked by
+  diffing the old and new compilers' output over every string literal in
+  the McCarthy and `lang-aot` test sources plus a hand-written edge-case
+  corpus. `extract_program` and `LispExpr` stay public for other consumers.
 
 ### Python and Perl: make release selection real
 
@@ -1084,7 +1091,7 @@ are rough estimates of reviewed diff size, not counting regenerated
 | 5 | 5a–5b | **Ruby integer subset on all backends** (= LANG83 PR2), on R0 pairs: `rb_int_div` → `i64_div_floor`, `puts` → `print_i64`, `StdoutThenTrap` rows; `Language::Ruby`; the IIR path drops `ruby-lexer` | ~1,200 lines over 2 PRs |
 | 6 | 6a–6e | JavaScript CST rewrite (see above) | ~3,000 lines over 5 PRs |
 | 7 | 7a–7c | Python: inventory pairs for the subset, `compile_source_at`, `Language::Python`, matrix rows. The float subset depends on LANG83 float formatting; an int subset depends on the LANG83 `*_ovf` family | ~2,000 lines over 3 PRs |
-| 8 | 8.x | Twig CST rewrite (≈5,700-line compiler, ~6–10 PRs by construct family, IIR-identity gate). McCarthy Lisp CST rewrite (~3 PRs) | large |
+| 8 | 8.x | Twig CST rewrite (≈5,700-line compiler, ~6–10 PRs by construct family, IIR-identity gate). McCarthy Lisp CST rewrite (~3 PRs; done in one, `mccarthy-lisp-iir-compiler` 0.9.0) | large |
 | 9 | ongoing | Release backfill, earliest first: per-release pairs and subset status for every language; remaining inventories (BASIC, ALGOL, COBOL and others); remaining lang-aot variants | many small PRs |
 
 Phases 4 and 5 may start once 2b (and, for Ruby, 3.2) has landed. They do not
