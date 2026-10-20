@@ -199,12 +199,12 @@ fn retry_on_error(
     let mut tried: std::collections::HashSet<(usize, usize)> = std::collections::HashSet::new();
     // Work budget (#17840 review, DoS). Each attempt re-parses the whole stream,
     // so a long run of insertions the speculation didn't cover costs
-    // O(insertions × n). Cap the total at max(64·n, 2M) token-parses. Ordinary
+    // O(insertions × n). Cap the total at max(4·n, 200k) token-parses. Ordinary
     // input, where speculation covers almost everything, never comes close. A
     // hostile file gives up with the parse error in hand, which both callers
     // already handle: SIMPLE fails cleanly, and WHITESPACE_ONLY skips the
     // insertion.
-    let budget = tokens.len().saturating_mul(64).max(2_000_000);
+    let budget = tokens.len().saturating_mul(4).max(200_000);
     let mut spent = 0usize;
 
     for _ in 0..max_insertions {
@@ -392,13 +392,15 @@ fn can_end_expression(tok: &Token) -> bool {
 /// (`function f(){ a() }`). The token before the matching `{` decides
 /// whether it's a block:
 /// - `)`, `else`, `do`, `try` or `finally` open a body;
-/// - `;`, `{`, `}` or the start of input open a bare block.
+/// - `;`, `{`, `}` or the start of input open a bare block;
+/// - `=>` opens an arrow body, unless the body starts `name :`.
 ///
-/// Anything else is left to retry, including `=>`. That covers `=`, `(`, `:`,
-/// `,` and a class name, which may open an object literal or a class body
-/// that takes no `;`. `=>` is excluded because the grammar buckets
-/// `() => {a:1}` as an object literal, and a speculated `;` would change
-/// which parse wins.
+/// The `name :` exception exists because the grammar buckets `() => {a:1}`
+/// as an object literal, and a speculated `;` would change which parse wins.
+/// Anything else is left to retry. That covers `=`, `(`, `:`, `,` and a
+/// class name, which may open an object literal or a class body that takes
+/// no `;`. A postfix `++`/`--` also counts as an expression end for Rule 1
+/// (`a++⏎b()`).
 ///
 /// Such a pair can never continue one expression (`a b`, `f() var`), so the
 /// parse is bound to fail exactly at `i`, and Rule 1 would insert this `;` on
@@ -441,7 +443,10 @@ fn speculate_line_semicolons(tokens: &[Token], original: &[bool]) -> (Vec<Token>
             matches!(
                 before.value.as_str(),
                 ")" | "else" | "do" | "try" | "finally" | ";" | "{" | "}"
-            )
+            ) || (before.value == "=>"
+                // `() => {a:1}`: the grammar buckets a `{ name :` arrow
+                // body as an object literal, so leave that shape to retry.
+                && tokens.get(o + 2).is_none_or(|t| t.value != ":"))
         }
     };
     let ends_statement_unterminated = |k: usize| {
@@ -481,8 +486,14 @@ fn speculate_line_semicolons(tokens: &[Token], original: &[bool]) -> (Vec<Token>
                                 | "&&" | "??" | "!"
                         )
                 });
+            // A postfix `++`/`--` (`a++⏎b()`) ends its expression too.
+            let postfix_update = matches!(prev.value.as_str(), "++" | "--")
+                && i >= 2
+                && tokens[i - 1].flags.unwrap_or(0) & TOKEN_PRECEDED_BY_NEWLINE == 0
+                && ends_expression_before(tokens, &open_paren, i - 2);
             if ((prev.value != "}" && ends_expression_before(tokens, &open_paren, i - 1))
-                || ends_object_literal)
+                || ends_object_literal
+                || postfix_update)
                 && !CONTEXTUAL.contains(&prev.value.as_str())
             {
                 out.push(synthetic_semicolon(tok));
@@ -978,6 +989,7 @@ mod tests {
             "do a()\nwhile (b)\nswitch (a) { case 1: b()\ndefault: c() }",
             "let s = `t`\nlet r = /x/g\nconst q = a ? b : c\nx = () => { y() }",
             "async function f(y) { for await (const x of y)\ng(x) }\nx = {}\ny()\nimport z\nfrom \"m\"",
+            "a++\nb--\nf(() => { c() })\ng(d => { e() })\nx = () => {a:1}",
         ] {
             let (tokens, original) = force_restricted_semicolons(tokenize(src));
             let (plain, _) = retry_on_error(tokens.clone(), original.clone(), &grammar).expect("plain parses");
@@ -1019,6 +1031,20 @@ mod tests {
         let original = vec![true; tokens.len()];
         assert_eq!(speculate_line_semicolons(&tokens, &original).0.len(), tokens.len() + 1);
         let tokens = tokenize("if (a) {}\ny()");
+        let original = vec![true; tokens.len()];
+        assert_eq!(speculate_line_semicolons(&tokens, &original).0.len(), tokens.len());
+    }
+
+    #[test]
+    fn speculation_covers_postfix_updates_and_arrow_bodies() {
+        // Neither needs a retry any more (review round 3).
+        for (src, extra) in [("a++\nb()", 1), ("f(() => { a() })\ng()", 2)] {
+            let tokens = tokenize(src);
+            let original = vec![true; tokens.len()];
+            assert_eq!(speculate_line_semicolons(&tokens, &original).0.len(), tokens.len() + extra, "{src}");
+        }
+        // The ambiguous arrow body is still left to retry.
+        let tokens = tokenize("x = () => {a:1}");
         let original = vec![true; tokens.len()];
         assert_eq!(speculate_line_semicolons(&tokens, &original).0.len(), tokens.len());
     }

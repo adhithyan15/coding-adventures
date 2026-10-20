@@ -296,6 +296,17 @@ linear pass, the semicolons the retry loop would certainly insert:
   unterminated. `=>` bodies are excluded because the grammar buckets
   `() => {a:1}` as an object.
 
+Rule 2 also covers `=>` bodies, except when one starts `name :` (the
+`() => {a:1}` ambiguity). Rule 1 also treats a postfix `++`/`--` as an
+expression end (`a++⏎b()`).
+
+**Work budget.** `retry_on_error` charges the stream length per attempt and
+stops once it has spent max(4·n, 200k) token-parses, returning the parse error
+in hand. A hostile file therefore costs at most about five parses. A valid
+file that needs more uncovered insertions than that is declined: SIMPLE fails
+cleanly and WHITESPACE_ONLY keeps its old output. An example is 100 lines of
+`x = () => {a:1}` after a large prefix.
+
 The retry loop then handles anything left. If the speculated stream fails to
 parse, the plain algorithm runs on the unspeculated stream, so correctness
 never depends on the guess. A unit test checks that both routes give the same

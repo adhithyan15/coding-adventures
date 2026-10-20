@@ -3947,9 +3947,8 @@ pub fn whitespace_only_minify(
             // a field).
             // (`prev_emitted_tok` is already this `{`, so look at `kept`.)
             // A method's `(` is preceded by its name, perhaps behind `*`,
-            // `async`, `get`/`set` or `static`. A field initialised with a
-            // function expression has `function` among those few tokens
-            // (`x = function*g(){}`, `x = async function(){}`).
+            // `async`, `get`/`set` or `static`. A field initialiser has `=`,
+            // `function`, `class` or `extends` among those few tokens.
             let member_body = brace_stack.last() == Some(&BlockKind::Class)
                 && idx >= 1
                 && (kept[idx - 1].value == "static"
@@ -3957,7 +3956,23 @@ pub fn whitespace_only_minify(
                         && kept_open_paren[idx - 1] != usize::MAX
                         && {
                             let p = kept_open_paren[idx - 1];
-                            (p.saturating_sub(4)..p).all(|k| kept[k].value != "function")
+                            // Walk back over this member's own header, to the
+                            // `{`/`}`/`;` that ends the previous member. A
+                            // field initialiser has `=`, `function`, `class` or
+                            // `extends` there (`x = function(){}`,
+                            // `x = class extends f(B){}`); a method doesn't.
+                            // Each header is walked once, so this is linear.
+                            (0..p)
+                                .rev()
+                                .map(|k| kept[k])
+                                .take_while(|t| {
+                                    !(is_structural_punct(t, "{")
+                                        || is_structural_punct(t, "}")
+                                        || is_structural_punct(t, ";"))
+                                })
+                                .all(|t| {
+                                    !matches!(t.value.as_str(), "function" | "class" | "extends" | "=")
+                                })
                         }));
             brace_is_member_body.push(member_body);
             brace_stack.push(kind);

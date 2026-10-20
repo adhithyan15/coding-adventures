@@ -74,6 +74,8 @@ const CASES: &[(&str, &str)] = &[
         "async function f(y){for await(const x of y)g(x)};",
     ),
     ("x = {}\ny()", "x={};y();"),
+    ("a++\nb()", "a++;b();"),
+    ("f(() => { a() })\ng()", "f(()=>{a()});g();"),
     ("class A{*g(){}\nh(){}}", "class A{*g(){}h(){}};"),
     ("class A{async m(){}\nn(){}}", "class A{async m(){}n(){}};"),
     // CCR-080 (#15867): the program-final `;` after a `do…while`.
@@ -90,6 +92,7 @@ const PARSE_ONLY: &[&str] = &[
     "class A{x\ny}",
     "class A{x = function(){}\ny = 1}",
     "class A{x=function*g(){}\ny=2}",
+    "class A{x=class extends f(B){}\ny=2}",
 ];
 
 fn compile_ws(source: &str, tag: usize) -> String {
