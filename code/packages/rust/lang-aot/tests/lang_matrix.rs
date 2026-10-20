@@ -9152,7 +9152,8 @@ fn main() { out(1, VALUE); }\n",
     },
 
     // Perl — LANG84 phase 4a, the bounded LANG81 integer `print` subset on its
-    // default release (the unversioned LANG81 pair). Perl's `print` writes the
+    // default release (`5.38.0` since phase 4b; the unversioned LANG81 pair in 4a,
+    // which no longer reaches the IIR path). Perl's `print` writes the
     // decimal text with NO newline, which is LANG83's `write_i64`; the frontend emits
     // `call_builtin write_i64` and nothing Perl-specific, so every column runs these
     // rows through the same lowering the op-conformance suite already proved.
