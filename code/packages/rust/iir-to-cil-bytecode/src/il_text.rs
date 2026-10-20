@@ -467,6 +467,20 @@ impl FnRegs {
     }
 }
 
+/// The LANG83 trap sequence (PR1b): flush `Console.Out`, then throw a
+/// `System.Exception` whose message is the trap kind. Never falls through.
+fn emit_lang83_trap(il: &mut String, fn_name: &str, kind: &str) -> Result<(), IIRClrError> {
+    let _ = writeln!(
+        il,
+        "    call class [System.Runtime]System.IO.TextWriter [System.Console]System.Console::get_Out()"
+    );
+    let _ = writeln!(il, "    callvirt instance void [System.Runtime]System.IO.TextWriter::Flush()");
+    let _ = writeln!(il, "    ldstr {}", cil_string_literal(fn_name, kind)?);
+    let _ = writeln!(il, "    newobj instance void [System.Runtime]System.Exception::.ctor(string)");
+    let _ = writeln!(il, "    throw");
+    Ok(())
+}
+
 /// Emit a load (`ldarg`/`ldloc`) of `name` onto the CIL stack.
 fn load_var(il: &mut String, regs: &FnRegs, name: &str) -> Result<(), IIRClrError> {
     let h = regs.home(name)?;
@@ -900,8 +914,118 @@ fn emit_method(
         let _ = writeln!(il, "    .locals init ({})", locals.join(", "));
     }
 
+    // LANG83 PR1b: internal branch labels for the floor-division guards,
+    // numbered per function (`'__lang83_<n>'`; quoted like every IIR label).
+    let mut lang83_labels = 0usize;
+    let mut lang83_label = || {
+        lang83_labels += 1;
+        format!("'__lang83_{lang83_labels}'")
+    };
     for instr in &f.instructions {
         match instr.op.as_str() {
+            // ── LANG83 PR1b: `trap "<kind>"` ────────────────────────────────
+            //
+            //   call TextWriter Console::get_Out(); callvirt TextWriter::Flush()
+            //   ldstr "<kind>"; newobj Exception::.ctor(string); throw
+            //
+            // Uncaught, CoreCLR prints `Unhandled exception. System.Exception:
+            // <kind>` on stderr and exits non-zero — after the flush.
+            "trap" => {
+                let kind = match instr.srcs.as_slice() {
+                    [Operand::Str(k)] if interpreter_ir::exception_kind::is_registered_trap_kind(k) => k,
+                    other => {
+                        return Err(IIRClrError::InvalidOperand {
+                            function: f.name.clone(),
+                            detail: format!("trap requires srcs = [Operand::Str(registered trap kind)], got {other:?}"),
+                        })
+                    }
+                };
+                emit_lang83_trap(il, &f.name, kind)?;
+            }
+            // ── LANG83 PR1b: `i64_div_floor` / `i64_mod_floor` ───────────────
+            //
+            // CIL `div` throws `DivideByZeroException` for a zero divisor and
+            // `div`/`rem` throw `OverflowException` for `MIN / -1` — neither is a
+            // LANG83 trap — so both edges are branched around first:
+            //
+            //     ld b; ldc.i8 0; bne.un NZ;  <trap Trap.DivZero>
+            //   NZ:
+            //     ld b; ldc.i8 -1; bne.un OK
+            //       div: ld a; ldc.i8 MIN; bne.un OK; <trap Trap.Overflow>
+            //       mod: ldc.i8 0; st dest; br DONE        (MIN mod -1 = 0)
+            //   OK:
+            //     ld a; ld b; div|rem                       ; truncating q | r
+            //     adj = (a rem b) ^ b < 0  &  (a rem b) != 0   ; int32 0/1
+            //     div: conv.i8 adj; sub                      ; q - adj
+            //     mod: conv.i8 adj; ld b; mul; add           ; r + adj*b
+            //     st dest
+            //   DONE:
+            "i64_div_floor" | "i64_mod_floor" => {
+                use interpreter_ir::exception_kind::{TRAP_DIV_ZERO, TRAP_OVERFLOW};
+                let want_mod = instr.op == "i64_mod_floor";
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: format!("{} must have a dest", instr.op),
+                })?;
+                let a = var_src(f, instr, 0, instr.op.as_str())?;
+                let b = var_src(f, instr, 1, instr.op.as_str())?;
+                if regs.home(dest)?.ty != "int64" {
+                    return Err(IIRClrError::InvalidOperand {
+                        function: f.name.clone(),
+                        detail: format!("{} needs an int64 dest (it is defined on i64)", instr.op),
+                    });
+                }
+                let (nonzero, ok, done) = (lang83_label(), lang83_label(), lang83_label());
+                load_var_as(il, &regs, b, "int64")?;
+                let _ = writeln!(il, "    ldc.i8 0");
+                let _ = writeln!(il, "    bne.un {nonzero}");
+                emit_lang83_trap(il, &f.name, TRAP_DIV_ZERO)?;
+                let _ = writeln!(il, "  {nonzero}:");
+                load_var_as(il, &regs, b, "int64")?;
+                let _ = writeln!(il, "    ldc.i8 -1");
+                let _ = writeln!(il, "    bne.un {ok}");
+                if want_mod {
+                    let _ = writeln!(il, "    ldc.i8 0");
+                    store_var_from(il, &regs, dest, "int64")?;
+                    let _ = writeln!(il, "    br {done}");
+                } else {
+                    load_var_as(il, &regs, a, "int64")?;
+                    let _ = writeln!(il, "    ldc.i8 {}", i64::MIN);
+                    let _ = writeln!(il, "    bne.un {ok}");
+                    emit_lang83_trap(il, &f.name, TRAP_OVERFLOW)?;
+                }
+                let _ = writeln!(il, "  {ok}:");
+                load_var_as(il, &regs, a, "int64")?;
+                load_var_as(il, &regs, b, "int64")?;
+                let _ = writeln!(il, "    {}", if want_mod { "rem" } else { "div" });
+                // adj, part 1: sign(r) != sign(b)  ⇔  (r ^ b) < 0
+                load_var_as(il, &regs, a, "int64")?;
+                load_var_as(il, &regs, b, "int64")?;
+                let _ = writeln!(il, "    rem");
+                load_var_as(il, &regs, b, "int64")?;
+                let _ = writeln!(il, "    xor");
+                let _ = writeln!(il, "    ldc.i8 0");
+                let _ = writeln!(il, "    clt");
+                // adj, part 2: r != 0
+                load_var_as(il, &regs, a, "int64")?;
+                load_var_as(il, &regs, b, "int64")?;
+                let _ = writeln!(il, "    rem");
+                let _ = writeln!(il, "    ldc.i8 0");
+                let _ = writeln!(il, "    ceq");
+                let _ = writeln!(il, "    ldc.i4.0");
+                let _ = writeln!(il, "    ceq");
+                let _ = writeln!(il, "    and");
+                let _ = writeln!(il, "    conv.i8");
+                if want_mod {
+                    load_var_as(il, &regs, b, "int64")?;
+                    let _ = writeln!(il, "    mul");
+                    let _ = writeln!(il, "    add");
+                } else {
+                    let _ = writeln!(il, "    sub");
+                }
+                store_var_from(il, &regs, dest, "int64")?;
+                let _ = writeln!(il, "  {done}:");
+            }
             // str_const <dest> = Str(s)  ->  ldstr "..."; st<dest>
             //
             // LANG-FULL E4 first managed foothold: Dartmouth BASIC string
@@ -1758,6 +1882,18 @@ fn emit_method(
                 // (not its decimal value): mask to 8 bits, widen to the 16-bit `char`,
                 // and call `Console.Write(char)` — so `.` of 65 emits `A`, not `65`.
                 // The CLR analogue of LLVM's libc `putchar` / wasm's `env.putchar`.
+                // `write_i64` (LANG83 PR1b) — decimal, NO newline:
+                // `Console.Write(int64)`, the same `Console.Out` writer as
+                // `print_i64`/`putchar`/`print_str`, so the stream stays ordered.
+                if builtin == "write_i64" {
+                    let val = var_src(f, instr, 1, "write_i64")?;
+                    load_var_as(il, &regs, val, "int64")?;
+                    let _ = writeln!(
+                        il,
+                        "    call void [System.Console]System.Console::Write(int64)"
+                    );
+                    continue;
+                }
                 if builtin == "putchar" {
                     let val = var_src(f, instr, 1, "putchar")?;
                     // The mask, `conv.u2` and `Write(char)` are all `int32`-shaped,
