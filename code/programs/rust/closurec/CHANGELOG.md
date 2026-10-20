@@ -941,6 +941,14 @@ conditionally registered passes (`inline`, `remove-unused-vars`, `treeshake`,
 were registered, that every reported name is a known pass, and pinning the
 scheduler's real order so a future fix to #15829 must consciously update it.
 
+### Fixed - strict clippy passes on closurec (#15939)
+
+`cargo clippy --all-targets -- -D warnings` now exits 0 with clippy 0.1.95.
+The unknown `doc_list_item_without_indentation` lint named in #15939 had
+already been removed from `Cargo.toml` by #16905. The one remaining error was
+`nonminimal_bool` in `tests/oracle_manifest.rs`: `a == !b` is now written as
+the equivalent `a != b`.
+
 ## [0.246.0] - 2026-09-19
 
 ### Added - upstream long-form aliases
