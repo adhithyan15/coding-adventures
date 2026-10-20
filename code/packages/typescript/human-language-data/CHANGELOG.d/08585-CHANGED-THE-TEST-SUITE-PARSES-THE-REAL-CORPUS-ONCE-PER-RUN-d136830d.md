@@ -15,8 +15,24 @@
 - `loadTrackLessons` consults the cache only when one has been configured for
   the exact curriculum root being read. Nothing but the Vitest setup files
   configures it, so every CLI process (`generate:*`, `check:*`, `report`)
-  parses from disk exactly as before. The cache is off on Windows, where the
-  ownership and mode checks have no faithful equivalent.
+  parses from disk exactly as before.
+- Windows uses the cache too, because the same corpus-wide tests were timing
+  out on `windows-2025`. Windows has no `process.getuid` or mode bits, so only
+  the owner/mode checks are skipped there. In exchange the cache is enabled
+  only for the fixed `defaultLessonCacheDirectory()`, and never for a
+  configured or temp path. The directory and every entry must not be a link
+  or junction (`lstat`), and must resolve (`realpathSync.native`) exactly to
+  where they claim to be. The opened entry must be the same file (device and
+  inode) that was checked, which stands in for the missing `O_NOFOLLOW`. Entry
+  names, magic and SHA-256 are checked as on POSIX. Only `ENTRY_NAME` and
+  `TEMP_NAME` files are ever deleted. A rename that fails with EPERM, EACCES
+  or EBUSY because another writer's identical entry is open counts as "already
+  written": the temp file is removed and nothing is swept. The platform rules
+  are a `CachePlatform` parameter, so tests simulate win32 on Linux: the
+  directory restriction, skipped mode checks, linked directory and entry,
+  digest refusal, rename collision, other rename failure, and that unrelated
+  files survive a sweep. The same-file check and the entry real-path check now
+  also run on POSIX.
 - `vitest.config.ts` gains `globalSetup: tests/setup/warm-lesson-cache.ts`,
   which parses the real corpus once before the workers start, and
   `setupFiles: tests/setup/lesson-cache.ts`, which turns the cache on inside

@@ -10,7 +10,10 @@
 //   RACE        concurrent writers never expose a half-written entry
 //
 // plus the security boundary from the module header: entries are only read
-// from a private directory, from private regular files, never through a link.
+// from a private directory, from private regular files, never through a link —
+// and the Windows variant of it, simulated here on POSIX: no owner or mode
+// checks, but only the one default directory, links still refused, digests
+// still checked, and a rename collision treated as another writer's entry.
 //
 // Every case builds its own fixture curriculum and its own cache directory in a
 // temp dir, and points the process-wide configuration at them for the duration
@@ -26,6 +29,7 @@ import {
   readFileSync,
   readdirSync,
   realpathSync,
+  renameSync,
   rmSync,
   statSync,
   symlinkSync,
@@ -42,11 +46,13 @@ import {
   defaultLessonCacheDirectory,
   directoryDigest,
   encodeEntry,
+  hostCachePlatform,
   lessonCacheFor,
   lessonCacheKey,
   openLessonCache,
   privatelyOwned,
   suiteLessonCacheOptions,
+  type CachePlatform,
   type LessonCache,
 } from "../src/lesson-cache.js";
 import { defaultCurriculumRoot, loadLessons, loadTrackLessons } from "../src/loader.js";
@@ -414,16 +420,155 @@ describe.runIf(POSIX)("the security boundary", () => {
   });
 });
 
-describe("where POSIX ownership does not exist", () => {
-  it("stays off, so Windows parses exactly as before", () => {
+describe("choosing the platform rules", () => {
+  it("is POSIX wherever process.getuid exists, and Windows only on win32", () => {
+    const host = hostCachePlatform();
+    if (POSIX) expect(host?.kind).toBe("posix");
+    else if (process.platform === "win32") expect(host?.kind).toBe("win32");
+    else expect(host).toBeUndefined();
+  });
+
+  it("stays off where neither rule set applies (no getuid, and not win32)", () => {
+    if (process.platform === "win32") return; // Windows is the other rule set, covered below.
     const original = Object.getOwnPropertyDescriptor(process, "getuid");
     Object.defineProperty(process, "getuid", { value: undefined, configurable: true });
     try {
+      expect(hostCachePlatform()).toBeUndefined();
       expect(openLessonCache(cacheDir)).toBeUndefined();
     } finally {
       if (original) Object.defineProperty(process, "getuid", original);
       else delete (process as { getuid?: unknown }).getuid;
     }
+  });
+
+  it("on Windows, is on for the default directory and nothing else", () => {
+    if (process.platform !== "win32") return; // Simulated on every platform below.
+    expect(openLessonCache(defaultLessonCacheDirectory())).toBeDefined();
+    expect(openLessonCache(cacheDir)).toBeUndefined();
+  });
+});
+
+describe.runIf(POSIX)("the Windows rules, simulated", () => {
+  // The real win32 rules, run on a POSIX machine: no owner or mode checks, no
+  // O_NOFOLLOW, and the cache allowed in exactly one directory. The one
+  // liberty taken is WHICH directory counts as the default: here it is this
+  // case's temp `cacheDir`, so these cases can never touch the suite's real
+  // entries. Symlinks stand in for junctions — Node's `lstat` reports both as
+  // links, and the real-path checks treat every reparse point alike.
+  let renameHook: ((from: string, to: string) => void) | undefined;
+  const win32 = (): CachePlatform => ({
+    kind: "win32",
+    defaultDirectory: cacheDir,
+    noFollow: 0,
+    rename: (from, to) => (renameHook ?? renameSync)(from, to),
+  });
+
+  beforeEach(() => {
+    renameHook = undefined;
+    writeLesson("spanish", "001-uno.md", lesson("uno", "uno", 1));
+    writeLesson("spanish", "002-dos.md", lesson("dos", "dos"));
+  });
+
+  it("refuses every directory except the default, however private", () => {
+    const elsewhere = join(scratch, "elsewhere");
+    mkdirSync(elsewhere, { mode: 0o700 });
+    expect(openLessonCache(elsewhere, win32())).toBeUndefined();
+    expect(openLessonCache(join(cacheDir, "nested"), win32())).toBeUndefined();
+    expect(configureLessonCache({ root, directory: elsewhere }, win32())).toBe(false);
+    expect(openLessonCache(cacheDir, win32())).toBeDefined();
+  });
+
+  it("skips only the owner/mode checks, which ACLs cannot express", () => {
+    mkdirSync(cacheDir, { mode: 0o700 });
+    chmodSync(cacheDir, 0o755);
+    // POSIX refuses this directory; Windows has no mode bits to read.
+    expect(openLessonCache(cacheDir)).toBeUndefined();
+    expect(openLessonCache(cacheDir, win32())).toBeDefined();
+  });
+
+  it("refuses a default directory that is a link (a junction, on Windows)", () => {
+    const real = join(scratch, "real-cache");
+    mkdirSync(real, { mode: 0o700 });
+    symlinkSync(real, cacheDir);
+    expect(openLessonCache(cacheDir, win32())).toBeUndefined();
+  });
+
+  it("parses, writes, then hits through loadTrackLessons", () => {
+    expect(configureLessonCache({ root, directory: cacheDir }, win32())).toBe(true);
+    const first = loadTrackLessons("spanish", root);
+    expect(first).toStrictEqual(freshParse("spanish"));
+    expect(entries()).toHaveLength(1);
+    const sentinel = [
+      parseLesson(lesson("sentinel", "centinela"), "spanish"),
+      parseLesson(lesson("sentinel-two", "centinela"), "spanish"),
+    ];
+    expect(activeCache().write("spanish", keyFor("spanish"), sentinel)).toBe("written");
+    expect(loadTrackLessons("spanish", root)).toStrictEqual(sentinel);
+  });
+
+  it("never follows a link planted under an entry's name, even without O_NOFOLLOW", () => {
+    configureLessonCache({ root, directory: cacheDir }, win32());
+    const sentinel = [parseLesson(lesson("sentinel", "centinela"), "spanish")];
+    const elsewhere = join(scratch, "planted.v8");
+    writeFileSync(elsewhere, encodeEntry(sentinel));
+    symlinkSync(elsewhere, join(cacheDir, `spanish-${keyFor("spanish")}.v8`));
+    expect(loadTrackLessons("spanish", root)).toStrictEqual(freshParse("spanish"));
+    expect(decodeEntry(readFileSync(elsewhere))).toStrictEqual(sentinel);
+  });
+
+  it("refuses an entry whose digest does not match, and replaces it", () => {
+    configureLessonCache({ root, directory: cacheDir }, win32());
+    loadTrackLessons("spanish", root);
+    const path = join(cacheDir, entries()[0]!);
+    const flipped = readFileSync(path);
+    flipped[flipped.length - 5]! ^= 0x01;
+    writeFileSync(path, flipped);
+    expect(loadTrackLessons("spanish", root)).toStrictEqual(freshParse("spanish"));
+    expect(decodeEntry(readFileSync(path))).toStrictEqual(freshParse("spanish"));
+  });
+
+  it("treats a rename collision as another writer's entry, and cleans up", () => {
+    const cache = openLessonCache(cacheDir, win32())!;
+    const key = "b".repeat(64);
+    const theirs = [parseLesson(lesson("theirs", "suyo"), "spanish")];
+    // The other writer's rename landed first and its file is held open, so
+    // ours fails the way MoveFileEx does on Windows.
+    renameHook = (_from, to) => {
+      writeFileSync(to, encodeEntry(theirs));
+      throw Object.assign(new Error("EPERM: operation not permitted, rename"), { code: "EPERM" });
+    };
+    expect(cache.write("spanish", key, [parseLesson(lesson("ours", "nuestro"), "spanish")])).toBe(
+      "already-written",
+    );
+    expect(readdirSync(cacheDir)).toEqual([`spanish-${key}.v8`]); // no temp file left
+    expect(cache.read("spanish", key)).toStrictEqual(theirs);
+  });
+
+  it("reports any other rename failure as not written, and cleans up", () => {
+    const cache = openLessonCache(cacheDir, win32())!;
+    renameHook = () => {
+      throw Object.assign(new Error("ENOSPC: no space left on device"), { code: "ENOSPC" });
+    };
+    expect(cache.write("spanish", "c".repeat(64), [])).toBe("not-written");
+    expect(readdirSync(cacheDir)).toEqual([]);
+  });
+
+  it("deletes nothing in the directory but its own entry and temp names", () => {
+    configureLessonCache({ root, directory: cacheDir }, win32());
+    loadTrackLessons("spanish", root);
+    const strangers = [
+      "notes.txt",
+      "spanish-not-a-hash.v8",
+      `spanish-${"d".repeat(64)}.v8.backup`,
+      `SPANISH-${"e".repeat(64)}.v8`,
+    ];
+    for (const name of strangers) writeFileSync(join(cacheDir, name), "not a cache file");
+    // An edit forces a new entry, whose write sweeps this track's old ones.
+    writeLesson("spanish", "003-tres.md", lesson("tres", "tres"));
+    loadTrackLessons("spanish", root);
+    const left = readdirSync(cacheDir).sort();
+    for (const name of strangers) expect(left).toContain(name);
+    expect(entries().filter((name) => /^spanish-[0-9a-f]{64}\.v8$/.test(name))).toHaveLength(1);
   });
 });
 
@@ -509,19 +654,17 @@ describe.runIf(POSIX)("concurrent writers", () => {
 });
 
 describe("the suite's own configuration", () => {
-  it("caches the real curriculum root on POSIX, from the package-local directory", () => {
+  it("caches the real curriculum root, from the package-local directory", () => {
     // `tests/setup/lesson-cache.ts` takes its root from
     // `suiteLessonCacheOptions()` rather than importing the loader. If that
     // arithmetic ever drifted from `defaultCurriculumRoot()`, the cache would
     // silently never turn on and the suite would quietly be slow again. This
     // is that alarm.
     expect(resolve(suiteLessonCacheOptions().root)).toBe(resolve(defaultCurriculumRoot()));
+    // On POSIX and on Windows alike: Windows now caches too, in this one
+    // directory only.
     const cache = lessonCacheFor(defaultCurriculumRoot());
-    if (POSIX) {
-      expect(cache?.directory).toBe(realpathSync(defaultLessonCacheDirectory()));
-    } else {
-      expect(cache).toBeUndefined();
-    }
+    expect(cache?.directory).toBe(realpathSync.native(defaultLessonCacheDirectory()));
   });
 
   // The fixture cases above prove the mechanism. These prove it on the data

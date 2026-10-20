@@ -100,11 +100,15 @@
 //      calling `configureLessonCache` names a directory, and the only such
 //      code is the setup files and this module's own tests (which use temp
 //      directories).
-//   2. It is a real directory (not a symlink, after resolving its parents),
-//      owned by the current user, with no group or other permission bits
-//      (mode 0700). Anything else disables the cache for the process.
-//   3. The entry is opened with O_NOFOLLOW, so a symlink planted under an
-//      entry's name is refused by the kernel rather than followed.
+//   2. It is a real directory — not a symlink or junction itself, and its
+//      real path is exactly its resolved parent plus its own name — owned by
+//      the current user, with no group or other permission bits (mode 0700).
+//      Anything else disables the cache for the process.
+//   3. The entry's name matches `ENTRY_NAME`, it is not a link (`lstat`, plus
+//      O_NOFOLLOW where the platform has it), its real path is exactly
+//      `<directory>/<name>`, and the file that is OPENED is the same file
+//      (device and inode) that was checked, so a link swapped in between the
+//      check and the open is refused.
 //   4. The opened file is a regular file owned by the current user with no
 //      group or other permission bits (mode 0600) — that is, a file only this
 //      user could have created, which is the closest a process can come to
@@ -116,9 +120,36 @@
 // A failed check is never an error. The cache is an optimisation, so every
 // refusal falls back to parsing from disk, which is always correct.
 //
-// On Windows (`process.getuid` is absent) the ownership and mode checks above
-// have no faithful equivalent — permissions are ACLs, not mode bits — so the
-// cache stays off and the tests parse, exactly as they did before.
+// Windows
+// -------
+// Windows has no `process.getuid` and no mode bits — permissions are ACLs — so
+// checks 2 and 4 cannot be expressed there. Windows CI needs the cache as
+// much as Linux does (the same corpus-wide tests time out on `windows-2025`),
+// so instead of switching it off, Windows keeps every check that CAN be made
+// and narrows where the cache may live:
+//
+//   * The cache is enabled ONLY for the fixed default directory,
+//     `defaultLessonCacheDirectory()`. Any other directory — a temp dir, a
+//     configured path, anything a caller passes — leaves the cache off.
+//   * The directory and every entry must not be links. Node's `lstat` reports
+//     a junction as a symbolic link, and the real-path equalities in checks 2
+//     and 3 catch any reparse point `lstat` does not label: a redirected path
+//     resolves somewhere other than where it claims to be.
+//   * Entry names, the magic bytes and the SHA-256 are checked exactly as on
+//     POSIX, and only names matching `ENTRY_NAME` or `TEMP_NAME` inside the
+//     directory are ever deleted.
+//
+// Why dropping ownership is acceptable there: the default directory is inside
+// this package's own `node_modules`. Anyone who can write a file into it can
+// equally replace `node_modules/vitest` — code the test process runs — so a
+// planted cache entry grants nothing that write access did not already give.
+// The ownership checks are defence in depth on POSIX, where they are free; on
+// Windows they are skipped, and only they are.
+//
+// The platform is a parameter (`CachePlatform`), not a `process.platform`
+// test buried in each function, so the Windows rules are exercised on Linux
+// too: `tests/lesson-cache.test.ts` runs the directory restriction, link
+// refusal, digest refusal and rename-collision cases under a simulated win32.
 //
 // Concurrency
 // -----------
@@ -128,7 +159,9 @@
 // atomic on POSIX: a reader opening the name sees either the old complete file
 // or the new complete file, never a mixture. Because the name is a hash of the
 // content, every racing writer is writing the same answer, so it does not
-// matter which rename lands last.
+// matter which rename lands last. On Windows a rename over an entry another
+// process has open can fail (EPERM, EACCES, EBUSY); since that entry already
+// holds the same answer, the loser just deletes its temp file and moves on.
 //
 // Disk usage
 // ----------
@@ -141,6 +174,7 @@ import { createHash, randomBytes } from "node:crypto";
 import {
   closeSync,
   constants as fsConstants,
+  existsSync,
   fstatSync,
   lstatSync,
   mkdirSync,
@@ -152,7 +186,7 @@ import {
   unlinkSync,
   writeSync,
 } from "node:fs";
-import { dirname, join, resolve } from "node:path";
+import { basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { deserialize, serialize } from "node:v8";
 // Type-only, and that is load-bearing: this module must not pull the parser in
@@ -220,8 +254,15 @@ export interface LessonCache {
   /** The parsed lessons stored under `key`, or `undefined` for any miss. */
   read(language: string, key: string): ParsedLesson[] | undefined;
   /** Store `lessons` under `key`. Never throws; a failed write is just a miss later. */
-  write(language: string, key: string, lessons: readonly ParsedLesson[]): void;
+  write(language: string, key: string, lessons: readonly ParsedLesson[]): LessonCacheWrite;
 }
+
+/**
+ * What a write did. Callers ignore it — every outcome is safe — but the tests
+ * use it to tell a Windows rename collision ("another writer already put the
+ * same entry there") apart from a write that failed outright.
+ */
+export type LessonCacheWrite = "written" | "already-written" | "not-written";
 
 // ---------------------------------------------------------------------------
 // The package source digest
@@ -322,9 +363,69 @@ export function privatelyOwned(stats: { uid: number; mode: number }, uid: number
   return stats.uid === uid && (stats.mode & GROUP_OR_OTHER) === 0;
 }
 
-/** The current user's id, or `undefined` where POSIX ownership does not exist. */
-function currentUid(): number | undefined {
-  return typeof process.getuid === "function" ? process.getuid() : undefined;
+/**
+ * The platform rules a cache runs under. Production code takes
+ * `hostCachePlatform()`; tests construct the other one to exercise it.
+ *
+ *     posix   owner + mode checks on the directory and every entry; any
+ *             directory a caller names, if it proves private
+ *     win32   no owner or mode checks (ACLs, not mode bits); ONLY the fixed
+ *             `defaultDirectory`
+ *
+ * `noFollow` is the O_NOFOLLOW flag where the platform has one and 0 where it
+ * does not (Windows); the `lstat` + same-file checks run either way, so a
+ * platform without the flag loses no protection. `rename` is a seam so the
+ * Windows rename collision can be produced on demand.
+ */
+export type CachePlatform =
+  | {
+      kind: "posix";
+      uid: number;
+      noFollow: number;
+      rename: (from: string, to: string) => void;
+    }
+  | {
+      kind: "win32";
+      defaultDirectory: string;
+      noFollow: number;
+      rename: (from: string, to: string) => void;
+    };
+
+/** The platform this process runs on, or `undefined` where neither rule set applies. */
+export function hostCachePlatform(): CachePlatform | undefined {
+  // `?? 0`: Node exposes no O_NOFOLLOW on Windows, and OR-ing `undefined` into
+  // a flag word would silently become 0 anyway — this just says so.
+  const noFollow = fsConstants.O_NOFOLLOW ?? 0;
+  if (typeof process.getuid === "function") {
+    return { kind: "posix", uid: process.getuid(), noFollow, rename: renameSync };
+  }
+  if (process.platform === "win32") {
+    return {
+      kind: "win32",
+      defaultDirectory: defaultLessonCacheDirectory(),
+      noFollow,
+      rename: renameSync,
+    };
+  }
+  return undefined;
+}
+
+/** POSIX: owned by us and private. Windows: nothing to check (see the header). */
+function ownedHere(stats: { uid: number; mode: number }, platform: CachePlatform): boolean {
+  return platform.kind === "win32" || privatelyOwned(stats, platform.uid);
+}
+
+/**
+ * Does `path`'s real location equal `expected`, exactly?
+ *
+ * `realpathSync.native` asks the OS (`realpath(3)`, or
+ * `GetFinalPathNameByHandle` on Windows), which resolves every kind of
+ * reparse point, not just the symlinks Node's JS implementation walks. A
+ * junction, mount point or symlink anywhere at the leaf makes the real path
+ * differ from where the name claims to live.
+ */
+function realPathIs(path: string, expected: string): boolean {
+  return realpathSync.native(path) === expected;
 }
 
 /**
@@ -335,9 +436,16 @@ function currentUid(): number | undefined {
  * directory that was ever readable or writable by someone else may already hold
  * files they planted, and making it private now would not remove them.
  */
-export function openLessonCache(directory: string): LessonCache | undefined {
-  const uid = currentUid();
-  if (uid === undefined) return undefined;
+export function openLessonCache(
+  directory: string,
+  platform: CachePlatform | undefined = hostCachePlatform(),
+): LessonCache | undefined {
+  if (platform === undefined) return undefined;
+  // Windows can make no ownership check, so it may use one directory only:
+  // the fixed default inside this package's `node_modules`.
+  if (platform.kind === "win32" && resolve(directory) !== resolve(platform.defaultDirectory)) {
+    return undefined;
+  }
   let resolved: string;
   let sourceDigest: string;
   try {
@@ -354,18 +462,23 @@ export function openLessonCache(directory: string): LessonCache | undefined {
     // `node_modules` is ordinary), so they are resolved, and the resolved
     // directory is checked again: a link swapped in after the first look then
     // fails the second.
-    if (!lstatSync(directory).isDirectory()) return undefined;
-    resolved = realpathSync(directory);
+    const leaf = lstatSync(directory);
+    if (!leaf.isDirectory() || leaf.isSymbolicLink()) return undefined;
+    // The leaf must resolve to itself: its parent's real path plus its own
+    // name. A junction or other reparse point AT the leaf resolves elsewhere.
+    resolved = realpathSync.native(directory);
+    const parent = realpathSync.native(dirname(resolve(directory)));
+    if (resolved !== join(parent, basename(resolve(directory)))) return undefined;
     const stats = lstatSync(resolved);
-    if (!stats.isDirectory() || !privatelyOwned(stats, uid)) return undefined;
+    if (!stats.isDirectory() || !ownedHere(stats, platform)) return undefined;
   } catch {
     return undefined;
   }
   return {
     directory: resolved,
     key: (input) => lessonCacheKey(input, sourceDigest),
-    read: (language, key) => readEntry(resolved, uid, language, key),
-    write: (language, key, lessons) => writeEntry(resolved, uid, language, key, lessons),
+    read: (language, key) => readEntry(resolved, platform, language, key),
+    write: (language, key, lessons) => writeEntry(resolved, platform, language, key, lessons),
   };
 }
 
@@ -416,28 +529,36 @@ function entryName(language: string, key: string): string | undefined {
  */
 function readEntry(
   directory: string,
-  uid: number,
+  platform: CachePlatform,
   language: string,
   key: string,
 ): ParsedLesson[] | undefined {
   const name = entryName(language, key);
   if (name === undefined) return undefined;
   const path = join(directory, name);
+  let checked: ReturnType<typeof lstatSync>;
   let fd: number;
   try {
-    // O_NOFOLLOW: if the final component is a symlink the open fails (ELOOP)
-    // instead of reading the link's target.
-    fd = openSync(path, fsConstants.O_RDONLY | fsConstants.O_NOFOLLOW);
+    // Look before opening: a link (or junction) under an entry's name is a
+    // miss, and so is anything whose real path is not `<directory>/<name>`.
+    // This is the whole defence on Windows, which has no O_NOFOLLOW.
+    checked = lstatSync(path);
+    if (!checked.isFile() || checked.isSymbolicLink() || !realPathIs(path, path)) return undefined;
+    // O_NOFOLLOW where it exists: if a link was swapped in after the look, the
+    // kernel refuses it (ELOOP) rather than following it.
+    fd = openSync(path, fsConstants.O_RDONLY | platform.noFollow);
   } catch {
     return undefined; // ENOENT is the ordinary miss; anything else is one too.
   }
   let bytes: Buffer;
   try {
     // `fstat` on the descriptor, not `stat` on the path: the checks are about
-    // the file that is OPEN, so a rename between the check and the read cannot
-    // swap in a different one.
+    // the file that is OPEN. It must be the very file `lstat` approved — same
+    // device, same inode — so a swap between the look and the open, which
+    // O_NOFOLLOW cannot catch where it does not exist, is refused here.
     const stats = fstatSync(fd);
-    if (!stats.isFile() || !privatelyOwned(stats, uid)) return undefined;
+    if (stats.dev !== checked.dev || stats.ino !== checked.ino) return undefined;
+    if (!stats.isFile() || !ownedHere(stats, platform)) return undefined;
     bytes = readFileSync(fd);
   } catch {
     return undefined;
@@ -445,7 +566,7 @@ function readEntry(
     closeSync(fd);
   }
   const lessons = decodeEntry(bytes);
-  if (lessons === undefined) discardOwnFile(path, uid);
+  if (lessons === undefined) discardOwnFile(directory, name, platform);
   return lessons;
 }
 
@@ -472,14 +593,37 @@ export function encodeEntry(lessons: readonly ParsedLesson[]): Buffer {
   return Buffer.concat([MAGIC, digest, payload]);
 }
 
-function discardOwnFile(path: string, uid: number): void {
+/**
+ * Delete one cache file — and only a cache file.
+ *
+ * Takes the directory and a bare name rather than a path, so it can only ever
+ * reach a direct child of the cache directory, and the name must be an entry
+ * or a temp file by this module's own grammar. Never a link (unlinking a link
+ * is harmless, but there is no reason to touch something this module did not
+ * write), and on POSIX never a file owned by someone else.
+ */
+function discardOwnFile(directory: string, name: string, platform: CachePlatform): void {
+  if (!ENTRY_NAME.test(name) && !TEMP_NAME.test(name)) return;
+  const path = join(directory, name);
   try {
     const stats = lstatSync(path);
-    if (stats.isFile() && stats.uid === uid) unlinkSync(path);
+    if (!stats.isFile() || stats.isSymbolicLink()) return;
+    if (platform.kind === "posix" && stats.uid !== platform.uid) return;
+    unlinkSync(path);
   } catch {
     // Already gone, or not ours to remove. Either way there is nothing to do.
   }
 }
+
+/**
+ * Rename errors that mean "another writer got there first".
+ *
+ * Windows refuses to replace a file another process has open — Node opens
+ * files with delete sharing, but a concurrent reader's handle can still make
+ * `MoveFileEx` fail with one of these. The entry under that name is a hash of
+ * the same content, so it already holds exactly what this writer had.
+ */
+const RENAME_COLLISION = new Set(["EPERM", "EACCES", "EBUSY"]);
 
 // ---------------------------------------------------------------------------
 // Writing an entry
@@ -500,31 +644,37 @@ function discardOwnFile(path: string, uid: number): void {
  */
 function writeEntry(
   directory: string,
-  uid: number,
+  platform: CachePlatform,
   language: string,
   key: string,
   lessons: readonly ParsedLesson[],
-): void {
+): LessonCacheWrite {
   const name = entryName(language, key);
-  if (name === undefined) return;
+  if (name === undefined) return "not-written";
   const target = join(directory, name);
-  const temp = `${target}.${process.pid}.${randomBytes(8).toString("hex")}.tmp`;
+  const tempName = `${name}.${process.pid}.${randomBytes(8).toString("hex")}.tmp`;
+  const temp = join(directory, tempName);
   let fd: number | undefined;
   try {
     const bytes = encodeEntry(lessons);
+    // O_EXCL is the guard that matters on every platform: it maps to
+    // CREATE_NEW on Windows, which fails if ANYTHING — file, link, junction —
+    // already has the name, so a pre-planted temp name is never opened.
     fd = openSync(
       temp,
-      fsConstants.O_WRONLY | fsConstants.O_CREAT | fsConstants.O_EXCL | fsConstants.O_NOFOLLOW,
+      fsConstants.O_WRONLY | fsConstants.O_CREAT | fsConstants.O_EXCL | platform.noFollow,
       0o600,
     );
     let offset = 0;
     while (offset < bytes.length) offset += writeSync(fd, bytes, offset);
     closeSync(fd);
     fd = undefined;
-    renameSync(temp, target);
-  } catch {
-    // Disk full, read-only checkout, a racing sweep — the entry simply is not
-    // written, and the next load parses. Never leave our half-file behind.
+    platform.rename(temp, target);
+  } catch (error) {
+    // Disk full, read-only checkout, a racing sweep, or (Windows) a rename
+    // collision with a writer that got there first — the entry is either
+    // already there or simply not written, and the next load parses. Never
+    // leave our half-file behind.
     if (fd !== undefined) {
       try {
         closeSync(fd);
@@ -532,10 +682,16 @@ function writeEntry(
         // The descriptor is already unusable; nothing more to release.
       }
     }
-    discardOwnFile(temp, uid);
-    return;
+    discardOwnFile(directory, tempName, platform);
+    // A collision is not a failure, but it is not this writer's entry either,
+    // so it does not sweep: the winner already did.
+    const code = (error as NodeJS.ErrnoException | undefined)?.code ?? "";
+    return fd === undefined && RENAME_COLLISION.has(code) && existsSync(target)
+      ? "already-written"
+      : "not-written";
   }
-  sweep(directory, uid, language, name);
+  sweep(directory, platform, language, name);
+  return "written";
 }
 
 /**
@@ -545,7 +701,7 @@ function writeEntry(
  * removes the name, and an already-open descriptor keeps reading the file. A
  * process that has not opened it yet gets ENOENT, which is an ordinary miss.
  */
-function sweep(directory: string, uid: number, language: string, keep: string): void {
+function sweep(directory: string, platform: CachePlatform, language: string, keep: string): void {
   let names: string[];
   try {
     names = readdirSync(directory);
@@ -556,13 +712,13 @@ function sweep(directory: string, uid: number, language: string, keep: string): 
   for (const name of names) {
     const entry = ENTRY_NAME.exec(name);
     if (entry && entry[1] === language && name !== keep) {
-      discardOwnFile(join(directory, name), uid);
+      discardOwnFile(directory, name, platform);
       continue;
     }
     if (TEMP_NAME.test(name)) {
       try {
         const stats = lstatSync(join(directory, name));
-        if (now - stats.mtimeMs > ORPHAN_AGE_MS) discardOwnFile(join(directory, name), uid);
+        if (now - stats.mtimeMs > ORPHAN_AGE_MS) discardOwnFile(directory, name, platform);
       } catch {
         // Renamed or swept by another writer in the meantime.
       }
@@ -586,12 +742,13 @@ let configured: { root: string; cache: LessonCache } | undefined;
  */
 export function configureLessonCache(
   options: { root: string; directory: string } | undefined,
+  platform: CachePlatform | undefined = hostCachePlatform(),
 ): boolean {
   if (options === undefined) {
     configured = undefined;
     return false;
   }
-  const cache = openLessonCache(options.directory);
+  const cache = openLessonCache(options.directory, platform);
   configured = cache === undefined ? undefined : { root: resolve(options.root), cache };
   return configured !== undefined;
 }

@@ -253,9 +253,12 @@ parser code) is a miss and can never be answered from an old parse. Entries
 are read only from a private (0700) directory, only when they are regular 0600
 files owned by the current user, never through a symlink, and only when their
 embedded SHA-256 matches; anything else is a miss and the lessons are parsed
-from disk. The cache is off on Windows and in every CLI process — `generate:*`
-and `check:*` always parse from disk. Deleting `node_modules/.cache` is always
-safe.
+from disk. On Windows, which has no owner or mode bits, those two checks are
+skipped and in exchange the cache is used only in that one fixed directory;
+links and junctions, entry names and digests are still checked. (Anyone who
+can write there can already replace code in `node_modules`.) The cache is off
+in every CLI process — `generate:*` and `check:*` always parse from disk.
+Deleting `node_modules/.cache` is always safe.
 
 ## Validation rules (the CI gate)
 

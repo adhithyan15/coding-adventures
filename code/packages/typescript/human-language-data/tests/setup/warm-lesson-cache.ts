@@ -18,7 +18,7 @@ import { loadLessons } from "../../src/loader.js";
 
 export default function setup(): void {
   const options = suiteLessonCacheOptions();
-  if (!configureLessonCache(options)) return; // Off here (Windows, unsafe directory): parse in the tests.
+  if (!configureLessonCache(options)) return; // Off here (unsafe directory, unknown platform): parse in the tests.
   try {
     loadLessons(options.root);
   } catch {
