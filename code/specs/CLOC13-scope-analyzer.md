@@ -314,6 +314,21 @@ unreferenced, and remove-unused-vars deleted it, so the output threw
 `ReferenceError`. The regression test is
 `code/programs/rust/closurec/tests/regression_for_head_shadow.rs`.
 
+## Case-block scope for `switch` (#17836, v0.22.0)
+
+A `switch` evaluates its discriminant in the enclosing scope. It then opens
+one `ScopeKind::Block` scope for the whole case block, which every case's
+test and consequent share (ECMAScript §14.12.4, CaseBlock evaluation). A
+`let`/`const`/`class` declared in any case lives in that scope. `var` still
+hoists to the enclosing function.
+
+Before this fix, the cases were walked in the enclosing scope. In
+`var x = 1; switch (1) { case 1: let x = 2; } console.log(x);` the case's
+`x` sat beside the outer one, the trailing read resolved to it, and
+remove-unused-vars deleted the outer `var`. This was the same failure as
+#16008. The regression test is
+`code/programs/rust/closurec/tests/regression_switch_case_shadow.rs`.
+
 ## Stage delivery — PR map
 
 | Stage      | PR    | Status |

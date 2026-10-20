@@ -976,6 +976,15 @@ conditionally registered passes (`inline`, `remove-unused-vars`, `treeshake`,
 were registered, that every reported name is a known pass, and pinning the
 scheduler's real order so a future fix to #15829 must consciously update it.
 
+### Fixed - outer binding shadowed in a `switch` case survives (#17836)
+
+`var x = 1; switch (1) { case 1: let x = 2; } console.log(x);` compiled at
+SIMPLE and ADVANCED without `var x = 1;` and threw `ReferenceError`. The fix
+is in `closure-scope-analyzer` 0.22.0, which gives the case block its own
+scope. `tests/regression_switch_case_shadow.rs` pins four shapes at both
+levels and, when `node` is present, checks that the output prints what the
+source prints.
+
 ### Fixed - strict clippy passes on closurec (#15939)
 
 `cargo clippy --all-targets -- -D warnings` now exits 0 with clippy 0.1.95.
