@@ -166,6 +166,25 @@ Output: AST (Program node) + list of errors
 - Verify error messages for: missing operand, unclosed parenthesis, unexpected token
 - End-to-end with lexer: source string → tokens → AST
 
+## Token-adjacency predicates (grammar-driven parser)
+
+The grammar-driven `GrammarParser` supports zero-width elements that test the
+gap before the next token, using the lexer's token flags (see 02-lexer):
+`@space_before`, `@no_space_before`, `@newline_before`, `@no_newline_before`,
+`@space_after_next`, `@no_space_after_next`.
+
+```text
+return_statement = "return" [ @no_newline_before expression ] SEMICOLON ;
+command_arg      = @space_before MINUS @no_space_before primary ;   # Ruby `f -1`
+```
+
+They consume nothing, add no AST children, and record no expectation for
+error messages. They work inside alternation, repetition, optional groups and
+`&`/`!` lookahead, and they keep packrat memoization exact because they read
+only the token stream at the cursor. Using `@newline_before` does not make a
+grammar newline-significant. Full semantics:
+[F11](F11-grammar-token-adjacency-predicates.md).
+
 ## Future Extensions
 
 - **Grammar-driven parser generator**: Define grammar in BNF/PEG, generate the parser
