@@ -2657,6 +2657,72 @@ pub fn lower_iir_to_beam(
                     instrs.push(label(l_done));
                 }
 
+// ── LANG83 PR4: overflow-checked arithmetic ─────────────────
+                //
+                // Erlang integers are unbounded: `+`, `-` and `*` never
+                // overflow, they promote to a bignum. That makes the check
+                // the simplest of any backend — compute the *exact* result,
+                // then test it against the i64 range:
+                //
+                //   gc_bif2  '+'|'-'|'*'  a, b -> rd      (neg: '-' 0, a)
+                //   is_lt    {f,LO_OK} rd MIN        ; rd < MIN  → raise
+                //   <erlang:error('Trap.Overflow')>
+                // LO_OK:
+                //   is_lt    {f,DONE} MAX rd         ; MAX < rd  → raise
+                //   <erlang:error('Trap.Overflow')>
+                // DONE:
+                //
+                // A bignum in `rd` only ever reaches the raise, which ends the
+                // program, so no out-of-range value is observable. `rd` is a
+                // variable register (below `live`), so the bignum survives a
+                // GC inside the comparison. A dest that aliases an operand is
+                // fine: both operands are read by the one `gc_bif2`.
+                "i64_add_ovf" | "i64_sub_ovf" | "i64_mul_ovf" | "i64_neg_ovf" => {
+                    use interpreter_ir::exception_kind::TRAP_OVERFLOW;
+                    let rd = match &instr.dest {
+                        Some(name) => var_reg!(name),
+                        None => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: format!("{} must have a dest", instr.op),
+                        }),
+                    };
+                    let (import_idx, x, y) = match instr.op.as_str() {
+                        "i64_neg_ovf" => (import_sub, BEAMOperand::i(0), integer_operand!(get_src!(instr, 0))),
+                        op => (
+                            match op {
+                                "i64_add_ovf" => import_add,
+                                "i64_sub_ovf" => import_sub,
+                                _ => import_mul,
+                            },
+                            integer_operand!(get_src!(instr, 0)),
+                            integer_operand!(get_src!(instr, 1)),
+                        ),
+                    };
+                    let l_lo_ok = alloc_synth_label!("overflow check labels");
+                    let l_done = alloc_synth_label!("overflow check labels");
+                    let overflow_atom = atoms.intern(TRAP_OVERFLOW);
+                    let raise = || [
+                        BEAMInstruction::new(OP_MOVE, vec![BEAMOperand::a(overflow_atom), BEAMOperand::x(0)]),
+                        BEAMInstruction::new(OP_CALL_EXT, vec![
+                            BEAMOperand::u(1), BEAMOperand::u(import_error as u64),
+                        ]),
+                    ];
+                    instrs.push(BEAMInstruction::new(OP_GC_BIF2, vec![
+                        BEAMOperand::f(0), BEAMOperand::u(live), BEAMOperand::u(import_idx as u64),
+                        x, y, BEAMOperand::x(rd),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_IS_LT, vec![
+                        BEAMOperand::f(l_lo_ok), BEAMOperand::x(rd), BEAMOperand::i(i64::MIN as u64),
+                    ]));
+                    instrs.extend(raise());
+                    instrs.push(BEAMInstruction::new(OP_LABEL, vec![BEAMOperand::u(l_lo_ok as u64)]));
+                    instrs.push(BEAMInstruction::new(OP_IS_LT, vec![
+                        BEAMOperand::f(l_done), BEAMOperand::i(i64::MAX as u64), BEAMOperand::x(rd),
+                    ]));
+                    instrs.extend(raise());
+                    instrs.push(BEAMInstruction::new(OP_LABEL, vec![BEAMOperand::u(l_done as u64)]));
+                }
+
                 "add" | "sub" | "mul" | "div" | "mod" => {
                     // VM-D034 (BEAM03): `div` needs a DIFFERENT BIF for f64
                     // than for i64 — `erlang:div/2` requires integer
