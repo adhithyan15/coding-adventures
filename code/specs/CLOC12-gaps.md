@@ -1450,6 +1450,44 @@ deleted:
 `tail_is_safe_to_truncate`. The `let`/`const` case also needs DCE to keep
 such tails, which is the CCR-082 review fix.
 
+### #17877 — a `function`/`class` declaration in a block parsed as an expression
+
+**Resolved (soundness).** The ECMAScript grammars gave `block`,
+`case_clause` and `default_clause` only `{ statement }`. The declaration
+alternatives were in `source_element`, which only `program` and
+`function_body` use. Inside a block, `function g(){}` and `class C{}`
+matched `expression_statement`. The output re-emitted them as
+`(function g(){})` and `(class C{})`, which bind nothing, so any later use
+threw `ReferenceError`. Without a newline after the declaration
+(`{function g(){} g()}`), the parse failed instead.
+
+ES2015–ES2025 now give the three rules an inline group: the declarations
+that version's `source_element` lists, minus `import`/`export`, followed by
+`statement`. That is ECMA-262's StatementListItem. The group is inlined, so
+a block that holds only statements has the same CST as before. The bridge's
+`convert_statement_list_item` lowers a function or class declaration to
+`Statement::Declaration`, the node a function body already holds. ES1, ES3
+and ES5 are unchanged: block-level function declarations were not standard
+before ES2015.
+
+**Still open:**
+
+- **Annex B.** In sloppy mode, a block-level function is also assigned to a
+  `var` of the same name in the enclosing function when the block runs.
+  closurec now keeps the source's behaviour. Upstream treats the function as
+  strictly block-scoped: for `function f(){ {function g(){}} return typeof g }`
+  it returns `"undefined"` where `node` returns `"function"`, and at ADVANCED
+  it reports `JSC_UNDEFINED_VARIABLE` for a later `g()`. Matching that is a
+  parity decision; it is not taken here.
+- **Size.** Upstream inlines or unwraps these functions and blocks, for
+  example `if(true){function g(){return 7}g()}` becomes `function(){return
+  7}()` at SIMPLE and `7` at ADVANCED. closurec keeps the block.
+- **TypeScript grammars.** `code/grammars/typescript` has the same `block`
+  rule. closurec doesn't use it.
+- **Other languages' compiled grammars.** Rust (`javascript-parser`) and Ruby
+  (`javascript_parser`, which CI checks for drift) are regenerated. The Lua
+  `_grammar_es*.lua` files are not checked by CI and need a separate refresh.
+
 ## CLOC12.149 — `FunctionExpression` (function in value position)
 
 **Landed (AST + emitter + passes):** `Expression::FunctionExpression` is now a
