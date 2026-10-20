@@ -1427,6 +1427,15 @@ after a `break` inside a loop is unreachable (`while (c) { break; y(); }` →
 inside switch-case consequents (`is_case_terminator`), so the loop-body `y()`
 survives. Placeholder: `drops_code_after_break_in_loop_block`.
 
+### #17842 — the switch collapse retargeted a nested `break`
+
+**Resolved (soundness).** The gap-014 constant-switch collapse now declines
+when the matched case still holds a non-trailing unlabelled `break` aimed at
+the switch. Without the switch, that `break` would hit the enclosing loop.
+
+**Still open (size):** upstream instead rewrites the case: `if(x)break;g()`
+becomes `x||g()`.
+
 ### #17841 — fold-control-flow's dead-after-`return` drop ignored hoisting
 
 **Resolved.** `closure-pass-fold-control-flow` truncated a block after
