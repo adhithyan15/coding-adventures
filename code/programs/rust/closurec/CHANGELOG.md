@@ -127,6 +127,26 @@ while the separate empty probe has its intended policy, reopen its active path
 with production verification access and verify identity, zero length and policy.
 Unsupported verification policies now reject before original mutation.
 
+### Changed - refuse private class elements, as upstream does (CCR-075 slice 1, #15860, CLOC44)
+
+Upstream `v20260915` rejects every private element with
+`JSC_UNSUPPORTED_LANGUAGE_FEATURE` ("Private elements."). The owner decided
+that closurec refuses what Closure refuses, so closurec now rejects them too.
+Every input is scanned before compilation, and a refused program produces:
+
+- stderr byte-identical to upstream's: one located error with an excerpt and
+  caret per occurrence, plus the extra error a `static` field gets, then
+  `N error(s), 0 warning(s)`;
+- exit status `min(N, 127)`;
+- no stdout, no output file and no sidecar.
+
+The ladder gains a third verdict, `DeclinedIdentically`. A rung upstream
+refuses records `expected.exit` and `expected.stderr` from the jar, and
+counts as agreement when closurec declines identically. The three
+`private_field` rungs moved there: the ledger drops from 59 to 56, and parity
+is now 55/57, 35/57 and 25/57. The four CCR-081 `simple-private-*` fixtures
+now assert the identical refusal. They had pinned closurec's old output.
+
 ### Fixed locally - verified Windows publication policies (CV02)
 
 Create prepared directories and files with atomically protected current-user
