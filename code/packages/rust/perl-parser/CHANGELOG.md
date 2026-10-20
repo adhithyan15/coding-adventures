@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- LANG84 phase 4a: compile every checked release pair (117 pairs, 2 distinct
+  parser tables) and export `INVENTORY_RELEASES`, `SUPPORTED_RELEASES`,
+  `release_parser_grammar(id)`, `unversioned_parser_grammar()` and
+  `MAX_RULE_DEPTH`. `parse_perl` still uses the unversioned LANG81 grammar.
+  New tests pin the tables against the inventory and each pair, and run the
+  shared probe through every compiled release.
+
 - Add the distinct own-source partial Perl 5.004_72 pair with CR whitespace,
   250/251-digit boundaries and unsupported-context rejection. Keep earlier
   whitespace contracts and LANG81 execution unchanged.
