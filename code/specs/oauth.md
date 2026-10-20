@@ -666,6 +666,16 @@ excludes OS, enterprise, user-installed, and local roots and carries an
 explicit update cadence. It supplies data only: certificate parsing, path and
 hostname validation, signature verification, constraint and algorithm policy,
 revocation, TLS, HTTP, and platform trust remain separate blockers.
+A bounded `x509-webpki-root-anchor-selection` composition now selects one
+decoded candidate certificate against only that reviewed snapshot. It requires
+an exact encoded subject and full SubjectPublicKeyInfo match, scans the complete
+set, and fails closed when no anchor or more than one anchor matches. Its
+non-copyable evidence binds the exact candidate certificate to the selected
+snapshot entry and retains that entry's optional name constraints for later
+path policy. Selection does not validate those constraints, grant the
+candidate a certificate role, verify any signature, check validity, construct
+or validate a path, check revocation, or provide hostname validation, TLS,
+HTTP, OAuth transport, or network authority.
 A bounded algorithm-specific prerequisite is now shipped as
 `x509-rsa-public-key`. It requires the exact RFC 3279 `rsaEncryption`
 SubjectPublicKeyInfo form, decodes its nested PKCS #1 public modulus and
