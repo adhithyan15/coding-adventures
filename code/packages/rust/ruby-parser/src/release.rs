@@ -58,7 +58,22 @@ pub const DEFAULT_RELEASE: &str = "3.3.6";
 pub const DEFAULT_MAX_SOURCE_BYTES: usize = 64 * 1024;
 
 /// Ceiling a trusted caller may raise the source budget to (LANG84 C5).
-pub const MAX_TRUSTED_SOURCE_BYTES: usize = 16 * 1024 * 1024;
+///
+/// Sized by memory, not by time: the generic packrat `GrammarParser` keeps
+/// its memo and CST at roughly 1–3 KB per source byte (measured: a 64 KiB
+/// `puts(1,1,…)` peaks near 192 MB, 1 MiB near 3 GB). 16 MiB would have
+/// needed ~48 GB and ended in an OOM abort rather than a `Budget` error, so
+/// the ceiling is 1 MiB and the token budget below bounds the parser's input
+/// directly.
+pub const MAX_TRUSTED_SOURCE_BYTES: usize = 1024 * 1024;
+
+/// Default token budget for untrusted programs (LANG84 C5), checked after
+/// lexing and before the parser builds its memo: ~3 KB per token, so the
+/// default bounds a parse near 48 MB.
+pub const DEFAULT_MAX_TOKENS: usize = 16 * 1024;
+
+/// Ceiling a trusted caller may raise the token budget to (~768 MB peak).
+pub const MAX_TRUSTED_TOKENS: usize = 256 * 1024;
 
 /// Upper bound for one release ID; longer requests are rejected before any
 /// lookup so a hostile string cannot be echoed back at length.
@@ -74,6 +89,9 @@ pub struct FrontendBudgets {
     /// (`MAX_RULE_DEPTH`, 180) are clamped to it: a deeper cap could
     /// overflow the native stack, which is an abort, not an error.
     pub max_rule_depth: usize,
+    /// Token count, checked after lexing and before parsing — the parser's
+    /// memory grows with it. Values above [`MAX_TRUSTED_TOKENS`] are clamped.
+    pub max_tokens: usize,
 }
 
 impl Default for FrontendBudgets {
@@ -81,6 +99,7 @@ impl Default for FrontendBudgets {
         Self {
             max_source_bytes: DEFAULT_MAX_SOURCE_BYTES,
             max_rule_depth: crate::MAX_RULE_DEPTH,
+            max_tokens: DEFAULT_MAX_TOKENS,
         }
     }
 }
@@ -88,6 +107,10 @@ impl Default for FrontendBudgets {
 impl FrontendBudgets {
     fn source_limit(&self) -> usize {
         self.max_source_bytes.min(MAX_TRUSTED_SOURCE_BYTES)
+    }
+
+    fn token_limit(&self) -> usize {
+        self.max_tokens.min(MAX_TRUSTED_TOKENS)
     }
 
     fn depth_limit(&self) -> usize {
@@ -248,6 +271,14 @@ pub fn tokenize_ruby_at(
             column: error.column,
             message: error.message,
         })?;
+    let token_limit = budgets.token_limit();
+    if tokens.len() > token_limit {
+        return Err(RubyFrontendError::Budget {
+            release: release.to_string(),
+            which: "tokens",
+            limit: token_limit,
+        });
+    }
     Ok((release, tokens))
 }
 

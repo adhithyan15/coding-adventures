@@ -12,7 +12,8 @@ use std::path::Path;
 use coding_adventures_ruby_lexer::releases as lexer_releases;
 use coding_adventures_ruby_parser::{
     grammar_classes, parse_ruby_at, resolve_release, supported_releases, tokenize_ruby_at,
-    FrontendBudgets, RubyFrontendError, DEFAULT_RELEASE,
+    FrontendBudgets, RubyFrontendError, DEFAULT_MAX_SOURCE_BYTES, DEFAULT_MAX_TOKENS, DEFAULT_RELEASE,
+    MAX_TRUSTED_SOURCE_BYTES, MAX_TRUSTED_TOKENS,
 };
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 
@@ -371,6 +372,7 @@ fn hostile_probe_child() {
         let trusted = FrontendBudgets {
             max_source_bytes: usize::MAX,
             max_rule_depth: usize::MAX,
+            max_tokens: usize::MAX,
         };
         assert!(matches!(
             parse_ruby_at(&deep, Some(release), &trusted),
@@ -393,4 +395,33 @@ fn hostile_probes_return_errors_in_a_child_process() {
         String::from_utf8_lossy(&output.stderr)
     );
     assert!(String::from_utf8_lossy(&output.stdout).contains("1 passed"));
+}
+
+
+/// Security review (LANG84 R0): the packrat parser's memory grows ~3 KB per
+/// token, so a dense program within the 64 KiB source budget used ~192 MB and
+/// a trusted 16 MiB budget would have needed ~48 GB (an OOM abort, not an
+/// error). The token budget refuses such input before the parser starts, and
+/// trusted callers can raise it only to `MAX_TRUSTED_TOKENS`.
+#[test]
+fn token_budget_refuses_dense_input_before_parsing() {
+    let budgets = FrontendBudgets::default();
+    for release in ["0.49", "3.3.6"] {
+        // `puts(1,1,…)`: two tokens per three bytes, well inside 64 KiB.
+        let dense = format!("puts(1{})", ",1".repeat(20_000));
+        assert!(dense.len() < DEFAULT_MAX_SOURCE_BYTES);
+        assert!(matches!(
+            parse_ruby_at(&dense, Some(release), &budgets),
+            Err(RubyFrontendError::Budget { which: "tokens", limit: DEFAULT_MAX_TOKENS, .. })
+        ), "{release}");
+        assert!(matches!(
+            tokenize_ruby_at(&dense, Some(release), &budgets),
+            Err(RubyFrontendError::Budget { which: "tokens", .. })
+        ), "{release}");
+        // A trusted caller can raise the budget, but only to the ceiling.
+        let trusted = FrontendBudgets { max_tokens: usize::MAX, ..FrontendBudgets::default() };
+        let (_, tokens) = tokenize_ruby_at(&dense, Some(release), &trusted).expect("within ceiling");
+        assert!(tokens.len() > DEFAULT_MAX_TOKENS && tokens.len() <= MAX_TRUSTED_TOKENS);
+    }
+    assert_eq!(MAX_TRUSTED_SOURCE_BYTES, 1024 * 1024);
 }

@@ -18,8 +18,8 @@ mod release;
 
 pub use release::{
     grammar_classes, parse_ruby_at, resolve_release, supported_releases, tokenize_ruby_at, FrontendBudgets,
-    RubyFrontendError, RubyParse, DEFAULT_MAX_SOURCE_BYTES, DEFAULT_RELEASE,
-    MAX_TRUSTED_SOURCE_BYTES,
+    RubyFrontendError, RubyParse, DEFAULT_MAX_SOURCE_BYTES, DEFAULT_MAX_TOKENS, DEFAULT_RELEASE,
+    MAX_TRUSTED_SOURCE_BYTES, MAX_TRUSTED_TOKENS,
 };
 
 /// Recursion-depth cap for the Ruby [`GrammarParser`] — see

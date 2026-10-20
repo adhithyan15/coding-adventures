@@ -4,6 +4,12 @@ All notable changes to the `coding-adventures-ruby-parser` crate will be documen
 
 ## [0.9.0] - 2026-10-20 — LANG84 release selection
 
+- **Token budget (security review).** `FrontendBudgets::max_tokens` (default
+  `DEFAULT_MAX_TOKENS` = 16,384; ceiling `MAX_TRUSTED_TOKENS` = 262,144) is
+  checked after lexing and before parsing, because the packrat parser's memory
+  grows ~3 KB per token. `MAX_TRUSTED_SOURCE_BYTES` drops from 16 MiB to 1 MiB
+  (16 MiB would have needed ~48 GB and ended in an OOM abort).
+
 ### Added
 - `parse_ruby_at(source, release, budgets)` and `tokenize_ruby_at`: the
   generic `GrammarLexer`/`GrammarParser` over exactly one release's
