@@ -1,0 +1,11 @@
+{
+  "id": "FR-C465-inonder",
+  "pathSegment": "FR-PATH-465-TEMPETE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-465-TEMPETE",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "language": "french",
+  "chapter": 264,
+  "sourceHash": "fnv1a64:8bafba12566ff8a4",
+  "lessonIds": [
+    "FR-C264-jetais-content",
+    "FR-C264-jespere",
+    "FR-C264-revision-sentiments"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "french/narration/ch264.txt",
+  "json": "french/narration/ch264.json",
+  "textHash": "fnv1a64:08172cb5c239ebb3",
+  "jsonHash": "fnv1a64:c2f399d9b2d7933d",
+  "findings": []
+}

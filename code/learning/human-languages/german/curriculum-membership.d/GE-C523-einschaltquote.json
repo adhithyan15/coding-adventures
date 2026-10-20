@@ -1,0 +1,11 @@
+{
+  "id": "GE-C523-einschaltquote",
+  "pathSegment": "GE-PATH-523-FERNSEHEN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-523-FERNSEHEN",
+      "order": 4
+    }
+  ]
+}

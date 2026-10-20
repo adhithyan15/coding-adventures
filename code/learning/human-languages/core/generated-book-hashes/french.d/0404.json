@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 404,
+  "sourceHash": "fnv1a64:394e3e15e4d4ed6d",
+  "lessonIds": [
+    "FR-C404-crevaison",
+    "FR-C404-crever",
+    "FR-C404-pneu",
+    "FR-C404-cric",
+    "FR-C404-gonfler"
+  ],
+  "tex": "french/book/chapters/ch404-un-pneu-a-plat.tex"
+}

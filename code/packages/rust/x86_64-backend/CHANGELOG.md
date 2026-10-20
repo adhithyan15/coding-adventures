@@ -1,4 +1,35 @@
 # Changelog — `x86_64-backend`
+## Unreleased — LANG83 PR1a — standard operation support
+
+- **LANG83 op support.** New `op_support` module exporting `OP_SUPPORT` and
+  `op_support(name) -> OpSupport`: this backend's declaration for every entry of
+  `interpreter_ir::op_registry::STANDARD_OPS` ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)). Every existing registered op is `Lowered` by the native pipeline (twig-aot rewriting + this backend). The four PR1b ops
+  (`write_i64`, `i64_div_floor`, `i64_mod_floor`, `trap`) are
+  `Refused("not yet lowered; LANG83 PR1b")`. `lang-aot`'s `check_module_for`
+  uses the table to refuse an unsupported op at compile time.
+- Tests: every registry entry is declared exactly once; the PR1b ops are
+  refused; the Builtin rows agree with `V1_BUILTINS`.
+- Adds a direct `interpreter-ir` dependency (already a transitive one via `jit-core`).
+
+## 0.40.0 - 2026-10-19 - stack-passed call arguments
+
+Calls and functions may now take more arguments than the ABI has integer
+registers. Overflow arguments use the standard layouts: SysV arguments 7 and up
+at `[rsp + 8·k]`, and Microsoft x64 arguments 5 and up at `[rsp + 32 + 8·k]`
+above the shadow space. Each call site reserves a 16-byte-aligned outgoing area
+and releases it after the call. Callees copy these arguments from
+`[rbp + 16 + …]` into their slots in the prologue. Previously such calls were
+refused with `too many arguments (8) for SysV ABI — max 6`, which kept every
+ALGOL program passing a captured 4-D array value formal (a handle, four lower
+bounds and three strides) off native x86-64. The two tests that pinned the
+refusal now pin successful compilation, and new tests pin the encoded stores
+and loads.
+
+A function may declare, and a call may pass, at most 255 stack-passed
+arguments (`MAX_STACK_ARGS`). That keeps each outgoing area under one guard
+page. Beyond it, functions fail with `TooManyParams` and calls with
+`UnsupportedOp`.
+
 ## Unreleased — FLOW-MATIC EOF peek (VM-039a)
 
 Support the zero-argument `input_more` builtin through the shared C runtime.

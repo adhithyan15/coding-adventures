@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 458,
+  "sourceHash": "fnv1a64:7d80770b7027694a",
+  "lessonIds": [
+    "FR-C458-dune",
+    "FR-C458-maree",
+    "FR-C458-crique",
+    "FR-C458-recif",
+    "FR-C458-coquillage"
+  ],
+  "tex": "french/book/chapters/ch458-au-bord-de-la-mer.tex"
+}

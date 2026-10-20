@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C351-reagir",
+    "language": "french",
+    "chapter": 351,
+    "sequence": 19770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:de40425623d6af98"
+  },
+  "findings": []
+}

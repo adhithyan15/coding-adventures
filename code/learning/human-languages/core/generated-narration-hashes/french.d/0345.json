@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:80b2c31e5aabc739",
+  "lessonIds": [
+    "FR-C345-approuver",
+    "FR-C345-desapprouver",
+    "FR-C345-partisan",
+    "FR-C345-adversaire",
+    "FR-C345-argumenter"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch345.txt",
+  "json": "french/narration/ch345.json",
+  "textHash": "fnv1a64:b96f414411d9eaf5",
+  "jsonHash": "fnv1a64:ecbe8c3a3eed9351",
+  "findings": []
+}

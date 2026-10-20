@@ -1,0 +1,11 @@
+{
+  "id": "FR-C358-syndicat",
+  "pathSegment": "FR-PATH-358-GREVE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-358-GREVE",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C500-hasard",
+  "pathSegment": "FR-PATH-500-CARTES",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-500-CARTES",
+      "order": 4
+    }
+  ]
+}

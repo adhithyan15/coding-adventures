@@ -1,0 +1,19 @@
+{
+  "chapter": 287,
+  "title": "Das Gefängnis",
+  "label": "ch:ge-das-gefangnis",
+  "canDo": "I can say how a crime story ends: to confess, a confession, prison, to disappear and to flee.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C287-fliehen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 287: I can say how a crime story ends: to confess, a confession, prison, to disappear and to flee.",
+    "assesses": [
+      "GE-LEX-C287-GEFAENGNIS-03",
+      "GE-LEX-C287-GEFAENGNIS-04",
+      "GE-LEX-C287-GEFAENGNIS-05"
+    ]
+  }
+}

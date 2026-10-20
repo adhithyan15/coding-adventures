@@ -1,0 +1,11 @@
+{
+  "id": "GE-C389-ausgabe",
+  "pathSegment": "GE-PATH-389-LEISTEN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-389-LEISTEN",
+      "order": 3
+    }
+  ]
+}

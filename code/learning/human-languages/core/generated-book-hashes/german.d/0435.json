@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 435,
+  "sourceHash": "fnv1a64:49b90d2d13b7db18",
+  "lessonIds": [
+    "GE-C435-abkuerzung",
+    "GE-C435-abkuerzen",
+    "GE-C435-umweg",
+    "GE-C435-umkehren",
+    "GE-C435-verfahren"
+  ],
+  "tex": "german/book/chapters/ch435-abkurzung-oder-umweg.tex"
+}

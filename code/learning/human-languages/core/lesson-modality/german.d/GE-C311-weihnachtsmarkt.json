@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C311-weihnachtsmarkt",
+    "language": "german",
+    "chapter": 311,
+    "sequence": 17010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:074e3c10d8d66d9e"
+  },
+  "findings": []
+}

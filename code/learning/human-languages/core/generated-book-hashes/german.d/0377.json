@@ -1,0 +1,14 @@
+{
+  "language": "german",
+  "chapter": 377,
+  "sourceHash": "fnv1a64:0673012f96e8e85b",
+  "lessonIds": [
+    "GE-C377-hochschule",
+    "GE-C377-vorlesung",
+    "GE-C377-dozent",
+    "GE-C377-studiengang",
+    "GE-C377-praktikum",
+    "GE-R377-review-370-377"
+  ],
+  "tex": "german/book/chapters/ch377-an-der-hochschule.tex"
+}

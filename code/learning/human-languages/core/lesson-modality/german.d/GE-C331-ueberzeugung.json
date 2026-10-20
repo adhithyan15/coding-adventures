@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C331-ueberzeugung",
+    "language": "german",
+    "chapter": 331,
+    "sequence": 18070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:44067db4a17f9fba"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C490-filleul",
+    "language": "french",
+    "chapter": 490,
+    "sequence": 26950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0088a23c781a1da"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C428-robinet",
+  "pathSegment": "FR-PATH-428-FUITE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-428-FUITE",
+      "order": 1
+    }
+  ]
+}

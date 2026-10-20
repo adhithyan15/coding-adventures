@@ -1,0 +1,19 @@
+{
+  "chapter": 425,
+  "title": "Au camping",
+  "label": "ch:fr-au-camping",
+  "canDo": "I can talk about camping: the campsite, the tent, the sleeping bag, camping and sleeping out in the open.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C425-bivouaquer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 425: I can talk about camping: the campsite, the tent, the sleeping bag, camping and sleeping out in the open.",
+    "assesses": [
+      "FR-LEX-C425-CAMPING-03",
+      "FR-LEX-C425-CAMPING-04",
+      "FR-LEX-C425-CAMPING-05"
+    ]
+  }
+}

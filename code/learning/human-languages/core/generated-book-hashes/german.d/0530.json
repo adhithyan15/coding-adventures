@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 530,
+  "sourceHash": "fnv1a64:1d0510c903d56787",
+  "lessonIds": [
+    "GE-C530-kaemmen",
+    "GE-C530-gurgeln",
+    "GE-C530-schminken",
+    "GE-C530-bademantel",
+    "GE-C530-schlafanzug"
+  ],
+  "tex": "german/book/chapters/ch530-morgens-im-bad.tex"
+}

@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-443-FEINKOST",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-443-FEINKOST"
+  ],
+  "after": []
+}

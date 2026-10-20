@@ -1,0 +1,11 @@
+{
+  "id": "FR-C396-installer",
+  "pathSegment": "FR-PATH-396-LOGICIEL",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-396-LOGICIEL",
+      "order": 0
+    }
+  ]
+}

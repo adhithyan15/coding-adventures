@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C434-schild",
+    "language": "german",
+    "chapter": 434,
+    "sequence": 23350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee15f5a1c5007b37"
+  },
+  "findings": []
+}

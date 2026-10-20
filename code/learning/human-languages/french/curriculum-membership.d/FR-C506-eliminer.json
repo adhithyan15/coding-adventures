@@ -1,0 +1,11 @@
+{
+  "id": "FR-C506-eliminer",
+  "pathSegment": "FR-PATH-506-RESULTATS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-506-RESULTATS",
+      "order": 2
+    }
+  ]
+}

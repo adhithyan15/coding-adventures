@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 310,
+  "sourceHash": "fnv1a64:51363d2ab8399b6e",
+  "lessonIds": [
+    "GE-C310-karneval",
+    "GE-C310-fasching",
+    "GE-C310-kostuem",
+    "GE-C310-verkleiden",
+    "GE-C310-brauch"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch310.txt",
+  "json": "german/narration/ch310.json",
+  "textHash": "fnv1a64:66118efb19cab84f",
+  "jsonHash": "fnv1a64:794298263ec0e553",
+  "findings": []
+}

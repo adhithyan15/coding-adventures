@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C300-civiere",
+    "language": "french",
+    "chapter": 300,
+    "sequence": 17180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6d89b6830487a4c4"
+  },
+  "findings": []
+}

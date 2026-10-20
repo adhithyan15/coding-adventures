@@ -1,0 +1,11 @@
+{
+  "id": "GE-C366-unter-umstaenden",
+  "pathSegment": "GE-PATH-366-HYPOTHESE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-366-HYPOTHESE",
+      "order": 2
+    }
+  ]
+}

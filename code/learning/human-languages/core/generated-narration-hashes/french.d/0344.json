@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:508f8c46435e5a97",
+  "lessonIds": [
+    "FR-C344-raisonner",
+    "FR-C344-raisonnement",
+    "FR-C344-conclure",
+    "FR-C344-nuance",
+    "FR-C344-nuancer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch344.txt",
+  "json": "french/narration/ch344.json",
+  "textHash": "fnv1a64:f9cfe9fb70f0b4f5",
+  "jsonHash": "fnv1a64:8b3cf4c2eb0faac3",
+  "findings": []
+}

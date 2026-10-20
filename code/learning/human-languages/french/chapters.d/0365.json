@@ -1,0 +1,19 @@
+{
+  "chapter": 365,
+  "title": "Les problèmes sociaux",
+  "label": "ch:fr-les-problemes-sociaux",
+  "canDo": "I can talk about social problems: poverty, inequality, discrimination and immigration.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FR-R365-revision-358-365",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 365: I can talk about social problems: poverty, inequality, discrimination and immigration.",
+    "assesses": [
+      "FR-LEX-C365-PAUVRETE-03",
+      "FR-LEX-C365-PAUVRETE-04",
+      "FR-LEX-C365-PAUVRETE-05"
+    ]
+  }
+}

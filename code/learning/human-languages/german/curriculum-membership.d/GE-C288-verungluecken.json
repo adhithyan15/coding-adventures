@@ -1,0 +1,11 @@
+{
+  "id": "GE-C288-verungluecken",
+  "pathSegment": "GE-PATH-288-ZUSAMMENSTOSS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-288-ZUSAMMENSTOSS",
+      "order": 3
+    }
+  ]
+}

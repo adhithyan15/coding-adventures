@@ -1,0 +1,11 @@
+{
+  "id": "GE-C347-zufaellig",
+  "pathSegment": "GE-PATH-347-ZUFALL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-347-ZUFALL",
+      "order": 1
+    }
+  ]
+}

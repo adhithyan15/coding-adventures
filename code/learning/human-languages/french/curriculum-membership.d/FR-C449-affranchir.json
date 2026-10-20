@@ -1,0 +1,11 @@
+{
+  "id": "FR-C449-affranchir",
+  "pathSegment": "FR-PATH-449-BURALISTE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-449-BURALISTE",
+      "order": 2
+    }
+  ]
+}

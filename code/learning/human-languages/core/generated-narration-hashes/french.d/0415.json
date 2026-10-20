@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 415,
+  "sourceHash": "fnv1a64:bfa6baffaab75ae9",
+  "lessonIds": [
+    "FR-C415-station",
+    "FR-C415-rame",
+    "FR-C415-carnet",
+    "FR-C415-tramway",
+    "FR-C415-trottinette",
+    "FR-R415-revision-408-415"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch415.txt",
+  "json": "french/narration/ch415.json",
+  "textHash": "fnv1a64:e6acccd144afc594",
+  "jsonHash": "fnv1a64:be96a497b025c590",
+  "findings": []
+}

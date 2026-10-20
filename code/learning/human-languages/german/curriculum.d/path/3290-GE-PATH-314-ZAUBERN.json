@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-314-ZAUBERN",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GE-EXT-314-ZAUBERN"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C341-clarifier",
+  "pathSegment": "FR-PATH-341-MALENTENDU",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-341-MALENTENDU",
+      "order": 1
+    }
+  ]
+}

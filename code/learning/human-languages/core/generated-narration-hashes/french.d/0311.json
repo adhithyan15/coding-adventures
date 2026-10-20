@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:2b5159e98c4a7529",
+  "lessonIds": [
+    "FR-C311-fiancer",
+    "FR-C311-demande-en-mariage",
+    "FR-C311-marier",
+    "FR-C311-piece-montee",
+    "FR-C311-dragee"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch311.txt",
+  "json": "french/narration/ch311.json",
+  "textHash": "fnv1a64:5dc7d8c5e8de973f",
+  "jsonHash": "fnv1a64:d9dd1a5ef51248df",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 475,
+  "sourceHash": "fnv1a64:877e52a4e2dd0de0",
+  "lessonIds": [
+    "FR-C475-jalousie",
+    "FR-C475-envier",
+    "FR-C475-rancune",
+    "FR-C475-rancunier",
+    "FR-C475-reconcilier"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch475.txt",
+  "json": "french/narration/ch475.json",
+  "textHash": "fnv1a64:8d4b48879990dcb5",
+  "jsonHash": "fnv1a64:d9a6f60a57cc4b94",
+  "findings": []
+}

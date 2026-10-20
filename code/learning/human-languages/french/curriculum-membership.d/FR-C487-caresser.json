@@ -1,0 +1,11 @@
+{
+  "id": "FR-C487-caresser",
+  "pathSegment": "FR-PATH-487-AMOUREUX",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-487-AMOUREUX",
+      "order": 4
+    }
+  ]
+}

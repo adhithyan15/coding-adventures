@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:15857afa387ee8a3",
+  "lessonIds": [
+    "GE-C330-standpunkt",
+    "GE-C330-ansicht",
+    "GE-C330-auffassung",
+    "GE-C330-gesichtspunkt",
+    "GE-C330-vertreten"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch330.txt",
+  "json": "german/narration/ch330.json",
+  "textHash": "fnv1a64:b51f8d8937844082",
+  "jsonHash": "fnv1a64:57e2779f4b48a7c1",
+  "findings": []
+}

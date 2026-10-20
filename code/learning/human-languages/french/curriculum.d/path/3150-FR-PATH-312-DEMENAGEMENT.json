@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-312-DEMENAGEMENT",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-312-DEMENAGEMENT"
+  ],
+  "after": []
+}

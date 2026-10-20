@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:198414d55355703f",
+  "lessonIds": [
+    "GE-C343-konsequenz",
+    "GE-C343-resultat",
+    "GE-C343-folglich",
+    "GE-C343-sodass",
+    "GE-C343-daher"
+  ],
+  "tex": "german/book/chapters/ch343-die-konsequenzen.tex"
+}

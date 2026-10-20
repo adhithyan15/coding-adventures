@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 416,
+  "sourceHash": "fnv1a64:b65230f10ead698b",
+  "lessonIds": [
+    "GE-C416-einchecken",
+    "GE-C416-bordkarte",
+    "GE-C416-flugsteig",
+    "GE-C416-handgepaeck",
+    "GE-C416-aufgeben"
+  ],
+  "tex": "german/book/chapters/ch416-am-flughafen.tex"
+}

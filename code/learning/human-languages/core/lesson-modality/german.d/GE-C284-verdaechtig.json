@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C284-verdaechtig",
+    "language": "german",
+    "chapter": 284,
+    "sequence": 15630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a2c68aaa93e610b4"
+  },
+  "findings": []
+}

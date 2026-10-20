@@ -1,0 +1,11 @@
+{
+  "id": "FR-C440-prefecture",
+  "pathSegment": "FR-PATH-440-QUARTIERS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-440-QUARTIERS",
+      "order": 2
+    }
+  ]
+}

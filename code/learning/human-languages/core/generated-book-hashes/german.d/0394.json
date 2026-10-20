@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 394,
+  "sourceHash": "fnv1a64:7cd59a62ba09643d",
+  "lessonIds": [
+    "GE-C394-hochladen",
+    "GE-C394-webseite",
+    "GE-C394-suchmaschine",
+    "GE-C394-posten",
+    "GE-C394-kommentieren"
+  ],
+  "tex": "german/book/chapters/ch394-im-internet.tex"
+}

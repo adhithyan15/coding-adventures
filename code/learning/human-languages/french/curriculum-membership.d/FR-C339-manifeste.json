@@ -1,0 +1,11 @@
+{
+  "id": "FR-C339-manifeste",
+  "pathSegment": "FR-PATH-339-PREUVE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-339-PREUVE",
+      "order": 4
+    }
+  ]
+}

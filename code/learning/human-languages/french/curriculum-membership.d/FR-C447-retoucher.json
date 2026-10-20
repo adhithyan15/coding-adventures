@@ -1,0 +1,11 @@
+{
+  "id": "FR-C447-retoucher",
+  "pathSegment": "FR-PATH-447-PRESSING",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-447-PRESSING",
+      "order": 4
+    }
+  ]
+}

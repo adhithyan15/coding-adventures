@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C445-quincaillerie",
+    "language": "french",
+    "chapter": 445,
+    "sequence": 24600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:319ee7ea25e43927"
+  },
+  "findings": []
+}

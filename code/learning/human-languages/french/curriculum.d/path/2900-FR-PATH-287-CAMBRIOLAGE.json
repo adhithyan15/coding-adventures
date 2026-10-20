@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-287-CAMBRIOLAGE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-287-CAMBRIOLAGE"
+  ],
+  "after": []
+}

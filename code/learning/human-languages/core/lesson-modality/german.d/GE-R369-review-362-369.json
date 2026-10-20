@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-R369-review-362-369",
+    "language": "german",
+    "chapter": 369,
+    "sequence": 20040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cea17c3c304b751e"
+  },
+  "findings": []
+}

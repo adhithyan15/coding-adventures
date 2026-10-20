@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-462-UNWETTER",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a storm coming: severe weather, a storm building up, hail, hailing and thunder.",
+  "prerequisites": []
+}

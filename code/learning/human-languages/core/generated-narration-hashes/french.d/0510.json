@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:f0accea613eedb82",
+  "lessonIds": [
+    "FR-C510-patin",
+    "FR-C510-patiner",
+    "FR-C510-luge",
+    "FR-C510-patinoire",
+    "FR-C510-piste"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch510.txt",
+  "json": "french/narration/ch510.json",
+  "textHash": "fnv1a64:171c81fde90fade4",
+  "jsonHash": "fnv1a64:c47fa7d5b18aa526",
+  "findings": []
+}

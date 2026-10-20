@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-292-INDICES",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-292-INDICES"
+  ],
+  "after": []
+}

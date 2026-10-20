@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 342,
+  "sourceHash": "fnv1a64:114ecc08a08723e9",
+  "lessonIds": [
+    "FR-C342-evaluer",
+    "FR-C342-juger",
+    "FR-C342-jugement",
+    "FR-C342-subjectif",
+    "FR-C342-impartial"
+  ],
+  "tex": "french/book/chapters/ch342-evaluer-et-juger.tex"
+}

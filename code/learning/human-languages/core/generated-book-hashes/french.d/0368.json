@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 368,
+  "sourceHash": "fnv1a64:5032c7d88f7dcf25",
+  "lessonIds": [
+    "FR-C368-a-condition-que",
+    "FR-C368-pourvu-que",
+    "FR-C368-a-moins-que",
+    "FR-C368-au-cas-ou",
+    "FR-C368-sinon"
+  ],
+  "tex": "french/book/chapters/ch368-a-une-condition.tex"
+}

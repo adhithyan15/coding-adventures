@@ -1,0 +1,11 @@
+{
+  "id": "GE-C468-aergern",
+  "pathSegment": "GE-PATH-468-WUT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-468-WUT",
+      "order": 2
+    }
+  ]
+}

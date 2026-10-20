@@ -1,0 +1,11 @@
+{
+  "id": "GE-C277-demonstrieren",
+  "pathSegment": "GE-PATH-277-STREIK",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-277-STREIK",
+      "order": 3
+    }
+  ]
+}

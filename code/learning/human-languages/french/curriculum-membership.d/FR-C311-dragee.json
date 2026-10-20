@@ -1,0 +1,11 @@
+{
+  "id": "FR-C311-dragee",
+  "pathSegment": "FR-PATH-311-OUI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-311-OUI",
+      "order": 4
+    }
+  ]
+}

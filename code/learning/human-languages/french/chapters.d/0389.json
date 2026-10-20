@@ -1,0 +1,19 @@
+{
+  "chapter": 389,
+  "title": "L'enquête",
+  "label": "ch:fr-l-enquete",
+  "canDo": "I can talk about an investigation: investigating, a witness, giving evidence and the victim.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FR-R389-revision-382-389",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 389: I can talk about an investigation: investigating, a witness, giving evidence and the victim.",
+    "assesses": [
+      "FR-LEX-C389-ENQUETE-03",
+      "FR-LEX-C389-ENQUETE-04",
+      "FR-LEX-C389-ENQUETE-05"
+    ]
+  }
+}

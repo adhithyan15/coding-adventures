@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C494-vertragen",
+    "language": "german",
+    "chapter": 494,
+    "sequence": 26450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:48bd5c2f1c078129"
+  },
+  "findings": []
+}

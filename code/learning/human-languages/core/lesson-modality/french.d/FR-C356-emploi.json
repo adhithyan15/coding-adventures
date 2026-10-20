@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C356-emploi",
+    "language": "french",
+    "chapter": 356,
+    "sequence": 20020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:32a4d0fd523f241d"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-430-BESTIOLES",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-430-BESTIOLES"
+  ],
+  "after": []
+}

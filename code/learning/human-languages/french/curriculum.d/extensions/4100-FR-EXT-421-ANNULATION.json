@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-421-ANNULATION",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can deal with a cancelled flight: the cancellation, the refund, confirming, calling off a booking and overbooking.",
+  "prerequisites": []
+}

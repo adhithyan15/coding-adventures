@@ -1,0 +1,11 @@
+{
+  "id": "FR-C411-pieton",
+  "pathSegment": "FR-PATH-411-ACCIDENT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-411-ACCIDENT",
+      "order": 2
+    }
+  ]
+}

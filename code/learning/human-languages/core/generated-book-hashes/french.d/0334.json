@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:7f9368960933824c",
+  "lessonIds": [
+    "FR-C334-point-de-vue",
+    "FR-C334-soutenir",
+    "FR-C334-pretendre",
+    "FR-C334-affirmer",
+    "FR-C334-convaincant"
+  ],
+  "tex": "french/book/chapters/ch334-mon-point-de-vue.tex"
+}

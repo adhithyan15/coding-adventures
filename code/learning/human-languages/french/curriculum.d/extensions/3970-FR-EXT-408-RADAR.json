@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-408-RADAR",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about road checks and fines: the fine, the speed camera, getting caught, writing someone up and checking.",
+  "prerequisites": []
+}

@@ -1,0 +1,172 @@
+German, chapter 395: Sicher im Netz.
+5 lessons. All 5 can be done entirely by ear.
+
+
+Lesson 1 of 5.
+das Passwort — the password.
+
+Warm-up.
+[pause 2 seconds]
+Before the new one: say the German for to post, then the German for to comment on.
+
+You'll want to know: das Passwort.
+das Passwort — "the password".
+Ich habe mein Passwort schon wieder vergessen. I have forgotten my password yet again.
+Plural: die Passwörter. Also das Kennwort.
+
+The word, taken apart.
+Passwort was borrowed from English password and fitted to German Wort "word", inherited from Proto-Germanic wurdą (EtymDB).
+
+What you've built.
+One more word for telling, explaining and describing at B1.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: das Passwort]
+[pause 8 seconds for the answer]
+[your turn — say: das Passwort, once more]
+[pause 8 seconds for the answer]
+[your turn — say: a sentence of your own with das Passwort]
+[pause 8 seconds for the answer]
+[your turn — recall: say the German for to post, then the German for to comment on, then say das Passwort again]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does das Passwort mean? ("The password".) Say it once more.
+
+
+Lesson 2 of 5.
+einloggen — to log in (reflexive, sich einloggen).
+
+Warm-up.
+[pause 2 seconds]
+Before the new one: say the German for to comment on, then the German for the password.
+
+You'll want to know: einloggen.
+einloggen — "to log in (reflexive, sich einloggen)".
+Ohne Passwort kann ich mich nicht einloggen. I cannot log in without a password.
+Reflexive and separable: ich logge mich ein, ich habe mich eingeloggt. Also sich anmelden.
+
+The word, taken apart.
+einloggen takes English log in and gives it the German prefix ein- "in". English log in is usually traced to the ship's log, the daily book named after the wooden log once used to measure a ship's speed; EtymDB has no entry for the German verb.
+
+What you've built.
+One more word for telling, explaining and describing at B1.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: einloggen]
+[pause 8 seconds for the answer]
+[your turn — say: einloggen, once more]
+[pause 8 seconds for the answer]
+[your turn — say: a sentence of your own with einloggen]
+[pause 8 seconds for the answer]
+[your turn — recall: say the German for to comment on, then the German for the password, then say einloggen again]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does einloggen mean? ("To log in (reflexive, sich einloggen)".) Say it once more.
+
+
+Lesson 3 of 5.
+der Zugang — the access; the way in.
+
+Warm-up.
+[pause 2 seconds]
+Before the new one: say the German for the password, then the German for to log in.
+
+You'll want to know: der Zugang.
+der Zugang — "the access; the way in".
+Im Hotel gibt es kostenlosen Zugang zum Internet. The hotel has free internet access.
+Plural: die Zugänge. Zugang zu + dative.
+
+The word, taken apart.
+Zugang joins zu "to" to Gang "going, path", inherited from Old High German gang and Proto-Germanic gangaz (EtymDB): the way to something.
+
+What you've built.
+One more word for telling, explaining and describing at B1.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: der Zugang]
+[pause 8 seconds for the answer]
+[your turn — say: der Zugang, once more]
+[pause 8 seconds for the answer]
+[your turn — say: a sentence of your own with der Zugang]
+[pause 8 seconds for the answer]
+[your turn — recall: say the German for the password, then the German for to log in, then say der Zugang again]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does der Zugang mean? ("The access; the way in".) Say it once more.
+
+
+Lesson 4 of 5.
+der Datenschutz — data protection, privacy.
+
+Warm-up.
+[pause 2 seconds]
+Before the new one: say the German for to log in, then the German for the access.
+
+You'll want to know: der Datenschutz.
+der Datenschutz — "data protection, privacy".
+Wegen des Datenschutzes darf ich Ihnen die Nummer nicht geben. Because of data protection I am not allowed to give you the number.
+No plural. Die Daten — the data.
+
+The word, taken apart.
+Datenschutz joins Daten "data", from Latin datum "something given" (EtymDB), to Schutz "protection", Middle High German schuz (EtymDB).
+
+What you've built.
+One more word for telling, explaining and describing at B1.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: der Datenschutz]
+[pause 8 seconds for the answer]
+[your turn — say: der Datenschutz, once more]
+[pause 8 seconds for the answer]
+[your turn — say: a sentence of your own with der Datenschutz]
+[pause 8 seconds for the answer]
+[your turn — recall: say the German for to log in, then the German for the access, then say der Datenschutz again]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does der Datenschutz mean? ("Data protection, privacy".) Say it once more.
+
+
+Lesson 5 of 5.
+verschlüsseln — to encrypt, to encode.
+
+Warm-up.
+[pause 2 seconds]
+Before the new one: say the German for the access, then the German for data protection.
+
+You'll want to know: verschlüsseln.
+verschlüsseln — "to encrypt, to encode".
+Die Nachrichten werden automatisch verschlüsselt. The messages are encrypted automatically.
+Inseparable: es verschlüsselt, es hat verschlüsselt. Built on der Schlüssel — the key.
+
+The word, taken apart.
+verschlüsseln is built with ver- on Schlüssel "key", inherited from Old High German sluzzil and Proto-Germanic slutilaz (EtymDB), of the family of schließen "to lock".
+
+What you've built.
+One more word for telling, explaining and describing at B1.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: verschlüsseln]
+[pause 8 seconds for the answer]
+[your turn — say: verschlüsseln, once more]
+[pause 8 seconds for the answer]
+[your turn — say: a sentence of your own with verschlüsseln]
+[pause 8 seconds for the answer]
+[your turn — recall: say the German for the access, then the German for data protection, then say verschlüsseln again]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does verschlüsseln mean? ("To encrypt, to encode".) Say it once more.

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:d92787afe4b795b7",
+  "lessonIds": [
+    "FR-C501-collectionner",
+    "FR-C501-collectionneur",
+    "FR-C501-maquette",
+    "FR-C501-modelisme",
+    "FR-C501-assembler"
+  ],
+  "tex": "french/book/chapters/ch501-collectionneurs.tex"
+}

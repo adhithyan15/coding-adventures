@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-356-KARRIERE",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "GE-EXT-356-KARRIERE"
+  ],
+  "after": []
+}

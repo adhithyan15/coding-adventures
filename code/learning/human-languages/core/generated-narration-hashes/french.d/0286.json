@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 286,
+  "sourceHash": "fnv1a64:e4ce2e8936ec8408",
+  "lessonIds": [
+    "FR-C286-sondage",
+    "FR-C286-bilan",
+    "FR-C286-hausse",
+    "FR-C286-baisse",
+    "FR-C286-statistique"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch286.txt",
+  "json": "french/narration/ch286.json",
+  "textHash": "fnv1a64:8339458c3ef3c767",
+  "jsonHash": "fnv1a64:bcd8655b6585fe4e",
+  "findings": []
+}

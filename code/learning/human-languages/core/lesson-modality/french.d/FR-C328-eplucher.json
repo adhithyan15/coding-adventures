@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C328-eplucher",
+    "language": "french",
+    "chapter": 328,
+    "sequence": 18580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8144081a3be87527"
+  },
+  "findings": []
+}

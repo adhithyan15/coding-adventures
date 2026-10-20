@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-269-JAHRZEHNT",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GE-EXT-269-JAHRZEHNT"
+  ],
+  "after": []
+}

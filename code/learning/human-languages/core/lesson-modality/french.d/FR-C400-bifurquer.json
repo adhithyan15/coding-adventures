@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C400-bifurquer",
+    "language": "french",
+    "chapter": 400,
+    "sequence": 22340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c87e52582ad114b4"
+  },
+  "findings": []
+}

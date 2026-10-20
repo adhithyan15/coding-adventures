@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:0594464b5fe9b290",
+  "lessonIds": [
+    "GE-C381-vorschrift",
+    "GE-C381-vorschreiben",
+    "GE-C381-beachten",
+    "GE-C381-einhalten",
+    "GE-C381-verpflichtet"
+  ],
+  "tex": "german/book/chapters/ch381-vorschriften.tex"
+}

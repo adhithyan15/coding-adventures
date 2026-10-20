@@ -1,0 +1,11 @@
+{
+  "id": "GE-C281-klauen",
+  "pathSegment": "GE-PATH-281-EINBRUCH",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-281-EINBRUCH",
+      "order": 3
+    }
+  ]
+}

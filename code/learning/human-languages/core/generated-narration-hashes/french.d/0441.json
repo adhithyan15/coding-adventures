@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:2bcf45a1366b70b2",
+  "lessonIds": [
+    "FR-C441-banc",
+    "FR-C441-lampadaire",
+    "FR-C441-reverbere",
+    "FR-C441-kiosque",
+    "FR-C441-pave"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch441.txt",
+  "json": "french/narration/ch441.json",
+  "textHash": "fnv1a64:edeae489d2ce9a69",
+  "jsonHash": "fnv1a64:89d20dd656a696bd",
+  "findings": []
+}

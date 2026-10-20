@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 480,
+  "sourceHash": "fnv1a64:f3f6621086a04eb1",
+  "lessonIds": [
+    "GE-C480-uebelkeit",
+    "GE-C480-uebergeben",
+    "GE-C480-durchfall",
+    "GE-C480-schwindlig",
+    "GE-C480-kreislauf"
+  ],
+  "tex": "german/book/chapters/ch480-ubel-und-schwindlig.tex"
+}

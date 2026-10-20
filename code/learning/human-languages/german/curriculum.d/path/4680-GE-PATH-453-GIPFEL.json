@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-453-GIPFEL",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-453-GIPFEL"
+  ],
+  "after": []
+}

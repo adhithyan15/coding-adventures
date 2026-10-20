@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 282,
+  "sourceHash": "fnv1a64:389016e0773c8623",
+  "lessonIds": [
+    "FR-C282-gros-titre",
+    "FR-C282-manchette",
+    "FR-C282-rubrique",
+    "FR-C282-editorial",
+    "FR-C282-faits-divers"
+  ],
+  "tex": "french/book/chapters/ch282-les-gros-titres.tex"
+}

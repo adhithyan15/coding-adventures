@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-387-KONTO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "GE-EXT-387-KONTO"
+  ],
+  "after": []
+}

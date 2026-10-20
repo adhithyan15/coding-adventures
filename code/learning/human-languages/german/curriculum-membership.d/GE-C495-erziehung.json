@@ -1,0 +1,11 @@
+{
+  "id": "GE-C495-erziehung",
+  "pathSegment": "GE-PATH-495-ERZIEHUNG",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-495-ERZIEHUNG",
+      "order": 1
+    }
+  ]
+}

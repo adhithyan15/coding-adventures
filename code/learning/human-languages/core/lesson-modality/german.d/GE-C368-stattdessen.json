@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C368-stattdessen",
+    "language": "german",
+    "chapter": 368,
+    "sequence": 19940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:313424f726a71616"
+  },
+  "findings": []
+}

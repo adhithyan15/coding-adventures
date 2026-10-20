@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-268-ORDRE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-268-ORDRE"
+  ],
+  "after": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-483-NAUSEE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe feeling sick, dizzy or having a headache.",
+  "prerequisites": []
+}

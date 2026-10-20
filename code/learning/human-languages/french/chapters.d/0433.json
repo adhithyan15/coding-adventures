@@ -1,0 +1,19 @@
+{
+  "chapter": 433,
+  "title": "Être dédommagé",
+  "label": "ch:fr-etre-dedommage",
+  "canDo": "I can talk about deposits and compensation: the down payment, the deposit, compensation, compensating someone and paying damages.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C433-indemniser",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 433: I can talk about deposits and compensation: the down payment, the deposit, compensation, compensating someone and paying damages.",
+    "assesses": [
+      "FR-LEX-C433-DEDOMMAGEMENT-03",
+      "FR-LEX-C433-DEDOMMAGEMENT-04",
+      "FR-LEX-C433-DEDOMMAGEMENT-05"
+    ]
+  }
+}

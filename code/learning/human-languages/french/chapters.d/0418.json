@@ -1,0 +1,19 @@
+{
+  "chapter": 418,
+  "title": "À bord",
+  "label": "ch:fr-a-bord",
+  "canDo": "I can talk about life on board: boarding, the flight attendants, the window and the aisle.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C418-allee",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 418: I can talk about life on board: boarding, the flight attendants, the window and the aisle.",
+    "assesses": [
+      "FR-LEX-C418-BORD-03",
+      "FR-LEX-C418-BORD-04",
+      "FR-LEX-C418-BORD-05"
+    ]
+  }
+}

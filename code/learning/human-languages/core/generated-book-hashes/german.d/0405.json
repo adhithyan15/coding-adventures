@@ -1,0 +1,14 @@
+{
+  "language": "german",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:ef12832679f43844",
+  "lessonIds": [
+    "GE-C405-kofferraum",
+    "GE-C405-motorhaube",
+    "GE-C405-kratzer",
+    "GE-C405-delle",
+    "GE-C405-verbeulen",
+    "GE-R405-review-398-405"
+  ],
+  "tex": "german/book/chapters/ch405-kratzer-und-dellen.tex"
+}

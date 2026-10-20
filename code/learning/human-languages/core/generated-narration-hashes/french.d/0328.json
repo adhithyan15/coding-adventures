@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 328,
+  "sourceHash": "fnv1a64:a012960dd7049100",
+  "lessonIds": [
+    "FR-C328-planche-a-decouper",
+    "FR-C328-eplucher",
+    "FR-C328-hacher",
+    "FR-C328-emincer",
+    "FR-C328-raper"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch328.txt",
+  "json": "french/narration/ch328.json",
+  "textHash": "fnv1a64:c77d2e54ddf40233",
+  "jsonHash": "fnv1a64:ac09b4b98b825e35",
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "chapter": 265,
+  "title": "More Than, and for How Long — plus … que, depuis, pendant",
+  "label": "ch:fr-more-than-and-how-long",
+  "canDo": "I can compare two things, and say how long something has been going on or lasted.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C265-revision-experience",
+    "kind": "production",
+    "summary": "Complete FR-C265-revision-experience: compare two ways to travel, and say how long you have lived somewhere and how long you lived somewhere else.",
+    "assesses": [
+      "FR-GRAM-MEILLEUR-02",
+      "FR-GRAM-DEPUIS-PRESENT-01",
+      "FR-GRAM-PLUS-QUE-01",
+      "FR-GRAM-PENDANT-DUREE-02"
+    ]
+  }
+}

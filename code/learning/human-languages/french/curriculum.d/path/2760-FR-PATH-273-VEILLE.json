@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-273-VEILLE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-273-VEILLE"
+  ],
+  "after": []
+}

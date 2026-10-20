@@ -1,0 +1,11 @@
+{
+  "id": "FR-C301-alerter",
+  "pathSegment": "FR-PATH-301-ALERTE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-301-ALERTE",
+      "order": 1
+    }
+  ]
+}

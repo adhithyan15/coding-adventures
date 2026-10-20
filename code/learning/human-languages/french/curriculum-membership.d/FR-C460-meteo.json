@@ -1,0 +1,11 @@
+{
+  "id": "FR-C460-meteo",
+  "pathSegment": "FR-PATH-460-METEO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-460-METEO",
+      "order": 0
+    }
+  ]
+}

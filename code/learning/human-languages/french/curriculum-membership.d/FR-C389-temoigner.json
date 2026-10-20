@@ -1,0 +1,11 @@
+{
+  "id": "FR-C389-temoigner",
+  "pathSegment": "FR-PATH-389-ENQUETE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-389-ENQUETE",
+      "order": 3
+    }
+  ]
+}

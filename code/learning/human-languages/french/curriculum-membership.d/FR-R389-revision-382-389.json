@@ -1,0 +1,11 @@
+{
+  "id": "FR-R389-revision-382-389",
+  "pathSegment": "FR-PATH-389-ENQUETE",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FR-EXT-389-ENQUETE",
+      "order": 5
+    }
+  ]
+}

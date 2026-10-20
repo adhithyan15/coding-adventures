@@ -1,0 +1,11 @@
+{
+  "id": "FR-C415-tramway",
+  "pathSegment": "FR-PATH-415-METRO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-415-METRO",
+      "order": 3
+    }
+  ]
+}

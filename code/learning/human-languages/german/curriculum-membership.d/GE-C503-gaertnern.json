@@ -1,0 +1,11 @@
+{
+  "id": "GE-C503-gaertnern",
+  "pathSegment": "GE-PATH-503-GARTEN",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-503-GARTEN",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 486,
+  "sourceHash": "fnv1a64:8ee5d84bd43a688e",
+  "lessonIds": [
+    "GE-C486-muedigkeit",
+    "GE-C486-erschoepft",
+    "GE-C486-gaehnen",
+    "GE-C486-schnarchen",
+    "GE-C486-albtraum"
+  ],
+  "tex": "german/book/chapters/ch486-mude-und-erschopft.tex"
+}

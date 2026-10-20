@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-420-STORNO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can deal with a cancelled booking: cancelling, the cancellation, rebooking, refunding and the refund.",
+  "prerequisites": []
+}

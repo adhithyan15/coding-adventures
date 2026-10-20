@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-368-STATTDESSEN",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "GE-EXT-368-STATTDESSEN"
+  ],
+  "after": []
+}

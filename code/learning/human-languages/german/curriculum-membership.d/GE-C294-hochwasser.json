@@ -1,0 +1,11 @@
+{
+  "id": "GE-C294-hochwasser",
+  "pathSegment": "GE-PATH-294-ERDBEBEN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-294-ERDBEBEN",
+      "order": 3
+    }
+  ]
+}

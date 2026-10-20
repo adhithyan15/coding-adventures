@@ -1,0 +1,11 @@
+{
+  "id": "FR-C388-punir",
+  "pathSegment": "FR-PATH-388-PEINE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-388-PEINE",
+      "order": 4
+    }
+  ]
+}

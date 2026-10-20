@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-458-LITTORAL",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-458-LITTORAL"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 306,
+  "title": "Petits accidents",
+  "label": "ch:fr-petits-accidents",
+  "canDo": "I can describe small accidents: choking, food poisoning, a sting, a bite and biting.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C306-morsure",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 306: I can describe small accidents: choking, food poisoning, a sting, a bite and biting.",
+    "assesses": [
+      "FR-LEX-C306-PIQURES-03",
+      "FR-LEX-C306-PIQURES-04",
+      "FR-LEX-C306-PIQURES-05"
+    ]
+  }
+}

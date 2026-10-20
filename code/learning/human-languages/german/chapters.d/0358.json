@@ -1,0 +1,19 @@
+{
+  "chapter": 358,
+  "title": "Die Gesellschaft",
+  "label": "ch:ge-die-gesellschaft",
+  "canDo": "I can talk about society and democracy, voting, and what people contribute.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C358-beitragen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 358: I can talk about society and democracy, voting, and what people contribute.",
+    "assesses": [
+      "GE-LEX-C358-GESELLSCHAFT-03",
+      "GE-LEX-C358-GESELLSCHAFT-04",
+      "GE-LEX-C358-GESELLSCHAFT-05"
+    ]
+  }
+}

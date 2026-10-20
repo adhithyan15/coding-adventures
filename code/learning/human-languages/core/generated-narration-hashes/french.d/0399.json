@@ -1,0 +1,21 @@
+{
+  "language": "french",
+  "chapter": 399,
+  "sourceHash": "fnv1a64:bf58b63078a6eb8c",
+  "lessonIds": [
+    "FR-C399-panne",
+    "FR-C399-planter",
+    "FR-C399-bloquer",
+    "FR-C399-redemarrer",
+    "FR-C399-virus",
+    "FR-R399-revision-398-399",
+    "FR-R399-revision-final-399"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "french/narration/ch399.txt",
+  "json": "french/narration/ch399.json",
+  "textHash": "fnv1a64:e5fab1fc8c3c35c4",
+  "jsonHash": "fnv1a64:a36293082b2f8205",
+  "findings": []
+}

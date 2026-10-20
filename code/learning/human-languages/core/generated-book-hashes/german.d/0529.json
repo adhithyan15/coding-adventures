@@ -1,0 +1,14 @@
+{
+  "language": "german",
+  "chapter": 529,
+  "sourceHash": "fnv1a64:48366eeb6160cba4",
+  "lessonIds": [
+    "GE-C529-renovieren",
+    "GE-C529-tapete",
+    "GE-C529-tapezieren",
+    "GE-C529-fliese",
+    "GE-C529-dachboden",
+    "GE-R529-review-522-529"
+  ],
+  "tex": "german/book/chapters/ch529-renovieren.tex"
+}

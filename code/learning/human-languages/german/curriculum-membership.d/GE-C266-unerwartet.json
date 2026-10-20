@@ -1,0 +1,11 @@
+{
+  "id": "GE-C266-unerwartet",
+  "pathSegment": "GE-PATH-266-PLOETZLICH",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-266-PLOETZLICH",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C511-flute",
+  "pathSegment": "FR-PATH-511-INSTRUMENTS",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-511-INSTRUMENTS",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-354-CANDIDATURE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can apply for a job: send my CV and my application, say who the candidates are and talk about being taken on.",
+  "prerequisites": []
+}

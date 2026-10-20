@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 480,
+  "sourceHash": "fnv1a64:ec7f4017c2dae8c7",
+  "lessonIds": [
+    "FR-C480-fracture",
+    "FR-C480-platre",
+    "FR-C480-bequille",
+    "FR-C480-boiter",
+    "FR-C480-os"
+  ],
+  "tex": "french/book/chapters/ch480-une-jambe-dans-le-platre.tex"
+}

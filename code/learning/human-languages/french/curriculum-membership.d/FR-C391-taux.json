@@ -1,0 +1,11 @@
+{
+  "id": "FR-C391-taux",
+  "pathSegment": "FR-PATH-391-EPARGNE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-391-EPARGNE",
+      "order": 4
+    }
+  ]
+}

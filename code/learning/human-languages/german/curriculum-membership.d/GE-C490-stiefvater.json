@@ -1,0 +1,11 @@
+{
+  "id": "GE-C490-stiefvater",
+  "pathSegment": "GE-PATH-490-SCHWIEGER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-490-SCHWIEGER",
+      "order": 1
+    }
+  ]
+}

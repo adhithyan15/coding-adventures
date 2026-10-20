@@ -1,0 +1,11 @@
+{
+  "id": "GE-C378-zusammenfassen",
+  "pathSegment": "GE-PATH-378-HAUSARBEIT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-378-HAUSARBEIT",
+      "order": 4
+    }
+  ]
+}

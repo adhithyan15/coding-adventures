@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-416-AEROGARE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-416-AEROGARE"
+  ],
+  "after": []
+}

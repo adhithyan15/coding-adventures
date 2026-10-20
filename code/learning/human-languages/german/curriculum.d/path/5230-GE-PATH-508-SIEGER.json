@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-508-SIEGER",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GE-EXT-508-SIEGER"
+  ],
+  "after": []
+}

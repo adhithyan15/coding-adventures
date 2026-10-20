@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 478,
+  "sourceHash": "fnv1a64:23efd0d48bc147d2",
+  "lessonIds": [
+    "FR-C478-sourcil",
+    "FR-C478-paupiere",
+    "FR-C478-cil",
+    "FR-C478-narine",
+    "FR-C478-tempe"
+  ],
+  "tex": "french/book/chapters/ch478-le-visage-de-pres.tex"
+}

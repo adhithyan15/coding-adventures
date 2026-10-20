@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-446-REINIGUNG",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-446-REINIGUNG"
+  ],
+  "after": []
+}

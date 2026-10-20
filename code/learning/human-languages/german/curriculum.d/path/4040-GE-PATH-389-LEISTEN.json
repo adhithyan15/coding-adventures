@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-389-LEISTEN",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "GE-EXT-389-LEISTEN"
+  ],
+  "after": []
+}

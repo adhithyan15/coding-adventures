@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 327,
+  "sourceHash": "fnv1a64:8ec22396f64278a9",
+  "lessonIds": [
+    "GE-C327-koecheln",
+    "GE-C327-aufkochen",
+    "GE-C327-duensten",
+    "GE-C327-anbraten",
+    "GE-C327-deckel"
+  ],
+  "tex": "german/book/chapters/ch327-auf-dem-herd.tex"
+}

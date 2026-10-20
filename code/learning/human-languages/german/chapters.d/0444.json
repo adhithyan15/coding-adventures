@@ -1,0 +1,19 @@
+{
+  "chapter": 444,
+  "title": "Noch mehr Läden",
+  "label": "ch:ge-noch-mehr-laden",
+  "canDo": "I can find other shops: the DIY store, the stationer, the bookshop, the flower shop and gluing things.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C444-kleben",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 444: I can find other shops: the DIY store, the stationer, the bookshop, the flower shop and gluing things.",
+    "assesses": [
+      "GE-LEX-C444-BAUMARKT-03",
+      "GE-LEX-C444-BAUMARKT-04",
+      "GE-LEX-C444-BAUMARKT-05"
+    ]
+  }
+}

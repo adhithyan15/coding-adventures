@@ -1,0 +1,19 @@
+{
+  "chapter": 466,
+  "title": "Neid und Eifersucht",
+  "label": "ch:ge-neid-und-eifersucht",
+  "canDo": "I can talk about envy and jealousy.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C466-goennen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 466: I can talk about envy and jealousy.",
+    "assesses": [
+      "GE-LEX-C466-NEID-03",
+      "GE-LEX-C466-NEID-04",
+      "GE-LEX-C466-NEID-05"
+    ]
+  }
+}

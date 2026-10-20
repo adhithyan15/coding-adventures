@@ -1,0 +1,11 @@
+{
+  "id": "GE-C483-heilen",
+  "pathSegment": "GE-PATH-483-GIPS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-483-GIPS",
+      "order": 4
+    }
+  ]
+}

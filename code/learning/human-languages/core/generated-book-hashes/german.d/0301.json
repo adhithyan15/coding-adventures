@@ -1,0 +1,14 @@
+{
+  "language": "german",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:ecfba9dbf2f359d7",
+  "lessonIds": [
+    "GE-C301-kuendigen",
+    "GE-C301-kuendigung",
+    "GE-C301-befoerdern",
+    "GE-C301-befoerderung",
+    "GE-C301-wendepunkt",
+    "GE-R301-review-294-301"
+  ],
+  "tex": "german/book/chapters/ch301-im-beruf.tex"
+}

@@ -1,0 +1,22 @@
+{
+  "chapter": 252,
+  "title": "The Told Story — ging, kam, las, als",
+  "label": "ch:ge-the-told-story",
+  "canDo": "I can tell what happened in the Präteritum with ich ging, ich kam and ich las, and place one event in the past with als.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C252-review",
+    "kind": "production",
+    "summary": "Complete GE-C252-review: two or three sentences of a past story in the Präteritum, one background with während and one event with als.",
+    "assesses": [
+      "GE-GRAMMAR-PRAETERITUM-STARK-01",
+      "GE-GRAMMAR-ERZAEHL-PRAETERITUM-01",
+      "GE-GRAMMAR-WAEHREND-HINTERGRUND-02",
+      "GE-GRAMMAR-ALS-EINMAL-01",
+      "GE-GRAMMAR-WENN-IMMER-02",
+      "GE-ETYMON-ABLAUT-02"
+    ]
+  }
+}

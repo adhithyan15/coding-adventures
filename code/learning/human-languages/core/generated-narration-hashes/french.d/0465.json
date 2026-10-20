@@ -1,0 +1,21 @@
+{
+  "language": "french",
+  "chapter": 465,
+  "sourceHash": "fnv1a64:1697a54a693a3c2d",
+  "lessonIds": [
+    "FR-C465-tempete",
+    "FR-C465-inondation",
+    "FR-C465-inonder",
+    "FR-C465-deborder",
+    "FR-C465-flaque",
+    "FR-R465-revision-464-465",
+    "FR-R465-revision-final-465"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "french/narration/ch465.txt",
+  "json": "french/narration/ch465.json",
+  "textHash": "fnv1a64:a0e58d7b4379ef9e",
+  "jsonHash": "fnv1a64:9601b7c3419d8312",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 276,
+  "sourceHash": "fnv1a64:dc19c160754ee603",
+  "lessonIds": [
+    "FR-C276-epoque",
+    "FR-C276-decennie",
+    "FR-C276-millenaire",
+    "FR-C276-ere",
+    "FR-C276-duree"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch276.txt",
+  "json": "french/narration/ch276.json",
+  "textHash": "fnv1a64:7fbd8808f647c797",
+  "jsonHash": "fnv1a64:bc0870b98859008f",
+  "findings": []
+}

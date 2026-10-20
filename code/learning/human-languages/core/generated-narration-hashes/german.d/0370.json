@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:12eee0abec8948d8",
+  "lessonIds": [
+    "GE-C370-klappen",
+    "GE-C370-misslingen",
+    "GE-C370-eintreten",
+    "GE-C370-zutreffen",
+    "GE-C370-herausstellen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch370.txt",
+  "json": "german/narration/ch370.json",
+  "textHash": "fnv1a64:36f2f0ef340de393",
+  "jsonHash": "fnv1a64:b7cda5a96fb9d7c7",
+  "findings": []
+}

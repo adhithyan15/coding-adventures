@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C402-volltanken",
+    "language": "german",
+    "chapter": 402,
+    "sequence": 21710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b12896f7850fdb37"
+  },
+  "findings": []
+}

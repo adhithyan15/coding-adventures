@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C377-studiengang",
+    "language": "german",
+    "chapter": 377,
+    "sequence": 20430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:be702f0b4ba4c0ab"
+  },
+  "findings": []
+}

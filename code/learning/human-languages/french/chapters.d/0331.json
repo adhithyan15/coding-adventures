@@ -1,0 +1,19 @@
+{
+  "chapter": 331,
+  "title": "Au four",
+  "label": "ch:fr-au-four",
+  "canDo": "I can describe baking: the tin, putting a dish in the oven, the cooking time, turning golden and browning on top.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-R331-revision-324-331",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 331: I can describe baking: the tin, putting a dish in the oven, the cooking time, turning golden and browning on top.",
+    "assesses": [
+      "FR-LEX-C331-FOUR-03",
+      "FR-LEX-C331-FOUR-04",
+      "FR-LEX-C331-FOUR-05"
+    ]
+  }
+}

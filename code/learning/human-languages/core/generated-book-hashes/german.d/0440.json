@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 440,
+  "sourceHash": "fnv1a64:687d733dbcca55bd",
+  "lessonIds": [
+    "GE-C440-buergersteig",
+    "GE-C440-parkbank",
+    "GE-C440-laterne",
+    "GE-C440-kopfsteinpflaster",
+    "GE-C440-brunnen"
+  ],
+  "tex": "german/book/chapters/ch440-auf-der-stra-e.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 383,
+  "sourceHash": "fnv1a64:855998cc418dc50a",
+  "lessonIds": [
+    "GE-C383-behoerde",
+    "GE-C383-antrag",
+    "GE-C383-beantragen",
+    "GE-C383-formular",
+    "GE-C383-unterschrift"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch383.txt",
+  "json": "german/narration/ch383.json",
+  "textHash": "fnv1a64:52779569556a058a",
+  "jsonHash": "fnv1a64:60001c319b57a0c7",
+  "findings": []
+}

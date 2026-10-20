@@ -1,0 +1,11 @@
+{
+  "id": "GE-C438-stadtmauer",
+  "pathSegment": "GE-PATH-438-ALTSTADT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-438-ALTSTADT",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C519-rebondissement",
+    "language": "french",
+    "chapter": 519,
+    "sequence": 28440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:833ec511773fb220"
+  },
+  "findings": []
+}

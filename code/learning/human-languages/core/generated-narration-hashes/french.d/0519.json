@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 519,
+  "sourceHash": "fnv1a64:5366a9bf8c505be3",
+  "lessonIds": [
+    "FR-C519-romancier",
+    "FR-C519-intrigue",
+    "FR-C519-denouement",
+    "FR-C519-rebondissement",
+    "FR-C519-captivant"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch519.txt",
+  "json": "french/narration/ch519.json",
+  "textHash": "fnv1a64:2e59cc19938bb7e9",
+  "jsonHash": "fnv1a64:9bbe0448825def20",
+  "findings": []
+}

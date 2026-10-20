@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 294,
+  "sourceHash": "fnv1a64:3657e33938d2a9ac",
+  "lessonIds": [
+    "FR-C294-interpeller",
+    "FR-C294-arrestation",
+    "FR-C294-menottes",
+    "FR-C294-garde-a-vue",
+    "FR-C294-interroger"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch294.txt",
+  "json": "french/narration/ch294.json",
+  "textHash": "fnv1a64:79a5c7763492334a",
+  "jsonHash": "fnv1a64:051d18caa0b03bb4",
+  "findings": []
+}

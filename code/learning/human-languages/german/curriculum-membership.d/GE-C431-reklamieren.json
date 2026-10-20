@@ -1,0 +1,11 @@
+{
+  "id": "GE-C431-reklamieren",
+  "pathSegment": "GE-PATH-431-BESCHWERDE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-431-BESCHWERDE",
+      "order": 2
+    }
+  ]
+}

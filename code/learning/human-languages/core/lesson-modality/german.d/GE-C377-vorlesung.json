@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C377-vorlesung",
+    "language": "german",
+    "chapter": 377,
+    "sequence": 20410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:de16169f14cb2d1f"
+  },
+  "findings": []
+}

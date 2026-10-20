@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C516-chevalet",
+    "language": "french",
+    "chapter": 516,
+    "sequence": 28290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0a42629883bf7d7"
+  },
+  "findings": []
+}

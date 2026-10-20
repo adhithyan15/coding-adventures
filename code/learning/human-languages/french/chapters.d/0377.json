@@ -1,0 +1,19 @@
+{
+  "chapter": 377,
+  "title": "Avant l'examen",
+  "label": "ch:fr-avant-l-examen",
+  "canDo": "I can talk about getting ready for an exam: revising, revision, memorising, learning by heart and the textbook.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FR-C377-manuel",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 377: I can talk about getting ready for an exam: revising, revision, memorising, learning by heart and the textbook.",
+    "assesses": [
+      "FR-LEX-C377-REVISION-03",
+      "FR-LEX-C377-REVISION-04",
+      "FR-LEX-C377-REVISION-05"
+    ]
+  }
+}

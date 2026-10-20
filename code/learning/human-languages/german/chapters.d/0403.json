@@ -1,0 +1,19 @@
+{
+  "chapter": 403,
+  "title": "Der Motor springt nicht an",
+  "label": "ch:ge-der-motor-springt-nicht-an",
+  "canDo": "I can talk about a car that will not start: starting, the battery, a jump start, the tow truck and the mechanic.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C403-mechaniker",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 403: I can talk about a car that will not start: starting, the battery, a jump start, the tow truck and the mechanic.",
+    "assesses": [
+      "GE-LEX-C403-STARTHILFE-03",
+      "GE-LEX-C403-STARTHILFE-04",
+      "GE-LEX-C403-STARTHILFE-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C514-strophe",
+  "pathSegment": "GE-PATH-514-MELODIE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-514-MELODIE",
+      "order": 3
+    }
+  ]
+}

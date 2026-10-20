@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C356-scheitern",
+    "language": "german",
+    "chapter": 356,
+    "sequence": 19370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:87e4d23736ab755f"
+  },
+  "findings": []
+}

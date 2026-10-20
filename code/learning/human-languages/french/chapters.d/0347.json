@@ -1,0 +1,19 @@
+{
+  "chapter": 347,
+  "title": "Puisque et vu que",
+  "label": "ch:fr-puisque-et-vu-que",
+  "canDo": "I can give a known reason with since, given that and seeing that, and draw a result with consequently and that is why.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C347-c-est-pourquoi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 347: I can give a known reason with since, given that and seeing that, and draw a result with consequently and that is why.",
+    "assesses": [
+      "FR-LEX-C347-PUISQUE-03",
+      "FR-LEX-C347-PUISQUE-04",
+      "FR-LEX-C347-PUISQUE-05"
+    ]
+  }
+}

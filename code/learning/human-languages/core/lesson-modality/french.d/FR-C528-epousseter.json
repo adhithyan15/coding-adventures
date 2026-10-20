@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C528-epousseter",
+    "language": "french",
+    "chapter": 528,
+    "sequence": 28880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3dd7b8361e7f2a76"
+  },
+  "findings": []
+}

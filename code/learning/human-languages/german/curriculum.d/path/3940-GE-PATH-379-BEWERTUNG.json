@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-379-BEWERTUNG",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "GE-EXT-379-BEWERTUNG"
+  ],
+  "after": []
+}

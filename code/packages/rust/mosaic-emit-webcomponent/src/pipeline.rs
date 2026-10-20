@@ -1279,7 +1279,7 @@ fn emit_html_tree(
     // -----------------------------------------------------------------
     match node.tag.as_str() {
         "HostSurface" => return Ok(emit_host_surface(node, part_styles)),
-        "HostInput" | "Input" => return Ok(emit_host_input(node, part_styles)),
+        "HostInput" | "Input" => return emit_host_input(node, part_styles),
         "HostButton" => return emit_host_button(node, ctx, part_styles),
         "HostDialog" => return emit_host_dialog(node, ctx, part_styles),
 
@@ -1801,6 +1801,7 @@ fn layout_value_to_js_expr(v: &LayoutPropValue) -> String {
 ///
 /// - `value: slot: x`     → `value="${x}"`
 /// - `placeholder: "..."` → `placeholder="..."`
+/// - `placeholder: slot: x` → `placeholder="${escapeHtmlAttribute(x)}"`
 /// - `read-only: slot: x` → `${x ? 'readonly' : ''}` (template-literal attr presence)
 /// - `read-only: true`    → `readonly`
 /// - `onChange: emit: onX` → `onchange="this.getRootNode().host.dispatch({type:'x', value:event.target.value})"`
@@ -1809,7 +1810,7 @@ fn layout_value_to_js_expr(v: &LayoutPropValue) -> String {
 /// All inline handlers reach the host via `this.getRootNode().host`
 /// because in the shadow DOM `this` inside an inline handler is the
 /// element where the handler is declared, not the Custom Element.
-fn emit_host_input(node: &LayoutNode, part_styles: &HtmlStyles) -> String {
+fn emit_host_input(node: &LayoutNode, part_styles: &HtmlStyles) -> Result<String, PipelineEmitError> {
     // `multiline: true` is a `<textarea>` on both primitives, the legacy
     // `Input` and the kernel `HostInput` (UI29 §2.1). Reading it only on the
     // legacy tag turned every multiline `HostInput` into a one-line
@@ -1843,10 +1844,10 @@ fn emit_host_input(node: &LayoutNode, part_styles: &HtmlStyles) -> String {
         }
     }
 
-    // placeholder="text"
-    if let Some(s) = find_string(node, "placeholder") {
-        attrs.push_str(&format!(r#" placeholder="{}""#, escape_html_attribute(s)));
-    }
+    // placeholder — a literal, escaped now, or a bound value escaped at
+    // render time. This read string literals only, so a slot-bound
+    // placeholder (every toolkit `Input`) rendered none, silently.
+    attrs.push_str(&text_attr(node, "placeholder", "placeholder")?);
 
     // readonly attribute — three cases. The kebab-name `read-only` is
     // the moslayout-compiler-emitted form (the React backend uses the
@@ -1936,7 +1937,7 @@ fn emit_host_input(node: &LayoutNode, part_styles: &HtmlStyles) -> String {
     } else {
         attrs.push_str(" />");
     }
-    attrs
+    Ok(attrs)
 }
 
 /// Lower a `HostButton` node to a `<button>` block inside the shadow
@@ -2054,21 +2055,43 @@ fn host_button_pressed_attr(node: &LayoutNode) -> Result<String, PipelineEmitErr
 /// An empty runtime value yields `aria-label=""`, which the accessible-name
 /// computation treats as absent, so the button's text still names it.
 fn accessible_name_attr(node: &LayoutNode) -> String {
-    let Some(prop) = node.props.iter().find(|prop| prop.name == "a11y-label") else {
-        return String::new();
+    text_attr(node, "a11y-label", "aria-label").unwrap_or_default()
+}
+
+/// Lower one text-valued layout prop to an HTML attribute fragment inside
+/// the `innerHTML` template, or to nothing when the node has no such prop.
+///
+/// | authored form     | emitted                                   |
+/// |-------------------|-------------------------------------------|
+/// | `prop : "Text"`   | ` attr="Text"` (escaped at emit time)     |
+/// | `prop : slot: s`  | ` attr="${escapeHtmlAttribute(s)}"`       |
+/// | `prop : item`     | ` attr="${escapeHtmlAttribute(item)}"`    |
+/// | `prop : ( e )`    | ` attr="${escapeHtmlAttribute(e)}"`       |
+///
+/// Every dynamic value is escaped at render time, because an unescaped `"`
+/// in a host-supplied value would end the attribute and start markup. A
+/// slot or binding name that is not a safe JS identifier is an
+/// `UnsafeSlotName` error; `accessible_name_attr` keeps its older rule of
+/// dropping such a name.
+fn text_attr(
+    node: &LayoutNode,
+    prop_name: &str,
+    html_attr: &str,
+) -> Result<String, PipelineEmitError> {
+    let Some(prop) = node.props.iter().find(|prop| prop.name == prop_name) else {
+        return Ok(String::new());
     };
-    let dynamic = |js: &str| format!(r#" aria-label="${{escapeHtmlAttribute({js})}}""#);
-    match &prop.value {
-        LayoutPropValue::String(label) => {
-            format!(r#" aria-label="{}""#, escape_html_attribute(label))
+    let dynamic = |js: &str| format!(r#" {html_attr}="${{escapeHtmlAttribute({js})}}""#);
+    Ok(match &prop.value {
+        LayoutPropValue::String(text) => {
+            format!(r#" {html_attr}="{}""#, escape_html_attribute(text))
         }
         LayoutPropValue::SlotRef(name) | LayoutPropValue::Keyword(name) => {
             let camel = to_camel_case_first_lower(name);
-            if is_safe_identifier(&camel) {
-                dynamic(&camel)
-            } else {
-                String::new()
+            if !is_safe_identifier(&camel) {
+                return Err(PipelineEmitError::UnsafeSlotName(camel));
             }
+            dynamic(&camel)
         }
         LayoutPropValue::Expr(expr) => {
             let trimmed = strip_outer_parens(expr.trim());
@@ -2079,7 +2102,7 @@ fn accessible_name_attr(node: &LayoutNode) -> String {
             }
         }
         _ => String::new(),
-    }
+    })
 }
 
 fn host_button_dispatch_bits(emit_name: &str, ctx: &RenderCtx<'_>) -> Option<(String, String)> {
@@ -5302,6 +5325,82 @@ mod tests {
             let out = from_pipeline(&m, &l, &empty_style("Edit")).unwrap().output;
             assert!(out.contains(expected), "expected {expected} in:\n{out}");
         }
+    }
+
+    /// A bound `placeholder` is interpolated into the template and escaped at
+    /// render time, on the `<input>` and on the `<textarea>`, for both
+    /// `HostInput` and the legacy `Input`. This path read string literals
+    /// only, so `placeholder : slot: front-template-placeholder`
+    /// (mosaic-pkg-note-type-editor) and every toolkit `Input` rendered no
+    /// placeholder, and the degradation report said nothing.
+    #[test]
+    fn text_field_placeholder_lowers_every_bound_form() {
+        let m = component(
+            "Edit",
+            vec![slot("front-template-placeholder", SlotType::Text, true)],
+            vec![],
+        );
+        for tag in ["HostInput", "Input"] {
+            for multiline in [false, true] {
+                for (value, expected) in [
+                    (
+                        LayoutPropValue::String("Say \"hi\" <b>".into()),
+                        r#" placeholder="Say &quot;hi&quot; &lt;b&gt;""#,
+                    ),
+                    (
+                        LayoutPropValue::SlotRef("front-template-placeholder".into()),
+                        r#" placeholder="${escapeHtmlAttribute(frontTemplatePlaceholder)}""#,
+                    ),
+                    (
+                        LayoutPropValue::Keyword("hint".into()),
+                        r#" placeholder="${escapeHtmlAttribute(hint)}""#,
+                    ),
+                    (
+                        LayoutPropValue::Expr("( hints [ 0 ] )".into()),
+                        r#" placeholder="${escapeHtmlAttribute(hints [ 0 ])}""#,
+                    ),
+                ] {
+                    let mut props = vec![LayoutProp {
+                        name: "placeholder".into(),
+                        value,
+                    }];
+                    if multiline {
+                        props.push(LayoutProp {
+                            name: "multiline".into(),
+                            value: LayoutPropValue::Keyword("true".into()),
+                        });
+                    }
+                    let l = root_layout("Edit", leaf_with_props(tag, props));
+                    let out = from_pipeline(&m, &l, &empty_style("Edit")).unwrap().output;
+                    assert!(
+                        out.contains(expected),
+                        "{tag} multiline={multiline}: expected {expected} in:\n{out}"
+                    );
+                }
+            }
+        }
+    }
+
+    /// A slot name that is not a JavaScript identifier is refused loudly
+    /// rather than spliced into the `${…}` interpolation, or dropped.
+    #[test]
+    fn text_field_placeholder_unsafe_slot_name_is_rejected() {
+        let m = component("Edit", vec![], vec![]);
+        let l = root_layout(
+            "Edit",
+            leaf_with_props(
+                "HostInput",
+                vec![LayoutProp {
+                    name: "placeholder".into(),
+                    value: LayoutPropValue::SlotRef("x)}${alert(1)".into()),
+                }],
+            ),
+        );
+        let err = from_pipeline(&m, &l, &empty_style("Edit")).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnsafeSlotName(_)),
+            "got {err:?}"
+        );
     }
 
     /// #15426: HostButton's portable name was never read on this backend.

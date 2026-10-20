@@ -1,0 +1,11 @@
+{
+  "id": "GE-C464-austrocknen",
+  "pathSegment": "GE-PATH-464-HITZEWELLE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-464-HITZEWELLE",
+      "order": 4
+    }
+  ]
+}

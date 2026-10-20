@@ -1,0 +1,19 @@
+{
+  "chapter": 529,
+  "title": "Renovieren",
+  "label": "ch:ge-renovieren",
+  "canDo": "I can talk about doing up a flat.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-R529-review-522-529",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 529: I can talk about doing up a flat.",
+    "assesses": [
+      "GE-LEX-C529-RENOVIEREN-03",
+      "GE-LEX-C529-RENOVIEREN-04",
+      "GE-LEX-C529-RENOVIEREN-05"
+    ]
+  }
+}

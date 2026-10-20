@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-384-VALABLE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can keep my papers in order: say when something expires, whether it is still valid, and renew it.",
+  "prerequisites": []
+}

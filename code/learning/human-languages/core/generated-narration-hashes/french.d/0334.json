@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:d04b831fa80d8507",
+  "lessonIds": [
+    "FR-C334-point-de-vue",
+    "FR-C334-soutenir",
+    "FR-C334-pretendre",
+    "FR-C334-affirmer",
+    "FR-C334-convaincant"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch334.txt",
+  "json": "french/narration/ch334.json",
+  "textHash": "fnv1a64:1f0d47a37bef6144",
+  "jsonHash": "fnv1a64:b516c59b40ace230",
+  "findings": []
+}

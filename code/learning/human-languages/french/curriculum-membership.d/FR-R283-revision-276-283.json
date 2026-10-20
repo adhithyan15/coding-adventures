@@ -1,0 +1,11 @@
+{
+  "id": "FR-R283-revision-276-283",
+  "pathSegment": "FR-PATH-283-ANTENNE",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FR-EXT-283-ANTENNE",
+      "order": 5
+    }
+  ]
+}

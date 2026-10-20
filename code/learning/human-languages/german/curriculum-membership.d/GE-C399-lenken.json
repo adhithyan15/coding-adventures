@@ -1,0 +1,11 @@
+{
+  "id": "GE-C399-lenken",
+  "pathSegment": "GE-PATH-399-LENKRAD",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-399-LENKRAD",
+      "order": 1
+    }
+  ]
+}

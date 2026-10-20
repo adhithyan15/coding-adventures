@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 354,
+  "sourceHash": "fnv1a64:beba478294109551",
+  "lessonIds": [
+    "GE-C354-besprechung",
+    "GE-C354-sitzung",
+    "GE-C354-protokoll",
+    "GE-C354-praesentieren",
+    "GE-C354-praesentation"
+  ],
+  "tex": "german/book/chapters/ch354-die-besprechung.tex"
+}

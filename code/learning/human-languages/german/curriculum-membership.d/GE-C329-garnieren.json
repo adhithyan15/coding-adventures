@@ -1,0 +1,11 @@
+{
+  "id": "GE-C329-garnieren",
+  "pathSegment": "GE-PATH-329-ANRICHTEN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-329-ANRICHTEN",
+      "order": 1
+    }
+  ]
+}

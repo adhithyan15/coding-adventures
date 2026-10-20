@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C494-schmollen",
+    "language": "german",
+    "chapter": 494,
+    "sequence": 26440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d6c3f2a0b85a5062"
+  },
+  "findings": []
+}

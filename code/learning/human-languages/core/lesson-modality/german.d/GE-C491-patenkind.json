@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C491-patenkind",
+    "language": "german",
+    "chapter": 491,
+    "sequence": 26300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:57ebac7b95e68b69"
+  },
+  "findings": []
+}

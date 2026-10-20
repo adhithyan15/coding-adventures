@@ -1,0 +1,11 @@
+{
+  "id": "FR-C276-decennie",
+  "pathSegment": "FR-PATH-276-EPOQUE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-276-EPOQUE",
+      "order": 1
+    }
+  ]
+}

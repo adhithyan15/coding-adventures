@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C488-genesen",
+    "language": "german",
+    "chapter": 488,
+    "sequence": 26160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:847044a33310ed50"
+  },
+  "findings": []
+}

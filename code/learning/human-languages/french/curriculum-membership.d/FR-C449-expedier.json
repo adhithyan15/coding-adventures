@@ -1,0 +1,11 @@
+{
+  "id": "FR-C449-expedier",
+  "pathSegment": "FR-PATH-449-BURALISTE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-449-BURALISTE",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 479,
+  "sourceHash": "fnv1a64:9538615432185f0f",
+  "lessonIds": [
+    "GE-C479-erkaelten",
+    "GE-C479-schnupfen",
+    "GE-C479-hustensaft",
+    "GE-C479-schweiss",
+    "GE-C479-gaensehaut"
+  ],
+  "tex": "german/book/chapters/ch479-schnupfen-und-gansehaut.tex"
+}

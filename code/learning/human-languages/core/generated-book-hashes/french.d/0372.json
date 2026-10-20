@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 372,
+  "sourceHash": "fnv1a64:f99a19d2cee7fd87",
+  "lessonIds": [
+    "FR-C372-risque",
+    "FR-C372-hasardeux",
+    "FR-C372-improbable",
+    "FR-C372-probabilite",
+    "FR-C372-quitte-a"
+  ],
+  "tex": "french/book/chapters/ch372-prendre-un-risque.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 372,
+  "title": "Prendre un risque",
+  "label": "ch:fr-prendre-un-risque",
+  "canDo": "I can weigh a risk: say something is chancy or unlikely, talk about the probability, and accept a cost.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FR-C372-quitte-a",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 372: I can weigh a risk: say something is chancy or unlikely, talk about the probability, and accept a cost.",
+    "assesses": [
+      "FR-LEX-C372-RISQUE-03",
+      "FR-LEX-C372-RISQUE-04",
+      "FR-LEX-C372-RISQUE-05"
+    ]
+  }
+}

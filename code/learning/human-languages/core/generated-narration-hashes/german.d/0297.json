@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 297,
+  "sourceHash": "fnv1a64:75b4a0089f6bbcb1",
+  "lessonIds": [
+    "GE-C297-aufwachsen",
+    "GE-C297-einschulung",
+    "GE-C297-abitur",
+    "GE-C297-abschluss",
+    "GE-C297-umzug"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch297.txt",
+  "json": "german/narration/ch297.json",
+  "textHash": "fnv1a64:dd64afa7fed2c52a",
+  "jsonHash": "fnv1a64:c601afdf140a6c45",
+  "findings": []
+}

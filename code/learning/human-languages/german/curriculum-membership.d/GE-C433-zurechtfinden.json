@@ -1,0 +1,11 @@
+{
+  "id": "GE-C433-zurechtfinden",
+  "pathSegment": "GE-PATH-433-KOMPASS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-433-KOMPASS",
+      "order": 3
+    }
+  ]
+}

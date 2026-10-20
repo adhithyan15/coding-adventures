@@ -1,0 +1,11 @@
+{
+  "id": "GE-C416-flugsteig",
+  "pathSegment": "GE-PATH-416-FLUGSTEIG",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-416-FLUGSTEIG",
+      "order": 2
+    }
+  ]
+}

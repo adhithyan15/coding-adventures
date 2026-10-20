@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-478-REUE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GE-EXT-478-REUE"
+  ],
+  "after": []
+}

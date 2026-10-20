@@ -1,0 +1,11 @@
+{
+  "id": "FR-C344-nuancer",
+  "pathSegment": "FR-PATH-344-RAISONNEMENT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-344-RAISONNEMENT",
+      "order": 4
+    }
+  ]
+}

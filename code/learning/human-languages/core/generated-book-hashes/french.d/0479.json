@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 479,
+  "sourceHash": "fnv1a64:3bc920142c75eff5",
+  "lessonIds": [
+    "FR-C479-blesser",
+    "FR-C479-coupure",
+    "FR-C479-egratignure",
+    "FR-C479-brulure",
+    "FR-C479-bosse"
+  ],
+  "tex": "french/book/chapters/ch479-petits-accidents.tex"
+}

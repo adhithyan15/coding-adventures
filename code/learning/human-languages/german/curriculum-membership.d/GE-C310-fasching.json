@@ -1,0 +1,11 @@
+{
+  "id": "GE-C310-fasching",
+  "pathSegment": "GE-PATH-310-KARNEVAL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-310-KARNEVAL",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C406-coffre",
+  "pathSegment": "FR-PATH-406-CARROSSERIE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-406-CARROSSERIE",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C293-soupcon",
+  "pathSegment": "FR-PATH-293-MYSTERE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-293-MYSTERE",
+      "order": 4
+    }
+  ]
+}

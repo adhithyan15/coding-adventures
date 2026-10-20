@@ -1,0 +1,11 @@
+{
+  "id": "GE-C385-rechtlich",
+  "pathSegment": "GE-PATH-385-AUSNAHME",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-385-AUSNAHME",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C402-retroviseur",
+  "pathSegment": "FR-PATH-402-VITRES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-402-VITRES",
+      "order": 1
+    }
+  ]
+}

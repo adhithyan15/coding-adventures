@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C370-souple",
+    "language": "french",
+    "chapter": 370,
+    "sequence": 20780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a736a667d666ed4"
+  },
+  "findings": []
+}

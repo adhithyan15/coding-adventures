@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-433-DEDOMMAGEMENT",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about deposits and compensation: the down payment, the deposit, compensation, compensating someone and paying damages.",
+  "prerequisites": []
+}

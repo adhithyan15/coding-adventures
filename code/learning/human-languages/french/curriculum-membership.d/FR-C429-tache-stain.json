@@ -1,0 +1,11 @@
+{
+  "id": "FR-C429-tache-stain",
+  "pathSegment": "FR-PATH-429-AMPOULE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-429-AMPOULE",
+      "order": 4
+    }
+  ]
+}

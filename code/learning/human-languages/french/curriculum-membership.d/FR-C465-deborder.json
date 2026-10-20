@@ -1,0 +1,11 @@
+{
+  "id": "FR-C465-deborder",
+  "pathSegment": "FR-PATH-465-TEMPETE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-465-TEMPETE",
+      "order": 3
+    }
+  ]
+}

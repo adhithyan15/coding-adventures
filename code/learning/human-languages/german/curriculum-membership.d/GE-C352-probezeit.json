@@ -1,0 +1,11 @@
+{
+  "id": "GE-C352-probezeit",
+  "pathSegment": "GE-PATH-352-ARBEITSLOS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-352-ARBEITSLOS",
+      "order": 3
+    }
+  ]
+}

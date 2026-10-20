@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 495,
+  "sourceHash": "fnv1a64:7257bffcd217f84e",
+  "lessonIds": [
+    "FR-C495-dispute",
+    "FR-C495-brouiller",
+    "FR-C495-tromper",
+    "FR-C495-trahir",
+    "FR-C495-trahison"
+  ],
+  "tex": "french/book/chapters/ch495-disputes-et-trahisons.tex"
+}

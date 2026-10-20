@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C482-eternuer",
+    "language": "french",
+    "chapter": 482,
+    "sequence": 26520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:661963f7042e30fc"
+  },
+  "findings": []
+}

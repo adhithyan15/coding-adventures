@@ -1,0 +1,11 @@
+{
+  "id": "GE-C321-entstehen",
+  "pathSegment": "GE-PATH-321-ERFINDEN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-321-ERFINDEN",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C384-ablaufen",
+  "pathSegment": "GE-PATH-384-GENEHMIGUNG",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-384-GENEHMIGUNG",
+      "order": 4
+    }
+  ]
+}

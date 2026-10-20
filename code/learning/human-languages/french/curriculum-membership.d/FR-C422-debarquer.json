@@ -1,0 +1,11 @@
+{
+  "id": "FR-C422-debarquer",
+  "pathSegment": "FR-PATH-422-TRAVERSEE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-422-TRAVERSEE",
+      "order": 4
+    }
+  ]
+}

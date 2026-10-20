@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C442-schneepflug",
+    "language": "german",
+    "chapter": 442,
+    "sequence": 23780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ccc77f8570d0720d"
+  },
+  "findings": []
+}

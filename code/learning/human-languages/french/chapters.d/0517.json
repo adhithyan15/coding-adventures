@@ -1,0 +1,19 @@
+{
+  "chapter": 517,
+  "title": "Marbre et argile",
+  "label": "ch:fr-marbre-et-argile",
+  "canDo": "I can talk about sculpture.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C517-sculpteur",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 517: I can talk about sculpture.",
+    "assesses": [
+      "FR-LEX-C517-SCULPTURE-03",
+      "FR-LEX-C517-SCULPTURE-04",
+      "FR-LEX-C517-SCULPTURE-05"
+    ]
+  }
+}

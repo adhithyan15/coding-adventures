@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C533-kamin",
+    "language": "german",
+    "chapter": 533,
+    "sequence": 28430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b361b4684b8297c2"
+  },
+  "findings": []
+}

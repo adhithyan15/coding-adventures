@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:d64123aa15820f9a",
+  "lessonIds": [
+    "FR-C422-ferry",
+    "FR-C422-traversee",
+    "FR-C422-cabine",
+    "FR-C422-gilet",
+    "FR-C422-debarquer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch422.txt",
+  "json": "french/narration/ch422.json",
+  "textHash": "fnv1a64:934f24a35116f9c1",
+  "jsonHash": "fnv1a64:3f616bf6aaed2f50",
+  "findings": []
+}

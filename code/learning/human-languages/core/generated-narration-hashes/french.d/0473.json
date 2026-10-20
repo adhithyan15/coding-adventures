@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 473,
+  "sourceHash": "fnv1a64:5ec2860dbb4b3890",
+  "lessonIds": [
+    "FR-C473-fierte",
+    "FR-C473-orgueil",
+    "FR-C473-vaniteux",
+    "FR-C473-modeste",
+    "FR-C473-vanter",
+    "FR-R473-revision-466-473"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch473.txt",
+  "json": "french/narration/ch473.json",
+  "textHash": "fnv1a64:36f61b1ef7d14aac",
+  "jsonHash": "fnv1a64:0c1a2cda8e87a07d",
+  "findings": []
+}

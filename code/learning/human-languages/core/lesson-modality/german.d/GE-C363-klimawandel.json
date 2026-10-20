@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C363-klimawandel",
+    "language": "german",
+    "chapter": 363,
+    "sequence": 19700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7627736fa8e5dfc5"
+  },
+  "findings": []
+}

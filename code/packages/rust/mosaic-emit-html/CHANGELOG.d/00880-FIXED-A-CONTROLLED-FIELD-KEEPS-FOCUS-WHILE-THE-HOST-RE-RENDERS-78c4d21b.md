@@ -7,9 +7,7 @@
   is (tag, accessible name, event markers) and which matching control it was,
   not by child index, which would land elsewhere once an `If` or `For` changes
   the tree.
-- **IME composition is sent once, when it ends.** An `input` event during
-  composition is held back and `compositionend` dispatches the change, so a
-  re-render cannot cancel a CJK or dead-key composition mid-word.
-- Verified in jsdom with a host that echoes every change: 7/7 behaviour checks
-  (focus, caret at end and mid-text, a second field, composition) against 1/7
-  for the previous runtime. Venture's HTML interaction test passes.
+  - Verified in jsdom with a host that echoes every change: 7/7 behaviour
+    checks (focus, caret at end and mid-text, a second field, composition)
+    against 1/7 for the previous runtime. Venture's HTML interaction test
+    passes.

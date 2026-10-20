@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-264-SENTIMENTS",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say how an experience felt, with the feeling as scene, and say what I hope and dream of doing next.",
+  "prerequisites": []
+}

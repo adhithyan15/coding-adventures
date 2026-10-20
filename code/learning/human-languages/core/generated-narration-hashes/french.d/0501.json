@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:31dcdf9f6a12cc5f",
+  "lessonIds": [
+    "FR-C501-collectionner",
+    "FR-C501-collectionneur",
+    "FR-C501-maquette",
+    "FR-C501-modelisme",
+    "FR-C501-assembler"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch501.txt",
+  "json": "french/narration/ch501.json",
+  "textHash": "fnv1a64:2e5c49825651746e",
+  "jsonHash": "fnv1a64:b96fe030c4aa0d69",
+  "findings": []
+}

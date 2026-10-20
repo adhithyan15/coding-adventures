@@ -1,0 +1,19 @@
+{
+  "chapter": 455,
+  "title": "Wasser in der Natur",
+  "label": "ch:ge-wasser-in-der-natur",
+  "canDo": "I can describe water in the countryside: the waterfall, the marsh, the pond, splashing and flowing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C455-fliessen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 455: I can describe water in the countryside: the waterfall, the marsh, the pond, splashing and flowing.",
+    "assesses": [
+      "GE-LEX-C455-WASSERFALL-03",
+      "GE-LEX-C455-WASSERFALL-04",
+      "GE-LEX-C455-WASSERFALL-05"
+    ]
+  }
+}

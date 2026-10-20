@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:419475da581f54f1",
+  "lessonIds": [
+    "FR-C304-noyade",
+    "FR-C304-noyer",
+    "FR-C304-sauveteur",
+    "FR-C304-bouee",
+    "FR-C304-maitre-nageur"
+  ],
+  "tex": "french/book/chapters/ch304-au-bord-de-l-eau.tex"
+}

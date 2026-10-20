@@ -1,0 +1,11 @@
+{
+  "id": "GE-C424-ferienwohnung",
+  "pathSegment": "GE-PATH-424-GASTHOF",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-424-GASTHOF",
+      "order": 1
+    }
+  ]
+}

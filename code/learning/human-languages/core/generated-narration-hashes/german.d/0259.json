@@ -1,0 +1,17 @@
+{
+  "language": "german",
+  "chapter": 259,
+  "sourceHash": "fnv1a64:89d48c0893804778",
+  "lessonIds": [
+    "GE-C259-aelter-als",
+    "GE-C259-seit",
+    "GE-C259-review"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "german/narration/ch259.txt",
+  "json": "german/narration/ch259.json",
+  "textHash": "fnv1a64:2917617aeb0a537c",
+  "jsonHash": "fnv1a64:3a55ce1fce513de8",
+  "findings": []
+}

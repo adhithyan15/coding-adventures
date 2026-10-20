@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 493,
+  "sourceHash": "fnv1a64:1e8ef751b552170e",
+  "lessonIds": [
+    "FR-C493-grossesse",
+    "FR-C493-accoucher",
+    "FR-C493-nourrisson",
+    "FR-C493-biberon",
+    "FR-C493-bercer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch493.txt",
+  "json": "french/narration/ch493.json",
+  "textHash": "fnv1a64:9c2501d0df8ea919",
+  "jsonHash": "fnv1a64:fba04ee6e4475c59",
+  "findings": []
+}

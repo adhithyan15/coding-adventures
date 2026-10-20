@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 428,
+  "sourceHash": "fnv1a64:bddaf4c6230c8b89",
+  "lessonIds": [
+    "FR-C428-fuite",
+    "FR-C428-robinet",
+    "FR-C428-lavabo",
+    "FR-C428-goutter",
+    "FR-C428-deboucher"
+  ],
+  "tex": "french/book/chapters/ch428-une-fuite-dans-la-salle-de-bains.tex"
+}

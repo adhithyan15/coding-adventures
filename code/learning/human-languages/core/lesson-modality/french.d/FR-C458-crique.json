@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C458-crique",
+    "language": "french",
+    "chapter": 458,
+    "sequence": 25290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:27302bc499b3998a"
+  },
+  "findings": []
+}

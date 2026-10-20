@@ -1,0 +1,11 @@
+{
+  "id": "FR-C304-noyer",
+  "pathSegment": "FR-PATH-304-NOYADE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-304-NOYADE",
+      "order": 1
+    }
+  ]
+}

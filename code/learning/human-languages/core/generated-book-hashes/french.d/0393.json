@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 393,
+  "sourceHash": "fnv1a64:78296253fe250023",
+  "lessonIds": [
+    "FR-C393-garantie",
+    "FR-C393-garantir",
+    "FR-C393-devis",
+    "FR-C393-rentable",
+    "FR-C393-avantageux"
+  ],
+  "tex": "french/book/chapters/ch393-garanties-et-devis.tex"
+}

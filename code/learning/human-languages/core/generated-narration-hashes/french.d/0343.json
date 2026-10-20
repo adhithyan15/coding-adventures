@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:f3b91503723a3b4f",
+  "lessonIds": [
+    "FR-C343-avantage",
+    "FR-C343-inconvenient",
+    "FR-C343-aspect",
+    "FR-C343-critique",
+    "FR-C343-souligner"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch343.txt",
+  "json": "french/narration/ch343.json",
+  "textHash": "fnv1a64:966a242bbea09905",
+  "jsonHash": "fnv1a64:bc2f17308cb3bb24",
+  "findings": []
+}

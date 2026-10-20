@@ -1,0 +1,19 @@
+{
+  "chapter": 435,
+  "title": "Les panneaux",
+  "label": "ch:fr-les-panneaux",
+  "canDo": "I can follow signs: the sign, the arrow, the crossroads, the marker post and the corner.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C435-angle",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 435: I can follow signs: the sign, the arrow, the crossroads, the marker post and the corner.",
+    "assesses": [
+      "FR-LEX-C435-PANNEAUX-03",
+      "FR-LEX-C435-PANNEAUX-04",
+      "FR-LEX-C435-PANNEAUX-05"
+    ]
+  }
+}

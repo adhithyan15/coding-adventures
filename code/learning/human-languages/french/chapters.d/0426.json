@@ -1,0 +1,19 @@
+{
+  "chapter": 426,
+  "title": "À la réception",
+  "label": "ch:fr-a-la-reception",
+  "canDo": "I can check in at a hotel: the front desk, the receptionist, the floor, the stay and unpacking.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C426-deballer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 426: I can check in at a hotel: the front desk, the receptionist, the floor, the stay and unpacking.",
+    "assesses": [
+      "FR-LEX-C426-RECEPTION-03",
+      "FR-LEX-C426-RECEPTION-04",
+      "FR-LEX-C426-RECEPTION-05"
+    ]
+  }
+}

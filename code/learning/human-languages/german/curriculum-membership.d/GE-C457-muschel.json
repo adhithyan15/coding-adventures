@@ -1,0 +1,11 @@
+{
+  "id": "GE-C457-muschel",
+  "pathSegment": "GE-PATH-457-KUESTE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-457-KUESTE",
+      "order": 4
+    }
+  ]
+}

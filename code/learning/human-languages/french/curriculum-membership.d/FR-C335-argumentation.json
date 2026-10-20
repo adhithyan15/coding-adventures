@@ -1,0 +1,11 @@
+{
+  "id": "FR-C335-argumentation",
+  "pathSegment": "FR-PATH-335-DEBAT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-335-DEBAT",
+      "order": 3
+    }
+  ]
+}

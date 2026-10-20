@@ -1,0 +1,19 @@
+{
+  "chapter": 311,
+  "title": "Un grand jour",
+  "label": "ch:fr-un-grand-jour",
+  "canDo": "I can talk about getting engaged and married: getting engaged, the proposal, getting married, the wedding cake and sugared almonds.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C311-dragee",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 311: I can talk about getting engaged and married: getting engaged, the proposal, getting married, the wedding cake and sugared almonds.",
+    "assesses": [
+      "FR-LEX-C311-OUI-03",
+      "FR-LEX-C311-OUI-04",
+      "FR-LEX-C311-OUI-05"
+    ]
+  }
+}

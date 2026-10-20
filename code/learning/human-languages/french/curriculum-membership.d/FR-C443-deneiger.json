@@ -1,0 +1,11 @@
+{
+  "id": "FR-C443-deneiger",
+  "pathSegment": "FR-PATH-443-HIVER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-443-HIVER",
+      "order": 4
+    }
+  ]
+}

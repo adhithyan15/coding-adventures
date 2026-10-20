@@ -1,0 +1,19 @@
+{
+  "chapter": 333,
+  "title": "Widersprechen",
+  "label": "ch:ge-widersprechen",
+  "canDo": "I can contradict someone, raise an objection and deny a claim.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C333-bestreiten",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 333: I can contradict someone, raise an objection and deny a claim.",
+    "assesses": [
+      "GE-LEX-C333-WIDERSPRUCH-03",
+      "GE-LEX-C333-WIDERSPRUCH-04",
+      "GE-LEX-C333-WIDERSPRUCH-05"
+    ]
+  }
+}

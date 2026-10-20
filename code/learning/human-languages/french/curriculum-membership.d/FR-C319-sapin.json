@@ -1,0 +1,11 @@
+{
+  "id": "FR-C319-sapin",
+  "pathSegment": "FR-PATH-319-REVEILLON",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-319-REVEILLON",
+      "order": 2
+    }
+  ]
+}

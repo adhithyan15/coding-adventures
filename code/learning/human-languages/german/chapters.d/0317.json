@@ -1,0 +1,19 @@
+{
+  "chapter": 317,
+  "title": "Weitererzählen",
+  "label": "ch:ge-weitererzahlen",
+  "canDo": "I can talk about telling and passing on stories: a narrative, to retell, to read aloud, to hand down and fate.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-R317-review-310-317",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 317: I can talk about telling and passing on stories: a narrative, to retell, to read aloud, to hand down and fate.",
+    "assesses": [
+      "GE-LEX-C317-ERZAEHLUNG-03",
+      "GE-LEX-C317-ERZAEHLUNG-04",
+      "GE-LEX-C317-ERZAEHLUNG-05"
+    ]
+  }
+}

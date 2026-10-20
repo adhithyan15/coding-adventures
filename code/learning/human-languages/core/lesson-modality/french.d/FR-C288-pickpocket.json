@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C288-pickpocket",
+    "language": "french",
+    "chapter": 288,
+    "sequence": 16520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:44b4a5e20754e6b7"
+  },
+  "findings": []
+}

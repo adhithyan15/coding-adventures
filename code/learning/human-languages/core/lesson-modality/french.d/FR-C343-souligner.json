@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C343-souligner",
+    "language": "french",
+    "chapter": 343,
+    "sequence": 19400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:df02052d9f95c4c2"
+  },
+  "findings": []
+}

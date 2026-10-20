@@ -1,0 +1,11 @@
+{
+  "id": "GE-C407-erwischen",
+  "pathSegment": "GE-PATH-407-BLITZER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-407-BLITZER",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C482-allergie",
+  "pathSegment": "FR-PATH-482-ALLERGIE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-482-ALLERGIE",
+      "order": 1
+    }
+  ]
+}

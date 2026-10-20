@@ -1,0 +1,11 @@
+{
+  "id": "GE-C497-necken",
+  "pathSegment": "GE-PATH-497-TROTZIG",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-497-TROTZIG",
+      "order": 3
+    }
+  ]
+}
