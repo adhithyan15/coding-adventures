@@ -702,6 +702,19 @@ runs them at the i64 bounds and one step past them on every executable column.
 The JVM wide-model evidence for ops is now derived from the registry: every Op
 with an `i64` operand type keeps its module on `long`.
 
+Since LANG83 PR6a every backend lowers `write_f64_py` and `write_f64_js`. They
+print an `f64` the way Python's `repr` or JavaScript's `String(x)` does, as the
+shortest round-trip digits with no newline (`1e+16` vs `10000000000000000`,
+`-0.0` vs `0`, `inf` vs `Infinity`). Each backend derives the digits its own
+way:
+
+- the native runtime, LLVM and WASM carry a Burger–Dybvig core;
+- the JVM, CLR and BEAM re-lay out their host's shortest formatter;
+- the VM and JIT use Rust's formatting, with ties corrected to even.
+
+There is no shared helper library. The conformance suite checks a 90-value
+table on every executable column against host `python3` and `node`.
+
 ## Limitations
 
 - **Host-targets-host only.** Same V1 policy as `twig-aot`.  Use the
