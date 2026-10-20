@@ -293,12 +293,10 @@ linear pass, the semicolons the retry loop would certainly insert:
   excluded.
 - **Rule 2:** before a `}` that closes a block opened after `)`, `else`, `do`,
   `try`, `finally`, `;`, `{` or `}`, when the statement inside is
-  unterminated. `=>` bodies are excluded because the grammar buckets
-  `() => {a:1}` as an object.
+  unterminated. It also covers an `=>` body, except one that starts
+  `name :`, because the grammar buckets `() => {a:1}` as an object literal.
 
-Rule 2 also covers `=>` bodies, except when one starts `name :` (the
-`() => {a:1}` ambiguity). Rule 1 also treats a postfix `++`/`--` as an
-expression end (`a++⏎b()`).
+Rule 1 also treats a postfix `++`/`--` as an expression end (`a++⏎b()`).
 
 **Work budget.** `retry_on_error` charges the stream length per attempt and
 stops once it has spent max(4·n, 200k) token-parses, returning the parse error
@@ -315,7 +313,7 @@ never depends on the guess. A unit test checks that both routes give the same
 final stream. 1,000 lines of `a()` now take about 1.5 s, and 1,600
 `function f(){ a() }` about 1.1 s.
 
-**Measured** against the pinned `v20260915` jar at WHITESPACE_ONLY: 23
+**Measured** against the pinned `v20260915` jar at WHITESPACE_ONLY: 36
 semicolon-light shapes (`tests/regression_ws_newline_asi.rs`) are now
 byte-identical. That includes CCR-080's program-final `;` after a `do…while`.
 
