@@ -1,0 +1,11 @@
+{
+  "id": "LA-C289-si-pluit",
+  "pathSegment": "LA-PATH-289-SI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-289-SI",
+      "order": 1
+    }
+  ]
+}

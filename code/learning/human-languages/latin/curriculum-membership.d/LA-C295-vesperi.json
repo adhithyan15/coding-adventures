@@ -1,0 +1,11 @@
+{
+  "id": "LA-C295-vesperi",
+  "pathSegment": "LA-PATH-295-NOCTU",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-295-NOCTU",
+      "order": 2
+    }
+  ]
+}

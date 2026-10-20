@@ -1,0 +1,19 @@
+{
+  "chapter": 461,
+  "title": "Hot-drinks bar, Hot water, To drink, Smoky, Filthy",
+  "label": "ch:la-hot-drinks-bar-hot-water-to-drink-smoky-filthy",
+  "canDo": "I can talk about eating and drinking in town: a hot-drinks bar, hot water for wine, drinking, a smoky room and a filthy table.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C461-immundus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 461: I can talk about eating and drinking in town: a hot-drinks bar, hot water for wine, drinking, a smoky room and a filthy table.",
+    "assesses": [
+      "LA-LEX-C461-THERMOPOLIUM-03",
+      "LA-LEX-C461-THERMOPOLIUM-04",
+      "LA-LEX-C461-THERMOPOLIUM-05"
+    ]
+  }
+}

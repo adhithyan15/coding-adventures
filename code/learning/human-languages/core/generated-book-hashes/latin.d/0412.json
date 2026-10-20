@@ -1,0 +1,14 @@
+{
+  "language": "latin",
+  "chapter": 412,
+  "sourceHash": "fnv1a64:d521687ca39bd15a",
+  "lessonIds": [
+    "LA-C412-cognitio",
+    "LA-C412-quaesitor",
+    "LA-C412-interrogo",
+    "LA-C412-delator",
+    "LA-C412-defensio",
+    "LA-R412-review-405-412"
+  ],
+  "tex": "latin/book/chapters/ch412-the-inquiry.tex"
+}

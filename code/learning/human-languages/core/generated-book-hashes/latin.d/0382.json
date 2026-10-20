@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:585cad64dcfb5ffa",
+  "lessonIds": [
+    "LA-C382-senator",
+    "LA-C382-patricius",
+    "LA-C382-plebeius",
+    "LA-C382-nobilis",
+    "LA-C382-popularis"
+  ],
+  "tex": "latin/book/chapters/ch382-senators-and-people.tex"
+}

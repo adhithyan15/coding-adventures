@@ -1,0 +1,19 @@
+{
+  "chapter": 311,
+  "title": "Damnātus aut absolūtus",
+  "label": "ch:la-damnatus-aut-absolutus",
+  "canDo": "I can tell the end of a trial: to condemn, to acquit, guilty, innocent and the blame.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C311-culpa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 311: I can tell the end of a trial: to condemn, to acquit, guilty, innocent and the blame.",
+    "assesses": [
+      "LA-LEX-C311-DAMNO-03",
+      "LA-LEX-C311-DAMNO-04",
+      "LA-LEX-C311-DAMNO-05"
+    ]
+  }
+}

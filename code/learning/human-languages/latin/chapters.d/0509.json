@@ -1,0 +1,19 @@
+{
+  "chapter": 509,
+  "title": "Courage and good sense",
+  "label": "ch:la-courage-and-good-sense",
+  "canDo": "I can talk about courage, rashness and good sense.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C509-prudentia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 509: I can talk about courage, rashness and good sense.",
+    "assesses": [
+      "LA-LEX-C509-FORT-03",
+      "LA-LEX-C509-FORT-04",
+      "LA-LEX-C509-FORT-05"
+    ]
+  }
+}

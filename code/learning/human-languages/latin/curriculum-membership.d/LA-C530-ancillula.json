@@ -1,0 +1,11 @@
+{
+  "id": "LA-C530-ancillula",
+  "pathSegment": "LA-PATH-530-ERUS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-530-ERUS",
+      "order": 2
+    }
+  ]
+}

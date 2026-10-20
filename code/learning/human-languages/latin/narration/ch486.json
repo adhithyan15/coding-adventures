@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 486,
+  "title": "Hoarfrost, The cold, To freeze, To be stiff with cold, To feel cold",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:a4776ac3c294eeb6",
+  "lessons": [
+    {
+      "id": "LA-C486-pruina",
+      "sequence": 25820,
+      "title": "pruīna, pruīnae — hoarfrost, frost",
+      "headword": "pruīna, pruīnae",
+      "romanization": "pruīna, pruīnae",
+      "gloss": "hoarfrost, frost",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:74fd09cf0be48604",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for stormy, then the Latin for turbulent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: pruīna, pruīnae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pruīna, pruīnae — \"hoarfrost, frost\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mane in prātīs pruīna alba est. In the morning there is white frost on the meadows."
+            },
+            {
+              "kind": "speech",
+              "text": "First declension, feminine: pruīna, pruīnae f. In poetry, also winter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pruīna is inherited from PIE prews- 'to frost, to freeze' (EtymDB). English freeze and frost are Germanic cousins from the same root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pruīna, pruīnae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pruīna, pruīnae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pruīna, pruīnae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pruīna, pruīnae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with pruīna, pruīnae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *pruīna, pruīnae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for stormy, then the Latin for turbulent, then say pruīna, pruīnae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for stormy, then the Latin for turbulent, then say *pruīna, pruīnae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does pruīna, pruīnae mean? (\"Hoarfrost, frost\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C486-frigus",
+      "sequence": 25830,
+      "title": "frīgus, frīgoris — the cold, cold weather",
+      "headword": "frīgus, frīgoris",
+      "romanization": "frīgus, frīgoris",
+      "gloss": "the cold, cold weather",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:38afa0c0f2449e72",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for turbulent, then the Latin for hoarfrost."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: frīgus, frīgoris",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "frīgus, frīgoris — \"the cold, cold weather\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Hieme frīgus magnum est, et pauperēs ignem nōn habent. In winter the cold is great, and the poor have no fire."
+            },
+            {
+              "kind": "speech",
+              "text": "Third declension, neuter: frīgus, frīgoris n. The adjective frīgidus 'cold' gives English frigid."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "frīgus is inherited from PIE sriHgos 'cold, coldness' (EtymDB), with Greek rhigos 'cold' as a cousin. English frigid comes from frīgidus, built on it (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "frīgus, frīgoris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *frīgus, frīgoris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "frīgus, frīgoris, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *frīgus, frīgoris*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with frīgus, frīgoris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *frīgus, frīgoris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for turbulent, then the Latin for hoarfrost, then say frīgus, frīgoris again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for turbulent, then the Latin for hoarfrost, then say *frīgus, frīgoris* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does frīgus, frīgoris mean? (\"The cold, cold weather\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C486-gelo",
+      "sequence": 25840,
+      "title": "gelō, gelāre — to freeze; (passive) to be frozen",
+      "headword": "gelō, gelāre",
+      "romanization": "gelō, gelāre",
+      "gloss": "to freeze; (passive) to be frozen",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:73e6b8f0a8303a94",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for hoarfrost, then the Latin for the cold."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: gelō, gelāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gelō, gelāre — \"to freeze; (passive) to be frozen\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Nocte aqua in puteō gelātur. At night the water in the well freezes."
+            },
+            {
+              "kind": "speech",
+              "text": "gelō, gelāre, gelāvī, gelātum. English congeal, jelly and gelatin come from this family."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gelō is built on gelū 'frost, chill', from PIE gel- 'cold' (EtymDB; Lewis & Short). English congeal comes from congelāre, and jelly from gelāta 'frozen' through French."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gelō, gelāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gelō, gelāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gelō, gelāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gelō, gelāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with gelō, gelāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *gelō, gelāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for hoarfrost, then the Latin for the cold, then say gelō, gelāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for hoarfrost, then the Latin for the cold, then say *gelō, gelāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does gelō, gelāre mean? (\"To freeze; (passive) to be frozen\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C486-rigeo",
+      "sequence": 25850,
+      "title": "rigeō, rigēre — to be stiff with cold, to be numb; to be stiff",
+      "headword": "rigeō, rigēre",
+      "romanization": "rigeō, rigēre",
+      "gloss": "to be stiff with cold, to be numb; to be stiff",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1f4bd7313d921989",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for the cold, then the Latin for to freeze."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: rigeō, rigēre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rigeō, rigēre — \"to be stiff with cold, to be numb; to be stiff\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Manūs viātōrum frīgore rigent. The travellers' hands are stiff with cold."
+            },
+            {
+              "kind": "speech",
+              "text": "rigeō, rigēre, riguī, second conjugation, no supine. English rigid comes from rigidus."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of rigeō is not settled: Lewis & Short suggest a link with Greek rhigeō 'to shiver' and frīgeō, and EtymDB gives no parent. English rigid comes from rigidus, built on it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rigeō, rigēre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rigeō, rigēre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rigeō, rigēre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rigeō, rigēre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with rigeō, rigēre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *rigeō, rigēre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for the cold, then the Latin for to freeze, then say rigeō, rigēre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for the cold, then the Latin for to freeze, then say *rigeō, rigēre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does rigeō, rigēre mean? (\"To be stiff with cold, to be numb; to be stiff\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C486-algeo",
+      "sequence": 25860,
+      "title": "algeō, algēre — to feel cold, to be cold",
+      "headword": "algeō, algēre",
+      "romanization": "algeō, algēre",
+      "gloss": "to feel cold, to be cold",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:80312944a48952fb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to freeze, then the Latin for to be stiff with cold."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: algeō, algēre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "algeō, algēre — \"to feel cold, to be cold\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Servus sine palliō alget. The slave without a cloak feels cold."
+            },
+            {
+              "kind": "speech",
+              "text": "algeō, algēre, alsī, second conjugation. Of a person feeling cold; frīgus is the cold itself."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of algeō is not settled: Lewis & Short report an old link with Greek algeō 'to feel pain', and EtymDB gives no parent."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "algeō, algēre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *algeō, algēre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "algeō, algēre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *algeō, algēre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with algeō, algēre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *algeō, algēre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to freeze, then the Latin for to be stiff with cold, then say algeō, algēre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to freeze, then the Latin for to be stiff with cold, then say *algeō, algēre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does algeō, algēre mean? (\"To feel cold, to be cold\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-R486-review-479-486",
+      "sequence": 25870,
+      "title": "Words from chapters 479–486 — a review",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 479-486",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:281cb79d8adbb8aa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Latin for an orchard and an olive tree."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an orchard, an olive tree, a press, to graft, the grape harvest",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an orchard, an olive tree, a press, to graft, the grape harvest]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a cliff, a jagged rock, sheer, steep, to climb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a cliff, a jagged rock, sheer, steep, to climb]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an enclosed valley, a plain, rocky, rough, to slide down",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an enclosed valley, a plain, rocky, rough, to slide down]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a river, a torrent, a confluence, to flow, to swim across",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a river, a torrent, a confluence, to flow, to swim across]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a pool, a whirlpool, a chasm, to trickle, to flood",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a pool, a whirlpool, a chasm, to trickle, to flood]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a beech tree, a fir tree, an elm tree, an ash tree, shady",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a beech tree, a fir tree, an elm tree, an ash tree, shady]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a downpour, to be soaking wet, rainy, stormy, turbulent",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a downpour, to be soaking wet, rainy, stormy, turbulent]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hoarfrost, the cold, to freeze, to be stiff with cold, to feel cold",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: hoarfrost, the cold, to freeze, to be stiff with cold, to feel cold]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An orchard? (pōmārium, pōmāriī.) An olive tree? (olea, oleae.) A press? (prēlum, prēlī.) To graft? (īnserō, īnserere.) The grape harvest? (vindēmia, vindēmiae.) A cliff? (rūpēs, rūpis.) A jagged rock? (cautēs, cautis.) Sheer? (praeruptus, praerupta, praeruptum.) Steep? (arduus, ardua, arduum.) To climb? (scandō, scandere.) An enclosed valley? (convallis, convallis.) A plain? (plānitiēs, plānitiēī.) Rocky? (saxōsus, saxōsa, saxōsum.) Rough? (cōnfragōsus, cōnfragōsa, cōnfragōsum.) To slide down? (dēlābor, dēlābī.) A river? (amnis, amnis.) A torrent? (torrēns, torrentis.) A confluence? (cōnfluēns, cōnfluentis.) To flow? (fluō, fluere.) To swim across? (trānsnatō, trānsnatāre.) A pool? (stagnum, stagnī.) A whirlpool? (gurges, gurgitis.) A chasm? (vorāgō, vorāginis.) To trickle? (mānō, mānāre.) To flood? (inundō, inundāre.) A beech tree? (fāgus, fāgī.) A fir tree? (abiēs, abietis.) An elm tree? (ulmus, ulmī.) An ash tree? (fraxinus, fraxinī.) Shady? (opācus, opāca, opācum.) A downpour? (imber, imbris.) To be soaking wet? (madeō, madēre.) Rainy? (pluviālis, pluviāle.) Stormy? (nimbōsus, nimbōsa, nimbōsum.) Turbulent? (turbidus, turbida, turbidum.) Hoarfrost? (pruīna, pruīnae.) The cold? (frīgus, frīgoris.) To freeze? (gelō, gelāre.) To be stiff with cold? (rigeō, rigēre.) To feel cold? (algeō, algēre.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

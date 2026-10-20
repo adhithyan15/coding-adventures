@@ -1,0 +1,11 @@
+{
+  "id": "LA-R322-review-315-322",
+  "pathSegment": "LA-PATH-322-FUGA",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "LA-EXT-322-FUGA",
+      "order": 5
+    }
+  ]
+}

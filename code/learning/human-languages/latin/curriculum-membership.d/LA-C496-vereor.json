@@ -1,0 +1,11 @@
+{
+  "id": "LA-C496-vereor",
+  "pathSegment": "LA-PATH-496-PAV",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-496-PAV",
+      "order": 1
+    }
+  ]
+}

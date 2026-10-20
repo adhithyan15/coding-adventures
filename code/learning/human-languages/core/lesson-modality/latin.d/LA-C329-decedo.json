@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C329-decedo",
+    "language": "latin",
+    "chapter": 329,
+    "sequence": 17780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bb72b1a8c63a3547"
+  },
+  "findings": []
+}

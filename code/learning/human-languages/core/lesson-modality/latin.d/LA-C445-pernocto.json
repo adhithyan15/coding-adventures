@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C445-pernocto",
+    "language": "latin",
+    "chapter": 445,
+    "sequence": 23740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f6f0249d95fd9b4c"
+  },
+  "findings": []
+}

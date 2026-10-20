@@ -1,0 +1,12 @@
+{
+  "language": "latin",
+  "chapter": 286,
+  "sourceHash": "fnv1a64:3871d1ddcee73e71",
+  "lessonIds": [
+    "LA-C286-navis",
+    "LA-C286-naulum",
+    "LA-C286-amitto",
+    "LA-R286-by-sea"
+  ],
+  "tex": "latin/book/chapters/ch286-by-sea.tex"
+}

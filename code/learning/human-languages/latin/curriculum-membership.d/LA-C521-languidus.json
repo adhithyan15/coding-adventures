@@ -1,0 +1,11 @@
+{
+  "id": "LA-C521-languidus",
+  "pathSegment": "LA-PATH-521-AEGR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-521-AEGR",
+      "order": 2
+    }
+  ]
+}

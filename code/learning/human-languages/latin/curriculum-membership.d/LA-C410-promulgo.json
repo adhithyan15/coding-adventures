@@ -1,0 +1,11 @@
+{
+  "id": "LA-C410-promulgo",
+  "pathSegment": "LA-PATH-410-ROGATIO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-410-ROGATIO",
+      "order": 1
+    }
+  ]
+}

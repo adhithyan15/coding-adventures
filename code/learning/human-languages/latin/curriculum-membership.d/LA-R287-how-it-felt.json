@@ -1,0 +1,11 @@
+{
+  "id": "LA-R287-how-it-felt",
+  "pathSegment": "LA-PATH-287-AFFECTUS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-287-AFFECTUS",
+      "order": 2
+    }
+  ]
+}

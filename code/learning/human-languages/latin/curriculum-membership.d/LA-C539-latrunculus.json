@@ -1,0 +1,11 @@
+{
+  "id": "LA-C539-latrunculus",
+  "pathSegment": "LA-PATH-539-ALEA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-539-ALEA",
+      "order": 2
+    }
+  ]
+}

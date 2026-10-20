@@ -1,0 +1,19 @@
+{
+  "chapter": 335,
+  "title": "Lūdī circēnsēs",
+  "label": "ch:la-ludi-circenses",
+  "canDo": "I can describe a chariot race: the charioteer, the four-horse chariot, the turning post, the racing team and of the circus.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C335-circensis",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 335: I can describe a chariot race: the charioteer, the four-horse chariot, the turning post, the racing team and of the circus.",
+    "assesses": [
+      "LA-LEX-C335-AURIGA-03",
+      "LA-LEX-C335-AURIGA-04",
+      "LA-LEX-C335-AURIGA-05"
+    ]
+  }
+}

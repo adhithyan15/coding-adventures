@@ -1,0 +1,19 @@
+{
+  "chapter": 365,
+  "title": "For, Of Course, Namely",
+  "label": "ch:la-for-of-course-namely",
+  "canDo": "I can back up a claim with since, for, of course and namely, and say what mood each word takes.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C365-scilicet",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 365: I can back up a claim with since, for, of course and namely, and say what mood each word takes.",
+    "assesses": [
+      "LA-LEX-C365-ETENIM-03",
+      "LA-LEX-C365-ETENIM-04",
+      "LA-LEX-C365-ETENIM-05"
+    ]
+  }
+}

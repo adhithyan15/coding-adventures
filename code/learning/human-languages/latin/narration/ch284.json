@@ -1,0 +1,524 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 284,
+  "title": "What You Should Do, and Why",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:a458b20873c8444a",
+  "lessons": [
+    {
+      "id": "LA-C284-debes",
+      "sequence": 15530,
+      "title": "dēbēs — what you should do",
+      "headword": "dēbēs, nōn dēbēs; dēbēbās",
+      "romanization": "dēbēs, nōn dēbēs; dēbēbās",
+      "gloss": "you should, you shouldn't — and dēbēbās with a present infinitive for 'you should have'",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:225d9b8efbd9b10e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You own dēbeō, \"I have to, I must; I owe\", and quiēscō, \"to rest\". Say \"I have to work\". (Labōrāre dēbeō.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Turn the same verb on a friend, and it becomes advice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: dēbēs + infinitive",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Aeger es; quiēscere dēbēs. — You are ill; you should rest. Nōn dēbēs tantum labōrāre. — You shouldn't work so much."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Dēbēs is the second person, \"you must\", and Latin uses it for what English softens into \"you should\". The infinitive carries the advice, and nōn in front turns it round."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "oportet, \"it is right, one ought\", says the same thing without pointing at anyone, and it takes the accusative and infinitive you met with putō:"
+            },
+            {
+              "kind": "speech",
+              "text": "Oportet tē quiēscere. — You ought to rest."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: dēbēbās, you should have",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English moves the past onto the infinitive: \"you should have come\". Latin moves it onto dēbeō instead, and keeps the plain infinitive:"
+            },
+            {
+              "kind": "speech",
+              "text": "Herī venīre dēbēbās. — You should have come yesterday."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Dēbēbās is the imperfect, \"you were bound to\", and the sentence carries the regret: the coming was owed, and it did not happen. The perfect does the same work, venīre dēbuistī, and so does oportet in the perfect: oportuit tē venīre."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart: dēbeō",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēbeō is contracted from dē, \"away from\", and habeō, \"to have\" (Lewis & Short), as its own lesson said: to have something that belongs to someone else. A debt, dēbitum, is what you hold and must give back; advice with dēbēs treats the right action as something owed."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Aeger es; quiēscere dēbēs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Aeger es; quiēscere dēbēs.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Nōn dēbēs tantum labōrāre.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Nōn dēbēs tantum labōrāre.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Oportet tē quiēscere.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Oportet tē quiēscere.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Herī venīre dēbēbās.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Herī venīre dēbēbās.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Fessus es; ergō quiēscere dēbēs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Fessus es; ergō quiēscere dēbēs.*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"You should rest\"? (Quiēscere dēbēs.) \"You shouldn't work so much\"? (Nōn dēbēs tantum labōrāre.) \"You should have come yesterday\"? (Herī venīre dēbēbās.) Which verb carries the past in that last one? (Dēbēbās, not the infinitive.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C284-explico",
+      "sequence": 15540,
+      "title": "cūr? — quia, quod, nam: explaining",
+      "headword": "cūr? — quia …, quod …, nam …",
+      "romanization": "cūr? — quia …, quod …, nam …",
+      "gloss": "giving an explanation — the answer to cūr with quia, quod or nam, and the second job quod does at B1",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c453d885406ad65f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask \"why?\". (Cūr?) Answer with \"because\". (Quia.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You also own explicō, \"to explain\", and causa, \"a reason\"."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the answer to cūr",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cūr herī nōn vēnistī? — Why didn't you come yesterday? Nōn vēnī, quia aeger eram. — I didn't come, because I was ill."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Both pasts: the not-coming is an event, nōn vēnī; the illness is the scene behind it, aeger eram. After quia the verb is an ordinary one, in whatever tense the facts need."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "nam, \"for\", hangs the reason on afterwards, as a second sentence: Nōn vēnī. Nam aeger eram. And explicō names what you are doing: Causam explicō, I am explaining the reason."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: quod, because",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The four lines you wrote with joiners asked you for quia, because quod has two jobs. Now you meet its second one as a reader:"
+            },
+            {
+              "kind": "speech",
+              "text": "Gaudeō quod vēnistī. — I am glad that you came, glad because you came."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "After a verb of feeling, gaudeō, doleō, quod gives the cause. Where a noun stands before it and quod points back to it, it is usually \"which\"; where no noun waits for it, it is usually \"because\" or \"that\". Writing, quia is still the safe choice; reading, expect both."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart: explicō",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "explicō is ex, \"out\", with plicō, \"to fold\" (EtymDB 2.1), as its own lesson said: to explain is to unfold. A Roman book was a volūmen, a roll, and Cicero writes volūmen explicāre for opening one (Lewis & Short). An explanation opens out what was rolled up inside the question."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Cūr herī nōn vēnistī? — then answer: Nōn vēnī, quia aeger eram.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Cūr herī nōn vēnistī?* — then answer: *Nōn vēnī, quia aeger eram.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same reason with nam — Nōn vēnī. Nam aeger eram.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same reason with *nam* — *Nōn vēnī. Nam aeger eram.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Gaudeō quod vēnistī.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Gaudeō quod vēnistī.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Quiēscere dēbēs, quia fessus es.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Quiēscere dēbēs, quia fessus es.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a reason of your own for something you did not do yesterday",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a reason of your own for something you did not do yesterday]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Why didn't you come?\" (Cūr nōn vēnistī?) \"Because I was ill\"? (Quia aeger eram.) Which word adds the reason as a second sentence? (Nam.) In gaudeō quod vēnistī, what does quod mean? (Because, or \"that\": no noun waits for it.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-R284-advice-and-reasons",
+      "sequence": 15550,
+      "title": "Review — what you should do, and why",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "advice and the reason for it — dēbēs, dēbēbās, quia, nam and the quod of feeling, with an opinion in front",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8358519853712d66",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"you should rest\". (Quiēscere dēbēs.) Then \"because you are tired\". (Quia fessus es.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two chapters, and you can give reasons. An opinion: putō with the accusative and infinitive, meā sententiā, mihi vidētur. Advice: dēbēs and an infinitive, and dēbēbās for what should have happened. A reason: quia, nam, and the quod that follows a feeling. A conclusion: ergō."
+            },
+            {
+              "kind": "speech",
+              "text": "Meā sententiā, quiēscere dēbēs, quia aeger es. Herī labōrāre nōn dēbēbās. — In my opinion you should rest, because you are ill. You shouldn't have worked yesterday."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four pieces in two sentences: the opinion, the advice, the reason, and the regret."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Meā sententiā, quiēscere dēbēs, quia aeger es.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Meā sententiā, quiēscere dēbēs, quia aeger es.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Herī labōrāre nōn dēbēbās.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Herī labōrāre nōn dēbēbās.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Cūr nōn vēnistī? — Nōn vēnī. Nam aeger eram.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Cūr nōn vēnistī? — Nōn vēnī. Nam aeger eram.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Putō tē fessum esse; ergō quiēscere dēbēs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Putō tē fessum esse; ergō quiēscere dēbēs.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "advice of your own to a friend, with its reason",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: advice of your own to a friend, with its reason]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"You shouldn't work so much\"? (Nōn dēbēs tantum labōrāre.) \"You should have come\"? (Venīre dēbēbās.) \"I am glad that you came\"? (Gaudeō quod vēnistī.) \"In my opinion\"? (Meā sententiā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

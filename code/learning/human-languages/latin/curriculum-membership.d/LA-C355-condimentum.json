@@ -1,0 +1,11 @@
+{
+  "id": "LA-C355-condimentum",
+  "pathSegment": "LA-PATH-355-CONDIO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-355-CONDIO",
+      "order": 1
+    }
+  ]
+}

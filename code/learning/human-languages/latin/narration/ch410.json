@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 410,
+  "title": "Passing a Law",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:997cd2d477ef6d7c",
+  "lessons": [
+    {
+      "id": "LA-C410-rogatio",
+      "sequence": 21910,
+      "title": "rogātiō, rogātiōnis — a bill (put to the people); a request",
+      "headword": "rogātiō, rogātiōnis",
+      "romanization": "rogātiō, rogātiōnis",
+      "gloss": "a bill (put to the people); a request",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:37d08b29b0998543",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for lawful, then the Latin for allowed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: rogātiō, rogātiōnis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rogātiō, rogātiōnis — \"a bill (put to the people); a request\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Tribūnus rogātiōnem ad populum tulit. The tribune put a bill to the people."
+            },
+            {
+              "kind": "speech",
+              "text": "rogātiō, rogātiōnis f., built on rogō, to ask: the magistrate asked the people whether they wished it. If they voted yes, the bill became a lēx."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rogātiō is the noun built on rogō \"to ask\" (EtymDB; Lewis & Short): the question put to the people. English rogation comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rogātiō, rogātiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rogātiō, rogātiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rogātiō, rogātiōnis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rogātiō, rogātiōnis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with rogātiō, rogātiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *rogātiō, rogātiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for lawful, then the Latin for allowed, then say rogātiō, rogātiōnis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for lawful, then the Latin for allowed, then say *rogātiō, rogātiōnis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does rogātiō, rogātiōnis mean? (\"A bill (put to the people); a request\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C410-promulgo",
+      "sequence": 21920,
+      "title": "prōmulgō, prōmulgāre — to publish, to make known (a bill)",
+      "headword": "prōmulgō, prōmulgāre",
+      "romanization": "prōmulgō, prōmulgāre",
+      "gloss": "to publish, to make known (a bill)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d207177493d96bd1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for allowed, then the Latin for a bill."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: prōmulgō, prōmulgāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "prōmulgō, prōmulgāre — \"to publish, to make known (a bill)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Lēgem novam prōmulgāvit. He published the new law."
+            },
+            {
+              "kind": "speech",
+              "text": "prōmulgō, prōmulgāre, prōmulgāvī, prōmulgātum. A bill was posted for public view before the vote. English promulgate."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of prōmulgō is not settled: Lewis & Short call it unknown. English promulgate comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prōmulgō, prōmulgāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prōmulgō, prōmulgāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prōmulgō, prōmulgāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prōmulgō, prōmulgāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with prōmulgō, prōmulgāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *prōmulgō, prōmulgāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for allowed, then the Latin for a bill, then say prōmulgō, prōmulgāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for allowed, then the Latin for a bill, then say *prōmulgō, prōmulgāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does prōmulgō, prōmulgāre mean? (\"To publish, to make known (a bill)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C410-abrogo",
+      "sequence": 21930,
+      "title": "abrogō, abrogāre — to repeal, to abolish",
+      "headword": "abrogō, abrogāre",
+      "romanization": "abrogō, abrogāre",
+      "gloss": "to repeal, to abolish",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab33b68f3a5b1a4f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a bill, then the Latin for to publish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: abrogō, abrogāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "abrogō, abrogāre — \"to repeal, to abolish\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Populus lēgem veterem abrogāvit. The people repealed the old law."
+            },
+            {
+              "kind": "speech",
+              "text": "abrogō, abrogāre, abrogāvī, abrogātum, ab + rogō: to ask the people to take a law away. English abrogate."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "abrogō is built from ab \"away\" and rogō \"to ask\" (EtymDB; Lewis & Short): to ask the people to take a law away. English abrogate comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abrogō, abrogāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abrogō, abrogāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abrogō, abrogāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abrogō, abrogāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with abrogō, abrogāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *abrogō, abrogāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a bill, then the Latin for to publish, then say abrogō, abrogāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a bill, then the Latin for to publish, then say *abrogō, abrogāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does abrogō, abrogāre mean? (\"To repeal, to abolish\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C410-sancio",
+      "sequence": 21940,
+      "title": "sanciō, sancīre — to make sacred and binding; to ratify",
+      "headword": "sanciō, sancīre",
+      "romanization": "sanciō, sancīre",
+      "gloss": "to make sacred and binding; to ratify",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3bcd64d9b41ed01c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to publish, then the Latin for to repeal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: sanciō, sancīre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sanciō, sancīre — \"to make sacred and binding; to ratify\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Lēgem iūre iūrandō sānxērunt. They made the law binding by an oath."
+            },
+            {
+              "kind": "speech",
+              "text": "sanciō, sancīre, sānxī, sānctum: to make a thing sacred and binding. Sānctus, holy, is its participle. English sanction and saint."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sanciō is inherited from a Proto-Indo-European root meaning \"to make holy\" (EtymDB), and sānctus \"holy\" is its participle (Lewis & Short). English sanction and saint come from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sanciō, sancīre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sanciō, sancīre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sanciō, sancīre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sanciō, sancīre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with sanciō, sancīre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *sanciō, sancīre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to publish, then the Latin for to repeal, then say sanciō, sancīre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to publish, then the Latin for to repeal, then say *sanciō, sancīre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does sanciō, sancīre mean? (\"To make sacred and binding; to ratify\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C410-praescribo",
+      "sequence": 21950,
+      "title": "praescrībō, praescrībere — to lay down, to prescribe",
+      "headword": "praescrībō, praescrībere",
+      "romanization": "praescrībō, praescrībere",
+      "gloss": "to lay down, to prescribe",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:581ad3aa896b5cff",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to repeal, then the Latin for to make sacred and binding."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: praescrībō, praescrībere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "praescrībō, praescrībere — \"to lay down, to prescribe\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Lēx praescrībit quid facere dēbeāmus. The law lays down what we must do."
+            },
+            {
+              "kind": "speech",
+              "text": "praescrībō, praescrībere, praescrīpsī, praescrīptum: to write at the head, then to lay down a rule. English prescribe."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "praescrībō is built from prae \"before, at the head\" and scrībō \"to write\" (Lewis & Short). English prescribe comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "praescrībō, praescrībere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *praescrībō, praescrībere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "praescrībō, praescrībere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *praescrībō, praescrībere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with praescrībō, praescrībere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *praescrībō, praescrībere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to repeal, then the Latin for to make sacred and binding, then say praescrībō, praescrībere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to repeal, then the Latin for to make sacred and binding, then say *praescrībō, praescrībere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does praescrībō, praescrībere mean? (\"To lay down, to prescribe\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

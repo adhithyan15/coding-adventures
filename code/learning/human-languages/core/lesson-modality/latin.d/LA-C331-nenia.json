@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C331-nenia",
+    "language": "latin",
+    "chapter": 331,
+    "sequence": 17860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8e0af2e4d00dd780"
+  },
+  "findings": []
+}

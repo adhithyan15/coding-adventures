@@ -1,0 +1,19 @@
+{
+  "chapter": 418,
+  "title": "Debts",
+  "label": "ch:la-debts",
+  "canDo": "I can talk about debt, a debtor and a creditor, interest, and money borrowed or lent.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "LA-C418-mutuus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 418: I can talk about debt, a debtor and a creditor, interest, and money borrowed or lent.",
+    "assesses": [
+      "LA-LEX-C418-AESALIENUM-03",
+      "LA-LEX-C418-AESALIENUM-04",
+      "LA-LEX-C418-AESALIENUM-05"
+    ]
+  }
+}

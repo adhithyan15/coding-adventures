@@ -1,0 +1,19 @@
+{
+  "chapter": 361,
+  "title": "Proof and Example",
+  "label": "ch:la-proof-and-example",
+  "canDo": "I can bring an argument, an example and a proof, and say that something shows or confirms a point.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C361-confirmo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 361: I can bring an argument, an example and a proof, and say that something shows or confirms a point.",
+    "assesses": [
+      "LA-LEX-C361-ARGUMENTUM-03",
+      "LA-LEX-C361-ARGUMENTUM-04",
+      "LA-LEX-C361-ARGUMENTUM-05"
+    ]
+  }
+}

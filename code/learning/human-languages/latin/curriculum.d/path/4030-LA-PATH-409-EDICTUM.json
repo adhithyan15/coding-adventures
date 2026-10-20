@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-409-EDICTUM",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "LA-EXT-409-EDICTUM"
+  ],
+  "after": []
+}

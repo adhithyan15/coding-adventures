@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 496,
+  "title": "Fear and dread",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:3e9047917cfd55a4",
+  "lessons": [
+    {
+      "id": "LA-C496-paveo",
+      "sequence": 26350,
+      "title": "paveō, pavēre — to quake with fear, be terrified",
+      "headword": "paveō, pavēre",
+      "romanization": "paveō, pavēre",
+      "gloss": "to quake with fear, be terrified",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e8ef8d724d69a0a9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for thunderstruck, then the Latin for to be struck dumb."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: paveō, pavēre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "paveō, pavēre — \"to quake with fear, be terrified\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ovēs lupum vident et pavent. The sheep catch sight of the wolf and quake with fear."
+            },
+            {
+              "kind": "speech",
+              "text": "paveō, pavēre, pāvī. The noun is pavor — terror."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "paveō is a native Latin verb; EtymDB links it with a Proto-Indo-European root meaning \"to strike\", but Lewis & Short calls its origin doubtful, so it is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paveō, pavēre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paveō, pavēre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paveō, pavēre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paveō, pavēre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with paveō, pavēre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *paveō, pavēre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for thunderstruck, then the Latin for to be struck dumb, then say paveō, pavēre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for thunderstruck, then the Latin for to be struck dumb, then say *paveō, pavēre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does paveō, pavēre mean? (\"To quake with fear, be terrified\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C496-vereor",
+      "sequence": 26360,
+      "title": "vereor, verērī — to respect; to fear",
+      "headword": "vereor, verērī",
+      "romanization": "vereor, verērī",
+      "gloss": "to respect; to fear",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e8b5921dbe8dce1a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to be struck dumb, then the Latin for to quake with fear."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: vereor, verērī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vereor, verērī — \"to respect; to fear\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Discipulī magistrum verentur. The pupils respect their teacher."
+            },
+            {
+              "kind": "speech",
+              "text": "Deponent: vereor, verērī, veritus sum. Fear mixed with respect. Vereor nē… — I am afraid that…"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vereor is inherited through Proto-Italic from a Proto-Indo-European root wer- (EtymDB), and Lewis & Short compares Greek horao \"to see\" and English ward. English revere comes from revereor."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vereor, verērī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vereor, verērī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vereor, verērī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vereor, verērī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with vereor, verērī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *vereor, verērī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to be struck dumb, then the Latin for to quake with fear, then say vereor, verērī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to be struck dumb, then the Latin for to quake with fear, then say *vereor, verērī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does vereor, verērī mean? (\"To respect; to fear\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C496-perterreo",
+      "sequence": 26370,
+      "title": "perterreō, perterrēre — to terrify thoroughly",
+      "headword": "perterreō, perterrēre",
+      "romanization": "perterreō, perterrēre",
+      "gloss": "to terrify thoroughly",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a09bff2c720d2391",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to quake with fear, then the Latin for to respect."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: perterreō, perterrēre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "perterreō, perterrēre — \"to terrify thoroughly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Tonitrus puerōs perterret. The thunder terrifies the children."
+            },
+            {
+              "kind": "speech",
+              "text": "perterreō, perterrēre, perterruī, perterritum: per- 'thoroughly' + terreō 'to frighten'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "perterreō is built on per- \"thoroughly\" and terreō \"to frighten\" (Lewis & Short; EtymDB). English terrify and terror belong to the same family."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "perterreō, perterrēre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *perterreō, perterrēre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "perterreō, perterrēre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *perterreō, perterrēre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with perterreō, perterrēre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *perterreō, perterrēre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to quake with fear, then the Latin for to respect, then say perterreō, perterrēre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to quake with fear, then the Latin for to respect, then say *perterreō, perterrēre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does perterreō, perterrēre mean? (\"To terrify thoroughly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C496-horribilis",
+      "sequence": 26380,
+      "title": "horribilis, horribile — dreadful, horrible",
+      "headword": "horribilis, horribile",
+      "romanization": "horribilis, horribile",
+      "gloss": "dreadful, horrible",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aa649de637558200",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to respect, then the Latin for to terrify thoroughly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: horribilis, horribile",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "horribilis, horribile — \"dreadful, horrible\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Tempestās horribilis nāvem frēgit. A dreadful storm broke the ship."
+            },
+            {
+              "kind": "speech",
+              "text": "Two endings. From horreō — to bristle, to shudder. English horrible."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "horribilis is built on horreō \"to bristle, to shudder\" with -ibilis (Lewis & Short; EtymDB). English horrible comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "horribilis, horribile",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *horribilis, horribile*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "horribilis, horribile, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *horribilis, horribile*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with horribilis, horribile",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *horribilis, horribile*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to respect, then the Latin for to terrify thoroughly, then say horribilis, horribile again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to respect, then the Latin for to terrify thoroughly, then say *horribilis, horribile* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does horribilis, horribile mean? (\"Dreadful, horrible\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C496-terribilis",
+      "sequence": 26390,
+      "title": "terribilis, terribile — frightful, terrible",
+      "headword": "terribilis, terribile",
+      "romanization": "terribilis, terribile",
+      "gloss": "frightful, terrible",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:70795374da145cf7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to terrify thoroughly, then the Latin for dreadful."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: terribilis, terribile",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "terribilis, terribile — \"frightful, terrible\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Leō vōcem terribilem habet. The lion has a terrible voice."
+            },
+            {
+              "kind": "speech",
+              "text": "Two endings. From terreō — to frighten. English terrible."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "terribilis is built on terreō \"to frighten\" with -ibilis (Lewis & Short); EtymDB traces terreō to a Proto-Indo-European root meaning \"to tremble, to frighten\". English terrible comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "terribilis, terribile",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *terribilis, terribile*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "terribilis, terribile, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *terribilis, terribile*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with terribilis, terribile",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *terribilis, terribile*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to terrify thoroughly, then the Latin for dreadful, then say terribilis, terribile again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to terrify thoroughly, then the Latin for dreadful, then say *terribilis, terribile* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does terribilis, terribile mean? (\"Frightful, terrible\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-R496-review-489-496",
+      "sequence": 26400,
+      "title": "Feelings and character",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 489-496",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:562070d36caa9289",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Latin for joy and to rejoice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "joy, to rejoice, cheerfulness, to leap for joy, pleasantness",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: joy, to rejoice, cheerfulness, to leap for joy, pleasantness]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sadness, sorrow, to grieve, grief, sorrowful",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: sadness, sorrow, to grieve, grief, sorrowful]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to weep, to wail, to groan, a groan, to sigh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to weep, to wail, to groan, a groan, to sigh]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to console, consolation, solace, gentle, to soothe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to console, consolation, solace, gentle, to soothe]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to grow angry, hot-tempered, a hot temper, unworthy, to be indignant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to grow angry, hot-tempered, a hot temper, unworthy, to be indignant]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to hate, hateful, to turn up one's nose at, disgust, it wearies",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to hate, hateful, to turn up one's nose at, disgust, it wearies]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "admiration, to wonder, to be stunned, thunderstruck, to be struck dumb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: admiration, to wonder, to be stunned, thunderstruck, to be struck dumb]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to quake with fear, to respect, to terrify thoroughly, dreadful, frightful",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to quake with fear, to respect, to terrify thoroughly, dreadful, frightful]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Joy? (laetitia, laetitiae.) To rejoice? (laetor, laetārī.) Cheerfulness? (hilaritās, hilaritātis.) To leap for joy? (exsultō, exsultāre.) Pleasantness? (iūcunditās, iūcunditātis.) Sadness? (trīstitia, trīstitiae.) Sorrow? (maestitia, maestitiae.) To grieve? (maereō, maerēre.) Grief? (maeror, maerōris.) Sorrowful? (lūctuōsus, lūctuōsa, lūctuōsum.) To weep? (lacrimō, lacrimāre.) To wail? (plōrō, plōrāre.) To groan? (gemō, gemere.) A groan? (gemitus, gemitūs.) To sigh? (suspīrō, suspīrāre.) To console? (cōnsōlor, cōnsōlārī.) Consolation? (cōnsōlātiō, cōnsōlātiōnis.) Solace? (sōlācium, sōlāciī.) Gentle? (lēnis, lēne.) To soothe? (lēniō, lēnīre.) To grow angry? (īrāscor, īrāscī.) Hot-tempered? (īrācundus, īrācunda, īrācundum.) A hot temper? (īrācundia, īrācundiae.) Unworthy? (indignus, indigna, indignum.) To be indignant? (indignor, indignārī.) To hate? (ōdī, ōdisse.) Hateful? (odiōsus, odiōsa, odiōsum.) To turn up one's nose at? (fastīdiō, fastīdīre.) Disgust? (fastīdium, fastīdiī.) It wearies? (taedet, taedēre.) Admiration? (admīrātiō, admīrātiōnis.) To wonder? (mīror, mīrārī.) To be stunned? (stupeō, stupēre.) Thunderstruck? (attonitus, attonita, attonitum.) To be struck dumb? (obstupēscō, obstupēscere.) To quake with fear? (paveō, pavēre.) To respect? (vereor, verērī.) To terrify thoroughly? (perterreō, perterrēre.) Dreadful? (horribilis, horribile.) Frightful? (terribilis, terribile.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

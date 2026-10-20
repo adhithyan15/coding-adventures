@@ -1,0 +1,11 @@
+{
+  "id": "LA-C350-abluo",
+  "pathSegment": "LA-PATH-350-OBSONO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-350-OBSONO",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 309,
+  "sourceHash": "fnv1a64:54fbc7767162b23f",
+  "lessonIds": [
+    "LA-C309-accuso",
+    "LA-C309-accusator",
+    "LA-C309-advocatus",
+    "LA-C309-patronus",
+    "LA-C309-testimonium"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch309.txt",
+  "json": "latin/narration/ch309.json",
+  "textHash": "fnv1a64:f150e6ac70acc9a7",
+  "jsonHash": "fnv1a64:6d086a95d224a82a",
+  "findings": []
+}

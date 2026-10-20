@@ -1,0 +1,11 @@
+{
+  "id": "LA-C311-absolvo",
+  "pathSegment": "LA-PATH-311-DAMNO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-311-DAMNO",
+      "order": 1
+    }
+  ]
+}

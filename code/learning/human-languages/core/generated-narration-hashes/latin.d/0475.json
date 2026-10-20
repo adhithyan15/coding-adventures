@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 475,
+  "sourceHash": "fnv1a64:798198ce367bb9f5",
+  "lessonIds": [
+    "LA-C475-messis",
+    "LA-C475-messor",
+    "LA-C475-falx",
+    "LA-C475-spica",
+    "LA-C475-triticum"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch475.txt",
+  "json": "latin/narration/ch475.json",
+  "textHash": "fnv1a64:4787f5c90007a619",
+  "jsonHash": "fnv1a64:653c470a3dbcfbb0",
+  "findings": []
+}

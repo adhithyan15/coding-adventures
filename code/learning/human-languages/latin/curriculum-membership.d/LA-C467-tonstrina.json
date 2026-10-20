@@ -1,0 +1,11 @@
+{
+  "id": "LA-C467-tonstrina",
+  "pathSegment": "LA-PATH-467-SUTRINA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-467-SUTRINA",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C385-princeps",
+  "pathSegment": "LA-PATH-385-REGO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-385-REGO",
+      "order": 4
+    }
+  ]
+}

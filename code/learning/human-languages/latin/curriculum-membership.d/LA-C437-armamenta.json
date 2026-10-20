@@ -1,0 +1,11 @@
+{
+  "id": "LA-C437-armamenta",
+  "pathSegment": "LA-PATH-437-RUDENS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-437-RUDENS",
+      "order": 2
+    }
+  ]
+}

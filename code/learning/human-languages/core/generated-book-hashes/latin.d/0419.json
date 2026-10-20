@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 419,
+  "sourceHash": "fnv1a64:605bebda50527c9b",
+  "lessonIds": [
+    "LA-C419-persolvo",
+    "LA-C419-usura",
+    "LA-C419-pignus",
+    "LA-C419-syngrapha",
+    "LA-C419-fenerator"
+  ],
+  "tex": "latin/book/chapters/ch419-paying-it-back.tex"
+}

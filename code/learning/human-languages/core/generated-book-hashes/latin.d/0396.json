@@ -1,0 +1,14 @@
+{
+  "language": "latin",
+  "chapter": 396,
+  "sourceHash": "fnv1a64:c4bbabd0e67a515d",
+  "lessonIds": [
+    "LA-C396-promissum",
+    "LA-C396-polliceor",
+    "LA-C396-fiducia",
+    "LA-C396-sponsio",
+    "LA-C396-obstringo",
+    "LA-R396-review-389-396"
+  ],
+  "tex": "latin/book/chapters/ch396-making-a-promise.tex"
+}

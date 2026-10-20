@@ -1,0 +1,11 @@
+{
+  "id": "LA-C340-eques",
+  "pathSegment": "LA-PATH-340-ARMA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-340-ARMA",
+      "order": 1
+    }
+  ]
+}

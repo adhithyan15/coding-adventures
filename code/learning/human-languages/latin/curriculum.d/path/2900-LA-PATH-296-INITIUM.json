@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-296-INITIUM",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-296-INITIUM"
+  ],
+  "after": []
+}

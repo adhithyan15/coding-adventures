@@ -244,6 +244,7 @@ input and repeated EOF reads; this does not change existing integer parsing.
 `Lowered` or `Refused(reason)`, for every operation in the
 [LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) standard registry
 (`interpreter_ir::op_registry::STANDARD_OPS`). "Lowered" means `lower_iir_to_llvm` emits LLVM IR for the op. `lang-aot` refuses a
-module that uses a refused op at compile time, with a typed error. The four
-LANG83 PR1b ops (`write_i64`, `i64_div_floor`, `i64_mod_floor`, `trap`) are
-refused until PR1b lowers them.
+module that uses a refused op at compile time, with a typed error. Since LANG83 PR1b this backend also lowers `write_i64`, `i64_div_floor`,
+`i64_mod_floor` and `trap`; the module carries its own `linkonce_odr`
+`@__iir_write_i64` / `@__iir_trap` definitions (libc only), and `@__iir_trap`
+flushes stdout before reporting the kind on stderr and aborting.

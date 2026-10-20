@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C308-lex",
+    "language": "latin",
+    "chapter": 308,
+    "sequence": 16700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8486b2926f4e4027"
+  },
+  "findings": []
+}

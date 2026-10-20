@@ -1,0 +1,11 @@
+{
+  "id": "LA-C315-naufragium",
+  "pathSegment": "LA-PATH-315-NAUFRAGIUM",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-315-NAUFRAGIUM",
+      "order": 0
+    }
+  ]
+}

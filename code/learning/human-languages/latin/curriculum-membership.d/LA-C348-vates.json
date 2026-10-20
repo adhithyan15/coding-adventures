@@ -1,0 +1,11 @@
+{
+  "id": "LA-C348-vates",
+  "pathSegment": "LA-PATH-348-ORACULUM",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-348-ORACULUM",
+      "order": 1
+    }
+  ]
+}

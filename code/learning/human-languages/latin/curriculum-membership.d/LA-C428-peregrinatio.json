@@ -1,0 +1,11 @@
+{
+  "id": "LA-C428-peregrinatio",
+  "pathSegment": "LA-PATH-428-PROFECTIO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-428-PROFECTIO",
+      "order": 2
+    }
+  ]
+}

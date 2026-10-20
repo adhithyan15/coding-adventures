@@ -1,0 +1,8 @@
+{
+  "id": "LA-EXT-378-TEXO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that someone practises a craft, and that he makes, weaves, sews or carves something.",
+  "prerequisites": []
+}

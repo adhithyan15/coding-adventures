@@ -1,0 +1,19 @@
+{
+  "chapter": 455,
+  "title": "To catch sight of, To come near, To turn back, To delay, To stop for a while",
+  "label": "ch:la-to-catch-sight-of-to-come-near-to-turn-back-to-delay-to-stop-for-a-while",
+  "canDo": "I can talk about the end of a journey: catching sight of the town, coming near, turning back, delaying and stopping for a while.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C455-commoror",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 455: I can talk about the end of a journey: catching sight of the town, coming near, turning back, delaying and stopping for a while.",
+    "assesses": [
+      "LA-LEX-C455-CONSPICOR-03",
+      "LA-LEX-C455-CONSPICOR-04",
+      "LA-LEX-C455-CONSPICOR-05"
+    ]
+  }
+}

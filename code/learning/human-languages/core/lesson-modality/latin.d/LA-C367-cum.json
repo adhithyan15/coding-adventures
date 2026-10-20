@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C367-cum",
+    "language": "latin",
+    "chapter": 367,
+    "sequence": 19710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0bb25b62f7dc4b7"
+  },
+  "findings": []
+}

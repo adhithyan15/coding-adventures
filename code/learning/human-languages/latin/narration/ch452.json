@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 452,
+  "title": "To stray, Off the road, Without roads, Roundabout way, To wander about",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:9750a507c265caf6",
+  "lessons": [
+    {
+      "id": "LA-C452-aberro",
+      "sequence": 24080,
+      "title": "aberrō, aberrāre — to stray, to wander from the way",
+      "headword": "aberrō, aberrāre",
+      "romanization": "aberrō, aberrāre",
+      "gloss": "to stray, to wander from the way",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2f268069d3297809",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to show, then the Latin for to make known."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: aberrō, aberrāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aberrō, aberrāre — \"to stray, to wander from the way\"."
+            },
+            {
+              "kind": "speech",
+              "text": "In nebulā viātōrēs ā viā aberrant. In the fog the travellers stray from the road."
+            },
+            {
+              "kind": "speech",
+              "text": "aberrō, aberrāre, aberrāvī, aberrātum, with ā or ab. English aberration comes from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aberrō is built from ab 'away, from' and errō 'to wander, to go astray' (EtymDB; Lewis & Short). English aberration comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aberrō, aberrāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aberrō, aberrāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aberrō, aberrāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aberrō, aberrāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with aberrō, aberrāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *aberrō, aberrāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to show, then the Latin for to make known, then say aberrō, aberrāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to show, then the Latin for to make known, then say *aberrō, aberrāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does aberrō, aberrāre mean? (\"To stray, to wander from the way\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C452-devius",
+      "sequence": 24090,
+      "title": "dēvius, dēvia, dēvium — off the road, out of the way; remote",
+      "headword": "dēvius, dēvia, dēvium",
+      "romanization": "dēvius, dēvia, dēvium",
+      "gloss": "off the road, out of the way; remote",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:054b3d21e3e5e7ac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to make known, then the Latin for to stray."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dēvius, dēvia, dēvium",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēvius, dēvia, dēvium — \"off the road, out of the way; remote\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Vīlla dēvia est; nēmō eam facile invenit. The country house is out of the way; nobody finds it easily."
+            },
+            {
+              "kind": "speech",
+              "text": "An adjective of three endings, from dē 'off' and via 'road'. English devious first meant 'off the main road'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēvius is built from dē 'off, away from' and via 'road' (Lewis & Short). English devious comes from it, first in the sense 'out of the way'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēvius, dēvia, dēvium",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēvius, dēvia, dēvium*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēvius, dēvia, dēvium, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēvius, dēvia, dēvium*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dēvius, dēvia, dēvium",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dēvius, dēvia, dēvium*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to make known, then the Latin for to stray, then say dēvius, dēvia, dēvium again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to make known, then the Latin for to stray, then say *dēvius, dēvia, dēvium* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dēvius, dēvia, dēvium mean? (\"Off the road, out of the way; remote\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C452-invius",
+      "sequence": 24100,
+      "title": "invius, invia, invium — without roads, pathless, impassable",
+      "headword": "invius, invia, invium",
+      "romanization": "invius, invia, invium",
+      "gloss": "without roads, pathless, impassable",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:75aefb979f585d40",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to stray, then the Latin for off the road."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: invius, invia, invium",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "invius, invia, invium — \"without roads, pathless, impassable\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Silva magna et invia est; equī trānsīre nōn possunt. The wood is big and pathless; the horses cannot get through."
+            },
+            {
+              "kind": "speech",
+              "text": "An adjective of three endings, from in- 'not' and via 'road'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "invius is built from in- 'not' and via 'road' (EtymDB; Lewis & Short): without a road, so hard to pass."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "invius, invia, invium",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *invius, invia, invium*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "invius, invia, invium, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *invius, invia, invium*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with invius, invia, invium",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *invius, invia, invium*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to stray, then the Latin for off the road, then say invius, invia, invium again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to stray, then the Latin for off the road, then say *invius, invia, invium* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does invius, invia, invium mean? (\"Without roads, pathless, impassable\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C452-ambages",
+      "sequence": 24110,
+      "title": "ambāgēs, ambāgum — a roundabout way, a winding path; long-winded talk",
+      "headword": "ambāgēs, ambāgum",
+      "romanization": "ambāgēs, ambāgum",
+      "gloss": "a roundabout way, a winding path; long-winded talk",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d50ab6371e58ba95",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for off the road, then the Latin for without roads."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ambāgēs, ambāgum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ambāgēs, ambāgum — \"a roundabout way, a winding path; long-winded talk\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Pastor nōn rēctā viā sed per ambāgēs nōs dūcit. The shepherd leads us not by the direct road but by a roundabout way."
+            },
+            {
+              "kind": "speech",
+              "text": "Third declension, feminine, mostly plural: ambāgēs, ambāgum f.; the singular appears only in the ablative ambāge. Also talk that goes round the point."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ambāgēs is built from ambi- 'around' and agō 'to drive, to go' (EtymDB): a going round. Lewis & Short give a roundabout way, then roundabout speech."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ambāgēs, ambāgum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ambāgēs, ambāgum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ambāgēs, ambāgum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ambāgēs, ambāgum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ambāgēs, ambāgum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ambāgēs, ambāgum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for off the road, then the Latin for without roads, then say ambāgēs, ambāgum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for off the road, then the Latin for without roads, then say *ambāgēs, ambāgum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ambāgēs, ambāgum mean? (\"A roundabout way, a winding path; long-winded talk\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C452-vagor",
+      "sequence": 24120,
+      "title": "vagor, vagārī — to wander about, to roam",
+      "headword": "vagor, vagārī",
+      "romanization": "vagor, vagārī",
+      "gloss": "to wander about, to roam",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eeaa6a05e6cc53aa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for without roads, then the Latin for a roundabout way."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: vagor, vagārī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vagor, vagārī — \"to wander about, to roam\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Canis sine dominō per viās oppidī vagātur. A dog without a master roams the streets of the town."
+            },
+            {
+              "kind": "speech",
+              "text": "Deponent: vagor, vagārī, vagātus sum. English vagabond comes from vagābundus, built on it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vagor is built on the adjective vagus 'wandering, roving' (EtymDB; Lewis & Short). English vague comes from vagus, and vagabond from vagābundus, built on the verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vagor, vagārī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vagor, vagārī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vagor, vagārī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vagor, vagārī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with vagor, vagārī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *vagor, vagārī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for without roads, then the Latin for a roundabout way, then say vagor, vagārī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for without roads, then the Latin for a roundabout way, then say *vagor, vagārī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does vagor, vagārī mean? (\"To wander about, to roam\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

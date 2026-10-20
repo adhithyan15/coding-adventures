@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 349,
+  "sourceHash": "fnv1a64:e27536eaf5e20ba8",
+  "lessonIds": [
+    "LA-C349-fabulor",
+    "LA-C349-aio",
+    "LA-C349-mirabilis",
+    "LA-C349-incredibilis",
+    "LA-C349-commentum"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch349.txt",
+  "json": "latin/narration/ch349.json",
+  "textHash": "fnv1a64:ca5431f17d6c3bac",
+  "jsonHash": "fnv1a64:c53fd095033022be",
+  "findings": []
+}

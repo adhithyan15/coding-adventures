@@ -1,0 +1,19 @@
+{
+  "chapter": 553,
+  "title": "Doors and stores",
+  "label": "ch:la-doors-and-stores",
+  "canDo": "I can describe the entrance of a house and its stores.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C553-penus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 553: I can describe the entrance of a house and its stores.",
+    "assesses": [
+      "LA-LEX-C553-LIMN-03",
+      "LA-LEX-C553-LIMN-04",
+      "LA-LEX-C553-LIMN-05"
+    ]
+  }
+}

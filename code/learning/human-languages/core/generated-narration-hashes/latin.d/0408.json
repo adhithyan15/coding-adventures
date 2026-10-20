@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 408,
+  "sourceHash": "fnv1a64:c52885fd3632b8f8",
+  "lessonIds": [
+    "LA-C408-mendum",
+    "LA-C408-vitium",
+    "LA-C408-ferula",
+    "LA-C408-verber",
+    "LA-C408-vapulo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch408.txt",
+  "json": "latin/narration/ch408.json",
+  "textHash": "fnv1a64:d93bb4c830b0f901",
+  "jsonHash": "fnv1a64:e96e5b43ce7d4693",
+  "findings": []
+}

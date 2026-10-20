@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 410,
+  "sourceHash": "fnv1a64:4c9f2145a312852f",
+  "lessonIds": [
+    "LA-C410-rogatio",
+    "LA-C410-promulgo",
+    "LA-C410-abrogo",
+    "LA-C410-sancio",
+    "LA-C410-praescribo"
+  ],
+  "tex": "latin/book/chapters/ch410-passing-a-law.tex"
+}

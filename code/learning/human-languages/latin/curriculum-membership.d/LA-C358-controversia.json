@@ -1,0 +1,11 @@
+{
+  "id": "LA-C358-controversia",
+  "pathSegment": "LA-PATH-358-ASSENSUS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-358-ASSENSUS",
+      "order": 4
+    }
+  ]
+}

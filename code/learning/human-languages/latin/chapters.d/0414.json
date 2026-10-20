@@ -1,0 +1,19 @@
+{
+  "chapter": 414,
+  "title": "Right and Wrong",
+  "label": "ch:la-right-and-wrong",
+  "canDo": "I can talk about a wrong and a disgraceful act, what heaven allows and forbids, and call a thing unfair.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "LA-C414-iniquus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 414: I can talk about a wrong and a disgraceful act, what heaven allows and forbids, and call a thing unfair.",
+    "assesses": [
+      "LA-LEX-C414-INIURIA-03",
+      "LA-LEX-C414-INIURIA-04",
+      "LA-LEX-C414-INIURIA-05"
+    ]
+  }
+}

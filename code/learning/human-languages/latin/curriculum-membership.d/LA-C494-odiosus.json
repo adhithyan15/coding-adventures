@@ -1,0 +1,11 @@
+{
+  "id": "LA-C494-odiosus",
+  "pathSegment": "LA-PATH-494-ODI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-494-ODI",
+      "order": 1
+    }
+  ]
+}

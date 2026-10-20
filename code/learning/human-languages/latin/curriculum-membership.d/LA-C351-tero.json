@@ -1,0 +1,11 @@
+{
+  "id": "LA-C351-tero",
+  "pathSegment": "LA-PATH-351-CONCIDO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-351-CONCIDO",
+      "order": 4
+    }
+  ]
+}

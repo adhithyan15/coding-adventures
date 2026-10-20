@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 307,
+  "sourceHash": "fnv1a64:142b243ce7148bfe",
+  "lessonIds": [
+    "LA-C307-venenum",
+    "LA-C307-veneficus",
+    "LA-C307-insidiae",
+    "LA-C307-coniuratio",
+    "LA-C307-proditor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch307.txt",
+  "json": "latin/narration/ch307.json",
+  "textHash": "fnv1a64:7d9f568b480d0686",
+  "jsonHash": "fnv1a64:70e15c7b343afe18",
+  "findings": []
+}

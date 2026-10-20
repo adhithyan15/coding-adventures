@@ -1,0 +1,20 @@
+{
+  "language": "latin",
+  "chapter": 364,
+  "sourceHash": "fnv1a64:7318c3768deff0e8",
+  "lessonIds": [
+    "LA-C364-concludo",
+    "LA-C364-conclusio",
+    "LA-C364-ratiocinor",
+    "LA-C364-significo",
+    "LA-C364-suspicio",
+    "LA-R364-review-357-364"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "latin/narration/ch364.txt",
+  "json": "latin/narration/ch364.json",
+  "textHash": "fnv1a64:6bece7e698c3ada3",
+  "jsonHash": "fnv1a64:26eddb0b254934ea",
+  "findings": []
+}

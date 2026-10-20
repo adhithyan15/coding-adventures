@@ -1,0 +1,11 @@
+{
+  "id": "LA-C444-enavigo",
+  "pathSegment": "LA-PATH-444-MALACIA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-444-MALACIA",
+      "order": 4
+    }
+  ]
+}

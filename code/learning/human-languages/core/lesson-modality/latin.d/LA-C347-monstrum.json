@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C347-monstrum",
+    "language": "latin",
+    "chapter": 347,
+    "sequence": 18670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:457de0fb74451870"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C454-dextrorsum",
+    "language": "latin",
+    "chapter": 454,
+    "sequence": 24180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a0890c569569ad3"
+  },
+  "findings": []
+}

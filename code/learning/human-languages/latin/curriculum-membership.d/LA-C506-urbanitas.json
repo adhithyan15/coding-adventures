@@ -1,0 +1,11 @@
+{
+  "id": "LA-C506-urbanitas",
+  "pathSegment": "LA-PATH-506-COMI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-506-COMI",
+      "order": 2
+    }
+  ]
+}

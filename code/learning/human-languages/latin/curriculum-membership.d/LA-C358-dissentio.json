@@ -1,0 +1,11 @@
+{
+  "id": "LA-C358-dissentio",
+  "pathSegment": "LA-PATH-358-ASSENSUS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-358-ASSENSUS",
+      "order": 1
+    }
+  ]
+}

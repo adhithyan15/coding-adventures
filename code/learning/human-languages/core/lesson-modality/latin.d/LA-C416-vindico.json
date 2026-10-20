@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C416-vindico",
+    "language": "latin",
+    "chapter": 416,
+    "sequence": 22260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:60d39631f76393eb"
+  },
+  "findings": []
+}

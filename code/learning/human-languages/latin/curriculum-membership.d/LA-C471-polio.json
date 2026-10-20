@@ -1,0 +1,11 @@
+{
+  "id": "LA-C471-polio",
+  "pathSegment": "LA-PATH-471-TORNUS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-471-TORNUS",
+      "order": 2
+    }
+  ]
+}

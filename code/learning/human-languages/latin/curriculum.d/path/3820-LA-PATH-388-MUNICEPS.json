@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-388-MUNICEPS",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "LA-EXT-388-MUNICEPS"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C344-annales",
+  "pathSegment": "LA-PATH-344-MAIORES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-344-MAIORES",
+      "order": 1
+    }
+  ]
+}

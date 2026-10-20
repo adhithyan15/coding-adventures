@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 487,
+  "sourceHash": "fnv1a64:596198e4329c2212",
+  "lessonIds": [
+    "LA-C487-aquilo",
+    "LA-C487-auster",
+    "LA-C487-favonius",
+    "LA-C487-perflo",
+    "LA-C487-serenitas"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch487.txt",
+  "json": "latin/narration/ch487.json",
+  "textHash": "fnv1a64:f22201ec58d6c9e8",
+  "jsonHash": "fnv1a64:76148997fdc2d998",
+  "findings": []
+}

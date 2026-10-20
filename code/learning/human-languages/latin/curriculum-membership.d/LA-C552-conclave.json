@@ -1,0 +1,11 @@
+{
+  "id": "LA-C552-conclave",
+  "pathSegment": "LA-PATH-552-DOMI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-552-DOMI",
+      "order": 1
+    }
+  ]
+}

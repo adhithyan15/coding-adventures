@@ -1,0 +1,11 @@
+{
+  "id": "LA-C367-quominus",
+  "pathSegment": "LA-PATH-367-CUM",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-367-CUM",
+      "order": 3
+    }
+  ]
+}

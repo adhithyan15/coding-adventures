@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C300-tabellarius",
+    "language": "latin",
+    "chapter": 300,
+    "sequence": 16260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:712bccf91df43407"
+  },
+  "findings": []
+}

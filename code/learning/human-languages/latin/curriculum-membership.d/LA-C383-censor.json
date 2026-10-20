@@ -1,0 +1,11 @@
+{
+  "id": "LA-C383-censor",
+  "pathSegment": "LA-PATH-383-MAGISTRATUS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-383-MAGISTRATUS",
+      "order": 4
+    }
+  ]
+}

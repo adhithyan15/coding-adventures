@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-367-CUM",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "LA-EXT-367-CUM"
+  ],
+  "after": []
+}

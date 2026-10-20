@@ -1,0 +1,11 @@
+{
+  "id": "LA-C491-gemo",
+  "pathSegment": "LA-PATH-491-LACR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-491-LACR",
+      "order": 2
+    }
+  ]
+}

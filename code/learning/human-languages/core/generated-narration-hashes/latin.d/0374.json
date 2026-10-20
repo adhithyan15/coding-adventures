@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 374,
+  "sourceHash": "fnv1a64:cee6a4c5ba2f9e01",
+  "lessonIds": [
+    "LA-C374-noceo",
+    "LA-C374-prosum",
+    "LA-C374-obsum",
+    "LA-C374-impedio",
+    "LA-C374-perturbo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch374.txt",
+  "json": "latin/narration/ch374.json",
+  "textHash": "fnv1a64:817bdae54e71f835",
+  "jsonHash": "fnv1a64:eddc037c61b02bb4",
+  "findings": []
+}

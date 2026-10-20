@@ -1,4 +1,20 @@
 # Changelog — `aarch64-backend`
+## [0.40.0] — 2026-10-19 (LANG83 PR1b — floor division, `trap`, `write_i64`)
+
+- **`i64_div_floor` / `i64_mod_floor`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)): `SDIV` never
+  faults (it returns 0 for `x / 0` and `MIN` for `MIN / -1`), so both edges are
+  tested before it: `cbnz x1` → `Trap.DivZero`; `add x9, x1, #1; cbnz x9` +
+  `MIN` compare → `Trap.Overflow` (div) or a divide by 1 (mod). Then
+  `sdiv`/`msub` and the floor fix-up (`eor` sign test, `sub #1` / `add b`),
+  with X9–X11 as scratch.
+- **`trap "<kind>"`** → `movz x0, #kind_id; bl __twig_trap; udf #0x7EA9`.
+- **`write_i64`** joins `V1_BUILTINS` → `__twig_write_i64`.
+- `op_support`: the four PR1b ops are `Lowered`.
+- Tests are structural (no AArch64 execution on the x86-64 hosts): each
+  expected instruction word is produced by `aarch64-encoder` itself and located
+  in the output in the required order; trap relocations and `udf` placement are
+  checked. Real execution happens on the macOS ARM64 CI leg.
+
 ## [0.39.0] — 2026-10-19 (LANG83 PR1a — standard operation support)
 
 - **LANG83 op support.** New `op_support` module exporting `OP_SUPPORT` and

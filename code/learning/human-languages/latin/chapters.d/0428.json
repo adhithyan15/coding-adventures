@@ -1,0 +1,19 @@
+{
+  "chapter": 428,
+  "title": "Departure, Return, Travel abroad, To travel abroad, To go forward",
+  "label": "ch:la-departure-return-travel-abroad-to-travel-abroad-to-go-forward",
+  "canDo": "I can talk about leaving, coming back and travelling far: a departure, a return, travel abroad, travelling abroad, and going forward.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C428-progredior",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 428: I can talk about leaving, coming back and travelling far: a departure, a return, travel abroad, travelling abroad, and going forward.",
+    "assesses": [
+      "LA-LEX-C428-PROFECTIO-03",
+      "LA-LEX-C428-PROFECTIO-04",
+      "LA-LEX-C428-PROFECTIO-05"
+    ]
+  }
+}

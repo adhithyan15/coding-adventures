@@ -1,0 +1,19 @@
+{
+  "chapter": 482,
+  "title": "River, Torrent, Confluence, To flow, To swim across",
+  "label": "ch:la-river-torrent-confluence-to-flow-to-swim-across",
+  "canDo": "I can describe rivers: a broad river, a torrent, the place where rivers meet, water flowing, and swimming across.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C482-transnato",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 482: I can describe rivers: a broad river, a torrent, the place where rivers meet, water flowing, and swimming across.",
+    "assesses": [
+      "LA-LEX-C482-AMNIS-03",
+      "LA-LEX-C482-AMNIS-04",
+      "LA-LEX-C482-AMNIS-05"
+    ]
+  }
+}

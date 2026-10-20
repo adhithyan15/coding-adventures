@@ -1,0 +1,19 @@
+{
+  "chapter": 378,
+  "title": "Making Things by Hand",
+  "label": "ch:la-making-things-by-hand",
+  "canDo": "I can say that someone practises a craft, and that he makes, weaves, sews or carves something.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C378-sculpo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 378: I can say that someone practises a craft, and that he makes, weaves, sews or carves something.",
+    "assesses": [
+      "LA-LEX-C378-TEXO-03",
+      "LA-LEX-C378-TEXO-04",
+      "LA-LEX-C378-TEXO-05"
+    ]
+  }
+}

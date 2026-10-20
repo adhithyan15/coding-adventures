@@ -1,0 +1,11 @@
+{
+  "id": "LA-C364-suspicio",
+  "pathSegment": "LA-PATH-364-CONCLUDO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-364-CONCLUDO",
+      "order": 4
+    }
+  ]
+}

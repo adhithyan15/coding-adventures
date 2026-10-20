@@ -1,0 +1,11 @@
+{
+  "id": "LA-C318-flagro",
+  "pathSegment": "LA-PATH-318-CREMO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-318-CREMO",
+      "order": 2
+    }
+  ]
+}

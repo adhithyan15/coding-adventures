@@ -1,0 +1,11 @@
+{
+  "id": "LA-C336-venatio",
+  "pathSegment": "LA-PATH-336-GLADIATOR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-336-GLADIATOR",
+      "order": 3
+    }
+  ]
+}

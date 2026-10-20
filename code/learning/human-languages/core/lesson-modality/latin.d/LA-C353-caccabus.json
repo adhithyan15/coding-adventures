@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C353-caccabus",
+    "language": "latin",
+    "chapter": 353,
+    "sequence": 18980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:44145e62d8e68f5a"
+  },
+  "findings": []
+}

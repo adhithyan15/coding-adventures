@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 358,
+  "sourceHash": "fnv1a64:88662f042c1852e8",
+  "lessonIds": [
+    "LA-C358-assentior",
+    "LA-C358-dissentio",
+    "LA-C358-consentio",
+    "LA-C358-consensus",
+    "LA-C358-controversia"
+  ],
+  "tex": "latin/book/chapters/ch358-agreeing-and-disagreeing.tex"
+}

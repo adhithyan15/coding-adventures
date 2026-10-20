@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C428-profectio",
+    "language": "latin",
+    "chapter": 428,
+    "sequence": 22850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d23b26eb3c971623"
+  },
+  "findings": []
+}

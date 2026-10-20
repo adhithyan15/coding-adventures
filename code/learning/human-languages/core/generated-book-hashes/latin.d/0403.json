@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 403,
+  "sourceHash": "fnv1a64:764f7286a8df6a05",
+  "lessonIds": [
+    "LA-C403-doctus",
+    "LA-C403-indoctus",
+    "LA-C403-eruditus",
+    "LA-C403-sciens",
+    "LA-C403-imperitus"
+  ],
+  "tex": "latin/book/chapters/ch403-learned-and-unlearned.tex"
+}
