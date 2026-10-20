@@ -1236,6 +1236,7 @@ fn run_compiler_on_this_stack(config: &CompilerConfig) -> Result<CompilerOutput,
     // then by position, as upstream reports them.
     {
         let es_version = map_language_in_to_es_version(config);
+        let mut files: Vec<(String, String)> = Vec::with_capacity(inputs.len());
         let mut refused = Vec::new();
         for path in &inputs {
             let contents = fs::read_to_string(path).map_err(|e| CompilerError::InputReadError {
@@ -1243,15 +1244,15 @@ fn run_compiler_on_this_stack(config: &CompilerConfig) -> Result<CompilerOutput,
                 kind: e.kind(),
                 message: e.to_string(),
             })?;
-            refused.extend(crate::refusals::scan(
-                &crate::refusals::display_path(&path.to_string_lossy()),
-                &contents,
-                es_version,
-            ));
+            let found = crate::refusals::scan(files.len(), &contents, es_version);
+            if !found.is_empty() {
+                refused.extend(found);
+            }
+            files.push((crate::refusals::display_path(&path.to_string_lossy()), contents));
         }
         if !refused.is_empty() {
             return Err(CompilerError::Refused {
-                stderr: crate::refusals::render(&refused),
+                stderr: crate::refusals::render(&refused, &files),
                 errors: refused.len(),
             });
         }

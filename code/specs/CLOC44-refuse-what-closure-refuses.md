@@ -41,6 +41,20 @@ a.js:12:10: ERROR - [JSC_UNSUPPORTED_LANGUAGE_FEATURE] This language feature is 
 | order | input files in order, then source position |
 | exit status | `min(N, 127)` |
 
+### Bounded output, a deliberate divergence
+
+Upstream prints every error with its full excerpt, so a hostile single line
+(`#a;` repeated) makes its output grow with errors × line length. 30 KB of
+input gives about 450 MB. closurec matches upstream byte for byte up to
+`MAX_DIAGNOSTIC_BYTES` (16 MiB) of diagnostics. Past that, it omits the
+remaining error blocks but still prints the true `N error(s)` summary and exit
+status. A refusal stores only positions, and excerpts are read from each
+source once, so memory stays proportional to the input. That same 30 KB input
+peaks at about 48 MB, where an unbounded render took 1.25 GB.
+
+Excerpts echo source lines verbatim, control characters included, as upstream
+(and rustc, and gcc) do. That is parity, and is left as is.
+
 ## Slice 1: private elements
 
 Upstream reports `JSC_UNSUPPORTED_LANGUAGE_FEATURE` ("Private elements.") for

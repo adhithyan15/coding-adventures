@@ -147,6 +147,11 @@ counts as agreement when closurec declines identically. The three
 is now 55/57, 35/57 and 25/57. The four CCR-081 `simple-private-*` fixtures
 now assert the identical refusal. They had pinned closurec's old output.
 
+Diagnostics stay byte-identical up to 16 MiB. Past that, closurec stops
+printing error blocks but keeps the true count and exit status, because
+upstream's output grows with errors × line length on a hostile line. Memory
+stays proportional to the input. See CLOC44 for both.
+
 ### Fixed locally - verified Windows publication policies (CV02)
 
 Create prepared directories and files with atomically protected current-user

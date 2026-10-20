@@ -47,11 +47,13 @@
 use coding_adventures_javascript_lexer::tokenize_javascript_typed;
 use coding_adventures_javascript_tokens::EsVersion;
 
-/// One refused construct, located the way upstream reports it.
+/// One refused construct, located the way upstream reports it. It holds
+/// positions only. The excerpt is read from the source at render time, so
+/// memory stays proportional to the input however many errors there are.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Refusal {
-    /// The input file, spelled as on the command line.
-    pub file: String,
+    /// Index of the input file in the list passed to [`render`].
+    pub file: usize,
     /// 1-based line.
     pub line: usize,
     /// 0-based column, in characters.
@@ -60,9 +62,16 @@ pub struct Refusal {
     pub key: &'static str,
     /// The diagnostic message, exactly as upstream prints it.
     pub message: &'static str,
-    /// The source line the error points into, for the excerpt.
-    pub excerpt: String,
 }
+
+/// Rendered diagnostics stop growing past this many bytes. Upstream prints
+/// every error with a full excerpt, so on a hostile single-line input (`#a;`
+/// repeated) its output grows with errors × line length: 30 KB of input gives
+/// about 450 MB. Below this budget closurec matches upstream byte for byte.
+/// Past it, the remaining error blocks are omitted, and the summary line and
+/// exit status still count all of them. That is a deliberate divergence,
+/// since parity isn't worth gigabytes of stderr. See CLOC44.
+pub const MAX_DIAGNOSTIC_BYTES: usize = 16 << 20;
 
 const UNSUPPORTED_FEATURE: &str = "JSC_UNSUPPORTED_LANGUAGE_FEATURE";
 const PRIVATE_ELEMENTS: &str =
@@ -72,23 +81,17 @@ const PRIVATE_ELEMENTS: &str =
 ///
 /// A file the lexer can't tokenize yields none here, because the ordinary
 /// pipeline reports that failure itself.
-pub fn scan(file: &str, source: &str, version: EsVersion) -> Vec<Refusal> {
+pub fn scan(file: usize, source: &str, version: EsVersion) -> Vec<Refusal> {
     let Ok(tokens) = tokenize_javascript_typed(source, version) else {
         return Vec::new();
     };
-    let lines: Vec<&str> = source.lines().collect();
     let at = |t: &lexer::token::Token| Refusal {
-        file: file.to_string(),
+        file,
         line: t.line,
         // The lexer's columns are 1-based; upstream prints 0-based.
         column: t.column.saturating_sub(1),
         key: UNSUPPORTED_FEATURE,
         message: PRIVATE_ELEMENTS,
-        excerpt: lines
-            .get(t.line.saturating_sub(1))
-            .copied()
-            .unwrap_or_default()
-            .to_string(),
     };
     let mut out = Vec::new();
     for (i, t) in tokens.iter().enumerate() {
@@ -110,20 +113,34 @@ pub fn scan(file: &str, source: &str, version: EsVersion) -> Vec<Refusal> {
 }
 
 /// Render `refusals` exactly as upstream prints them to stderr, without the
-/// final newline (the CLI adds it).
-pub fn render(refusals: &[Refusal]) -> String {
+/// final newline (the CLI adds it). `files` holds `(display name, source)` for
+/// each input, indexed by [`Refusal::file`]. Output is capped at
+/// [`MAX_DIAGNOSTIC_BYTES`].
+pub fn render(refusals: &[Refusal], files: &[(String, String)]) -> String {
+    // Each file's lines, split once and borrowed, never copied per error.
+    let lines: Vec<Vec<&str>> = files.iter().map(|(_, src)| src.lines().collect()).collect();
     let mut out = String::new();
     for r in refusals {
+        let excerpt = lines
+            .get(r.file)
+            .and_then(|l| l.get(r.line.saturating_sub(1)))
+            .copied()
+            .unwrap_or_default();
+        let name = files.get(r.file).map(|(n, _)| n.as_str()).unwrap_or_default();
         let gutter = format!("  {}| ", r.line);
+        let pad = gutter.chars().count() + r.column;
+        // Header, excerpt line, caret line, blank line.
+        let block = name.len() + r.key.len() + r.message.len() + 48 + gutter.len() + excerpt.len() + pad;
+        if out.len().saturating_add(block) > MAX_DIAGNOSTIC_BYTES {
+            break;
+        }
         out.push_str(&format!(
-            "{}:{}:{}: ERROR - [{}] {}\n{gutter}{}\n{}^\n\n",
-            r.file,
+            "{name}:{}:{}: ERROR - [{}] {}\n{gutter}{excerpt}\n{}^\n\n",
             r.line,
             r.column,
             r.key,
             r.message,
-            r.excerpt,
-            " ".repeat(gutter.chars().count() + r.column),
+            " ".repeat(pad),
         ));
     }
     out.push_str(&format!("{} error(s), 0 warning(s)", refusals.len()));
@@ -153,7 +170,7 @@ mod tests {
     use super::*;
 
     fn scan_es(src: &str) -> Vec<Refusal> {
-        scan("a.js", src, EsVersion::Es2025)
+        scan(0, src, EsVersion::Es2025)
     }
 
     #[test]
@@ -193,7 +210,8 @@ mod tests {
     fn render_matches_upstream_bytes() {
         // Captured from closure-compiler-v20260915 (two errors, exit 2).
         let src = "class A { #x = 1; get(){ return this.#x; } }\nconsole.log(new A().get());\n";
-        let out = render(&scan("t.js", src, EsVersion::Es2025));
+        let files = vec![("t.js".to_string(), src.to_string())];
+        let out = render(&scan(0, src, EsVersion::Es2025), &files);
         let line = "class A { #x = 1; get(){ return this.#x; } }";
         let expected = format!(
             "t.js:1:10: ERROR - [{UNSUPPORTED_FEATURE}] {PRIVATE_ELEMENTS}\n  1| {line}\n{}^\n\n\
@@ -208,16 +226,29 @@ mod tests {
     #[test]
     fn multi_digit_lines_widen_the_gutter() {
         let src = format!("{}class C {{\n  #y;\n}}\n", "var v;\n".repeat(11));
-        let r = scan("b.js", &src, EsVersion::Es2025);
+        let r = scan(0, &src, EsVersion::Es2025);
         assert_eq!((r[0].line, r[0].column), (13, 2));
-        assert!(render(&r).starts_with("b.js:13:2: ERROR"));
-        assert!(render(&r).contains("\n  13|   #y;\n        ^\n"));
+        let files = vec![("b.js".to_string(), src.clone())];
+        assert!(render(&r, &files).starts_with("b.js:13:2: ERROR"));
+        assert!(render(&r, &files).contains("\n  13|   #y;\n        ^\n"));
     }
 
     #[test]
     fn display_path_collapses_repeated_slashes_like_java_file() {
         assert_eq!(display_path("/tmp//cc/a.js"), "/tmp/cc/a.js");
         assert_eq!(display_path("tests/diff/x/input/a.js"), "tests/diff/x/input/a.js");
+    }
+
+    #[test]
+    fn rendering_is_bounded_on_a_hostile_single_line() {
+        // `#a;` × 20000 on one line: upstream would print ~2.4 GB.
+        let src = "#a;".repeat(20_000);
+        let r = scan(0, &src, EsVersion::Es2025);
+        assert_eq!(r.len(), 20_000);
+        let files = vec![("h.js".to_string(), src)];
+        let out = render(&r, &files);
+        assert!(out.len() <= MAX_DIAGNOSTIC_BYTES + 64, "{}", out.len());
+        assert!(out.ends_with("20000 error(s), 0 warning(s)"));
     }
 
     #[test]
