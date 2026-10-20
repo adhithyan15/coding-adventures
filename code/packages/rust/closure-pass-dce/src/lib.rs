@@ -9,12 +9,11 @@
 //! Two cleanup categories:
 //!
 //! 1. **Dead-after-terminator**: in any `BlockStatement.body`, drop
-//!    everything after a `ReturnStatement` or a `ThrowStatement` — both
-//!    unconditionally end the statement list's execution, in every block
-//!    context, so what follows is unreachable. `BreakStatement` and
-//!    `ContinueStatement` only qualify relative to their enclosing loop/switch
-//!    scope, so they are handled only in switch-case consequents
-//!    (`is_case_terminator`), not at the general block level (Phase 2 work).
+//!    everything after a `return`, `throw`, `break` or `continue`. Each one
+//!    unconditionally ends the statement list's execution in every block
+//!    context, so what follows is unreachable. `break` and `continue` were
+//!    added by CCR-082 (#15878, gap-152). Switch-case consequents use the
+//!    separate `is_case_terminator`.
 //! 2. **Empty-statement removal**: drop `EmptyStatement` nodes
 //!    from `BlockStatement.body`. They're semantically a no-op,
 //!    just `;` noise.
@@ -791,12 +790,9 @@ fn dce_tagged_statement(stmt: &TaggedStatement, st: &mut DceState) -> TaggedStat
             // function. Everything after such a terminator in the
             // SAME case's consequent is unreachable.
             //
-            // We do NOT generalise into `is_terminator` (which
-            // handles block-level `ReturnStatement`-only dropping)
-            // because `BreakStatement` at function-body block
-            // level is a SyntaxError — broadening the block walker
-            // would mishandle that. Case consequents are a special
-            // context where Break is legal and terminating.
+            // Case consequents are a statement list but not a
+            // `BlockStatement`, so the block-level `is_terminator`
+            // never sees them; this loop is their own truncation.
             //
             // `Continue` is intentionally NOT a terminator here:
             // it could refer to an enclosing loop, in which case
@@ -1197,17 +1193,28 @@ fn dce_block_statement(b: &BlockStatement, st: &mut DceState) -> BlockStatement 
 ///   like `return` for dead-code purposes, in EVERY block context. (This is
 ///   the same reasoning `is_case_terminator` already applies to switch cases.)
 ///
-/// `break` / `continue` are deliberately excluded here: they only terminate
-/// flow relative to an *enclosing* loop/switch, so whether the statements after
-/// them in an arbitrary block are unreachable depends on context this
-/// block-level check doesn't have (and a bare `break`/`continue` in a
-/// function-body block is a SyntaxError a faithful parser never produces). The
-/// switch-case context handles `break` separately via `is_case_terminator`.
+/// - `continue …;` (CCR-082, #15878) jumps to the next iteration of a loop,
+///   labelled or not. Wherever that loop is, control leaves *this* statement
+///   list unconditionally, so what follows it here never runs. Upstream
+///   truncates the tail and then empties the loop body:
+///   `for(var c=0;c<1;c++){continue;g()}` → `for(var c=0;c<1;c++);`.
+///
+/// - `break …;` (CCR-082, gap-152) leaves the enclosing loop, `switch` or
+///   labelled statement, labelled or not, so it too leaves *this* list
+///   unconditionally. This is upstream's own `UnreachableCodeEliminationTest`
+///   rule: `while (c) { break; y(); }` → `while (c) { break; }`. In a bare
+///   function body a `break` is a SyntaxError that the parser never produces,
+///   so treating it as a terminator there can't misfire.
+///
+/// Whatever the terminator, `tail_is_safe_to_truncate` still guards the tail:
+/// a hoisted `var` or `function` after it keeps the whole tail alive.
 fn is_terminator(stmt: &Statement) -> bool {
     matches!(
         stmt,
         Statement::Tagged(TaggedStatement::ReturnStatement(_))
             | Statement::Tagged(TaggedStatement::ThrowStatement(_))
+            | Statement::Tagged(TaggedStatement::ContinueStatement(_))
+            | Statement::Tagged(TaggedStatement::BreakStatement(_))
     )
 }
 
@@ -1230,9 +1237,19 @@ fn is_terminator(stmt: &Statement) -> bool {
 /// - `debugger` (declares nothing, and an UNREACHABLE one can never fire, so
 ///   dropping it is a genuine no-op — CCR-053 stopped removing *reachable*
 ///   `debugger` statements precisely because those are observable, and this is
-///   the other side of that line),
-/// - `let` / `const` declarations (block-scoped, TDZ — not hoisted; a
-///   reference before the declaration throws either way).
+///   the other side of that line).
+///
+/// Not `let` / `const`, though they are block-scoped and not hoisted. A dead
+/// `let x` still creates this block's binding for `x` from the block's start,
+/// so code *before* the terminator that reads `x` hits the TDZ and throws.
+/// Dropping the declaration would silently send that read to an outer `x`
+/// instead, a behaviour change:
+///
+/// ```js
+/// var x = 5;
+/// for (;;) { try { log(x) } catch (e) { log("TDZ") } break; let x; }
+/// // source prints "TDZ"; without `let x` it would print 5
+/// ```
 ///
 /// Every other form — a `function` declaration, a `var` declaration, or ANY
 /// compound statement (`if` / `while` / `for` / block / `switch` / labeled)
@@ -1253,8 +1270,10 @@ fn tail_is_safe_to_truncate(stmts: &[Statement]) -> bool {
                 | TaggedStatement::ThrowStatement(_)
                 | TaggedStatement::DebuggerStatement(_)
         ),
-        // `let` / `const` are block-scoped (safe to drop); `var` hoists (unsafe).
-        Statement::Declaration(Declaration::VariableDeclaration(vd)) => vd.kind != VarKind::Var,
+        // `var` hoists, and a dead `let`/`const` still shadows (and TDZ-guards)
+        // its name across the whole block, so any declaration is unsafe. A
+        // genuinely unused one is removed downstream by remove-unused-vars.
+        Statement::Declaration(Declaration::VariableDeclaration(_)) => false,
         // A `function` declaration is itself a hoisted binding — unsafe.
         Statement::Declaration(Declaration::FunctionDeclaration(_)) => false,
         // A `class` declaration binds a name too — treated as unsafe like a
@@ -2483,17 +2502,15 @@ mod tests {
     }
 
     #[test]
-    fn drops_tail_of_let_declarations_after_terminator() {
-        // `let`/`const` are block-scoped (not hoisted), so a tail of only
-        // `let`/`const` declarations (here a `let`) IS safe to drop. Uses a
-        // `var`-free declaration to confirm the whitelist admits non-`var`
-        // declarations.
+    fn keeps_tail_of_let_declarations_after_terminator() {
+        // A dead `let k` still binds `k` (in its TDZ) across the whole block,
+        // so a read of `k` before the terminator throws. Dropping it would
+        // redirect that read to an outer `k`, so the tail is kept.
         let body = vec![return_stmt(), let_decl_stmt("k")];
         let prog = program_with_function(body, Some("block.1"));
-        let (out, _contribs, changed, _) = run_pass(prog);
-        assert!(changed, "a let-only tail after a terminator is safe to drop");
+        let (out, _contribs, _changed, _) = run_pass(prog);
         let new_block = extract_function_body(&out);
-        assert_eq!(new_block.body.len(), 1, "only the terminator should remain");
+        assert_eq!(new_block.body.len(), 2, "the let-bearing tail must survive");
     }
 
     #[test]
@@ -4032,5 +4049,100 @@ mod tests {
             .with_body(vec![ProgramItem::Statement(if_full(ident("x"), expr_stmt(call0("g")), None))]);
         let (out, _c, _changed, _) = run_pass(prog);
         assert_eq!(out.body.len(), 1, "non-empty-consequent if must be kept");
+    }
+
+    // ---- CCR-082 (#15878): `continue` / `break` end their statement list --
+    //
+    // `continue` and `break` (labelled or not) transfer control unconditionally, so the
+    // statements after it in the same list never run — exactly like `return`
+    // and `throw`. Upstream truncates them and then empties the loop body:
+    //
+    //   for(var c=0;c<1;c++){continue;g()}  →  for(var c=0;c<1;c++);
+    //
+    // A hoisted `var`/`function` in the tail still blocks truncation
+    // (`tail_is_safe_to_truncate`); upstream hoists such a `var` into the
+    // `for` head instead, which is a separate slice.
+
+    use coding_adventures_javascript_ast::{ContinueStatement, WhileStatement};
+
+    fn continue_stmt(label: Option<&str>) -> Statement {
+        Statement::continue_statement(ContinueStatement {
+            cv: None,
+            label: label.map(|name| Identifier {
+                cv: None,
+                name: name.to_string(),
+            }),
+        })
+    }
+
+    /// `while (c) { <body> }` inside a function; returns the loop body after DCE.
+    fn dce_loop_body(body: Vec<Statement>) -> Vec<Statement> {
+        let loop_stmt = Statement::while_statement(WhileStatement {
+            cv: None,
+            test: ident("c"),
+            body: Box::new(Statement::block_statement(BlockStatement { cv: None, body })),
+        });
+        let prog = program_with_function(vec![loop_stmt], Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let fn_body = extract_function_body(&out);
+        let Statement::Tagged(TaggedStatement::WhileStatement(w)) = &fn_body.body[0] else {
+            panic!("expected the while loop, got {:?}", fn_body.body[0]);
+        };
+        let Statement::Tagged(TaggedStatement::BlockStatement(b)) = w.body.as_ref() else {
+            panic!("expected a block body, got {:?}", w.body);
+        };
+        b.body.clone()
+    }
+
+    #[test]
+    fn ccr082_drops_statements_after_continue() {
+        // while(c){continue;g();debugger} → while(c){continue}
+        let body = dce_loop_body(vec![
+            continue_stmt(None),
+            expr_stmt(ident("g")),
+            debugger_stmt(),
+        ]);
+        assert_eq!(body.len(), 1, "dead tail after continue must go: {body:?}");
+        assert!(matches!(
+            &body[0],
+            Statement::Tagged(TaggedStatement::ContinueStatement(_))
+        ));
+    }
+
+    #[test]
+    fn ccr082_drops_statements_after_labelled_continue() {
+        // A labelled `continue` still leaves this list unconditionally.
+        let body = dce_loop_body(vec![continue_stmt(Some("outer")), expr_stmt(ident("g"))]);
+        assert_eq!(body.len(), 1, "{body:?}");
+    }
+
+    #[test]
+    fn ccr082_keeps_statements_before_continue() {
+        // while(c){g();continue;h()} → while(c){g();continue}
+        let body = dce_loop_body(vec![
+            expr_stmt(ident("g")),
+            continue_stmt(None),
+            expr_stmt(ident("h")),
+        ]);
+        assert_eq!(body.len(), 2, "{body:?}");
+    }
+
+    #[test]
+    fn ccr082_drops_statements_after_break() {
+        // while(c){break;g()} → while(c){break} (upstream UCE test rule).
+        let brk = Statement::break_statement(coding_adventures_javascript_ast::BreakStatement {
+            cv: None,
+            label: None,
+        });
+        let body = dce_loop_body(vec![brk, expr_stmt(ident("g"))]);
+        assert_eq!(body.len(), 1, "{body:?}");
+    }
+
+    #[test]
+    fn ccr082_hoisted_function_in_tail_still_blocks_truncation() {
+        // while(c){continue;function h(){}} — the declaration hoists, so the
+        // tail is preserved, exactly as after `return`.
+        let body = dce_loop_body(vec![continue_stmt(None), func_decl_stmt("h")]);
+        assert_eq!(body.len(), 2, "{body:?}");
     }
 }
