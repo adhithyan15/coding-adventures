@@ -65,12 +65,17 @@ through a symlink (or, on Windows, a junction) planted in the output tree:
 
 | Platform | File | How the tree is walked | Race-free against a concurrent swap? |
 |----------|------|------------------------|--------------------------------------|
-| Unix     | `backend_unix.go` | `openat(parent, child, O_DIRECTORY\|O_NOFOLLOW)` per component | yes |
+| Unix     | `backend_unix.go` | `openat(parent, child, O_DIRECTORY\|O_NOFOLLOW)` per component, write an `O_EXCL` temp file and `renameat` it over the target | yes |
 | Windows  | `backend_windows.go` + `backend_pathwalk.go` | `Mkdir` + `Lstat` per component, reject reparse points, write an `O_EXCL` temp file and `os.Rename` it over the target | no: a directory swapped for a junction between check and write is not caught |
 | other    | `backend_other.go` | refuses | n/a |
 
 Both walks reject a root that is a file or a link, a link in the package
-directories, and an existing output that is not a plain file. Class filenames
+directories, and an existing output that is not a plain file. Neither walk
+opens the target name for writing, so a *hard* link planted there (which
+`O_NOFOLLOW` cannot see) is replaced rather than written through. Both start
+from the deepest existing ancestor of the output root, so system links above it
+(macOS's `/var -> /private/var`) are fine, and both return an absolute,
+canonical path. Class filenames
 whose components contain `\`, `:` or NUL are rejected everywhere. The tests run
 every write-safety case under both walks, so POSIX CI covers the Windows code
 path as well.
