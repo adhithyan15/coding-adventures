@@ -1,0 +1,5 @@
+oracle: host CPython 3.11.17, 3.12.3, 3.13.16 (python3.11, python3.12, python3.13)
+command: {python3.11,python3.12,python3.13} -I print_forms.py
+result: exit 0; stdout is exactly <name>.expect
+releases: 3.11.17, 3.12.3 and 3.13.16 by their own host interpreters (above); 3.0a1 and 3.16.0a1 through the py3 profile's pinned-source evidence (python-iir-compiler/src/profiles.rs)
+why: `print()` writes one newline; `;` between statements and after the last
