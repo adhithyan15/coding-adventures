@@ -1,0 +1,11 @@
+{
+  "id": "GE-C342-ausloeser",
+  "pathSegment": "GE-PATH-342-WIRKUNG",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-342-WIRKUNG",
+      "order": 4
+    }
+  ]
+}

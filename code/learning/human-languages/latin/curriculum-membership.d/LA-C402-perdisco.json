@@ -1,0 +1,11 @@
+{
+  "id": "LA-C402-perdisco",
+  "pathSegment": "LA-PATH-402-EDISCO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-402-EDISCO",
+      "order": 1
+    }
+  ]
+}

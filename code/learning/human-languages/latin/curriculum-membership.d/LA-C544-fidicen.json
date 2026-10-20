@@ -1,0 +1,11 @@
+{
+  "id": "LA-C544-fidicen",
+  "pathSegment": "LA-PATH-544-CITH",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-544-CITH",
+      "order": 3
+    }
+  ]
+}

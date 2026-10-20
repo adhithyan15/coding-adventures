@@ -1,0 +1,19 @@
+{
+  "chapter": 434,
+  "title": "Den Schildern nach",
+  "label": "ch:ge-den-schildern-nach",
+  "canDo": "I can follow signs: the signpost, the sign, the arrow, the turning and branching off.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C434-abzweigen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 434: I can follow signs: the signpost, the sign, the arrow, the turning and branching off.",
+    "assesses": [
+      "GE-LEX-C434-WEGWEISER-03",
+      "GE-LEX-C434-WEGWEISER-04",
+      "GE-LEX-C434-WEGWEISER-05"
+    ]
+  }
+}

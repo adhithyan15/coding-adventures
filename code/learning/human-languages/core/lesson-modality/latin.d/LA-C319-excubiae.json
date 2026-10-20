@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C319-excubiae",
+    "language": "latin",
+    "chapter": 319,
+    "sequence": 17260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fc059fafb034415f"
+  },
+  "findings": []
+}

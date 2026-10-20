@@ -1,0 +1,19 @@
+{
+  "chapter": 367,
+  "title": "Vielleicht",
+  "label": "ch:ge-vielleicht",
+  "canDo": "I can say that something might happen: possibly, maybe, perhaps even, and add at any rate and after all.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GE-C367-womoeglich",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 367: I can say that something might happen: possibly, maybe, perhaps even, and add at any rate and after all.",
+    "assesses": [
+      "GE-LEX-C367-EVENTUELL-03",
+      "GE-LEX-C367-EVENTUELL-04",
+      "GE-LEX-C367-EVENTUELL-05"
+    ]
+  }
+}

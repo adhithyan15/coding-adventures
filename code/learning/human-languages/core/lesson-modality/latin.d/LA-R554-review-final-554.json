@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-R554-review-final-554",
+    "language": "latin",
+    "chapter": 554,
+    "sequence": 29390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3809e371209b7e96"
+  },
+  "findings": []
+}

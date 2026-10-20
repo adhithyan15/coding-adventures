@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C429-carrus",
+    "language": "latin",
+    "chapter": 429,
+    "sequence": 22900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:69cb076d8d56075c"
+  },
+  "findings": []
+}

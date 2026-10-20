@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-292-REPENTE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-292-REPENTE"
+  ],
+  "after": []
+}

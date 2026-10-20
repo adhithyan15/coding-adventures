@@ -1,0 +1,11 @@
+{
+  "id": "GE-C387-betrag",
+  "pathSegment": "GE-PATH-387-KONTO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-387-KONTO",
+      "order": 4
+    }
+  ]
+}

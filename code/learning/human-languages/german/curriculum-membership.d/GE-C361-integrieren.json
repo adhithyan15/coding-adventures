@@ -1,0 +1,11 @@
+{
+  "id": "GE-C361-integrieren",
+  "pathSegment": "GE-PATH-361-EINWANDERUNG",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-361-EINWANDERUNG",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C373-einplanen",
+  "pathSegment": "GE-PATH-373-UNVORHERGESEHEN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-373-UNVORHERGESEHEN",
+      "order": 4
+    }
+  ]
+}

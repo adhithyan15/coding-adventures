@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-309-ACCUSO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-309-ACCUSO"
+  ],
+  "after": []
+}

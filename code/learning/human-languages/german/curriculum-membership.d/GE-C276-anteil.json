@@ -1,0 +1,11 @@
+{
+  "id": "GE-C276-anteil",
+  "pathSegment": "GE-PATH-276-UMFRAGE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-276-UMFRAGE",
+      "order": 2
+    }
+  ]
+}

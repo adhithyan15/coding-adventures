@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 317,
+  "sourceHash": "fnv1a64:1d01ae9f11c88f18",
+  "lessonIds": [
+    "LA-C317-incendium",
+    "LA-C317-aestus",
+    "LA-C317-favilla",
+    "LA-C317-torris",
+    "LA-C317-ardor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch317.txt",
+  "json": "latin/narration/ch317.json",
+  "textHash": "fnv1a64:b8d209b1fab00b91",
+  "jsonHash": "fnv1a64:7aed867cfccddce0",
+  "findings": []
+}

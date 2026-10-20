@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 474,
+  "sourceHash": "fnv1a64:1bcb4eccacb4f4b5",
+  "lessonIds": [
+    "GE-C474-staunen",
+    "GE-C474-erstaunt",
+    "GE-C474-verwirrt",
+    "GE-C474-neugier",
+    "GE-C474-sprachlos"
+  ],
+  "tex": "german/book/chapters/ch474-staunen-und-neugier.tex"
+}

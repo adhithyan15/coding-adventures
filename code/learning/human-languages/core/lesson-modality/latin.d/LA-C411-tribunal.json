@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C411-tribunal",
+    "language": "latin",
+    "chapter": 411,
+    "sequence": 21960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:980f3820573d3510"
+  },
+  "findings": []
+}

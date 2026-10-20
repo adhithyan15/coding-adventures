@@ -1,0 +1,11 @@
+{
+  "id": "GE-C293-waldbrand",
+  "pathSegment": "GE-PATH-293-BRENNEN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-293-BRENNEN",
+      "order": 4
+    }
+  ]
+}

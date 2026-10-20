@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "german",
+  "chapter": 352,
+  "title": "Ohne Arbeit",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e16a2810580ae1e6",
+  "lessons": [
+    {
+      "id": "GE-C352-entlassen",
+      "sequence": 19120,
+      "title": "entlassen — to lay off, to dismiss; to discharge",
+      "headword": "entlassen",
+      "romanization": "entlassen",
+      "gloss": "to lay off, to dismiss; to discharge",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d5b5cf8acaea85f8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the hour of overtime, then the German for the end of the working day."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: entlassen",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "entlassen — \"to lay off, to dismiss; to discharge\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Die Fabrik hat fünfzig Mitarbeiter entlassen. The factory laid off fifty employees."
+            },
+            {
+              "kind": "speech",
+              "text": "Inseparable and strong: sie entlässt, sie hat entlassen. From hospital: Er wird morgen entlassen — he is being discharged tomorrow."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "entlassen is built with ent- \"away\" on lassen \"to let, to let go\", inherited from Old High German lāzan and Proto-Germanic lētaną (EtymDB): you let someone go."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "entlassen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *entlassen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "entlassen, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *entlassen*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with entlassen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *entlassen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the hour of overtime, then the German for the end of the working day, then say entlassen again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the hour of overtime, then the German for the end of the working day, then say *entlassen* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does entlassen mean? (\"To lay off, to dismiss; to discharge\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C352-arbeitslos",
+      "sequence": 19130,
+      "title": "arbeitslos — unemployed, out of work",
+      "headword": "arbeitslos",
+      "romanization": "arbeitslos",
+      "gloss": "unemployed, out of work",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5780701ca7978418",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the end of the working day, then the German for to lay off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: arbeitslos",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "arbeitslos — \"unemployed, out of work\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Nach der Kündigung war er drei Monate arbeitslos. After he was given notice, he was out of work for three months."
+            },
+            {
+              "kind": "speech",
+              "text": "Der Arbeitslose, die Arbeitslose — the unemployed person, declined like an adjective."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "arbeitslos joins Arbeit \"work\", Proto-Germanic arbaidiz (EtymDB), to -los \"without\", from Old High German lōs \"loose, free, lacking\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arbeitslos",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arbeitslos*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arbeitslos, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arbeitslos*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with arbeitslos",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *arbeitslos*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the end of the working day, then the German for to lay off, then say arbeitslos again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the end of the working day, then the German for to lay off, then say *arbeitslos* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does arbeitslos mean? (\"Unemployed, out of work\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C352-arbeitslosigkeit",
+      "sequence": 19140,
+      "title": "die Arbeitslosigkeit — unemployment",
+      "headword": "die Arbeitslosigkeit",
+      "romanization": "die Arbeitslosigkeit",
+      "gloss": "unemployment",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d9703ad171db97af",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to lay off, then the German for unemployed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Arbeitslosigkeit",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Arbeitslosigkeit — \"unemployment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "In dieser Region ist die Arbeitslosigkeit sehr hoch. Unemployment is very high in this region."
+            },
+            {
+              "kind": "speech",
+              "text": "No plural in everyday use. Die Arbeitslosenquote — the unemployment rate."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Arbeitslosigkeit is formed from arbeitslos with -igkeit; the adjective joins Arbeit \"work\" to -los \"without\", from Old High German lōs (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Arbeitslosigkeit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Arbeitslosigkeit*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Arbeitslosigkeit, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Arbeitslosigkeit*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with die Arbeitslosigkeit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *die Arbeitslosigkeit*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to lay off, then the German for unemployed, then say die Arbeitslosigkeit again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to lay off, then the German for unemployed, then say *die Arbeitslosigkeit* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does die Arbeitslosigkeit mean? (\"Unemployment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C352-probezeit",
+      "sequence": 19150,
+      "title": "die Probezeit — the trial period, the probation",
+      "headword": "die Probezeit",
+      "romanization": "die Probezeit",
+      "gloss": "the trial period, the probation",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:690b41b84c61aa2d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for unemployed, then the German for unemployment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Probezeit",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Probezeit — \"the trial period, the probation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "In der Probezeit kann man schneller kündigen. During the trial period you can give notice more quickly."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Probezeiten. Usually the first six months of a new job."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Probezeit joins Probe \"trial, test\", borrowed from Late Latin proba \"proof\", from probāre \"to test, to approve\" (EtymDB; Lewis & Short), to Zeit \"time\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Probezeit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Probezeit*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Probezeit, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Probezeit*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with die Probezeit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *die Probezeit*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for unemployed, then the German for unemployment, then say die Probezeit again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for unemployed, then the German for unemployment, then say *die Probezeit* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does die Probezeit mean? (\"The trial period, the probation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C352-einarbeiten",
+      "sequence": 19160,
+      "title": "einarbeiten — to train in (a new colleague); to settle in (sich einarbeiten)",
+      "headword": "einarbeiten",
+      "romanization": "einarbeiten",
+      "gloss": "to train in (a new colleague); to settle in (sich einarbeiten)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9685f98a114d05bd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for unemployment, then the German for the trial period."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: einarbeiten",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "einarbeiten — \"to train in (a new colleague); to settle in (sich einarbeiten)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Eine Kollegin arbeitet mich in den ersten Wochen ein. A colleague is training me in during the first weeks."
+            },
+            {
+              "kind": "speech",
+              "text": "Separable: sie arbeitet mich ein, sie hat mich eingearbeitet. Sich einarbeiten — to get to know a new job."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "einarbeiten is built from ein \"in\" and arbeiten \"to work\", from Arbeit, Old High German arbeit and Proto-Germanic arbaidiz \"labour, hardship\" (EtymDB): you work someone into a job."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "einarbeiten",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *einarbeiten*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "einarbeiten, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *einarbeiten*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with einarbeiten",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *einarbeiten*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for unemployment, then the German for the trial period, then say einarbeiten again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for unemployment, then the German for the trial period, then say *einarbeiten* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does einarbeiten mean? (\"To train in (a new colleague); to settle in (sich einarbeiten)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

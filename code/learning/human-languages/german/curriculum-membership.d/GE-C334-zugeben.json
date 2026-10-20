@@ -1,0 +1,11 @@
+{
+  "id": "GE-C334-zugeben",
+  "pathSegment": "GE-PATH-334-ZUSTIMMEN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-334-ZUSTIMMEN",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C532-libertinus",
+  "pathSegment": "LA-PATH-532-LIBT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-532-LIBT",
+      "order": 1
+    }
+  ]
+}

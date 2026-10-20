@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C542-rusticor",
+    "language": "latin",
+    "chapter": 542,
+    "sequence": 28740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4f8e48d54816a266"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-R478-review-471-478",
+    "language": "latin",
+    "chapter": 478,
+    "sequence": 25460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:54597c951304fead"
+  },
+  "findings": []
+}

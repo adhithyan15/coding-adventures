@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C531-ostiarius",
+    "language": "latin",
+    "chapter": 531,
+    "sequence": 28170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:397ff22dad4b9cf8"
+  },
+  "findings": []
+}

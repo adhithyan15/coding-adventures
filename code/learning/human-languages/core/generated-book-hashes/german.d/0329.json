@@ -1,0 +1,15 @@
+{
+  "language": "german",
+  "chapter": 329,
+  "sourceHash": "fnv1a64:9d8185ed9113b85b",
+  "lessonIds": [
+    "GE-C329-anrichten",
+    "GE-C329-garnieren",
+    "GE-C329-servieren",
+    "GE-C329-abkuehlen",
+    "GE-C329-knusprig",
+    "GE-R329-review-326-329",
+    "GE-R329-review-final-329"
+  ],
+  "tex": "german/book/chapters/ch329-guten-appetit.tex"
+}

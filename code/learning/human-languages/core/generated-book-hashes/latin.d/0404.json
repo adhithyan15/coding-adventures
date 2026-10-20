@@ -1,0 +1,14 @@
+{
+  "language": "latin",
+  "chapter": 404,
+  "sourceHash": "fnv1a64:a5c0111ecac5e815",
+  "lessonIds": [
+    "LA-C404-rhetor",
+    "LA-C404-rhetorica",
+    "LA-C404-dialectica",
+    "LA-C404-geometria",
+    "LA-C404-elementum",
+    "LA-R404-review-397-404"
+  ],
+  "tex": "latin/book/chapters/ch404-what-pupils-studied.tex"
+}

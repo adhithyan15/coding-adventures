@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:0df6772b7041c334",
+  "lessonIds": [
+    "GE-C314-zaubern",
+    "GE-C314-verzaubern",
+    "GE-C314-verwandeln",
+    "GE-C314-fluch",
+    "GE-C314-drache"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch314.txt",
+  "json": "german/narration/ch314.json",
+  "textHash": "fnv1a64:ffb218b79597b2b0",
+  "jsonHash": "fnv1a64:504bfeeac92261d1",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C284-festnehmen",
+  "pathSegment": "GE-PATH-284-VERDACHT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-284-VERDACHT",
+      "order": 4
+    }
+  ]
+}

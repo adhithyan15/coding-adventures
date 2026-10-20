@@ -1,0 +1,11 @@
+{
+  "id": "GE-C455-plaetschern",
+  "pathSegment": "GE-PATH-455-WASSERFALL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-455-WASSERFALL",
+      "order": 3
+    }
+  ]
+}

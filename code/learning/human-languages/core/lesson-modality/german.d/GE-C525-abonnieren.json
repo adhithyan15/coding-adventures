@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C525-abonnieren",
+    "language": "german",
+    "chapter": 525,
+    "sequence": 28030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8bc5d1c7b5b4d001"
+  },
+  "findings": []
+}

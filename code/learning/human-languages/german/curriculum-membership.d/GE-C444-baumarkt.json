@@ -1,0 +1,11 @@
+{
+  "id": "GE-C444-baumarkt",
+  "pathSegment": "GE-PATH-444-BAUMARKT",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-444-BAUMARKT",
+      "order": 0
+    }
+  ]
+}

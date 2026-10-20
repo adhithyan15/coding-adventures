@@ -1,0 +1,11 @@
+{
+  "id": "GE-C440-buergersteig",
+  "pathSegment": "GE-PATH-440-BRUNNEN",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-440-BRUNNEN",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C526-fegen",
+  "pathSegment": "GE-PATH-526-PUTZEN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-526-PUTZEN",
+      "order": 2
+    }
+  ]
+}

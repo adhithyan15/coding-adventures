@@ -1,0 +1,11 @@
+{
+  "id": "LA-C393-conor",
+  "pathSegment": "LA-PATH-393-STATUO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-393-STATUO",
+      "order": 4
+    }
+  ]
+}

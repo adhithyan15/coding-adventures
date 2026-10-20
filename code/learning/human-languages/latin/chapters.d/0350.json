@@ -1,0 +1,19 @@
+{
+  "chapter": 350,
+  "title": "In macellō",
+  "label": "ch:la-in-macello",
+  "canDo": "I can tell how food was bought and made ready: to buy food, the provisions, to wash off, to wipe clean and the small knife.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C350-cultellus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 350: I can tell how food was bought and made ready: to buy food, the provisions, to wash off, to wipe clean and the small knife.",
+    "assesses": [
+      "LA-LEX-C350-OBSONO-03",
+      "LA-LEX-C350-OBSONO-04",
+      "LA-LEX-C350-OBSONO-05"
+    ]
+  }
+}

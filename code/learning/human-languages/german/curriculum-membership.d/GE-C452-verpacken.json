@@ -1,0 +1,11 @@
+{
+  "id": "GE-C452-verpacken",
+  "pathSegment": "GE-PATH-452-LIEFERUNG",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-452-LIEFERUNG",
+      "order": 1
+    }
+  ]
+}

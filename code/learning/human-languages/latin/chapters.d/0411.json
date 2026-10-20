@@ -1,0 +1,19 @@
+{
+  "chapter": 411,
+  "title": "Going to Law",
+  "label": "ch:la-going-to-law",
+  "canDo": "I can talk about the judgement seat, a lawsuit and going to law, bail and a legal expert.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "LA-C411-iurisconsultus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 411: I can talk about the judgement seat, a lawsuit and going to law, bail and a legal expert.",
+    "assesses": [
+      "LA-LEX-C411-TRIBUNAL-03",
+      "LA-LEX-C411-TRIBUNAL-04",
+      "LA-LEX-C411-TRIBUNAL-05"
+    ]
+  }
+}

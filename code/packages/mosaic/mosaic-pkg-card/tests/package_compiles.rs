@@ -75,7 +75,7 @@ fn manifest_declares_expected_exports() {
         .and_then(|p| p.get("version"))
         .and_then(|v| v.as_str())
         .expect("[package].version must be set");
-    assert_eq!(version, "0.1.0", "[package].version must be 0.1.0 for the initial release");
+    assert_eq!(version, "0.2.0", "[package].version must be 0.2.0: the body slot is `body-text`");
 
     // [components].exports
     let exports = value
@@ -126,7 +126,7 @@ fn card_mil_compiles_with_expected_interface() {
     let slot_names: Vec<&str> = out.component.slots.iter().map(|s| s.name.as_str()).collect();
     assert_eq!(
         slot_names,
-        vec!["title", "body", "footer"],
+        vec!["title", "body-text", "footer"],
         "Card must expose exactly three slots in order: title, body, footer"
     );
     for slot in &out.component.slots {

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C398-ausfahrt",
+  "pathSegment": "GE-PATH-398-LANDSTRASSE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-398-LANDSTRASSE",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C367-zumindest",
+  "pathSegment": "GE-PATH-367-EVENTUELL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-367-EVENTUELL",
+      "order": 2
+    }
+  ]
+}

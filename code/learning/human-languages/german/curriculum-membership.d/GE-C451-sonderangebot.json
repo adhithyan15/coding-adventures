@@ -1,0 +1,11 @@
+{
+  "id": "GE-C451-sonderangebot",
+  "pathSegment": "GE-PATH-451-SCHNAEPPCHEN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-451-SCHNAEPPCHEN",
+      "order": 1
+    }
+  ]
+}

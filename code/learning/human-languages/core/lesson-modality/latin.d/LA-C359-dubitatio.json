@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C359-dubitatio",
+    "language": "latin",
+    "chapter": 359,
+    "sequence": 19320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:783f8b321f20b8e4"
+  },
+  "findings": []
+}

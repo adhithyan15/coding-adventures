@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C302-jubilaeum",
+    "language": "german",
+    "chapter": 302,
+    "sequence": 16580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:581d38a54a2e61e1"
+  },
+  "findings": []
+}

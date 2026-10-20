@@ -1,0 +1,11 @@
+{
+  "id": "LA-C303-latrocinium",
+  "pathSegment": "LA-PATH-303-FURTUM",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-303-FURTUM",
+      "order": 1
+    }
+  ]
+}

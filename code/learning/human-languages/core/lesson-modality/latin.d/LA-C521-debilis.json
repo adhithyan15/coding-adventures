@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C521-debilis",
+    "language": "latin",
+    "chapter": 521,
+    "sequence": 27670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:41ba4ff996a41d4d"
+  },
+  "findings": []
+}

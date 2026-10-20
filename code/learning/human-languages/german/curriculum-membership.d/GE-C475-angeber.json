@@ -1,0 +1,11 @@
+{
+  "id": "GE-C475-angeber",
+  "pathSegment": "GE-PATH-475-ANGEBER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-475-ANGEBER",
+      "order": 2
+    }
+  ]
+}

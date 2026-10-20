@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 452,
+  "sourceHash": "fnv1a64:2ffac11b1a2438f3",
+  "lessonIds": [
+    "GE-C452-verpackung",
+    "GE-C452-verpacken",
+    "GE-C452-karton",
+    "GE-C452-liefern",
+    "GE-C452-umtauschen"
+  ],
+  "tex": "german/book/chapters/ch452-bestellt-und-geliefert.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C433-himmelsrichtung",
+  "pathSegment": "GE-PATH-433-KOMPASS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-433-KOMPASS",
+      "order": 2
+    }
+  ]
+}

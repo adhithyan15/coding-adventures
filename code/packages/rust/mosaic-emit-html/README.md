@@ -131,7 +131,7 @@ static snapshot.
 | Icon                 | `<span class="icon">`                                 |
 | Grid                 | `<table>` with fixture-driven `<thead>`/`<tbody>`     |
 | Input (compatibility)| `<input type="text">` or `<textarea>`                 |
-| HostInput (UI29)     | `<input type="text" value="{{value}}">`; `<textarea>{{value}}</textarea>` with `multiline: true` (no `data-on-commit`) |
+| HostInput (UI29)     | `<input type="text" value="{{value}}">`; `<textarea>{{value}}</textarea>` with `multiline: true` (commit marker keyed `data-commit-key="mod+Enter"`) |
 | HostButton (UI29)    | `<button>{{label}}</button>`                          |
 | HostSlider (UI29)    | `<input type="range" value="{{value}}">`            |
 | HostScroll (UI29)    | `<div style="overflow-y:auto; overflow-x:hidden">` — the axis (UI61) |
@@ -148,7 +148,12 @@ attach listeners without parsing Mosaic source files:
 
 - `HostButton` with `onClick` or `onTap` emits `data-on-click`.
 - `Input` or `HostInput` with `onChange`, `onCommit`, or `onCancel` emits
-  `data-on-change`, `data-on-commit`, or `data-on-cancel`.
+  `data-on-change`, `data-on-commit`, or `data-on-cancel`. A commit fires on
+  Enter unless the field also carries `data-commit-key="mod+Enter"`: a
+  `multiline: true` field, where Enter is a line break, commits on Ctrl+Enter
+  (Windows, Linux) or Cmd+Enter (macOS) instead (UI25 §4). A hydrator binds it
+  as `event.key === "Enter" && (event.ctrlKey || event.metaKey)`; the
+  generated `main.js` does exactly that.
 - `HostSlider` with `onChange` or `onCommit` emits `data-on-change` or
   `data-on-commit` while retaining native range semantics.
 

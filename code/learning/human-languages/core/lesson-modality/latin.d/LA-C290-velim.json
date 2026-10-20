@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C290-velim",
+    "language": "latin",
+    "chapter": 290,
+    "sequence": 15740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7df828b0646c7826"
+  },
+  "findings": []
+}

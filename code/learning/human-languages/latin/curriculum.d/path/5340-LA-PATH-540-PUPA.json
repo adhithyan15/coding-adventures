@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-540-PUPA",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "LA-EXT-540-PUPA"
+  ],
+  "after": []
+}

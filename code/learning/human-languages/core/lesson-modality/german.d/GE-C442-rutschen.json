@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C442-rutschen",
+    "language": "german",
+    "chapter": 442,
+    "sequence": 23790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:408bb08ebc0394a9"
+  },
+  "findings": []
+}

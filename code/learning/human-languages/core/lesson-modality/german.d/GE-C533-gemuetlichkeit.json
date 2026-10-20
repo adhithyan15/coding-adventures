@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C533-gemuetlichkeit",
+    "language": "german",
+    "chapter": 533,
+    "sequence": 28470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:50b9b79bcd8be3d8"
+  },
+  "findings": []
+}

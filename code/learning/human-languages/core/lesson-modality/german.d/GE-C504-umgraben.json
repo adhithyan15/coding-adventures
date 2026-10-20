@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C504-umgraben",
+    "language": "german",
+    "chapter": 504,
+    "sequence": 26940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b4d7cc94d769436a"
+  },
+  "findings": []
+}

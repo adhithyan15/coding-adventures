@@ -1,0 +1,11 @@
+{
+  "id": "GE-C379-korrigieren",
+  "pathSegment": "GE-PATH-379-BEWERTUNG",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-379-BEWERTUNG",
+      "order": 4
+    }
+  ]
+}

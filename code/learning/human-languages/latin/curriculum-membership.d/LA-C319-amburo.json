@@ -1,0 +1,11 @@
+{
+  "id": "LA-C319-amburo",
+  "pathSegment": "LA-PATH-319-SIPHO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-319-SIPHO",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 354,
+  "sourceHash": "fnv1a64:5cf6973d93df6247",
+  "lessonIds": [
+    "GE-C354-besprechung",
+    "GE-C354-sitzung",
+    "GE-C354-protokoll",
+    "GE-C354-praesentieren",
+    "GE-C354-praesentation"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch354.txt",
+  "json": "german/narration/ch354.json",
+  "textHash": "fnv1a64:de0dc7096919c07d",
+  "jsonHash": "fnv1a64:d3e0e7ae07bab0f4",
+  "findings": []
+}

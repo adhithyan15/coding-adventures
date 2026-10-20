@@ -1,0 +1,11 @@
+{
+  "id": "GE-C403-batterie",
+  "pathSegment": "GE-PATH-403-STARTHILFE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-403-STARTHILFE",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 416,
+  "sourceHash": "fnv1a64:e9656532f49c20f4",
+  "lessonIds": [
+    "GE-C416-einchecken",
+    "GE-C416-bordkarte",
+    "GE-C416-flugsteig",
+    "GE-C416-handgepaeck",
+    "GE-C416-aufgeben"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch416.txt",
+  "json": "german/narration/ch416.json",
+  "textHash": "fnv1a64:6906c16645dfcca1",
+  "jsonHash": "fnv1a64:6d465f22281ebe17",
+  "findings": []
+}

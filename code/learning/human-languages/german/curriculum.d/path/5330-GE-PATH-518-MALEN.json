@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-518-MALEN",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GE-EXT-518-MALEN"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C324-infantia",
+    "language": "latin",
+    "chapter": 324,
+    "sequence": 17510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ddc0f1888d890cc5"
+  },
+  "findings": []
+}

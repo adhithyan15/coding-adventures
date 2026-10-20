@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C412-abteil",
+    "language": "german",
+    "chapter": 412,
+    "sequence": 22230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0f69d7e98b4e1fce"
+  },
+  "findings": []
+}

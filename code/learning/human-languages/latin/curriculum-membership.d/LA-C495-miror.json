@@ -1,0 +1,11 @@
+{
+  "id": "LA-C495-miror",
+  "pathSegment": "LA-PATH-495-MIRA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-495-MIRA",
+      "order": 1
+    }
+  ]
+}

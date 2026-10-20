@@ -1,0 +1,11 @@
+{
+  "id": "GE-C375-durchfallen",
+  "pathSegment": "GE-PATH-375-KLAUSUR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-375-KLAUSUR",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C417-alienus",
+  "pathSegment": "LA-PATH-417-POSSESSIO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-417-POSSESSIO",
+      "order": 2
+    }
+  ]
+}

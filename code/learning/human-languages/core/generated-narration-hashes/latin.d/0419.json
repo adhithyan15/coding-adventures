@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 419,
+  "sourceHash": "fnv1a64:1023dd033ff3793f",
+  "lessonIds": [
+    "LA-C419-persolvo",
+    "LA-C419-usura",
+    "LA-C419-pignus",
+    "LA-C419-syngrapha",
+    "LA-C419-fenerator"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch419.txt",
+  "json": "latin/narration/ch419.json",
+  "textHash": "fnv1a64:1bc8089ba4eaaab7",
+  "jsonHash": "fnv1a64:125addd46bbf4216",
+  "findings": []
+}

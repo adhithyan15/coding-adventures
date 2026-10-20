@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:c4d090a7c81fbd55",
+  "lessonIds": [
+    "LA-C325-bulla",
+    "LA-C325-crepundia",
+    "LA-C325-praenomen",
+    "LA-C325-cognomen",
+    "LA-C325-tutor"
+  ],
+  "tex": "latin/book/chapters/ch325-nomen-et-bulla.tex"
+}

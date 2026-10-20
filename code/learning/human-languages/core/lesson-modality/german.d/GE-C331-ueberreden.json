@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C331-ueberreden",
+    "language": "german",
+    "chapter": 331,
+    "sequence": 18080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d9ba4df7fa84df0"
+  },
+  "findings": []
+}

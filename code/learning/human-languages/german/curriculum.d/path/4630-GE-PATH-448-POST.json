@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-448-POST",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-448-POST"
+  ],
+  "after": []
+}

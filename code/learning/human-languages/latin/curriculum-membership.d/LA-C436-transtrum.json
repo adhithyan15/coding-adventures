@@ -1,0 +1,11 @@
+{
+  "id": "LA-C436-transtrum",
+  "pathSegment": "LA-PATH-436-PUPPIS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-436-PUPPIS",
+      "order": 3
+    }
+  ]
+}

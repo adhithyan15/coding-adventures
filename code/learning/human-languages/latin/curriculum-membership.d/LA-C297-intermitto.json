@@ -1,0 +1,11 @@
+{
+  "id": "LA-C297-intermitto",
+  "pathSegment": "LA-PATH-297-INCIPIO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-297-INCIPIO",
+      "order": 4
+    }
+  ]
+}

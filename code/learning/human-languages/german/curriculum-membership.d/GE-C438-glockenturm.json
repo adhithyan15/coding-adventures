@@ -1,0 +1,11 @@
+{
+  "id": "GE-C438-glockenturm",
+  "pathSegment": "GE-PATH-438-ALTSTADT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-438-ALTSTADT",
+      "order": 2
+    }
+  ]
+}

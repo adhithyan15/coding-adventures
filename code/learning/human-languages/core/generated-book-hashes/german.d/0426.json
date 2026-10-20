@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:6799f6b5e8532df0",
+  "lessonIds": [
+    "GE-C426-rezeption",
+    "GE-C426-anreisen",
+    "GE-C426-abreisen",
+    "GE-C426-aufenthalt",
+    "GE-C426-auschecken"
+  ],
+  "tex": "german/book/chapters/ch426-an-der-rezeption.tex"
+}

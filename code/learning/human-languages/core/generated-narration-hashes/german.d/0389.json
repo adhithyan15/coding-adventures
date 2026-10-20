@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 389,
+  "sourceHash": "fnv1a64:dcafa98da15fa5af",
+  "lessonIds": [
+    "GE-C389-leisten",
+    "GE-C389-lohnen",
+    "GE-C389-finanzieren",
+    "GE-C389-ausgabe",
+    "GE-C389-einnahme"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch389.txt",
+  "json": "german/narration/ch389.json",
+  "textHash": "fnv1a64:3c81855bd543d13b",
+  "jsonHash": "fnv1a64:3b3e08ed8a5fb582",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C328-wuerzen",
+  "pathSegment": "GE-PATH-328-SIEB",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-328-SIEB",
+      "order": 4
+    }
+  ]
+}

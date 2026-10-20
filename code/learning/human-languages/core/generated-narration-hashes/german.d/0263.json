@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 263,
+  "sourceHash": "fnv1a64:a1967417c694ae1f",
+  "lessonIds": [
+    "GE-C263-nachdem",
+    "GE-C263-bevor",
+    "GE-C263-sobald",
+    "GE-C263-solange",
+    "GE-C263-seitdem"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch263.txt",
+  "json": "german/narration/ch263.json",
+  "textHash": "fnv1a64:5fbad80bc439f9b5",
+  "jsonHash": "fnv1a64:f49d4309d3efdff3",
+  "findings": []
+}

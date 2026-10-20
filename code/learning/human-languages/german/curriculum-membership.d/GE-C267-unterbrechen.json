@@ -1,0 +1,11 @@
+{
+  "id": "GE-C267-unterbrechen",
+  "pathSegment": "GE-PATH-267-DAUERN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-267-DAUERN",
+      "order": 4
+    }
+  ]
+}

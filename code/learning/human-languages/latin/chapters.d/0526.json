@@ -1,0 +1,19 @@
+{
+  "chapter": 526,
+  "title": "Healing",
+  "label": "ch:la-healing",
+  "canDo": "I can talk about healing and getting well.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C526-potio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 526: I can talk about healing and getting well.",
+    "assesses": [
+      "LA-LEX-C526-SANO-03",
+      "LA-LEX-C526-SANO-04",
+      "LA-LEX-C526-SANO-05"
+    ]
+  }
+}

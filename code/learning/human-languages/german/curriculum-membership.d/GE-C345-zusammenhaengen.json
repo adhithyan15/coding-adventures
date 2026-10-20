@@ -1,0 +1,11 @@
+{
+  "id": "GE-C345-zusammenhaengen",
+  "pathSegment": "GE-PATH-345-ZUSAMMENHANG",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-345-ZUSAMMENHANG",
+      "order": 1
+    }
+  ]
+}

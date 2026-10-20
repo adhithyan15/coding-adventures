@@ -1,0 +1,11 @@
+{
+  "id": "GE-C292-evakuieren",
+  "pathSegment": "GE-PATH-292-RETTUNG",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-292-RETTUNG",
+      "order": 3
+    }
+  ]
+}

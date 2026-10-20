@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 408,
+  "sourceHash": "fnv1a64:4f37ae5329fe0931",
+  "lessonIds": [
+    "GE-C408-vorfahrt",
+    "GE-C408-ueberholen",
+    "GE-C408-draengeln",
+    "GE-C408-gegenverkehr",
+    "GE-C408-ausweichen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch408.txt",
+  "json": "german/narration/ch408.json",
+  "textHash": "fnv1a64:bf2b2552a8c04cd7",
+  "jsonHash": "fnv1a64:a5d4ada3db18258b",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 511,
+  "title": "Cruelty and gentleness",
+  "label": "ch:la-cruelty-and-gentleness",
+  "canDo": "I can talk about cruelty and gentleness.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C511-mansuetus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 511: I can talk about cruelty and gentleness.",
+    "assesses": [
+      "LA-LEX-C511-CRUD-03",
+      "LA-LEX-C511-CRUD-04",
+      "LA-LEX-C511-CRUD-05"
+    ]
+  }
+}

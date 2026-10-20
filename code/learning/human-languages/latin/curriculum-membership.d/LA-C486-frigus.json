@@ -1,0 +1,11 @@
+{
+  "id": "LA-C486-frigus",
+  "pathSegment": "LA-PATH-486-PRUINA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-486-PRUINA",
+      "order": 1
+    }
+  ]
+}

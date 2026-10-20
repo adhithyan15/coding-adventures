@@ -1,0 +1,11 @@
+{
+  "id": "GE-C462-hageln",
+  "pathSegment": "GE-PATH-462-UNWETTER",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-462-UNWETTER",
+      "order": 3
+    }
+  ]
+}

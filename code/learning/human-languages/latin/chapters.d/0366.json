@@ -1,0 +1,19 @@
+{
+  "chapter": 366,
+  "title": "Evidently, And Yet, So Then",
+  "label": "ch:la-evidently-and-yet-so-then",
+  "canDo": "I can say evidently and no doubt, object with and yet, and draw a consequence with so then and for that reason.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C366-idcirco",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 366: I can say evidently and no doubt, object with and yet, and draw a consequence with so then and for that reason.",
+    "assesses": [
+      "LA-LEX-C366-PROINDE-03",
+      "LA-LEX-C366-PROINDE-04",
+      "LA-LEX-C366-PROINDE-05"
+    ]
+  }
+}

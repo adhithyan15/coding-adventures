@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:0cb4601d3b1009dc",
+  "lessonIds": [
+    "GE-C525-streamen",
+    "GE-C525-abonnieren",
+    "GE-C525-videospiel",
+    "GE-C525-zocken",
+    "GE-C525-kopfhoerer"
+  ],
+  "tex": "german/book/chapters/ch525-streamen-und-zocken.tex"
+}

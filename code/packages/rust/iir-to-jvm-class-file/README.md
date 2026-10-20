@@ -310,3 +310,14 @@ remains and 0 at EOF, without consuming it. The host must share its stream
 with `readLong()J` and `readLine()Ljava/lang/String;`; I/O errors must fail
 rather than report EOF. The LANG matrix supplies this host and executes four
 FLOW-MATIC input/EOF cases, including a zero-filled partial record.
+
+## LANG83 operation support
+
+`iir_to_jvm_class_file::op_support::op_support(name)` (and `OP_SUPPORT`) is this backend's answer,
+`Lowered` or `Refused(reason)`, for every operation in the
+[LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) standard registry
+(`interpreter_ir::op_registry::STANDARD_OPS`). "Lowered" means `lower_iir_to_jvm` emits JVM bytecode for the op. `lang-aot` refuses a
+module that uses a refused op at compile time, with a typed error. Since LANG83 PR1b this backend also lowers `write_i64`
+(`System.out.print(J)V`), `i64_div_floor`/`i64_mod_floor` (explicit zero and
+`MIN / -1` checks, then `Math.floorDiv`/`floorMod`) and `trap`
+(`System.out.flush()` then `throw new RuntimeException(kind)`).

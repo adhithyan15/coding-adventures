@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-329-MORS",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-329-MORS"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 521,
+  "title": "Being ill",
+  "label": "ch:la-being-ill",
+  "canDo": "I can say that someone is ill and weak.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C521-debilitas",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 521: I can say that someone is ill and weak.",
+    "assesses": [
+      "LA-LEX-C521-AEGR-03",
+      "LA-LEX-C521-AEGR-04",
+      "LA-LEX-C521-AEGR-05"
+    ]
+  }
+}

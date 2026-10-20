@@ -1,0 +1,11 @@
+{
+  "id": "GE-C530-schlafanzug",
+  "pathSegment": "GE-PATH-530-BAD",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-530-BAD",
+      "order": 4
+    }
+  ]
+}

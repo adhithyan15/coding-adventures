@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-417-POSSESSIO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "LA-EXT-417-POSSESSIO"
+  ],
+  "after": []
+}

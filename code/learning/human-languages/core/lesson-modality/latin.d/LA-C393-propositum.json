@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C393-propositum",
+    "language": "latin",
+    "chapter": 393,
+    "sequence": 21060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9bf73d5c3e28707"
+  },
+  "findings": []
+}

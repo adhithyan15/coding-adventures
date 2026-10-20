@@ -1,0 +1,19 @@
+{
+  "chapter": 348,
+  "title": "Ōrāculum",
+  "label": "ch:la-oraculum",
+  "canDo": "I can talk about signs and prophecy: an oracle, a seer, a portent, an omen and to prophesy.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C348-vaticinor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 348: I can talk about signs and prophecy: an oracle, a seer, a portent, an omen and to prophesy.",
+    "assesses": [
+      "LA-LEX-C348-ORACULUM-03",
+      "LA-LEX-C348-ORACULUM-04",
+      "LA-LEX-C348-ORACULUM-05"
+    ]
+  }
+}

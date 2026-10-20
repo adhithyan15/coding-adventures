@@ -25,12 +25,12 @@
 // undefined identifiers, not one — a real bug found live-testing this
 // package, not a hypothetical.
 //
-// The legacy `Input` primitive, once: the note body needs multiple lines,
-// and when this package was written UI29's kernel `HostInput` was
-// single-line only (see code/specs/task-app-notes-ui-v1.md). HostInput has
-// since gained `multiline: true` on every backend (#15930) and lowers it
-// exactly as `Input` does, so `notes-body-input` can move to HostInput when
-// the legacy `Input` retires (U29-X1). This is the only such use here.
+// The note body is the kernel's text area, `HostInput ( multiline : true )`
+// (#15930). When this package was written HostInput was single-line only, so
+// the body used the legacy UI25 `Input` (code/specs/task-app-notes-ui-v1.md);
+// that primitive is retiring (U29-X1). In the body Enter is a line break and
+// Ctrl+Enter (Cmd+Enter on macOS) raises `onSave`, exactly as the Save button
+// does (UI25 §4, UI29 §2.1).
 
 layout Notes {
   Column [ notes-root ] {
@@ -54,11 +54,12 @@ layout Notes {
             placeholder : "Title" ,
             onChange : emit: onTitleChange
           )
-          Input [ notes-body-input ] (
+          HostInput [ notes-body-input ] (
             value : slot: body-value ,
             placeholder : "Write something…" ,
             multiline : true ,
-            onChange : emit: onBodyChange
+            onChange : emit: onBodyChange ,
+            onCommit : emit: onSave
           )
           HostInput [ notes-task-input ] (
             value : slot: task-name-value ,

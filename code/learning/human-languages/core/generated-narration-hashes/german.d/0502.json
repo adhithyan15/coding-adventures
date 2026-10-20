@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:fdcaa8c2540ac706",
+  "lessonIds": [
+    "GE-C502-angeln",
+    "GE-C502-koeder",
+    "GE-C502-anbeissen",
+    "GE-C502-objektiv",
+    "GE-C502-knipsen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch502.txt",
+  "json": "german/narration/ch502.json",
+  "textHash": "fnv1a64:11268b4073e7c23e",
+  "jsonHash": "fnv1a64:1f35b7a6d5b532b9",
+  "findings": []
+}

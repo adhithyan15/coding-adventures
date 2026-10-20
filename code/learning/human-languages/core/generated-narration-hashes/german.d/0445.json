@@ -1,0 +1,20 @@
+{
+  "language": "german",
+  "chapter": 445,
+  "sourceHash": "fnv1a64:82c0b6a1b32cf555",
+  "lessonIds": [
+    "GE-C445-schuster",
+    "GE-C445-besohlen",
+    "GE-C445-polieren",
+    "GE-C445-schluesseldienst",
+    "GE-C445-aufschliessen",
+    "GE-R445-review-438-445"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "german/narration/ch445.txt",
+  "json": "german/narration/ch445.json",
+  "textHash": "fnv1a64:9986cecda49cce61",
+  "jsonHash": "fnv1a64:d5843e4e267bcf28",
+  "findings": []
+}

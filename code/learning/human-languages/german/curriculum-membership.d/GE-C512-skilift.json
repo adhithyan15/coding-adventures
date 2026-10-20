@@ -1,0 +1,11 @@
+{
+  "id": "GE-C512-skilift",
+  "pathSegment": "GE-PATH-512-WINTERSPORT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-512-WINTERSPORT",
+      "order": 4
+    }
+  ]
+}

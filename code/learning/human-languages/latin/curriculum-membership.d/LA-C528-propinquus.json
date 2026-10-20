@@ -1,0 +1,11 @@
+{
+  "id": "LA-C528-propinquus",
+  "pathSegment": "LA-PATH-528-GENS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-528-GENS",
+      "order": 1
+    }
+  ]
+}

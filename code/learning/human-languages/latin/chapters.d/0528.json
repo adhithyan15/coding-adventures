@@ -1,0 +1,19 @@
+{
+  "chapter": 528,
+  "title": "Relatives",
+  "label": "ch:la-relatives",
+  "canDo": "I can talk about my wider family.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-R528-review-521-528",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 528: I can talk about my wider family.",
+    "assesses": [
+      "LA-LEX-C528-GENS-03",
+      "LA-LEX-C528-GENS-04",
+      "LA-LEX-C528-GENS-05"
+    ]
+  }
+}

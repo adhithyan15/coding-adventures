@@ -1,0 +1,11 @@
+{
+  "id": "GE-C418-fensterplatz",
+  "pathSegment": "GE-PATH-418-BORD",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-418-BORD",
+      "order": 1
+    }
+  ]
+}

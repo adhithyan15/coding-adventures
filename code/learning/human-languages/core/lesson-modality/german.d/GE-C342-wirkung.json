@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C342-wirkung",
+    "language": "german",
+    "chapter": 342,
+    "sequence": 18610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b5178dc01919adc1"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C298-braeutigam",
+  "pathSegment": "GE-PATH-298-VERLOBUNG",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-298-VERLOBUNG",
+      "order": 3
+    }
+  ]
+}

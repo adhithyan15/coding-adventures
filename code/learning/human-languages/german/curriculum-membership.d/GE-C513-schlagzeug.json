@@ -1,0 +1,11 @@
+{
+  "id": "GE-C513-schlagzeug",
+  "pathSegment": "GE-PATH-513-INSTRUMENTE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-513-INSTRUMENTE",
+      "order": 3
+    }
+  ]
+}

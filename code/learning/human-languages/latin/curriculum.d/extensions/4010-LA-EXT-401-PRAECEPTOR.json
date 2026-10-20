@@ -1,0 +1,8 @@
+{
+  "id": "LA-EXT-401-PRAECEPTOR",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the slave who walks a boy to school, a teacher, the grammar master, the primary teacher and a schoolfellow.",
+  "prerequisites": []
+}

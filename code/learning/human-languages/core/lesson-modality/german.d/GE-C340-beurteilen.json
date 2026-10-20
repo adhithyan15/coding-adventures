@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C340-beurteilen",
+    "language": "german",
+    "chapter": 340,
+    "sequence": 18510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce4c9e4e73b06c70"
+  },
+  "findings": []
+}

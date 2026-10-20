@@ -1,0 +1,20 @@
+{
+  "chapter": 256,
+  "title": "Finding the Way — wie komme ich zum Bahnhof",
+  "label": "ch:ge-finding-the-way",
+  "canDo": "I can ask the way with wie komme ich zum or zur, and follow an answer with geradeaus, links and rechts.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C256-review",
+    "kind": "production",
+    "summary": "Complete GE-C256-review: ask the way to two places, one with zum and one with zur, and give the answer back in the Sie form.",
+    "assesses": [
+      "GE-LEX-WIE-KOMME-ICH-01",
+      "GE-GRAMMAR-ZUM-ZUR-02",
+      "GE-LEX-LINKS-01",
+      "GE-GRAMMAR-SIE-IMPERATIV-02"
+    ]
+  }
+}

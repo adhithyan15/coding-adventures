@@ -1,0 +1,11 @@
+{
+  "id": "GE-C370-herausstellen",
+  "pathSegment": "GE-PATH-370-KLAPPEN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-370-KLAPPEN",
+      "order": 4
+    }
+  ]
+}

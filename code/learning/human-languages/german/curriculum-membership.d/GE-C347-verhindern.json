@@ -1,0 +1,11 @@
+{
+  "id": "GE-C347-verhindern",
+  "pathSegment": "GE-PATH-347-ZUFALL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-347-ZUFALL",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C328-abtropfen",
+  "pathSegment": "GE-PATH-328-SIEB",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-328-SIEB",
+      "order": 2
+    }
+  ]
+}

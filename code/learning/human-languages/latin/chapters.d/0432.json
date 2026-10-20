@@ -1,0 +1,19 @@
+{
+  "chapter": 432,
+  "title": "To ride, Saddle cloth, Spur, To jump down, To kick",
+  "label": "ch:la-to-ride-saddle-cloth-spur-to-jump-down-to-kick",
+  "canDo": "I can talk about riding: riding a horse, the saddle cloth, a spur, jumping down, and a horse kicking.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C432-calcitro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 432: I can talk about riding: riding a horse, the saddle cloth, a spur, jumping down, and a horse kicking.",
+    "assesses": [
+      "LA-LEX-C432-EQUITO-03",
+      "LA-LEX-C432-EQUITO-04",
+      "LA-LEX-C432-EQUITO-05"
+    ]
+  }
+}

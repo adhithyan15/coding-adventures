@@ -1,0 +1,20 @@
+{
+  "language": "latin",
+  "chapter": 478,
+  "sourceHash": "fnv1a64:2d7153a68cd56daa",
+  "lessonIds": [
+    "LA-C478-opilio",
+    "LA-C478-bubulcus",
+    "LA-C478-caulae",
+    "LA-C478-tondeo",
+    "LA-C478-mulgeo",
+    "LA-R478-review-471-478"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "latin/narration/ch478.txt",
+  "json": "latin/narration/ch478.json",
+  "textHash": "fnv1a64:6f1a716ed7de2b78",
+  "jsonHash": "fnv1a64:0907d3cbbe76950f",
+  "findings": []
+}

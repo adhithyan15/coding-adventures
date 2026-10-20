@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-319-KAISER",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GE-EXT-319-KAISER"
+  ],
+  "after": []
+}

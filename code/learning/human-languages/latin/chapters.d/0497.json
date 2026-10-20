@@ -1,0 +1,19 @@
+{
+  "chapter": 497,
+  "title": "Worry and distress",
+  "label": "ch:la-worry-and-distress",
+  "canDo": "I can talk about worry and distress.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C497-crucio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 497: I can talk about worry and distress.",
+    "assesses": [
+      "LA-LEX-C497-SOLL-03",
+      "LA-LEX-C497-SOLL-04",
+      "LA-LEX-C497-SOLL-05"
+    ]
+  }
+}

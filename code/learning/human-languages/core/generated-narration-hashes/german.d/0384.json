@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 384,
+  "sourceHash": "fnv1a64:8b9315ec8b31d6ca",
+  "lessonIds": [
+    "GE-C384-genehmigung",
+    "GE-C384-genehmigen",
+    "GE-C384-gueltig",
+    "GE-C384-verlaengern",
+    "GE-C384-ablaufen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch384.txt",
+  "json": "german/narration/ch384.json",
+  "textHash": "fnv1a64:39cfa8953e9acb92",
+  "jsonHash": "fnv1a64:4a5e394fa6303e4b",
+  "findings": []
+}

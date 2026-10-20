@@ -1,0 +1,11 @@
+{
+  "id": "LA-C474-sulcus",
+  "pathSegment": "LA-PATH-474-ARO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-474-ARO",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C431-freno",
+  "pathSegment": "LA-PATH-431-HABENA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-431-HABENA",
+      "order": 3
+    }
+  ]
+}

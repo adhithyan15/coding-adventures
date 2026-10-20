@@ -51,11 +51,42 @@ Standard opcodes (handled by `vm-core`):
 | Type system | `cast type_assert` |
 | Strings | `str_const str_len str_index str_concat str_slice str_eq str_cmp print_str` |
 | Exceptions (AOT00 T2, inert — no backend lowers these yet) | `throw catch landingpad` |
+| Float math (ALGOL AL8) | `f64_sqrt f64_sin f64_cos f64_ln f64_exp f64_atan f64_tan f64_pow` |
+| Conversions (LANG-FULL E8) | `int_to_real real_to_int_trunc real_to_int_floor` |
+| LANG83 PR1b (registered; no backend lowers them yet) | `i64_div_floor i64_mod_floor trap` |
 
 Type strings: `u8 u16 u32 u64 i8 i16 i32 i64 bool f32 f64 str void any`
 
 Exception kind names (`exception_kind` module) are dotted paths, e.g. `"Trap.Bounds"`;
-`catch "Trap"` catches any `Trap.*`, and `"*"` catches anything.
+`catch "Trap"` catches any `Trap.*`, and `"*"` catches anything. The closed table a
+LANG83 `trap` may name is the six built-in leaves (`Trap.Bounds`, `Trap.Null`,
+`Trap.DivZero`, `Trap.ConvRange`, `Trap.Overflow`, `Trap.User`) plus
+`LANGUAGE_TRAP_KINDS`; `trap_kind_id` gives each a stable, append-only integer id.
+
+## The standard operation registry (LANG83)
+
+`op_registry::STANDARD_OPS` names every operation a frontend may emit and every
+backend must lower or refuse — output builtins (`print_i64`, `putchar`,
+`write_i64`), `print_str` and the string ops, arithmetic and comparison, `f64` math,
+conversions and `trap`. Each backend crate publishes an `OP_SUPPORT` table of
+`OpSupport::{Lowered, Refused(reason)}` and checks it with
+`op_registry::check_op_support_table`, so adding a registry op fails CI in every
+backend until each one decides. `lang_aot::check_module_for` uses those tables to
+refuse an unsupported op at compile time instead of miscompiling it.
+
+```rust
+use interpreter_ir::op_registry::{lookup, name_rule_violation, OpKind};
+
+assert_eq!(lookup("write_i64").unwrap().kind, OpKind::Builtin);
+// New names are type-first: a `div_` prefix would be captured by the native
+// backends' prefix dispatch and silently compiled as truncating division.
+assert!(name_rule_violation("div_floor").is_some());
+```
+
+`opcodes::may_trap`, `opcodes::trap_kinds` and `opcodes::is_terminator` answer the
+analysis questions the new ops raise; `trap`, `i64_div_floor` and `i64_mod_floor`
+count as side-effecting so dead-code elimination keeps them. See
+`code/specs/LANG83-iir-standard-operation-registry.md`.
 
 ---
 
@@ -120,7 +151,8 @@ src/
 ├── function.rs     — IIRFunction + FunctionTypeStatus
 ├── instr.rs        — IIRInstr + Operand
 ├── opcodes.rs      — opcode category predicates + type helpers
-├── exception_kind.rs — exception kind names + kind_matches() (AOT00 T2)
+├── op_registry.rs  — LANG83 standard operation registry + OpSupport
+├── exception_kind.rs — exception kind names, trap-kind ids + kind_matches() (AOT00 T2, LANG83)
 ├── slot_state.rs   — SlotState (type-feedback)
 └── serialise.rs    — binary encode / decode
 ```
@@ -133,4 +165,4 @@ src/
 cargo test -p interpreter-ir
 ```
 
-86 unit tests + 37 doctests, all green.
+119 unit tests + 52 doctests, all green.

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C401-paedagogus",
+    "language": "latin",
+    "chapter": 401,
+    "sequence": 21450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f183c3df31e99af2"
+  },
+  "findings": []
+}

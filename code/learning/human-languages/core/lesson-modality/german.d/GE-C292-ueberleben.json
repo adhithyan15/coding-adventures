@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C292-ueberleben",
+    "language": "german",
+    "chapter": 292,
+    "sequence": 16070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3cb8fcbe89ad22f6"
+  },
+  "findings": []
+}

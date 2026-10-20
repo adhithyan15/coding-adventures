@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 473,
+  "sourceHash": "fnv1a64:5f92d8267ac4b4f9",
+  "lessonIds": [
+    "LA-C473-rus",
+    "LA-C473-fundus",
+    "LA-C473-bubile",
+    "LA-C473-casa",
+    "LA-C473-tugurium"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch473.txt",
+  "json": "latin/narration/ch473.json",
+  "textHash": "fnv1a64:0c0ca74f069ded1a",
+  "jsonHash": "fnv1a64:eb01199393e9da3c",
+  "findings": []
+}

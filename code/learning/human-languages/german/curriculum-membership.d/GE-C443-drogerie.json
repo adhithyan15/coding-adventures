@@ -1,0 +1,11 @@
+{
+  "id": "GE-C443-drogerie",
+  "pathSegment": "GE-PATH-443-FEINKOST",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-443-FEINKOST",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C531-abtrocknen",
+  "pathSegment": "GE-PATH-531-KUECHE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-531-KUECHE",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C328-divortium",
+  "pathSegment": "LA-PATH-328-FLAMMEUM",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-328-FLAMMEUM",
+      "order": 4
+    }
+  ]
+}

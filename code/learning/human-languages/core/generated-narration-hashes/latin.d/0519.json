@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 519,
+  "sourceHash": "fnv1a64:a2888a81bdb866b9",
+  "lessonIds": [
+    "LA-C519-visus",
+    "LA-C519-auditus",
+    "LA-C519-tactus",
+    "LA-C519-olfacio",
+    "LA-C519-percipio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch519.txt",
+  "json": "latin/narration/ch519.json",
+  "textHash": "fnv1a64:70d17e970171e523",
+  "jsonHash": "fnv1a64:f08a7210f6bfcbd5",
+  "findings": []
+}

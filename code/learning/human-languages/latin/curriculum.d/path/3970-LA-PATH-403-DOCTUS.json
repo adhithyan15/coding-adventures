@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-403-DOCTUS",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "LA-EXT-403-DOCTUS"
+  ],
+  "after": []
+}

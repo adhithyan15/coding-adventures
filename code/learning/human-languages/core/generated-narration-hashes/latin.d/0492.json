@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 492,
+  "sourceHash": "fnv1a64:fd68f137ffe92299",
+  "lessonIds": [
+    "LA-C492-consolor",
+    "LA-C492-consolatio",
+    "LA-C492-solacium",
+    "LA-C492-lenis",
+    "LA-C492-lenio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch492.txt",
+  "json": "latin/narration/ch492.json",
+  "textHash": "fnv1a64:b1905704091dc233",
+  "jsonHash": "fnv1a64:9fdc77b1d7ee4c1d",
+  "findings": []
+}

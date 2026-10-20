@@ -1,0 +1,11 @@
+{
+  "id": "LA-C368-dissero",
+  "pathSegment": "LA-PATH-368-ORATOR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-368-ORATOR",
+      "order": 3
+    }
+  ]
+}

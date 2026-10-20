@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C356-aufstieg",
+    "language": "german",
+    "chapter": 356,
+    "sequence": 19340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d13176bee229fd86"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C316-erzaehler",
+    "language": "german",
+    "chapter": 316,
+    "sequence": 17260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:59578c12637b168d"
+  },
+  "findings": []
+}

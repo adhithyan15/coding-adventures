@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C315-prinzessin",
+    "language": "german",
+    "chapter": 315,
+    "sequence": 17230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:893262c4b738ce2f"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-332-HERES",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-332-HERES"
+  ],
+  "after": []
+}

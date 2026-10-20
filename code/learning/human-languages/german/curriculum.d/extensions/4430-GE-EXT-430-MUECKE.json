@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-430-MUECKE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can complain about insects in a room: the bedbug, the cockroach, the mosquito, being bitten and crawling.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C297-abitur",
+  "pathSegment": "GE-PATH-297-AUFWACHSEN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-297-AUFWACHSEN",
+      "order": 2
+    }
+  ]
+}

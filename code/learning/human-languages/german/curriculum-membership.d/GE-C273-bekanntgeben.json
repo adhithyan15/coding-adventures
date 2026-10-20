@@ -1,0 +1,11 @@
+{
+  "id": "GE-C273-bekanntgeben",
+  "pathSegment": "GE-PATH-273-BEKANNT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-273-BEKANNT",
+      "order": 4
+    }
+  ]
+}

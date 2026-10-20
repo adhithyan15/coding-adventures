@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C297-umzug",
+    "language": "german",
+    "chapter": 297,
+    "sequence": 16330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1feb7c785f15bea8"
+  },
+  "findings": []
+}

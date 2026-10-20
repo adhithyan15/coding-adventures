@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-348-ORACULUM",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-348-ORACULUM"
+  ],
+  "after": []
+}

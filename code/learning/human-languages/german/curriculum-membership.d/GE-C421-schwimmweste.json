@@ -1,0 +1,11 @@
+{
+  "id": "GE-C421-schwimmweste",
+  "pathSegment": "GE-PATH-421-FAEHRE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-421-FAEHRE",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C367-ne",
+  "pathSegment": "LA-PATH-367-CUM",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-367-CUM",
+      "order": 1
+    }
+  ]
+}

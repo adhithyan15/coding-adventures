@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 429,
+  "sourceHash": "fnv1a64:f4f992093c5bf14f",
+  "lessonIds": [
+    "LA-C429-carrus",
+    "LA-C429-cisium",
+    "LA-C429-essedum",
+    "LA-C429-carpentum",
+    "LA-C429-carruca"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch429.txt",
+  "json": "latin/narration/ch429.json",
+  "textHash": "fnv1a64:2bebf17af23ebfec",
+  "jsonHash": "fnv1a64:6200a492cfa4c80f",
+  "findings": []
+}

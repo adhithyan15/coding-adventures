@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 393,
+  "sourceHash": "fnv1a64:f893343307c5f3f8",
+  "lessonIds": [
+    "LA-C393-statuo",
+    "LA-C393-destino",
+    "LA-C393-propositum",
+    "LA-C393-inceptum",
+    "LA-C393-conor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch393.txt",
+  "json": "latin/narration/ch393.json",
+  "textHash": "fnv1a64:133742d35feb6916",
+  "jsonHash": "fnv1a64:27b1a9b560799eae",
+  "findings": []
+}

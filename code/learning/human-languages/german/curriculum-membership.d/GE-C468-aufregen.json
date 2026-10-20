@@ -1,0 +1,11 @@
+{
+  "id": "GE-C468-aufregen",
+  "pathSegment": "GE-PATH-468-WUT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-468-WUT",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 527,
+  "title": "Wäsche waschen",
+  "label": "ch:ge-wasche-waschen",
+  "canDo": "I can talk about doing the laundry.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C527-falten",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 527: I can talk about doing the laundry.",
+    "assesses": [
+      "GE-LEX-C527-WAESCHE-03",
+      "GE-LEX-C527-WAESCHE-04",
+      "GE-LEX-C527-WAESCHE-05"
+    ]
+  }
+}

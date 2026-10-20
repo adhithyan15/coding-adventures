@@ -1,0 +1,11 @@
+{
+  "id": "GE-C456-gebuesch",
+  "pathSegment": "GE-PATH-456-LICHTUNG",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-456-LICHTUNG",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C531-aufwaermen",
+  "pathSegment": "GE-PATH-531-KUECHE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-531-KUECHE",
+      "order": 0
+    }
+  ]
+}

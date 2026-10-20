@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C509-temerarius",
+    "language": "latin",
+    "chapter": 509,
+    "sequence": 27040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:94cfdef1f8748d8c"
+  },
+  "findings": []
+}

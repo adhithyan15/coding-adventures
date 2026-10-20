@@ -1,0 +1,11 @@
+{
+  "id": "LA-C331-laudatio",
+  "pathSegment": "LA-PATH-331-LUCTUS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-331-LUCTUS",
+      "order": 2
+    }
+  ]
+}

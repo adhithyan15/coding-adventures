@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-405-DELLE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-405-DELLE"
+  ],
+  "after": []
+}

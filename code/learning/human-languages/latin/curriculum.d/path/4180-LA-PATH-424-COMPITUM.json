@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-424-COMPITUM",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "LA-EXT-424-COMPITUM"
+  ],
+  "after": []
+}

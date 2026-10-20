@@ -1,0 +1,19 @@
+{
+  "chapter": 384,
+  "title": "Die Genehmigung",
+  "label": "ch:ge-die-genehmigung",
+  "canDo": "I can talk about permits: getting approval, how long a document is valid, renewing it and when it expires.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GE-C384-ablaufen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 384: I can talk about permits: getting approval, how long a document is valid, renewing it and when it expires.",
+    "assesses": [
+      "GE-LEX-C384-GENEHMIGUNG-03",
+      "GE-LEX-C384-GENEHMIGUNG-04",
+      "GE-LEX-C384-GENEHMIGUNG-05"
+    ]
+  }
+}

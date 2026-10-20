@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:0501e72674492005",
+  "lessonIds": [
+    "GE-C382-verbot",
+    "GE-C382-zulaessig",
+    "GE-C382-strafbar",
+    "GE-C382-verstossen",
+    "GE-C382-verstoss"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch382.txt",
+  "json": "german/narration/ch382.json",
+  "textHash": "fnv1a64:9592d9ac355aea3c",
+  "jsonHash": "fnv1a64:a012ab1f7015f552",
+  "findings": []
+}

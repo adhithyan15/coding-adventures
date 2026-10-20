@@ -1,0 +1,19 @@
+{
+  "chapter": 404,
+  "title": "Ein platter Reifen",
+  "label": "ch:ge-ein-platter-reifen",
+  "canDo": "I can deal with a flat tyre: the tyre, the flat, pumping it up, the jack and the warning triangle.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C404-warndreieck",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 404: I can deal with a flat tyre: the tyre, the flat, pumping it up, the jack and the warning triangle.",
+    "assesses": [
+      "GE-LEX-C404-REIFEN-03",
+      "GE-LEX-C404-REIFEN-04",
+      "GE-LEX-C404-REIFEN-05"
+    ]
+  }
+}

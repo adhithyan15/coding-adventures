@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 347,
+  "sourceHash": "fnv1a64:47d4cdd166dfca94",
+  "lessonIds": [
+    "LA-C347-monstrum",
+    "LA-C347-gigas",
+    "LA-C347-heros",
+    "LA-C347-nympha",
+    "LA-C347-vellus"
+  ],
+  "tex": "latin/book/chapters/ch347-monstra-et-heroes.tex"
+}

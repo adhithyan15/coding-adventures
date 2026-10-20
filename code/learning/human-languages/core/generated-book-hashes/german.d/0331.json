@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 331,
+  "sourceHash": "fnv1a64:2c08bfd131b8149a",
+  "lessonIds": [
+    "GE-C331-ueberzeugen",
+    "GE-C331-ueberzeugend",
+    "GE-C331-ueberzeugung",
+    "GE-C331-ueberreden",
+    "GE-C331-argumentieren"
+  ],
+  "tex": "german/book/chapters/ch331-jemanden-uberzeugen.tex"
+}

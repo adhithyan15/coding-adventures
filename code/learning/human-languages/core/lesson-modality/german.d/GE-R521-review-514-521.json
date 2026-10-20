@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-R521-review-514-521",
+    "language": "german",
+    "chapter": 521,
+    "sequence": 27860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d42909f92f8936f1"
+  },
+  "findings": []
+}

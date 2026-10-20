@@ -1,0 +1,11 @@
+{
+  "id": "GE-C286-richter",
+  "pathSegment": "GE-PATH-286-URTEIL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-286-URTEIL",
+      "order": 1
+    }
+  ]
+}

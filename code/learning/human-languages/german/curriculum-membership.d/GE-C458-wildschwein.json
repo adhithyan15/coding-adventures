@@ -1,0 +1,11 @@
+{
+  "id": "GE-C458-wildschwein",
+  "pathSegment": "GE-PATH-458-WILDTIERE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-458-WILDTIERE",
+      "order": 2
+    }
+  ]
+}

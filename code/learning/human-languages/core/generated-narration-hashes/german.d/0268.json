@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 268,
+  "sourceHash": "fnv1a64:d4fa69383f35d11f",
+  "lessonIds": [
+    "GE-C268-augenblick",
+    "GE-C268-zeitpunkt",
+    "GE-C268-zeitraum",
+    "GE-C268-dauer",
+    "GE-C268-frist"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch268.txt",
+  "json": "german/narration/ch268.json",
+  "textHash": "fnv1a64:5c0483eb608ca5e8",
+  "jsonHash": "fnv1a64:8b4ebcc17690826b",
+  "findings": []
+}

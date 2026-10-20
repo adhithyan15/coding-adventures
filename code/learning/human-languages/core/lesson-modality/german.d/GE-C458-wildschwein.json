@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C458-wildschwein",
+    "language": "german",
+    "chapter": 458,
+    "sequence": 24590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:582ae56e368c872d"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 402,
+  "sourceHash": "fnv1a64:49eb20e9d16fe93c",
+  "lessonIds": [
+    "LA-C402-edisco",
+    "LA-C402-perdisco",
+    "LA-C402-studeo",
+    "LA-C402-meditor",
+    "LA-C402-recordor"
+  ],
+  "tex": "latin/book/chapters/ch402-learning-by-heart.tex"
+}

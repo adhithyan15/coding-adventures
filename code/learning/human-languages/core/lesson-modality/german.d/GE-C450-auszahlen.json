@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C450-auszahlen",
+    "language": "german",
+    "chapter": 450,
+    "sequence": 24200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f17e79262915a1b"
+  },
+  "findings": []
+}

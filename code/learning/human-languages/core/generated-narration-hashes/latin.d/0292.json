@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 292,
+  "sourceHash": "fnv1a64:987682b763e2ab30",
+  "lessonIds": [
+    "LA-C292-repente",
+    "LA-C292-confestim",
+    "LA-C292-continuo",
+    "LA-C292-extemplo",
+    "LA-C292-protinus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch292.txt",
+  "json": "latin/narration/ch292.json",
+  "textHash": "fnv1a64:879528a8fec25a7c",
+  "jsonHash": "fnv1a64:0f2f9cced890eb9a",
+  "findings": []
+}

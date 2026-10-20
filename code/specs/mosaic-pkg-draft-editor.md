@@ -23,7 +23,9 @@ note form.
 
 ## Why a package, not the toolkit
 
-The only portable text area is the UI25 legacy `Input ( multiline : true )`.
+When this package was written, the only portable text area was the UI25
+legacy `Input ( multiline : true )`. (The kernel `HostInput` now takes
+`multiline: true` too, #15930, and the body uses it; see below.)
 Inside `mosaic-pkg-toolkit`, the artifact builder rewrites every bare tag that
 matches a sibling export to that sibling (`qualify_local_component_references`),
 so a bare `Input` in a toolkit component becomes the toolkit's *single-line*
@@ -54,7 +56,10 @@ component DraftEditor {
 ```
 
 - **Controlled.** Every keystroke emits the whole new text; the host owns the
-  draft and writes it back. Save commits. This is how all three hosts already
+  draft and writes it back. Save commits, and so does Ctrl+Enter (Cmd+Enter on
+  macOS) in the body: it raises `onSave` (UI25 §4), even when `save-label` is
+  empty, because a layout cannot bind a field's commit conditionally; a host
+  that offers no Save ignores `onSave`. This is how all three hosts already
   work (Engram's draft buffer, TaskApp's `noteBodyDraft`).
 - **Every label is a slot.** No English literals; the host localises.
 - **Label-gated parts.** An empty `title-label` removes the title field (Engram's

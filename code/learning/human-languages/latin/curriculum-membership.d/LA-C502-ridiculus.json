@@ -1,0 +1,11 @@
+{
+  "id": "LA-C502-ridiculus",
+  "pathSegment": "LA-PATH-502-IOCU",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-502-IOCU",
+      "order": 3
+    }
+  ]
+}

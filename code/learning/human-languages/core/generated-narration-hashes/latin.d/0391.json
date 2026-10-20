@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 391,
+  "sourceHash": "fnv1a64:03ff7fd0fe9cab64",
+  "lessonIds": [
+    "LA-C391-etiamsi",
+    "LA-C391-tametsi",
+    "LA-C391-alioqui",
+    "LA-C391-secus",
+    "LA-C391-sive"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch391.txt",
+  "json": "latin/narration/ch391.json",
+  "textHash": "fnv1a64:a14949385e4fef76",
+  "jsonHash": "fnv1a64:ae992ce94521afc5",
+  "findings": []
+}

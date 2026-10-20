@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-520-BUECHER",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about kinds of books.",
+  "prerequisites": []
+}

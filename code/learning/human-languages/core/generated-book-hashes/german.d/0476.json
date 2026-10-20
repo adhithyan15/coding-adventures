@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 476,
+  "sourceHash": "fnv1a64:ecaf3d78fe9bd4a2",
+  "lessonIds": [
+    "GE-C476-stur",
+    "GE-C476-hartnaeckig",
+    "GE-C476-launisch",
+    "GE-C476-gereizt",
+    "GE-C476-empfindlich"
+  ],
+  "tex": "german/book/chapters/ch476-stur-und-launisch.tex"
+}

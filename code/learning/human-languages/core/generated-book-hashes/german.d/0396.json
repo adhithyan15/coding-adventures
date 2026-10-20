@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 396,
+  "sourceHash": "fnv1a64:2a11ae5176c101e7",
+  "lessonIds": [
+    "GE-C396-tastatur",
+    "GE-C396-drucker",
+    "GE-C396-ausdrucken",
+    "GE-C396-installieren",
+    "GE-C396-programm"
+  ],
+  "tex": "german/book/chapters/ch396-am-computer.tex"
+}

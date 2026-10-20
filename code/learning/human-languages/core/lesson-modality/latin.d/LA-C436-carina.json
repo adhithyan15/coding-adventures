@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C436-carina",
+    "language": "latin",
+    "chapter": 436,
+    "sequence": 23280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:02444c9d04eaf0a3"
+  },
+  "findings": []
+}

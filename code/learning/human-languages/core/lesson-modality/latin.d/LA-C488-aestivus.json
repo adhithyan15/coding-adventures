@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C488-aestivus",
+    "language": "latin",
+    "chapter": 488,
+    "sequence": 25960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:682142f8d6b401f4"
+  },
+  "findings": []
+}

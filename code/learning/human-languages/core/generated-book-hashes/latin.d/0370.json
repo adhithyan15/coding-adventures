@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:46f5a2926c781e6b",
+  "lessonIds": [
+    "LA-C370-auctoritas",
+    "LA-C370-dignitas",
+    "LA-C370-gravitas",
+    "LA-C370-levitas",
+    "LA-C370-temeritas"
+  ],
+  "tex": "latin/book/chapters/ch370-weight-and-standing.tex"
+}

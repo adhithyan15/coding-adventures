@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C386-humanitas",
+    "language": "latin",
+    "chapter": 386,
+    "sequence": 20690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d5f77d0bd52f2f0"
+  },
+  "findings": []
+}

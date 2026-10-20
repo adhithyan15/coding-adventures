@@ -1,0 +1,19 @@
+{
+  "chapter": 380,
+  "title": "Hiring and Hard Labour",
+  "label": "ch:la-hiring-and-hard-labour",
+  "canDo": "I can say that someone hires workers or lets out a house, speak of a servant, and say that someone works hard or wears himself out.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "LA-R380-review-373-380",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 380: I can say that someone hires workers or lets out a house, speak of a servant, and say that someone works hard or wears himself out.",
+    "assesses": [
+      "LA-LEX-C380-CONDUCO-03",
+      "LA-LEX-C380-CONDUCO-04",
+      "LA-LEX-C380-CONDUCO-05"
+    ]
+  }
+}

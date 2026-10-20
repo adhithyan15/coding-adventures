@@ -1,0 +1,11 @@
+{
+  "id": "GE-C528-muelltonne",
+  "pathSegment": "GE-PATH-528-MUELL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-528-MUELL",
+      "order": 3
+    }
+  ]
+}

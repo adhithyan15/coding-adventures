@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 287,
+  "sourceHash": "fnv1a64:22bde9cea1d4bd83",
+  "lessonIds": [
+    "GE-C287-gestehen",
+    "GE-C287-gestaendnis",
+    "GE-C287-gefaengnis",
+    "GE-C287-verschwinden",
+    "GE-C287-fliehen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch287.txt",
+  "json": "german/narration/ch287.json",
+  "textHash": "fnv1a64:59fac31d4783199f",
+  "jsonHash": "fnv1a64:6b63a8c63ee69529",
+  "findings": []
+}

@@ -1,0 +1,18 @@
+{
+  "language": "german",
+  "chapter": 253,
+  "sourceHash": "fnv1a64:f4d23e7bc0e94291",
+  "lessonIds": [
+    "GE-C253-dann",
+    "GE-C253-schliesslich",
+    "GE-C253-lesung",
+    "GE-C253-review"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 2,
+  "text": "german/narration/ch253.txt",
+  "json": "german/narration/ch253.json",
+  "textHash": "fnv1a64:3ff53a32587a41d0",
+  "jsonHash": "fnv1a64:ff7377511170c2db",
+  "findings": []
+}

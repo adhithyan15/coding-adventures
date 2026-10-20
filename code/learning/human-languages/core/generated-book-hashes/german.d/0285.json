@@ -1,0 +1,14 @@
+{
+  "language": "german",
+  "chapter": 285,
+  "sourceHash": "fnv1a64:f9f991339ed6b3cc",
+  "lessonIds": [
+    "GE-C285-betruegen",
+    "GE-C285-betrug",
+    "GE-C285-betrueger",
+    "GE-C285-faelschen",
+    "GE-C285-erpressen",
+    "GE-R285-review-278-285"
+  ],
+  "tex": "german/book/chapters/ch285-der-betrug.tex"
+}

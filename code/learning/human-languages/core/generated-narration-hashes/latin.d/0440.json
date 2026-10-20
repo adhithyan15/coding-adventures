@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 440,
+  "sourceHash": "fnv1a64:23b4ff4f96f59dfe",
+  "lessonIds": [
+    "LA-C440-fluctuo",
+    "LA-C440-nauseo",
+    "LA-C440-defero",
+    "LA-C440-traicio",
+    "LA-C440-enato"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch440.txt",
+  "json": "latin/narration/ch440.json",
+  "textHash": "fnv1a64:2d69352829bacba0",
+  "jsonHash": "fnv1a64:725548a6cc0e7620",
+  "findings": []
+}

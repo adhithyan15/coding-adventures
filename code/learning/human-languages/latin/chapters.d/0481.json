@@ -1,0 +1,19 @@
+{
+  "chapter": 481,
+  "title": "Enclosed valley, Plain, Rocky, Rough, To slide down",
+  "label": "ch:la-enclosed-valley-plain-rocky-rough-to-slide-down",
+  "canDo": "I can describe the shape of the land: an enclosed valley, a plain, rocky and rough ground, and sliding down a slope.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C481-delabor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 481: I can describe the shape of the land: an enclosed valley, a plain, rocky and rough ground, and sliding down a slope.",
+    "assesses": [
+      "LA-LEX-C481-CONVALLIS-03",
+      "LA-LEX-C481-CONVALLIS-04",
+      "LA-LEX-C481-CONVALLIS-05"
+    ]
+  }
+}

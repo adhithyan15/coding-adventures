@@ -1,0 +1,21 @@
+{
+  "language": "german",
+  "chapter": 329,
+  "sourceHash": "fnv1a64:e5250aecfd468e34",
+  "lessonIds": [
+    "GE-C329-anrichten",
+    "GE-C329-garnieren",
+    "GE-C329-servieren",
+    "GE-C329-abkuehlen",
+    "GE-C329-knusprig",
+    "GE-R329-review-326-329",
+    "GE-R329-review-final-329"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "german/narration/ch329.txt",
+  "json": "german/narration/ch329.json",
+  "textHash": "fnv1a64:d96606b180e2c8ba",
+  "jsonHash": "fnv1a64:2cbee5d06934bfbf",
+  "findings": []
+}

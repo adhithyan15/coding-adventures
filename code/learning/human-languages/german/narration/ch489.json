@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "german",
+  "chapter": 489,
+  "title": "Neffen und Nichten",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:dee9ed5cf4445d89",
+  "lessons": [
+    {
+      "id": "GE-C489-verwandt",
+      "sequence": 26170,
+      "title": "verwandt — related (by family)",
+      "headword": "verwandt",
+      "romanization": "verwandt",
+      "gloss": "related (by family)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3ae41a7bfeb152f8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to get some rest, then the German for to recover."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: verwandt",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "verwandt — \"related (by family)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Wir haben den gleichen Nachnamen, aber wir sind nicht verwandt. We have the same surname, but we are not related."
+            },
+            {
+              "kind": "speech",
+              "text": "Verwandt mit + dative. Der Verwandte or die Verwandte — a relative."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "verwandt is the old past participle of verwenden \"to turn, to turn towards\" (EtymDB), built on wenden \"to turn\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "verwandt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *verwandt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "verwandt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *verwandt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with verwandt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *verwandt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to get some rest, then the German for to recover, then say verwandt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to get some rest, then the German for to recover, then say *verwandt* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does verwandt mean? (\"Related (by family)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C489-verwandtschaft",
+      "sequence": 26180,
+      "title": "die Verwandtschaft — relatives; kinship",
+      "headword": "die Verwandtschaft",
+      "romanization": "die Verwandtschaft",
+      "gloss": "relatives; kinship",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9d9680500561eb39",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to recover, then the German for related."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Verwandtschaft",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Verwandtschaft — \"relatives; kinship\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Zu Weihnachten kommt die ganze Verwandtschaft. All the relatives come for Christmas."
+            },
+            {
+              "kind": "speech",
+              "text": "A collective noun: all your relatives together. Plural, rare: die Verwandtschaften."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Verwandtschaft is built on verwandt \"related\" with -schaft; verwandt is the old participle of verwenden \"to turn towards\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Verwandtschaft",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Verwandtschaft*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Verwandtschaft, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Verwandtschaft*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with die Verwandtschaft",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *die Verwandtschaft*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to recover, then the German for related, then say die Verwandtschaft again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to recover, then the German for related, then say *die Verwandtschaft* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does die Verwandtschaft mean? (\"Relatives; kinship\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C489-neffe",
+      "sequence": 26190,
+      "title": "der Neffe — nephew",
+      "headword": "der Neffe",
+      "romanization": "der Neffe",
+      "gloss": "nephew",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b8f345e12b2a1130",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for related, then the German for relatives."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: der Neffe",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "der Neffe — \"nephew\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mein Neffe ist zehn und spielt gern Fußball. My nephew is ten and likes playing football."
+            },
+            {
+              "kind": "speech",
+              "text": "Weak noun: den Neffen, dem Neffen. Plural: die Neffen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Neffe is inherited from Old High German nefo (EtymDB), an old Germanic family word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Neffe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Neffe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Neffe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Neffe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with der Neffe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *der Neffe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for related, then the German for relatives, then say der Neffe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for related, then the German for relatives, then say *der Neffe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does der Neffe mean? (\"Nephew\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C489-nichte",
+      "sequence": 26200,
+      "title": "die Nichte — niece",
+      "headword": "die Nichte",
+      "romanization": "die Nichte",
+      "gloss": "niece",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ec32074aa8dd9ed5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for relatives, then the German for nephew."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Nichte",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Nichte — \"niece\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Meine Nichte hat mir ein Bild gemalt. My niece painted me a picture."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Nichten."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Nichte was borrowed from Middle Low German nichte (EtymDB), the northern form of an old Germanic word for a niece."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Nichte",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Nichte*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Nichte, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Nichte*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with die Nichte",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *die Nichte*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for relatives, then the German for nephew, then say die Nichte again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for relatives, then the German for nephew, then say *die Nichte* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does die Nichte mean? (\"Niece\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C489-schwager",
+      "sequence": 26210,
+      "title": "der Schwager — brother-in-law",
+      "headword": "der Schwager",
+      "romanization": "der Schwager",
+      "gloss": "brother-in-law",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:80cc1078516913b8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for nephew, then the German for niece."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: der Schwager",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "der Schwager — \"brother-in-law\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mein Schwager hilft uns beim Umzug. My brother-in-law is helping us move."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Schwager. A sister-in-law is die Schwägerin."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Schwager is inherited from Middle High German swāger and Old High German suāgur, from Proto-Germanic swēgraz \"husband's brother\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Schwager",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Schwager*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Schwager, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Schwager*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with der Schwager",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *der Schwager*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for nephew, then the German for niece, then say der Schwager again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for nephew, then the German for niece, then say *der Schwager* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does der Schwager mean? (\"Brother-in-law\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-R489-review-482-489",
+      "sequence": 26220,
+      "title": "Words from chapters 482–489 — a review",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 482-489",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ae1ecd265716b032",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the German for to sprain and bruise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to sprain, bruise, bandage, to disinfect, scar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to sprain, bruise, bandage, to disinfect, scar]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "plaster cast, crutch, to limp, wheelchair, to heal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: plaster cast, crutch, to limp, wheelchair, to heal]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "forehead, cheek, chin, eyebrow, eyelash",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: forehead, cheek, chin, eyebrow, eyelash]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "back of the neck, elbow, wrist, ankle, hip",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: back of the neck, elbow, wrist, ankle, hip]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiredness, exhausted, to yawn, to snore, nightmare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: tiredness, exhausted, to yawn, to snore, nightmare]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "family doctor, specialist, to examine, to treat, to prescribe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: family doctor, specialist, to examine, to treat, to prescribe]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to infect, infection, to vaccinate, to get some rest, to recover",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to infect, infection, to vaccinate, to get some rest, to recover]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "related, relatives, nephew, niece, brother-in-law",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: related, relatives, nephew, niece, brother-in-law]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To sprain? (verstauchen.) Bruise? (die Prellung.) Bandage? (der Verband.) To disinfect? (desinfizieren.) Scar? (die Narbe.) Plaster cast? (der Gips.) Crutch? (die Krücke.) To limp? (humpeln.) Wheelchair? (der Rollstuhl.) To heal? (heilen.) Forehead? (die Stirn.) Cheek? (die Wange.) Chin? (das Kinn.) Eyebrow? (die Augenbraue.) Eyelash? (die Wimper.) Back of the neck? (der Nacken.) Elbow? (der Ellbogen.) Wrist? (das Handgelenk.) Ankle? (der Knöchel.) Hip? (die Hüfte.) Tiredness? (die Müdigkeit.) Exhausted? (erschöpft.) To yawn? (gähnen.) To snore? (schnarchen.) Nightmare? (der Albtraum.) Family doctor? (der Hausarzt.) Specialist? (der Facharzt.) To examine? (untersuchen.) To treat? (behandeln.) To prescribe? (verschreiben.) To infect? (anstecken.) Infection? (die Infektion.) To vaccinate? (impfen.) To get some rest? (erholen.) To recover? (genesen.) Related? (verwandt.) Relatives? (die Verwandtschaft.) Nephew? (der Neffe.) Niece? (die Nichte.) Brother-in-law? (der Schwager.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

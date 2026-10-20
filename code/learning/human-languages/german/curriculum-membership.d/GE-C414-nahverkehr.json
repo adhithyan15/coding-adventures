@@ -1,0 +1,11 @@
+{
+  "id": "GE-C414-nahverkehr",
+  "pathSegment": "GE-PATH-414-PENDELN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-414-PENDELN",
+      "order": 1
+    }
+  ]
+}

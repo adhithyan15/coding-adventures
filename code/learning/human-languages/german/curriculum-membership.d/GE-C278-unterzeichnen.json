@@ -1,0 +1,11 @@
+{
+  "id": "GE-C278-unterzeichnen",
+  "pathSegment": "GE-PATH-278-VERHANDELN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-278-VERHANDELN",
+      "order": 3
+    }
+  ]
+}

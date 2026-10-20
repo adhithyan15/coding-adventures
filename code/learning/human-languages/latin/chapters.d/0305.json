@@ -1,0 +1,19 @@
+{
+  "chapter": 305,
+  "title": "Scelus et fraus",
+  "label": "ch:la-scelus-et-fraus",
+  "canDo": "I can name wrongdoing in a story: a crime, a deed, wicked, fraud and trickery.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C305-dolus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 305: I can name wrongdoing in a story: a crime, a deed, wicked, fraud and trickery.",
+    "assesses": [
+      "LA-LEX-C305-SCELUS-03",
+      "LA-LEX-C305-SCELUS-04",
+      "LA-LEX-C305-SCELUS-05"
+    ]
+  }
+}

@@ -240,6 +240,7 @@ fn emit_component(
     let uses_host_dialog = layout_contains_tag(&layout.root, "HostDialog");
     let uses_host_slider = layout_contains_tag(&layout.root, "HostSlider");
     let uses_auto_focus = layout_contains_keyword_prop(&layout.root, "auto-focus", "true");
+    let uses_multiline_commit = layout_has_multiline_commit(&layout.root);
     let uses_native_table_semantics = layout_has_native_table_semantics(&layout.root);
     let uses_text_heading = layout_has_text_role(&layout.root, "heading");
     let uses_text_replacement_semantics = layout_has_text_replacement_semantics(&layout.root);
@@ -523,11 +524,31 @@ fn emit_component(
 
         writeln!(out, "import androidx.compose.ui.geometry.Offset").unwrap();
         writeln!(out, "import androidx.compose.ui.geometry.Rect").unwrap();
+    }
+    // Key handling: the drag runtime's keyboard moves, and a text area's
+    // Ctrl/Cmd+Enter commit. One gate per import, so a file using both still
+    // imports each name once.
+    if uses_drag || uses_multiline_commit {
         writeln!(out, "import androidx.compose.ui.input.key.Key").unwrap();
         writeln!(out, "import androidx.compose.ui.input.key.KeyEventType").unwrap();
+    }
+    if uses_multiline_commit {
+        writeln!(out, "import androidx.compose.ui.input.key.isCtrlPressed").unwrap();
+        writeln!(out, "import androidx.compose.ui.input.key.isMetaPressed").unwrap();
+    }
+    if uses_drag || uses_multiline_commit {
         writeln!(out, "import androidx.compose.ui.input.key.key").unwrap();
+    }
+    if uses_drag {
         writeln!(out, "import androidx.compose.ui.input.key.onKeyEvent").unwrap();
+    }
+    if uses_multiline_commit {
+        writeln!(out, "import androidx.compose.ui.input.key.onPreviewKeyEvent").unwrap();
+    }
+    if uses_drag || uses_multiline_commit {
         writeln!(out, "import androidx.compose.ui.input.key.type").unwrap();
+    }
+    if uses_drag {
         writeln!(out, "import androidx.compose.ui.layout.boundsInRoot").unwrap();
         writeln!(
             out,
@@ -746,6 +767,15 @@ fn layout_contains_tag(node: &LayoutNode, tag: &str) -> bool {
             .children
             .iter()
             .any(|child| layout_contains_tag(child, tag))
+}
+
+/// Does any text field commit from a text area (UI25 §4's Ctrl/Cmd+Enter)?
+/// Gates the key-event imports that commit handler needs.
+fn layout_has_multiline_commit(node: &LayoutNode) -> bool {
+    (matches!(node.tag.as_str(), "HostInput" | "Input")
+        && matches!(find_prop_value(node, "multiline"), Some(LayoutPropValue::Keyword(v)) if v == "true")
+        && find_emit_ref_prop(node, "onCommit").is_some())
+        || node.children.iter().any(layout_has_multiline_commit)
 }
 
 fn layout_contains_keyword_prop(node: &LayoutNode, name: &str, value: &str) -> bool {
@@ -7864,8 +7894,11 @@ fn emit_host_input(
     //
     // A multiline field keeps the IME's newline key instead: `ImeAction.Done`
     // would replace it, so a soft keyboard could no longer start a new line,
-    // and Enter commits a text area on no backend (#15930).
-    if let Some(emit_name) = find_emit_ref_prop(node, "onCommit").filter(|_| !multiline) {
+    // and Enter commits a text area on no backend (#15930). It commits on
+    // UI25 §4's Ctrl/Cmd+Enter instead, through the key handler appended to
+    // the modifier below (`multiline_commit`).
+    let mut multiline_commit = None;
+    if let Some(emit_name) = find_emit_ref_prop(node, "onCommit") {
         let case = pascalize(&strip_on_prefix(emit_name));
         validate_safe_identifier(&case).map_err(PipelineEmitError::UnsafeEmitName)?;
         let emit = emits.iter().find(|e| e.name == *emit_name);
@@ -7884,17 +7917,21 @@ fn emit_host_input(
                 format!("{component_name}Event.{case}({payload})")
             }
         };
-        writeln!(out, "{inner}singleLine = true,").unwrap();
-        writeln!(
-            out,
-            "{inner}keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),"
-        )
-        .unwrap();
-        writeln!(
-            out,
-            "{inner}keyboardActions = KeyboardActions(onDone = {{ dispatch({dispatch_call}) }}),"
-        )
-        .unwrap();
+        if multiline {
+            multiline_commit = Some(dispatch_call);
+        } else {
+            writeln!(out, "{inner}singleLine = true,").unwrap();
+            writeln!(
+                out,
+                "{inner}keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),"
+            )
+            .unwrap();
+            writeln!(
+                out,
+                "{inner}keyboardActions = KeyboardActions(onDone = {{ dispatch({dispatch_call}) }}),"
+            )
+            .unwrap();
+        }
     }
 
     let fills = node
@@ -7911,6 +7948,18 @@ fn emit_host_input(
         let base = modifier_expr.unwrap_or_else(|| "Modifier".to_string());
         modifier_expr = Some(format!(
             "{base}.semantics {{ contentDescription = {accessible_label} }}"
+        ));
+    }
+    // A text area's hardware-keyboard commit (UI25 §4): Ctrl+Enter, or
+    // Cmd+Enter on macOS. A *preview* key handler runs on the way down to
+    // the focused node, so it sees the key before BasicTextField inserts a
+    // newline, and returning `true` consumes the chord. Bare Enter returns
+    // `false` and reaches the field as a line break. `NumPadEnter` is the
+    // keypad's Enter; only KeyDown commits, so one press dispatches once.
+    if let Some(dispatch_call) = multiline_commit {
+        let base = modifier_expr.unwrap_or_else(|| "Modifier".to_string());
+        modifier_expr = Some(format!(
+            "{base}.onPreviewKeyEvent {{ event -> if (event.type == KeyEventType.KeyDown && (event.key == Key.Enter || event.key == Key.NumPadEnter) && (event.isCtrlPressed || event.isMetaPressed)) {{ dispatch({dispatch_call}); true }} else false }}"
         ));
     }
     if let Some(modifier) = modifier_expr {
@@ -11145,6 +11194,60 @@ mod tests {
         let single = make("false");
         assert!(single.contains("singleLine = true,"), "{single}");
         assert!(single.contains("keyboardActions = KeyboardActions(onDone = { dispatch(EditorEvent.Save) }),"), "{single}");
+        assert!(!single.contains("onPreviewKeyEvent"), "{single}");
+    }
+
+    /// UI25 §4 — a text area commits on Ctrl+Enter, or Cmd+Enter on macOS,
+    /// from a hardware keyboard. The preview handler sees the key before
+    /// BasicTextField does, so consuming it keeps the chord out of the text;
+    /// bare Enter is left alone and inserts its newline. A text-payload
+    /// commit carries the field's value, as the single-line `onDone` does.
+    #[test]
+    fn multiline_host_input_commits_on_ctrl_or_cmd_enter() {
+        let m = component(
+            "Editor",
+            vec![slot("v", SlotType::Text, true)],
+            vec![emit_decl("onSave", vec![param("value", EmitPayloadType::Text)])],
+        );
+        for tag in ["HostInput", "Input"] {
+            let l = layout(
+                "Editor",
+                styled_node(
+                    tag,
+                    "editor-input",
+                    vec![
+                        slot_prop("value", "v"),
+                        LayoutProp {
+                            name: "multiline".into(),
+                            value: LayoutPropValue::Keyword("true".into()),
+                        },
+                        LayoutProp {
+                            name: "onCommit".into(),
+                            value: LayoutPropValue::EmitRef("onSave".into()),
+                        },
+                    ],
+                    vec![],
+                ),
+            );
+            let out = from_pipeline(&m, &l, &empty_style("Editor")).expect("emit").output;
+            assert!(
+                out.contains(
+                    ".onPreviewKeyEvent { event -> if (event.type == KeyEventType.KeyDown && (event.key == Key.Enter || event.key == Key.NumPadEnter) && (event.isCtrlPressed || event.isMetaPressed)) { dispatch(EditorEvent.Save(v)); true } else false }"
+                ),
+                "{tag}: {out}"
+            );
+            for import in [
+                "import androidx.compose.ui.input.key.Key\n",
+                "import androidx.compose.ui.input.key.KeyEventType\n",
+                "import androidx.compose.ui.input.key.isCtrlPressed\n",
+                "import androidx.compose.ui.input.key.isMetaPressed\n",
+                "import androidx.compose.ui.input.key.key\n",
+                "import androidx.compose.ui.input.key.onPreviewKeyEvent\n",
+                "import androidx.compose.ui.input.key.type\n",
+            ] {
+                assert_eq!(out.matches(import).count(), 1, "{tag}: `{import}` once in {out}");
+            }
+        }
     }
 
     #[test]

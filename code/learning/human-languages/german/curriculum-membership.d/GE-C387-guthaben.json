@@ -1,0 +1,11 @@
+{
+  "id": "GE-C387-guthaben",
+  "pathSegment": "GE-PATH-387-KONTO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-387-KONTO",
+      "order": 1
+    }
+  ]
+}

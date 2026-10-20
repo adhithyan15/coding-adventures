@@ -1,0 +1,11 @@
+{
+  "id": "GE-C336-abwaegen",
+  "pathSegment": "GE-PATH-336-EINIGUNG",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-336-EINIGUNG",
+      "order": 2
+    }
+  ]
+}

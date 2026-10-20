@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 262,
+  "sourceHash": "fnv1a64:81a351c5a7b30225",
+  "lessonIds": [
+    "GE-C262-zunaechst",
+    "GE-C262-anschliessend",
+    "GE-C262-daraufhin",
+    "GE-C262-zuletzt",
+    "GE-C262-reihenfolge"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch262.txt",
+  "json": "german/narration/ch262.json",
+  "textHash": "fnv1a64:21fa2354a36c86d8",
+  "jsonHash": "fnv1a64:038fa14b9d1e4cc1",
+  "findings": []
+}

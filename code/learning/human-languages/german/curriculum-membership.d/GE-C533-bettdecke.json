@@ -1,0 +1,11 @@
+{
+  "id": "GE-C533-bettdecke",
+  "pathSegment": "GE-PATH-533-GEMUETLICH",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-533-GEMUETLICH",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C525-sitio",
+  "pathSegment": "LA-PATH-525-TUSS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-525-TUSS",
+      "order": 2
+    }
+  ]
+}

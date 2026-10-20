@@ -1,0 +1,19 @@
+{
+  "chapter": 451,
+  "title": "Gute Angebote",
+  "label": "ch:ge-gute-angebote",
+  "canDo": "I can find a bargain: reducing prices, the special offer, the bargain, haggling and the flea market.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C451-flohmarkt",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 451: I can find a bargain: reducing prices, the special offer, the bargain, haggling and the flea market.",
+    "assesses": [
+      "GE-LEX-C451-SCHNAEPPCHEN-03",
+      "GE-LEX-C451-SCHNAEPPCHEN-04",
+      "GE-LEX-C451-SCHNAEPPCHEN-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C403-eruditus",
+  "pathSegment": "LA-PATH-403-DOCTUS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-403-DOCTUS",
+      "order": 2
+    }
+  ]
+}

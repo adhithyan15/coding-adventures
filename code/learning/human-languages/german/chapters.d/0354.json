@@ -1,0 +1,19 @@
+{
+  "chapter": 354,
+  "title": "Die Besprechung",
+  "label": "ch:ge-die-besprechung",
+  "canDo": "I can talk about meetings at work: who takes the minutes and who gives a presentation.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C354-praesentation",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 354: I can talk about meetings at work: who takes the minutes and who gives a presentation.",
+    "assesses": [
+      "GE-LEX-C354-BESPRECHUNG-03",
+      "GE-LEX-C354-BESPRECHUNG-04",
+      "GE-LEX-C354-BESPRECHUNG-05"
+    ]
+  }
+}

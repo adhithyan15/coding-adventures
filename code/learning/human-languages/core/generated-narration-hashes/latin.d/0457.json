@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 457,
+  "sourceHash": "fnv1a64:24e1ab755f4eb505",
+  "lessonIds": [
+    "LA-C457-insula",
+    "LA-C457-cenaculum",
+    "LA-C457-contignatio",
+    "LA-C457-tignum",
+    "LA-C457-trabs"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch457.txt",
+  "json": "latin/narration/ch457.json",
+  "textHash": "fnv1a64:c370f10ec05e520c",
+  "jsonHash": "fnv1a64:3baedf8bf34dadaf",
+  "findings": []
+}

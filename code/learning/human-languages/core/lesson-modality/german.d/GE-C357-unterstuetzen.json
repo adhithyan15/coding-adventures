@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C357-unterstuetzen",
+    "language": "german",
+    "chapter": 357,
+    "sequence": 19410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d93dff197e96c4d"
+  },
+  "findings": []
+}

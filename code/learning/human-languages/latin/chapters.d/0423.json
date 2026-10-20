@@ -1,0 +1,19 @@
+{
+  "chapter": 423,
+  "title": "Footpath, Mountain track, Side path, Slope, Step",
+  "label": "ch:la-footpath-mountain-track-side-path-slope-step",
+  "canDo": "I can talk about the smaller ways a traveller takes: a footpath, a mountain track, a side path, a slope, and stepping along.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C423-gradior",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 423: I can talk about the smaller ways a traveller takes: a footpath, a mountain track, a side path, a slope, and stepping along.",
+    "assesses": [
+      "LA-LEX-C423-SEMITA-03",
+      "LA-LEX-C423-SEMITA-04",
+      "LA-LEX-C423-SEMITA-05"
+    ]
+  }
+}

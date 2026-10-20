@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C254-ich-finde-dass",
+    "language": "german",
+    "chapter": 254,
+    "sequence": 14180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:61ae52c54c9d51a0"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-428-PROFECTIO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "LA-EXT-428-PROFECTIO"
+  ],
+  "after": []
+}

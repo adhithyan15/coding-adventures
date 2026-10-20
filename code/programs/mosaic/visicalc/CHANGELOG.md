@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Depends on `mosaic-pkg-grid` 0.3.0, whose Cell and Column load on Qt again.
+
 ## 2026-09-20
 
 - Name inline cell editors through the shared grid editor-label slot and the Rust-selected absolute cell address (#15752).

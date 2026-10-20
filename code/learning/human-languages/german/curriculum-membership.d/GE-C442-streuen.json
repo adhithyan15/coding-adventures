@@ -1,0 +1,11 @@
+{
+  "id": "GE-C442-streuen",
+  "pathSegment": "GE-PATH-442-GLATTEIS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-442-GLATTEIS",
+      "order": 2
+    }
+  ]
+}

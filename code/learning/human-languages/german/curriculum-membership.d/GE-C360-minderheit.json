@@ -1,0 +1,11 @@
+{
+  "id": "GE-C360-minderheit",
+  "pathSegment": "GE-PATH-360-VORURTEIL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-360-VORURTEIL",
+      "order": 2
+    }
+  ]
+}

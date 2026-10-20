@@ -1,0 +1,19 @@
+{
+  "chapter": 419,
+  "title": "Warten am Flughafen",
+  "label": "ch:ge-warten-am-flughafen",
+  "canDo": "I can talk about delays: the stopover, the time difference, running late, being stuck and an emergency landing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C419-notlanden",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 419: I can talk about delays: the stopover, the time difference, running late, being stuck and an emergency landing.",
+    "assesses": [
+      "GE-LEX-C419-ZWISCHENLANDUNG-03",
+      "GE-LEX-C419-ZWISCHENLANDUNG-04",
+      "GE-LEX-C419-ZWISCHENLANDUNG-05"
+    ]
+  }
+}

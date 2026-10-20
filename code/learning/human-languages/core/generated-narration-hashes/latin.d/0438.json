@@ -1,0 +1,20 @@
+{
+  "language": "latin",
+  "chapter": 438,
+  "sourceHash": "fnv1a64:386924ae03df8def",
+  "lessonIds": [
+    "LA-C438-conscendo",
+    "LA-C438-vectura",
+    "LA-C438-nauclerus",
+    "LA-C438-velificor",
+    "LA-C438-portitor",
+    "LA-R438-review-431-438"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "latin/narration/ch438.txt",
+  "json": "latin/narration/ch438.json",
+  "textHash": "fnv1a64:2fc8224acaf0af75",
+  "jsonHash": "fnv1a64:f0507e721cf69533",
+  "findings": []
+}

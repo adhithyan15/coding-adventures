@@ -1,0 +1,19 @@
+{
+  "chapter": 443,
+  "title": "Sandbank, Billow, Shallows, Strait, To sail past",
+  "label": "ch:la-sandbank-billow-shallows-strait-to-sail-past",
+  "canDo": "I can talk about the dangers of the water: a sandbank, the billows, the shallows, a strait, and sailing past.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C443-praetervehor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 443: I can talk about the dangers of the water: a sandbank, the billows, the shallows, a strait, and sailing past.",
+    "assesses": [
+      "LA-LEX-C443-FLUCTUS-03",
+      "LA-LEX-C443-FLUCTUS-04",
+      "LA-LEX-C443-FLUCTUS-05"
+    ]
+  }
+}

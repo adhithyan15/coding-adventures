@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 316,
+  "sourceHash": "fnv1a64:f2120f21c95a5171",
+  "lessonIds": [
+    "LA-C316-eripio",
+    "LA-C316-incolumis",
+    "LA-C316-subvenio",
+    "LA-C316-succurro",
+    "LA-C316-auxilium"
+  ],
+  "tex": "latin/book/chapters/ch316-auxilium.tex"
+}

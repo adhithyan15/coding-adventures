@@ -651,6 +651,45 @@ host — via the same `x86_64-backend` and `elf_object` / `pe_object` /
 No backend changes needed — every frontend gets x86-64 Linux, x86-64
 Windows, and ARM64 macOS for free.
 
+## Standard operations and compile-time refusal (LANG83)
+
+A frontend that needs a new operation (floor division, output without a
+newline, a defined trap, …) does not add a helper function or a runtime
+library. It uses an operation from the LANG83 standard registry
+(`interpreter_ir::op_registry::STANDARD_OPS`), and each backend lowers that
+operation itself. `lang_aot::Backend` names the nine columns (`X86_64`, `Aarch64`,
+`Llvm`, `Wasm`, `Jvm`, `Clr`, `Beam`, `Vm`, `Jit`). Each column maps to its
+crate's `op_support` declaration.
+`check_module_for(backend, &module)` runs first in every code-generation entry
+point. A refused operation is therefore a typed
+`LangAotError::UnsupportedOps` that names the function, the operation and the
+backend's reason. It is never a miscompile:
+
+```rust
+use lang_aot::{check_module_for, Backend};
+
+// `module` is any IIRModule. Err(UnsupportedOps) lists each refused (function, op).
+check_module_for(Backend::Wasm, &module)?;
+```
+
+The IIR-level entry points `compile_iir_to_{llvm,wasm,jvm_class,cil_artifact,
+cil_text,beam}` and `compile_iir_to_host_executable` compile an already-built
+module. Each `compile_source_to_*` is the frontend followed by one of them.
+`tests/op_conformance.rs` builds an IIR case for every registry operation. Each
+`Lowered` case compiles on every code-generation backend and runs on WASM, VM,
+JIT, LLVM, native and (with a JDK) the JVM. Each `Refused` case is rejected at
+compile time. Output is one ordered stream on every column: `print_i64`,
+`write_i64`, `putchar` and `print_str` interleave in program order.
+
+Since LANG83 PR1b every backend lowers `write_i64` (no newline),
+`i64_div_floor` / `i64_mod_floor` (floor semantics; a zero divisor traps
+`Trap.DivZero`, `MIN / -1` traps `Trap.Overflow`, `MIN mod -1` is 0) and
+`trap "<kind>"`. A trap flushes the output written so far before reporting its
+kind; the conformance suite proves that ("print, then trap") on WASM, VM, JIT,
+LLVM, native and JVM. Modules using the PR1b i64 operations keep the wide i64
+value model on the JVM (they are never narrowed to `i32`). See
+`code/specs/LANG83-iir-standard-operation-registry.md`.
+
 ## Limitations
 
 - **Host-targets-host only.** Same V1 policy as `twig-aot`.  Use the
