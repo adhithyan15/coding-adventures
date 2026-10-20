@@ -162,11 +162,11 @@ func ensurePlainDirectory(path string) error {
 // sibling of dir/name, then rename it over dir/name.  On any failure the
 // temporary file is removed, so a failed write leaves the classpath as it was.
 func replaceFileAtomically(dir string, name string, data []byte) error {
-	var nonce [8]byte
-	if _, err := rand.Read(nonce[:]); err != nil {
-		return backendError("failed to name temporary class file: %v", err)
+	tempName, err := temporaryClassFileName(name)
+	if err != nil {
+		return err
 	}
-	tempPath := filepath.Join(dir, "."+name+"."+hex.EncodeToString(nonce[:])+".tmp")
+	tempPath := filepath.Join(dir, tempName)
 
 	// O_EXCL with O_CREATE fails if anything — file, directory, dangling
 	// link — already has this name; it never follows a link.  Go opens files
@@ -186,6 +186,19 @@ func replaceFileAtomically(dir string, name string, data []byte) error {
 		return backendError("failed to move class file into place: %v", err)
 	}
 	return nil
+}
+
+// temporaryClassFileName names the temp sibling both walks write before the
+// final rename: ".Example.class.3f9c0a1b2d4e5f60.tmp".  The leading dot keeps it
+// out of casual listings, and 64 random bits make a collision with anything
+// already in the directory (planted or left over) vanishingly unlikely — and
+// harmless if it happens, since the temp file is opened with O_EXCL.
+func temporaryClassFileName(name string) (string, error) {
+	var nonce [8]byte
+	if _, err := rand.Read(nonce[:]); err != nil {
+		return "", backendError("failed to name temporary class file: %v", err)
+	}
+	return "." + name + "." + hex.EncodeToString(nonce[:]) + ".tmp", nil
 }
 
 // isPlainDirectory: a directory that is neither a symlink nor a reparse point.
