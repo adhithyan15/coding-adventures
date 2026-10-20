@@ -377,7 +377,11 @@ fail. This was checked by mutation.
   divisor, `MIN / -1`, `MIN / 1`, print-then-trap. May split per backend.
 - **PR2 — Ruby frontend** on these ops (`rb_int_div` = `i64_div_floor`, `puts`
   = `print_i64`, `StdoutThenTrap` rows).
-- **PR3 — Perl** (`print` = `write_i64`).
+- **PR3 — Perl** (`print` = `write_i64`). Landed as LANG84 phase 4a: the
+  Perl frontend emits `call_builtin write_i64` (no more `pl_print_int`), and
+  eleven `lang_matrix` rows run it; the matrix WASM host and VM/JIT runners
+  now provide `write_i64` on the ordered sink. No Perl row emits a floor op
+  or traps yet (the subset has no `/`, `%` or `int()`).
 - **PR4 — overflow family. PR5 — strings. PR6 — floats + Python/JavaScript
   formatting.**
 
