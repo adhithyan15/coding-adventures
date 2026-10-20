@@ -1,5 +1,16 @@
 # Changelog — interpreter-ir
 
+## [0.14.0] — 2026-10-20 (LANG83 PR6a — shortest round-trip float output)
+
+- **Registry:** two new output Builtins, `introduced_by: "LANG83 PR6a"`
+  (`LANG83_PR6A`, `OpSpec::is_pr6a`): `write_f64_py` (Python `repr(float)`
+  layout) and `write_f64_js` (JavaScript `Number#toString` layout). Each takes
+  one `f64`, writes the shortest decimal that reads back as exactly that value
+  (closest on a length tie, round-half-even on an exact tie) with no newline,
+  and never traps. One builtin per layout, not a flags operand. Every backend
+  lowers both in the same slice.
+- **New test `pr6a_set_is_exactly_the_two_float_writers`.**
+
 ## [0.13.0] — 2026-10-20 (LANG83 PR4 — overflow-checked arithmetic)
 
 - **Registry:** four new type-first Ops, `introduced_by: "LANG83 PR4"`
