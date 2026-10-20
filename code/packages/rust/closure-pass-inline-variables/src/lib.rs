@@ -107,7 +107,7 @@ use coding_adventures_correlation_vector::Contribution;
 use coding_adventures_javascript_ast::statement::TaggedStatement;
 use coding_adventures_javascript_ast::{
     ArrowBody, AssignmentTarget, BindingTarget, ClassMember, Declaration, Expression, ForInit,
-    ObjectMember, Program, ProgramItem, PropertyKey, Statement, VarKind, VariableDeclaration,
+    LogicalOperator, ObjectMember, Program, ProgramItem, PropertyKey, Statement, VarKind, VariableDeclaration,
 };
 use serde_json::json;
 
@@ -158,8 +158,17 @@ impl InlineVariablesPass {
     /// * CLOC29 — propagate a scalar top-level `let`/`var` to its uses
     ///   (`var x=1; x?a:b` becomes `a` once constant-folding runs).
     ///
-    /// `const` scalars are NOT gated here: they propagate at both levels,
-    /// as they always have.
+    /// Since CCR-078 (#15863), top-level `const` scalars ride this flag too.
+    /// They used to propagate at both levels. The pinned oracle keeps them at
+    /// SIMPLE, and only uses their value to decide a statement condition. So
+    /// open-world mode substitutes only at those sites (see
+    /// [`is_condition_site`]):
+    ///
+    /// ```text
+    /// SIMPLE   : const b=2;console.log(b);     =>  unchanged
+    /// SIMPLE   : const T=!0;T&&console.log(1); =>  const T=!0;console.log(1);
+    /// ADVANCED : const b=2;console.log(b);     =>  console.log(2);
+    /// ```
     ///
     /// The candidates this enables are all top-level bindings, and a
     /// top-level binding is a property of the global object. At SIMPLE the
@@ -291,6 +300,11 @@ struct ConstCandidate {
     /// over the serialized AST and refuses on any write, which is exactly
     /// the guarantee `const`-ness gives the scalar path for free.
     strong_proof: bool,
+    /// CCR-078 (#15863): open world (SIMPLE). Substitute only at a
+    /// *statement condition* — the bare test of an `if`, or the bare left
+    /// operand of a statement-level `&&`/`||` — never at an ordinary use.
+    /// See [`is_condition_site`].
+    condition_sites_only: bool,
 }
 
 /// One propagation event for CV provenance (#89): the original `const`
@@ -412,6 +426,7 @@ fn inline_variables_program(
             value: init.clone(),
             structured,
             strong_proof: structured || scalar_strong,
+            condition_sites_only: !closed_world,
         });
     }
     if candidates.is_empty() {
@@ -478,6 +493,21 @@ fn inline_variables_program(
                     } else {
                         literal_repr(&cand.value)
                     },
+                    sites,
+                });
+            }
+            continue;
+        }
+        if cand.condition_sites_only {
+            // Open world: the binding stays, and each substituted condition
+            // folds away (`if(true)…`, `true&&…`), so nothing is duplicated
+            // and the size budget does not apply.
+            let sites = propagate_all(program, cand);
+            if sites > 0 {
+                changed = true;
+                propagated.push(PropagatedConst {
+                    name: cand.name.clone(),
+                    value: literal_repr(&cand.value),
                     sites,
                 });
             }
@@ -1322,6 +1352,28 @@ fn structured_repr(expr: &Expression) -> String {
 /// Replace EVERY use of `cand.name` in the program with a clone of the
 /// constant's literal value. Returns whether any replacement was made.
 /// The walk does not short-circuit — it rewrites all use sites.
+/// Is `test` a statement condition that open-world propagation may fill in
+/// (CCR-078, #15863)? Only the bare name itself qualifies.
+///
+/// At SIMPLE the reference compiler keeps every top-level binding, `const`
+/// included, but it does use a literal-initialized one's value to decide a
+/// statement-level condition, which then folds away. Measured with the
+/// pinned `v20260915` jar:
+///
+/// | input (SIMPLE)                              | upstream                         |
+/// |---------------------------------------------|----------------------------------|
+/// | `const T=true; T&&console.log(1);`          | `const T=!0;console.log(1);`     |
+/// | `const D=false; if(D)a();else b();`         | `const D=!1;b();`                |
+/// | `const N=0; N\|\|console.log(1);`            | `const N=0;console.log(1);`      |
+/// | `const D=false; D?a():b();`                 | `const D=!1;b();`                |
+/// | `const T=true; console.log(T);`             | unchanged — an ordinary use      |
+/// | `const N=2; if(N>1)console.log(1);`         | unchanged apart from if→`&&`     |
+/// | `const T=true; while(!T)f();`               | unchanged apart from while→`for` |
+/// | `const D=false; console.log(D?1:2);`        | unchanged — a value, not a statement |
+fn is_condition_site(test: &Expression, cand: &ConstCandidate) -> bool {
+    matches!(test, Expression::Identifier(id) if id.name == cand.name)
+}
+
 fn propagate_all(program: &mut Program, cand: &ConstCandidate) -> usize {
     let mut changed = 0usize;
     for item in &mut program.body {
@@ -1396,6 +1448,25 @@ fn propagate_in_stmt(stmt: &mut Statement, cand: &ConstCandidate) -> usize {
         Statement::Declaration(d) => changed += propagate_in_decl(d, cand),
         Statement::Tagged(t) => match t {
             TaggedStatement::ExpressionStatement(es) => {
+                // CCR-078: `X && e;`, `X || e;` and `X ? a : b;` as a
+                // statement (the last is also what fold-control-flow makes
+                // of `if (X) a; else b;`).
+                if cand.condition_sites_only {
+                    match &mut es.expression {
+                        Expression::LogicalExpression(le)
+                            if matches!(le.operator, LogicalOperator::And | LogicalOperator::Or)
+                                && is_condition_site(&le.left, cand) =>
+                        {
+                            *le.left = cand.value.clone();
+                            changed += 1;
+                        }
+                        Expression::ConditionalExpression(ce) if is_condition_site(&ce.test, cand) => {
+                            *ce.test = cand.value.clone();
+                            changed += 1;
+                        }
+                        _ => {}
+                    }
+                }
                 changed += propagate_in_expr(&mut es.expression, cand)
             }
             TaggedStatement::BlockStatement(b) => {
@@ -1404,6 +1475,11 @@ fn propagate_in_stmt(stmt: &mut Statement, cand: &ConstCandidate) -> usize {
                 }
             }
             TaggedStatement::IfStatement(is) => {
+                // CCR-078: `if (X)`.
+                if cand.condition_sites_only && is_condition_site(&is.test, cand) {
+                    is.test = cand.value.clone();
+                    changed += 1;
+                }
                 changed += propagate_in_expr(&mut is.test, cand);
                 changed += propagate_in_stmt(&mut is.consequent, cand);
                 if let Some(alt) = &mut is.alternate {
@@ -1557,7 +1633,7 @@ fn propagate_in_expr(expr: &mut Expression, cand: &ConstCandidate) -> usize {
     // every other arm just recurses into use-position sub-expressions.
     // A structured candidate never takes this path — see above.
     if let Expression::Identifier(id) = expr {
-        if !cand.structured && id.name == cand.name {
+        if !cand.structured && !cand.condition_sites_only && id.name == cand.name {
             *expr = cand.value.clone();
             return 1;
         }
@@ -1838,13 +1914,13 @@ mod tests {
             .code
     }
 
-    /// Parse `src`, bridge, run the pass, and return its CV contributions —
-    /// the propagation table (#89 provenance).
+    /// Parse `src`, bridge, run the (closed-world) pass, and return its CV
+    /// contributions — the propagation table (#89 provenance).
     fn propagate_contributions(src: &str) -> Vec<Contribution> {
         let es = EsVersion::Es2025;
         let node = parse_javascript_typed(src, es).expect("parse");
         let prog = bridge::grammar_to_program(&node, es).expect("bridge");
-        let pass = InlineVariablesPass::new();
+        let pass = InlineVariablesPass::closed_world();
         let sidecar = Sidecar::new();
         let mut cv = CVLog::new(true);
         pass.run(PassContext {
@@ -1888,8 +1964,9 @@ mod tests {
 
     #[test]
     fn no_propagation_emits_no_contributions() {
-        // `let` is reassignable — never propagated, so the table is empty.
-        let contribs = propagate_contributions("let x = 1; use(x);");
+        // A call initializer is not a literal — never propagated, so the
+        // table is empty.
+        let contribs = propagate_contributions("const x = f(); use(x);");
         assert!(
             contribs.is_empty(),
             "expected no contributions; got {contribs:?}"
@@ -2509,6 +2586,86 @@ mod tests {
             propagate_source("const MSG = \"a long message value\"; a(MSG);"),
             "const MSG=\"a long message value\";a(\"a long message value\");"
         );
+    }
+
+    /// CCR-078 (#15863): at SIMPLE the pinned oracle keeps a top-level
+    /// `const` too. Measured with `v20260915`:
+    ///
+    /// ```text
+    /// let a = 1; const b = 2; console.log(a + b);  =>  let a=1;const b=2;console.log(a+b);
+    /// const s = "x"; console.log(s);               =>  const s="x";console.log(s);
+    /// ```
+    #[test]
+    fn does_not_propagate_const_in_the_open_world() {
+        assert_eq!(
+            propagate_source_open_world("let a = 1; const b = 2; console.log(a + b);"),
+            "let a=1;const b=2;console.log(a+b);"
+        );
+        assert_eq!(
+            propagate_source_open_world("const s = \"x\"; console.log(s);"),
+            "const s=\"x\";console.log(s);"
+        );
+        // ADVANCED (closed world) still propagates it.
+        assert_eq!(
+            propagate_source("const b = 2; console.log(b);"),
+            "const b=2;console.log(2);"
+        );
+    }
+
+    /// CCR-078: the open world still fills in a statement condition, which
+    /// constant-folding then removes (upstream: `const T=!0;console.log(1);`).
+    #[test]
+    fn open_world_substitutes_only_statement_conditions() {
+        assert_eq!(
+            propagate_source_open_world("const T = true; T && console.log(T);"),
+            "const T=!0;!0&&console.log(T);"
+        );
+        assert_eq!(
+            propagate_source_open_world("const D = false; if (D) a(); else b(D);"),
+            "const D=!1;if(!1)a();else b(D);"
+        );
+        assert_eq!(
+            propagate_source_open_world("const N = 0; N || c();"),
+            "const N=0;0||c();"
+        );
+        assert_eq!(
+            propagate_source_open_world("const D = false; D ? a() : b(D);"),
+            "const D=!1;!1?a():b(D);"
+        );
+        // Inside a function body too.
+        assert_eq!(
+            propagate_source_open_world("const T = true; function f() { if (T) g(); }"),
+            "const T=!0;function f(){if(!0)g();};"
+        );
+        // Not a bare name, not a statement, or not `&&`/`||`: left alone.
+        for (src, unchanged) in [
+            ("const N = 2; if (N > 1) a();", "const N=2;if(N>1)a();"),
+            ("const T = true; while (!T) a();", "const T=!0;while(!T)a();"),
+            ("const D = false; console.log(D ? 1 : 2);", "const D=!1;console.log(D?1:2);"),
+            ("const T = true; var x = T && f();", "const T=!0;var x=T&&f();"),
+            ("const N = null; N ?? a();", "const N=null;N??a();"),
+        ] {
+            assert_eq!(propagate_source_open_world(src), unchanged, "{src}");
+        }
+    }
+
+    #[test]
+    fn open_world_run_reports_no_change_and_no_provenance() {
+        let es = EsVersion::Es2025;
+        let node = parse_javascript_typed("const N = 42; use(N);", es).expect("parse");
+        let prog = bridge::grammar_to_program(&node, es).expect("bridge");
+        let sidecar = Sidecar::new();
+        let mut cv = CVLog::new(true);
+        let out = InlineVariablesPass::new()
+            .run(PassContext {
+                program: &prog,
+                sidecar: &sidecar,
+                cv: &mut cv,
+            })
+            .expect("inline-variables");
+        assert!(!out.changed);
+        assert!(out.contributions.is_empty());
+        assert_eq!(out.program, prog);
     }
 
     #[test]

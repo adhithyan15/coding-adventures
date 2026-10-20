@@ -2,6 +2,28 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline-variables` crate will be documented in this file.
 
+## [0.19.0] - 2026-10-20
+
+### Changed — SIMPLE keeps a top-level `const` (CCR-078, #15863, CLOC43)
+
+In open-world mode (`InlineVariablesPass::new()`, run at SIMPLE), a top-level
+`const` literal is no longer propagated to ordinary uses. The pinned oracle
+keeps it: `let a=1;const b=2;console.log(a+b);` is left unchanged, where we
+emitted `console.log(a+2)`.
+
+The literal is still substituted at a *statement condition*, which upstream
+also folds: a bare-name `if` test, the left operand of a statement `&&`/`||`,
+or the test of a statement `?:`. So `const T=!0;T&&f()` still becomes
+`const T=!0;f()`.
+
+`closed_world()` (ADVANCED) is unchanged.
+
+Tests:
+- Three new unit tests.
+- The upstream-ported suite now runs closed-world, since upstream's
+  `InlineVariablesTest` inlines globals.
+- Its `let`/`var` case now checks a *reassigned* binding.
+
 ## [0.18.0] - 2026-09-25
 
 ### Added — optional chains resolve like plain ones (CLOC30)
