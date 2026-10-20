@@ -846,30 +846,26 @@ export function lowerIrToJvmClassFile(
   return new Lowerer(program, config).lower();
 }
 
-/**
- * How the embedded Python helper should defend the write against symlink
- * tricks.
- *
- * | value           | walk used                                                     |
- * |-----------------|---------------------------------------------------------------|
- * | `"auto"`        | directory-FD walk when Python's `os.supports_dir_fd` covers   |
- * |                 | `open` and `mkdir` (POSIX); otherwise path checks (Windows)   |
- * | `"path-checks"` | always the path-check walk (what `"auto"` picks on Windows)   |
- *
- * Windows has no `dir_fd=` support and cannot `os.open()` a bare directory
- * at all (it fails with `PermissionError: [Errno 13]`), so the FD walk is
- * simply unavailable there. `"path-checks"` can be forced so the Windows
- * code path is exercised by the test suite on Linux and macOS too.
- *
- * @internal Not re-exported from the package entry point.
- */
-export type ClassFileWriteStrategy = "auto" | "path-checks";
-
 export function writeClassFile(artifact: JVMClassArtifact, outputDir: string): string {
   return writeClassFileWithStrategy(artifact, outputDir, "auto");
 }
 
-/** @internal Test seam for {@link ClassFileWriteStrategy}; prefer `writeClassFile`. */
+/**
+ * How the secure writer walks from the classpath root down to the class file.
+ *
+ * - `"auto"`: descriptor-relative traversal (`openat`-style `dir_fd`) wherever
+ *   the host Python supports it, i.e. every POSIX system; otherwise the
+ *   path-check walk.  This is what {@link writeClassFile} uses.
+ * - `"path-checks"`: always use the path-check walk — the only option on
+ *   Windows, where `os.open()` cannot open a directory and `dir_fd` is
+ *   unsupported.
+ *
+ * The strategy is an internal seam, deliberately not re-exported from the
+ * package index.  It exists so the POSIX test runs can exercise the Windows
+ * walk too; otherwise that code would only ever run on the Windows CI job.
+ */
+export type ClassFileWriteStrategy = "auto" | "path-checks";
+
 export function writeClassFileWithStrategy(
   artifact: JVMClassArtifact,
   outputDir: string,
@@ -883,9 +879,7 @@ export function writeClassFileWithStrategy(
   const payload = Buffer.from(artifact.classBytes).toString("base64");
   const result = spawnSync(
     "python3",
-    // -I: isolated mode, so neither the working directory nor PYTHON* env
-    // vars can put a planted module ahead of the standard library.
-    ["-I", "-c", SECURE_CLASS_WRITER, root, relativePath, payload, strategy],
+    ["-c", SECURE_CLASS_WRITER, root, relativePath, payload, strategy],
     { encoding: "utf8" },
   );
   if (result.error) {
@@ -1052,72 +1046,95 @@ function asLabel(operand: IrOperand): IrLabel {
   return operand;
 }
 
-/**
- * Normalise `classFilename` into a POSIX relative path for the Python helper.
- *
- * The result is always joined with `/`, never with `node:path`'s `join`: on
- * Windows that would yield `demo\Example.class`, which the helper parses
- * with `PurePosixPath` as ONE component, so the per-directory symlink checks
- * would never see `demo` at all. For the same reason any component carrying
- * a Windows separator (`\`), a drive / alternate-data-stream colon (`:`) or
- * a NUL byte is rejected outright: each could steer the write elsewhere once
- * the operating system reinterprets it.
- *
- * Two more Windows rewrites are refused on every platform, so a class tree
- * that writes on Linux also writes (to the same place) on Windows:
- *
- * - a component ending in `.` or a space, which Win32 silently strips
- *   (`demo/.. ` would become `..`);
- * - a reserved device name such as `NUL`, `CON` or `COM1.class`, with or
- *   without an extension, which Win32 opens as a device instead of a file.
- *
- *   demo/Example.class    -> demo/Example.class
- *   //demo//Example.class -> demo/Example.class
- *   ../Example.class      -> JvmBackendError
- *   demo\Example.class    -> JvmBackendError
- *   C:/Example.class      -> JvmBackendError
- *   demo./Example.class   -> JvmBackendError
- *   demo/NUL.class        -> JvmBackendError
- */
-const WINDOWS_RESERVED_NAME_RE = /^(CON|PRN|AUX|NUL|COM[0-9]|LPT[0-9])(\..*)?$/i;
+// The relative path handed to the Python writer is always "/"-separated,
+// whatever the host OS.  The writer parses it as a PurePosixPath so that
+// every directory component is visited (and checked) one at a time.
+//
+// An earlier version returned `join(...parts)`, which on Windows produced
+// "demo\\Example.class".  PurePosixPath sees that as ONE component, so the
+// writer would skip the checks on "demo" and hand the backslash straight to
+// the Windows path parser.  For the same reason a component may not contain
+// a backslash, a drive-letter colon, or a NUL: on Windows "..\\evil" or
+// "C:evil" would escape the classpath root even though neither is literally
+// "." or "..".
+//
+//   classFilename            result
+//   ──────────────────────   ─────────────────────────────
+//   "demo/Example.class"     "demo/Example.class"
+//   "/demo//Example.class"   "demo/Example.class"   (empty parts dropped)
+//   "../Example.class"       throws
+//   "demo\\..\\x.class"      throws
+//   "C:x.class"              throws
+const UNSAFE_PATH_COMPONENT_RE = /[\\:\0]/;
 
 function validatedOutputRelativePath(classFilename: string): string {
   const parts = classFilename.split("/").filter(Boolean);
   if (
     parts.length === 0
-    || parts.some((component) => component === "." || component === "..")
-    || parts.some((component) => /[\\:\0]/.test(component))
-    || parts.some((component) => /[. ]$/.test(component))
-    || parts.some((component) => WINDOWS_RESERVED_NAME_RE.test(component))
+    || parts.some(
+      (component) => component === "." || component === ".." || UNSAFE_PATH_COMPONENT_RE.test(component),
+    )
   ) {
     throw new JvmBackendError("Resolved class-file path escapes the requested classpath root");
   }
   return parts.join("/");
 }
 
-// The writer runs in Python because Node has no portable `openat`/`mkdirat`.
-// Arguments: root, POSIX relative path, base64 payload, strategy.
+// ── The secure class-file writer ──────────────────────────────────────────
 //
-// 1. Walk up from the requested root until an existing ancestor is found; it
-//    must be a real directory (not a symlink or junction). Missing components
-//    below it are created by the chosen strategy.
-// 2. "dir-fd" (POSIX): open each directory relative to its parent's FD with
-//    O_NOFOLLOW, so a symlink swapped in after validation cannot redirect us.
-// 3. "path-checks" (Windows, or forced by tests): lstat every component,
-//    refuse links/junctions, then write a sibling temp file and os.replace()
-//    it over the target. os.replace (MoveFileEx on Windows) swaps the
-//    directory entry itself instead of following a link planted there.
-//    Unlike step 2 this is not race-free for intermediate directories (a
-//    link swapped in between the check and the mkdir is not caught). That is
-//    the most Windows' path APIs allow, and exploiting it already requires
-//    local write access to the output tree during the build.
+// Node has no openat(2), so the actual write is delegated to a small Python
+// program.  Its job is to place `<root>/<relative path>` on disk without ever
+// being steered outside `root` by a symlink (or, on Windows, a junction —
+// another kind of "reparse point") planted somewhere along the way.
+//
+// argv: root (absolute), relative path ("/"-separated), base64 payload,
+// strategy ("auto" | "path-checks").
+//
+// Step 1, shared by both strategies: find the deepest component of `root`
+// that already exists.  It must be a real directory — not a file, not a
+// symlink, not a junction.  Everything above it is canonicalised with
+// realpath (so e.g. macOS's /var -> /private/var is fine); everything below
+// it is created by the writer, one component at a time.
+//
+//   root = /tmp/out/new/deeper     /tmp/out exists, new/ and deeper/ do not
+//   canonical_root = /tmp/out      missing_parts = ["new", "deeper"]
+//
+// Step 2 depends on what the platform offers:
+//
+//   strategy          used on   how each directory is entered
+//   ────────────────  ────────  ─────────────────────────────────────────────
+//   descriptors       POSIX     os.open(child, O_DIRECTORY|O_NOFOLLOW,
+//                               dir_fd=parent).  Race-free: once a directory
+//                               is open, renaming or swapping it cannot
+//                               redirect what happens inside it.
+//   path checks       Windows   mkdir, then lstat; refuse a symlink, a
+//                               junction, or a non-directory.  The file is
+//                               written to an O_EXCL temp sibling and then
+//                               os.replace()d over the target.
+//
+// Windows cannot do the descriptor walk from Python at all: os.open() on a
+// directory fails with PermissionError [Errno 13] and os.supports_dir_fd
+// does not contain os.open.  The path-check walk catches every link that is
+// in place when the writer looks, but — unlike the descriptor walk — not a
+// directory swapped for a junction between the lstat and the write.  Closing
+// that window needs handle-relative NtCreateFile calls (see lessons.d:
+// "A Windows directory handle does not make subsequent path-based writes
+// safe from a directory swap"); the Rust and Python ports of this backend
+// accept the same residual race on Windows.
+//
+// Why os.replace instead of opening the target with O_TRUNC?  The target
+// may already exist (recompiling into the same classpath is normal).  If a
+// symlink were swapped in at the target name after our lstat, opening it
+// would follow the link and truncate whatever it points at.  os.replace
+// (MoveFileExW on Windows, rename(2) on POSIX) replaces the directory entry
+// itself and never follows a link at the destination.
 const SECURE_CLASS_WRITER = `
 import base64
-import contextlib
 import os
 import pathlib
+import secrets
+import stat
 import sys
-import tempfile
 
 root = pathlib.Path(sys.argv[1])
 if not root.is_absolute():
@@ -1125,52 +1142,50 @@ if not root.is_absolute():
 relative_path = pathlib.PurePosixPath(sys.argv[2])
 payload = base64.b64decode(sys.argv[3])
 strategy = sys.argv[4] if len(sys.argv) > 4 else "auto"
-if strategy not in ("auto", "path-checks"):
-    raise RuntimeError("Unknown class-file write strategy: " + strategy)
 
-INVALID_DIRECTORY = "Refusing to write through symlinked or invalid directory"
-INVALID_FILE = "Refusing to write through symlinked or invalid output file"
+# Windows marks symlinks AND junctions with this attribute; Python only
+# reports symlinks through S_ISLNK, so a junction is caught by this bit alone.
+# On POSIX st_file_attributes does not exist and the getattr yields 0.
+FILE_ATTRIBUTE_REPARSE_POINT = 0x0400
 
 
-def is_link_like(path):
-    if os.path.islink(path):
+def is_link_or_reparse_point(metadata):
+    if stat.S_ISLNK(metadata.st_mode):
         return True
-    # Windows junctions are reparse points that islink() does not report.
-    # os.path.isjunction only exists from Python 3.12, so also read the
-    # reparse-point bit from lstat(), which Windows Pythons have had far
-    # longer. A missing path is not a link; any other lstat error propagates
-    # and aborts the write.
-    isjunction = getattr(os.path, "isjunction", None)
-    if isjunction is not None and isjunction(path):
-        return True
-    try:
-        attributes = getattr(os.lstat(path), "st_file_attributes", 0)
-    except FileNotFoundError:
-        return False
-    return bool(attributes & 0x400)  # FILE_ATTRIBUTE_REPARSE_POINT
+    return bool(getattr(metadata, "st_file_attributes", 0) & FILE_ATTRIBUTE_REPARSE_POINT)
 
 
-missing_parts = []
-current_root = root
-while True:
-    try:
-        os.lstat(current_root)
-    except FileNotFoundError:
-        parent = current_root.parent
-        if parent == current_root:
-            raise
-        missing_parts.insert(0, current_root.name)
-        current_root = parent
-        continue
-    if not os.path.isdir(current_root) or is_link_like(current_root):
-        raise RuntimeError(INVALID_DIRECTORY)
-    canonical_root = pathlib.Path(os.path.realpath(current_root))
-    break
-
-components = missing_parts + list(relative_path.parts[:-1])
+def is_plain_directory(metadata):
+    return stat.S_ISDIR(metadata.st_mode) and not is_link_or_reparse_point(metadata)
 
 
-def write_via_dir_fd():
+def is_plain_file(metadata):
+    return stat.S_ISREG(metadata.st_mode) and not is_link_or_reparse_point(metadata)
+
+
+def refuse_directory():
+    raise RuntimeError("Refusing to write through symlinked or invalid directory")
+
+
+def locate_existing_root():
+    missing_parts = []
+    current_root = root
+    while True:
+        try:
+            metadata = os.lstat(current_root)
+        except FileNotFoundError:
+            parent = current_root.parent
+            if parent == current_root:
+                raise
+            missing_parts.insert(0, current_root.name)
+            current_root = parent
+            continue
+        if not is_plain_directory(metadata):
+            refuse_directory()
+        return pathlib.Path(os.path.realpath(current_root)), missing_parts
+
+
+def write_via_directory_descriptors(canonical_root, directory_parts):
     open_directory_flags = os.O_RDONLY
     if hasattr(os, "O_DIRECTORY"):
         open_directory_flags |= os.O_DIRECTORY
@@ -1185,7 +1200,7 @@ def write_via_dir_fd():
     try:
         current_fd = os.open(canonical_root, open_directory_flags)
         directory_fds.append(current_fd)
-        for component in components:
+        for component in directory_parts:
             try:
                 os.mkdir(component, dir_fd=current_fd)
             except FileExistsError:
@@ -1201,40 +1216,52 @@ def write_via_dir_fd():
             os.close(directory_fd)
 
 
-def write_via_path_checks():
+def write_via_path_checks(canonical_root, directory_parts):
     current = canonical_root
-    for component in components:
+    for component in directory_parts:
         current = current / component
-        if is_link_like(current):
-            raise RuntimeError(INVALID_DIRECTORY)
+        # mkdir first, then inspect: an existing symlink or junction makes
+        # mkdir raise FileExistsError and is then rejected by the lstat.
         try:
             os.mkdir(current)
         except FileExistsError:
             pass
-        if is_link_like(current) or not os.path.isdir(current):
-            raise RuntimeError(INVALID_DIRECTORY)
+        if not is_plain_directory(os.lstat(current)):
+            refuse_directory()
+
     target = current / relative_path.name
-    if is_link_like(target) or os.path.isdir(target):
-        raise RuntimeError(INVALID_FILE)
-    tmp_fd, tmp_name = tempfile.mkstemp(dir=current, prefix=".", suffix=".class.tmp")
     try:
-        with os.fdopen(tmp_fd, "wb") as handle:
+        existing = os.lstat(target)
+    except FileNotFoundError:
+        pass
+    else:
+        if not is_plain_file(existing):
+            raise RuntimeError("Refusing to overwrite symlinked or invalid output file")
+
+    temp_path = current / ("." + relative_path.name + "." + secrets.token_hex(8) + ".tmp")
+    temp_flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
+    for optional_flag in ("O_BINARY", "O_NOINHERIT", "O_NOFOLLOW"):
+        temp_flags |= getattr(os, optional_flag, 0)
+    temp_fd = os.open(temp_path, temp_flags, 0o644)
+    try:
+        with os.fdopen(temp_fd, "wb", closefd=True) as handle:
             handle.write(payload)
-        os.replace(tmp_name, target)
+        os.replace(temp_path, target)
     except BaseException:
-        with contextlib.suppress(FileNotFoundError):
-            os.remove(tmp_name)
+        try:
+            os.unlink(temp_path)
+        except FileNotFoundError:
+            pass
         raise
 
 
-if (
-    strategy == "auto"
-    and os.open in os.supports_dir_fd
-    and os.mkdir in os.supports_dir_fd
-):
-    write_via_dir_fd()
+canonical_root, missing_parts = locate_existing_root()
+directory_parts = missing_parts + list(relative_path.parts[:-1])
+descriptors_supported = os.open in os.supports_dir_fd and os.mkdir in os.supports_dir_fd
+if strategy == "auto" and descriptors_supported:
+    write_via_directory_descriptors(canonical_root, directory_parts)
 else:
-    write_via_path_checks()
+    write_via_path_checks(canonical_root, directory_parts)
 `;
 
 function u1(value: number): Uint8Array {

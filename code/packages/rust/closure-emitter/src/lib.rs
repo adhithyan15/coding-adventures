@@ -3317,7 +3317,7 @@ fn unary_op_str(op: UnaryOperator) -> &'static str {
 /// | ReturnStatement             | terminator         | YES          |
 /// | BreakStatement              | terminator         | YES          |
 /// | ContinueStatement           | terminator         | YES          |
-/// | ThrowStatement              | terminator         | YES          |
+/// | ThrowStatement              | forced terminator  | NO (CCR-084: upstream always keeps it) |
 /// | EmptyStatement              | the statement      | NO (rare; preserve so empty bodies survive) |
 /// | Declaration::VariableDeclaration | terminator    | YES (block-final `var x=1;` → `var x=1` before `}`) |
 /// | Declaration::Function/Class | ends in `}`        | (no `;` to pop anyway) |
@@ -3345,7 +3345,11 @@ fn last_stmt_uses_terminator_semi(s: &Statement) -> bool {
                 | TaggedStatement::ReturnStatement(_)
                 | TaggedStatement::BreakStatement(_)
                 | TaggedStatement::ContinueStatement(_)
-                | TaggedStatement::ThrowStatement(_)
+                // NOT `ThrowStatement` (CCR-084, #15919): upstream ends every
+                // `throw` with a forced `;` (CodeGenerator's
+                // `endStatement(/* needSemiColon= */ true, …)`, "otherwise
+                // safari can't parse this"), so a block-final `throw` keeps
+                // it: `function f(){throw 1;}`.
                 // `do … while(x);` ends in a real terminator `;` that ASI can
                 // supply before a closing `}`, so it is safe to pop. (Plain
                 // `while(x)…` is NOT here: its trailing `;` is a body slot.)
@@ -8522,5 +8526,70 @@ mod tests {
             source: src_("y"),
         });
         assert_eq!(emit_one_decl(d), "export*as ns from\"y\";");
+    }
+
+    // ---- CCR-084 (#15919): a block-final `throw` keeps its `;` ----------
+    //
+    // Upstream's CodeGenerator ends every `throw` with a FORCED semicolon
+    // (`cc.endStatement(/* needSemiColon= */ true, …)`, commented "Must have a
+    // ';' after a throw statement, otherwise safari can't parse this"), while
+    // `return`, `break`, `continue` and expression statements use the plain
+    // `endStatement`, which lets a following `}` absorb the `;`. The printer
+    // is shared by every compilation level, so this holds at SIMPLE and
+    // ADVANCED as well as WHITESPACE_ONLY.
+    //
+    // | block-final statement | upstream        | before CCR-084 |
+    // |-----------------------|-----------------|----------------|
+    // | `throw 1`             | `{throw 1;}`    | `{throw 1}`    |
+    // | `return`              | `{return}`      | `{return}`     |
+    // | `a()`                 | `{a()}`         | `{a()}`        |
+
+    fn throw_one() -> Statement {
+        Statement::throw_statement(ThrowStatement {
+            cv: None,
+            argument: num(1.0),
+        })
+    }
+
+    fn call_a() -> Statement {
+        expr_stmt(Expression::CallExpression(CallExpression {
+            cv: None,
+            callee: Box::new(ident("a")),
+            arguments: vec![],
+        }))
+    }
+
+    #[test]
+    fn ccr084_block_final_throw_keeps_its_semicolon() {
+        // {throw 1;} — and the program-final `;` after the block (CCR-073).
+        assert_eq!(emit_stmt(block_of(vec![throw_one()])), "{throw 1;};");
+        // {a();throw 1;}
+        assert_eq!(emit_stmt(block_of(vec![call_a(), throw_one()])), "{a();throw 1;};");
+    }
+
+    #[test]
+    fn ccr084_switch_final_throw_keeps_its_semicolon() {
+        // switch(x){case 1:throw 1;} — plus CCR-073's program-final `;`.
+        let s = Statement::switch_statement(SwitchStatement {
+            cv: None,
+            discriminant: ident("x"),
+            cases: vec![SwitchCase {
+                cv: None,
+                test: Some(num(1.0)),
+                consequent: vec![throw_one()],
+            }],
+        });
+        assert_eq!(emit_stmt(s), "switch(x){case 1:throw 1;};");
+    }
+
+    #[test]
+    fn ccr084_other_block_final_terminators_still_drop_their_semicolon() {
+        // The contrast rows: only `throw` is exempt from the compact tail.
+        let ret = Statement::return_statement(ReturnStatement {
+            cv: None,
+            argument: None,
+        });
+        assert_eq!(emit_stmt(block_of(vec![ret])), "{return};");
+        assert_eq!(emit_stmt(block_of(vec![call_a()])), "{a()};");
     }
 }

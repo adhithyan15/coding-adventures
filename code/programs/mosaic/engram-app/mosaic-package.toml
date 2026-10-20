@@ -61,10 +61,10 @@ dependencies = [
 # Qt reaches the engine through the STANDARD Mosaic runtime, not through
 # `engram-capi`.
 #
-# The other backends still ship a hand-written `MosaicHost` above, because each
-# reimplements the whole application boundary against the bespoke ABI. Qt no
-# longer does: props, events, snapshot and restore all go through
-# `engram-mosaic-app` and the generated binding, and the only thing left that a
+# A backend with a `MosaicHost` override in `[host_assets]` above still ships a
+# hand-written host, which reimplements the whole application boundary against
+# the bespoke ABI. Qt has no such override: props, events, snapshot and restore
+# all go through `engram-mosaic-app` and the generated binding, and the only thing left that a
 # generated host genuinely cannot do is put a file dialog on screen — which is
 # what this handler is.
 #

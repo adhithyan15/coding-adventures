@@ -57,6 +57,19 @@
       }
     },
     {
+      "id": "global-temperature-op",
+      "deck": "* Berkeley SPICE global temperature CLI corpus\n.model Dfast D(IS=2e-14)\nVbias vin 0 0.8\nRlimit vin out 1k\nD1 out 0 Dfast\n.temp 27 75\n.dc Vbias 0.8 0.8 0.1\n.save V(out)\n.measure dc temperature_output FIND V(out) AT=0.8\n.end\n",
+      "expected": {
+        "title": "Berkeley SPICE global temperature CLI corpus",
+        "analysisKinds": ["dc", "dc"],
+        "analysisIndexes": [1, 1],
+        "temperatureKelvin": [300.15, 348.15],
+        "recordCounts": [1, 1],
+        "outputTemperaturesKelvin": [300.15, 348.15],
+        "measureTemperaturesKelvin": [300.15, 348.15]
+      }
+    },
+    {
       "id": "deck-output-artifacts",
       "deck": "* Berkeley SPICE v1 output artifact CLI corpus\nV1 in 0 0\nR1 in out 1k\nR2 out 0 1k\n.save V(out)\n.print dc V(in)\n.measure dc half FIND V(out) AT=0.5\n.dc V1 0 1 1\n.end\n",
       "expected": {
@@ -65,6 +78,7 @@
           {
             "analysisIndex": 3,
             "analysis": "dc",
+            "temperatureKelvin": null,
             "probes": ["V(out)", "V(in)"],
             "records": [
               {
@@ -90,6 +104,7 @@
           {
             "analysisIndex": 3,
             "analysis": "dc",
+            "temperatureKelvin": null,
             "name": "half",
             "operation": "find",
             "probe": "V(out)",
