@@ -25404,8 +25404,9 @@ fn perl_rows_agree_with_the_host_perl_oracle() {
             .output()
             .expect("perl ran once already");
         assert!(out.status.success(), "perl {version} rejected {:?}", program.src);
+        // Perl on Windows prints through a `:crlf` layer; fold "\r\n" back.
         assert_eq!(
-            String::from_utf8_lossy(&out.stdout),
+            String::from_utf8_lossy(&out.stdout).replace("\r\n", "\n"),
             expected,
             "perl {version} disagrees with the row's expectation for {:?}",
             program.src
