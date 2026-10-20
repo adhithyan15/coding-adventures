@@ -108,11 +108,14 @@ cargo test -p lang-aot --test lang_matrix every_backend_name_round_trips_through
 # `print_str` must produce one ordered stream on every available column (WASM/VM/
 # JIT used to drop the integers whenever any byte output existed).
 cargo test -p lang-aot --test lang_matrix mixed_print_i64_and_print_str_output_is_one_ordered_stream_on_every_available_backend -- --exact
-# LANG84 phase 4a: Perl on every backend. The eleven Perl rows also run in the
-# full-corpus aggregate above; these name the Perl-specific claims so a Perl
+# LANG84 phases 4a and 4c: Perl on every backend. The 33 Perl rows (the
+# pl-int-print corpus on the three release-class representatives) also run in
+# the full-corpus aggregate above; these name the Perl-specific claims so a Perl
 # regression is reported as one. The oracle compares every row's expectation
 # with a host `perl` (skips without one); the LANG83 check runs
-# `check_module_for` on all nine backends, CLR and BEAM included.
+# `check_module_for` on all nine backends, CLR and BEAM included; the corpus
+# test ties every row to its corpus case and to the release sweep's boundary set.
 cargo test -p lang-aot --test lang_matrix perl_rows_run_on_every_available_backend -- --exact
 cargo test -p lang-aot --test lang_matrix perl_rows_agree_with_the_host_perl_oracle -- --exact
 cargo test -p lang-aot --test lang_matrix perl_rows_pass_the_lang83_check_on_all_nine_backends -- --exact
+cargo test -p lang-aot --test lang_matrix perl_rows_run_their_corpus_case -- --exact

@@ -153,7 +153,29 @@ struct Prog {
     src: &'static str,
     expect: Expect,
     backends: &'static [Backend],
+    /// The exact release the row compiles against (LANG84 "CI bounding"):
+    /// `Some("<id>")` for a language with a `releases.csv` inventory (Perl),
+    /// `None` for an in-repo language without one. A row's backend runs prove
+    /// stage B for this release and, through IIR identity, for every release
+    /// in its class (`code/grammars/<lang>/release_classes.csv`).
+    release: Option<&'static str>,
+    /// The corpus case the row runs, `"<subset>/<name>"`, which ties the row to
+    /// `code/grammars/<lang>/corpus/<subset>/<name>.*` without comparing
+    /// program text. `release_inventory.py check --matrix` reads `release` and
+    /// `case` to verify every `backend_status` claim.
+    case: Option<&'static str>,
 }
+
+/// The source of one `pl-int-print` corpus case, read at compile time, so a
+/// Perl row runs exactly the bytes the corpus holds (CRLF included).
+macro_rules! perl_case {
+    ($name:literal) => {
+        include_str!(concat!("../../../../grammars/perl/corpus/pl-int-print/", $name, ".pl"))
+    };
+}
+
+/// Every executable column, for rows that run on all of them.
+const EVERY_COLUMN: &[Backend] = &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam];
 
 use Backend::{Beam, Clr, Jit, Jvm, Llvm, NativeAot, Vm, Wasm};
 
@@ -170,7 +192,7 @@ mod common;
 /// so a backend that merely emits a literal would not pass.
 const PROGRAMS: &[Prog] = &[
     // Twig — the original AOT language; a bare expression is the whole program.
-    Prog { lang: Language::Twig, ext: "twig", src: "42", expect: Expect::Exit(42), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    Prog { lang: Language::Twig, ext: "twig", src: "42", expect: Expect::Exit(42), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam], release: None, case: None },
     // Twig — *variadic* arithmetic (`(+ 10 20 12)` = 42).  Scheme's `+`/`-`/`*`/`/`
     // are n-ary; `twig-ir-compiler` folds an all-`i64` arithmetic call into a
     // left-associated chain of typed binary CIR ops (`r1 = add 10,20; r2 = add
@@ -185,6 +207,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(+ 10 20 12)",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — **E6d-1: TW3-core dynamic `cons`/`car`/`cdr` on the code-gen backends.**
     // `(car (cons 42 0))` allocates a heap cons pair `(42 . 0)` and reads its head.
@@ -205,6 +229,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(car (cons 42 0))",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — E6d-1: nested cons proves multi-cell pointer chasing.
     // `(car (cdr (cons 1 (cons 42 0))))` = car(cdr(`(1 . (42 . 0))`)) =
@@ -215,6 +241,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(car (cdr (cons 1 (cons 42 0))))",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — **E6d-2: dynamic integer arithmetic over `any`, all 5 code-gen
     // backends.** `(+ (car (cons 41 0)) 1)` forces `+` over a boxed operand —
@@ -238,6 +266,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(+ (car (cons 41 0)) 1)",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — **E6d-3a: the `list` constructor on the code-gen backends.**
     // `list` is pure sugar over `cons`: `(list a b c)` = `(cons a (cons b
@@ -253,6 +283,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(car (list 42 1 2))",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — E6d-3a: `list` + `cdr` traversal reaches the second element.
     // `(car (cdr (list 1 42 3)))` = car(cdr(`(1 42 3)`)) = car(`(42 3)`) = 42,
@@ -263,6 +295,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(car (cdr (list 1 42 3)))",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — **E6d-3b: the `length` list operation on the code-gen backends.**
     // Unlike the `list` *constructor* (E6d-3a, a straight-line cons desugar),
@@ -283,6 +317,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(+ (length (list 1 2 3)) 39)",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — E6d-3b: `null?` on the empty list `(list)` (a bare nil) is #t → exit 1,
     // the direct regression guard for the WASM nil-const `ref.null` fix.
@@ -292,6 +328,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(null? (list))",
         expect: Expect::Exit(1),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — **E6d-3b: the `list-ref` list operation on the code-gen backends.**
     // Like `length`, `list-ref` *walks* the cons chain, so `lower_list_ops`
@@ -309,6 +347,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(list-ref (list 10 20 42) 2)",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — **E6d-3b: the `append` list operation on the code-gen backends.**
     // `append` *rebuilds* the first list in front of the second, so `lower_list_ops`
@@ -325,6 +365,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(car (cdr (append (list 1 42) (list 3))))",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — **E6d-3b: the `reverse` list operation on the code-gen backends.**
     // `reverse` is lowered by `lower_list_ops` to a nil-seeded call to a synthesized
@@ -342,6 +384,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(car (reverse (list 1 2 42)))",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — **E6d-3b: the `assoc` list operation on the code-gen backends** (the
     // last E6d-3b op). `assoc` searches an association list (a list of `(k . v)`
@@ -359,6 +403,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(cdr (assoc 2 (list (cons 1 10) (cons 2 42) (cons 3 30))))",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — E6d-3b: `assoc` of an ABSENT key returns nil, so `null?` of the result
     // is #t → exit 1 — the direct guard for the not-found (nil base-case) branch.
@@ -368,6 +414,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(null? (assoc 9 (list (cons 1 10) (cons 2 20))))",
         expect: Expect::Exit(1),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — **E6d-4: symbols / quote on the code-gen backends.** A quote literal
     // `'a` (or `(quote a)`) now lowers to `const Var("a") : symbol` — the same
@@ -382,6 +430,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(equal? 'a 'a)",
         expect: Expect::Exit(1),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — E6d-4: two DISTINCT symbols are not `equal?` (different interned ids),
     // so `(equal? 'a 'b)` = #f → exit 0 — the discriminating half of the proof.
@@ -391,6 +441,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(equal? 'a 'b)",
         expect: Expect::Exit(0),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — **E6d-5: records (TW6 part 1) on the code-gen backends.** A `(record
     // Name (f : T) …)` erases to a constructor `Name(…)` that builds a cons chain
@@ -419,6 +471,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(record Point (x : int) (y : int)) (point-x (Point 42 7))",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — E6d-5: the SECOND field of a record (accessor walks one `cdr` then
     // `car`), proving the cons-chain offset is right. `(point-y (Point 7 42))` = 42.
@@ -428,6 +482,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(record Point (x : int) (y : int)) (point-y (Point 7 42))",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — **E6d-6: unions / `match` (TW6 part 2).** A `(union Name (Variant …) …)`
     // erases to integer-tagged constructors (a cons `(tag . fields…)`) and `match`
@@ -485,6 +541,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(union Opt (Some (v : int)) (None)) (match (Some 42) ((Some v) v) ((None) 0))",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — E6d-6: matching the SECOND variant (`None`) proves the tag dispatch
     // actually discriminates — the boxed-bool branch takes the right arm, not
@@ -503,6 +561,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(union Opt (Some (v : int)) (None)) (match (None) ((Some v) v) ((None) 42))",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — **E6d-8: dynamic globals on the code-gen backends.** A value global
     // `g` that is *forward-referenced* (read inside `f` before its `define`) is
@@ -522,6 +582,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(define (f) g) (define g 42) (f)",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — E6d-8: a forward-referenced dynamic global also composes with
     // arithmetic. This is the discriminating boxed-slot proof: `f` loads `g` through
@@ -533,6 +595,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(define (f) (+ g 1)) (define g 41) (f)",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — **E6d-7: closures (TW5) on all 5 code-gen backends** (the last E6
     // backend gap). `((lambda (x) (+ x 1)) 41)` allocates a closure and applies
@@ -554,6 +618,8 @@ const PROGRAMS: &[Prog] = &[
         src: "((lambda (x) (+ x 1)) 41)",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — E6d-7: a **capturing** closure. The outer lambda returns an inner
     // one that captures `x`; applying it threads the captured 40 + the arg 2.
@@ -566,6 +632,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(((lambda (x) (lambda (y) (+ x y))) 40) 2)",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — E4 literal `string-length`. The compiler lowers
     // `(string-length "HELLO")` to shared `str_const` + `str_len`, avoiding the
@@ -581,6 +649,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(string-length \"HELLO\")",
         expect: Expect::Exit(5),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — E4 literal `string-ref`. The front-end emits `str_const` plus a
     // typed integer index and `str_index`; ASCII keeps the byte-oriented E4
@@ -591,6 +661,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(string-ref \"ABC\" 1)",
         expect: Expect::Exit(66),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — E4 literal `string-ref` out-of-bounds trap. This proves the same
     // runtime fail-closed contract on every backend: native/LLVM lower the
@@ -602,6 +674,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(string-ref \"ABC\" 3)",
         expect: Expect::Trap,
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — E4 literal `string-append` feeding `string-length`. This exercises
     // the shared `str_concat` op while staying on the direct-literal metadata
@@ -613,6 +687,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(string-length (string-append \"AB\" \"CDE\"))",
         expect: Expect::Exit(5),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — E4 literal `string=?`. Like the literal length row, this stays on
     // the direct `str_const` + `str_eq` path so every codegen backend can prove
@@ -624,6 +700,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(string=? \"HELLO\" \"HELLO\")",
         expect: Expect::Exit(1),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — E4 named string values. Non-escaping top-level string `define`s
     // now stay in `main` as typed `str_const` registers, so shared string ops can
@@ -637,6 +715,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(define a \"AB\") (define b \"CDE\") (string-length (string-append a b))",
         expect: Expect::Exit(5),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — E4 named string equality driving control flow. The `string=?`
     // result is the shared i64 boolean consumed by the existing `if` lowering,
@@ -648,6 +728,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(define s \"HELLO\") (if (string=? s \"HELLO\") 42 0)",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — E4 named string indexing. This reuses the landed in-bounds
     // `str_index` backend support but proves the source string can be a named
@@ -658,6 +740,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(define s \"ABC\") (string-ref s 2)",
         expect: Expect::Exit(67),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — E4 lexical string locals. A `let` string binding now materialises
     // directly as a typed `str_const` register, and a local integer binding can
@@ -669,6 +753,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(let ((s \"ABC\") (i 2)) (string-ref s i))",
         expect: Expect::Exit(67),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — E4 lexical `let*` string locals. The sequential-binding form uses
     // the same typed `str_const` local slot path as `let`, and `str_len`
@@ -679,6 +765,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(let* ((s \"HELLO\")) (string-length s))",
         expect: Expect::Exit(5),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — E4 lexical string locals can drive equality control flow too.
     // Two local string slots feed `str_eq`, and the resulting i64 boolean flows
@@ -689,6 +777,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(let ((s \"OK\") (t \"OK\")) (if (string=? s t) 42 0))",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — E4 lexical string locals feeding concat. This takes the local
     // string path beyond indexing: two `let` string slots feed `str_concat`,
@@ -700,6 +790,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(let ((a \"AB\") (b \"CDE\")) (string-length (string-append a b)))",
         expect: Expect::Exit(5),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — E4 `str_concat` feeding `str_index`. The prior local-string proof
     // observed a concat result with `str_len`; this row makes the byte-indexing
@@ -711,6 +803,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(let ((a \"AB\") (b \"CDE\") (i 3)) (string-ref (string-append a b) i))",
         expect: Expect::Exit(68),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — E4 `str_len` computing a `str_index` operand. This keeps
     // `string-length` on the shared `str_len` path, lowers `(- len 1)` as typed
@@ -722,6 +816,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(let ((s \"ABCDE\")) (string-ref s (- (string-length s) 1)))",
         expect: Expect::Exit(69),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — E4 `substring` feeding `string-ref`. This proves the shared
     // `str_slice` op produces a string value that all seven proven columns can
@@ -733,6 +829,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(let ((s \"ABCDE\")) (string-ref (substring s 1 4) 1))",
         expect: Expect::Exit(67),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — E4 `str_cmp` driving lexical string predicates. The frontend lowers
     // `string<?`/`string>?` to shared `str_cmp` followed by typed comparison
@@ -743,6 +841,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(if (string<? \"ALPHA\" \"BETA\") (if (string>? \"BETA\" \"ALPHA\") 42 0) 0)",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — E4 string ops inside a direct top-level function. The function body
     // lowers `(string-length "HELLO")` to typed `str_const` + `str_len`, and the
@@ -754,6 +854,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(define (strlen) (string-length \"HELLO\")) (strlen)",
         expect: Expect::Exit(5),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — E4 string ops over an annotated top-level function parameter. The
     // bare `str` annotation gives the compiler enough static evidence to stamp
@@ -773,6 +875,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(define (strlen (s : str)) (string-length s)) (strlen \"HELLO\")",
         expect: Expect::Exit(5),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — E4 string ops over an unannotated top-level function parameter
     // with direct-call evidence from `main`. The direct `(strlen "HELLO")`
@@ -787,6 +891,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(define (strlen s) (string-length s)) (strlen \"HELLO\")",
         expect: Expect::Exit(5),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — E4 string ops over an unannotated top-level function parameter
     // with direct-call evidence from a static string expression actual. The
@@ -805,6 +911,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(define (strlen x) (string-length x)) (strlen (substring (string-append \"HE\" \"LLO!\") 0 5))",
         expect: Expect::Exit(5),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — E4 string equality over multiple unannotated top-level function
     // parameters inferred from one direct call. The first actual is literal,
@@ -826,6 +934,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(define (same a b) (if (string=? a b) 42 0)) (same \"OK\" (string-append \"O\" \"K\"))",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — E4 string ops over an unannotated top-level function parameter
     // with direct-call evidence from a non-escaping top-level string value. The
@@ -840,6 +950,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(define s \"HELLO\") (define (strlen x) (string-length x)) (strlen s)",
         expect: Expect::Exit(5),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — E4 string ops over an unannotated top-level function parameter
     // with direct-call evidence from a lexical string local in `main`. The
@@ -854,6 +966,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(define (strlen x) (string-length x)) (let ((s \"HELLO\")) (strlen s))",
         expect: Expect::Exit(5),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — E4 string ops over an unannotated top-level function parameter
     // with direct-call evidence from a derived sequential `let*` string local
@@ -872,6 +986,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(define (strlen x) (string-length x)) (let* ((a \"HE\") (b (string-append a \"LLO\"))) (strlen b))",
         expect: Expect::Exit(5),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Twig — *top-level value `define`* read from `main` (`(define x 40) (define
     // y 2) (+ x y)` = 42).  A value define previously lowered to
@@ -889,6 +1005,8 @@ const PROGRAMS: &[Prog] = &[
         src: "(define x 40) (define y 2) (+ x y)",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Nib — typed functions: define `double`, call it, return the result. Greened on
     // WASM in LM-W Nib by completing the i64 materialization: `nib_ty_str` and the
@@ -900,6 +1018,8 @@ const PROGRAMS: &[Prog] = &[
         src: "fn double(x: u8) -> u8 { return x + x; } fn main() -> u8 { return double(21); }",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Nib — multiplication (LANG-FULL N1). `*` lowers to the shared IIR `mul`; the
     // multiplicative level binds tighter than additive (so `2 + 3 * 4` is `2 + (3*4)`).
@@ -911,6 +1031,8 @@ const PROGRAMS: &[Prog] = &[
         src: "fn main() -> u8 { return 6 * 7; }",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Nib — division (LANG-FULL N1). `/` lowers to the shared IIR `div`. `84 / 2` exits 42.
     Prog {
@@ -919,6 +1041,8 @@ const PROGRAMS: &[Prog] = &[
         src: "fn main() -> u8 { return 84 / 2; }",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Nib — `for` loop (LANG-FULL N2). Desugars to the canonical counter loop; the range
     // `1 .. 6` is exclusive (`i = 1,2,3,4,5`), summing the loop variable into a local
@@ -933,6 +1057,8 @@ const PROGRAMS: &[Prog] = &[
         src: "fn main() -> u4 { let s: u4 = 0; for i: u4 in 1 .. 6 { s = s + i; } return s; }",
         expect: Expect::Exit(15),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Nib — nested `for` loops (LANG-FULL N2). 3 × 2 = 6 body executions; proves distinct
     // loop labels and nested counter reassignment lower correctly on every backend.
@@ -943,6 +1069,8 @@ const PROGRAMS: &[Prog] = &[
                for i: u4 in 0 .. 3 { for j: u4 in 0 .. 2 { s = s + 1; } } return s; }",
         expect: Expect::Exit(6),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Nib — reassigning a *function parameter* inside a loop (LLVM first-class fix).
     // `acc` is a parameter accumulated across the loop (`acc = acc + 6`, 7 times) → 42.
@@ -956,6 +1084,8 @@ const PROGRAMS: &[Prog] = &[
                fn main() -> u8 { return run(0); }",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Nib — bitwise AND / OR / XOR (LANG-FULL N3). `& | ^` lower to the shared IIR
     // `and`/`or`/`xor`. Executed on every backend: `12 & 10` = 0b1100 & 0b1010 = 0b1000 = 8.
@@ -965,6 +1095,8 @@ const PROGRAMS: &[Prog] = &[
         src: "fn main() -> u8 { return 12 & 10; }",
         expect: Expect::Exit(8),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // `12 | 3` = 0b1100 | 0b0011 = 0b1111 = 15.
     Prog {
@@ -973,6 +1105,8 @@ const PROGRAMS: &[Prog] = &[
         src: "fn main() -> u8 { return 12 | 3; }",
         expect: Expect::Exit(15),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // `6 ^ 5` = 0b110 ^ 0b101 = 0b011 = 3.
     Prog {
@@ -981,6 +1115,8 @@ const PROGRAMS: &[Prog] = &[
         src: "fn main() -> u8 { return 6 ^ 5; }",
         expect: Expect::Exit(3),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Nib — `&&` SHORT-CIRCUIT (LANG-FULL N4). The left `1 == 2` is false, so the right
     // operand `84 / 0 == 0` must NOT be evaluated — if it were, the division by zero would
@@ -992,6 +1128,8 @@ const PROGRAMS: &[Prog] = &[
         src: "fn main() -> u8 { if 1 == 2 && 84 / 0 == 0 { return 9; } return 7; }",
         expect: Expect::Exit(7),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Nib — `||` SHORT-CIRCUIT (LANG-FULL N4). The left `1 == 1` is true, so `84 / 0 == 0`
     // must NOT be evaluated. Returns 7 on every backend ⇒ the RHS was skipped.
@@ -1001,6 +1139,8 @@ const PROGRAMS: &[Prog] = &[
         src: "fn main() -> u8 { if 1 == 1 || 84 / 0 == 0 { return 7; } return 9; }",
         expect: Expect::Exit(7),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Nib — `&&` true path: both sides true ⇒ the `if` is taken ⇒ 1.
     Prog {
@@ -1009,6 +1149,8 @@ const PROGRAMS: &[Prog] = &[
         src: "fn main() -> u8 { if 1 == 1 && 2 == 2 { return 1; } return 0; }",
         expect: Expect::Exit(1),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Nib — logical NOT (`!`, LANG-FULL N9). `1 == 2` is false, so
     // `!(1 == 2)` must be true and take the 42 branch. The old passthrough
@@ -1019,6 +1161,8 @@ const PROGRAMS: &[Prog] = &[
         src: "fn main() -> u8 { if !(1 == 2) { return 42; } return 0; }",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Nib — module-scoped `const` (LANG-FULL N5). A top-level `const N: u8 = 42;` is folded
     // to its literal at each use, so referencing it in `main` needs no runtime storage and
@@ -1029,6 +1173,8 @@ const PROGRAMS: &[Prog] = &[
         src: "const N: u8 = 42; fn main() -> u8 { return N; }",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Nib — multiple consts used in arithmetic: `30 + 12` = 42.
     Prog {
@@ -1037,6 +1183,8 @@ const PROGRAMS: &[Prog] = &[
         src: "const A: u8 = 30; const B: u8 = 12; fn main() -> u8 { return A + B; }",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Nib — u8 WRAP (LANG-FULL E2 / N6). `200u8 + 100u8` overflows the byte and must
     // wrap mod-256 to `44`. The exit code is itself `& 0xFF`, so a bare `return 200+100`
@@ -1053,6 +1201,8 @@ const PROGRAMS: &[Prog] = &[
         src: "fn main() -> u8 { let x: u8 = 200 + 100; if x == 44 { return 1; } return 0; }",
         expect: Expect::Exit(1),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Nib — u8 wrap is width-correct, not "any mask": `6 * 7 = 42` must stay 42 (it fits a
     // byte), proving the mask is mod-256 not a blanket truncation. `6` and `7` are typed
@@ -1065,6 +1215,8 @@ const PROGRAMS: &[Prog] = &[
         src: "fn main() -> u8 { return 6 * 7; }",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Nib — `+%` WRAPPING add (LANG-FULL N7). `200u8 +% 100` discards the carry →
     // `44`. The comparison (`x == 44`) distinguishes a wrapped 44 from an unwrapped
@@ -1076,6 +1228,8 @@ const PROGRAMS: &[Prog] = &[
         src: "fn main() -> u8 { let x: u8 = 200 +% 100; if x == 44 { return 1; } return 0; }",
         expect: Expect::Exit(1),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Nib — `+?` SATURATING add (LANG-FULL N7). `200u8 +? 100` clamps at the u8 max
     // → `255` (NOT 44, the wrapping result). `+?` lowers to a *wide* add + a clamp
@@ -1087,6 +1241,8 @@ const PROGRAMS: &[Prog] = &[
         src: "fn main() -> u8 { let x: u8 = 200 +? 100; if x == 255 { return 1; } return 0; }",
         expect: Expect::Exit(1),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Nib — `+?` saturating at the u4 max: `15u4 +? 1` clamps to `15` (the nibble
     // max), not the wrapping `0`.
@@ -1096,6 +1252,8 @@ const PROGRAMS: &[Prog] = &[
         src: "fn main() -> u4 { let a: u4 = 15 +? 1; if a == 15 { return 1; } return 0; }",
         expect: Expect::Exit(1),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Nib — `+?` that does NOT overflow returns the plain sum (`3 +? 4 = 7`),
     // proving the clamp branch only fires on overflow.
@@ -1105,6 +1263,8 @@ const PROGRAMS: &[Prog] = &[
         src: "fn main() -> u8 { let x: u8 = 3 +? 4; if x == 7 { return 1; } return 0; }",
         expect: Expect::Exit(1),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Nib — bitwise NOT (`~`), u8 (LANG-FULL N3). `~0` flips all bits; masked to the
     // u8 width (the E2 value-mask) it is `255` (`-1 & 0xFF`), NOT the i64 all-ones.
@@ -1118,6 +1278,8 @@ const PROGRAMS: &[Prog] = &[
         src: "fn main() -> u8 { let x: u8 = ~0; if x == 255 { return 1; } return 0; }",
         expect: Expect::Exit(1),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Nib — bitwise NOT (`~`), u4 (LANG-FULL N3). `~15` on a nibble: 15 = 0b1111, so
     // its complement masked to 4 bits is `0`. Proves the `not` mask is width-correct
@@ -1128,6 +1290,8 @@ const PROGRAMS: &[Prog] = &[
         src: "fn main() -> u4 { let x: u4 = ~15; if x == 0 { return 1; } return 0; }",
         expect: Expect::Exit(1),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Nib — module-scoped `static` globals (LANG-FULL N8). The counter starts
     // at 40, a separate function increments the same module global twice, and
@@ -1142,6 +1306,8 @@ const PROGRAMS: &[Prog] = &[
               fn main() -> u8 { let a: u8 = bump(1); let b: u8 = bump(1); return counter; }",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Nib — const/static expression folding (LANG-FULL N10). `BASE` folds
     // `6 * 7` at compile time, then the static initializer folds `BASE + 0`
@@ -1153,6 +1319,8 @@ const PROGRAMS: &[Prog] = &[
         src: "const BASE: u8 = 6 * 7; static counter: u8 = BASE + 0; fn main() -> u8 { return counter; }",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Nib — BCD storage (VM-012). `bcd` is a single decimal digit, so the
     // value must survive a module-static store/load without widening or
@@ -1164,6 +1332,8 @@ const PROGRAMS: &[Prog] = &[
         src: "static digit: bcd = 9; fn main() -> bcd { return digit; }",
         expect: Expect::Exit(9),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Oct — `let` + `if` + comparison; `main` is void so the process exits 0.
     Prog {
@@ -1172,6 +1342,8 @@ const PROGRAMS: &[Prog] = &[
         src: "fn main() { let x: u8 = 1; if x == 1 { let y: u8 = 2; } else { let z: u8 = 3; } }",
         expect: Expect::Exit(0),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Oct — the `out` intrinsic prints to stdout (LANG-FULL O-OUT). The 8008 writes a
     // value to an I/O port; on the general backends all ports collapse to stdout via
@@ -1184,6 +1356,8 @@ const PROGRAMS: &[Prog] = &[
         src: "fn main() { out(1, 200); }",
         expect: Expect::Stdout("200"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Oct — `out` of a computed value: `100 + 100` = 200 printed. Proves Oct arithmetic
     // produces the right result *observably* (not just "ran and exited 0").
@@ -1193,6 +1367,8 @@ const PROGRAMS: &[Prog] = &[
         src: "fn main() { out(1, 100 + 100); }",
         expect: Expect::Stdout("200"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Oct — `&&` SHORT-CIRCUIT, PROVEN observably (LANG-FULL O1). `side()` prints 5 and
     // returns 1; it sits in the right operand of `&&`. The left `1 == 2` is false, so a
@@ -1207,6 +1383,8 @@ const PROGRAMS: &[Prog] = &[
                fn main() { if 1 == 2 && side() == 1 { out(1, 1); } else { out(1, 9); } }",
         expect: Expect::Stdout("9"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Oct — `||` SHORT-CIRCUIT, PROVEN observably. `1 == 1` is true, so `side()` (in the
     // right operand) must be skipped → output `7`. Eager would print `5` then `7`.
@@ -1217,6 +1395,8 @@ const PROGRAMS: &[Prog] = &[
                fn main() { if 1 == 1 || side() == 1 { out(1, 7); } else { out(1, 9); } }",
         expect: Expect::Stdout("7"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Oct — bitwise NOT (`~`) masks to the u8 width (LANG-FULL O2). Oct's only integer
     // type is `u8` (the 8008 byte), so `~0` flips 8 bits → `255` (`-1 & 0xFF`), NOT the
@@ -1230,6 +1410,8 @@ const PROGRAMS: &[Prog] = &[
         src: "fn main() { out(1, ~0); }",
         expect: Expect::Stdout("255"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Oct — u8 arithmetic WRAPS modulo 256 (LANG-FULL O2). The grammar specifies Oct
     // addition wraps mod-2⁸; `200 + 100 = 300` wraps to `44`. Until O2 the result rode an
@@ -1242,6 +1424,8 @@ const PROGRAMS: &[Prog] = &[
         src: "fn main() { out(1, 200 + 100); }",
         expect: Expect::Stdout("44"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Oct — logical NOT (`!`) produces a clean boolean 0/1 (LANG-FULL O-!).
     // `1 == 2` is false, so `!(1 == 2)` is true and prints 42. The old lowering
@@ -1254,6 +1438,8 @@ const PROGRAMS: &[Prog] = &[
         src: "fn main() { if !(1 == 2) { out(1, 42); } else { out(1, 0); } }",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Oct — `static` module GLOBAL, shared across functions (LANG-FULL O3). Until now
     // Oct's top-level `static` was silently dropped at IIR-gen; `oct-iir-compiler` 0.8.0
@@ -1275,6 +1461,8 @@ const PROGRAMS: &[Prog] = &[
                fn main() { bump(); bump(); out(1, counter); }",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // ───────────────────────────────────────────────────────────────────────
     // MacroOct — Oct, plus a preprocessor, and nothing else (PREP01 slice 1).
@@ -1318,6 +1506,8 @@ const PROGRAMS: &[Prog] = &[
         src: "@if 1\nfn main() { out(1, 42); }\n@else\nfn main() { out(1, 7); }\n@end\n",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // MacroOct — the same program with the condition flipped, so the `@else`
     // branch is the one that survives. The pair matters: a preprocessor that
@@ -1328,6 +1518,8 @@ const PROGRAMS: &[Prog] = &[
         src: "@if 0\nfn main() { out(1, 42); }\n@else\nfn main() { out(1, 7); }\n@end\n",
         expect: Expect::Stdout("7"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // MacroOct — a real comparison in the controlling expression, the shape
     // PREP01's own worked example uses (`@if LED_PORT == 1`). The dialect's
@@ -1339,6 +1531,8 @@ const PROGRAMS: &[Prog] = &[
         src: "@if 1 == 1\nfn main() { out(1, 200); }\n@else\nfn main() { out(0, 200); }\n@end\n",
         expect: Expect::Stdout("200"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // MacroOct — `&&` and `!=` in one condition. Proves the conditional
     // evaluator's precedence layering end to end: `1 == 1 && 2 != 3` must
@@ -1349,6 +1543,8 @@ const PROGRAMS: &[Prog] = &[
         src: "@if 1 == 1 && 2 != 3\nfn main() { out(1, 42); }\n@else\nfn main() { out(1, 7); }\n@end\n",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // MacroOct — an undefined name is 0, which is C's rule too. Printing 42
     // (the `LED_PORT == 0` branch) is the observable proof.
@@ -1362,6 +1558,8 @@ const PROGRAMS: &[Prog] = &[
         src: "@if LED_PORT == 0\nfn main() { out(1, 42); }\n@else\nfn main() { out(1, 7); }\n@end\n",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // MacroOct — VM-068, the POSITIVE control: a DEFINED name drives the
     // branch. Printing 42 requires `LED_PORT` to have been macro-expanded
@@ -1388,6 +1586,8 @@ fn main() { out(1, 7); }
 ",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // MacroOct — NESTED conditionals: the inner `@else` inside a taken outer
     // group. The engine tracks nesting on an explicit stack, and a group
@@ -1399,6 +1599,8 @@ fn main() { out(1, 7); }
         src: "@if 1\n@if 0\nfn main() { out(1, 7); }\n@else\nfn main() { out(1, 42); }\n@end\n@end\n",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // MacroOct — a group with no `@else`, dropping a whole FUNCTION. If the
     // skipped `fn unused` survived, Oct would still compile it and `main`
@@ -1412,6 +1614,8 @@ fn main() { out(1, 7); }
         src: "@if 0\nfn unused() -> u8 { return 7; }\n@end\nfn main() { out(1, 42); }\n",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // MacroOct — directives wrapped around Oct's u8 WRAP (`200 + 100` = 44,
     // LANG-FULL O2). Deliberately a semantic behaviour the preprocessor knows
@@ -1424,6 +1628,8 @@ fn main() { out(1, 7); }
         src: "@if 1\nfn main() { out(1, 200 + 100); }\n@end\n",
         expect: Expect::Stdout("44"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // MacroOct — a multi-function program selected as a unit, with a `static`
     // module global, a call across functions, and a `while` loop inside the
@@ -1437,6 +1643,8 @@ fn main() { out(1, 7); }
 fn main() { let i: u8 = 0; while i < 3 { bump(); i = i + 1; } out(1, counter); }\n",
         expect: Expect::Stdout("24"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
 
     // ── PREP01 slice 2: `@define` ──────────────────────────────────────────
@@ -1464,6 +1672,8 @@ fn main() { let i: u8 = 0; while i < 3 { bump(); i = i + 1; } out(1, counter); }
         src: "@define LED_PORT 1\n@define LEVEL 200\nfn main() { out(LED_PORT, LEVEL); }\n",
         expect: Expect::Stdout("200"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // MacroOct — function-like `@define` with one parameter used TWICE in the
     // body. Substitution is per-occurrence: an expander that substituted once
@@ -1475,6 +1685,8 @@ fn main() { let i: u8 = 0; while i < 3 { bump(); i = i + 1; } out(1, counter); }
         src: "@define DOUBLE(x) x + x\nfn main() { out(1, DOUBLE(21)); }\n",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // MacroOct — two parameters, with a macro invocation INSIDE one of the
     // arguments. That is argument pre-expansion, the half of Prosser's
@@ -1487,6 +1699,8 @@ fn main() { let i: u8 = 0; while i < 3 { bump(); i = i + 1; } out(1, counter); }
         src: "@define ONE 1\n@define ADD(a, b) a + b\nfn main() { out(1, ADD(41, ONE)); }\n",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // MacroOct — the two termination cases in one program, over Oct's u8 wrap.
     //
@@ -1508,6 +1722,8 @@ fn main() { let i: u8 = 0; while i < 3 { bump(); i = i + 1; } out(1, counter); }
 fn main() { counter = bump(counter); out(1, counter); }\n",
         expect: Expect::Stdout("4"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // MacroOct — `@define` inside a conditional, which is where the two
     // features meet. The engine must treat a definition in a SKIPPED group as
@@ -1522,6 +1738,8 @@ fn main() { counter = bump(counter); out(1, counter); }\n",
 fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
 
     // ALGOL 60 — a begin/end block with real integer arithmetic (`17 mod 5` = 2).
@@ -1531,6 +1749,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer result; result := 17 mod 5 end",
         expect: Expect::Exit(2),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — the canonical generated grammar permits conditional
     // expressions and designators to recurse in either branch. Both nested
@@ -1547,6 +1767,8 @@ fn main() { out(1, VALUE); }\n",
                good: result := result + 2; done: end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a nested declaration may override a standard function only
     // within its block. The final `abs` call must resolve back to the built-in,
@@ -1560,6 +1782,8 @@ fn main() { out(1, VALUE); }\n",
                result := result + abs(-21) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — procedures obey block scope like scalar, label, and switch
     // declarations. The nested `choose` resolves to its stable sibling while
@@ -1575,6 +1799,8 @@ fn main() { out(1, VALUE); }\n",
                result := result + choose() + 1 end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a real array element may be the controlled variable of a
     // for clause. Integer bounds widen to f64, and the typed array path carries
@@ -1588,6 +1814,8 @@ fn main() { out(1, VALUE); }\n",
                result := entier(total * 2.0) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an integer array element may be the controlled variable of a
     // for clause. Each assignment/read uses the existing bounds-checked array
@@ -1601,6 +1829,8 @@ fn main() { out(1, VALUE); }\n",
                  result := result + values[index] end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — report-style `go to` feeds the same runtime-selected
     // designational-expression lowering as the single-word `goto` spelling.
@@ -1612,6 +1842,8 @@ fn main() { out(1, VALUE); }\n",
                no: result := 1; go to done; yes: result := 42; done: end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — dummy statements consume no tokens and perform no work. This
     // exercises leading/consecutive/trailing separators, an empty then arm, an
@@ -1625,6 +1857,8 @@ fn main() { out(1, VALUE); }\n",
                empty: ; result := result + 1; end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — the exponentiation operator `↑` (§3.3.4, spelled `^`; LANG-FULL
     // AL-pow).  A **nonnegative integer-literal exponent** unrolls to repeated
@@ -1640,6 +1874,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer result; result := 10 + 2 ^ 5 end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 -- exponentiation is right-associative. `2 ^ 3 ^ 2` means
     // `2 ^ (3 ^ 2)` = 512; dividing by 12 yields 42 (left association would
@@ -1651,6 +1887,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer result; result := (2 ^ 3 ^ 2) div 12 end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 -- runtime integer exponents use the existing `f64_pow` IIR
     // operation after widening both operands. The first result is 2^3 = 8;
@@ -1662,6 +1900,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer exponent, result; real positive, reciprocal; exponent := 3; positive := 2 ^ exponent; exponent := -1; reciprocal := 2 ^ exponent; result := entier(positive + 68 * reciprocal) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — literal string output (LANG-FULL AL4 on E4). ALGOL leaves I/O
     // implementation-defined, so this frontend recognises undeclared statement
@@ -1676,6 +1916,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin print('HI') end",
         expect: Expect::Stdout("HI"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — implementation-defined integer output reuses the shared
     // `call_builtin print_i64` path already supported by every standard backend.
@@ -1686,6 +1928,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer n; n := 40; output(n + 2) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — boolean output branches on the typed value and prints one of
     // two shared string literals, avoiding an untyped bool-to-integer coercion.
@@ -1695,6 +1939,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean flag; flag := true; output(flag and true, flag and false) end",
         expect: Expect::Stdout("truefalse"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a direct real literal has a deterministic source spelling, so
     // it can reuse string output without adding a partial runtime f64 formatter.
@@ -1704,6 +1950,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin output(4.25) end",
         expect: Expect::Stdout("4.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a runtime real procedure result is formatted by the
     // same portable IIR helper already proven for BASIC numeric output.
@@ -1713,6 +1961,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := 2.25; output(pick()) end",
         expect: Expect::Stdout("2.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — runtime-real formatter provenance also begins at a direct
     // real procedure call whose formal parameters are all value-mode scalars.
@@ -1722,6 +1972,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure scale(x); value x; real x; scale := x * 2.0; real result; result := scale(1.125); output(result) end",
         expect: Expect::Stdout("2.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — the same runtime result may migrate through a direct real
     // scalar slot before the shared portable formatter consumes it.
@@ -1731,6 +1983,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := 2.25; real x; x := pick(); output(x) end",
         expect: Expect::Stdout("2.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — runtime-real formatter provenance follows a straight-line
     // local scalar copy. Reassigning the source afterwards does not change the
@@ -1741,6 +1995,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := 2.25; real x, y; x := pick(); y := x; x := 1.0; output(y) end",
         expect: Expect::Stdout("2.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an unknown statement condition may retain runtime-real
     // formatter provenance when both exits establish it for the same slot.
@@ -1750,6 +2006,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := 2.25; boolean flag; real x; if flag then x := pick() else x := pick(); output(x) end",
         expect: Expect::Stdout("2.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a side-effect-free conditional value may retain runtime-real
     // formatter provenance when every reachable value branch proves it.
@@ -1759,6 +2017,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := true; real procedure left; left := 2.25; real procedure right; right := 3.5; real x; x := if choose() then left() else right(); output(x) end",
         expect: Expect::Stdout("2.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — calling selectors may choose transformed direct real results
     // without trusting mutable local provenance across the selector call.
@@ -1768,6 +2028,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := -3.5; real result; result := if choose() then abs(left()) else abs(right()); output(result) end",
         expect: Expect::Stdout("2.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — the same calling selector remains formatter-safe when each
     // branch nests its direct result through finite real name specialisation.
@@ -1777,6 +2039,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := true; real procedure left; left := 2.25; real procedure right; right := 3.5; real procedure relay(x); real x; relay := x; real result; result := if choose() then relay(left()) else relay(right()); output(result) end",
         expect: Expect::Stdout("2.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a real standard function can transform each direct producer
     // before finite real name specialisation without reviving local provenance.
@@ -1786,6 +2050,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := -3.5; real procedure relay(x); real x; relay := x; real result; result := if choose() then relay(abs(left())) else relay(abs(right())); output(result) end",
         expect: Expect::Stdout("2.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — unary signs can transform each direct producer before finite
     // real name specialisation without reviving local provenance.
@@ -1795,6 +2061,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := true; real procedure left; left := 2.25; real procedure right; right := 3.5; real procedure relay(x); real x; relay := x; real result; result := if choose() then relay(-left()) else relay(+right()); output(result) end",
         expect: Expect::Stdout("-2.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — additive composition with finite static operands can transform
     // each direct producer before finite real name specialisation.
@@ -1804,6 +2072,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := true; real procedure left; left := 2.25; real procedure right; right := 3.5; real procedure relay(x); real x; relay := x; real result; result := if choose() then relay(left() + 1.25) else relay(10.0 - right()); output(result) end",
         expect: Expect::Stdout("3.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — multiplicative composition with finite static operands can
     // transform each direct producer before finite real name specialisation.
@@ -1813,6 +2083,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := true; real procedure left; left := 2.25; real procedure right; right := 3.5; real procedure relay(x); real x; relay := x; real result; result := if choose() then relay(left() * 2.0) else relay(14.0 / right()); output(result) end",
         expect: Expect::Stdout("4.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — exponentiation with finite static operands can transform each
     // direct producer before finite real name specialisation.
@@ -1822,6 +2094,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := true; real procedure left; left := 2.25; real procedure right; right := 3.5; real procedure relay(x); real x; relay := x; real result; result := if choose() then relay(left() ^ 2) else relay(right() ^ 1); output(result) end",
         expect: Expect::Stdout("5.0625"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — finite static expressions remain stable when specialised into
     // a real name formal on either side of a procedure-calling selector.
@@ -1831,6 +2105,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := true; real procedure relay(x); real x; relay := x; real result; result := if choose() then relay(2.25 + 1.25) else relay(7.0 / 2); output(result) end",
         expect: Expect::Stdout("3.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — exact variable-free integer-valued standard functions may be
     // widened through a real name formal under a procedure-calling selector.
@@ -1840,6 +2116,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := true; real procedure relay(x); real x; relay := x; real result; result := if choose() then relay(sign(-2.5)) else relay(entier(3.75)); output(result) end",
         expect: Expect::Stdout("-1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — built-in sign maps any selector-safe runtime-real operand to
     // an exact small integer that may widen through a real name formal.
@@ -1849,6 +2127,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real procedure relay(x); real x; relay := x; real result; result := if choose() then relay(sign(left())) else relay(sign(right())); output(result) end",
         expect: Expect::Stdout("-1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — built-in sign's bounded integer result widens exactly while
     // retaining runtime-real formatter provenance through assignment.
@@ -1858,6 +2138,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := -2.25; real result; result := sign(pick()); output(result) end",
         expect: Expect::Stdout("-1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — entier preserves sign's exact bounded runtime result while
     // the nested integer result widens through real assignment.
@@ -1867,6 +2149,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick())); output(result) end",
         expect: Expect::Stdout("-1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — unary minus preserves sign's exact bounded result before
     // entier and the final widening through real assignment.
@@ -1876,6 +2160,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := -2.25; real result; result := entier(-sign(pick())); output(result) end",
         expect: Expect::Stdout("1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — built-in integer abs maps sign's exact bounded result to
     // exact 0 or 1 before entier and real widening.
@@ -1885,6 +2171,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := -2.25; real result; result := entier(abs(sign(pick()))); output(result) end",
         expect: Expect::Stdout("1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — variable-free exact additive zero leaves sign's bounded
     // integer result unchanged before entier and real widening.
@@ -1894,6 +2182,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := -2.25; real result; result := entier(0 - abs(sign(pick()))); output(result) end",
         expect: Expect::Stdout("-1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — variable-free exact multiplicative units leave sign's
     // bounded integer result unchanged up to sign before entier and widening.
@@ -1903,6 +2193,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := -2.25; real result; result := entier(-1 * abs(sign(pick()))); output(result) end",
         expect: Expect::Stdout("-1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — exact unit divisors preserve a numerator-position bounded
     // sign result before entier and real widening.
@@ -1912,6 +2204,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := -2.25; real result; result := entier(abs(sign(pick())) / (-1)); output(result) end",
         expect: Expect::Stdout("-1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an exact unit exponent preserves a bounded sign result before
     // entier and real widening.
@@ -1921,6 +2215,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := -2.25; real result; result := entier(abs(sign(pick())) ^ (2 - 1)); output(result) end",
         expect: Expect::Stdout("1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — nested entier calls preserve an already integral bounded
     // sign result before real widening.
@@ -1930,6 +2226,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := -2.25; real result; result := entier(entier(sign(pick()))); output(result) end",
         expect: Expect::Stdout("-1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — sqrt preserves an abs-normalized bounded sign result before
     // entier and real widening.
@@ -1939,6 +2237,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(abs(sign(pick())))); output(result) end",
         expect: Expect::Stdout("1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — sqrt preserves a nonnegative bounded entier result before
     // outer entier and real widening.
@@ -1948,6 +2248,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(entier(abs(sign(pick()))))); output(result) end",
         expect: Expect::Stdout("1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — sqrt preserves sign applied to a nonnegative bounded result
     // before outer entier and real widening.
@@ -1957,6 +2259,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(sign(abs(sign(pick()))))); output(result) end",
         expect: Expect::Stdout("1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — cosine of a direct sign result is nonnegative before sqrt,
     // outer entier, and real widening.
@@ -1966,6 +2270,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(sign(pick())))); output(result) end",
         expect: Expect::Stdout("0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — unary signs retain the [-1, 1] bound before cosine, sqrt,
     // outer entier, and real widening.
@@ -1975,6 +2281,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(-sign(pick())))); output(result) end",
         expect: Expect::Stdout("0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — exact additive zero terms retain the [-1, 1] sign bound
     // before cosine, sqrt, outer entier, and real widening.
@@ -1984,6 +2292,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(0 - sign(pick())))); output(result) end",
         expect: Expect::Stdout("0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — exact multiplicative unit factors retain the [-1, 1] sign
     // bound before cosine, sqrt, outer entier, and real widening.
@@ -1993,6 +2303,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(sign(pick()) * (-1)))); output(result) end",
         expect: Expect::Stdout("0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an exact identity exponent retains the [-1, 1] sign bound
     // before cosine, sqrt, outer entier, and real widening.
@@ -2002,6 +2314,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(sign(pick()) ^ 1))); output(result) end",
         expect: Expect::Stdout("0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — built-in abs retains the bounded sign root before cosine,
     // sqrt, outer entier, and real widening.
@@ -2011,6 +2325,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(abs(sign(pick()))))); output(result) end",
         expect: Expect::Stdout("0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — built-in sqrt retains a nonnegative unit sign-rooted bound
     // before cosine, outer sqrt, entier, and real widening.
@@ -2020,6 +2336,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(sqrt(abs(sign(pick())))))); output(result) end",
         expect: Expect::Stdout("0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — built-in entier retains a nonnegative unit sign-rooted bound
     // before cosine, outer sqrt, entier, and real widening.
@@ -2029,6 +2347,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(entier(abs(sign(pick())))))); output(result) end",
         expect: Expect::Stdout("0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — built-in sine preserves the direct sign-rooted unit bound
     // before cosine, outer sqrt, entier, and real widening.
@@ -2038,6 +2358,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(sin(abs(sign(pick())))))); output(result) end",
         expect: Expect::Stdout("0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — built-in ln maps one exponential over a nonnegative unit
     // sign-rooted range before cosine, outer sqrt, entier, and real widening.
@@ -2047,6 +2369,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(ln(exp(abs(sign(pick()))))))); output(result) end",
         expect: Expect::Stdout("0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — built-in ln maps one exponential over a signed unit
     // sign-rooted range before cosine, outer sqrt, entier, and real widening.
@@ -2056,6 +2380,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(ln(exp(sign(pick())))))); output(result) end",
         expect: Expect::Stdout("0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — built-in exp maps a nonpositive unit sign-rooted range to
     // (0, 1] before cosine, outer sqrt, entier, and real widening.
@@ -2065,6 +2391,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(exp(-abs(sign(pick())))))); output(result) end",
         expect: Expect::Stdout("0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — additive zero terms preserve a nonpositive unit sign-rooted
     // range before exp, cosine, outer sqrt, entier, and real widening.
@@ -2074,6 +2402,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(exp(0 - abs(sign(pick())))))); output(result) end",
         expect: Expect::Stdout("0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — multiplication by an exact negative unit maps a nonnegative
     // unit sign-rooted range before exp, cosine, sqrt, entier, and widening.
@@ -2083,6 +2413,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(exp(abs(sign(pick())) * (-1))))); output(result) end",
         expect: Expect::Stdout("0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — division by an exact negative unit maps a nonnegative unit
     // sign-rooted range before exp, cosine, sqrt, entier, and widening.
@@ -2092,6 +2424,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(exp(abs(sign(pick())) / (-1))))); output(result) end",
         expect: Expect::Stdout("0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an exact identity power preserves a nonpositive unit
     // sign-rooted range before exp, cosine, sqrt, entier, and widening.
@@ -2101,6 +2435,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(exp((-abs(sign(pick()))) ^ 1)))); output(result) end",
         expect: Expect::Stdout("0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — monotone built-ins preserve a nonpositive unit sign-rooted
     // range before exp, cosine, sqrt, entier, and widening.
@@ -2110,6 +2446,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(exp(arctan(entier(sign(-abs(sign(pick()))))))))); output(result) end",
         expect: Expect::Stdout("0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — every arm of a runtime conditional preserves a nonpositive
     // unit runtime-real sign root before exp, cosine, sqrt, and widening.
@@ -2119,6 +2457,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(sqrt(cos(exp(if choose() then sin(-abs(sign(left()))) else arctan(-abs(sign(right()))))))); output(result) end",
         expect: Expect::Stdout("0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — every arm of a runtime conditional preserves a nonnegative
     // unit runtime-real sign root under negation before exp and widening.
@@ -2128,6 +2468,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(sqrt(cos(exp(-(if choose() then sqrt(abs(sign(left()))) else cos(sign(right()))))))); output(result) end",
         expect: Expect::Stdout("0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — every arm of a runtime conditional preserves a unit-bounded
     // runtime-real sign root before cosine, sqrt, entier, and widening.
@@ -2137,6 +2479,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(sqrt(cos(if choose() then sin(sign(left())) else arctan(sign(right()))))); output(result) end",
         expect: Expect::Stdout("0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — nested sqrt calls preserve an abs-normalized bounded sign
     // result before entier and real widening.
@@ -2146,6 +2490,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(sqrt(abs(sign(pick()))))); output(result) end",
         expect: Expect::Stdout("1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — bounded trigonometric mappings preserve a sign-rooted result
     // before entier and real widening.
@@ -2155,6 +2501,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := -2.25; real result; result := entier(cos(sign(pick()))); output(result) end",
         expect: Expect::Stdout("0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — one exponential mapping preserves a bounded sign-rooted
     // result before entier and real widening.
@@ -2164,6 +2512,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := -2.25; real result; result := entier(exp(sign(pick()))); output(result) end",
         expect: Expect::Stdout("0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     Prog {
         lang: Language::Algol60,
@@ -2171,6 +2521,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(exp(if choose() then sin(sign(left())) else arctan(sign(right())))); output(result) end",
         expect: Expect::Stdout("0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     Prog {
         lang: Language::Algol60,
@@ -2178,6 +2530,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(sqrt(if choose() then sqrt(abs(sign(left()))) else cos(sign(right())))); output(result) end",
         expect: Expect::Stdout("1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     Prog {
         lang: Language::Algol60,
@@ -2185,6 +2539,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 0.0; real result; result := entier(sqrt(ln(if choose() then exp(abs(sign(left()))) else exp(sqrt(abs(sign(right()))))))); output(result) end",
         expect: Expect::Stdout("1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     Prog {
         lang: Language::Algol60,
@@ -2192,6 +2548,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 0.0; real result; result := entier(sqrt(ln(if choose() then exp(exp(abs(sign(left())))) else exp(exp(sqrt(abs(sign(right())))))))); output(result) end",
         expect: Expect::Stdout("1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     Prog {
         lang: Language::Algol60,
@@ -2199,6 +2557,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 0.0; real result; result := entier(sqrt(ln(if choose() then exp(exp(exp(abs(sign(left()))))) else exp(exp(exp(sqrt(abs(sign(right()))))))))); output(result) end",
         expect: Expect::Stdout("3"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     Prog {
         lang: Language::Algol60,
@@ -2206,6 +2566,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure left; left := 2.25; real procedure right; right := 0.0; real result; result := entier(ln(if choose() then exp(exp(exp(exp(-abs(sign(left())))))) else exp(exp(exp(exp(-abs(sign(right())))))))); output(result) end",
         expect: Expect::Stdout("15"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     Prog {
         lang: Language::Algol60,
@@ -2213,6 +2575,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := 2.25; real procedure rightvalue; rightvalue := 0.0; real left, right, result; left := leftvalue(); right := rightvalue(); result := entier(sqrt(ln(if choose() then exp(exp(exp(exp(-abs(sign(left)))))) else exp(exp(exp(exp(-abs(sign(right))))))))); output(result) end",
         expect: Expect::Stdout("3"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     Prog {
         lang: Language::Algol60,
@@ -2220,6 +2584,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 0.0; real left, right, result; left := leftvalue(); right := rightvalue(); result := entier(sqrt(ln(if choose() then exp(abs(sign(left))) else exp(abs(sign(right)))))) + entier(sqrt(ln(if choose() then exp(exp(abs(sign(left)))) else exp(exp(abs(sign(right))))))) + entier(sqrt(ln(if choose() then exp(exp(exp(abs(sign(left))))) else exp(exp(exp(abs(sign(right)))))))); output(result) end",
         expect: Expect::Stdout("5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     Prog {
         lang: Language::Algol60,
@@ -2227,6 +2593,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := 3.5; real result; result := entier(sqrt(ln(exp(exp(abs(sign(pick()))))))); output(result) end",
         expect: Expect::Stdout("1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     Prog {
         lang: Language::Algol60,
@@ -2234,6 +2602,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := 3.5; real result; result := entier(sqrt(ln(exp(exp(exp(abs(sign(pick())))))))); output(result) end",
         expect: Expect::Stdout("3"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     Prog {
         lang: Language::Algol60,
@@ -2241,6 +2611,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := -2.25; real result; result := entier(ln(exp(exp(exp(exp(-abs(sign(pick())))))))); output(result) end",
         expect: Expect::Stdout("4"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — ln may safely map one exponential over a bounded
     // sign-rooted result before entier and real widening.
@@ -2250,6 +2622,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := 0.0; real result; result := entier(ln(exp(sign(pick())))); output(result) end",
         expect: Expect::Stdout("0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — sqrt may safely map one exponential over a bounded
     // sign-rooted result before entier and real widening.
@@ -2259,6 +2633,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := 0.0; real result; result := entier(sqrt(exp(sign(pick())))); output(result) end",
         expect: Expect::Stdout("1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — nested sqrt calls may safely map one exponential over a
     // bounded sign-rooted result before entier and real widening.
@@ -2268,6 +2644,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := 0.0; real result; result := entier(sqrt(sqrt(exp(sign(pick()))))); output(result) end",
         expect: Expect::Stdout("1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — sqrt may safely map ln-exp over an abs-normalized bounded
     // sign-rooted result before entier and real widening.
@@ -2277,6 +2655,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := 0.0; real result; result := entier(sqrt(ln(exp(abs(sign(pick())))))); output(result) end",
         expect: Expect::Stdout("0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — unary plus is an identity and may preserve runtime-real
     // formatter provenance through assignment and output.
@@ -2286,6 +2666,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := 2.25; real x; x := +pick(); output(+x) end",
         expect: Expect::Stdout("2.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — unary minus preserves runtime-real formatter provenance
     // while applying the sign at each expression site.
@@ -2295,6 +2677,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := 2.25; real x; x := -pick(); output(-x) end",
         expect: Expect::Stdout("2.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — additive composition may combine runtime-real provenance
     // with finite static operands without opening multiplicative expressions.
@@ -2304,6 +2688,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := 2.25; real x; x := pick() + 1.25; output(10.0 - x + pick()) end",
         expect: Expect::Stdout("8.75"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — multiplication may combine runtime-real provenance with
     // finite static operands while division and powers remain gated.
@@ -2313,6 +2699,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := 2.25; real x; x := pick() * 2.0; output(2.0 * x * pick()) end",
         expect: Expect::Stdout("20.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — division may combine runtime-real provenance with finite
     // static operands.
@@ -2322,6 +2710,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := 2.25; real x; x := 18.0 / pick(); output(x / 2.0) end",
         expect: Expect::Stdout("4"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — exponentiation may combine runtime-real provenance with
     // finite static operands on either side of the operator.
@@ -2331,6 +2721,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := 3.0; real x; x := 2.0 ^ pick(); output(x ^ 2) end",
         expect: Expect::Stdout("64"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — implemented real-valued standard functions preserve
     // runtime-real provenance through assignment and nested output.
@@ -2340,6 +2732,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := 9.0; real x; x := sqrt(pick()); output(abs(-x)) end",
         expect: Expect::Stdout("3"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a dynamically indexed real array-element read carries
     // runtime-real provenance through multiplicative output.
@@ -2349,6 +2743,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := 2.25; real array values[1:2]; integer i; i := 2; values[2] := pick(); output(values[i] * 2.0) end",
         expect: Expect::Stdout("4.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a real value formal is a concrete f64 in the callee frame,
     // so it may carry runtime-real provenance through composition and output.
@@ -2358,6 +2754,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := 2.25; procedure show(x); value x; real x; output(x * 2.0); show(pick()) end",
         expect: Expect::Stdout("4.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — promotion into the existing capture global keeps a real value
     // formal formatter-safe inside a nested sibling procedure.
@@ -2367,6 +2765,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := 2.25; procedure show(x); value x; real x; begin procedure nested; output(x * 2.0); nested() end; show(pick()) end",
         expect: Expect::Stdout("4.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an ordinary real scalar captured through the existing E6
     // typed-global path remains a concrete f64 in its nested sibling.
@@ -2376,6 +2776,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real shared; procedure show; output(shared); shared := 2.25; show() end",
         expect: Expect::Stdout("2.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a real procedure specialised for a proven runtime-real name
     // actual returns a concrete f64 without requiring a runtime thunk ABI.
@@ -2385,6 +2787,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; output(relay(pick())) end",
         expect: Expect::Stdout("2.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — real procedure results remain concrete f64 values when the
     // direct call carries either a copied value-array descriptor or the
@@ -2395,6 +2799,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real array values[1:2]; real procedure copied(a); value a; real array a; copied := a[1] + a[2]; real procedure shared(a); real array a; shared := a[1] + a[2]; values[1] := 1.125; values[2] := 1.125; output(copied(values), shared(values)) end",
         expect: Expect::Stdout("2.252.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a direct typed procedure actual is substituted into the
     // specialised sibling, so no dynamic procedure descriptor crosses the ABI.
@@ -2404,6 +2810,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := 2.25; real procedure apply(p); real procedure p; apply := p(); output(apply(pick)) end",
         expect: Expect::Stdout("2.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — finite specialisation substitutes integer and boolean name
     // actuals directly while the result remains a concrete f64.
@@ -2413,6 +2821,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure frominteger(n); integer n; frominteger := n + 0.25; real procedure fromboolean(b); boolean b; fromboolean := if b then 2.25 else 0.0; output(frominteger(2), fromboolean(true)) end",
         expect: Expect::Stdout("2.252.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a string literal actual remains an argument to the specialised
     // call, and the real result retains formatter provenance through a local.
@@ -2422,6 +2832,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real x; real procedure fromstring(s); string s; fromstring := if s = 'OK' then 2.25 else 0.0; x := fromstring('OK'); output(x, fromstring('OK')) end",
         expect: Expect::Stdout("2.252.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — calls preserve formatter provenance for caller-frame real
     // locals that remain unaliased after call lowering.
@@ -2431,6 +2843,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := 2.25; procedure touch; begin end; real x; x := pick(); output(pick(), x); touch(); output(x) end",
         expect: Expect::Stdout("2.252.252.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a specialised read-only name formal retains the bounded
     // runtime-real provenance of its non-assignable actual expression.
@@ -2440,6 +2854,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := 2.25; procedure show(x); real x; output(x); show(pick()) end",
         expect: Expect::Stdout("2.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — forwarding a name formal preserves the original
     // non-assignable runtime-real actual and its formatter provenance.
@@ -2449,6 +2865,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := 2.25; procedure sink(y); real y; output(y); procedure relay(x); real x; sink(x); relay(pick()) end",
         expect: Expect::Stdout("2.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an assignable real array-element actual is re-evaluated at
     // each name-formal read and retains formatter provenance through direct
@@ -2459,6 +2877,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real array a[1:1]; procedure sink(y); real y; output(y); procedure relay(x); real x; sink(x); a[1] := 2.25; relay(a[1]) end",
         expect: Expect::Stdout("2.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — static integer-valued functions may feed checked snapshots and widen into
     // bounded static real expressions. Copying preserves the destination when
@@ -2470,6 +2890,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer n, saved; n := abs(-40) + sign(-2) + entier(3.9); saved := n; n := 9; output(saved + 0.5) end",
         expect: Expect::Stdout("42.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — straight-line integer snapshots retain bounded powers whose
     // exponent operands are variable-free checked integer arithmetic.
@@ -2479,6 +2901,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer n, saved; n := 6 ^ ((2 ^ (2 - 1)) div 2) + 36; saved := n; n := 9; output(saved + 0.5) end",
         expect: Expect::Stdout("42.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — implemented integer-valued standard functions may form a
     // bounded variable-free exponent without becoming a dynamic power call.
@@ -2488,6 +2912,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer n, saved; n := 6 ^ (abs(-2) div entier(2.9)) + 36; saved := n; n := 9; output(saved + 0.5) end",
         expect: Expect::Stdout("42.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an exact bare tracked integer exponent retains bounded real
     // multiplication lowering and exact later snapshot output.
@@ -2497,6 +2923,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer exponent; real saved; exponent := 2; saved := 6.0 ^ exponent + 6.0; exponent := 3; output(saved + 0.5) end",
         expect: Expect::Stdout("42.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a unary sign around an exact tracked integer exponent is
     // pure and retains bounded real multiplication lowering.
@@ -2506,6 +2934,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer exponent; real saved; exponent := -2; saved := 6.0 ^ (-exponent) + 6.0; exponent := 3; output(saved + 0.5) end",
         expect: Expect::Stdout("42.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — checked integer arithmetic over exact tracked snapshots is
     // side-effect-free and retains bounded real multiplication lowering.
@@ -2515,6 +2945,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer exponent; real saved; exponent := -2; saved := 6.0 ^ (0 - exponent) + 6.0; exponent := 3; output(saved + 0.5) end",
         expect: Expect::Stdout("42.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a pure implemented standard function may consume a tracked
     // integer and retain bounded real multiplication lowering.
@@ -2524,6 +2956,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer exponent; real saved; exponent := -2; saved := 6.0 ^ abs(exponent) + 6.0; exponent := 3; output(saved + 0.5) end",
         expect: Expect::Stdout("42.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — checked exponent arithmetic may compose pure implemented
     // standard functions over tracked local integer snapshots.
@@ -2533,6 +2967,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer exponent; real saved; exponent := -2; saved := 6.0 ^ (abs(exponent) + sign(exponent) + 1) + 6.0; exponent := 3; if saved = 42.0 then output(42) else output(1) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — built-in entier may consume composed tracked integer
     // arithmetic when widening that arithmetic to binary64 is exact.
@@ -2542,6 +2978,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer exponent; real saved; exponent := -2; saved := 6.0 ^ entier(abs(exponent) + sign(exponent) + 1) + 6.0; exponent := 3; if saved = 42.0 then output(42) else output(1) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an exact built-in square root over a tracked integer may
     // provide an integral bounded exponent without a runtime power call.
@@ -2551,6 +2989,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer exponent; real saved; exponent := 4; saved := 6.0 ^ sqrt(exponent) + 6.0; exponent := 9; if saved = 42.0 then output(42) else output(1) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an exact integral tracked square root may compose with
     // checked integer-valued arithmetic before bounded real-power unrolling.
@@ -2560,6 +3000,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer exponent; real saved; exponent := 4; saved := 6.0 ^ (sqrt(exponent) + sign(exponent) - 1) + 6.0; exponent := 9; if saved = 42.0 then output(42) else output(1) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — equal exact integral tracked square-root branches may retain
     // bounded multiplication while their pure runtime selector still lowers.
@@ -2569,6 +3011,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer gate, exponent; real saved; exponent := 4; saved := 6.0 ^ (if gate = 0 then sqrt(exponent) else sqrt(exponent)) + 6.0; exponent := 9; if saved = 42.0 then output(42) else output(1) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an exact integral tracked square root may feed another
     // built-in square root before bounded real-power unrolling.
@@ -2578,6 +3022,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer exponent; real saved; exponent := 16; saved := 6.0 ^ sqrt(sqrt(exponent)) + 6.0; exponent := 81; if saved = 42.0 then output(42) else output(1) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — exact integral tracked square roots may feed pure
     // integer-valued standard functions before bounded real-power unrolling.
@@ -2587,6 +3033,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer exponent; real saved; exponent := 4; saved := 6.0 ^ (entier(abs(sqrt(exponent))) + sign(sqrt(exponent)) - 1) + 6.0; exponent := 9; if saved = 42.0 then output(42) else output(1) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — canonical exact outputs from real standard functions may
     // provide bounded exponents over tracked local integer snapshots.
@@ -2596,6 +3044,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer exponent; real saved; exponent := 0; saved := 6.0 ^ (cos(exponent) + 1) + 6.0; exponent := 9; if saved = 42.0 then output(42) else output(1) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — exact built-in results over tracked real snapshots may also
     // provide bounded exponents without admitting arbitrary real arithmetic.
@@ -2605,6 +3055,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real exponent, saved; exponent := 0.0; saved := 6.0 ^ (cos(exponent) + 1) + 6.0; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a pure real selector still executes around equal exact
     // built-in exponent branches over a tracked local real snapshot.
@@ -2614,6 +3066,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real gate, exponent, saved; exponent := 0.0; saved := 6.0 ^ (if gate = 0.0 then cos(exponent) + 1 else cos(exponent) + 1) + 6.0; gate := 1.0; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a pure built-in may collapse distinct conditional tracked
     // real operands to one exact exponent while the selector still executes.
@@ -2623,6 +3077,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real gate, exponent, saved; exponent := -2.0; saved := 6.0 ^ abs(if gate = 0.0 then exponent else -exponent) + 6.0; gate := 1.0; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a path-independent built-in result may feed another pure
     // built-in while retaining the runtime selector.
@@ -2632,6 +3088,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real gate, exponent, saved; exponent := -2.0; saved := 6.0 ^ entier(abs(if gate = 0.0 then exponent else -exponent)) + 6.0; gate := 1.0; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — exact literal arithmetic may compose around a
     // path-independent built-in result before another pure built-in.
@@ -2641,6 +3099,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real gate, exponent, saved; exponent := -2.0; saved := 6.0 ^ entier(abs(if gate = 0.0 then exponent else -exponent) + 0.5) + 6.0; gate := 1.0; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an exact tracked integer snapshot may join arithmetic around
     // a path-independent built-in result without erasing the selector.
@@ -2650,6 +3110,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer offset; real gate, exponent, saved; offset := 0; exponent := -2.0; saved := 6.0 ^ entier(abs(if gate = 0.0 then exponent else -exponent) + offset + 0.5) + 6.0; gate := 1.0; offset := 9; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a finite tracked local real snapshot may join arithmetic
     // around a path-independent built-in result without erasing the selector.
@@ -2659,6 +3121,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real offset, gate, exponent, saved; offset := 0.0; exponent := -2.0; saved := 6.0 ^ entier(abs(if gate = 0.0 then exponent else -exponent) + offset + 0.5) + 6.0; gate := 1.0; offset := 9.0; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a path-independent built-in result may form the base of a
     // bounded variable-free integral power before another pure built-in.
@@ -2668,6 +3132,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real gate, exponent, saved; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ 1) + 6.0; gate := 1.0; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an exact tracked integer may bound a power around a
     // path-independent built-in result without erasing the selector.
@@ -2677,6 +3143,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer power; real gate, exponent, saved; power := 1; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ power) + 6.0; gate := 1.0; power := 9; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an exact integral tracked real may bound a power around a
     // path-independent built-in result without erasing the selector.
@@ -2686,6 +3154,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real power, gate, exponent, saved; power := 1.0; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ power) + 6.0; gate := 1.0; power := 9.0; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an exact integral tracked real snapshot may bound a plain
     // real power without a standard-function result in its base.
@@ -2695,6 +3165,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real exponent, saved; exponent := 2.0; saved := 6.0 ^ exponent + 6.0; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — equal path-independent tracked real snapshots may bound a
     // plain real power while preserving runtime selector execution.
@@ -2704,6 +3176,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real gate, left, right, saved; left := 2.0; right := 2.0; saved := 6.0 ^ (if gate = 0.0 then left else right) + 6.0; gate := 1.0; left := 9.0; right := 9.0; if saved = 42.0 then output(42) else output(1) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — nested path-independent tracked real snapshot conditionals
     // retain every runtime selector while bounding a plain real power.
@@ -2713,6 +3187,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean outer, inner; real first, second, third, saved; first := 2.0; second := 2.0; third := 2.0; saved := 6.0 ^ (if outer then if inner then first else second else third) + 6.0; outer := true; inner := true; first := 9.0; second := 9.0; third := 9.0; if saved = 42.0 then output(42) else output(1) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a tracked real snapshot and equal real literal may form a
     // path-independent exponent while preserving runtime selector execution.
@@ -2722,6 +3198,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean gate; real exponent, saved; exponent := 2.0; saved := 6.0 ^ (if gate then exponent else 2.0) + 6.0; gate := true; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — finite variable-free real arithmetic may match a tracked
     // snapshot leaf in a path-independent power exponent.
@@ -2731,6 +3209,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean gate; real exponent, saved; exponent := 2.0; saved := 6.0 ^ (if gate then exponent else 1.0 + 1.0) + 6.0; gate := true; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an exact tracked built-in result may match a tracked real
     // snapshot in a path-independent power exponent.
@@ -2740,6 +3220,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean gate; real exponent, radicand, saved; exponent := 2.0; radicand := 4.0; saved := 6.0 ^ (if gate then exponent else sqrt(radicand)) + 6.0; gate := true; exponent := 9.0; radicand := 9.0; if saved = 42.0 then output(42) else output(1) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an exact built-in result over a losslessly widened tracked
     // integer may match a tracked real snapshot in a conditional exponent.
@@ -2749,6 +3231,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer radicand; boolean gate; real exponent, saved; radicand := 4; exponent := 2.0; saved := 6.0 ^ (if gate then exponent else sqrt(radicand)) + 6.0; gate := true; radicand := 9; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an exact variable-free built-in result may match a tracked
     // real snapshot in a path-independent conditional exponent.
@@ -2758,6 +3242,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean gate; real exponent, saved; exponent := 2.0; saved := 6.0 ^ (if gate then exponent else sqrt(4.0)) + 6.0; gate := true; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — finite arithmetic over initialized tracked local reals may
     // bound a power around a path-independent built-in result.
@@ -2767,6 +3253,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real power, offset, gate, exponent, saved; power := 0.5; offset := 0.5; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ (power + offset)) + 6.0; gate := 1.0; power := 9.0; offset := 9.0; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — finite arithmetic over initialized tracked local reals may
     // bound a plain real power without a standard-function result in its base.
@@ -2776,6 +3264,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real power, offset, saved; power := 0.5; offset := 1.5; saved := 6.0 ^ (power + offset) + 6.0; power := 9.0; offset := 9.0; if saved = 42.0 then output(42) else output(1) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — path-independent conditional arithmetic over tracked local
     // reals may bound a power while its runtime selector remains emitted.
@@ -2785,6 +3275,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real power, offset, gate, exponent, saved; power := 0.5; offset := 0.5; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ (if gate = 0.0 then power + offset else offset + power)) + 6.0; gate := 1.0; power := 9.0; offset := 9.0; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — path-independent conditional arithmetic over tracked local
     // reals may bound a plain power while preserving its runtime selector.
@@ -2794,6 +3286,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real power, offset, gate, saved; power := 0.5; offset := 1.5; saved := 6.0 ^ (if gate = 0.0 then power + offset else offset + power) + 6.0; gate := 1.0; power := 9.0; offset := 9.0; if saved = 42.0 then output(42) else output(1) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — exact arithmetic mixing tracked local integer and real
     // snapshots may bound a power around a path-independent built-in result.
@@ -2803,6 +3297,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer whole; real part, gate, exponent, saved; whole := 1; part := 0.0; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ (whole + part)) + 6.0; gate := 1.0; whole := 9; part := 9.0; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — exact mixed tracked numeric arithmetic may bound a plain
     // real power without requiring a standard-function result in its base.
@@ -2812,6 +3308,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer whole; real part, saved; whole := 1; part := 1.0; saved := 6.0 ^ (whole + part) + 6.0; whole := 9; part := 9.0; if saved = 42.0 then output(42) else output(1) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — path-independent conditional mixed tracked arithmetic may
     // bound a power while its runtime selector remains emitted.
@@ -2821,6 +3319,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer whole; real part, gate, exponent, saved; whole := 1; part := 0.0; exponent := -2.0; saved := 6.0 ^ entier((abs(if gate = 0.0 then exponent else -exponent) + 0.5) ^ (if gate = 0.0 then whole + part else part + whole)) + 6.0; gate := 1.0; whole := 9; part := 9.0; exponent := 9.0; if saved = 42.0 then output(42) else output(1) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — path-independent conditional mixed tracked arithmetic may
     // bound a plain real power while preserving its runtime selector.
@@ -2830,6 +3330,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer whole; real part, gate, saved; whole := 1; part := 1.0; saved := 6.0 ^ (if gate = 0.0 then whole + part else part + whole) + 6.0; gate := 1.0; whole := 9; part := 9.0; if saved = 42.0 then output(42) else output(1) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — equal branches of a pure runtime conditional may retain
     // bounded multiplication while the selector branch still lowers.
@@ -2839,6 +3341,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer gate, exponent; real saved; exponent := 2; saved := 6.0 ^ (if gate = 0 then exponent else exponent) + 6.0; exponent := 3; output(saved + 0.5) end",
         expect: Expect::Stdout("42.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — equal branches of a runtime conditional may participate
     // inside exact integer snapshot arithmetic while the branch still lowers.
@@ -2848,6 +3352,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer gate, n, saved; n := (if gate = 0 then 40 else 40) + 2; saved := n; n := 9; output(saved + 0.5) end",
         expect: Expect::Stdout("42.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a known local integer may provide a bounded exponent while
     // preserving integer power lowering and exact later snapshot output.
@@ -2857,6 +3363,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer exponent, n, saved; exponent := 2; n := 6 ^ exponent + 6; saved := n; exponent := 3; output(saved + 0.5) end",
         expect: Expect::Stdout("42.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a runtime condition may preserve assignment metadata when
     // both independently proven branches have exactly the same value. The
@@ -2868,6 +3376,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean flag; integer n; real x; flag := false; n := if flag then 40 else 40; x := if flag then 2.5 else 2.5; output(n + x) end",
         expect: Expect::Stdout("42.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — statement control flow intersects independently compiled
     // branch states. Equal integer and real assignments remain available to
@@ -2878,6 +3388,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean flag; integer n; real x; flag := false; if flag then n := 40 else n := 40; if flag then x := 2.5 else x := 2.5; output(n + x) end",
         expect: Expect::Stdout("42.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — exact unary signs stay attached to direct real literals while
     // the bounded source-spelling path continues to reject computed reals.
@@ -2887,6 +3399,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin output(-4.25, +2.5) end",
         expect: Expect::Stdout("-4.25+2.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a runtime boolean may select between source-spelled real
     // literal leaves. The frontend branches before output and sends only the
@@ -2898,6 +3412,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean flag; flag := false; output(if flag then +4.25 else -2.5) end",
         expect: Expect::Stdout("-2.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — exact arithmetic grouping around a direct signed real literal
     // does not turn it into a computed f64. The frontend unwraps only a balanced
@@ -2908,6 +3424,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin output((+4.25), (-2.5)) end",
         expect: Expect::Stdout("+4.25-2.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — finite literal-only addition/subtraction can be evaluated by
     // the frontend. The resulting decimal strings use the existing portable
@@ -2918,6 +3436,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin output(2.0 + 2.25, 6.5 - 2.0) end",
         expect: Expect::Stdout("4.254.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — finite literal-only multiplication uses the same bounded
     // frontend evaluator. The second expression proves normal precedence while
@@ -2928,6 +3448,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin output(2.5 * 2.0, 1.5 + 2.0 * 3.0) end",
         expect: Expect::Stdout("57.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — finite literal-only division completes the bounded arithmetic
     // output evaluator. The second expression proves multiplicative operators
@@ -2938,6 +3460,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin output(9.0 / 2.0, 8.0 / 2.0 * 1.5) end",
         expect: Expect::Stdout("4.56"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — real literal bases with capped nonnegative integer-literal
     // exponent chains use deterministic repeated multiplication. The chain
@@ -2948,6 +3472,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin output(2.5 ^ 2, 2.0 ^ 3 ^ 2) end",
         expect: Expect::Stdout("6.25512"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — finite literal-only real powers accept bounded nonnegative
     // integral arithmetic exponent operands without runtime real formatting.
@@ -2957,6 +3483,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin output(2.0 ^ (6 div 3), 2.0 ^ (1.0 + 2.0), 2.0 ^ ((2 ^ 2) - 1)) end",
         expect: Expect::Stdout("488"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — one bounded negative integral arithmetic exponent uses the
     // same deterministic reciprocal path as a signed literal exponent.
@@ -2966,6 +3494,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin output(2.0 ^ (1 - 4), 4.0 ^ (0.0 - 2.0), 2.0 ^ (1 - (2 ^ 2))) end",
         expect: Expect::Stdout("0.1250.06250.125"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — one signed integer-literal exponent remains bounded by the
     // existing cap. Negative powers use repeated division and still emit only
@@ -2976,6 +3506,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin output(2.0 ^ (-3), 4.0 ^ (+2)) end",
         expect: Expect::Stdout("0.12516"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — exactly integral real-literal exponents inside the existing
     // cap use the same deterministic repeated arithmetic as integer spellings.
@@ -2986,6 +3518,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin output(2.0 ^ 3.0, 2.0 ^ (-3.0)) end",
         expect: Expect::Stdout("80.125"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — nonnegative integral-literal exponent chains may use real or
     // integer spellings. The frontend computes the right-associated exponent
@@ -2996,6 +3530,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin output(2.0 ^ 3.0 ^ 2.0, 2.0 ^ 3 ^ 2.0) end",
         expect: Expect::Stdout("512512"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — deterministic real standard-function calls over static
     // operands bypass runtime f64 formatting. Exact sqrt keeps this path
@@ -3006,6 +3542,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin output(abs(2.0 - 6.25), sqrt(2.25)) end",
         expect: Expect::Stdout("4.251.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — formatter-free standard-function values may nest and compose
     // with the existing finite literal-only arithmetic evaluator.
@@ -3015,6 +3553,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin output(abs(sqrt(2.25) - 2.0) + 0.25, sqrt(abs(-2.25)) * 2.0) end",
         expect: Expect::Stdout("0.753"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a runtime condition may select between formatter-free static
     // standard-function expressions without materializing either as an f64.
@@ -3024,6 +3564,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean flag; flag := false; output(if flag then abs(-4.25) else sqrt(2.25) + 0.5) end",
         expect: Expect::Stdout("2"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — canonical transcendental inputs with exact zero/one results
     // join the formatter-free static standard-function path.
@@ -3033,6 +3575,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin output(sin(0.0), cos(0.0), ln(1.0), exp(0.0), arctan(0.0)) end",
         expect: Expect::Stdout("01010"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — exact integer-valued standard-function results can widen
     // into the formatter-free literal-only real arithmetic path.
@@ -3042,6 +3586,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin output(sign(-2.5) + 2.0, entier(2.75) + 0.5) end",
         expect: Expect::Stdout("12.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — string procedures (LANG-FULL E4-dyn payoff, E4d-AL). The first
     // E4-dyn *frontend* feature: a `string procedure` returns a runtime string.
@@ -3080,6 +3626,8 @@ fn main() { out(1, VALUE); }\n",
               print(pick(1)) end",
         expect: Expect::Stdout("HI"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a runtime string procedure result can be copied into a
     // scalar local, compared for equality, and printed. This drives a dynamic
@@ -3095,6 +3643,8 @@ fn main() { out(1, VALUE); }\n",
                   print(s) end",
         expect: Expect::Stdout("HI"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a branch-selected string procedure result can feed lexical
     // ordering after being copied to a scalar local. This takes the runtime
@@ -3112,6 +3662,8 @@ fn main() { out(1, VALUE); }\n",
                   print(s) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — string arrays reuse the shared E5 `array<str>` substrate.
     // The element reads feed runtime lexical ordering before output, proving
@@ -3125,6 +3677,8 @@ fn main() { out(1, VALUE); }\n",
                   print(words[1]) end",
         expect: Expect::Stdout("HI"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — runtime string procedure results remain valid `array<str>`
     // elements. The array store/read boundary must preserve the runtime handle
@@ -3142,6 +3696,8 @@ fn main() { out(1, VALUE); }\n",
         ),
         expect: Expect::Stdout("HI"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a branch-selected `string procedure` result can become the
     // `string` value actual of a second typed procedure without becoming a
@@ -3158,6 +3714,8 @@ fn main() { out(1, VALUE); }\n",
                   result := matches(pick(1)) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — explicit empty argument lists for a zero-argument typed
     // procedure in value position and a proper procedure in statement
@@ -3169,6 +3727,8 @@ fn main() { out(1, VALUE); }\n",
                   procedure store; result := answer(); store() end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a valid procedure heading may partition its formals across
     // multiple specification groups. All names are declared once in the
@@ -3182,6 +3742,8 @@ fn main() { out(1, VALUE); }\n",
                   result := combine(3, 4, 8.0) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 report-style split specifications. `integer p,a` supplies the
     // types while `procedure p` and `array a` independently supply each
@@ -3196,6 +3758,8 @@ fn main() { out(1, VALUE); }\n",
                   values[4] := 21; result := apply(twice, values) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a proper procedure captures an enclosing array and retains
     // its declaration-space lower bounds across a fresh procedure frame.
@@ -3207,6 +3771,8 @@ fn main() { out(1, VALUE); }\n",
                   seed; result := values[4] + values[5] end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a one-dimensional typed array formal is a descriptor-value
     // parameter: its value-mode handle is copied while its declared lower
@@ -3224,6 +3790,8 @@ fn main() { out(1, VALUE); }\n",
                   invoke end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — multidimensional coordinates are checked independently before
     // row-major flattening. Without this guard A[1,3] in a 2x2 array aliases
@@ -3235,6 +3803,8 @@ fn main() { out(1, VALUE); }\n",
                   values[2,1] := 42; result := values[1,3] end",
         expect: Expect::Trap,
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — array bound pairs are evaluated at run time, and every extent
     // must remain positive before stride arithmetic or allocation. A reversed
@@ -3246,6 +3816,8 @@ fn main() { out(1, VALUE); }\n",
                   begin integer array values[lower:upper]; result := 42 end end",
         expect: Expect::Trap,
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a two-dimensional array formal infers its rank from `a[i,j]`
     // in `fill2`. The call ABI carries the shared handle plus both lower bounds
@@ -3264,6 +3836,8 @@ fn main() { out(1, VALUE); }\n",
                   invoke end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a nested procedure captures a two-dimensional array formal.
     // `fill` first publishes the actual's handle, lower bounds, and row-major
@@ -3279,6 +3853,8 @@ fn main() { out(1, VALUE); }\n",
                   result := fill(values) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a nested procedure captures an enclosing scalar value
     // parameter. `total` publishes its incoming `seed` before `bump` runs in a
@@ -3295,6 +3871,8 @@ fn main() { out(1, VALUE); }\n",
                   result := total(40) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — direct scalar call-by-name (LANG-FULL AL7). The specialised
     // `sum` sibling re-evaluates `term` in the caller environment every time
@@ -3314,6 +3892,8 @@ fn main() { out(1, VALUE); }\n",
                   result := sum(i, 3, i * i) * 3 end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — forwarding a scalar name formal. `forward` writes `x`, then
     // passes it to a nested `consume` procedure whose formal deliberately uses
@@ -3331,6 +3911,8 @@ fn main() { out(1, VALUE); }\n",
                   n := 20; result := forward(n) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — direct name-array forwarding. Name arrays retain the existing
     // typed descriptor ABI because the only supported actual is a bare array
@@ -3349,6 +3931,8 @@ fn main() { out(1, VALUE); }\n",
                   result := forward(values) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — recursive name arrays. Arrays do not require scalar thunks:
     // every call carries the existing typed descriptor, so the two specialised
@@ -3368,6 +3952,8 @@ fn main() { out(1, VALUE); }\n",
                   result := even(values, 3) end",
         expect: Expect::Exit(60),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — recursive scalar name forwarding. A recursive call that
     // forwards every scalar name formal under its original spelling may reuse
@@ -3387,6 +3973,8 @@ fn main() { out(1, VALUE); }\n",
                   x := 21; result := even(3, x) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — recursive scalar name remapping. Each recursive step swaps
     // `x` and `y`, so the compiler must retain two specialised siblings rather
@@ -3405,6 +3993,8 @@ fn main() { out(1, VALUE); }\n",
                   left := 10; right := 3; result := swapcount(2, left, right) end",
         expect: Expect::Exit(7),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — direct formal-procedure forwarding. The outer and nested
     // wrappers receive `square` as a formal procedure, but their specialised
@@ -3422,6 +4012,8 @@ fn main() { out(1, VALUE); }\n",
                   result := dispatch(square, 6) end",
         expect: Expect::Exit(36),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a report-style typed procedure formal retains its expected
     // integer result while direct specialization substitutes `twice`. The
@@ -3436,6 +4028,8 @@ fn main() { out(1, VALUE); }\n",
                result := apply(twice, 21) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a direct nested procedure actual may capture its enclosing
     // value formal before travelling through `dispatch`. The specialised
@@ -3453,6 +4047,8 @@ fn main() { out(1, VALUE); }\n",
                   result := outer(40) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — recursive forwarding retains a direct procedure actual in
     // the active specialisation. Each `descend(p, n - 1)` reuses the same
@@ -3468,6 +4064,8 @@ fn main() { out(1, VALUE); }\n",
                   result := descend(twice, 4) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — mutual recursion carries one direct procedure formal through
     // a finite two-sibling graph. `even` and `odd` each forward `twice` to the
@@ -3485,6 +4083,8 @@ fn main() { out(1, VALUE); }\n",
                   result := even(twice, 4) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a `value procedure` formal retains the same direct target as
     // a name-mode procedure formal when the actual is statically known. Both
@@ -3502,6 +4102,8 @@ fn main() { out(1, VALUE); }\n",
                   result := dispatch(square, 6) end",
         expect: Expect::Exit(36),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — formal procedure bound to a standard function. `abs` travels
     // through the same nested wrapper shape as a declared procedure, but its
@@ -3517,6 +4119,8 @@ fn main() { out(1, VALUE); }\n",
                   result := dispatch(abs, 0 - 42) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a standard output procedure travels through nested direct
     // `procedure` formals. The specialised wrappers retain the direct `print`
@@ -3533,6 +4137,8 @@ fn main() { out(1, VALUE); }\n",
                   dispatch(print, 'FORMAL') end",
         expect: Expect::Stdout("FORMAL"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — direct and forwarded string name formals. The nested
     // `consume` formal shares the outer spelling, so the specialised sibling
@@ -3551,6 +4157,8 @@ fn main() { out(1, VALUE); }\n",
                   s := 'NO'; result := forward(s) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — scalar string variables on the direct literal fast path. A
     // `string` scalar assigned from a literal emits `str_const` directly to its
@@ -3561,6 +4169,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin string s; s := 'HI'; print(s) end",
         expect: Expect::Stdout("HI"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — the implementation-defined `output` spelling follows the same
     // E4 path as `print`: a direct-literal string slot consumed by `print_str`.
@@ -3571,6 +4181,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin string s; s := 'OK'; output(s) end",
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — `output` preserves multiple literal-backed scalar string
     // actuals. This proves the AL4 standard-output alias can consume two E4
@@ -3582,6 +4194,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin string s, t; s := 'O'; t := 'K'; output(s, t) end",
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — literal-backed scalar string copy. This keeps AL4 inside the
     // same immutable E4 shape BASIC now uses: `t := s` lowers through
@@ -3593,6 +4207,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin string s, t; s := 'OK'; t := s; print(t) end",
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — copied scalar string slots are snapshots. Reassigning the
     // source after `t := s` rematerializes `s` but must not change `t`, keeping
@@ -3603,6 +4219,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin string s, t; s := 'OK'; t := s; s := 'NO'; print(t) end",
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — definite string initialization is joined across statement
     // control flow. Both exits assign the same typed local slot, so the later
@@ -3613,6 +4231,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean flag; string s; flag := false; if flag then s := 'HI' else s := 'LO'; print(s) end",
         expect: Expect::Stdout("LO"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a zero-trip loop cannot erase definite initialization from
     // before the loop. The body is skipped, and the pre-loop typed string is
@@ -3623,6 +4243,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i; string s; s := 'OK'; for i := 1 while false do s := 'HI'; print(s) end",
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — list elements execute in order, and a plain single-value
     // element runs its body exactly once. It can therefore establish definite
@@ -3633,6 +4255,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i; string s; for i := 1 while false, 2 do s := 'OK'; print(s) end",
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — static start, step, and limit values prove this ascending
     // step loop enters its body. The assignment therefore establishes definite
@@ -3643,6 +4267,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, result; string s; for i := 1 step 1 until 2 do s := 'OK'; if s = 'OK' then result := 42 else result := 0 end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — straight-line integer snapshots can prove a later step-loop
     // header nonempty before loop lowering invalidates numeric metadata.
@@ -3652,6 +4278,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, first, stride, last, result; string s; first := 1; stride := 1; last := 2; for i := first step stride until last do s := 'OK'; if s = 'OK' then result := 42 else result := 0 end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — true and false literal string predicates may select exact
     // initial, step, and limit expressions for finite step loops.
@@ -3661,6 +4289,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, total; total := 0; for i := if 'ALPHA' < 'BETA' then 1 else 4 step if 'ALPHA' < 'BETA' then 1 else 2 until if 'ALPHA' < 'BETA' then 3 else 4 do total := total + i; print(total + 0.25); total := 0; for i := if 'BETA' < 'ALPHA' then 1 else 2 step if 'BETA' < 'ALPHA' then 2 else 1 until if 'BETA' < 'ALPHA' then 5 else 4 do total := total + i; print(total + 0.25) end",
         expect: Expect::Stdout("6.259.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a straight-line boolean snapshot can select a statement
     // branch that establishes definite string initialization.
@@ -3670,6 +4300,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer result; boolean flag; string s; flag := true; if flag then s := 'OK'; if s = 'OK' then result := 42 else result := 0 end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a static selector preserves the reachable numeric branch's
     // snapshot even when the conditional expression's branches differ.
@@ -3679,6 +4311,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean flag; real x; flag := false; x := if flag then 1.5 else 42.0; print(x) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a statically unreachable procedure result does not require
     // runtime real formatting when the selected output branch is a literal.
@@ -3688,6 +4322,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure choose; choose := 1.5; boolean flag; flag := false; print(if flag then choose() else 42.0) end",
         expect: Expect::Stdout("42.0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a statically empty step loop cannot change the entry real
     // snapshot, so formatter-free output remains available afterward.
@@ -3697,6 +4333,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i; real r; r := 42.0; for i := 2 step 1 until 1 do r := 1.5; print(r) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — executing step, single-value, and while elements preserve
     // runtime-real formatter provenance for an unmodified caller-frame local.
@@ -3706,6 +4344,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure pick; pick := 2.25; integer i; real x; x := pick(); for i := 1 step 1 until 3 do output(''); output(x); for i := 1, 2, 3 do output(''); output(x); for i := i + 1 while i < 6 do output(''); output(x) end",
         expect: Expect::Stdout("2.252.252.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — even a zero-trip step element assigns its controlled variable
     // in the loop preheader before testing the bound.
@@ -3715,6 +4355,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real x; x := 9.0; for x := 2.0 step 1.0 until 1.0 do x := 1.5; print(x) end",
         expect: Expect::Stdout("2"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a statically false while element skips its body, preserving
     // unrelated entry snapshots while its preheader initializes the control.
@@ -3724,6 +4366,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i; real r; r := 42.0; for i := 1 while false do r := 1.5; output(r, i + 0.5) end",
         expect: Expect::Stdout("421.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — static bounds prove exactly one body execution, which
     // establishes a real constant independently of incoming snapshots.
@@ -3733,6 +4377,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i; real r; for i := 1 step 1 until 1 do r := 6.25; print(r) end",
         expect: Expect::Stdout("6.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a finite integer step loop whose body avoids the controlled
     // scalar leaves it at the first value beyond the limit.
@@ -3742,6 +4388,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i; for i := 1 step 1 until 3 do print(''); print(i + 2.25) end",
         expect: Expect::Stdout("6.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — bounded simulation mirrors each emitted f64 addition and
     // retains the first real control value beyond the limit.
@@ -3751,6 +4399,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real x; for x := 1.0 step 0.5 until 2.0 do print(''); print(x + 0.25) end",
         expect: Expect::Stdout("2.75"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — each finite iteration establishes the same body constant
     // independently of the controlled scalar.
@@ -3760,6 +4410,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i; real r; for i := 1 step 1 until 3 do r := 6.25; print(r) end",
         expect: Expect::Stdout("6.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — bounded step analysis evaluates one simple scalar assignment
     // at the final in-range control value, retaining a formatter-free result.
@@ -3769,6 +4421,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i; real r; for i := 1 step 1 until 3 do r := i + 0.25; print(r) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — bounded step analysis simulates a simple scalar recurrence
     // once per iteration, retaining its exact final formatter-free value.
@@ -3778,6 +4432,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i; real r; r := 0.25; for i := 1 step 1 until 3 do r := r + i; print(r) end",
         expect: Expect::Stdout("6.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — the exact single-assignment extractor also recognizes a
     // recurrence wrapped in one compound statement.
@@ -3787,6 +4443,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i; real r; boolean flag; flag := false; for i := 1 step 1 until 3 do begin flag := not flag end; if flag then r := 42.0 else r := 0.5; print(r) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an exact step recurrence remains analyzable when every
     // additional compound-body statement is an inert local scalar assignment.
@@ -3796,6 +4454,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, pad, hold; real r; boolean flag; pad := 7; hold := 9; flag := false; for i := 1 step 1 until 3 do begin pad := pad; flag := not flag; hold := hold end; if flag then r := 42.0 else r := 0.5; print(r) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — bounded while analysis applies one simple scalar recurrence
     // after every true predicate and retains its exact formatter-free result.
@@ -3805,6 +4465,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i; real r; i := 0; r := 0.25; for i := i + 1 while i <= 3 do r := r + i; print(r) end",
         expect: Expect::Stdout("6.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — bounded while analysis also carries one local boolean
     // recurrence to the exact final snapshot used by formatter-free output.
@@ -3814,6 +4476,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i; real r; boolean flag; i := 0; flag := false; for i := i + 1 while i <= 3 do flag := flag eqv false; if flag then r := 42.0 else r := 0.5; print(r) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — unary boolean wrappers must reach static negation rather
     // than being mistaken for a bare-variable identity read.
@@ -3823,6 +4487,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i; real r; boolean flag; i := 0; flag := false; for i := i + 1 while i <= 3 do flag := not flag; if flag then r := 42.0 else r := 0.5; print(r) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a sole recurrence assignment may retain its snapshot through
     // an otherwise effect-free compound-statement wrapper.
@@ -3832,6 +4498,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i; real r; boolean flag; i := 0; flag := false; for i := i + 1 while i <= 3 do begin flag := not flag end; if flag then r := 42.0 else r := 0.5; print(r) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an exact while recurrence remains analyzable when every
     // additional compound-body statement is an inert local scalar assignment.
@@ -3841,6 +4509,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, pad, hold; real r; boolean flag; i := 0; pad := 7; hold := 9; flag := false; for i := i + 1 while i <= 3 do begin pad := pad; flag := not flag; hold := hold end; if flag then r := 42.0 else r := 0.5; print(r) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — existing exact scalar identity proofs may establish inert
     // siblings around one changing recurrence in both bounded loop forms.
@@ -3850,6 +4520,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, pad; real hold, r; boolean stepflag, whileflag, ready; pad := 7; hold := 9.0; ready := true; stepflag := false; for i := 1 step 1 until 3 do begin pad := 0 + pad; stepflag := not stepflag; hold := hold * 1.0; ready := ready and true end; if stepflag then r := 42.0 else r := 0.5; print(r); i := 0; whileflag := false; for i := i + 1 while i <= 3 do begin ready := true and ready; whileflag := not whileflag; pad := pad * 1; hold := 1.0 * hold end; if whileflag then r := 42.0 else r := 0.5; print(r) end",
         expect: Expect::Stdout("4242"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a statically nonempty while element may have a dynamic trip
     // count while still establishing the same control-independent body value.
@@ -3859,6 +4531,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i; real r; i := 0; for i := i + 1 while i < 3 do r := 6.25; print(r) end",
         expect: Expect::Stdout("6.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — capped abstract execution retains the first control value
     // whose while predicate applies an exact standard function to a stable
@@ -3869,6 +4543,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n; n := -3; i := 0; for i := i + 1 while i < abs(n) do if n = -3 then print(''); print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — capped abstract execution mirrors each emitted binary64
     // update and retains the first real control value whose predicate is false.
@@ -3878,6 +4554,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real x; x := 0.0; for x := x + 0.5 while x < 2.0 do print(''); print(x + 0.25) end",
         expect: Expect::Stdout("2.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — bounded while-control simulation applies a statically
     // selected control update in the body before evaluating the next element.
@@ -3887,6 +4565,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i; real x; i := 0; for i := i + 1 while i <= 10 do if i < 4 then i := i * 2 else i := i + 3; print(i + 0.25); x := 0.5; for x := x + 0.5 while x <= 10.0 do if x < 4.0 then x := x * 2.0 else x := x + 3.0; print(x) end",
         expect: Expect::Stdout("11.2512.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a bounded while-control recurrence and another local scalar
     // recurrence advance together while retaining both terminating snapshots.
@@ -3896,6 +4576,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, total; i := 0; total := 0; for i := i + 1 while i <= 10 do begin total := total + i * 2; if i < 4 then i := i * 2 else i := i + 3 end; print(i + 0.25); print(total + 0.5) end",
         expect: Expect::Stdout("11.2522.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a bounded while loop may evolve a supported local scalar
     // used by its next control predicate while retaining every exact snapshot.
@@ -3905,6 +4587,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n; real r; i := 0; n := 3; r := 0.25; for i := i + 1 while i <= n do begin r := r + i; n := n - 1 end; print(i + 0.25); print(n + 0.5); print(r) end",
         expect: Expect::Stdout("3.251.53.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — the changing while dependency may consume an unchanged
     // ordinary local scalar while capped execution retains exact snapshots.
@@ -3914,6 +4598,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, delta; real r; i := 0; n := 5; delta := 2; r := 0.25; for i := i + 1 while i <= n do begin r := r + i; n := n - delta end; print(i + 0.25); print(n + 0.5); print(r) end",
         expect: Expect::Stdout("3.251.53.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a changing while dependency may consume another changing
     // local recurrence when their dependency graph is acyclic.
@@ -3923,6 +4609,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, delta; real r; i := 0; n := 5; delta := 1; r := 0.25; for i := i + 1 while i <= n do begin r := r + i; n := n - delta; delta := delta + 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25); print(r) end",
         expect: Expect::Stdout("3.252.53.253.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — changing acyclic dependency recurrences may use conditional
     // expressions whose selectors also evolve through exact local snapshots.
@@ -3932,6 +4620,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit, choose; boolean other; i := 0; n := 3; limit := 3; choose := 1; other := true; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := not other end; print(i + 0.25); print(n + 0.5); print(limit + 0.25); print(choose + 0.25) end",
         expect: Expect::Stdout("3.253.53.250.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a changing exact selector may choose a supported recurrence
     // statement on some bounded passes and leave the dependency unchanged on others.
@@ -3941,6 +4631,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n; boolean guard; real r; i := 0; n := 4; guard := true; r := 0.25; for i := i + 1 while i <= n do begin r := r + i; if guard then n := n - 1; guard := not guard end; print(i + 0.25); print(n + 0.5); print(r) end",
         expect: Expect::Stdout("4.252.56.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — capped while analysis applies repeated writes to one changing
     // dependency in source order before evaluating the next control predicate.
@@ -3950,6 +4642,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n; real r; i := 0; n := 6; r := 0.25; for i := i + 1 while i <= n do begin n := n - 1; n := n - 1; r := r + i end; print(i + 0.25); print(n + 0.5); print(r) end",
         expect: Expect::Stdout("3.252.53.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — capped while analysis evaluates a cycle of cross-assigned
     // local dependencies in source order and retains every exact snapshot.
@@ -3959,6 +4653,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, delta; i := 0; n := 4; delta := 2; for i := i + 1 while i <= n do begin n := n - delta; delta := n end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
         expect: Expect::Stdout("3.250.50.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a cross-assigned cycle may contain a conditional expression
     // when its selector depends solely on the exact loop-control snapshot.
@@ -3968,6 +4664,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, delta; i := 0; n := 4; delta := 2; for i := i + 1 while i <= n do begin n := n - delta; delta := if i < 2 then n else n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
         expect: Expect::Stdout("3.250.5-0.75"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an unchanged exact ordinary local may select a conditional
     // expression inside a cross-assigned recurrence cycle.
@@ -3977,6 +4675,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, delta; boolean choose; i := 0; n := 4; delta := 2; choose := false; for i := i + 1 while i <= n do begin n := n - delta; delta := if choose then n else n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
         expect: Expect::Stdout("3.251.50.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an unchanged exact ordinary local may select statement
     // branches containing the writes in a cross-assigned recurrence cycle.
@@ -3986,6 +4686,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, delta; boolean choose; i := 0; n := 4; delta := 2; choose := false; for i := i + 1 while i <= n do begin n := n - delta; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
         expect: Expect::Stdout("3.251.50.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a supported exact recurrence may evolve a statement selector
     // while capped source-order execution tracks its selected dependency cycle.
@@ -3995,6 +4697,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, delta; boolean choose; i := 0; n := 4; delta := 2; choose := true; for i := i + 1 while i <= n do begin n := n - delta; choose := i < 2; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
         expect: Expect::Stdout("3.250.5-0.75"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an exact recursive boolean recurrence may evolve a statement
     // selector while capped execution tracks the selected dependency cycle.
@@ -4004,6 +4708,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, delta; boolean choose; i := 0; n := 4; delta := 2; choose := true; for i := i + 1 while i <= n do begin n := n - delta; choose := not choose; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
         expect: Expect::Stdout("3.251.51.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a conditional expression may preserve an exact direct
     // self-recursive selector while source-order execution tracks its cycle.
@@ -4013,6 +4719,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, delta; boolean choose, flag; i := 0; n := 4; delta := 2; choose := true; flag := true; for i := i + 1 while i <= n do begin n := n - delta; choose := if flag then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
         expect: Expect::Stdout("3.251.51.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a selector that changes during capped execution may choose
     // different leaves when every leaf retains the direct recurrence edge.
@@ -4022,6 +4730,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, delta; boolean choose, flag; i := 0; n := 4; delta := 2; choose := true; flag := true; for i := i + 1 while i <= n do begin n := n - delta; flag := i < 2; choose := if flag then not choose else choose; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
         expect: Expect::Stdout("3.251.50.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a conditional boolean recurrence may remain acyclic while
     // selecting different recurrence-cycle statements on successive passes.
@@ -4031,6 +4741,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, delta; boolean choose; i := 0; n := 4; delta := 2; choose := true; for i := i + 1 while i <= n do begin n := n - delta; choose := if i < 2 then true else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
         expect: Expect::Stdout("3.250.5-0.75"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an exact evolving selector may choose a self-recursive leaf
     // on one pass and a non-recursive exact leaf on another pass.
@@ -4040,6 +4752,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, delta; boolean choose, flag; i := 0; n := 4; delta := 2; choose := true; flag := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; choose := if flag then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
         expect: Expect::Stdout("3.251.50.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — one exact acyclic copy may forward an evolving selector to
     // the partial self-recursive boolean recurrence.
@@ -4049,6 +4763,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag; choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
         expect: Expect::Stdout("3.251.50.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — two exact acyclic copies may forward an evolving selector
     // to the partial self-recursive boolean recurrence.
@@ -4058,6 +4774,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, delta; boolean choose, flag, gate, key; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; key := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag; key := gate; choose := if key then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
         expect: Expect::Stdout("3.251.50.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — any finite acyclic chain of exact copies may forward an
     // evolving selector to the partial self-recursive boolean recurrence.
@@ -4067,6 +4785,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, delta; boolean choose, flag, gate, key, last; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; key := true; last := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag; key := gate; last := key; choose := if last then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
         expect: Expect::Stdout("3.251.50.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — established boolean identities may forward an evolving
     // selector through an acyclic copy chain to partial self-recursion.
@@ -4076,6 +4796,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, delta; boolean choose, flag, gate, key; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; key := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag and true; key := not not gate; choose := if key then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
         expect: Expect::Stdout("3.251.50.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a dynamic conditional may forward a selector when both
     // branches are established identities of that unique dependency.
@@ -4085,6 +4807,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, delta; boolean choose, flag, gate, other; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; other := false; for i := i + 1 while i <= n do begin n := n - delta; other := not other; flag := if i < 2 then true else false; gate := if other then flag and true else not not flag; choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
         expect: Expect::Stdout("3.251.50.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a boolean conditional projection is an exact copy of its
     // selector and may forward an evolving selector to partial self-recursion.
@@ -4094,6 +4818,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := if flag then true else false; choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
         expect: Expect::Stdout("3.251.50.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a complemented boolean conditional projection is an exact
     // copy of its selector and may forward it to partial self-recursion.
@@ -4103,6 +4829,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := if not flag then false else true; choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
         expect: Expect::Stdout("3.251.50.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a one-sided guarded projection is an exact selector copy
     // when its other branch preserves that selector directly.
@@ -4112,6 +4840,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := if flag then flag else false; choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
         expect: Expect::Stdout("3.251.50.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — literal-only boolean expressions may supply a neutral
     // identity operand and the constants of an exact selector projection.
@@ -4121,6 +4851,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, delta; boolean choose, flag, gate, key; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; key := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag and (false impl true); key := if gate then (false or true) eqv not false else true and false; choose := if key then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
         expect: Expect::Stdout("3.251.50.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — literal integer predicates may supply a neutral operand of
     // an exact selector identity.
@@ -4130,6 +4862,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag and (1 < 2); choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
         expect: Expect::Stdout("3.251.50.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — checked literal integer arithmetic may form the neutral
     // predicate operand of an exact selector identity.
@@ -4139,6 +4873,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag and (1 + 2 < 4); choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
         expect: Expect::Stdout("3.251.50.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — finite literal real arithmetic may form the neutral
     // predicate operand of an exact selector identity.
@@ -4148,6 +4884,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag and (1.5 + 0.5 < 3.0); choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
         expect: Expect::Stdout("3.251.50.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — literal strings may form the neutral predicate operand of an
     // exact selector identity without introducing dynamic string state.
@@ -4157,6 +4895,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag and ('ALPHA' < 'BETA'); choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
         expect: Expect::Stdout("3.251.50.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a variable-free literal string predicate may select a
     // statement branch while capped execution tracks the recurrence cycle.
@@ -4166,6 +4906,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, delta; i := 0; n := 4; delta := 2; for i := i + 1 while i <= n do begin n := n - delta; if 'ALPHA' < 'BETA' then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
         expect: Expect::Stdout("3.250.50.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a variable-free literal string predicate may select an
     // expression branch while capped execution tracks the recurrence cycle.
@@ -4175,6 +4917,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, delta; i := 0; n := 4; delta := 2; for i := i + 1 while i <= n do begin n := n - delta; delta := if 'ALPHA' < 'BETA' then n else n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
         expect: Expect::Stdout("3.250.50.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — exact cross-assigned boolean recurrences may evolve a
     // statement selector while source-order execution tracks both cycles.
@@ -4184,6 +4928,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, delta; boolean choose, guard; i := 0; n := 4; delta := 2; choose := true; guard := false; for i := i + 1 while i <= n do begin n := n - delta; choose := guard; guard := not choose; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
         expect: Expect::Stdout("3.251.51.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a conditional expression may evolve one exact selector in
     // a mutually recursive graph while source-order execution tracks both cycles.
@@ -4193,6 +4939,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, delta; boolean choose, guard; i := 0; n := 4; delta := 2; choose := true; guard := false; for i := i + 1 while i <= n do begin n := n - delta; choose := if guard then not choose else guard; guard := not choose; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
         expect: Expect::Stdout("3.251.51.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     Prog {
         lang: Language::Algol60,
@@ -4200,6 +4948,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, delta; boolean choose, guard; i := 0; n := 4; delta := 2; choose := true; guard := false; for i := i + 1 while i <= n do begin n := n - delta; if guard then choose := not choose else choose := guard; guard := not choose; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
         expect: Expect::Stdout("3.251.51.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — statement control may close an exact selector cycle even
     // when each selected boolean write contains its own exact conditional.
@@ -4209,6 +4959,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, delta; boolean choose, guard, flag; i := 0; n := 4; delta := 2; choose := true; guard := false; flag := true; for i := i + 1 while i <= n do begin n := n - delta; if guard then choose := if flag then true else false else choose := if flag then false else true; guard := not choose; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
         expect: Expect::Stdout("3.251.51.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an exact scalar self-assignment is an idempotent body write,
     // so the stable local while dependency remains available to the proof.
@@ -4218,6 +4970,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n; n := 3; i := 0; for i := i + 1 while i < n do n := n; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a self-only static expression that equals the tracked entry
     // value is idempotent on every iteration of capped while analysis.
@@ -4227,6 +4981,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n; n := 3; i := 0; for i := i + 1 while i < n do n := n + 0; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an unwritten local dependency may prove that a static
     // assignment exactly preserves the tracked while dependency.
@@ -4236,6 +4992,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit; n := 3; limit := 3; i := 0; for i := i + 1 while i < n do n := limit; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an exact self-assignment also leaves a transitive dependency
     // stable while a checked assignment proves the predicate scalar unchanged.
@@ -4245,6 +5003,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit; n := 3; limit := 3; i := 0; for i := i + 1 while i < n do begin n := limit; limit := limit end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a complete integer identity also leaves a transitive value
     // dependency stable without recursive effect inference.
@@ -4254,6 +5014,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit; n := 3; limit := 3; i := 0; for i := i + 1 while i < n do begin n := limit; limit := 0 + limit * 1 div 1 - 0 end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a real dependency makes the while comparison mixed numeric;
     // the tracked integer side widens only while it remains exact in binary64.
@@ -4263,6 +5025,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i; real n, limit; n := 3.0; limit := 3.0; i := 0; for i := i + 1 while i < n do begin n := limit; limit := limit end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - a real assignment target supplies the widening context for
     // an exact tracked integer. The widened value remains available through a
@@ -4273,6 +5037,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, limit; real n; limit := 3; n := limit + 0; i := 0; for i := i + 1 while i < n do begin n := limit + 0; limit := limit end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — equal conditional self-assignment leaves also preserve a
     // transitive dependency without evaluating their dynamic selector.
@@ -4282,6 +5048,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit; boolean choose; n := 3; limit := 3; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose then limit else limit end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a variable-free static selector may discard a changing leaf
     // while preserving a transitive dependency through the selected leaf.
@@ -4291,6 +5059,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit; n := 3; limit := 3; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if true then limit else n end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a variable-free literal string predicate may discard a
     // changing leaf while preserving a transitive recurrence dependency.
@@ -4300,6 +5070,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit; n := 3; limit := 3; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if 'ALPHA' < 'BETA' then limit else limit + 1 end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an unchanged known local selector may discard a changing
     // leaf while preserving a transitive dependency through the selected leaf.
@@ -4309,6 +5081,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit; boolean choose; n := 3; limit := 3; choose := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose then limit else n end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an exact scalar self-assignment leaves a known selector
     // stable while it chooses the preserving transitive dependency leaf.
@@ -4318,6 +5092,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit; boolean choose; n := 3; limit := 3; choose := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose then limit else limit + 1; choose := choose end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — equal bare-self conditional leaves leave a known selector
     // stable even when their selector is dynamic.
@@ -4327,6 +5103,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit; boolean choose, other; n := 3; limit := 3; choose := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose then limit else limit + 1; choose := if other then choose else choose end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a variable-free static conditional assignment selector may
     // discard a changing leaf while leaving a known selector stable.
@@ -4336,6 +5114,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit; boolean choose; n := 3; limit := 3; choose := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose then limit else limit + 1; choose := if true then choose else false end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a variable-free literal string predicate may discard a
     // changing leaf while leaving a known recurrence selector stable.
@@ -4345,6 +5125,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit; boolean choose; n := 3; limit := 3; choose := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose then limit else limit + 1; choose := if 'ALPHA' < 'BETA' then choose else false end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an unchanged known scalar may select the preserving leaf of
     // a conditional assignment to the known transitive selector.
@@ -4354,6 +5136,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit, choose; boolean other; n := 3; limit := 3; choose := 1; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0 end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an exact self-assignment leaves a known conditional-selector
     // dependency stable while its predicate selects the preserving leaf.
@@ -4363,6 +5147,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit, choose; boolean other; n := 3; limit := 3; choose := 1; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := other end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — equal bare-self conditional leaves preserve a known
     // conditional-selector dependency even when their selector is dynamic.
@@ -4372,6 +5158,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit, choose; boolean other, flag; n := 3; limit := 3; choose := 1; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else other end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an unchanged known scalar may select the preserving leaf of
     // a conditional assignment to a conditional-selector dependency.
@@ -4381,6 +5169,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit, choose; boolean other, flag; n := 3; limit := 3; choose := 1; other := true; flag := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := flag end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a second unchanged known selector may preserve the next
     // dependency in the bounded conditional-selector chain.
@@ -4390,6 +5180,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit, choose; boolean other, flag, gate; n := 3; limit := 3; choose := 1; other := true; flag := true; gate := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := if gate then flag else false; gate := gate end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a third unchanged known selector may preserve the next
     // dependency while the analysis remains explicitly depth-bounded.
@@ -4399,6 +5191,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit, choose; boolean other, flag, gate, key; n := 3; limit := 3; choose := 1; other := true; flag := true; gate := true; key := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := if gate then flag else false; gate := if key then gate else false; key := key end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a fourth unchanged known selector may preserve the next
     // dependency while the analysis remains explicitly depth-bounded.
@@ -4408,6 +5202,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit, choose; boolean other, flag, gate, key, last; n := 3; limit := 3; choose := 1; other := true; flag := true; gate := true; key := true; last := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := if gate then flag else false; gate := if key then gate else false; key := if last then key else false; last := last end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a fifth unchanged known selector may preserve the next
     // dependency while the analysis remains explicitly depth-bounded.
@@ -4417,6 +5213,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit, choose; boolean other, flag, gate, key, last, final; n := 3; limit := 3; choose := 1; other := true; flag := true; gate := true; key := true; last := true; final := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := if gate then flag else false; gate := if key then gate else false; key := if last then key else false; last := if final then last else false; final := final end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a sixth unchanged known selector may preserve the next
     // dependency while the analysis remains explicitly depth-bounded.
@@ -4426,6 +5224,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit, choose; boolean other, flag, gate, key, last, final, ultimate; n := 3; limit := 3; choose := 1; other := true; flag := true; gate := true; key := true; last := true; final := true; ultimate := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := if gate then flag else false; gate := if key then gate else false; key := if last then key else false; last := if final then last else false; final := if ultimate then final else false; ultimate := ultimate end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a seventh unchanged known selector may preserve the next
     // dependency while the analysis remains explicitly depth-bounded.
@@ -4435,6 +5235,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit, choose; boolean other, flag, gate, key, last, final, ultimate, terminal; n := 3; limit := 3; choose := 1; other := true; flag := true; gate := true; key := true; last := true; final := true; ultimate := true; terminal := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := if gate then flag else false; gate := if key then gate else false; key := if last then key else false; last := if final then last else false; final := if ultimate then final else false; ultimate := if terminal then ultimate else false; terminal := terminal end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an eighth unchanged known selector may preserve the next
     // dependency while the analysis remains explicitly depth-bounded.
@@ -4444,6 +5246,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit, choose; boolean other, flag, gate, key, last, final, ultimate, terminal, horizon; n := 3; limit := 3; choose := 1; other := true; flag := true; gate := true; key := true; last := true; final := true; ultimate := true; terminal := true; horizon := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := if gate then flag else false; gate := if key then gate else false; key := if last then key else false; last := if final then last else false; final := if ultimate then final else false; ultimate := if terminal then ultimate else false; terminal := if horizon then terminal else false; horizon := horizon end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a ninth unchanged known selector may preserve the next
     // dependency while the analysis remains explicitly depth-bounded.
@@ -4453,6 +5257,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit, choose; boolean other, flag, gate, key, last, final, ultimate, terminal, horizon, frontier; n := 3; limit := 3; choose := 1; other := true; flag := true; gate := true; key := true; last := true; final := true; ultimate := true; terminal := true; horizon := true; frontier := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := if gate then flag else false; gate := if key then gate else false; key := if last then key else false; last := if final then last else false; final := if ultimate then final else false; ultimate := if terminal then ultimate else false; terminal := if horizon then terminal else false; horizon := if frontier then horizon else false; frontier := frontier end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a tenth unchanged known selector may preserve the next
     // dependency while the analysis remains explicitly depth-bounded.
@@ -4462,6 +5268,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit, choose; boolean other, flag, gate, key, last, final, ultimate, terminal, horizon, frontier, boundary; n := 3; limit := 3; choose := 1; other := true; flag := true; gate := true; key := true; last := true; final := true; ultimate := true; terminal := true; horizon := true; frontier := true; boundary := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := if gate then flag else false; gate := if key then gate else false; key := if last then key else false; last := if final then last else false; final := if ultimate then final else false; ultimate := if terminal then ultimate else false; terminal := if horizon then terminal else false; horizon := if frontier then horizon else false; frontier := if boundary then frontier else false; boundary := boundary end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a computed boolean identity write cannot change the selector,
     // so its transitive dependency remains stable during bounded loop analysis.
@@ -4471,6 +5279,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit, choose; boolean other, flag; n := 3; limit := 3; choose := 1; other := true; flag := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := flag and true end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a computed integer identity write cannot change the selector,
     // so its transitive dependency remains stable during bounded loop analysis.
@@ -4480,6 +5290,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit, choose; boolean other; n := 3; limit := 3; choose := 1; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := other; choose := choose + 0 end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — multiplication by exact positive one preserves a finite real
     // selector without invoking the unsound additive-zero identity.
@@ -4489,6 +5301,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := choose * 1.0 end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — subtracting positive zero preserves every finite real,
     // including negative zero, so a selector dependency remains stable.
@@ -4498,6 +5312,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := choose - 0.0 end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — adding negative real zero is the sign-symmetric exact
     // identity, so this selector dependency also remains stable.
@@ -4507,6 +5323,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := choose + (-0.0) end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a grouped literal-only subtraction can produce exact
     // positive zero, which remains safe on the subtractive identity path.
@@ -4516,6 +5334,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := choose - ((-0.0) - (-0.0)) end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — exact positive units preserve a finite-real selector as a chain.
     Prog {
@@ -4524,6 +5344,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := 1.0 * choose * 1.0 / 1.0 end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an even pair of exact negative-unit operations preserves a
     // finite-real selector, including the sign bit of zero.
@@ -4533,6 +5355,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := (-1.0) * choose / (-1.0) end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — grouped literal-only signed-unit expressions retain exact
     // parity and can therefore serve as a finite-real identity operand.
@@ -4542,6 +5366,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := choose * ((-1.0) * (-1.0)) end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a negative unit raised to an even literal power is an exact
     // positive unit and therefore preserves a finite-real selector.
@@ -4551,6 +5377,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := choose * ((-1.0) ^ 2) end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an even positive power of negative zero is exact positive
     // zero and therefore preserves a finite-real selector under subtraction.
@@ -4560,6 +5388,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := choose - ((-0.0) ^ 2) end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — the bounded unrolled power path returns exact positive one
     // for a literal base with a complete zero exponent chain.
@@ -4569,6 +5399,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := choose * (2.0 ^ 0) end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a finite literal-only arithmetic base is still pure, so the
     // bounded zero-exponent path returns an exact positive unit.
@@ -4578,6 +5410,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := choose * ((2.0 + 3.0) ^ 0) end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an integral real-literal exponent chain may also evaluate to
     // zero while its finite literal-only base remains pure.
@@ -4587,6 +5421,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := choose * ((2.0 + 3.0) ^ 0.0) end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — two unary negations preserve a boolean selector exactly.
     Prog {
@@ -4595,6 +5431,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit, choose; boolean other, flag; n := 3; limit := 3; choose := 1; other := true; flag := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := not not flag end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — repeated `and true` preserves a boolean selector exactly.
     Prog {
@@ -4603,6 +5441,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit, choose; boolean other, flag; n := 3; limit := 3; choose := 1; other := true; flag := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := true and flag and true end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — neutral integer operations preserve a selector as a chain.
     Prog {
@@ -4611,6 +5451,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit, choose; boolean other; n := 3; limit := 3; choose := 1; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := other; choose := 0 + choose * 1 div 1 - 0 end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a literal exponent chain equal to one lowers to its base.
     Prog {
@@ -4619,6 +5461,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit, choose; boolean other; n := 3; limit := 3; choose := 1; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := other; choose := choose ^ 1 ^ 1 end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — checked integer arithmetic exponent operands retain the
     // bounded integer power path and preserve an integer selector exactly.
@@ -4628,6 +5472,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit, choose; boolean other; n := 3; limit := 3; choose := 1; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := other; choose := choose ^ ((6 div 3) - 1) end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — checked exponent arithmetic recurses through bounded power
     // operands while preserving the integer selector and result type.
@@ -4637,6 +5483,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit, choose; boolean other; n := 3; limit := 3; choose := 1; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := other; choose := choose ^ ((2 ^ (2 - 1)) div 2) end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a bounded integral real-literal exponent chain equal to one
     // preserves a finite-real selector on the runtime power path.
@@ -4646,6 +5494,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := choose ^ 1.0 ^ 1 end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a variable-free literal arithmetic exponent equal to one
     // preserves a finite-real selector on the runtime power path.
@@ -4655,6 +5505,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := choose ^ (2.0 - 1.0) end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — checked integer literal arithmetic may also produce the
     // exact unit exponent for a finite-real selector.
@@ -4664,6 +5516,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit; real choose; boolean other; n := 3; limit := 3; choose := 1.0; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1.0 then limit else limit + 1; choose := if other then choose else 0.0; other := other; choose := choose ^ (2 - 1) end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — leading unary plus is an exact no-op before an identity tail.
     Prog {
@@ -4672,6 +5526,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit, choose; boolean other; n := 3; limit := 3; choose := 1; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := other; choose := +choose + 0 end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — parentheses preserve exact self-references and neutral literals.
     Prog {
@@ -4680,6 +5536,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit, choose; boolean other; n := 3; limit := 3; choose := 1; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := other; choose := (0) + (choose) + (0) end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — signed neutral literals retain their exact identity values.
     Prog {
@@ -4688,6 +5546,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit, choose; boolean other; n := 3; limit := 3; choose := 1; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := other; choose := (+0) + choose * (+1) div (+1) - (-0) end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — complete identity expressions remain stable through grouping.
     Prog {
@@ -4696,6 +5556,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit, choose; boolean other; n := 3; limit := 3; choose := 1; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := other; choose := ((0 + choose + 0)) end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — unconditional identity leaves do not consume an extra
     // selector-dependency level at the bounded proof cap.
@@ -4705,6 +5567,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, limit, choose; boolean other, flag, gate, key, last, final, ultimate, terminal, horizon, frontier, boundary, threshold; n := 3; limit := 3; choose := 1; other := true; flag := true; gate := true; key := true; last := true; final := true; ultimate := true; terminal := true; horizon := true; frontier := true; boundary := true; threshold := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := if gate then flag else false; gate := if key then gate else false; key := if last then key else false; last := if final then last else false; final := if ultimate then final else false; ultimate := if terminal then ultimate else false; terminal := if horizon then terminal else false; horizon := if frontier then horizon else false; frontier := if boundary then frontier else false; boundary := if threshold then boundary and true else false or boundary end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an ordinary procedure-call selector may choose bare,
     // unaliased local runtime-real snapshots without exposing mutation.
@@ -4714,6 +5578,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := 2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then left else right; output(result) end",
         expect: Expect::Stdout("3.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — unary signs preserve unaliased local runtime-real snapshots
     // across an ordinary procedure-call selector.
@@ -4723,6 +5589,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then -left else +right; output(result) end",
         expect: Expect::Stdout("3.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — additive finite-static transforms preserve an unaliased
     // local runtime-real root across an ordinary procedure-call selector.
@@ -4732,6 +5600,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := 2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then left + 1.0 else right - 0.25; output(result) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — multiplicative finite-static transforms preserve an unaliased
     // local runtime-real root across an ordinary procedure-call selector.
@@ -4741,6 +5611,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := 2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then left * 2.0 else 14.0 / right; output(result) end",
         expect: Expect::Stdout("4"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — finite-static powers preserve an unaliased local runtime-real
     // root across an ordinary procedure-call selector.
@@ -4750,6 +5622,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := 2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then left ^ 2 else right ^ 1; output(result) end",
         expect: Expect::Stdout("3.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 -- pure standard functions preserve an unaliased local
     // runtime-real root across an ordinary procedure-call selector.
@@ -4759,6 +5633,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 12.25; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then abs(left) else sqrt(right); output(result) end",
         expect: Expect::Stdout("3.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - a procedure-call selector may choose exact entier(sign(...))
     // transforms rooted in unaliased local runtime-real snapshots.
@@ -4768,6 +5644,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then entier(sign(left)) else entier(sign(right)); output(result) end",
         expect: Expect::Stdout("1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - a procedure-call selector may carry exact local-rooted
     // runtime-real transforms through a specialised real name formal.
@@ -4777,6 +5655,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(sign(left))) else relay(entier(sign(right))); output(result) end",
         expect: Expect::Stdout("1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - exact local-rooted name actuals retain their proof through
     // unary signs.
@@ -4786,6 +5666,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(-entier(sign(left))) else relay(+entier(sign(right))); output(result) end",
         expect: Expect::Stdout("1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - signed exact local-rooted name actuals retain their proof
     // through additive composition with finite static terms.
@@ -4795,6 +5677,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(-entier(sign(left)) + 2.0) else relay(+entier(sign(right)) - 0.0); output(result) end",
         expect: Expect::Stdout("1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - additive exact local-rooted name actuals retain their proof
     // through multiplication or division by finite static terms.
@@ -4804,6 +5688,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay((-entier(sign(left)) + 2.0) * 3.0) else relay((+entier(sign(right)) - 0.0) / 1.0); output(result) end",
         expect: Expect::Stdout("1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - multiplicative exact local-rooted name actuals retain their
     // proof as the sole dynamic base of a finite static power chain.
@@ -4813,6 +5699,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(((-entier(sign(left)) + 2.0) * 3.0) ^ 2) else relay(((+entier(sign(right)) - 0.0) / 1.0) ^ 1); output(result) end",
         expect: Expect::Stdout("1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - a supported built-in real transform preserves the exact
     // powered local-rooted name-actual proof.
@@ -4822,6 +5710,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2)) else relay(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1)); output(result) end",
         expect: Expect::Stdout("1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - exactly two supported built-in real transforms preserve the
     // powered local-rooted name-actual proof.
@@ -4831,6 +5721,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(sqrt(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2))) else relay(sqrt(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1))); output(result) end",
         expect: Expect::Stdout("1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - exactly three supported built-in real transforms preserve the
     // powered local-rooted name-actual proof.
@@ -4840,6 +5732,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(abs(sqrt(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2)))) else relay(abs(sqrt(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1)))); output(result) end",
         expect: Expect::Stdout("1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - exactly four supported built-in real transforms preserve the
     // powered local-rooted name-actual proof.
@@ -4849,6 +5743,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(abs(abs(sqrt(abs(((-entier(sign(left)) + 2.0) * 3.0) ^ 2))))) else relay(abs(abs(sqrt(abs(((+entier(sign(right)) - 0.0) / 1.0) ^ 1))))); output(result) end",
         expect: Expect::Stdout("1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - exactly five supported built-in real transforms preserve the
     // exact local-rooted name-actual proof.
@@ -4858,6 +5754,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(abs(abs(abs(abs(abs(entier(sign(left)))))))) else relay(abs(abs(abs(abs(abs(entier(sign(right)))))))); output(result) end",
         expect: Expect::Stdout("1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - exactly six supported built-in real transforms preserve the
     // exact local-rooted name-actual proof.
@@ -4867,6 +5765,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(abs(abs(abs(abs(abs(abs(entier(sign(left))))))))) else relay(abs(abs(abs(abs(abs(abs(entier(sign(right))))))))); output(result) end",
         expect: Expect::Stdout("1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - integer-valued sign may wrap an exact local-rooted name
     // actual while retaining the bounded formatter proof.
@@ -4876,6 +5776,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(sign(entier(sign(left)))) else relay(sign(entier(sign(right)))); output(result) end",
         expect: Expect::Stdout("1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - integer-valued entier may wrap an already exact bounded
     // entier-sign local name actual without widening the accepted root.
@@ -4885,6 +5787,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)))) else relay(entier(entier(sign(right)))); output(result) end",
         expect: Expect::Stdout("1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - outer entier may consume a supported bounded transform rooted
     // in sign without admitting an unrestricted runtime entier operand.
@@ -4894,6 +5798,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(abs(entier(sign(left))))) else relay(entier(abs(entier(sign(right))))); output(result) end",
         expect: Expect::Stdout("1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - one exact additive unit offset keeps a sign-rooted name
     // actual within a small finite range before the outer entier.
@@ -4903,6 +5809,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 1)) else relay(entier(entier(sign(right)) + 1)); output(result) end",
         expect: Expect::Stdout("2"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the unit-offset cap is path-sensitive: each runtime-selected
     // branch may carry one offset without adding the two mutually exclusive paths.
@@ -4912,6 +5820,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 1) else (entier(sign(right)) + 1))); output(result) end",
         expect: Expect::Stdout("2"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts two units on each
     // runtime-selected path, represented either as one exact 2 or nested units.
@@ -4921,6 +5831,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 2) else ((entier(sign(right)) + 1) + 1))); output(result) end",
         expect: Expect::Stdout("3"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts three units on each
     // runtime-selected path as one exact 3 or a nested exact 1+2 sum.
@@ -4930,6 +5842,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 3) else ((entier(sign(right)) + 1) + 2))); output(result) end",
         expect: Expect::Stdout("4"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts four units on each
     // runtime-selected path as one exact 4 or a nested exact 1+3 sum.
@@ -4939,6 +5853,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 4) else ((entier(sign(right)) + 1) + 3))); output(result) end",
         expect: Expect::Stdout("5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts five units on each
     // runtime-selected path as one exact 5 or a nested exact 2+3 sum.
@@ -4948,6 +5864,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 5) else ((entier(sign(right)) + 2) + 3))); output(result) end",
         expect: Expect::Stdout("6"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts six units on each
     // runtime-selected path as one exact 6 or a nested exact 1+5 sum.
@@ -4957,6 +5875,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 6) else ((entier(sign(right)) + 1) + 5))); output(result) end",
         expect: Expect::Stdout("7"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts seven units on each
     // runtime-selected path as one exact 7 or a nested exact 2+5 sum.
@@ -4966,6 +5886,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 7) else ((entier(sign(right)) + 2) + 5))); output(result) end",
         expect: Expect::Stdout("8"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts eight units on each
     // runtime-selected path as one exact 8 or a nested exact 3+5 sum.
@@ -4975,6 +5897,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 8) else ((entier(sign(right)) + 3) + 5))); output(result) end",
         expect: Expect::Stdout("9"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts nine units on each
     // runtime-selected path as one exact 9 or a nested exact 4+5 sum.
@@ -4984,6 +5908,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 9) else ((entier(sign(right)) + 4) + 5))); output(result) end",
         expect: Expect::Stdout("10"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts ten units on each
     // runtime-selected path as one exact 10 or a nested exact 4+6 sum.
@@ -4993,6 +5919,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 10) else ((entier(sign(right)) + 4) + 6))); output(result) end",
         expect: Expect::Stdout("11"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts eleven units on each
     // runtime-selected path as one exact 11 or a nested exact 5+6 sum.
@@ -5002,6 +5930,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 11) else ((entier(sign(right)) + 5) + 6))); output(result) end",
         expect: Expect::Stdout("12"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts twelve units on each
     // runtime-selected path as one exact 12 or a nested exact 5+7 sum.
@@ -5011,6 +5941,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 12) else ((entier(sign(right)) + 5) + 7))); output(result) end",
         expect: Expect::Stdout("13"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts thirteen units on each
     // runtime-selected path as one exact 13 or a nested exact 6+7 sum.
@@ -5020,6 +5952,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 13) else ((entier(sign(right)) + 6) + 7))); output(result) end",
         expect: Expect::Stdout("14"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts fourteen units on each
     // runtime-selected path as one exact 14 or a nested exact 7+7 sum.
@@ -5029,6 +5963,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 14) else ((entier(sign(right)) + 7) + 7))); output(result) end",
         expect: Expect::Stdout("15"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts fifteen units on each
     // runtime-selected path as one exact 15 or a nested exact 7+8 sum.
@@ -5038,6 +5974,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 15) else ((entier(sign(right)) + 7) + 8))); output(result) end",
         expect: Expect::Stdout("16"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts sixteen units on each
     // runtime-selected path as one exact 16 or a nested exact 8+8 sum.
@@ -5047,6 +5985,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 16) else ((entier(sign(right)) + 8) + 8))); output(result) end",
         expect: Expect::Stdout("17"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts seventeen units on each
     // runtime-selected path as one exact 17 or a nested exact 8+9 sum.
@@ -5056,6 +5996,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 17) else ((entier(sign(right)) + 8) + 9))); output(result) end",
         expect: Expect::Stdout("18"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts eighteen units on each
     // runtime-selected path as one exact 18 or a nested exact 9+9 sum.
@@ -5065,6 +6007,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 18) else ((entier(sign(right)) + 9) + 9))); output(result) end",
         expect: Expect::Stdout("19"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts nineteen units on each
     // runtime-selected path as one exact 19 or a nested exact 9+10 sum.
@@ -5074,6 +6018,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 19) else ((entier(sign(right)) + 9) + 10))); output(result) end",
         expect: Expect::Stdout("20"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts twenty units on each
     // runtime-selected path as one exact 20 or a nested exact 10+10 sum.
@@ -5083,6 +6029,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 20) else ((entier(sign(right)) + 10) + 10))); output(result) end",
         expect: Expect::Stdout("21"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts twenty-one units on each
     // runtime-selected path as one exact 21 or a nested exact 10+11 sum.
@@ -5092,6 +6040,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 21) else ((entier(sign(right)) + 10) + 11))); output(result) end",
         expect: Expect::Stdout("22"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts twenty-two units on each
     // runtime-selected path as one exact 22 or a nested exact 11+11 sum.
@@ -5101,6 +6051,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 22) else ((entier(sign(right)) + 11) + 11))); output(result) end",
         expect: Expect::Stdout("23"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts twenty-three units on each
     // runtime-selected path as one exact 23 or a nested exact 11+12 sum.
@@ -5110,6 +6062,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 23) else ((entier(sign(right)) + 11) + 12))); output(result) end",
         expect: Expect::Stdout("24"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts twenty-four units on each
     // runtime-selected path as one exact 24 or a nested exact 12+12 sum.
@@ -5119,6 +6073,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 24) else ((entier(sign(right)) + 12) + 12))); output(result) end",
         expect: Expect::Stdout("25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts twenty-five units on each
     // runtime-selected path as one exact 25 or a nested exact 12+13 sum.
@@ -5128,6 +6084,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 25) else ((entier(sign(right)) + 12) + 13))); output(result) end",
         expect: Expect::Stdout("26"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts twenty-six units on each
     // runtime-selected path as one exact 26 or a nested exact 13+13 sum.
@@ -5137,6 +6095,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 26) else ((entier(sign(right)) + 13) + 13))); output(result) end",
         expect: Expect::Stdout("27"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts twenty-seven units on each
     // runtime-selected path as one exact 27 or a nested exact 13+14 sum.
@@ -5146,6 +6106,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 27) else ((entier(sign(right)) + 13) + 14))); output(result) end",
         expect: Expect::Stdout("28"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts twenty-eight units on each
     // runtime-selected path as one exact 28 or a nested exact 14+14 sum.
@@ -5155,6 +6117,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 28) else ((entier(sign(right)) + 14) + 14))); output(result) end",
         expect: Expect::Stdout("29"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts twenty-nine units on each
     // runtime-selected path as one exact 29 or a nested exact 14+15 sum.
@@ -5164,6 +6128,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 29) else ((entier(sign(right)) + 14) + 15))); output(result) end",
         expect: Expect::Stdout("30"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts thirty units on each
     // runtime-selected path as one exact 30 or a nested exact 15+15 sum.
@@ -5173,6 +6139,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 30) else ((entier(sign(right)) + 15) + 15))); output(result) end",
         expect: Expect::Stdout("31"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts thirty-one units on each
     // runtime-selected path as one exact 31 or a nested exact 15+16 sum.
@@ -5182,6 +6150,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 31) else ((entier(sign(right)) + 15) + 16))); output(result) end",
         expect: Expect::Stdout("32"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts thirty-two units on each
     // runtime-selected path as one exact 32 or a nested exact 16+16 sum.
@@ -5191,6 +6161,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 32) else ((entier(sign(right)) + 16) + 16))); output(result) end",
         expect: Expect::Stdout("33"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts thirty-three units on each
     // runtime-selected path as one exact 33 or a nested exact 16+17 sum.
@@ -5200,6 +6172,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 33) else ((entier(sign(right)) + 16) + 17))); output(result) end",
         expect: Expect::Stdout("34"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts thirty-four units on each
     // runtime-selected path as one exact 34 or a nested exact 17+17 sum.
@@ -5209,6 +6183,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 34) else ((entier(sign(right)) + 17) + 17))); output(result) end",
         expect: Expect::Stdout("35"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts thirty-five units on each
     // runtime-selected path as one exact 35 or a nested exact 17+18 sum.
@@ -5218,6 +6194,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 35) else ((entier(sign(right)) + 17) + 18))); output(result) end",
         expect: Expect::Stdout("36"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts thirty-six units on each
     // runtime-selected path as one exact 36 or a nested exact 18+18 sum.
@@ -5227,6 +6205,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 36) else ((entier(sign(right)) + 18) + 18))); output(result) end",
         expect: Expect::Stdout("37"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts thirty-seven units on each
     // runtime-selected path as one exact 37 or a nested exact 18+19 sum.
@@ -5236,6 +6216,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 37) else ((entier(sign(right)) + 18) + 19))); output(result) end",
         expect: Expect::Stdout("38"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts thirty-eight units on each
     // runtime-selected path as one exact 38 or a nested exact 19+19 sum.
@@ -5245,6 +6227,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 38) else ((entier(sign(right)) + 19) + 19))); output(result) end",
         expect: Expect::Stdout("39"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts thirty-nine units on each
     // runtime-selected path as one exact 39 or a nested exact 19+20 sum.
@@ -5254,6 +6238,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 39) else ((entier(sign(right)) + 19) + 20))); output(result) end",
         expect: Expect::Stdout("40"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts forty units on each
     // runtime-selected path as one exact 40 or a nested exact 20+20 sum.
@@ -5263,6 +6249,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 40) else ((entier(sign(right)) + 20) + 20))); output(result) end",
         expect: Expect::Stdout("41"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts forty-one units on each
     // runtime-selected path as one exact 41 or a nested exact 20+21 sum.
@@ -5272,6 +6260,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 41) else ((entier(sign(right)) + 20) + 21))); output(result) end",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts forty-two units on each
     // runtime-selected path as one exact 42 or a nested exact 21+21 sum.
@@ -5281,6 +6271,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 42) else ((entier(sign(right)) + 21) + 21))); output(result) end",
         expect: Expect::Stdout("43"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts forty-three units on each
     // runtime-selected path as one exact 43 or a nested exact 21+22 sum.
@@ -5290,6 +6282,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 43) else ((entier(sign(right)) + 21) + 22))); output(result) end",
         expect: Expect::Stdout("44"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget accepts forty-four units on each
     // runtime-selected path as one exact 44 or a nested exact 22+22 sum.
@@ -5299,6 +6293,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 44) else ((entier(sign(right)) + 22) + 22))); output(result) end",
         expect: Expect::Stdout("45"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the additive offset budget is the exact binary64 integer
     // range, not a hand-picked count: 1000 units (one term or 600+400) stays
@@ -5309,6 +6305,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 1000) else ((entier(sign(right)) + 600) + 400))); output(result) end",
         expect: Expect::Stdout("1001"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - the largest accepted budget, 2^53 - 1 units, keeps
     // sign(left) - (2^53 - 1) = -2^53 exact through entier; the shared
@@ -5320,6 +6318,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) - 9007199254740991) else ((entier(sign(right)) + 4503599627370496) + 4503599627370495))); output(result) end",
         expect: Expect::Stdout("-9.0072E+15"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
@@ -5329,6 +6329,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n; n := 3; i := 0; for i := i + 1 while i < n do if false then n := n + 1; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an unwritten known boolean local selects the body path, so an
     // unreachable dependency write does not invalidate capped while analysis.
@@ -5338,6 +6340,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n; boolean flag; n := 3; flag := false; i := 0; for i := i + 1 while i < n do if flag then n := n + 1; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — every selector in the known boolean composition is stable,
     // so its false result makes the dependency write unreachable.
@@ -5347,6 +6351,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n; boolean flag, guard; n := 3; flag := false; guard := true; i := 0; for i := i + 1 while i < n do if flag and guard then n := n + 1; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a known predicate over an unwritten integer local is stable,
     // so its false result makes the dependency write unreachable.
@@ -5356,6 +6362,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, guard; n := 3; guard := 1; i := 0; for i := i + 1 while i < n do if guard = 0 then n := n + 1; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — supported standard functions are deterministic wrappers over
     // stable scalar dependencies in a body predicate.
@@ -5365,6 +6373,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, guard; n := 3; guard := -1; i := 0; for i := i + 1 while i < n do if abs(guard) = 0 then n := n + 1; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an exact self-assignment preserves the stable scalar used by
     // the known body predicate.
@@ -5374,6 +6384,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, guard; n := 3; guard := 1; i := 0; for i := i + 1 while i < n do begin if guard = 0 then n := n + 1; guard := guard end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — both leaves of a dynamic conditional preserve the same scalar,
     // so the known body predicate remains stable.
@@ -5383,6 +6395,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, guard; boolean choose; n := 3; guard := 1; i := 0; for i := i + 1 while i < n do begin if guard = 0 then n := n + 1; guard := if choose then guard else guard end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a statically known conditional assignment examines only its
     // selected leaf, which exactly preserves the body-predicate dependency.
@@ -5392,6 +6406,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, guard; n := 3; guard := 1; i := 0; for i := i + 1 while i < n do begin if guard = 0 then n := n + 1; guard := if true then guard else 0 end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an unchanged known local selector may choose the preserving
     // leaf while the unselected conditional assignment leaf changes it.
@@ -5401,6 +6417,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, n, guard; boolean choose; n := 3; guard := 1; choose := true; i := 0; for i := i + 1 while i < n do begin if guard = 0 then n := n + 1; guard := if choose then guard else 0 end; print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an exactly-one-iteration step loop with a static controlled
     // assignment may retain the post-body increment when that value exits.
@@ -5410,6 +6428,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real x; for x := 1.0 step 1.0 until 1.0 do x := 6.25; print(x) end",
         expect: Expect::Stdout("7.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — the same exact controlled assignment may be wrapped in one
     // compound statement without losing the post-body exit snapshot.
@@ -5419,6 +6439,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real x; for x := 1.0 step 1.0 until 1.0 do begin x := 6.25 end; print(x) end",
         expect: Expect::Stdout("7.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — the exact initial control snapshot may feed the sole body
     // assignment when its checked post-body increment exits after one pass.
@@ -5428,6 +6450,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real x; for x := 1.0 step 1.0 until 1.0 do x := x + 5.25; print(x) end",
         expect: Expect::Stdout("7.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — bounded abstract execution follows an exact integer control
     // assignment until its checked post-body increment crosses the limit.
@@ -5437,6 +6461,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i; for i := 1 step 1 until 10 do i := i * 2; print(i + 0.25) end",
         expect: Expect::Stdout("15.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — bounded abstract execution also follows a finite real control
     // recurrence until its post-body binary64 increment crosses the limit.
@@ -5446,6 +6472,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real x; for x := 1.0 step 0.5 until 10.0 do x := x * 2.0; print(x) end",
         expect: Expect::Stdout("11.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a statically decidable statement condition may select a
     // different controlled-scalar recurrence as the exact control evolves.
@@ -5455,6 +6483,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i; real x; for i := 1 step 1 until 10 do if i < 4 then i := i * 2 else i := i + 3; print(i + 0.25); for x := 1.0 step 0.5 until 10.0 do if x < 4.0 then x := x * 2.0 else x := x + 3.0; print(x) end",
         expect: Expect::Stdout("11.2512.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — true and false literal string predicates may select distinct
     // bounded controlled-scalar recurrences.
@@ -5464,6 +6494,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, j; for i := 1 step 1 until 10 do if 'ALPHA' < 'BETA' then i := i * 2 else i := i + 3; print(i + 0.25); for j := 1 step 1 until 10 do if 'BETA' < 'ALPHA' then j := j * 2 else j := j + 3; print(j + 0.25) end",
         expect: Expect::Stdout("15.2513.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — true and false literal string predicates may select distinct
     // terminating conditions while bounded scalar recurrences advance.
@@ -5473,6 +6505,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, j; real x, y; i := 0; x := 0.25; for i := i + 1 while if 'ALPHA' < 'BETA' then i <= 3 else i <= 1 do x := x + i; print(x); j := 0; y := 0.25; for j := j + 1 while if 'BETA' < 'ALPHA' then j <= 1 else j <= 2 do y := y + j; print(y) end",
         expect: Expect::Stdout("6.253.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — true and false literal string predicates may select distinct
     // controlled expressions while bounded predicates terminate each loop.
@@ -5482,6 +6516,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, j; real x, y; i := 0; x := 0.25; for i := if 'ALPHA' < 'BETA' then i + 1 else i + 2 while i <= 3 do x := x + i; print(x); j := 0; y := 0.25; for j := if 'BETA' < 'ALPHA' then j + 2 else j + 1 while j <= 2 do y := y + j; print(y) end",
         expect: Expect::Stdout("6.253.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — exact literal string predicates may choose values in
     // successive single-value and bounded while elements of one for list.
@@ -5492,6 +6528,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i; real total; total := 0.25; for i := if 'ALPHA' < 'BETA' then 1 else 9, if 'BETA' < 'ALPHA' then 8 else 2, if 'ALPHA' < 'BETA' then i + 1 else i + 3 while i <= 4 do total := total + i; print(total) end",
         expect: Expect::Stdout("10.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — exact literal string predicates may choose every header of
     // a bounded step element and the value of the following single-value
@@ -5502,6 +6540,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i; real total; total := 0.25; for i := if 'ALPHA' < 'BETA' then 1 else 9 step if 'BETA' < 'ALPHA' then 2 else 1 until if 'ALPHA' < 'BETA' then 2 else 0, if 'BETA' < 'ALPHA' then 8 else 4 do total := total + i; print(total) end",
         expect: Expect::Stdout("7.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a finite step element may read its controlled variable in
     // the body without writing it. Its exact exit snapshot then seeds a
@@ -5512,6 +6552,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i; real total; total := 0.25; for i := if 'ALPHA' < 'BETA' then 1 else 9 step if 'BETA' < 'ALPHA' then 2 else 1 until if 'ALPHA' < 'BETA' then 2 else 0, if 'BETA' < 'ALPHA' then i + 3 else i + 1 while i <= 4 do total := total + i; print(total) end",
         expect: Expect::Stdout("7.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — the same cross-element exit propagation works for an exact
     // finite binary64 step. The real step exit seeds the following while
@@ -5522,6 +6564,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real x, total; total := 0.25; for x := if 'ALPHA' < 'BETA' then 1.0 else 9.0 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 2.0 else 0.0, if 'BETA' < 'ALPHA' then x + 1.5 else x + 0.5 while x <= 3.0 do total := total + x; print(total) end",
         expect: Expect::Stdout("7.75"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a bounded real while element may pass its exact terminating
     // snapshot into a following finite binary64 step element while their
@@ -5532,6 +6576,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real x, total; x := 0.0; total := 0.25; for x := if 'ALPHA' < 'BETA' then x + 0.5 else x + 1.0 while x <= 1.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 2.5 else 0.0 do total := total + x; print(total) end",
         expect: Expect::Stdout("6.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — one finite binary64 step element may pass its exact exit
     // snapshot into the initial expression of another finite real step while
@@ -5542,6 +6588,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real x, total; total := 0.25; for x := if 'ALPHA' < 'BETA' then 1.0 else 9.0 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 2.0 else 0.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 4.0 else 0.0 do total := total + x; print(total) end",
         expect: Expect::Stdout("15.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a finite binary64 step element may pass its exact exit
     // snapshot into a following single-value element while their shared body
@@ -5552,6 +6600,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real x, total; total := 0.25; for x := if 'ALPHA' < 'BETA' then 1.0 else 9.0 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 2.0 else 0.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 do total := total + x; print(total) end",
         expect: Expect::Stdout("7.75"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a real single-value element may pass its exact snapshot
     // into a following single-value element while their shared body only
@@ -5562,6 +6612,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real x, total; total := 0.25; for x := if 'ALPHA' < 'BETA' then 0.5 else 9.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 do total := total + x; print(total) end",
         expect: Expect::Stdout("1.75"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — one exact real snapshot chain may traverse all three for-list
     // element shapes while their shared body only reads the controlled variable.
@@ -5571,6 +6623,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real x, total; total := 0.25; for x := if 'ALPHA' < 'BETA' then 0.5 else 9.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 2.0 else 0.0, if 'BETA' < 'ALPHA' then x + 1.0 else x + 0.5 while if 'ALPHA' < 'BETA' then x <= 4.0 else x <= 1.0 do total := total + x; print(total) end",
         expect: Expect::Stdout("15.75"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — the reverse three-shape path also propagates exact exits
     // while the shared body only reads the controlled variable.
@@ -5580,6 +6634,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real x, total; x := 0.0; total := 0.25; for x := if 'ALPHA' < 'BETA' then x + 0.5 else x + 1.0 while if 'ALPHA' < 'BETA' then x <= 1.0 else x <= 0.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 2.5 else 0.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 do total := total + x; print(total) end",
         expect: Expect::Stdout("9.75"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — another three-shape permutation propagates a finite-step
     // exit through a single value into a bounded while element.
@@ -5589,6 +6645,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real x, total; total := 0.25; for x := if 'ALPHA' < 'BETA' then 1.0 else 9.0 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 2.0 else 0.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5, if 'BETA' < 'ALPHA' then x + 1.0 else x + 0.5 while if 'ALPHA' < 'BETA' then x <= 4.5 else x <= 1.0 do total := total + x; print(total) end",
         expect: Expect::Stdout("19.75"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — the reverse permutation propagates a bounded-while exit
     // through a single value into a finite binary64 step element.
@@ -5598,6 +6656,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real x, total; x := 0.0; total := 0.25; for x := if 'ALPHA' < 'BETA' then x + 0.5 else x + 1.0 while if 'ALPHA' < 'BETA' then x <= 1.0 else x <= 0.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 4.0 else 0.0 do total := total + x; print(total) end",
         expect: Expect::Stdout("16.75"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a fifth three-shape permutation propagates a single value
     // through a bounded while element into a finite binary64 step.
@@ -5607,6 +6667,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real x, total; total := 0.25; for x := if 'ALPHA' < 'BETA' then 0.5 else 9.0, if 'BETA' < 'ALPHA' then x + 1.0 else x + 0.5 while if 'ALPHA' < 'BETA' then x <= 2.0 else x <= 1.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 4.5 else 0.0 do total := total + x; print(total) end",
         expect: Expect::Stdout("20.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — the sixth three-shape permutation propagates a finite-step
     // exit through a bounded while element into a single value.
@@ -5616,6 +6678,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real x, total; total := 0.25; for x := if 'ALPHA' < 'BETA' then 1.0 else 9.0 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 2.0 else 0.0, if 'BETA' < 'ALPHA' then x + 1.0 else x + 0.5 while if 'ALPHA' < 'BETA' then x <= 4.0 else x <= 1.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 do total := total + x; print(total) end",
         expect: Expect::Stdout("20.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a real single-value element may pass its exact snapshot
     // into a following finite binary64 step element while their shared body
@@ -5626,6 +6690,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real x, total; total := 0.25; for x := if 'ALPHA' < 'BETA' then 1.0 else 9.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 step if 'BETA' < 'ALPHA' then 1.0 else 0.5 until if 'ALPHA' < 'BETA' then 2.5 else 0.0 do total := total + x; print(total) end",
         expect: Expect::Stdout("7.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a real single-value element may pass its exact snapshot
     // into a following bounded real while element while their shared body
@@ -5636,6 +6702,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real x, total; total := 0.25; for x := if 'ALPHA' < 'BETA' then 0.5 else 9.0, if 'BETA' < 'ALPHA' then x + 1.0 else x + 0.5 while if 'ALPHA' < 'BETA' then x <= 2.0 else x <= 1.0 do total := total + x; print(total) end",
         expect: Expect::Stdout("5.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — one bounded real while element may pass its exact
     // terminating snapshot into another bounded real while element while
@@ -5646,6 +6714,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real x, total; x := 0.0; total := 0.25; for x := if 'ALPHA' < 'BETA' then x + 0.5 else x + 1.0 while x <= 1.0, if 'BETA' < 'ALPHA' then x + 1.5 else x + 0.5 while if 'ALPHA' < 'BETA' then x <= 2.5 else x <= 1.5 do total := total + x; print(total) end",
         expect: Expect::Stdout("6.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a bounded real while element may pass its exact terminating
     // snapshot into a following single-value element while their shared body
@@ -5656,6 +6726,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real x, total; x := 0.0; total := 0.25; for x := if 'ALPHA' < 'BETA' then x + 0.5 else x + 1.0 while x <= 1.0, if 'BETA' < 'ALPHA' then 9.0 else x + 0.5 do total := total + x; print(total) end",
         expect: Expect::Stdout("3.75"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a bounded while element may read its controlled variable in
     // the body without writing it. Its exact terminating snapshot then seeds
@@ -5666,6 +6738,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i; real total; i := 0; total := 0.25; for i := if 'ALPHA' < 'BETA' then i + 1 else i + 2 while i <= 2, if 'BETA' < 'ALPHA' then 9 else i + 1 step if 'BETA' < 'ALPHA' then 2 else 1 until if 'ALPHA' < 'BETA' then 5 else 0 do total := total + i; print(total) end",
         expect: Expect::Stdout("12.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a finite step element may feed its exact exit into the
     // initial expression of another finite step element while their shared
@@ -5676,6 +6750,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i; real total; total := 0.25; for i := if 'ALPHA' < 'BETA' then 1 else 9 step if 'BETA' < 'ALPHA' then 2 else 1 until if 'ALPHA' < 'BETA' then 2 else 0, if 'BETA' < 'ALPHA' then 9 else i + 1 step if 'BETA' < 'ALPHA' then 2 else 1 until if 'ALPHA' < 'BETA' then 5 else 0 do total := total + i; print(total) end",
         expect: Expect::Stdout("12.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a bounded while element may feed its exact terminating
     // snapshot into a second bounded while element while their shared body
@@ -5686,6 +6762,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i; real total; i := 0; total := 0.25; for i := if 'ALPHA' < 'BETA' then i + 1 else i + 2 while i <= 2, if 'BETA' < 'ALPHA' then i + 2 else i + 1 while if 'ALPHA' < 'BETA' then i <= 5 else i <= 3 do total := total + i; print(total) end",
         expect: Expect::Stdout("12.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a bounded while element may feed its exact terminating
     // snapshot into a following single-value element while their shared body
@@ -5696,6 +6774,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i; real total; i := 0; total := 0.25; for i := if 'ALPHA' < 'BETA' then i + 1 else i + 2 while i <= 2, if 'BETA' < 'ALPHA' then 9 else i + 1 do total := total + i; print(total) end",
         expect: Expect::Stdout("7.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a single-value element may feed its exact control snapshot
     // into the initial expression of a following finite-step element.
@@ -5705,6 +6785,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i; real total; total := 0.25; for i := if 'ALPHA' < 'BETA' then 1 else 9, if 'BETA' < 'ALPHA' then 9 else i + 1 step if 'BETA' < 'ALPHA' then 2 else 1 until if 'ALPHA' < 'BETA' then 4 else 0 do total := total + i; print(total) end",
         expect: Expect::Stdout("10.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an exact control recurrence remains analyzable when every
     // additional compound-body statement is an inert local scalar assignment.
@@ -5714,6 +6796,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer pad; real x; pad := 7; for x := 1.0 step 0.5 until 10.0 do begin x := x * 2.0; pad := pad end; print(x) end",
         expect: Expect::Stdout("11.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — existing exact scalar identity proofs may establish inert
     // siblings around a recurrence that writes the controlled scalar.
@@ -5723,6 +6807,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer pad; real x, hold; boolean ready; pad := 7; hold := 9.0; ready := true; for x := 1.0 step 0.5 until 10.0 do begin x := x * 2.0; pad := 0 + pad; hold := hold * 1.0; ready := ready and true end; print(x) end",
         expect: Expect::Stdout("11.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — unlabeled dummy statements are inert siblings around finite
     // step, bounded while, and controlled-scalar recurrence assignments.
@@ -5732,6 +6818,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i; real x, r; boolean stepflag, whileflag; stepflag := false; for i := 1 step 1 until 3 do begin ; stepflag := not stepflag; ; end; if stepflag then r := 42.0 else r := 0.5; print(r); i := 0; whileflag := false; for i := i + 1 while i <= 3 do begin ; whileflag := not whileflag; ; end; if whileflag then r := 42.0 else r := 0.5; print(r); for x := 1.0 step 0.5 until 10.0 do begin ; x := x * 2.0; ; end; print(x) end",
         expect: Expect::Stdout("424211.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — unlabeled nested compounds may group the same recurrence,
     // scalar-identity, and dummy statements without changing their effects.
@@ -5741,6 +6829,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, pad; real x, hold, r; boolean stepflag, whileflag, ready; pad := 7; hold := 9.0; ready := true; stepflag := false; for i := 1 step 1 until 3 do begin begin pad := pad; ; stepflag := not stepflag end; begin hold := hold; ready := ready end end; if stepflag then r := 42.0 else r := 0.5; print(r); i := 0; whileflag := false; for i := i + 1 while i <= 3 do begin begin pad := pad; ; whileflag := not whileflag end; begin hold := hold; ready := ready end end; if whileflag then r := 42.0 else r := 0.5; print(r); for x := 1.0 step 0.5 until 10.0 do begin begin ; pad := pad; x := x * 2.0 end; begin hold := hold; ready := ready end end; print(x) end",
         expect: Expect::Stdout("424211.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — bounded loop metadata evaluates several pure local scalar
     // recurrences in source order, so y observes x's update in each pass.
@@ -5750,6 +6840,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i; real x, y; x := 0.0; y := 0.0; for i := 1 step 1 until 3 do begin x := x + i; y := y + x end; print(x); print(y); i := 0; x := 0.0; y := 0.0; for i := i + 1 while i <= 3 do begin x := x + i; y := y + x end; print(x); print(y) end",
         expect: Expect::Stdout("610610"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a recurrence-updated boolean may statically select a
     // different pure local scalar assignment on each bounded iteration.
@@ -5759,6 +6851,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i; real x, y; boolean take; x := 0.0; y := 0.0; take := false; for i := 1 step 1 until 4 do begin take := not take; if take then x := x + i else y := y + i end; print(x); print(y); i := 0; x := 0.0; y := 0.0; take := false; for i := i + 1 while i <= 4 do begin take := not take; if take then x := x + i else y := y + i end; print(x); print(y) end",
         expect: Expect::Stdout("4646"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a list containing only single-value elements is straight-line
     // repetition with no zero-trip path or backedge. Its final static real
@@ -5769,6 +6863,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i; real r; for i := 1, 2 do r := i + 4.25; print(r) end",
         expect: Expect::Stdout("6.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — literal-backed scalar string predicates. AL4 now lowers
     // comparisons over string literals and literal-backed scalar variables
@@ -5783,6 +6879,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin string s; s := 'ALPHA'; if (s = 'ALPHA' and s != 'OMEGA') and (s < 'BETA' and 'BETA' > s) then print('OK') else print('BAD') end",
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — the `abs` **standard function** (§3.2.4, LANG-FULL AL8). `abs`
     // is built into the language, not a user procedure, so `algol-iir-compiler`
@@ -5799,6 +6897,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer result; result := abs(0 - 42) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — the `sign` **standard function** (§3.2.4, LANG-FULL AL8). Like
     // `abs`, `sign` is built in and resolved by name; it lowers to the nested
@@ -5813,6 +6913,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer result; result := 43 + sign(0 - 1) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — the `entier` **standard function** (§3.2.5, LANG-FULL E8 + AL-entier).
     // `entier(E)` is the largest *integer* not greater than the *real* `E` — floor,
@@ -5834,6 +6936,8 @@ fn main() { out(1, VALUE); }\n",
                result := 45 + entier(r) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — the `sqrt` **standard function** (§3.2.4, LANG-FULL AL8-sqrt).
     // `sqrt(E)` computes the IEEE-754 square root of a `real` expression.  Unlike
@@ -5854,6 +6958,8 @@ fn main() { out(1, VALUE); }\n",
                result := entier(r) end",
         expect: Expect::Exit(7),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — **AL8-trig**: `cos` standard function (§3.2.4).
     // `cos(0.0)` = 1.0 exactly in IEEE-754 double.  `entier(1.0) + 41` = 42.
@@ -5868,6 +6974,8 @@ fn main() { out(1, VALUE); }\n",
                result := entier(r) + 41 end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — **AL8-trig**: `exp` standard function (§3.2.4).
     // `exp(0.0)` = 1.0 exactly.  `entier(1.0) + 41` = 42.
@@ -5878,6 +6986,8 @@ fn main() { out(1, VALUE); }\n",
                result := entier(r) + 41 end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — **AL8-trig**: `sin` standard function (§3.2.4).
     // `sin(0.0)` = 0.0 exactly.  `entier(0.0 + 42.0)` = 42.
@@ -5888,6 +6998,8 @@ fn main() { out(1, VALUE); }\n",
                result := entier(r + 42.0) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — **AL8-trig**: `ln` standard function (§3.2.4).
     // `ln(1.0)` = 0.0 exactly.  `entier(0.0 + 42.0)` = 42.
@@ -5900,6 +7012,8 @@ fn main() { out(1, VALUE); }\n",
                result := entier(r + 42.0) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — **AL8-arctan**: `arctan` standard function (§3.2.4).
     // `arctan(0.0)` = 0.0 exactly (arctan of 0 is 0).
@@ -5912,6 +7026,8 @@ fn main() { out(1, VALUE); }\n",
                result := entier(r + 42.0) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a *typed procedure with a value parameter* (`integer procedure
     // sq(x); value x; integer x; sq := x*x`) called from the main block:
@@ -5932,6 +7048,8 @@ fn main() { out(1, VALUE); }\n",
                sq := x * x; result := sq(7) end",
         expect: Expect::Exit(49),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — integer procedure values compose across two typed calls. Two
     // `scale` results become i64 actuals for `combine`, whose return becomes
@@ -5946,6 +7064,8 @@ fn main() { out(1, VALUE); }\n",
                result := combine(scale(3), scale(4)) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a boolean procedure returns directly into a compound
     // condition. The two `call` results must keep their `bool` IIR type through
@@ -5958,6 +7078,8 @@ fn main() { out(1, VALUE); }\n",
                neg := not p; if neg(false) and not neg(true) then result := 42 else result := 0 end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — boolean procedure values compose across two typed calls:
     // `neg` results become the two actuals to `both`, then its bool result
@@ -5971,6 +7093,8 @@ fn main() { out(1, VALUE); }\n",
                both := p and q; if both(neg(false), not neg(true)) then result := 42 else result := 0 end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a *proper procedure* (`procedure bump`) has no return value,
     // so the frontend emits an IIR `void` sibling function and a no-destination
@@ -5983,6 +7107,8 @@ fn main() { out(1, VALUE); }\n",
                d := d + 1; result := 40; bump(2); result := result + 2 end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a procedure that *reads and writes a variable from the enclosing
     // block* (LANG-FULL enabler **E6**, layer 1 — typed module globals).
@@ -6015,6 +7141,8 @@ fn main() { out(1, VALUE); }\n",
                result := incr(2) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an `own` variable: static lifetime (LANG-FULL **AL6**). `bump`
     // declares `own integer n` inside its body; ALGOL 60 §5.2.5 says an `own`
@@ -6038,6 +7166,8 @@ fn main() { out(1, VALUE); }\n",
                result := bump(1) + bump(1) + bump(1) end",
         expect: Expect::Exit(6),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an `own` array has the same static-lifetime rule as an own
     // scalar, but its handle plus 1-based lower-bound metadata are initialized
@@ -6053,6 +7183,8 @@ fn main() { out(1, VALUE); }\n",
                result := bump(1) + bump(1) + bump(1) end",
         expect: Expect::Exit(6),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — captured and `own` scalar strings. `setshared` stores a
     // string in a block global from a proper procedure, while `remember`
@@ -6072,6 +7204,8 @@ fn main() { out(1, VALUE); }\n",
                result := result + remember(1) + remember(2) end",
         expect: Expect::Exit(3),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a captured string can be reassigned from a branch-selected
     // string procedure result. `store(0)` writes LO, `store(1)` overwrites it
@@ -6089,6 +7223,8 @@ fn main() { out(1, VALUE); }\n",
                store(0); store(1); result := matches(shared) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — an `own string` retains its persistent global identity while
     // successive calls replace it from branch-selected procedure results. The
@@ -6107,6 +7243,8 @@ fn main() { out(1, VALUE); }\n",
                result := remember(0) + remember(1) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a *switch* (computed goto) + the integer comparison that drives
     // it.  `switch s := a1, a2, a3; … goto s[i]` selects the i-th label by a
@@ -6126,6 +7264,8 @@ fn main() { out(1, VALUE); }\n",
                a3: result := 49; done: end",
         expect: Expect::Exit(49),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a switch element is itself a full designational expression.
     // The selected outer element first tests `chooseyes`, then dispatches
@@ -6141,6 +7281,8 @@ fn main() { out(1, VALUE); }\n",
                fallback: result := 2; done: result := result + 2 end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — switch declarations obey lexical block scope. The nested `s`
     // selects `innertarget`, then leaving that block restores the outer `s`,
@@ -6159,6 +7301,8 @@ fn main() { out(1, VALUE); }\n",
                bad: result := 1; done: end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — labels obey lexical block scope. The first nested `goto outer`
     // resolves forward to the inner label; after that block exits, the same
@@ -6177,6 +7321,8 @@ fn main() { out(1, VALUE); }\n",
                done: end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — switch-to-switch references bind where the containing switch
     // is declared. `root` forward-references the outer `leaf`; the inner block's
@@ -6192,6 +7338,8 @@ fn main() { out(1, VALUE); }\n",
                outertarget: result := 42; done: end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — repeated labels on one statement denote the same target.
     // Execution first enters through `first`, then loops through `second` and
@@ -6205,6 +7353,8 @@ fn main() { out(1, VALUE); }\n",
                else result := 42 end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — *real (f64) arithmetic* + a real comparison (LANG-FULL AL1 /
     // enabler E3, phase 1).  `r := 2.5 * 2.0` computes in IEEE-754 double
@@ -6231,6 +7381,8 @@ fn main() { out(1, VALUE); }\n",
                if r = 5.0 then result := 42 else result := 0 end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — *real division* (`/`) + an *ordered* real comparison (E3).
     // `r := 7.0 / 2.0` is true division (`3.5`, not integer `div`'s `3`), and
@@ -6244,6 +7396,8 @@ fn main() { out(1, VALUE); }\n",
                if r < 4.0 then result := 1 else result := 0 end",
         expect: Expect::Exit(1),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — *one-dimensional integer arrays* (LANG-FULL enabler E5, AL2).
     // `integer array A[1:5]` lowers to an IIR `alloc_array`; the first `for` loop
@@ -6284,6 +7438,8 @@ fn main() { out(1, VALUE); }\n",
                for i := 1 step 1 until 5 do result := result + A[i] end",
         expect: Expect::Exit(55),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — *straight-line* 1-D integer array (LANG-FULL E5, the **LLVM**
     // static-array proof — PR-4a). `A[1] := 40; A[3] := 2; result := A[1] + A[3]`
@@ -6314,6 +7470,8 @@ fn main() { out(1, VALUE); }\n",
                A[1] := 40; A[3] := 2; result := A[1] + A[3] end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a **string-typed value parameter** (LANG-FULL AL4-str-params).
     // `integer procedure echo(s); value s; string s; print(s)` declares a
@@ -6337,6 +7495,8 @@ fn main() { out(1, VALUE); }\n",
                echo('HELLO') end",
         expect: Expect::Stdout("HELLO"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a named string variable passed to a string parameter (AL4-str-params).
     // The outer block declares `string msg`, initialises it with a literal, then
@@ -6357,6 +7517,8 @@ fn main() { out(1, VALUE); }\n",
                msg := 'HI'; say(msg) end",
         expect: Expect::Stdout("HI"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — boolean E5 arrays carry `bool` elements through a true
     // call-by-value copy. The callee observes its writes and contributes 40,
@@ -6372,6 +7534,8 @@ fn main() { out(1, VALUE); }\n",
                if not flags[-1] and flags[0] then result := result + 2 else result := 0 end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 -- a 2-D boolean value copy keeps both lower bounds and the
     // outer row-major stride. The callee sees its checkerboard, while all four
@@ -6382,6 +7546,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean array flags[-1:0, 2:3]; integer result; procedure setflags(a); value a; boolean array a; begin a[-1,2] := true; a[-1,3] := false; a[0,2] := false; a[0,3] := true; if a[-1,2] and not a[-1,3] and not a[0,2] and a[0,3] then result := 40 else result := 0 end; flags[-1,2] := false; flags[-1,3] := false; flags[0,2] := false; flags[0,3] := false; setflags(flags); if not flags[-1,2] and not flags[-1,3] and not flags[0,2] and not flags[0,3] then result := result + 2 else result := 0 end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 -- a nested procedure writes a captured 3-D boolean-array
     // value formal. The checkerboard spans both row-major strides, so a stale
@@ -6392,6 +7558,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean array flags[-1:0, 2:3, 5:6]; integer result; procedure setflags(a); value a; boolean array a; begin procedure populate; begin a[-1,2,5] := true; a[-1,3,6] := false; a[0,2,5] := false; a[0,3,6] := true end; populate(); if a[-1,2,5] and not a[-1,3,6] and not a[0,2,5] and a[0,3,6] then result := 42 else result := 0 end; setflags(flags) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 -- a nested procedure writes a captured 3-D real-array value
     // formal. The four corners span both row-major strides, and the caller's
@@ -6402,6 +7570,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real array values[-1:0, 2:3, 5:6]; integer result, total; procedure setvalues(a); value a; real array a; begin procedure populate; begin a[-1,2,5] := 30.0; a[-1,3,6] := 4.0; a[0,2,5] := 6.0; a[0,3,6] := 2.0 end; populate(); total := entier(a[-1,2,5] + a[-1,3,6] + a[0,2,5] + a[0,3,6]); if total = 42 then result := 42 else result := 0 end; setvalues(values) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 -- a nested procedure writes a captured 4-D integer-array
     // value formal. Four non-unit lower bounds and all three row-major strides
@@ -6412,6 +7582,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer array values[-1:0, 2:3, 5:6, 8:9]; integer result; procedure setvalues(a); value a; integer array a; begin procedure populate; begin a[-1,2,5,8] := 30; a[-1,3,6,9] := 4; a[0,2,5,8] := 6; a[0,3,6,9] := 2 end; populate(); if a[-1,2,5,8] + a[-1,3,6,9] + a[0,2,5,8] + a[0,3,6,9] = 42 then result := 42 else result := 0 end; setvalues(values) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 -- a nested procedure writes a captured 2-D string-array
     // value formal. This takes the dynamic `array<str>` handle plus both
@@ -6424,6 +7596,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin string array words[-1:0, 4:5]; integer result; procedure fill(a); value a; string array a; begin procedure seed; begin a[-1,4] := 'HI'; a[-1,5] := 'NO'; a[0,4] := 'LO'; a[0,5] := 'OK' end; seed(); if a[-1,4] < a[0,4] and a[0,5] = 'OK' and a[-1,5] != 'HI' then result := 42 else result := 0 end; fill(words) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 -- a nested procedure writes a captured 3-D string-array
     // value formal. Distinct non-unit lower bounds and both row-major strides
@@ -6435,6 +7609,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin string array words[-1:0, 4:5, 7:8]; integer result; procedure fill(a); value a; string array a; begin procedure seed; begin a[-1,4,7] := 'HI'; a[-1,5,8] := 'NO'; a[0,4,7] := 'LO'; a[0,5,8] := 'OK' end; seed(); if a[-1,4,7] < a[0,4,7] and a[0,5,8] = 'OK' and a[-1,5,8] != 'HI' then result := 42 else result := 0 end; fill(words) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 -- a nested procedure writes a captured 4-D string-array
     // value formal. All descriptor fields must reach the nested function for
@@ -6445,6 +7621,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin string array words[-1:0, 4:5, 7:8, 10:11]; integer result; procedure fill(a); value a; string array a; begin procedure seed; begin a[-1,4,7,10] := 'HI'; a[-1,5,8,11] := 'NO'; a[0,4,7,10] := 'LO'; a[0,5,8,11] := 'OK' end; seed(); if a[-1,4,7,10] < a[0,4,7,10] and a[0,5,8,11] = 'OK' and a[-1,5,8,11] != 'HI' then result := 42 else result := 0 end; fill(words) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 -- a nested procedure forwards a captured 4-D string-array
     // value formal to a sibling array formal. The forwarding call must reload
@@ -6455,6 +7633,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin string array words[-1:0, 4:5, 7:8, 10:11]; integer result; procedure fill(a); value a; string array a; begin procedure seed(b); string array b; begin b[-1,4,7,10] := 'HI'; b[-1,5,8,11] := 'NO'; b[0,4,7,10] := 'LO'; b[0,5,8,11] := 'OK' end; procedure invoke; seed(a); invoke(); if a[-1,4,7,10] < a[0,4,7,10] and a[0,5,8,11] = 'OK' and a[-1,5,8,11] != 'HI' then result := 42 else result := 0 end; fill(words) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 -- a nested procedure forwards a captured 4-D real-array
     // value formal to a sibling array formal. The forwarding call must reload
@@ -6465,6 +7645,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real array values[-1:0, 2:3, 5:6, 8:9]; integer result, total; procedure fill(a); value a; real array a; begin procedure seed(b); real array b; begin b[-1,2,5,8] := 30.0; b[-1,3,6,9] := 4.0; b[0,2,5,8] := 6.0; b[0,3,6,9] := 2.0 end; procedure invoke; seed(a); invoke(); total := entier(a[-1,2,5,8] + a[-1,3,6,9] + a[0,2,5,8] + a[0,3,6,9]); if total = 42 then result := 42 else result := 0 end; fill(values) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 -- a nested procedure forwards a captured 4-D boolean-array
     // value formal to a sibling array formal. The forwarding call must reload
@@ -6475,6 +7657,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean array flags[-1:0, 2:3, 5:6, 8:9]; integer result; procedure fill(a); value a; boolean array a; begin procedure seed(b); boolean array b; begin b[-1,2,5,8] := true; b[-1,3,6,9] := false; b[0,2,5,8] := false; b[0,3,6,9] := true end; procedure invoke; seed(a); invoke(); if a[-1,2,5,8] and not a[-1,3,6,9] and not a[0,2,5,8] and a[0,3,6,9] then result := 42 else result := 0 end; fill(flags) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — *`real` array* (LANG-FULL AL9-a — real-typed E5 arrays).  The E5
     // array substrate (`alloc_array`/`array_set`/`array_get`) uses the IIR
@@ -6495,6 +7679,8 @@ fn main() { out(1, VALUE); }\n",
                A[1] := 40.0; A[3] := 2.0; result := entier(A[1] + A[3]) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — *`real` procedure with a real value parameter* (LANG-FULL AL9-b).
     // Proves that the `call`/`ret` pathway carries `f64` arguments and return values
@@ -6513,6 +7699,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure square(x); value x; real x; square := x * x; \
                integer result; result := entier(square(6.5)) end",        expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — *recursive procedure* (LANG-FULL AL12). The classic factorial
     // function calls itself via `fact(n - 1)`, proving that the call-and-return
@@ -6532,6 +7720,8 @@ fn main() { out(1, VALUE); }\n",
                result := fact(3) end",
         expect: Expect::Exit(6),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — *`goto` loop* (LANG-FULL AL12). Labels + `goto` are ALGOL 60
     // primitives (report §4.7): `label:` defines a label in the current block;
@@ -6548,6 +7738,8 @@ fn main() { out(1, VALUE); }\n",
                loop: x := x + 7; if x < 42 then goto loop; result := x end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — *`for … while`* (LANG-FULL AL11). ALGOL 60 report §4.6.4:
     // a `for` element of the form `expr while cond` re-evaluates the
@@ -6567,6 +7759,8 @@ fn main() { out(1, VALUE); }\n",
                for i := i + 6 while i <= 36 do result := i + 6 end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — real-valued procedure (LANG-FULL AL13). `scale(x)` is a `real
     // procedure` that multiplies its argument by 6.0 and assigns the product to
@@ -6589,6 +7783,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin real procedure scale(x); value x; real x; scale := x * 6.0; \
                integer result; result := entier(scale(7.0)) end",        expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — real procedure values compose across two typed calls. Each
     // `scale` result is an `f64` value actual for `combine`; its f64 return then
@@ -6603,6 +7799,8 @@ fn main() { out(1, VALUE); }\n",
                result := entier(combine(scale(3.0), scale(4.0))) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 -- integer-to-real promotion (LANG-FULL AL1). Integer values
     // may flow wherever a real is required: direct real assignment, a real
@@ -6620,6 +7818,8 @@ fn main() { out(1, VALUE); }\n",
                if values[4] = i then result := entier(scale(r)) else result := 0 end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — *boolean variable* (LANG-FULL AL10). `boolean b` declares a
     // slot at type_hint `"bool"` (LLVM `i1`, JVM/CLR `int32 0/1`, VM
@@ -6639,6 +7839,8 @@ fn main() { out(1, VALUE); }\n",
                if b then result := 42 else result := 0 end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — *boolean `not`* (LANG-FULL AL10).  The unary `not` op
     // flips a `false` slot to `true`.  In LLVM it lowers to `xor i1 %b, 1`;
@@ -6654,6 +7856,8 @@ fn main() { out(1, VALUE); }\n",
                if not b then result := 42 else result := 0 end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — *boolean `and` + `not` compound* (LANG-FULL AL10). Two
     // boolean variables; the compound condition `a and (not b)` with
@@ -6669,6 +7873,8 @@ fn main() { out(1, VALUE); }\n",
                if a and (not b) then result := 42 else result := 0 end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — *nested block variable shadowing* (LANG-FULL AL12). ALGOL 60
     // report §2.7: each `begin … end` is a block with its own declarations;
@@ -6692,6 +7898,8 @@ fn main() { out(1, VALUE); }\n",
                if flag then result := result + x else result := 0 end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — *single-value `for` element* (LANG-FULL AL11). The ALGOL
     // 60 for-list `for i := expr do body` with a single literal value
@@ -6705,6 +7913,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin integer i, result; for i := 2 do result := 40 + i end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — *multi-element `for` list* (LANG-FULL AL11). The for-list
     // `1 step 1 until 3, 10, i + 1 while i < 13` sequences three kinds of
@@ -6722,6 +7932,8 @@ fn main() { out(1, VALUE); }\n",
                result := result + i; result := result + 3 end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — *two-dimensional integer array* (LANG-FULL AL-multidim).
     // `integer array M[1:2, 1:2]` declares a 2×2 matrix in ALGOL 60 report
@@ -6744,6 +7956,8 @@ fn main() { out(1, VALUE); }\n",
                result := M[1, 1] + M[1, 2] + M[2, 1] + M[2, 2] end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — *two-dimensional **real** array* (LANG-FULL AL-multidim-real).
     // Identical multidim flat-index machinery as the integer cell above, but the
@@ -6766,6 +7980,8 @@ fn main() { out(1, VALUE); }\n",
                result := entier(sum) end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — *three-dimensional integer array* (LANG-FULL AL-multidim-3D).
     // Proves the multidim lowering is genuinely **N-dimensional**, not hardcoded
@@ -6787,6 +8003,8 @@ fn main() { out(1, VALUE); }\n",
                result := M[1, 1, 1] + M[2, 1, 1] + M[1, 2, 1] end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — *2-D array with arbitrary lower bounds* (LANG-FULL
     // AL-multidim-bounds).  Unlike BASIC's fixed 0-based arrays, ALGOL arrays
@@ -6809,6 +8027,8 @@ fn main() { out(1, VALUE); }\n",
                result := M[0-1, 2] + M[1, 3] end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // Brainfuck — build 65 on the tape and `putchar` it: prints `A`.
     // `lower_brainfuck_for_aot` widens the BF cell/ptr registers to `i64` (byte width
@@ -6851,6 +8071,8 @@ fn main() { out(1, VALUE); }\n",
         src: "++++++++[>++++++++<-]>+.",
         expect: Expect::Stdout("A"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Brainfuck — a NESTED-loop, multi-output program (LANG-FULL B1). The classic
     // multiply-by-repeated-addition idiom `[>[->+>+<<]>>[-<<+>>]<<<-]` is a loop *inside*
@@ -6868,6 +8090,8 @@ fn main() { out(1, VALUE); }\n",
         src: "++++++++>+++++++++<[>[->+>+<<]>>[-<<+>>]<<<-]>>.-------.",
         expect: Expect::Stdout("HA"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Brainfuck — two sequential loops + two outputs (LANG-FULL B1). Builds 80 in a loop,
     // `-` → 79 (`O`), prints; `----` → 75 (`K`), prints. Distinct loop labels + multi-output.
@@ -6880,6 +8104,8 @@ fn main() { out(1, VALUE); }\n",
         src: "++++++++[>++++++++++<-]>-.----.",
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Brainfuck — STDIN (LANG-FULL B1-stdin). The matrix proved every backend can *write*
     // output (`.`); these two prove every backend can *read* input (`,`). `,+.` reads one
@@ -6910,6 +8136,8 @@ fn main() { out(1, VALUE); }\n",
         src: ",+.",
         expect: Expect::Stdout("B"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Brainfuck — multi-byte STDIN echo (LANG-FULL B1-stdin). `,.,.` reads a byte and prints
     // it, twice; with input "Hi" it echoes "Hi". Proves *repeated* reads advance through the
@@ -6921,6 +8149,8 @@ fn main() { out(1, VALUE); }\n",
         src: ",.,.",
         expect: Expect::Stdout("Hi"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Brainfuck — the canonical `cat` (LANG-FULL B1-eof). `,[.,]` reads a byte and, while
     // it is non-zero, prints it and reads the next — echoing stdin until end-of-input. The
@@ -6937,6 +8167,8 @@ fn main() { out(1, VALUE); }\n",
         src: ",[.,]",
         expect: Expect::Stdout("Hi"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — `PRINT 42` writes `42` to stdout. BA7-1b makes even the
     // integer-spelled literal a scalar `f64`, so this baseline cell now runs through
@@ -6956,6 +8188,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 PRINT 42\n20 END\n",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — exponentiation with an integer-valued literal exponent
     // (LANG-FULL BA-^). General `^` still needs a math runtime for variable or
@@ -6972,6 +8206,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 PRINT 6 ^ 2 + 6\n20 END\n",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — E4/BA4 first string-PRINT proof. The frontend lowers a
     // string literal item to shared `str_const` + `print_str`, and the existing
@@ -6989,6 +8225,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 PRINT \"HELLO\"\n20 END\n",
         expect: Expect::Stdout("HELLO"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — BA4 string variables. The frontend accepts `$`-suffixed
     // names, lowers `LET A$ = "HI"` directly into a safe typed `str_const` slot,
@@ -7001,6 +8239,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 LET A$ = \"HI\"\n20 PRINT A$\n30 END\n",
         expect: Expect::Stdout("HI"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — BA4 literal string reassignment. Re-emitting
     // `str_const` into the same backend-facing slot makes the most recent
@@ -7012,6 +8252,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 LET A$ = \"NO\"\n20 LET A$ = \"OK\"\n30 PRINT A$\n40 END\n",
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — BA4 literal string concatenation. The frontend lowers
     // `"O" + "K"` to E4 `str_const` + `str_concat`, stores the result in the
@@ -7022,6 +8264,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 LET A$ = \"O\" + \"K\"\n20 PRINT A$\n30 END\n",
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — BA4 literal-backed scalar string copy. `B$ = A$`
     // lowers to E4 `str_concat` with an empty suffix, proving immutable copy
@@ -7032,6 +8276,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 LET A$ = \"OK\"\n20 LET B$ = A$\n30 PRINT B$\n40 END\n",
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — BA4 multi-item string PRINT. `;` keeps adjacent output,
     // so two scalar string slots are consumed by ordered E4 `print_str` calls
@@ -7042,6 +8288,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 LET A$ = \"O\"\n20 LET B$ = \"K\"\n30 PRINT A$; B$\n40 END\n",
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — BA4 string PRINT composes with BA2 comma separators.
     // The comma path emits a single `putchar(' ')` between the ordered E4
@@ -7053,6 +8301,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 LET A$ = \"O\"\n20 LET B$ = \"K\"\n30 PRINT A$, B$\n40 END\n",
         expect: Expect::Stdout("O K"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — BA4 string expression in PRINT. This keeps concat out
     // of an assignment target and proves `PRINT` can consume a temporary E4
@@ -7063,6 +8313,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 LET A$ = \"O\"\n20 PRINT A$ + \"K\"\n30 END\n",
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — BA4 variable-variable string expression in PRINT.
     // This proves `PRINT` can consume a temporary E4 `str_concat` result when
@@ -7073,6 +8325,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 LET A$ = \"O\"\n20 LET B$ = \"K\"\n30 PRINT A$ + B$\n40 END\n",
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — BA4 string expression in IF equality. This proves the
     // relation path can consume a temporary E4 string expression result before
@@ -7083,6 +8337,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 LET A$ = \"O\"\n20 IF A$ + \"K\" = \"OK\" THEN 50\n30 PRINT \"BAD\"\n40 END\n50 PRINT \"OK\"\n60 END\n",
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — BA4 variable-variable string expression in IF
     // equality. This extends the equality branch proof beyond `A$ + literal`:
@@ -7094,6 +8350,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 LET A$ = \"O\"\n20 LET B$ = \"K\"\n30 IF A$ + B$ = \"OK\" THEN 60\n40 PRINT \"BAD\"\n50 END\n60 PRINT \"OK\"\n70 END\n",
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — BA4 string expression in IF inequality. This composes
     // the variable-variable concat proof with the `<>` branch path: E4
@@ -7105,6 +8363,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 LET A$ = \"O\"\n20 LET B$ = \"K\"\n30 IF A$ + B$ <> \"NO\" THEN 60\n40 PRINT \"BAD\"\n50 END\n60 PRINT \"OK\"\n70 END\n",
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — BA4 string expression assignment with a variable
     // operand. This proves a non-literal concat can be stored in another safe
@@ -7115,6 +8375,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 LET A$ = \"O\"\n20 LET B$ = A$ + \"K\"\n30 PRINT B$\n40 END\n",
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — BA4 chained string expression assignment. This takes
     // the variable-backed concat proof beyond two operands: `A$ + "B" + "C"`
@@ -7126,6 +8388,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 LET A$ = \"A\"\n20 LET B$ = A$ + \"B\" + \"C\"\n30 PRINT B$\n40 END\n",
         expect: Expect::Stdout("ABC"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — BA4 string equality drives control flow. `IF A$ = "Y"`
     // lowers to shared E4 `str_eq`, then the existing branch machinery chooses
@@ -7137,6 +8401,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 LET A$ = \"Y\"\n20 IF A$ = \"Y\" THEN 50\n30 PRINT \"BAD\"\n40 END\n50 PRINT \"OK\"\n60 END\n",
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — BA4 copied string slots in control flow. This composes
     // the scalar copy foothold with `str_eq` over two string slots, proving
@@ -7147,6 +8413,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 LET A$ = \"OK\"\n20 LET B$ = A$\n30 IF B$ = A$ THEN 60\n40 PRINT \"BAD\"\n50 END\n60 PRINT \"OK\"\n70 END\n",
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — BA4 string inequality drives control flow too. The
     // frontend reuses E4 `str_eq` but targets the THEN line with `jmp_if_false`,
@@ -7157,6 +8425,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 LET A$ = \"N\"\n20 IF A$ <> \"Y\" THEN 50\n30 PRINT \"BAD\"\n40 END\n50 PRINT \"OK\"\n60 END\n",
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — BA4 lexical string ordering drives control flow. The
     // frontend lowers `$` string `<` / `>` relops through E4 `str_cmp`, compares
@@ -7168,6 +8438,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 LET A$ = \"ALPHA\"\n20 IF A$ < \"BETA\" THEN 40\n30 END\n40 IF \"BETA\" > A$ THEN 60\n50 END\n60 PRINT \"OK\"\n70 END\n",
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — `FOR`/`NEXT` loop with an accumulator (LANG-FULL BA0). Sums
     // 1..5 into S and prints 15. FOR/NEXT lowers to `cmp_le`, which the WASM and LLVM
@@ -7185,6 +8457,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 LET S = 0\n20 FOR I = 1 TO 5\n30 LET S = S + I\n40 NEXT I\n50 PRINT S\n60 END\n",
         expect: Expect::Stdout("15"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — `FOR … STEP` with step size 2 (LANG-FULL BA-step). The
     // `STEP` clause stores its value into a dedicated `_for_<n>_step` IIR slot
@@ -7200,6 +8474,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 LET S = 0\n20 FOR I = 1 TO 5 STEP 2\n30 LET S = S + I\n40 NEXT I\n50 PRINT S\n60 END\n",
         expect: Expect::Stdout("9"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — `IF … THEN <line>` + `GOTO`-style jump (LANG-FULL BA0). `A > 5`
     // lowers to `cmp_gt` (one of the comparisons LLVM compared at the wrong width until
@@ -7213,6 +8489,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 LET A = 7\n20 IF A > 5 THEN 100\n30 PRINT 0\n40 END\n100 PRINT A\n110 END\n",
         expect: Expect::Stdout("7"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — `DEF FN` user-defined function (LANG-FULL BA5). The
     // single-line definition `DEF FNS(X) = X * X` lowers to a *sibling*
@@ -7230,6 +8508,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 DEF FNS(X) = X * X\n20 PRINT FNS(7)\n30 END\n",
         expect: Expect::Stdout("49"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — *one-dimensional real arrays* (LANG-FULL BA3 + BA7,
     // enabler
@@ -7253,6 +8533,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 DIM A(3)\n20 LET A(1) = 40\n30 LET A(2) = 2\n40 PRINT A(1) + A(2)\n50 END\n",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — *two-dimensional real arrays* (LANG-FULL BA-DIM-2D,
     // enabler **E5**).  `DIM A(1,2)` declares a 2×3 matrix (0-based inclusive:
@@ -7272,6 +8554,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 DIM A(1,2)\n20 LET A(0,0) = 40\n30 LET A(1,2) = 2\n40 PRINT A(0,0) + A(1,2)\n50 END\n",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — *`READ` / `DATA` / `RESTORE`* (LANG-FULL BA6 + BA7). The
     // `DATA` pool is materialised once at the top of `main` as an `array<f64>`
@@ -7290,6 +8574,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 DATA 21\n20 READ A\n30 RESTORE\n40 READ B\n50 PRINT A + B\n60 END\n",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — *multi-item `PRINT` on one line* with a `;` separator and
     // a negative value (LANG-FULL BA2). `PRINT 0 - 12; 34` prints `-12` and `34`
@@ -7315,6 +8601,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 PRINT 0 - 12; 34\n20 END\n",
         expect: Expect::Stdout("-1234"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — multi-item `PRINT` with a `,` separator (LANG-FULL BA2).
     // Where `;` joins tightly, `,` inserts a separator space: `PRINT 5, 6` ⇒
@@ -7331,6 +8619,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 PRINT 5, 6\n20 END\n",
         expect: Expect::Stdout("5 6"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — BA7-1 scalar real arithmetic. Decimal spellings (`6.0`,
     // `7.0`) stay on the same `f64` value path as integer-spelled literals; `*`
@@ -7342,6 +8632,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 PRINT 6.0 * 7.0\n20 END\n",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — BA7-2a fixed-decimal fractional `PRINT`. The helper
     // handles ordinary fractional values without backend-specific code: an
@@ -7355,6 +8647,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 PRINT 3.14\n20 PRINT 1.0 / 4.0\n30 PRINT 0.0 - 2.5\n40 END\n",
         expect: Expect::Stdout("3.14\n.25\n-2.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — BA7-2b historical real formatting. The helper now
     // rounds to six significant digits (`1.234567` -> `1.23457`) and switches
@@ -7366,6 +8660,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 PRINT 1.234567\n20 PRINT 123456789\n30 PRINT 0.0001234567\n40 PRINT 1.0 / 4.0\n50 END\n",
         expect: Expect::Stdout("1.23457\n1.23457E+08\n1.23457E-04\n.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — BA7-3 real aggregate storage. Fractional `DATA` values
     // are materialised in an `array<f64>` pool, `READ A(0)` stores one into a
@@ -7378,6 +8674,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 DIM A(1)\n20 DATA 3.14, 0.25\n30 READ A(0)\n40 READ B\n50 PRINT A(0)\n60 PRINT B\n70 END\n",
         expect: Expect::Stdout("3.14\n.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — mixed numeric/string DATA (VM-017). One shared pointer
     // walks the source-ordered kind/numeric/string parallel pools. The first
@@ -7400,6 +8698,8 @@ fn main() { out(1, VALUE); }\n",
               60 RESTORE\n70 READ C, T$\n80 PRINT C\n90 PRINT T$\n100 END\n",
         expect: Expect::Stdout("42\nOK\n20\nO"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — *unstructured `GOSUB` / `RETURN`* (LANG-FULL BA1, enabler
     // **E7**). The headline proof that one `RETURN` resumes at the *dynamically
@@ -7422,6 +8722,8 @@ fn main() { out(1, VALUE); }\n",
                100 PRINT 9;\n110 RETURN\n",
         expect: Expect::Stdout("919"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — *nested* `GOSUB` (LANG-FULL BA1). A subroutine that itself
     // `GOSUB`s a second one before returning — proves the **LIFO stack discipline**
@@ -7437,6 +8739,8 @@ fn main() { out(1, VALUE); }\n",
                120 PRINT 6;\n130 RETURN\n200 PRINT 7;\n210 RETURN\n",
         expect: Expect::Stdout("876"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — `SQR` (square root) built-in (LANG-FULL BA-builtins).
     // SQR(X) lowers to the f64_sqrt IIR op (same hardware instruction that
@@ -7448,6 +8752,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 PRINT SQR(49)\n20 END\n",
         expect: Expect::Stdout("7"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — deterministic transcendental builtins (VM-016).
     // The exact-value inputs separate frontend dispatch from floating-point
@@ -7460,6 +8766,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 PRINT SIN(0)\n20 PRINT COS(0)\n30 PRINT LOG(1)\n40 PRINT EXP(0)\n50 END\n",
         expect: Expect::Stdout("0\n1\n0\n1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — portable deterministic RND semantics (VM-018). The
     // frontend emits one Park–Miller helper whose i64 state lives in the shared
@@ -7481,6 +8789,8 @@ fn main() { out(1, VALUE); }\n",
               60 END\n",
         expect: Expect::Stdout("22\n85032\n85032\n601352"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — `INT` (floor) built-in (LANG-FULL BA-builtins).
     // INT(X) = ⌊X⌋, returned as a real.  Lowers to real_to_int_floor +
@@ -7491,6 +8801,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 PRINT INT(3.7)\n20 END\n",
         expect: Expect::Stdout("3"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — `ABS` (absolute value) built-in (LANG-FULL BA-builtins).
     // ABS(X) is lowered inline: if X < 0 then −X else X (store-per-branch,
@@ -7508,6 +8820,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 PRINT ABS(-42)\n20 END\n",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — `SGN` (signum) built-in (LANG-FULL BA-builtins).
     // SGN(X) = 1.0 if X > 0, −1.0 if X < 0, 0.0 if X = 0.  Lowered
@@ -7518,6 +8832,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 PRINT SGN(-5)\n20 END\n",
         expect: Expect::Stdout("-1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — `ATN` (arctangent) built-in (LANG-FULL BA-arctan).
     // ATN(X) lowers to the f64_atan IIR op which calls libm `atan` on every
@@ -7529,6 +8845,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 PRINT ATN(0)\n20 END\n",
         expect: Expect::Stdout("0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — `TAN` (tangent) built-in (LANG-FULL BA-arctan).
     // TAN(X) lowers to the f64_tan IIR op which calls libm `tan` on every
@@ -7539,6 +8857,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 PRINT TAN(0)\n20 END\n",
         expect: Expect::Stdout("0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — general `^` exponentiation via f64_pow IIR op (LANG-FULL BA-pow).
     // 4 ^ 0.5 = pow(4.0, 0.5) = 2.0 exactly; printed as "2" by __basic_print_real
@@ -7558,6 +8878,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 PRINT 4 ^ 0.5\n20 END\n",
         expect: Expect::Stdout("2"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — scalar `INPUT` statement (LANG-FULL BA-INPUT). `INPUT X`
     // reads one line from stdin, parses it as an integer, and stores the result in
@@ -7576,6 +8898,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 INPUT X\n20 PRINT X\n30 END\n",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — two sequential `INPUT` reads, then arithmetic (BA-INPUT).
     // This proves that two independent calls to `input_i64` drain successive lines
@@ -7588,6 +8912,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 INPUT A\n20 INPUT B\n30 PRINT A + B\n40 END\n",
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — a *runtime (non-foldable) string* chosen by control flow
     // (LANG-FULL E4-dyn foothold). `INPUT N` reads an integer at run time, so
@@ -7619,6 +8945,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 INPUT N\n20 IF N > 0 THEN 50\n30 LET A$ = \"LO\"\n40 GOTO 60\n50 LET A$ = \"HI\"\n60 PRINT A$\n70 END\n",
         expect: Expect::Stdout("HI"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — **string** `INPUT A$` (LANG-FULL E4-dyn, BA string INPUT
     // foothold). Unlike the numeric `INPUT X` (which parses the line to an i64) and
@@ -7662,6 +8990,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 INPUT A$\n20 PRINT A$\n30 END\n",
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // BA runtime string CONCAT — `str_concat` over two operands that are *both* read
     // from `INPUT`, so neither carries any compile-time string metadata (no data-segment
@@ -7703,6 +9033,8 @@ fn main() { out(1, VALUE); }\n",
         src: "10 INPUT A$\n20 INPUT B$\n30 PRINT A$ + B$\n40 END\n",
         expect: Expect::Stdout("OK!"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Dartmouth BASIC — **string arrays** (LANG-FULL E4-dyn, work item
     // E4d-BA-arr).  `DIM A$(2)` allocates an `array<str>`: the E5 length-
@@ -7735,6 +9067,8 @@ fn main() { out(1, VALUE); }\n",
                40 PRINT A$(0) + A$(1)\n50 END\n",
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // VM-044: three loop-carried additions wrap 250 + 30 to 24, then the
     // function returns that value across a call boundary for visible output.
@@ -7746,6 +9080,8 @@ fn main() { out(1, VALUE); }\n",
               fn main() { out(1, count()); }",
         expect: Expect::Stdout("24"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // The conditional break must leave the loop only after its third body.
     Prog {
@@ -7755,6 +9091,8 @@ fn main() { out(1, VALUE); }\n",
               if n == 3 { break; } } out(1, n); }",
         expect: Expect::Stdout("3"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Inner break resumes the outer body; outer break resumes main. A single
     // shared break label would skip one of these distinct output markers.
@@ -7765,6 +9103,8 @@ fn main() { out(1, VALUE); }\n",
               out(1, 2); break; } out(1, 7); }",
         expect: Expect::Stdout("4\n2\n7"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // FLOW-MATIC — unified-matrix baseline (VM-020). A file-qualified field is
     // initialised to zero, moved through the frontend's scalar-field path, and
@@ -7779,6 +9119,8 @@ fn main() { out(1, VALUE); }\n",
                (1) MOVE TOTAL (C) TO TOTAL (C) ; WRITE-ITEM FILE-C ; STOP .",
         expect: Expect::Stdout("0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // VM-037: fields begin at zero. Distinct record widths make a wrong
     // branch observable without an infinite-loop failure path.
@@ -7791,6 +9133,8 @@ fn main() { out(1, VALUE); }\n",
               (4) WRITE-ITEM FILE-C ; STOP .",
         expect: Expect::Stdout("0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Both strict inequalities are false for equal fields. OTHERWISE must
     // jump over the one-field wrong path to the two-field result.
@@ -7803,6 +9147,8 @@ fn main() { out(1, VALUE); }\n",
               (4) WRITE-ITEM FILE-A ; STOP .",
         expect: Expect::Stdout("0 0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // Each jump skips a terminating two-field output path. The correct chain
     // visits two separated one-field writes; neither jump can be ignored.
@@ -7816,6 +9162,8 @@ fn main() { out(1, VALUE); }\n",
               (4) WRITE-ITEM FILE-C ; STOP .",
         expect: Expect::Stdout("0\n0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL-60 — literal `DISPLAY` (PL09 step 4, the `cobol-iir-compiler` minimal
     // slice). A four-division program whose PROCEDURE DIVISION `DISPLAY`s a string
@@ -7837,6 +9185,8 @@ fn main() { out(1, VALUE); }\n",
                000000     STOP RUN.",
         expect: Expect::Stdout("HELLO"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL-60 — `MOVE` a numeric literal into a PICTURE-typed item, then
     // `DISPLAY` the item (PL09 step 4). This is the cell that proves the
@@ -7863,6 +9213,8 @@ fn main() { out(1, VALUE); }\n",
                000000     STOP RUN.",
         expect: Expect::Stdout("00042"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL-60 — integer arithmetic (PL09 step 4, PR2). Numeric items are now
     // scaled `i64` slots, so `ADD`/`MULTIPLY`/`SUBTRACT` lower to native `add` /
@@ -7889,6 +9241,8 @@ fn main() { out(1, VALUE); }\n",
                000000     STOP RUN.",
         expect: Expect::Stdout("20"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL-60 — scaled-decimal ADD (PL09 step 4, PR3). `R PIC 9(2)V99` holds a
     // value scaled by 2, so it starts 1.50 (slot `150`). `ADD 2.25 TO R` aligns
@@ -7911,6 +9265,8 @@ fn main() { out(1, VALUE); }\n",
                000000     STOP RUN.",
         expect: Expect::Stdout("0375"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL-60 — IF / ELSE with a relational condition (PL09 step 4, PR4). The
     // condition lowers to a `cmp_gt` on the aligned values; `jmp_if_false` skips
@@ -7932,6 +9288,8 @@ fn main() { out(1, VALUE); }\n",
                000000     STOP RUN.",
         expect: Expect::Stdout("BIG"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL-60 — scaled DIVIDE with ROUNDED (PL09 step 4, PR3b). `20 / 3 =
     // 6.666…`; carried to one guard digit past the `V99` receiver then rounded
@@ -7953,6 +9311,8 @@ fn main() { out(1, VALUE); }\n",
                000000     STOP RUN.",
         expect: Expect::Stdout("0667"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL-60 — PERFORM … TIMES (PL09 step 4). The performed paragraph range is
     // inlined at the call site with a counted loop around it: TICK runs 3 times,
@@ -7976,6 +9336,8 @@ fn main() { out(1, VALUE); }\n",
                000000     DISPLAY COUNT.",
         expect: Expect::Stdout("1\n2\n3"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL-60 — COMPUTE with operator precedence (PL09 step 4). `A + B * C =
     // 10 + (3*2) = 16`, stored into `9(4)V99` → `001600`. This proves the
@@ -7999,6 +9361,8 @@ fn main() { out(1, VALUE); }\n",
                000000     STOP RUN.",
         expect: Expect::Stdout("001600"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL-60 — signed numeric with trailing overpunch (PL09 step 4). `N PIC
     // S9(2)` starts at 3; SUBTRACT 5 → -2; a signed receiver keeps the sign, and
@@ -8019,6 +9383,8 @@ fn main() { out(1, VALUE); }\n",
                000000     STOP RUN.",
         expect: Expect::Stdout("0K"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL-60 — character item MOVE + alphanumeric comparison (PL09 step 4).
     // W = "ABCD" moved into V PIC X(2) truncates to "AB" (str_slice); the
@@ -8040,6 +9406,8 @@ fn main() { out(1, VALUE); }\n",
                000000     STOP RUN.",
         expect: Expect::Stdout("AB"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL-60 — COMPUTE exponentiation with a constant integer exponent (PL09
     // step 4). `A ** 3 = 4**3 = 64`, stored into `9(6)` → `000064`. A literal
@@ -8061,6 +9429,8 @@ fn main() { out(1, VALUE); }\n",
                000000     STOP RUN.",
         expect: Expect::Stdout("000064"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL-60 — nested COMPUTE division (PL09 step 4). `A / B + C = 10/3 + 2`;
     // the oracle carries the division at a fixed scale-12 intermediate, so the
@@ -8085,6 +9455,8 @@ fn main() { out(1, VALUE); }\n",
                000000     STOP RUN.",
         expect: Expect::Stdout("000533"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL-60 — level-88 condition-name (PL09 step 4). `88 IS-OK VALUE 1` over
     // `STATUS-CODE` (=1) makes `IF IS-OK` true → prints "OK". A condition-name
@@ -8105,6 +9477,8 @@ fn main() { out(1, VALUE); }\n",
                000000     STOP RUN.",
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL-60 — level-88 condition-name with multiple values and a THRU range
     // (PL09 step 4). `88 COND VALUE 1 5 THRU 7 9` over N=6 → 6 is in 5 THRU 7, so
@@ -8126,6 +9500,8 @@ fn main() { out(1, VALUE); }\n",
                000000     STOP RUN.",
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL-60 — SET a level-88 condition-name TRUE (PL09 step 4). `SET IS-DONE TO
     // TRUE` stores 9 (`88 IS-DONE VALUE 9`) into STATUS-CODE (PIC 9), which then
@@ -8147,6 +9523,8 @@ fn main() { out(1, VALUE); }\n",
                000000     STOP RUN.",
         expect: Expect::Stdout("9"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL-60 — symbolic relational operator (PL09 step 4). `IF N >= 5` on N=5
     // holds (boundary), printing "GE". A symbol lowers to the same `cmp_*` a word
@@ -8165,6 +9543,8 @@ fn main() { out(1, VALUE); }\n",
                000000     STOP RUN.",
         expect: Expect::Stdout("GE"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL-60 — compound condition with AND/OR and parentheses (PL09 step 4).
     // `(N > 1 OR N > 9) AND N < 8` on N=5 = (true OR false) AND true = true →
@@ -8184,6 +9564,8 @@ fn main() { out(1, VALUE); }\n",
                000000     STOP RUN.",
         expect: Expect::Stdout("Y"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL-60 — NOT over a parenthesised condition (PL09 step 4). `NOT (N<3 OR
     // N>9)` on N=5 = NOT (false OR false) = true → prints "Y". The negation inverts
@@ -8203,6 +9585,8 @@ fn main() { out(1, VALUE); }\n",
                000000     STOP RUN.",
         expect: Expect::Stdout("Y"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL-60 — EVALUATE case statement (PL09 step 4). `EVALUATE N` on N=5 with
     // `WHEN 1 / WHEN 5 / WHEN OTHER` matches the second WHEN → prints "FIVE". Lowers
@@ -8226,6 +9610,8 @@ fn main() { out(1, VALUE); }\n",
                000000     STOP RUN.",
         expect: Expect::Stdout("FIVE"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL-60 — EVALUATE with a multi-value / THRU-range WHEN (PL09 step 4).
     // `EVALUATE N` on N=6 with `WHEN 1 5 THRU 7 9` matches (6 is in 5 THRU 7) →
@@ -8248,6 +9634,8 @@ fn main() { out(1, VALUE); }\n",
                000000     STOP RUN.",
         expect: Expect::Stdout("Y"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL-60 — alphanumeric EVALUATE subject (PL09 step 4). `EVALUATE GRADE` on
     // GRADE="B" with `WHEN "A" THRU "M"` (byte-lexical) matches → prints "FIRST".
@@ -8271,6 +9659,8 @@ fn main() { out(1, VALUE); }\n",
                000000     STOP RUN.",
         expect: Expect::Stdout("FIRST"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL reference modification: literal bounds, omitted length and first/last character.
     Prog {
@@ -8290,6 +9680,8 @@ fn main() { out(1, VALUE); }\n",
                000000 STOP RUN.",
         expect: Expect::Stdout("BCD\nCDE\nA\nE"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL reference modification: live computed indices, mixed bounds and omitted length.
     Prog {
@@ -8312,6 +9704,8 @@ fn main() { out(1, VALUE); }\n",
                000000 STOP RUN.",
         expect: Expect::Stdout("BCD\nBCD\nCDE"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL reference modification: computed slices drive both comparison branches and EVALUATE.
     Prog {
@@ -8335,6 +9729,8 @@ fn main() { out(1, VALUE); }\n",
                000000 STOP RUN.",
         expect: Expect::Stdout("MATCH\nDIFF\nHIT"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL reference modification: constant MOVE pads and truncates; markers retain spaces.
     Prog {
@@ -8356,6 +9752,8 @@ fn main() { out(1, VALUE); }\n",
                000000 STOP RUN.",
         expect: Expect::Stdout("BC   |\nBC|"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL reference modification: runtime MOVE uses the live slice length for fitting.
     Prog {
@@ -8380,6 +9778,8 @@ fn main() { out(1, VALUE); }\n",
                000000 STOP RUN.",
         expect: Expect::Stdout("BC   |\nBC|"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL reference modification: a runtime end past item width must trap.
     Prog {
@@ -8398,6 +9798,8 @@ fn main() { out(1, VALUE); }\n",
                000000 STOP RUN.",
         expect: Expect::Trap,
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL reference modification: a runtime zero start must trap after one-based conversion.
     Prog {
@@ -8415,6 +9817,8 @@ fn main() { out(1, VALUE); }\n",
                000000 STOP RUN.",
         expect: Expect::Trap,
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL STRING SIZE: item padding is copied; a literal separator and old tail stay visible.
     Prog {
@@ -8434,6 +9838,8 @@ fn main() { out(1, VALUE); }\n",
                000000 STOP RUN.",
         expect: Expect::Stdout("HI   -OKZZ|"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL STRING SIZE: the same sources truncate at a short receiver and exactly fill another.
     Prog {
@@ -8456,6 +9862,8 @@ fn main() { out(1, VALUE); }\n",
                000000 STOP RUN.",
         expect: Expect::Stdout("ABCD|\nABCDE|"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL STRING SIZE: a changed source is read again; unwritten receiver bytes are never filled.
     Prog {
@@ -8477,6 +9885,8 @@ fn main() { out(1, VALUE); }\n",
                000000 STOP RUN.",
         expect: Expect::Stdout("ABZZZZ|\nCDZZZZ|"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL delimiters: STRING cuts each sender, keeps absent delimiters whole, and preserves the tail.
     Prog {
@@ -8497,6 +9907,8 @@ fn main() { out(1, VALUE); }\n",
                000000 STOP RUN.",
         expect: Expect::Stdout("[abefZZZZ]"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL delimiters: an item delimiter stops at its first match, even when another follows.
     Prog {
@@ -8516,6 +9928,8 @@ fn main() { out(1, VALUE); }\n",
                000000 STOP RUN.",
         expect: Expect::Stdout("[aZZZ]"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL delimiters: UNSTRING truncates/pads fields; the last receiver does not take the remainder.
     Prog {
@@ -8538,6 +9952,8 @@ fn main() { out(1, VALUE); }\n",
                000000 STOP RUN.",
         expect: Expect::Stdout("[AB]\n[Z  ]\n[Q]"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL delimiters: leading and consecutive delimiters produce space-filled empty receivers.
     Prog {
@@ -8562,6 +9978,8 @@ fn main() { out(1, VALUE); }\n",
                000000 STOP RUN.",
         expect: Expect::Stdout("[  ]\n[A ]\n[  ]\n[B ]"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL delimiters: an item delimiter splits fields; exhausted source leaves later receivers alone.
     Prog {
@@ -8585,6 +10003,8 @@ fn main() { out(1, VALUE); }\n",
                000000 STOP RUN.",
         expect: Expect::Stdout("[A ]\n[B ]\n[ZZ]"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL pointer/overflow: in-range STRING preserves both sides and advances by bytes placed.
     Prog {
@@ -8609,6 +10029,8 @@ fn main() { out(1, VALUE); }\n",
                000000 STOP RUN.",
         expect: Expect::Stdout("[..XY..]\n05\nNON"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL pointer/overflow: an exact fit reaches width plus one without overflow.
     Prog {
@@ -8633,6 +10055,8 @@ fn main() { out(1, VALUE); }\n",
                000000 STOP RUN.",
         expect: Expect::Stdout("[..XYZ]\n06\nNON"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL pointer/overflow: a partial STRING transfer updates its pointer before ON OVERFLOW.
     Prog {
@@ -8657,6 +10081,8 @@ fn main() { out(1, VALUE); }\n",
                000000 STOP RUN.",
         expect: Expect::Stdout("[...abc]\n07\nYES"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL pointer/overflow: zero STRING pointer transfers nothing and remains unchanged.
     Prog {
@@ -8681,6 +10107,8 @@ fn main() { out(1, VALUE); }\n",
                000000 STOP RUN.",
         expect: Expect::Stdout("[......]\n00\nYES"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL pointer/overflow: UNSTRING starts at a middle field and reports remaining input.
     Prog {
@@ -8705,6 +10133,8 @@ fn main() { out(1, VALUE); }\n",
                000000 STOP RUN.",
         expect: Expect::Stdout("[b  ]\n05\nYES"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL pointer/overflow: UNSTRING exhaustion advances past the end and runs the success clause.
     Prog {
@@ -8731,6 +10161,8 @@ fn main() { out(1, VALUE); }\n",
                000000 STOP RUN.",
         expect: Expect::Stdout("[a  ]\n[b  ]\n04\nNON"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL pointer/overflow: a past-end UNSTRING pointer leaves receiver and pointer unchanged.
     Prog {
@@ -8755,6 +10187,8 @@ fn main() { out(1, VALUE); }\n",
                000000 STOP RUN.",
         expect: Expect::Stdout("[ZZZ]\n06\nYES"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // COBOL pointer/overflow: a trailing delimiter leaves an empty field and therefore overflows.
     Prog {
@@ -8779,6 +10213,8 @@ fn main() { out(1, VALUE); }\n",
                000000 STOP RUN.",
         expect: Expect::Stdout("[A  ]\n[B  ]\nYES"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
     // INSPECT all accumulates: observe counters after each operation.
     Prog {
@@ -8803,6 +10239,8 @@ fn main() { out(1, VALUE); }\n",
                000000 STOP RUN.",
         expect: Expect::Stdout("009\n009\n013"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
 
     // INSPECT characters counts padding: observe counters after each operation.
@@ -8824,6 +10262,8 @@ fn main() { out(1, VALUE); }\n",
                000000 STOP RUN.",
         expect: Expect::Stdout("011\n017"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
 
     // INSPECT leading stops at first mismatch: observe counters after each operation.
@@ -8853,6 +10293,8 @@ fn main() { out(1, VALUE); }\n",
                000000 STOP RUN.",
         expect: Expect::Stdout("007\n004\n007\n012"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
 
     // INSPECT replace all items: observe the rebuilt source text.
@@ -8879,6 +10321,8 @@ fn main() { out(1, VALUE); }\n",
                000000 STOP RUN.",
         expect: Expect::Stdout("XBXBX\nXBXBX\nXYXYX"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
 
     // INSPECT replace leading gap: observe the rebuilt source text.
@@ -8903,6 +10347,8 @@ fn main() { out(1, VALUE); }\n",
                000000 STOP RUN.",
         expect: Expect::Stdout("**X00\n**X**\nX0000"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
 
     // INSPECT replace characters padding: observe the rebuilt source text.
@@ -8926,6 +10372,8 @@ fn main() { out(1, VALUE); }\n",
                000000 STOP RUN.",
         expect: Expect::Stdout("[AB   ]\n[*****]\n[QQQQQ]"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
 
     // INSPECT replace no rechaining: observe the rebuilt source text.
@@ -8944,6 +10392,8 @@ fn main() { out(1, VALUE); }\n",
                000000 STOP RUN.",
         expect: Expect::Stdout("bzQbz"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
 
     // INSPECT replace first match: observe the rebuilt source text.
@@ -8962,6 +10412,8 @@ fn main() { out(1, VALUE); }\n",
                000000 STOP RUN.",
         expect: Expect::Stdout("xQxxx"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
 
     // VM-057: STRING with a single sending field that is also the INTO receiver
@@ -8988,6 +10440,8 @@ fn main() { out(1, VALUE); }\n",
                000000 STOP RUN.",
         expect: Expect::Stdout("ABCDE"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
 
     // VM-047c: INSPECT TALLYING FOR ALL ... BEFORE region — the count is bounded to
@@ -9014,6 +10468,8 @@ fn main() { out(1, VALUE); }\n",
                000000 STOP RUN.",
         expect: Expect::Stdout("001\n003"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
 
     // VM-047c: INSPECT TALLYING FOR ALL ... AFTER region — the asymmetric partner of
@@ -9040,6 +10496,8 @@ fn main() { out(1, VALUE); }\n",
                000000 STOP RUN.",
         expect: Expect::Stdout("001\n001"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
 
     // VM-047c: INSPECT REPLACING ALL ... BEFORE region — the rewrite is bounded to
@@ -9066,6 +10524,8 @@ fn main() { out(1, VALUE); }\n",
                000000 STOP RUN.",
         expect: Expect::Stdout("[AB0CD0]\n[AB*CD0]\n[AB*CD*]"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
 
     // VM-047c: INSPECT REPLACING ALL ... AFTER region — the asymmetric partner of
@@ -9093,6 +10553,8 @@ fn main() { out(1, VALUE); }\n",
                000000 STOP RUN.",
         expect: Expect::Stdout("[AB0CD0]\n[AB0CD*]\n[AB0CD0]"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
 
     // VM-047c: BEFORE and AFTER together in ONE INSPECT statement — the combined
@@ -9124,13 +10586,15 @@ fn main() { out(1, VALUE); }\n",
                000000 STOP RUN.",
         expect: Expect::Stdout("002\n0A0B*"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
     },
 
     // VM-039a: real stdin and EOF on the shared native/LLVM runtime.
-    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-C .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE N (A) TO N (C) ; WRITE-ITEM FILE-C .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout("5\n-3"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
-    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT EMPTY FILE-A ; OUTPUT OUT FILE-C .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE N (A) TO N (C) ; WRITE-ITEM FILE-C .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout(""), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
-    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-A .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE Q (A) TO Q (A) ; MOVE UP (A) TO UP (A) ; WRITE-ITEM FILE-A .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout("3 100\n7 0"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
-    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-A .\n(1) READ-ITEM FILE-A ; MOVE N (A) TO N (A) ; WRITE-ITEM FILE-A .\n(2) READ-ITEM FILE-A ; READ-ITEM FILE-A ; WRITE-ITEM FILE-A ; STOP .", expect: Expect::Stdout("9\n9"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-C .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE N (A) TO N (C) ; WRITE-ITEM FILE-C .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout("5\n-3"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam], release: None, case: None },
+    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT EMPTY FILE-A ; OUTPUT OUT FILE-C .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE N (A) TO N (C) ; WRITE-ITEM FILE-C .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout(""), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam], release: None, case: None },
+    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-A .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE Q (A) TO Q (A) ; MOVE UP (A) TO UP (A) ; WRITE-ITEM FILE-A .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout("3 100\n7 0"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam], release: None, case: None },
+    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-A .\n(1) READ-ITEM FILE-A ; MOVE N (A) TO N (A) ; WRITE-ITEM FILE-A .\n(2) READ-ITEM FILE-A ; READ-ITEM FILE-A ; WRITE-ITEM FILE-A ; STOP .", expect: Expect::Stdout("9\n9"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam], release: None, case: None },
 
     Prog {
     lang: Language::Cobol60,
@@ -9149,44 +10613,85 @@ fn main() { out(1, VALUE); }\n",
           000000 STOP RUN.",
     expect: Expect::Stdout("002"),
     backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+    release: None,
+    case: None,
     },
 
-    // Perl — LANG84 phase 4a, the bounded LANG81 integer `print` subset on its
-    // default release (`5.38.0` since phase 4b; the unversioned LANG81 pair in 4a,
-    // which no longer reaches the IIR path). Perl's `print` writes the
-    // decimal text with NO newline, which is LANG83's `write_i64`; the frontend emits
-    // `call_builtin write_i64` and nothing Perl-specific, so every column runs these
-    // rows through the same lowering the op-conformance suite already proved.
+    // Perl — LANG84 phases 4a and 4c: the bounded LANG81 integer `print` subset
+    // (`pl-int-print`). Perl's `print` writes the decimal text with NO newline,
+    // which is LANG83's `write_i64`; the frontend emits `call_builtin write_i64`
+    // and nothing Perl-specific, so every column runs these rows through the same
+    // lowering the op-conformance suite already proved.
     //
-    // Every expected string below was produced by the host `perl` oracle
-    // (`perl_rows_agree_with_the_host_perl_oracle` re-checks each one whenever a
-    // `perl` is on PATH); the compiled programs never run on it.
+    // Each row runs one case of `code/grammars/perl/corpus/pl-int-print/` (the
+    // source is `include_str!`ed, so it cannot drift) under one release. The
+    // releases are the representatives of the three IIR-identity classes that
+    // `perl-iir-compiler`'s release sweep finds (`release_classes.csv`): 5.38.0
+    // (the default; profile `perl_iv`), 1.000 and 5.003_26 (profile `perl_nv`).
+    // Every release in a class lowers every case to the same IIR as its
+    // representative, so these 33 rows stand for all 118 checked releases on all
+    // eight columns (`release_inventory.py check --matrix` verifies that).
+    //
+    // Every expected string is the corpus `.expect`, produced by the host `perl`
+    // oracle (`perl_rows_agree_with_the_host_perl_oracle` re-checks each one
+    // whenever a `perl` is on PATH, and `perl_rows_run_their_corpus_case` checks
+    // it against the corpus file); the compiled programs never run on it.
     //
     // The rows print, rather than exit with, their value on purpose: an exit code is
     // `& 0xFF`, so it could not tell `2147483647` from `255`. Several rows print more
     // than once, which proves statement order and the absence of a newline.
-    Prog { lang: Language::Perl, ext: "pl", src: "print(1 + 2);", expect: Expect::Stdout("3"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    //
+    // 5.38.0 — the default release; the whole corpus.
+    // The smallest program: one print of a sum.
+    Prog { lang: Language::Perl, ext: "pl", src: perl_case!("add"), expect: Expect::Stdout("3"), backends: EVERY_COLUMN, release: Some("5.38.0"), case: Some("pl-int-print/add") },
     // `*` binds tighter than `-`: 7 - (2 * 3).
-    Prog { lang: Language::Perl, ext: "pl", src: "print(7 - 2 * 3);", expect: Expect::Stdout("1"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    Prog { lang: Language::Perl, ext: "pl", src: perl_case!("mul_binds_tighter"), expect: Expect::Stdout("1"), backends: EVERY_COLUMN, release: Some("5.38.0"), case: Some("pl-int-print/mul_binds_tighter") },
     // Two prints, no separator: `-4` then `2` is `-42`, not `-4\n2`.
-    Prog { lang: Language::Perl, ext: "pl", src: "print(-4); print(2);", expect: Expect::Stdout("-42"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
-    Prog { lang: Language::Perl, ext: "pl", src: "print((1 + 2) * 3);", expect: Expect::Stdout("9"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    Prog { lang: Language::Perl, ext: "pl", src: perl_case!("no_newline_between_prints"), expect: Expect::Stdout("-42"), backends: EVERY_COLUMN, release: Some("5.38.0"), case: Some("pl-int-print/no_newline_between_prints") },
+    Prog { lang: Language::Perl, ext: "pl", src: perl_case!("parentheses"), expect: Expect::Stdout("9"), backends: EVERY_COLUMN, release: Some("5.38.0"), case: Some("pl-int-print/parentheses") },
     // Left associativity: (10 - 3) - 2, not 10 - (3 - 2).
-    Prog { lang: Language::Perl, ext: "pl", src: "print(10 - 3 - 2);", expect: Expect::Stdout("5"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    Prog { lang: Language::Perl, ext: "pl", src: perl_case!("left_associative_minus"), expect: Expect::Stdout("5"), backends: EVERY_COLUMN, release: Some("5.38.0"), case: Some("pl-int-print/left_associative_minus") },
     // A spaced `- -` is binary minus then unary minus (adjacent `--` is decrement
     // and is refused); `- -5` nests two unary minuses.
-    Prog { lang: Language::Perl, ext: "pl", src: "print(1- -2); print(- -5);", expect: Expect::Stdout("35"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
-    Prog { lang: Language::Perl, ext: "pl", src: "print(2 * -3 * 4);", expect: Expect::Stdout("-24"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    Prog { lang: Language::Perl, ext: "pl", src: perl_case!("binary_then_unary_minus"), expect: Expect::Stdout("35"), backends: EVERY_COLUMN, release: Some("5.38.0"), case: Some("pl-int-print/binary_then_unary_minus") },
+    Prog { lang: Language::Perl, ext: "pl", src: perl_case!("unary_minus_in_product"), expect: Expect::Stdout("-24"), backends: EVERY_COLUMN, release: Some("5.38.0"), case: Some("pl-int-print/unary_minus_in_product") },
     // Both ends of the signed 32-bit range the subset admits, printed at full width.
     // The minimum is spelled `-2147483647 - 1` because the literal 2147483648 is
     // itself out of range and refused.
-    Prog { lang: Language::Perl, ext: "pl", src: "print(2147483647); print(-2147483647 - 1);", expect: Expect::Stdout("2147483647-2147483648"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    Prog { lang: Language::Perl, ext: "pl", src: perl_case!("i32_bounds"), expect: Expect::Stdout("2147483647-2147483648"), backends: EVERY_COLUMN, release: Some("5.38.0"), case: Some("pl-int-print/i32_bounds") },
     // The largest square in range; `46341 * 46341` would be refused at compile time.
-    Prog { lang: Language::Perl, ext: "pl", src: "print(46340 * 46340);", expect: Expect::Stdout("2147395600"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
-    // Integer `-0` prints `0`; a negated parenthesised difference.
-    Prog { lang: Language::Perl, ext: "pl", src: "print(0); print(-0); print(-(3 - 10));", expect: Expect::Stdout("007"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    Prog { lang: Language::Perl, ext: "pl", src: perl_case!("largest_square"), expect: Expect::Stdout("2147395600"), backends: EVERY_COLUMN, release: Some("5.38.0"), case: Some("pl-int-print/largest_square") },
+    // Integer `-0` prints `0`; a negated parenthesised difference. (Refused under
+    // `perl_nv`, so this case has no 1.000 or 5.003_26 row.)
+    Prog { lang: Language::Perl, ext: "pl", src: perl_case!("zero_and_negation"), expect: Expect::Stdout("007"), backends: EVERY_COLUMN, release: Some("5.38.0"), case: Some("pl-int-print/zero_and_negation") },
     // Newlines and tabs between statements are whitespace, not output.
-    Prog { lang: Language::Perl, ext: "pl", src: "print(1);\nprint(2);\n\tprint(3);\n", expect: Expect::Stdout("123"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    Prog { lang: Language::Perl, ext: "pl", src: perl_case!("newline_and_tab_layout"), expect: Expect::Stdout("123"), backends: EVERY_COLUMN, release: Some("5.38.0"), case: Some("pl-int-print/newline_and_tab_layout") },
+    // CRLF line ends: a carriage return is whitespace here (and under 1.000, but
+    // not under 5.003_26, whose pair makes it a lex error).
+    Prog { lang: Language::Perl, ext: "pl", src: perl_case!("crlf_layout"), expect: Expect::Stdout("12"), backends: EVERY_COLUMN, release: Some("5.38.0"), case: Some("pl-int-print/crlf_layout") },
+    // 1.000 — representative of the class with Perl 1–4, 5.000–5.003_25 and 5.004_72.
+    Prog { lang: Language::Perl, ext: "pl", src: perl_case!("add"), expect: Expect::Stdout("3"), backends: EVERY_COLUMN, release: Some("1.000"), case: Some("pl-int-print/add") },
+    Prog { lang: Language::Perl, ext: "pl", src: perl_case!("mul_binds_tighter"), expect: Expect::Stdout("1"), backends: EVERY_COLUMN, release: Some("1.000"), case: Some("pl-int-print/mul_binds_tighter") },
+    Prog { lang: Language::Perl, ext: "pl", src: perl_case!("no_newline_between_prints"), expect: Expect::Stdout("-42"), backends: EVERY_COLUMN, release: Some("1.000"), case: Some("pl-int-print/no_newline_between_prints") },
+    Prog { lang: Language::Perl, ext: "pl", src: perl_case!("parentheses"), expect: Expect::Stdout("9"), backends: EVERY_COLUMN, release: Some("1.000"), case: Some("pl-int-print/parentheses") },
+    Prog { lang: Language::Perl, ext: "pl", src: perl_case!("left_associative_minus"), expect: Expect::Stdout("5"), backends: EVERY_COLUMN, release: Some("1.000"), case: Some("pl-int-print/left_associative_minus") },
+    Prog { lang: Language::Perl, ext: "pl", src: perl_case!("binary_then_unary_minus"), expect: Expect::Stdout("35"), backends: EVERY_COLUMN, release: Some("1.000"), case: Some("pl-int-print/binary_then_unary_minus") },
+    Prog { lang: Language::Perl, ext: "pl", src: perl_case!("unary_minus_in_product"), expect: Expect::Stdout("-24"), backends: EVERY_COLUMN, release: Some("1.000"), case: Some("pl-int-print/unary_minus_in_product") },
+    Prog { lang: Language::Perl, ext: "pl", src: perl_case!("i32_bounds"), expect: Expect::Stdout("2147483647-2147483648"), backends: EVERY_COLUMN, release: Some("1.000"), case: Some("pl-int-print/i32_bounds") },
+    Prog { lang: Language::Perl, ext: "pl", src: perl_case!("largest_square"), expect: Expect::Stdout("2147395600"), backends: EVERY_COLUMN, release: Some("1.000"), case: Some("pl-int-print/largest_square") },
+    Prog { lang: Language::Perl, ext: "pl", src: perl_case!("newline_and_tab_layout"), expect: Expect::Stdout("123"), backends: EVERY_COLUMN, release: Some("1.000"), case: Some("pl-int-print/newline_and_tab_layout") },
+    Prog { lang: Language::Perl, ext: "pl", src: perl_case!("crlf_layout"), expect: Expect::Stdout("12"), backends: EVERY_COLUMN, release: Some("1.000"), case: Some("pl-int-print/crlf_layout") },
+    // 5.003_26 — representative of the class through 5.004_71 whose pairs refuse a CR.
+    Prog { lang: Language::Perl, ext: "pl", src: perl_case!("add"), expect: Expect::Stdout("3"), backends: EVERY_COLUMN, release: Some("5.003_26"), case: Some("pl-int-print/add") },
+    Prog { lang: Language::Perl, ext: "pl", src: perl_case!("mul_binds_tighter"), expect: Expect::Stdout("1"), backends: EVERY_COLUMN, release: Some("5.003_26"), case: Some("pl-int-print/mul_binds_tighter") },
+    Prog { lang: Language::Perl, ext: "pl", src: perl_case!("no_newline_between_prints"), expect: Expect::Stdout("-42"), backends: EVERY_COLUMN, release: Some("5.003_26"), case: Some("pl-int-print/no_newline_between_prints") },
+    Prog { lang: Language::Perl, ext: "pl", src: perl_case!("parentheses"), expect: Expect::Stdout("9"), backends: EVERY_COLUMN, release: Some("5.003_26"), case: Some("pl-int-print/parentheses") },
+    Prog { lang: Language::Perl, ext: "pl", src: perl_case!("left_associative_minus"), expect: Expect::Stdout("5"), backends: EVERY_COLUMN, release: Some("5.003_26"), case: Some("pl-int-print/left_associative_minus") },
+    Prog { lang: Language::Perl, ext: "pl", src: perl_case!("binary_then_unary_minus"), expect: Expect::Stdout("35"), backends: EVERY_COLUMN, release: Some("5.003_26"), case: Some("pl-int-print/binary_then_unary_minus") },
+    Prog { lang: Language::Perl, ext: "pl", src: perl_case!("unary_minus_in_product"), expect: Expect::Stdout("-24"), backends: EVERY_COLUMN, release: Some("5.003_26"), case: Some("pl-int-print/unary_minus_in_product") },
+    Prog { lang: Language::Perl, ext: "pl", src: perl_case!("i32_bounds"), expect: Expect::Stdout("2147483647-2147483648"), backends: EVERY_COLUMN, release: Some("5.003_26"), case: Some("pl-int-print/i32_bounds") },
+    Prog { lang: Language::Perl, ext: "pl", src: perl_case!("largest_square"), expect: Expect::Stdout("2147395600"), backends: EVERY_COLUMN, release: Some("5.003_26"), case: Some("pl-int-print/largest_square") },
+    Prog { lang: Language::Perl, ext: "pl", src: perl_case!("newline_and_tab_layout"), expect: Expect::Stdout("123"), backends: EVERY_COLUMN, release: Some("5.003_26"), case: Some("pl-int-print/newline_and_tab_layout") },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses
@@ -9220,6 +10725,20 @@ fn native_linker_ok() -> bool {
     }
 }
 
+/// `p`'s source as IIR, compiled against the row's release (`None` is the
+/// frontend's default, and the only value an uninventoried language takes).
+/// Every runner starts here, so a Perl row tagged `1.000` really runs the 1.000
+/// grammar on every column; `compile_source_to_<backend>(lang, ..)` would
+/// silently use the default release instead.
+fn prog_iir(p: &Prog, module_name: &str) -> Result<interpreter_ir::IIRModule, lang_aot::LangAotError> {
+    lang_aot::compile_source_to_iir_at(p.lang, p.release, p.src, module_name)
+}
+
+/// `p`'s `--lang` request: the language plus the row's release.
+fn request(p: &Prog) -> lang_aot::LanguageRequest {
+    lang_aot::LanguageRequest { language: p.lang, release: p.release.map(str::to_string) }
+}
+
 /// Compile `p` to a native executable for the host OS. `Err` carries the real
 /// compiler/linker error so `run_native` can fail loudly (see `cell_failed`) — the
 /// host-can't-produce-a-native-exe case is decided earlier by `native_linker_ok`,
@@ -9227,7 +10746,7 @@ fn native_linker_ok() -> bool {
 fn compile_native(
     src_path: &std::path::Path,
     exe: &std::path::Path,
-    lang: Language,
+    lang: lang_aot::LanguageRequest,
 ) -> Result<(), String> {
     #[cfg(target_os = "linux")]
     {
@@ -9373,7 +10892,7 @@ fn run_native(p: &Prog) -> Option<RunResult> {
     let src_path = dir.path().join(format!("prog.{}", p.ext));
     std::fs::write(&src_path, p.src).expect("native: write source");
     let exe = dir.path().join("prog");
-    if let Err(e) = compile_native(&src_path, &exe, p.lang) {
+    if let Err(e) = compile_native(&src_path, &exe, request(p)) {
         cell_failed("NativeAot", p, "source → native executable", e);
     }
     // Feed the program's stdin (a Brainfuck `,` reads it via libc `getchar`); empty for
@@ -9488,7 +11007,7 @@ fn run_llvm(p: &Prog) -> Option<RunResult> {
     .expect("clang -dumpmachine emitted valid UTF-8")
     .trim()
     .to_string();
-    let ll = match lang_aot::compile_source_to_llvm_with_target(p.lang, p.src, "lm", &triple) {
+    let ll = match prog_iir(p, "lm").and_then(|m| lang_aot::compile_iir_to_llvm(m, "lm", &triple)) {
         Ok(ll) => ll,
         Err(e) => cell_failed("Llvm", p, "source → LLVM IR", format!("{e:?}")),
     };
@@ -10181,7 +11700,7 @@ fn run_wasm(p: &Prog) -> Option<RunResult> {
     // Wasm is compiled and executed entirely in-process: there is no host toolchain
     // to be absent, so this runner has NO legitimate skip. Every exit below is a
     // real failure.
-    let wasm = match lang_aot::compile_source_to_wasm(p.lang, p.src, "main") {
+    let wasm = match prog_iir(p, "main").and_then(lang_aot::compile_iir_to_wasm) {
         Ok(w) => w,
         Err(e) => cell_failed("Wasm", p, "source → wasm bytes", format!("{e:?}")),
     };
@@ -10380,7 +11899,7 @@ fn run_jvm(p: &Prog) -> Option<RunResult> {
         (cp.len() - 1) as u16
     }
     let prints = matches!(&p.expect, Expect::Stdout(_));
-    let mut class = match lang_aot::compile_source_to_jvm_class(p.lang, p.src, "Main") {
+    let mut class = match prog_iir(p, "Main").and_then(|m| lang_aot::compile_iir_to_jvm_class(m, "Main")) {
         Ok(c) => c,
         Err(e) => cell_failed("Jvm", p, "source → JVM class file", format!("{e:?}")),
     };
@@ -10669,7 +12188,7 @@ fn run_beam(p: &Prog) -> Option<RunResult> {
         return None; // no BEAM runtime on this host — the ONLY legitimate skip
     }
     let module = "langmatrix";
-    let bytes = match lang_aot::compile_source_to_beam(p.lang, p.src, module) {
+    let bytes = match prog_iir(p, module).and_then(|m| lang_aot::compile_iir_to_beam(m, module)) {
         Ok(b) => b,
         Err(e) => cell_failed("Beam", p, "source → BEAM bytes", format!("{e:?}")),
     };
@@ -10792,7 +12311,7 @@ fn run_clr(p: &Prog) -> Option<RunResult> {
         return None;
     }
     let ilasm = clr_support::find_ilasm()?;
-    let il = match lang_aot::compile_source_to_cil_text(p.lang, p.src, "Main") {
+    let il = match prog_iir(p, "Main").and_then(|m| lang_aot::compile_iir_to_cil_text(m, "Main")) {
         Ok(il) => il,
         Err(e) => cell_failed("Clr", p, "source → textual CIL", format!("{e:?}")),
     };
@@ -10937,7 +12456,7 @@ fn run_vm(p: &Prog) -> Option<RunResult> {
 
     // The VM is in-process — there is no toolchain to be absent, so a compile
     // failure here is a real failure, never a skip.
-    let mut module = match lang_aot::compile_source_to_iir(p.lang, p.src, "main") {
+    let mut module = match prog_iir(p, "main") {
         Ok(m) => m,
         Err(e) => cell_failed("Vm", p, "source → IIR", format!("{e:?}")),
     };
@@ -11067,7 +12586,7 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
     use vm_core::value::Value;
 
     // In-process, like `run_vm`: no toolchain gate, so no legitimate skip.
-    let mut module = match lang_aot::compile_source_to_iir(p.lang, p.src, "main") {
+    let mut module = match prog_iir(p, "main") {
         Ok(m) => m,
         Err(e) => cell_failed("Jit", p, "source → IIR", format!("{e:?}")),
     };
@@ -11248,6 +12767,8 @@ fn portable_text_stdout_accepts_lf_and_crlf() {
         src: "10 PRINT 3.14\n20 PRINT .25\n30 PRINT -2.5\n",
         expect: Expect::Stdout("3.14\n.25\n-2.5"),
         backends: &[Llvm],
+        release: None,
+        case: None,
     };
     for stdout in ["3.14\n.25\n-2.5", "3.14\r\n.25\r\n-2.5"] {
         assert_cell(Llvm, &program, RunResult::Completed {
@@ -11264,6 +12785,8 @@ fn portable_text_stdout_preserves_content_and_brainfuck_bytes() {
         src: "text comparison boundary",
         expect: Expect::Stdout(" A\t\n\nB\rC Ω "),
         backends: &[Llvm],
+        release: None,
+        case: None,
     };
     assert_cell(Llvm, &program, RunResult::Completed {
         code: Some(0), stdout: " A\t\r\n\r\nB\rC Ω ".to_string(),
@@ -11282,6 +12805,8 @@ fn portable_text_stdout_preserves_content_and_brainfuck_bytes() {
         src: "byte comparison boundary",
         expect: Expect::Stdout("A\nB"),
         backends: &[Llvm],
+        release: None,
+        case: None,
     };
     assert!(std::panic::catch_unwind(|| assert_cell(Llvm, &bytes,
         RunResult::Completed { code: Some(0), stdout: "A\r\nB".to_string() }
@@ -11968,8 +13493,10 @@ fn feature_coverage_doc_counts_match_programs_source() {
         (Language::MacroOct, 15, 120),
         (Language::FlowMatic, 8, 64),
         (Language::Cobol60, 59, 472),
-        // Perl: LANG84 phase 4a's eleven integer-`print` rows, all eight columns.
-        (Language::Perl, 11, 88),
+        // Perl: the `pl-int-print` corpus on the three IIR-identity class
+        // representatives (LANG84 4c): 12 cases on 5.38.0, 11 on 1.000 and 10
+        // on 5.003_26, all eight columns.
+        (Language::Perl, 33, 264),
     ];
 
     for (lang, want_rows, want_cells) in expected {
@@ -12273,6 +13800,8 @@ const ORDERED_OUTPUT_PROGRAM: Prog = Prog {
           print('C') end",
     expect: Expect::Stdout("A1\nB-2\nC"),
     backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    release: None,
+    case: None,
 };
 
 #[test]
@@ -23599,7 +25128,7 @@ fn t7_differential_random_u8_expressions_agree() {
         let expr = gen_u8_expr(&mut state, 0);
         let src: &'static str =
             Box::leak(format!("fn main() -> u8 {{ return {expr}; }}").into_boxed_str());
-        let p = Prog { lang: Language::Nib, ext: "nib", src, expect: Expect::Exit(0), backends: &[] };
+        let p = Prog { lang: Language::Nib, ext: "nib", src, expect: Expect::Exit(0), backends: &[], release: None, case: None };
 
         // The observable is the `u8` program's LOW BYTE. Every engine that reports
         // via a process exit code is already truncated to 8 bits by the OS
@@ -23689,6 +25218,8 @@ fn t7_differential_random_basic_print_agree() {
             src,
             expect: Expect::Stdout(""),
             backends: &[],
+            release: None,
+            case: None,
         };
 
         let Some(want) = stdout_of(p.lang, run_vm(&p)) else {
@@ -23754,6 +25285,8 @@ fn t7_differential_random_basic_conditionals_agree() {
             src,
             expect: Expect::Stdout(""),
             backends: &[],
+            release: None,
+            case: None,
         };
 
         let Some(want) = stdout_of(p.lang, run_vm(&p)) else {
@@ -23836,6 +25369,8 @@ fn t7_differential_random_basic_loops_agree() {
             src,
             expect: Expect::Stdout(""),
             backends: &[],
+            release: None,
+            case: None,
         };
         let Some(want) = stdout_of(p.lang, run_vm(&p)) else {
             panic!("VM (reference oracle) failed to run generated program: {src:?}");
@@ -23994,6 +25529,8 @@ fn portable_text_stdout_clr_numeric_eof() {
         src: "10 INPUT EOFVALUE\n20 PRINT EOFVALUE\n30 END\n",
         expect: Expect::Stdout("0"),
         backends: &[Clr],
+        release: None,
+        case: None,
     };
     assert!(program_stdin(&p).is_empty());
     match run_clr(&p) {
@@ -24052,7 +25589,7 @@ fn portable_text_stdout_clr_input_more_peek() {
             "1\n1\n5\n5\n1\n1\n0\n1\n1\n0\n1\n1\n0\n1\n1\n-3\n0\n0\n0\n0\n0\n0"
         };
         let p = Prog { lang: Language::FlowMatic, ext: "iir", src: "CLR direct IIR peek/width proof",
-            expect: Expect::Stdout(expected), backends: &[Clr] };
+            expect: Expect::Stdout(expected), backends: &[Clr], release: None, case: None };
         let result = run_clr_il(&p, &il, b"hello\n5\n4294967296\n\nbad\n-3", &ilasm);
         assert_cell(Clr, &p, result);
     }
@@ -25253,7 +26790,7 @@ fn portable_text_stdout_cobol_region_intersection() {
 }
 
 // ---------------------------------------------------------------------------
-// LANG84 phase 4a — Perl on every backend
+// LANG84 phases 4a and 4c — Perl on every backend, per release class
 // ---------------------------------------------------------------------------
 
 fn perl_rows() -> Vec<&'static Prog> {
@@ -25272,9 +26809,9 @@ fn perl_rows_run_on_every_available_backend() {
     for program in perl_rows() {
         assert_eq!(
             program.backends,
-            &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+            EVERY_COLUMN,
             "every Perl row declares all eight columns: {:?}",
-            program.src
+            program.case
         );
         for &backend in program.backends {
             let available = match backend {
@@ -25338,8 +26875,9 @@ fn perl_rows_agree_with_the_host_perl_oracle() {
 #[test]
 fn perl_rows_pass_the_lang83_check_on_all_nine_backends() {
     for program in perl_rows() {
-        let module = lang_aot::compile_source_to_iir(Language::Perl, program.src, "c7")
-            .unwrap_or_else(|e| panic!("{:?}: {e}", program.src));
+        let module = lang_aot::compile_source_to_iir_at(Language::Perl, program.release, program.src, "c7")
+            .unwrap_or_else(|e| panic!("{:?} {:?}: {e}", program.release, program.case));
+        assert_eq!(module.release.as_deref(), program.release, "{:?}", program.case);
         let builtins: Vec<_> = module
             .functions
             .iter()
@@ -25360,3 +26898,48 @@ fn perl_rows_pass_the_lang83_check_on_all_nine_backends() {
         }
     }
 }
+
+/// LANG84 4c: every Perl row names a release and a `pl-int-print` corpus case,
+/// runs exactly that case's source and expects exactly its `.expect`, and the
+/// rows are precisely the boundary set the release sweep computed: every case
+/// each IIR-identity class representative accepts (read from
+/// `code/grammars/perl/release_classes.csv`), plus the whole corpus on the
+/// default release. No row is missing, none is extra, none is repeated. This
+/// is the Rust-side mirror of `release_inventory.py check --matrix`.
+#[test]
+fn perl_rows_run_their_corpus_case() {
+    let grammars = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/perl");
+    let corpus = grammars.join("corpus/pl-int-print");
+    let mut rows = std::collections::BTreeSet::new();
+    for program in perl_rows() {
+        let (Some(release), Some(case)) = (program.release, program.case) else {
+            panic!("a Perl row names its release and case: {:?}", program.src);
+        };
+        let name = case.strip_prefix("pl-int-print/").unwrap_or_else(|| panic!("{case}"));
+        let source = std::fs::read_to_string(corpus.join(format!("{name}.pl"))).unwrap();
+        assert_eq!(program.src, source, "{case}: the row runs the corpus source");
+        let expect = std::fs::read_to_string(corpus.join(format!("{name}.expect"))).unwrap();
+        let Expect::Stdout(stdout) = program.expect else { panic!("{case}: a Perl row checks stdout") };
+        assert_eq!(Some(stdout), expect.strip_suffix('\n'), "{case}@{release}: the row expects the .expect");
+        assert!(rows.insert((release.to_string(), name.to_string())), "{case}@{release} twice");
+    }
+    // release_classes.csv lists each case's releases in inventory order, so
+    // the first release seen with a class is that class's representative.
+    let classes = std::fs::read_to_string(grammars.join("release_classes.csv")).unwrap();
+    let mut expected = std::collections::BTreeSet::new();
+    let mut seen = std::collections::BTreeSet::new();
+    for line in classes.lines().skip(1) {
+        let [subset, case, release, class] = line.split(',').collect::<Vec<_>>()[..] else {
+            panic!("release_classes.csv: {line}");
+        };
+        assert_eq!(subset, "pl-int-print");
+        if class == "rejected" {
+            continue;
+        }
+        if seen.insert((case.to_string(), class.to_string())) || release == "5.38.0" {
+            expected.insert((release.to_string(), case.to_string()));
+        }
+    }
+    assert_eq!(rows, expected, "Perl rows vs the sweep's boundary set");
+}
+

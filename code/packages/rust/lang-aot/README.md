@@ -690,12 +690,17 @@ LLVM, native and JVM. Modules using the PR1b i64 operations keep the wide i64
 value model on the JVM (they are never narrowed to `i32`). See
 `code/specs/LANG83-iir-standard-operation-registry.md`.
 
-**Perl (LANG84 phases 4a, 4b).** `--lang perl` (or `pl`, or a `.pl` file)
+**Perl (LANG84 phases 4a–4c).** `--lang perl` (or `pl`, or a `.pl` file)
 compiles the bounded LANG81 integer `print` subset with `perl-iir-compiler` on
 its default release, `5.38.0`; `--lang perl@<release>` selects any other
 checked row of `code/grammars/perl/releases.csv` exactly. Perl's `print` is `write_i64`, so no backend has Perl-specific
-code. Eleven `lang_matrix` rows declare all eight executable columns, and three
-named tests guard them:
+code. Thirty-three `lang_matrix` rows declare all eight executable columns:
+each runs one case of the `pl-int-print` corpus under one release (`Prog`'s
+`release` and `case` fields), and the releases are the three IIR-identity
+class representatives `perl-iir-compiler`'s release sweep finds (5.38.0, 1.000
+and 5.003_26), which stand for all 118 checked releases. Four named tests
+guard them (`perl_rows_run_their_corpus_case` ties each row to its corpus
+files and to the sweep's boundary set):
 
 ```sh
 cargo test -p lang-aot --test lang_matrix perl_rows_ -- --nocapture
