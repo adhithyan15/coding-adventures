@@ -302,7 +302,9 @@ expression end (`a++⏎b()`).
 
 **Work budget.** `retry_on_error` charges the stream length per attempt and
 stops once it has spent max(4·n, 200k) token-parses, returning the parse error
-in hand. A hostile file therefore costs at most about five parses. A valid
+in hand. The budget applies to the speculated attempt and again to the plain
+fallback, so a hostile file costs at most about ten parses, which is still
+linear. A valid
 file that needs more uncovered insertions than that is declined: SIMPLE fails
 cleanly and WHITESPACE_ONLY keeps its old output. An example is 100 lines of
 `x = () => {a:1}` after a large prefix.
