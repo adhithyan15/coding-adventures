@@ -105,7 +105,7 @@ does not gate it).
 | | `f64_div_floor` `f64_mod_floor` `f64_is_nan` | Op | Later | Python float `//` `%` (`fmod`, then a sign fix-up; `b == 0` → `Trap.DivZero`). Deferred to PR6b: WASM has no `fmod` instruction, so it needs its own exact remainder routine. |
 | Conversions | `int_to_real` | Op | Exists | Exact `i64 → f64`. |
 | | `real_to_int_trunc` `real_to_int_floor` | Op | Exists | Non-finite or out-of-range → `Trap.ConvRange`. |
-| | `i64_to_str`, `f64_to_str_py` `_js` `_rb` `_pl` | Op | Later | One op per *layout*, not a flags operand; every backend uses one internal shortest-digits core, with Rust `format!("{:e}")` digits as the oracle. |
+| | `i64_to_str`, `f64_to_str_py` `_js` `_rb` `_pl` | Op | Later | One op per *layout*, not a flags operand; every backend uses one internal shortest-digits core. The oracle is host `python3` / `node`. Rust `format!("{:e}")` gives the same digit *length* but rounds an exact tie up, not to even (see "PR6a"). |
 | Output | `print_i64` | Builtin | Exists | Decimal value **plus `\n`**. Kept: BASIC, Oct, ALGOL and Ruby `puts` depend on it. |
 | | `putchar` | Builtin | Exists | Low byte of the argument. |
 | | `print_str` | Op | Exists | String bytes, no newline. |
@@ -575,11 +575,20 @@ more digits follow, then `e`, then the sign, which is always present.
 For finite non-zero `x`, the digit string `D` is the shortest one such that
 `D × 10^k` rounds to `x` under round-half-even. If several strings of that
 length qualify, it is the one closest to `x`. On an exact tie the last digit
-is even. This is what Python's `repr`, ECMAScript's `Number::toString`, Rust's
-`{:e}`, Java 19+'s `Double.toString`, .NET Core 3.0+'s `"R"` and Erlang's
-`float_to_list(F, [short])` all produce. The tie rule is not hypothetical:
-`2^-25` is exactly halfway between `2.9802322387695312e-08` and
-`...313e-08`, and Python prints the even one.
+is even. Python's `repr` and ECMAScript's `Number::toString` produce exactly
+this. So, per their documentation, do Java 19+'s `Double.toString`, .NET Core
+3.0+'s `"R"` and Erlang's `float_to_list(F, [short])` (Ryu). Two host
+formatters differ, so the backends that use them correct for it:
+
+- **Rust's `{:e}` rounds an exact tie up.** Against host `python3` on 535 432
+  values, Rust's digits differed on 94, and every one was such a tie. `2^-25`
+  is exactly `2.98023223876953125e-08`: Python prints `…312e-08` and Rust
+  `…313e-8`. The same happens for any double near `1e15` with a `.25` or `.75`
+  fraction. So Rust's `{:e}` is NOT the oracle the vocabulary table first
+  named; host `python3` and `node` are.
+- **Java never prints fewer than two digits**, so `Double.MIN_VALUE` is
+  `4.9E-324` where Python and JavaScript print `5e-324`. This only matters
+  for the deepest subnormals, where a one-digit decimal reads back.
 
 The **one internal core** (the vocabulary table's "one shortest-digits core")
 is the Burger–Dybvig free-format algorithm (Steele–White / Dragon4 family)
@@ -633,11 +642,11 @@ emits itself.
 | x86-64 / AArch64 | `__twig_write_f64_py` / `__twig_write_f64_js` in the native runtime (`twig_runtime.c`, the same place PR1b put `__twig_write_i64`): the core above in C, on stack bignums | C; `putchar` on the same `stdout` `FILE*` as `printf`. The argument is the raw bit pattern in a GPR (`rdi` / `x0`), so the generic `call_builtin` marshalling is unchanged. |
 | LLVM | module-local `linkonce_odr` IR: `@__iir_bn_*` limb routines and `@__iir_f64_digits` (the core, bignums in `alloca [40 x i64]`) | `linkonce_odr @__iir_write_f64(double, i32 layout)`; libc `putchar` |
 | WASM | in-module functions: `$__iir_bn_*` limb routines and the core, bignums in a 1 664-byte region reserved at the end of the module's static data (so neither the bump allocator nor string data can overlap it) | in-module `$__iir_write_f64(f64, i32 layout)`; one `env.putchar` per byte |
-| JVM | `Double.toString(Math.abs(x))`: JDK 19+ implements Raffaello Giulietti's shortest algorithm (JDK-4511638). CI runs JDK 21. | synthetic static method `__iir_write_f64(DI)V`: `new BigDecimal(s).stripTrailingZeros()` gives `D` (`unscaledValue()`) and `e10 = len(D) - 1 - scale()`; fixed layout is `toPlainString()`, sci is built with a `StringBuilder`; one `System.out.print(String)` |
+| JVM | `Double.toString(Math.abs(x))`: JDK 19+ implements Raffaello Giulietti's shortest algorithm (JDK-4511638). CI runs JDK 21. When two digits survive, the helper tries the two one-digit neighbours with `BigDecimal.doubleValue` and keeps the closer one that reads back (even on a tie), because Java never prints one digit. | synthetic private static method `__iir_write_f64(DI)V`: `new BigDecimal(s).stripTrailingZeros()` gives `D` (`unscaledValue()`) and `e10 = len(D) - 1 - scale()`; fixed layout is `toPlainString()`, sci is built with a `StringBuilder`; one `System.out.print(String)` |
 | CLR (textual) | `Math.Abs(x).ToString("R", CultureInfo.InvariantCulture)`: shortest round-trip on .NET Core 3.0+ | IL helper `__iir_write_f64(float64, int32)` that parses the mantissa / `E` exponent with `IndexOf`, `Substring`, `Remove`, `TrimStart('0')`, `TrimEnd('0')` and `Int32.Parse`, then `Console.Write(string)` for each piece |
 | BEAM | `erlang:float_to_list(F, [short])`: shortest round-trip since OTP 25 (Ryu). CI runs OTP 27. | module-local function `'__iir_write_f64'/2`: `string:split` on `e` and `.`, `string:trim` of `0`s, `list_to_integer`, then `io:put_chars/1` per piece |
-| VM | Rust `format!("{:e}", x)`, which prints Rust's shortest round-trip digits (the oracle the vocabulary table names) | `vm_core::float_format::{python_repr, js_to_string}`; default builtins on the same `stdout` handle as `write_i64` |
-| JIT | the same Rust functions, through the embedder-registered `write_f64_py` / `write_f64_js` handler | new `CALL_BUILTIN_F64` bytecode, which passes the register as `Value::Float`. `const_f64` compiles to the register's bit pattern. Any other use of an `f64` register still refuses compilation, so it falls back to the interpreter, as it did before. |
+| VM | Rust `format!("{:e}", x)` for the shortest digits. Then Rust's exact `{:.1100e}` expansion detects an exact tie: one digit longer than the shortest, ending in `5`. On a tie the module takes the even neighbour whenever it also reads back. | `vm_core::float_format::{python_repr, js_to_string}`; default builtins on the same `stdout` handle as `write_i64` |
+| JIT | the same Rust functions, through the embedder-registered `write_f64_py` / `write_f64_js` handler | new `CALL_BUILTIN_F64` bytecode, which passes the register as `Value::Float`. `const_f64` compiles to the register's bit pattern, and a float literal that the optimiser's constant propagation folded into the call is materialised the same way. Any other use of an `f64` register still refuses compilation, so it falls back to the interpreter, as it did before. |
 
 The host formatters fix only the **digits**. Each backend re-derives `D` and
 `e10` from the host's string and applies the LANG83 layout itself, so the
@@ -654,22 +663,45 @@ layouts. They stay `Later` until their frontends emit them.
 
 ### Conformance cases
 
-`op_conformance` gains one case per layout that prints a table of values, each
-followed by `putchar('\n')`. The table holds the layout edges: `0.0`, `-0.0`,
-`±inf` and `nan` (not on BEAM, see above), `1.0`, `100.0`, `0.1`, `1e15`,
-`1e16`, `1e20`, `1e21`, `1e-4`, `1e-5`, `1e-6`, `1e-7`, `1.5e-7`, `123.456`,
-`5e-324`, `2.2250738585072014e-308`, `1.7976931348623157e308`, `2^-25` (the
-round-half-even tie), `2^53 + 2`, `2e23` (the value JDK < 19 printed long),
-and 40 random finite doubles from fixed seeds. The expected strings are
-**generated by host `python3` and `node`** and checked in; a test re-runs both
-oracles when they are installed and fails if the checked-in strings drift. A
-second set of cases is the same table through `print_i64` interleaving, so
-the ordered-stream contract covers the new builtins. The gate
-`pr6a_ops_are_lowered_on_every_backend` pins that all nine backends lower
-both builtins.
+`op_conformance` gains one case per layout that prints a 90-value table, each
+value followed by `putchar('\n')`. The table holds the layout edges and the
+hard digits:
+
+- `0.0`, `-0.0`, `±inf` and `nan` (BEAM cannot represent the last three);
+- `1.0`, `100.0`, `0.1`, `1e15`, `1e16`, `1e20`, `1e21`;
+- `1e-4`, `1e-5`, `1e-6`, `1e-7`, `1.5e-7`, `123.456`, `-2.5`;
+- `5e-324`, `2.2250738585072014e-308`, `1.7976931348623157e308`;
+- the round-half-even ties `2^-25` and `1072012167405248.25`;
+- `2^53 + 2`, `2e23` (the value JDK < 19 printed long), `0.1 + 0.2`, `1e-300`;
+- 40 random finite bit patterns and 20 random short decimals from fixed
+  seeds.
+
+The expected strings are **generated by host `python3` and `node`** and
+checked in. The test `float_table_matches_host_python3_and_node` re-runs both
+oracles whenever they are installed and fails if a checked-in string drifts.
+
+Two more cases cover output that is not a table:
+
+- One interleaves the writers with `write_i64`, `print_i64` and `putchar`, so
+  the ordered-stream contract covers them.
+- One prints computed floats (`0.1 + 0.2`, `int_to_real 7`), not only
+  constants.
+
+The gate `pr6a_ops_are_lowered_on_every_backend` pins that all nine backends
+lower both builtins. It also requires both table cases to pass on every
+executable column whose toolchain is present.
 
 Local evidence and its limits are those of PR4: native x86-64, LLVM (clang),
-WASM, JVM (JDK 21), VM and JIT execute every case. CLR, BEAM and AArch64 are
+WASM, JVM (JDK 21), VM and JIT execute every case. Beyond the 90-value table,
+four implementations were checked on the full prototype corpus (535 432 values
+against `python3`, 402 112 against `node`), with no mismatch:
+
+- the native runtime's C (also clean under ASan/UBSan);
+- the LLVM IR at `-O0` and `-O2`;
+- the emitted WASM module, run on V8;
+- the JVM helper on JDK 21.
+
+The VM/JIT formatter was checked the same way. CLR, BEAM and AArch64 are
 structural here. Their unit tests pin the emitted IL, BEAM instructions and
 AArch64 words. The CLR helper is checked by an IL stack-depth model: every
 label is reached at depth 0, no instruction underflows, and the declared
@@ -680,6 +712,21 @@ same digits (`1.0e16`, `1.0e+16`, `10000000000000000.0`) and must produce
 Python's and JavaScript's strings for each. CI executes CLR and BEAM through
 `lang_matrix`'s real `dotnet` and `erl` columns once a language row emits
 these builtins (LANG83 PR2 for Python).
+
+### Divergences from the PR6a plan, and why
+
+- *The oracle.* The plan named Rust's `format!("{:e}")` digits as the oracle.
+  Rust rounds an exact tie up, so the oracle is host `python3` / `node`. The
+  VM/JIT formatter takes Rust's digits and applies round-half-even with Rust's
+  exact expansion (see "The digits").
+- *JVM.* `Double.toString` was planned as the whole digit source. It prints at
+  least two digits, so the helper adds the one-digit neighbour check.
+- *JIT.* `JITCore`'s optimiser propagates a `const_f64` into the writer's
+  operand, so the JIT accepts a float literal there as well as a float
+  register.
+- *Table size.* The plan named 40 random values. The table has 60: 40 bit
+  patterns and 20 short decimals, because short decimals exercise the fixed
+  layouts that random bit patterns rarely reach.
 
 ## What PR1a deliberately does not do
 
