@@ -199,6 +199,8 @@ struct BuiltinSig {
 
 const V1_BUILTINS: &[BuiltinSig] = &[
     BuiltinSig { name: "print_i64",    n_args: 1, returns: false },
+    // LANG83 PR1b — decimal, no newline (`__twig_write_i64`, same stdout FILE*).
+    BuiltinSig { name: "write_i64",    n_args: 1, returns: false },
     BuiltinSig { name: "putchar",      n_args: 1, returns: false },
     BuiltinSig { name: "getchar",      n_args: 0, returns: true  },
     BuiltinSig { name: "print_string", n_args: 2, returns: false },
@@ -834,13 +836,31 @@ fn emit_instr(
     // here rather than via a typed `_<ty>` suffix.
     //
     //   int_to_real        ldr x0,[src]; scvtf d0,x0;            str_d d0,[dest]
-    //   real_to_int_trunc  ldr_d d0,[src]; fcvtzs x0,d0;         str x0,[dest]
-    //   real_to_int_floor  ldr_d d0,[src]; frintm d0,d0; fcvtzs x0,d0; str x0,[dest]
+    //   real_to_int_*      ldr_d d0,[src]
+    //                      frintm d0,d0 (floor) | frintz d0,d0 (trunc)
+    //                      fcvtzs x0,d0
+    //                      scvtf d1,x0 ; fcmp d0,d1      ; round-trip check
+    //                      b.vs trap ; b.ne trap         ; NaN / out of range
+    //                      mov x2,#i64::MAX ; cmp x0,x2 ; b.ne ok
+    //               trap:  udf #0xDEAD
+    //                 ok:  str x0,[dest]
     //
-    // `fcvtzs` rounds toward zero and *saturates* on NaN/±∞/out-of-range (ARM
-    // does not trap) — a documented divergence from the VM trap shared with the
-    // JVM backend; every finite, in-range value (all `entier`/coercion produces)
-    // converts identically.
+    // `fcvtzs` does not trap. On NaN, ±∞ and out-of-range values it
+    // *saturates* (NaN→0, too big→i64::MAX, too small→i64::MIN), which would
+    // hand the program a wrong integer. The VM contract is a fail-closed trap,
+    // as on the x86-64, JVM, LLVM, WASM and CLR backends, so the result is
+    // turned back into a double and compared with the rounded input:
+    //
+    //   input               fcvtzs      scvtf back   outcome
+    //   in range, integral  exact       == input     ok
+    //   NaN                 0           unordered    b.vs → trap
+    //   ±∞, |v| > 2^63      MAX / MIN   != input     b.ne → trap
+    //   exactly 2^63        MAX         2^63 ==      i64::MAX check → trap
+    //   exactly -2^63       MIN         -2^63 ==     ok (a real i64)
+    //
+    // The last check is needed because i64::MAX rounds to 2^63 as a double.
+    // No in-range double truncates to i64::MAX (doubles near 2^63 are 1024
+    // apart), so that result always means saturation.
     if op == "int_to_real" {
         let dest = require_dest(instr)?;
         let src = instr.srcs.first()
@@ -856,10 +876,25 @@ fn emit_instr(
         let src = instr.srcs.first()
             .ok_or_else(|| BackendError::MalformedInstr(format!("{op} needs srcs[0]")))?;
         load_fp_operand(asm, alloc, Reg::X0, src)?; // f64 → D0
+        // Round in place so the round-trip check compares integral values.
         if op == "real_to_int_floor" {
             asm.frintm(Reg::X0, Reg::X0);           // D0 = floor(D0)  (round to −∞)
+        } else {
+            asm.frintz(Reg::X0, Reg::X0);           // D0 = trunc(D0)  (round to zero)
         }
-        asm.fcvtzs(Reg::X0, Reg::X0);               // X0 = (i64) D0   (trunc toward zero)
+        asm.fcvtzs(Reg::X0, Reg::X0);               // X0 = (i64) D0, saturating
+        asm.scvtf(Reg::X1, Reg::X0);                // D1 = (double) X0
+        asm.fcmp(Reg::X0, Reg::X1);                 // D0 vs D1
+        let trap = asm.create_label();
+        let ok = asm.create_label();
+        asm.b_cond(Cond::Vs, trap);                 // unordered: NaN input
+        asm.b_cond(Cond::Ne, trap);                 // saturated: lost the value
+        asm.mov_imm64(Reg::X2, i64::MAX as u64);
+        asm.cmp(Reg::X0, Reg::X2);
+        asm.b_cond(Cond::Ne, ok);                   // not the +2^63 saturation
+        asm.bind(trap).map_err(BackendError::from)?;
+        asm.udf(0xDEAD);
+        asm.bind(ok).map_err(BackendError::from)?;
         let slot = alloc.slot_of(dest);
         asm.str_(Reg::X0, Reg::Sp, slot)?;          // store the integer
         return Ok(());
@@ -1018,6 +1053,24 @@ fn emit_instr(
             asm.str_(Reg::X0, Reg::Sp, slot)?;
         }
 
+        return Ok(());
+    }
+
+    // ── LANG83 PR1b: floor division and `trap` ──────────────────────────────
+    //
+    // Type-first names (never `div_floor`), so the `div_` prefix arm below can
+    // never claim them as a truncating SDIV.
+    if op == "i64_div_floor" || op == "i64_mod_floor" {
+        return emit_floor_divmod(asm, alloc, instr, op == "i64_mod_floor");
+    }
+    if op == "trap" {
+        // IIR `trap "<kind>"` arrives as `trap Var("<kind>")`; only a kind in
+        // the closed table has a stable id.
+        let kind = instr.srcs.first().and_then(CIROperand::as_var)
+            .ok_or_else(|| BackendError::MalformedInstr("trap needs srcs[0]=kind".into()))?;
+        let id = interpreter_ir::exception_kind::trap_kind_id(kind)
+            .ok_or_else(|| BackendError::MalformedInstr(format!("trap: unregistered kind {kind:?}")))?;
+        emit_trap_call(asm, id)?;
         return Ok(());
     }
 
@@ -1959,6 +2012,110 @@ fn emit_div(
     mask_narrow_x0(asm, ty);
     let slot = alloc.slot_of(dest);
     asm.str_(Reg::X0, Reg::Sp, slot)?;
+    Ok(())
+}
+
+// ===========================================================================
+// LANG83 PR1b — floor division and traps
+// ===========================================================================
+
+/// The `udf` immediate after a `bl __twig_trap` — distinct from
+/// `type_assert`'s `0xDEAD` so a crash dump says which kind of trap site it was.
+const TRAP_UDF_IMM: u16 = 0x7EA9;
+
+/// `movz w0, #kind_id; bl __twig_trap; udf #0x7EA9` — the native trap sequence.
+///
+/// `__twig_trap(int32_t)` (`twig-aot/runtime/twig_runtime.c`) flushes stdout,
+/// writes `trap: <kind>` to stderr and aborts; it never returns, and the
+/// trailing `udf` guarantees a fault rather than a fall-through regardless.
+fn emit_trap_call(asm: &mut Assembler, kind_id: u32) -> Result<(), BackendError> {
+    let id = u16::try_from(kind_id)
+        .map_err(|_| BackendError::MalformedInstr(format!("trap kind id {kind_id} exceeds 16 bits")))?;
+    asm.movz(Reg::X0, id, 0);
+    asm.bl_external("__twig_trap");
+    asm.udf(TRAP_UDF_IMM);
+    Ok(())
+}
+
+/// `i64_div_floor` / `i64_mod_floor` (LANG83): floor quotient / remainder with
+/// *defined* edges. AArch64's `SDIV` does not fault — it returns 0 for a zero
+/// divisor and `MIN` for `MIN / -1` — so both edges are tested explicitly
+/// before it, exactly as on x86-64 (where they would fault instead).
+///
+/// ```text
+///         ldr  x0, [a]
+///         ldr  x1, [b]
+///         cbnz x1, nonzero
+///         movz w0, #3 ; bl __twig_trap ; udf      ; Trap.DivZero
+/// nonzero:
+///         add  x9, x1, #1           ; x9 == 0  ⇔  b == -1
+///         cbnz x9, divide
+///   div:  mov  x9, #MIN ; cmp x0, x9 ; b.ne divide
+///         movz w0, #5 ; bl __twig_trap ; udf      ; Trap.Overflow
+///   mod:  movz x1, #1               ; a mod -1 == a mod 1 == 0
+/// divide:
+///         sdiv x2, x0, x1           ; q (truncating)
+///         msub x10, x2, x1, x0      ; r = a - q*b
+///         cbz  x10, done            ; exact → already floor
+///         eor  x11, x10, x1
+///         cmp  x11, #0
+///         b.ge done                 ; sign(r) == sign(b) → already floor
+///   div:  sub  x2, x2, #1
+///   mod:  add  x10, x10, x1
+/// done:
+///         str  x2 | x10, [dest]
+/// ```
+///
+/// X9–X11 are AAPCS64 temporaries (caller-saved) and never live across an
+/// instruction under the stack-spill allocator.
+fn emit_floor_divmod(
+    asm: &mut Assembler,
+    alloc: &mut RegAlloc,
+    instr: &CIRInstr,
+    want_mod: bool,
+) -> Result<(), BackendError> {
+    use interpreter_ir::exception_kind::{trap_kind_id, TRAP_DIV_ZERO, TRAP_OVERFLOW};
+    let dest = require_dest(instr)?;
+    if instr.srcs.len() < 2 {
+        return Err(BackendError::MalformedInstr(format!("{} needs 2 srcs", instr.op)));
+    }
+    let div_zero = trap_kind_id(TRAP_DIV_ZERO).expect("Trap.DivZero is a built-in kind");
+    let overflow = trap_kind_id(TRAP_OVERFLOW).expect("Trap.Overflow is a built-in kind");
+    let nonzero = asm.create_label();
+    let divide = asm.create_label();
+    let done = asm.create_label();
+
+    load_operand(asm, alloc, Reg::X0, &instr.srcs[0])?;
+    load_operand(asm, alloc, Reg::X1, &instr.srcs[1])?;
+    asm.cbnz(Reg::X1, nonzero);
+    emit_trap_call(asm, div_zero)?;
+    asm.bind(nonzero).map_err(BackendError::from)?;
+    asm.add_imm(Reg::X9, Reg::X1, 1)?;
+    asm.cbnz(Reg::X9, divide);
+    if want_mod {
+        asm.movz(Reg::X1, 1, 0);
+    } else {
+        asm.mov_imm64(Reg::X9, i64::MIN as u64);
+        asm.cmp(Reg::X0, Reg::X9);
+        asm.b_cond(Cond::Ne, divide);
+        emit_trap_call(asm, overflow)?;
+    }
+    asm.bind(divide).map_err(BackendError::from)?;
+    asm.sdiv(Reg::X2, Reg::X0, Reg::X1);
+    asm.msub(Reg::X10, Reg::X2, Reg::X1, Reg::X0);
+    asm.cbz(Reg::X10, done);
+    asm.eor(Reg::X11, Reg::X10, Reg::X1);
+    asm.cmp_imm(Reg::X11, 0)?;
+    asm.b_cond(Cond::Ge, done);
+    if want_mod {
+        asm.add(Reg::X10, Reg::X10, Reg::X1);
+    } else {
+        asm.sub_imm(Reg::X2, Reg::X2, 1)?;
+    }
+    asm.bind(done).map_err(BackendError::from)?;
+    let result = if want_mod { Reg::X10 } else { Reg::X2 };
+    let slot = alloc.slot_of(dest);
+    asm.str_(result, Reg::Sp, slot)?;
     Ok(())
 }
 
@@ -3166,6 +3323,105 @@ mod tests {
         assert!(words.contains(&0x0000DEAD), "expected udf #0xDEAD in {words:?}");
     }
 
+    // ---- LANG83 PR1b: floor division, trap, write_i64 (structural) ----
+    //
+    // No AArch64 execution on the x86-64 CI/dev hosts, so these compare the
+    // emitted words against the *encoder's own* encoding of each expected
+    // instruction (the encoder is separately tested against the ARM ARM).
+
+    /// The encoder's word for one instruction.
+    fn word_of(emit: impl FnOnce(&mut Assembler)) -> u32 {
+        let mut a = Assembler::new();
+        emit(&mut a);
+        let bytes = a.finish().expect("single instruction encodes");
+        u32::from_le_bytes([bytes[0], bytes[1], bytes[2], bytes[3]])
+    }
+
+    fn words(bytes: &[u8]) -> Vec<u32> {
+        bytes.chunks(4).map(|c| u32::from_le_bytes([c[0], c[1], c[2], c[3]])).collect()
+    }
+
+    fn floor_fn(op: &str) -> (Vec<u32>, Vec<ExternalReloc>) {
+        let params = vec![("a".into(), "i64".into()), ("b".into(), "i64".into())];
+        let cir = vec![
+            make_binop_cir(op, "q", "a", "b", "i64"),
+            CIRInstr { op: "ret_i64".into(), dest: None, srcs: vec![CIROperand::Var("q".into())],
+                       ty: "i64".into(), deopt_to: None },
+        ];
+        let (bytes, relocs) = compile_with_relocs(&ctx("f", &params, "i64"), &cir)
+            .unwrap_or_else(|e| panic!("{op}: {e}"));
+        (words(&bytes), relocs)
+    }
+
+    fn pos(ws: &[u32], w: u32) -> usize {
+        ws.iter().position(|x| *x == w).unwrap_or_else(|| panic!("{w:#010x} not in {ws:08x?}"))
+    }
+
+    #[test]
+    fn i64_div_floor_guards_both_edges_before_sdiv_then_fixes_up() {
+        let (ws, relocs) = floor_fn("i64_div_floor");
+        let trap_div_zero = pos(&ws, word_of(|a| a.movz(Reg::X0, 3, 0)));
+        let minus_one = pos(&ws, word_of(|a| a.add_imm(Reg::X9, Reg::X1, 1).unwrap()));
+        let min_cmp = pos(&ws, word_of(|a| a.cmp(Reg::X0, Reg::X9)));
+        let trap_overflow = pos(&ws, word_of(|a| a.movz(Reg::X0, 5, 0)));
+        let sdiv = pos(&ws, word_of(|a| a.sdiv(Reg::X2, Reg::X0, Reg::X1)));
+        assert!(trap_div_zero < minus_one && minus_one < min_cmp && min_cmp < trap_overflow && trap_overflow < sdiv,
+            "both edges are tested before the hardware divide");
+        let msub = pos(&ws, word_of(|a| a.msub(Reg::X10, Reg::X2, Reg::X1, Reg::X0)));
+        let eor = pos(&ws, word_of(|a| a.eor(Reg::X11, Reg::X10, Reg::X1)));
+        let dec = pos(&ws, word_of(|a| a.sub_imm(Reg::X2, Reg::X2, 1).unwrap()));
+        assert!(sdiv < msub && msub < eor && eor < dec);
+        assert_eq!(relocs.iter().filter(|r| r.symbol == "__twig_trap").count(), 2);
+        assert_eq!(ws.iter().filter(|w| **w == u32::from(TRAP_UDF_IMM)).count(), 2, "udf after each trap call");
+    }
+
+    #[test]
+    fn i64_mod_floor_divides_by_one_for_minus_one_and_adds_the_divisor() {
+        let (ws, relocs) = floor_fn("i64_mod_floor");
+        assert_eq!(relocs.iter().filter(|r| r.symbol == "__twig_trap").count(), 1, "only Trap.DivZero");
+        assert!(!ws.contains(&word_of(|a| a.movz(Reg::X0, 5, 0))), "no Trap.Overflow");
+        let one = pos(&ws, word_of(|a| a.movz(Reg::X1, 1, 0)));
+        let sdiv = pos(&ws, word_of(|a| a.sdiv(Reg::X2, Reg::X0, Reg::X1)));
+        let add = pos(&ws, word_of(|a| a.add(Reg::X10, Reg::X10, Reg::X1)));
+        assert!(one < sdiv && sdiv < add);
+    }
+
+    #[test]
+    fn trap_moves_the_kind_id_into_w0_and_calls_the_runtime() {
+        let cir = vec![
+            CIRInstr { op: "trap".into(), dest: None, srcs: vec![CIROperand::Var("Trap.User".into())],
+                       ty: "void".into(), deopt_to: None },
+            CIRInstr { op: "ret_void".into(), dest: None, srcs: vec![], ty: "void".into(), deopt_to: None },
+        ];
+        let params: [(String, String); 0] = [];
+        let (bytes, relocs) = compile_with_relocs(&ctx("t", &params, "void"), &cir).expect("trap lowers");
+        let ws = words(&bytes);
+        let mov = pos(&ws, word_of(|a| a.movz(Reg::X0, 6, 0)));
+        assert_eq!(ws[mov + 1] & 0xFC00_0000, 0x9400_0000, "BL follows");
+        assert_eq!(ws[mov + 2], u32::from(TRAP_UDF_IMM), "udf after the noreturn call");
+        assert_eq!(relocs.len(), 1);
+        assert_eq!(relocs[0].symbol, "__twig_trap");
+        assert_eq!(relocs[0].word_idx, mov + 1);
+        let bad = vec![CIRInstr { op: "trap".into(), dest: None, srcs: vec![CIROperand::Var("Nope".into())],
+                                  ty: "void".into(), deopt_to: None }];
+        assert!(compile(&ctx("t", &params, "void"), &bad).is_err());
+    }
+
+    #[test]
+    fn write_i64_calls_the_runtime_helper() {
+        let cir = vec![
+            CIRInstr { op: "const_i64".into(), dest: Some("n".into()), srcs: vec![CIROperand::Int(-5)],
+                       ty: "i64".into(), deopt_to: None },
+            CIRInstr { op: "call_builtin".into(), dest: None,
+                       srcs: vec![CIROperand::Var("write_i64".into()), CIROperand::Var("n".into())],
+                       ty: "void".into(), deopt_to: None },
+            CIRInstr { op: "ret_void".into(), dest: None, srcs: vec![], ty: "void".into(), deopt_to: None },
+        ];
+        let params: [(String, String); 0] = [];
+        let (_bytes, relocs) = compile_with_relocs(&ctx("w", &params, "void"), &cir).unwrap();
+        assert_eq!(relocs.iter().map(|r| r.symbol.as_str()).collect::<Vec<_>>(), ["__twig_write_i64"]);
+    }
+
     // ---- LANG40/LANG41: io_out handler (BL __twig_print_i64 external reloc) ----
 
     #[test]
@@ -3658,6 +3914,26 @@ mod tests {
     fn e8_conversions_compile() {
         assert!(!e8_round_module("real_to_int_trunc", 45, 0.0).is_empty(), "trunc should compile");
         assert!(!e8_round_module("real_to_int_floor", 45, 0.0).is_empty(), "floor should compile");
+    }
+
+    /// Narrowing fails closed: each conversion rounds with the matching
+    /// `frint*`, round-trips through `scvtf` + `fcmp`, and reaches a
+    /// `udf #0xDEAD` trap instead of storing a saturated integer.
+    #[test]
+    fn e8_narrowing_traps_instead_of_saturating() {
+        const UDF_DEAD: u32 = 0x0000_DEAD;
+        const FRINTZ_D0: u32 = 0x1E65_C000;
+        const FRINTM_D0: u32 = 0x1E65_4000;
+        const SCVTF_D1_X0: u32 = 0x9E62_0001;
+        let words = |bytes: Vec<u8>| -> Vec<u32> {
+            bytes.as_chunks::<4>().0.iter().map(|w| u32::from_le_bytes(*w)).collect()
+        };
+        for (op, frint) in [("real_to_int_trunc", FRINTZ_D0), ("real_to_int_floor", FRINTM_D0)] {
+            let w = words(e8_round_module(op, 45, 0.0));
+            assert!(w.contains(&frint), "{op}: expected its frint* rounding");
+            assert!(w.contains(&SCVTF_D1_X0), "{op}: expected the scvtf round trip");
+            assert!(w.contains(&UDF_DEAD), "{op}: expected a udf trap");
+        }
     }
 
     /// **Executed** on real Apple-Silicon hardware: the full conversion chain

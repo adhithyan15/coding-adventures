@@ -10,7 +10,7 @@
 //!
 //! A deliberately ordered ladder does. The committed oracle fixtures now cover
 //! 57 rungs ramped from trivial to hard. The divergence ledger records agreement
-//! of 55/57 at `WHITESPACE_ONLY`, 35/57 at `SIMPLE`, and 25/57 at `ADVANCED`,
+//! of 54/57 at `WHITESPACE_ONLY`, 35/57 at `SIMPLE`, and 24/57 at `ADVANCED`,
 //! while the selected golden corpus reports 100%.
 //!
 //! # The ordering is the point
@@ -728,7 +728,7 @@ fn well_formedness_rejects_every_way_of_switching_a_rung_off() {
 fn reviewed_divergence_count_is_pinned() {
     assert_eq!(
         load_ledger().len(),
-        56,
+        58,
         "reviewed divergence ledger changed — see the note on this test"
     );
 }

@@ -14,6 +14,9 @@ Grammar Lens: one group word.
 ਲੋਕ — lok — people.
 Keep this as one useful word. No new plural rule is needed today.
 
+The word, taken apart.
+ਲੋਕ (lok) is Sanskrit loka, "world, people", taken over as a learned loan. Mahan Kosh identifies the Sanskrit word; CDIAL 11119 gives the same meanings.
+
 Guided Practice.
 [your turn — hear: lok; YOU SAY: ਲੋਕ]
 [pause 8 seconds for the answer]
@@ -22,7 +25,7 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Say people. (ਲੋਕ (lok).)
-Source: Punjabi University, RCPLT dictionary, lists ਲੋਕ (lok) as people or public.
+Sources: Punjabi University, RCPLT dictionary, lists ਲੋਕ (lok) as people or public. Mahan Kosh identifies Sanskrit loka; Turner gives its senses in CDIAL 11119.
 
 
 Lesson 2 of 7.
@@ -59,6 +62,9 @@ Grammar Lens: one location noun.
 ਉਸ ਥਾਂ (thaan) — us thā̃ — that place.
 Keep this as a two-word pointing phrase, not a new rule for every location noun.
 
+The word, taken apart.
+ਥਾਂ (thaan) (thā̃) is a tadbhava, inherited and reshaped by sound change. It comes through Prakrit thāma from Sanskrit sthāman, "station, place" (CDIAL 13760).
+
 Guided Practice.
 [your turn — hear: us thā̃; YOU SAY: ਉਸ ਥਾਂ (thaan)]
 [pause 8 seconds for the answer]
@@ -69,7 +75,7 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Say that place. (ਉਸ (us) ਥਾਂ (thaan).)
-Source: Punjabi University, RCPLT dictionary, gives ਥਾਂ (thaan) as place or location.
+Sources: Punjabi University, RCPLT dictionary, gives ਥਾਂ (thaan) as place or location. Turner derives it through Prakrit thāma from Sanskrit sthāman in CDIAL 13760.
 
 
 Lesson 4 of 7.
