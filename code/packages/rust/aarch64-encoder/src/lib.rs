@@ -1021,6 +1021,16 @@ impl Assembler {
         self.emit(0x1E654000 | (dn.idx() << 5) | dd.idx());
     }
 
+    /// `FRINTZ Dd, Dn` — round a double (`Dn`) to an integral double toward
+    /// zero (truncate), result in `Dd`. `real_to_int_trunc` uses it so its
+    /// range check compares the exact integral value `fcvtzs` will produce.
+    ///
+    /// Same encoding group as `FRINTM` with `opcode=001011` (FRINTZ):
+    /// `0001_1110_0110_0101_1100_00nn_nnnd_dddd` (`0x1E65C000`).
+    pub fn frintz(&mut self, dd: Reg, dn: Reg) {
+        self.emit(0x1E65C000 | (dn.idx() << 5) | dd.idx());
+    }
+
     /// `FSQRT Dd, Dn` — IEEE-754 double-precision square root (AL8 `sqrt`).
     ///
     /// A single hardware instruction — no libm call, no subroutine linkage.

@@ -24,6 +24,15 @@
   each trap and the tail; `lang-aot`'s `op_conformance` runs them on real
   `java` with the verifier on.
 
+## 0.37.0 - 2026-10-19 - fail-closed real-to-integer narrowing
+
+Each `d2i`/`d2l` narrowing of `real_to_int_trunc` and `real_to_int_floor` is
+now preceded by a range check. The check throws `java.lang.ArithmeticException`
+for NaN, ±∞ and values outside the destination's integer range, where the JVM
+would otherwise saturate (NaN→0, +∞→MAX, −∞→MIN). This replaces the saturating
+lowering 0.18.0 documented as a divergence. The stack-depth analysis now
+models `dup2`, `new`, `invokespecial` and `athrow`.
+
 ## Unreleased — LANG83 PR1b — floor division, `trap`, `write_i64`
 
 - **`i64_div_floor` / `i64_mod_floor`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)) →
