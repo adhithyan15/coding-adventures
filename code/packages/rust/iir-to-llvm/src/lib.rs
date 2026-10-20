@@ -1692,6 +1692,16 @@ fn lower_function(
         lower_instr_with_slots(instr, &mut state, out)?;
     }
 
+    // `trap` ends its block with `unreachable` and opens a fresh
+    // `__after_trapN:` block for whatever follows. When the trap is the
+    // function's *last* instruction nothing follows, and that empty block
+    // would have no terminator — invalid IR that `llc`/`clang` reject. Close
+    // it with `unreachable` too: control can never reach it.
+    if state.block_open && func.instructions.last().is_some_and(|i| i.op == "trap") {
+        out.push_str("  unreachable\n");
+        state.block_open = false;
+    }
+
     out.push_str("}\n");
     Ok(())
 }

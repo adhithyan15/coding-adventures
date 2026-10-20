@@ -14,8 +14,12 @@
   are only reached with a safe divisor (never LLVM UB), then a `select`-based
   floor fix-up.
 - **`trap "<kind>"`**: `call @__iir_trap(msg); unreachable`, then a fresh
-  (unreachable) block for any IIR that follows. The validator rejects a `trap`
-  whose operand is not a registered kind literal.
+  (unreachable) block for any IIR that follows. When `trap` is the function's
+  last instruction that fresh block is closed with `unreachable` too (security
+  review note: an empty block with no terminator is invalid IR clang rejects;
+  tests `trailing_trap_closes_its_after_block` and the real-clang
+  `trailing_trap_compiles_and_traps_on_real_clang`). The validator rejects a
+  `trap` whose operand is not a registered kind literal.
 - `op_support`: the four PR1b ops are `Lowered`.
 - Tests: IR shape (edges before `sdiv`, flush → write → abort order, message
   bytes, fresh block after `trap`, validator), and three real-`clang` runs:

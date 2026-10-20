@@ -915,11 +915,27 @@ fn emit_method(
     }
 
     // LANG83 PR1b: internal branch labels for the floor-division guards,
-    // numbered per function (`'__lang83_<n>'`; quoted like every IIR label).
+    // numbered per function (`'<prefix><n>'`; quoted like every IIR label).
+    //
+    // The labels must be unforgeable: IIR labels share the CIL label namespace,
+    // so a user label (or a branch to one) spelled `__lang83_1` would collide
+    // with an internal one. The prefix therefore starts as `__lang83_` and
+    // grows a leading `_` until *no* name the function mentions starts with
+    // it — then no user label or branch target can equal `<prefix><n>`.
+    // (Every `Var` operand is checked, a superset of the label names, so the
+    // rule needs no list of which ops take labels.)
+    let mentioned: Vec<&str> = f.instructions.iter()
+        .flat_map(|i| i.srcs.iter())
+        .filter_map(|s| match s { Operand::Var(n) => Some(n.as_str()), _ => None })
+        .collect();
+    let mut lang83_prefix = String::from("__lang83_");
+    while mentioned.iter().any(|n| n.starts_with(lang83_prefix.as_str())) {
+        lang83_prefix.insert(0, '_');
+    }
     let mut lang83_labels = 0usize;
     let mut lang83_label = || {
         lang83_labels += 1;
-        format!("'__lang83_{lang83_labels}'")
+        format!("'{lang83_prefix}{lang83_labels}'")
     };
     for instr in &f.instructions {
         match instr.op.as_str() {

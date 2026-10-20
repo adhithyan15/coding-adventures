@@ -147,3 +147,28 @@ fn binary_artifact_path_refuses_the_pr1b_ops() {
     assert!(lower_iir_to_cil(&m, &IIRClrConfig::new("Main")).is_err());
 }
 
+
+/// Security-review note (LANG83 PR1b): the floor sequences' internal labels
+/// used to be the fixed `'__lang83_<n>'`, so a user label of that exact
+/// spelling collided with one (a duplicate label ilasm rejects — or, for a
+/// branch to an *undefined* user label `__lang83_1`, a jump into the middle of
+/// the guard sequence). The internal prefix now grows until no name the
+/// function mentions starts with it.
+#[test]
+fn user_label_spelled_like_an_internal_floor_label_cannot_collide() {
+    let il = il_of(&module(
+        vec![
+            IIRInstr::new("jmp", None, vec![v("__lang83_1")], "void"),
+            IIRInstr::new("label", None, vec![v("__lang83_1")], "void"),
+            IIRInstr::new("i64_div_floor", Some("q".into()), vec![v("a"), v("b")], "i64"),
+            IIRInstr::new("ret", None, vec![v("q")], "i64"),
+        ],
+        vec![("a".into(), "i64".into()), ("b".into(), "i64".into())],
+    ));
+    let lines: Vec<String> = il.lines().map(|l| l.trim().to_string()).collect();
+    // The user's label is defined exactly once — by the user.
+    assert_eq!(lines.iter().filter(|l| *l == "'__lang83_1':").count(), 1, "{il}");
+    // The internal labels moved to a longer prefix the user never mentioned.
+    assert!(lines.iter().any(|l| l.starts_with("'___lang83_")), "{il}");
+    assert_labels_resolve(&lines);
+}

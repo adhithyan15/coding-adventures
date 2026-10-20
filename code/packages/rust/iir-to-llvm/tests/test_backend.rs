@@ -3534,6 +3534,39 @@ fn trap_terminates_its_block_and_validates_its_kind() {
     assert!(validate_for_llvm(&bad).iter().any(|e| e.contains("trap requires")), "{:?}", validate_for_llvm(&bad));
 }
 
+/// A `trap` that is the function's last instruction leaves no code after it,
+/// so the fresh `__after_trapN:` block must be closed with `unreachable` —
+/// an empty block with no terminator is invalid IR (security-review note on
+/// LANG83 PR1b). Checked textually here and, when clang is present, by real
+/// compilation in `trailing_trap_compiles_and_traps_on_real_clang`.
+#[test]
+fn trailing_trap_closes_its_after_block() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "void",
+        vec![IIRInstr::new("trap", None, vec![Operand::Str("Trap.User".into())], "void")],
+    );
+    let ll = lower(&module_with(f));
+    let body = &ll[ll.find("define void @main").or_else(|| ll.find("@main(")).expect("main defined")..];
+    let after = body.find("__after_trap").expect("after-trap block");
+    let tail = &body[after..body.find("\n}\n").expect("function end")];
+    assert!(tail.trim_end().ends_with("unreachable"), "after-trap block must be terminated:\n{tail}");
+}
+
+#[test]
+fn trailing_trap_compiles_and_traps_on_real_clang() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "void",
+        vec![IIRInstr::new("trap", None, vec![Operand::Str("Trap.User".into())], "void")],
+    );
+    let Some(out) = run_on_clang(&module_with(f), "trailing_trap") else { return };
+    assert!(!out.status.success(), "a trap exits non-zero");
+    assert!(String::from_utf8_lossy(&out.stderr).contains("trap: Trap.User"));
+}
+
 /// Compile with real `clang` and run; `None` when clang is absent.
 fn run_on_clang(module: &IIRModule, tag: &str) -> Option<std::process::Output> {
     use std::process::Command;

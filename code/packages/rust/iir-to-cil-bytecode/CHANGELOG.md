@@ -5,7 +5,10 @@
 - **`i64_div_floor` / `i64_mod_floor`** on `emit_il` ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)):
   CIL `div`/`rem` would throw `DivideByZeroException` / `OverflowException`, so
   both edges are branched around first (`ldc.i8 0; bne.un`, then `-1` and
-  (div) `MIN` compares, to per-function `'__lang83_<n>'` labels). Div traps
+  (div) `MIN` compares, to per-function `'__lang83_<n>'` labels — the prefix
+  grows a leading `_` until no name the function mentions starts with it, so
+  a user label or branch target spelled `__lang83_1` cannot collide with an
+  internal label; security review note). Div traps
   `Trap.Overflow` on `MIN / -1`; mod stores 0 for any `b == -1`. Floor fix-up
   with no scratch locals: `adj = ((a rem b) ^ b < 0) & ((a rem b) != 0)`,
   `div − conv.i8(adj)` / `rem + conv.i8(adj)·b`. The dest must be `int64`.
