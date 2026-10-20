@@ -2,6 +2,29 @@
 
 ## Unreleased
 
+- LANG84 phase 4b: `DEFAULT_RELEASE` is the inventory release `5.38.0`
+  (new `DEFAULT_RELEASE_ID`), whose pair is grounded in the `v5.38.0` tag.
+  `Release` is now a newtype over one checked inventory ID (`id()` returns
+  `&'static str`); `Release::Unversioned` and `Release::Inventory` are gone,
+  because the unversioned LANG81 pair no longer reaches the IIR path (C4.5).
+  Visible change: under the default, a 251-digit literal is now rejected
+  before lowering, as `toke.c` does, instead of lexing and being refused as
+  out of range.
+- Every produced module records its release in `IIRModule::release`
+  (`compile_ast_at` sets it; `compile_ast` records the default).
+- C8 CST contract: `cst::*`, `CST_RULES`, `CST_TOKEN_TYPES` and
+  `CST_TOKEN_SPELLINGS` name everything the compiler dispatches on, and the
+  compiler uses those constants. `tests::cst_contract` checks every checked
+  release's compiled grammar defines each rule and token type, lexes each
+  spelling as one token, and parses the corpus into exactly the shapes the
+  compiler destructures.
+- C5 hostile-input probes run in a child copy of the test binary
+  (`tests::hostile_probes`): deep nesting, deep unary minus, long flat
+  chains, decrement runs, unterminated constructs, statement floods,
+  foreign characters, the source and IIR budgets, the 250/251-digit
+  boundary and deep/wide caller-supplied trees, across three releases. The
+  parent reports a signal (stack overflow, abort) as an abort.
+
 - LANG84 phase 4a: release selection. `compile_source_at(source, release,
   module_name, &FrontendBudgets)` compiles against exactly one checked
   inventory release, or `DEFAULT_RELEASE` (still the unversioned LANG81 pair)

@@ -13,6 +13,15 @@
 //! host `perl` appears only in tests, as an oracle that says what the right
 //! output is.
 //!
+//! ## Which grammar runs
+//!
+//! Exactly one row of `code/grammars/perl/releases.csv` (LANG84 C4). A caller
+//! names it (`Some("5.004_72")`) or names none and gets [`DEFAULT_RELEASE`],
+//! the `5.38.0` pair grounded in the `v5.38.0` tag. The produced module
+//! records the ID in `IIRModule::release`, every error names it, and nothing
+//! ever falls back to a neighbouring release or to LANG81's unversioned
+//! `perl.tokens`/`perl.grammar`, which are no longer on this path.
+//!
 //! ## The accepted subset
 //!
 //! One or more `print(<expr>);` statements, where an expression is decimal
@@ -41,10 +50,8 @@
 //! Perl-only `pl_print_int` builtin, which only an embedder that registered
 //! it could run, so no lang-aot backend could.)
 
-use coding_adventures_perl_lexer::{release_token_grammar, unversioned_token_grammar};
-use coding_adventures_perl_parser::{
-    release_parser_grammar, unversioned_parser_grammar, MAX_RULE_DEPTH,
-};
+use coding_adventures_perl_lexer::release_token_grammar;
+use coding_adventures_perl_parser::{release_parser_grammar, MAX_RULE_DEPTH};
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use lexer::grammar_lexer::GrammarLexer;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode, GrammarParser};
@@ -53,7 +60,56 @@ use std::sync::{Arc, Mutex};
 use vm_core::{errors::VMError, value::Value, VMCore};
 
 mod release;
-pub use release::{resolve_release, Release, DEFAULT_RELEASE};
+pub use release::{resolve_release, Release, DEFAULT_RELEASE, DEFAULT_RELEASE_ID};
+
+/// The CST contract (LANG84 C8): every name this compiler dispatches on.
+///
+/// The compiler walks the parse tree a release's `.grammar` produces, so it
+/// silently depends on that grammar's rule names, on one token type, and on
+/// the spellings of the punctuation it checks. If a release pair renamed
+/// `term` to `product`, every program would be refused for that release —
+/// a breaking change to the compiler, not a grammar detail. Naming them here,
+/// and using these constants (not string literals) in the compiler below,
+/// lets the `cst_contract` test check every checked release against exactly
+/// what the compiler reads:
+///
+/// | Kind | Names | Checked against |
+/// |---|---|---|
+/// | rule | [`CST_RULES`] | the release's `ParserGrammar` rules |
+/// | token type | [`CST_TOKEN_TYPES`] | the release's `TokenGrammar` definitions |
+/// | spelling | [`CST_TOKEN_SPELLINGS`] | lexing each spelling alone yields one token with that value |
+pub mod cst {
+    /// The whole program: one or more print statements.
+    pub const PROGRAM: &str = "program";
+    /// `print ( expr ) ;`
+    pub const PRINT_STATEMENT: &str = "print_statement";
+    /// An additive chain: `term { (+|-) term }`.
+    pub const EXPR: &str = "expr";
+    /// A multiplicative chain: `unary { * unary }`.
+    pub const TERM: &str = "term";
+    /// `- unary` or an atom.
+    pub const UNARY: &str = "unary";
+    /// An integer literal or a parenthesized expression.
+    pub const ATOM: &str = "atom";
+    /// The integer-literal token type (`type_name`).
+    pub const INT: &str = "INT";
+}
+
+/// Every CST rule name the compiler dispatches on (LANG84 C8).
+pub const CST_RULES: &[&str] = &[
+    cst::PROGRAM,
+    cst::PRINT_STATEMENT,
+    cst::EXPR,
+    cst::TERM,
+    cst::UNARY,
+    cst::ATOM,
+];
+
+/// Every token type the compiler dispatches on (LANG84 C8).
+pub const CST_TOKEN_TYPES: &[&str] = &[cst::INT];
+
+/// Every token spelling the compiler compares a token's value against.
+pub const CST_TOKEN_SPELLINGS: &[&str] = &["print", "(", ")", ";", "+", "-", "*"];
 
 const MAX_AST_ITEMS: usize = 16_384;
 const MAX_AST_DEPTH: usize = 64;
@@ -240,18 +296,16 @@ pub fn compile_source_at(
     }
     // Resolution guarantees both tables exist for an inventory release: the
     // lexer and parser crates are generated from the same CSV rows, and their
-    // own tests pin that.
-    let (token_grammar, parser_grammar) = match release {
-        Release::Unversioned => (unversioned_token_grammar(), unversioned_parser_grammar()),
-        Release::Inventory(id) => match (release_token_grammar(id), release_parser_grammar(id)) {
-            (Some(tokens), Some(grammar)) => (tokens, grammar),
-            _ => {
-                return Err(FrontendError::ReleaseNotAvailable {
-                    release: id.to_string(),
-                    stage: "no compiled table",
-                })
-            }
-        },
+    // own tests pin that. There is no other kind of release (LANG84 C4.5):
+    // the unversioned LANG81 pair is unreachable from here.
+    let (Some(token_grammar), Some(parser_grammar)) = (
+        release_token_grammar(release.id()),
+        release_parser_grammar(release.id()),
+    ) else {
+        return Err(FrontendError::ReleaseNotAvailable {
+            release: release.id().to_string(),
+            stage: "no compiled table",
+        });
     };
     let tokens = GrammarLexer::new(source, &token_grammar)
         .tokenize()
@@ -317,7 +371,7 @@ pub fn compile_ast_at(
         )));
     }
     check_ast_budget(tree).map_err(|message| unsupported(Refusal::bare(message)))?;
-    if tree.rule_name != "program" || tree.children.is_empty() {
+    if tree.rule_name != cst::PROGRAM || tree.children.is_empty() {
         return Err(unsupported(Refusal::at(
             tree,
             "expected a Perl print program",
@@ -343,6 +397,8 @@ pub fn compile_ast_at(
     compiler.emit("ret_void", None, vec![], "void");
     let mut module = IIRModule::new(module_name, "perl");
     module.entry_point = Some("main".into());
+    // LANG84 C4.1: the module records the one release that produced it.
+    module.release = Some(release.id().to_string());
     module.add_or_replace(IIRFunction::new(
         "main",
         vec![],
@@ -516,10 +572,10 @@ impl Compiler {
         else {
             return Err(Refusal::at(node, "unsupported Perl print statement"));
         };
-        if node.rule_name != "print_statement"
+        if node.rule_name != cst::PRINT_STATEMENT
             || token_value(name) != Some("print")
             || token_value(open) != Some("(")
-            || expr.rule_name != "expr"
+            || expr.rule_name != cst::EXPR
             || token_value(close) != Some(")")
             || token_value(semicolon) != Some(";")
         {
@@ -540,13 +596,13 @@ impl Compiler {
 
     fn compile_expression(&mut self, node: &GrammarASTNode) -> Result<Compiled, Refusal> {
         match node.rule_name.as_str() {
-            "expr" | "term" => self.compile_chain(node),
-            "unary" => match node.children.as_slice() {
-                [ASTNodeOrToken::Node(atom)] if atom.rule_name == "atom" => {
+            cst::EXPR | cst::TERM => self.compile_chain(node),
+            cst::UNARY => match node.children.as_slice() {
+                [ASTNodeOrToken::Node(atom)] if atom.rule_name == cst::ATOM => {
                     self.compile_expression(atom)
                 }
                 [sign, ASTNodeOrToken::Node(inner)]
-                    if token_value(sign) == Some("-") && inner.rule_name == "unary" =>
+                    if token_value(sign) == Some("-") && inner.rule_name == cst::UNARY =>
                 {
                     let value = self.compile_expression(inner)?;
                     let checked = checked_i32(node, -i64::from(value.value))?;
@@ -559,8 +615,8 @@ impl Compiler {
                 }
                 _ => Err(Refusal::at(node, "unsupported Perl unary expression")),
             },
-            "atom" => match node.children.as_slice() {
-                [ASTNodeOrToken::Token(token)] if token.type_name.as_deref() == Some("INT") => {
+            cst::ATOM => match node.children.as_slice() {
+                [ASTNodeOrToken::Token(token)] if token.type_name.as_deref() == Some(cst::INT) => {
                     if token.value.len() > 1 && token.value.starts_with('0') {
                         return Err(Refusal::at(
                             node,
@@ -585,7 +641,7 @@ impl Compiler {
                 }
                 [open, ASTNodeOrToken::Node(expr), close]
                     if token_value(open) == Some("(")
-                        && expr.rule_name == "expr"
+                        && expr.rule_name == cst::EXPR
                         && token_value(close) == Some(")") =>
                 {
                     self.compile_expression(expr)
@@ -600,10 +656,10 @@ impl Compiler {
     }
 
     fn compile_chain(&mut self, node: &GrammarASTNode) -> Result<Compiled, Refusal> {
-        let child_rule = if node.rule_name == "expr" {
-            "term"
+        let child_rule = if node.rule_name == cst::EXPR {
+            cst::TERM
         } else {
-            "unary"
+            cst::UNARY
         };
         let Some(ASTNodeOrToken::Node(first)) = node.children.first() else {
             return Err(Refusal::at(node, "empty Perl arithmetic expression"));
@@ -622,9 +678,9 @@ impl Compiler {
             }
             let rhs = self.compile_expression(right)?;
             let (opcode, value) = match (node.rule_name.as_str(), token_value(operator)) {
-                ("expr", Some("+")) => ("add", i64::from(acc.value) + i64::from(rhs.value)),
-                ("expr", Some("-")) => ("sub", i64::from(acc.value) - i64::from(rhs.value)),
-                ("term", Some("*")) => ("mul", i64::from(acc.value) * i64::from(rhs.value)),
+                (cst::EXPR, Some("+")) => ("add", i64::from(acc.value) + i64::from(rhs.value)),
+                (cst::EXPR, Some("-")) => ("sub", i64::from(acc.value) - i64::from(rhs.value)),
+                (cst::TERM, Some("*")) => ("mul", i64::from(acc.value) * i64::from(rhs.value)),
                 _ => return Err(Refusal::at(node, "unsupported Perl arithmetic operator")),
             };
             let value = checked_i32(node, value)?;

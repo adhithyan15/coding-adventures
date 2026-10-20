@@ -9,8 +9,8 @@
 //! not a question this crate can answer correctly — and does not need to.
 //!
 //! ```text
-//!   None ───────────────────────────────► DEFAULT_RELEASE
-//!   Some(id) ──► id in SUPPORTED_RELEASES? ── yes ─► Release::Inventory(id)
+//!   None ───────────────────────────────► DEFAULT_RELEASE (5.38.0)
+//!   Some(id) ──► id in SUPPORTED_RELEASES? ── yes ─► Release(id)
 //!                     │ no
 //!                     ▼
 //!              id in INVENTORY_RELEASES? ── yes ─► ReleaseNotAvailable (pending)
@@ -35,43 +35,45 @@ const MAX_ECHOED_RELEASE_CHARS: usize = 64;
 /// How many inventory IDs an `UnknownRelease` error suggests (LANG84 C4.2).
 const MAX_SUGGESTIONS: usize = 5;
 
-/// The grammar pair a compile ran against.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum Release {
-    /// The unversioned `perl.tokens`/`perl.grammar` pair: LANG81's bounded
-    /// Perl 5.38 execution grammar. Not an inventory row. It stays the
-    /// default until a `perl5.38.0` pair grounded in tag `v5.38.0` replaces
-    /// it (LANG84 "Python and Perl: make release selection real"), and it is
-    /// reachable only by naming no release.
-    Unversioned,
-    /// Exactly one non-pending row of `releases.csv`.
-    Inventory(&'static str),
-}
+/// The one inventory release a compile runs against (LANG84 C4.1).
+///
+/// A `Release` can only be obtained from [`resolve_release`] or
+/// [`DEFAULT_RELEASE`], so holding one is proof that the ID is a
+/// non-pending row of `releases.csv` with compiled tables. There is no
+/// "unversioned" value any more: since LANG84 phase 4b the IIR path never
+/// touches LANG81's unversioned `perl.tokens`/`perl.grammar` (C4.5). Those
+/// files stay for `perl-lexer::tokenize_perl` and `perl-parser::parse_perl`,
+/// which are not on the IIR path.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub struct Release(&'static str);
 
 impl Release {
-    /// The inventory ID, or `None` for the unversioned pair.
-    pub fn id(self) -> Option<&'static str> {
-        match self {
-            Release::Unversioned => None,
-            Release::Inventory(id) => Some(id),
-        }
+    /// The exact inventory ID, such as `"5.38.0"` or `"5.004_72"`.
+    pub fn id(self) -> &'static str {
+        self.0
     }
 }
 
 impl fmt::Display for Release {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            Release::Unversioned => write!(f, "unversioned LANG81 pair"),
-            Release::Inventory(id) => write!(f, "Perl {id}"),
-        }
+        write!(f, "Perl {}", self.0)
     }
 }
 
+/// The inventory ID a compile uses when the caller names no release.
+///
+/// `5.38.0` is the first stable release of the line LANG81's pilot was
+/// written against, and its pair is grounded in the `v5.38.0` tag's own
+/// `perly.y`, `toke.c`, `keywords.h` and `parser.h` blobs (see the header of
+/// `code/grammars/perl/perl5.38.0.tokens`). A test pins that this is a
+/// non-pending inventory row with compiled tables.
+pub const DEFAULT_RELEASE_ID: &str = "5.38.0";
+
 /// What a compile uses when the caller names no release (LANG84 C4.4).
 ///
-/// LANG84 phase 4a keeps this on the unversioned pair. Phase 4b moves it to an
-/// exact inventory ID once a release pair replaces the LANG81 grammar.
-pub const DEFAULT_RELEASE: Release = Release::Unversioned;
+/// Phase 4a kept this on the unversioned LANG81 pair; phase 4b moved it to
+/// the inventory release [`DEFAULT_RELEASE_ID`].
+pub const DEFAULT_RELEASE: Release = Release(DEFAULT_RELEASE_ID);
 
 /// Resolve a caller's release request to exactly one grammar pair.
 ///
@@ -81,7 +83,7 @@ pub fn resolve_release(requested: Option<&str>) -> Result<Release, FrontendError
         return Ok(DEFAULT_RELEASE);
     };
     if let Some(id) = SUPPORTED_RELEASES.iter().find(|id| **id == requested) {
-        return Ok(Release::Inventory(id));
+        return Ok(Release(id));
     }
     if INVENTORY_RELEASES.contains(&requested) {
         return Err(FrontendError::ReleaseNotAvailable {
@@ -147,17 +149,21 @@ mod tests {
     use super::*;
 
     #[test]
-    fn no_release_is_the_default_and_the_default_is_unversioned() {
+    fn no_release_is_the_default_and_the_default_is_an_inventory_row() {
         assert_eq!(resolve_release(None).unwrap(), DEFAULT_RELEASE);
-        assert_eq!(DEFAULT_RELEASE, Release::Unversioned);
-        assert_eq!(DEFAULT_RELEASE.id(), None);
+        assert_eq!(DEFAULT_RELEASE.id(), "5.38.0");
+        // LANG84 C4.4: the default is an exact, checked inventory ID, and
+        // naming it explicitly resolves to the very same release.
+        assert!(SUPPORTED_RELEASES.contains(&DEFAULT_RELEASE_ID));
+        assert_eq!(resolve_release(Some(DEFAULT_RELEASE_ID)).unwrap(), DEFAULT_RELEASE);
+        assert_eq!(DEFAULT_RELEASE.to_string(), "Perl 5.38.0");
     }
 
     #[test]
     fn every_supported_release_resolves_to_itself() {
         for id in SUPPORTED_RELEASES {
             let release = resolve_release(Some(id)).unwrap();
-            assert_eq!(release.id(), Some(*id));
+            assert_eq!(release.id(), *id);
             assert_eq!(release.to_string(), format!("Perl {id}"));
         }
     }
@@ -172,10 +178,11 @@ mod tests {
                 stage: "pending"
             }
         );
-        // 5.38.0 is in the inventory but its pair is a later phase: it must
-        // not fall back to 5.38.2, which is a checked pair with equal text.
+        // 5.38.1 sits between two checked pairs (5.38.0 and 5.38.2) whose
+        // toke.c blobs are identical, yet it is pending: it must not fall
+        // back to either neighbour.
         assert!(matches!(
-            resolve_release(Some("5.38.0")),
+            resolve_release(Some("5.38.1")),
             Err(FrontendError::ReleaseNotAvailable { .. })
         ));
     }
