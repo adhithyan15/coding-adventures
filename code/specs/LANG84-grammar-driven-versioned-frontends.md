@@ -288,7 +288,7 @@ retrieval date, upstream URLs, and blob or commit IDs of the history sources.
 | Column | Required | Values |
 | --- | --- | --- |
 | `release` | yes | Upstream public spelling (`2.7.8`, `1.8.7-p374`, `3.0.0-preview1`, `3.13.0rc2`, `es5.1`, `js1.8.5`, `5.004_04-m1`). Unique. Charset `[A-Za-z0-9._-]`; anything else is normalized by a mapping documented in the directory README. |
-| `date` | yes | ISO `YYYY-MM-DD`. Uncertain dates take a `?` suffix, and the README states the source. |
+| `date` | yes | ISO `YYYY-MM-DD`, or ISO reduced precision `YYYY-MM` / `YYYY` when the source states only a month or year (it sorts as the start of that period). Uncertain dates take a `?` suffix, and the README states the source. |
 | `channel` | yes | `final`, `patch`, `preview`, `alpha`, `beta`, `rc`, `dev`, `trial`, `edition` |
 | `source_ref` | yes | Tag name plus resolvable URL, or archive URL, or document URL |
 | `source_sha` | yes | Git commit or tag object ID, or SHA-256 of the archive or document; `-` only for a row still pending evidence |
@@ -325,6 +325,20 @@ with `grammar_subset=pl-decimal-print`, and `pending` rows become `none`.
 
 It reads columns by header name and fails on an absent column (lesson: *read
 the inventory header before grouping release statuses*).
+
+Pre-LANG84 pairs that are not release pairs, such as Python's minor-line
+`python3.12.*`, are declared in a header comment,
+`# legacy-minor-line-pairs: python2.7 python3.0 ...`. The pair-file check skips
+the stems it lists and fails if a listed stem has no files.
+
+**Status (2a).** The first `check` landed with the phase 2a inventories. It
+covers the header, uniqueness and charset, date format and order, the
+predecessor rule (an earlier row; empty only on the first row), the allowed
+status values, the monotonic claims, pair files in both directions, declared
+subsets, and named profiles. `--matrix` is not implemented yet. Perl's
+inventory keeps the LANG82 header and is reported as skipped until the
+phase 2b migration. Only directories listed in the script's `LEGACY_SCHEMA`
+may be skipped.
 
 ### Materialized pair per release
 
@@ -903,7 +917,7 @@ noted.
 | Dartmouth BASIC | GL + 2 hooks (`lib.rs`: 391 non-test lines incl. docs) | GP | CST | unversioned | Compliant (C3 hooks) | Inventory (editions 1–7) |
 | Derive, Wolfram | GL + `drop_bracketed_newlines` | GP | CST | unversioned | Compliant (C3 hook) | Optional E3 replacement; inventories |
 | MacroOct, MacroNib | GL + Oct/Nib GP | GP | CST | — | Base parse compliant; directive layer is a preprocessor | See [Preprocessor dialects](#preprocessor-dialects) |
-| McCarthy Lisp | GL | GP, then `extract_program` → `Vec<LispExpr>` | typed lift | unversioned | **Non-compliant (C2 typed lift)** | Phase 8 rewrite |
+| McCarthy Lisp | GL | GP | CST | unversioned | Compliant since `mccarthy-lisp-iir-compiler` 0.9.0 (was C2 typed lift via `extract_program` → `Vec<LispExpr>`) | Phase 8 CST rewrite done; inventory (LISP 1, 1.5) |
 | Twig | GL | GP | CST | unversioned | Compliant since `twig-ir-compiler` 0.46.0 (was C2 typed lift via `ast_extract.rs` + `ast_nodes.rs` → `twig_parser::Program`). The TW05-B gate's checker still lifts internally; see open question 2 | Phase 8 CST rewrite done; single-row inventory (see open question 5) |
 | JavaScript | GL with runtime `REGEX`/`BAD_REGEX` deletion | GP over `es*.grammar` + `asi.rs` (≈338) | `bridge.rs` (≈4,214) → `javascript_ast::Program` | 14 pairs (es1, es3, es5, es2015–es2025) + unversioned; no CSV; hard-coded `Es2020` | **Non-compliant (C2 mutation, hook size, typed lift)** | Phase 6 |
 | Ruby | hand-written `ruby-lexer` (≈2,200 lines) driving `ruby-1.8.lexer.states.toml` (1,917 lines; 15 eras share it, the era list stops at 3.3) | GP over `ruby.grammar` (919 lines) | CST | unversioned; stale 79-line `ruby.tokens` | **Non-compliant (C2 hand-written lexer)** | Phases 3 and 5 |
@@ -990,7 +1004,14 @@ corpus.
   The checker still lifts the tree to `Program` internally: open question 2,
   option 2, now isolated inside `twig-type-checker`.
 - McCarthy Lisp's `extract_program` is replaced by borrowed views over the
-  CST.
+  CST. **Done** in `mccarthy-lisp-iir-compiler` 0.9.0, as one PR: the
+  compiler takes `parse_to_cst`'s `GrammarASTNode` (`compile_ast`), reads
+  `'X` and `list_body` children as cons structure through borrowed cursors
+  (no owned tree), runs capture analysis over the CST (C1.7), and keeps the
+  extractor's error cases in a validation pass. IIR identity was checked by
+  diffing the old and new compilers' output over every string literal in
+  the McCarthy and `lang-aot` test sources plus a hand-written edge-case
+  corpus. `extract_program` and `LispExpr` stay public for other consumers.
 
 ### Python and Perl: make release selection real
 
@@ -1049,6 +1070,21 @@ A later PREP spec MAY move directive syntax into its own
 Inventory PRs are CSV and README only. Every row starts at `grammar_status`
 `pending` unless a pair already exists and has been checked.
 
+**Phase 2a result (2026-10-20).** Every row in the three new inventories is
+`pending`, stage `none`.
+
+- `ruby/` has 1,189 rows. Seven of the 1,196 tags are excluded: branch, freeze
+  and CVS-import markers, plus one conversion artifact. Most tag-only patch
+  levels date from their tag commit, marked `?`. `v1_9_0_N` keeps the upstream
+  tarball spelling `1.9.0-N`, not `-pN`.
+- `python/` has 657 rows. The 20 excluded tags are retired-branch heads.
+  Thirteen releases with NEWS entries but no tags are listed in the header.
+- `ecmascript/` has 29 rows. The existing `es*` pairs do not cite their
+  sources, so they have not reached stage G.
+
+Each directory README gives the date sources, the lineage rules (`line`,
+`branch-point`, `curated`) and the remaining gaps.
+
 ## Phased roadmap
 
 Only one implementation PR is active at a time (LANG78 practice). The sizes
@@ -1058,8 +1094,8 @@ are rough estimates of reviewed diff size, not counting regenerated
 | Phase | PR(s) | Content | Size |
 | --- | --- | --- | --- |
 | 1 | 1 | This spec, plus cross-links from LANG78 and LANG82 | doc only |
-| 2 | 2a | `releases.csv` and README for Ruby, Python and ecmascript (CSV only) | ~3,000 CSV rows, ~200 lines of prose |
-| | 2b | `release_inventory.py check`, `subsets.csv` scaffolding, Perl CSV schema migration, CI hook | ~600 lines |
+| 2 | 2a | `releases.csv` and README for Ruby (1,189 rows), Python (657) and ecmascript (29), plus the first `release_inventory.py check` and its CI hook | ~1,900 CSV rows, ~200 lines of prose, ~400 lines of checker and tests |
+| | 2b | `subsets.csv` scaffolding, Perl CSV schema migration (including the perl-parser tests that match `,partial` row endings), `--matrix` | ~600 lines |
 | | 2c | `release_evidence.py` (blob-ID capture per release) | ~400 lines |
 | 3 | 3.1 | E1 line/column guards (+ F-spec) | ~800 lines Rust + tests |
 | | 3.2 | Ruby R0: `ruby<earliest…>` partial pairs for `rb-int-puts`, mechanically materialized from evidence; differential tests | ~600 lines + pairs |
@@ -1075,7 +1111,7 @@ are rough estimates of reviewed diff size, not counting regenerated
 | 5 | 5a–5b | **Ruby integer subset on all backends** (= LANG83 PR2), on R0 pairs: `rb_int_div` → `i64_div_floor`, `puts` → `print_i64`, `StdoutThenTrap` rows; `Language::Ruby`; the IIR path drops `ruby-lexer` | ~1,200 lines over 2 PRs |
 | 6 | 6a–6e | JavaScript CST rewrite (see above) | ~3,000 lines over 5 PRs |
 | 7 | 7a–7c | Python: inventory pairs for the subset, `compile_source_at`, `Language::Python`, matrix rows. The float subset depends on LANG83 float formatting; an int subset depends on the LANG83 `*_ovf` family | ~2,000 lines over 3 PRs |
-| 8 | 8.x | Twig CST rewrite (≈5,700-line compiler, ~6–10 PRs by construct family, IIR-identity gate; done in one, `twig-ir-compiler` 0.46.0). McCarthy Lisp CST rewrite (~3 PRs) | large |
+| 8 | 8.x | Twig CST rewrite (≈5,700-line compiler, ~6–10 PRs by construct family, IIR-identity gate; done in one, `twig-ir-compiler` 0.46.0). McCarthy Lisp CST rewrite (~3 PRs; done in one, `mccarthy-lisp-iir-compiler` 0.9.0) | large |
 | 9 | ongoing | Release backfill, earliest first: per-release pairs and subset status for every language; remaining inventories (BASIC, ALGOL, COBOL and others); remaining lang-aot variants | many small PRs |
 
 Phases 4 and 5 may start once 2b (and, for Ruby, 3.2) has landed. They do not
