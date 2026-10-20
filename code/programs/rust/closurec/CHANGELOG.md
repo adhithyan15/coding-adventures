@@ -67,6 +67,22 @@ sized array chunks. Preserve revision/subauthority checks and little-endian
 word order, remove the slice-conversion unwrap, and keep warnings denied.
 Fresh review, local compiler/policy validation and native CI are required.
 
+### Changed - SIMPLE keeps a top-level `const`, as upstream does (CCR-078, #15863)
+
+SIMPLE no longer propagates a top-level `const` literal into its ordinary uses.
+The pinned oracle doesn't either. A literal-initialized const still folds a
+statement condition (`if(T)`, `T&&f()`, `T?a():b()`), as upstream does. See
+CLOC43.
+
+- `ladder_t6_let_const_simple` now matches upstream. Its ledger entry is gone,
+  the count pin moves from 59 to 58, and SIMPLE parity is now 35/57.
+- The `simple-inline-variables` golden pinned our old output, which upstream
+  never produced. It was re-captured from the jar.
+- Fixed (security review): a function, arrow, class-expression or catch
+  binding that shadows a top-level `const` no longer receives its value.
+  `tests/regression_expression_shadow.rs` runs six such programs under node
+  at both levels.
+
 ### Fixed - native Windows CI execution gate (CV02)
 
 The repaired-head plan selected the compiler for Windows but left its OS-suite
