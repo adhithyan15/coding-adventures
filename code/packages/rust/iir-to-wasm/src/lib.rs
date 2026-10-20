@@ -66,6 +66,7 @@
 
 pub mod codegen;
 pub mod lower;
+mod lang83_f64;
 pub mod validate;
 
 /// LANG83: this backend's declaration for every standard operation (see the
