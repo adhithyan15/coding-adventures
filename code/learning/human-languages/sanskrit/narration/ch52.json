@@ -4,7 +4,7 @@
   "chapter": 52,
   "title": "Two Things Joined",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:436708dcfeeb5026",
+  "sourceHash": "fnv1a64:8b29a2d09ea33771",
   "lessons": [
     {
       "id": "SA-C52-ca",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bbcbb08825f3b8e1",
+      "sourceHash": "fnv1a64:863b46ba94ffee24",
       "notice": null,
       "blocks": [
         {
@@ -72,6 +72,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ca is inherited: MW compares Latin -que and Greek te, which also stand after the word they join (CDIAL 4533)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -82,7 +93,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -140,7 +151,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -171,7 +182,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a5174181dd504b8b",
+      "sourceHash": "fnv1a64:77c614e24ee68438",
       "notice": null,
       "blocks": [
         {
@@ -224,6 +235,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Vā is inherited too: MW compares Latin -ve, \"or\", which is also an enclitic and never opens a sentence (CDIAL 11466)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -274,7 +296,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -305,7 +327,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:88bdb71c5fe69728",
+      "sourceHash": "fnv1a64:b3c2bac479914f96",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -363,6 +385,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Kintu is built from kim, \"what\", and the particle tu, \"but\"; MW lists kiṃ-tu under kim as \"but, however, nevertheless\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -373,7 +406,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -413,7 +446,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

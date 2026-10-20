@@ -14,7 +14,8 @@ romanization: "ṭabakha"
 concept_tag: AR-VERB-TABAKHA
 prerequisites: [AR-C59-fataha, AR-C59-aghlaqa]
 sounds: []
-roots: []
+roots: [ṭ-b-kh]
+etymology_hook: "ṭabakha: built on the root ṭ-b-kh, 'to cook' (Lane); the same root gives maṭbakh, 'a kitchen'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C59-aghlaqa]
 <!-- hl-knowledge: introduces=[AR-LEX-C60-VERBS60-01]; assesses=[] -->
 
 **طبخ** — *ṭabakha* — "to cook (he cooked)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**طبخ** (*ṭabakha*) is built on the native Arabic root *ṭ-b-kh*, "to cook" (Lane). The same root gives *maṭbakh*, "a kitchen".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

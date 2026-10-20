@@ -14,7 +14,8 @@ romanization: "shams"
 concept_tag: AR-NATURE77-SHAMS
 prerequisites: [AR-C77-najm, AR-C77-sahaba]
 sounds: []
-roots: []
+roots: [sh-m-s]
+etymology_hook: "shams: built on the root sh-m-s, 'the sun' (Lane); Hebrew shemesh, 'sun', is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C77-sahaba]
 <!-- hl-knowledge: introduces=[AR-LEX-C77-NATURE77-03]; assesses=[] -->
 
 **شمس** — *shams* — "the sun".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شمس** (*shams*) is built on the native Arabic root *sh-m-s*, "the sun" (Lane). Hebrew *shemesh*, "sun", is its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

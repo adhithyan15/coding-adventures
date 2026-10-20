@@ -32,13 +32,13 @@ history owners.
   **"Across the family"** cognate box, every form supplied so nothing is
   assumed — completing the four-way pattern-matching across the Dravidian
   scripts.
-- **Grammar introduced inline**: yes/no as demonstratives (*athe*/*alla*) at
-  *athe*, negation-by-verb (the shared *il-*) at *illa*.
+- **Grammar introduced inline**: yes/no as demonstratives (*ate*/*alla*) at
+  *ate*, negation-by-verb (the shared *il-*) at *illa*.
 
 ## Progress
 
 - **Chapter 1 — Greetings** ([`lessons/ML-C01-*`](./lessons/)): hear and use
-  *namaskāram* → eight sub-five-minute reading/writing steps → nandi → athe →
+  *namaskāram* → eight sub-five-minute reading/writing steps → nandi → ate →
   illa → śari → practice. The first unit reaches tracing, guided copy, delayed
   copy, and dictation before whole-word writing. In the book.
 - **Chapter 2 — Introducing Yourself** ([`lessons/ML-C02-*`](./lessons/)):

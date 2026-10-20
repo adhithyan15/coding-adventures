@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:d097c4558a2a62cb",
+  "lessonIds": [
+    "IT-C512-torneo",
+    "IT-C512-semifinale",
+    "IT-C512-qualificarsi",
+    "IT-C512-medaglia",
+    "IT-C512-podio"
+  ],
+  "tex": "italian/book/chapters/ch512-il-torneo.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 537,
+  "sourceHash": "fnv1a64:5fa392256679270a",
+  "lessonIds": [
+    "ES-C537-desde-entonces",
+    "ES-C537-hasta-entonces",
+    "ES-C537-al-dia-siguiente",
+    "ES-C537-hace-poco",
+    "ES-C537-anteayer"
+  ],
+  "tex": "spanish/book/chapters/ch537-desde-entonces.tex"
+}

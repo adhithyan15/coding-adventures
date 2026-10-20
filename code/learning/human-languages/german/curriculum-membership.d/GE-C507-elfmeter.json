@@ -1,0 +1,11 @@
+{
+  "id": "GE-C507-elfmeter",
+  "pathSegment": "GE-PATH-507-SPIEL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-507-SPIEL",
+      "order": 1
+    }
+  ]
+}

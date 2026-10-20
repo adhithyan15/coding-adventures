@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 399,
+  "sourceHash": "fnv1a64:b42b2096180936da",
+  "lessonIds": [
+    "IT-C399-account",
+    "IT-C399-password",
+    "IT-C399-utente",
+    "IT-C399-accedere",
+    "IT-C399-registrarsi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch399.txt",
+  "json": "italian/narration/ch399.json",
+  "textHash": "fnv1a64:8850f9d2cbf41ed0",
+  "jsonHash": "fnv1a64:029804382481ec9b",
+  "findings": []
+}

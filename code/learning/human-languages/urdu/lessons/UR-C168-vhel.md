@@ -14,7 +14,8 @@ romanization: "vhel"
 concept_tag: UR-CHIZ168-VHEL
 prerequisites: [UR-C168-batakh, UR-C168-ullu]
 sounds: []
-roots: []
+roots: [english-whale]
+etymology_hook: "vhel ← English whale"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C168-ullu]
 <!-- hl-knowledge: introduces=[UR-LEX-C168-CHIZ168-03]; assesses=[] -->
 
 **وہیل** — *vhel* — "a whale".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**وہیل** (*vhel*) is a loan from English *whale*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

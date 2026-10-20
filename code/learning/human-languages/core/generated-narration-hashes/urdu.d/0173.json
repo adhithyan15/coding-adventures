@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 173,
-  "sourceHash": "fnv1a64:a3c2fdf6fc8a2e7c",
+  "sourceHash": "fnv1a64:213b7d098364073b",
   "lessonIds": [
     "UR-C173-divar-ghari",
     "UR-C173-gamla",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "urdu/narration/ch173.txt",
   "json": "urdu/narration/ch173.json",
-  "textHash": "fnv1a64:48d1930cb04b31fb",
-  "jsonHash": "fnv1a64:f0e53befa47d19c3",
+  "textHash": "fnv1a64:de0e39e6fffef0f5",
+  "jsonHash": "fnv1a64:e5ae27fa7e5958b8",
   "findings": []
 }

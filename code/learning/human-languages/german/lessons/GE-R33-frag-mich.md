@@ -79,4 +79,4 @@ move it left.
 [PAUSE 4s] What turns a statement into a yes-or-no question? (**The verb moves
 to first place**.) What does a command leave out? (**The pronoun**.) Which sound
 law lines German *w-* up with English *wh-*? (**Grimm's**.) And which of the six
-W-words is two words welded together? (***Warum*** — an old *was* plus *um*.)
+W-words is two words welded together? (***Warum*** — an old *wo* plus *um*.)

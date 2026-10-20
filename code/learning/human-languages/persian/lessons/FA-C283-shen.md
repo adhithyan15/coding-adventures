@@ -15,6 +15,7 @@ concept_tag: FA-CHIZ283-SHEN
 prerequisites: [FA-C282-shir-e-ab, FA-C282-dastgire]
 sounds: []
 roots: []
+etymology_hook: "shen: origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C282-dastgire]
 <!-- hl-knowledge: introduces=[FA-LEX-C283-CHIZ283-01]; assesses=[] -->
 
 **شن** — *shen* — "gravel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shen* is the word for gravel, but no source used here gives its origin, which is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

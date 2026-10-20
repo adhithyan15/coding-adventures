@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-462-ORAGE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a storm: stormy weather, lightning, hail, rumbling and a gust of wind.",
+  "prerequisites": []
+}

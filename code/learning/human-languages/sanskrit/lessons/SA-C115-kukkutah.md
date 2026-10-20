@@ -14,7 +14,8 @@ romanization: "kukkuṭaḥ"
 concept_tag: SA-THINGS115-KUKKUTAH
 prerequisites: [SA-C115-pipilika, SA-C115-citrapatangah]
 sounds: []
-roots: []
+roots: [sanskrit-kukkuta]
+etymology_hook: "kukkuṭa 'cock' is imitative, from the cry kukkuṭ (MW; CDIAL 3208); Punjabi kukkaṛ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C115-citrapatangah]
 <!-- hl-knowledge: introduces=[SA-LEX-C115-THINGS115-05]; assesses=[] -->
 
 **कुक्कुटः** — *kukkuṭaḥ* — "a rooster".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kukkuṭa* "a cock" is imitative: MW records *kukkuṭ* as a word that copies the cock's cry, and CDIAL 3208 calls it onomatopoeic. It lives on as Punjabi *kukkaṛ* "cock" (CDIAL 3208).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

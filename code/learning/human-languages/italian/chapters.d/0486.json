@@ -1,0 +1,19 @@
+{
+  "chapter": 486,
+  "title": "Starnuti e prurito",
+  "label": "ch:it-starnuti-e-prurito",
+  "canDo": "I can describe allergies: sneezing, itching and stings.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-R486-ripasso-479-486",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 486: I can describe allergies: sneezing, itching and stings.",
+    "assesses": [
+      "IT-LEX-C486-PRURITO-03",
+      "IT-LEX-C486-PRURITO-04",
+      "IT-LEX-C486-PRURITO-05"
+    ]
+  }
+}

@@ -14,7 +14,8 @@ romanization: "kazoeru"
 concept_tag: JA-VERB-KAZOERU
 prerequisites: [JA-W136-zo, JA-W03-ka, JA-W01-e, JA-W132-ru, JA-C135-ginkou, JA-C134-taberu, JA-C126-futsuu]
 sounds: [mora]
-roots: []
+roots: [japanese-kazoeru]
+etymology_hook: "kazoeru: native Japanese, inherited, not borrowed; kanji 数える attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -53,6 +54,11 @@ politely, it is *kazoemasu*.
 The new sign is spent at once. **か**, **ぞ**, **え** and **る**: four beats,
 *ka–zo–e–ru*. It ends in **る**, like the verb **たべる**. You write every
 sign in it now.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**かぞえる** (*kazoeru*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C136-KAZOERU, JA-SCRIPT-ZO-01, JA-LEX-ANCHOR-KAZOKU, JA-SCRIPT-KA-01, JA-SCRIPT-E-01, JA-SCRIPT-RU-01] -->

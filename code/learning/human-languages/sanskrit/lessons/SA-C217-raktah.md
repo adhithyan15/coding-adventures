@@ -14,7 +14,8 @@ romanization: "raktaḥ"
 concept_tag: SA-QUAL217-RAKTAH
 prerequisites: [SA-C216-vijnah, SA-C216-buddhiman]
 sounds: []
-roots: []
+roots: [sanskrit-rakta]
+etymology_hook: "rakta 'dyed, red' ← past participle of √rañj 'colour, dye'; Hindi rātā 'red' (CDIAL 10539)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C216-buddhiman]
 <!-- hl-knowledge: introduces=[SA-LEX-C217-QUAL217-01]; assesses=[] -->
 
 **रक्तः** — *raktaḥ* — "red".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*rakta* is the past participle of the root √rañj, "to be coloured, dyed" (MW): "dyed", then "red", then "blood" (CDIAL 10539). It lives on as Hindi *rātā*, "dyed, red".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

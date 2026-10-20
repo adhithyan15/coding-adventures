@@ -1,0 +1,76 @@
+---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-C267-homework-plan
+sequence: 15840
+spine_node: SPINE-TALK-ABOUT-FUTURE
+chapter: 267
+type: grammar
+headword: (one homework and study plan)
+gloss: reuse two complete first-person future forms with familiar schoolwork
+concept_tag: SA-SCHOOL267-HOMEWORK
+prerequisites: [SA-C83-lesson, SA-C255-grhakaryam, SA-C264-karisyami, SA-C264-pathisyami, SA-C267-exam-time]
+sounds: []
+roots: []
+reviews_of: [SA-C83-lesson, SA-C255-grhakaryam, SA-C264-karisyami, SA-C264-pathisyami, SA-C267-exam-time]
+duration:
+  max_seconds: 235
+requires:
+  knowledge: [SA-LEX-C83-SCHOOL-04, SA-LEX-C255-SCH255-04, SA-VERB-C264-KARISYAMI-01, SA-VERB-C264-PATHISYAMI-02, SA-PATTERN-C267-SCHOOL-PLAN-01]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [SA-LEX-C83-SCHOOL-04, SA-LEX-C255-SCH255-04, SA-VERB-C264-KARISYAMI-01, SA-VERB-C264-PATHISYAMI-02, SA-PATTERN-C267-SCHOOL-PLAN-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+---
+
+# Retrieve your homework and study plan
+
+## Warm-up
+
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C83-SCHOOL-04, SA-LEX-C255-SCH255-04] -->
+
+[PAUSE 2s] Say “a lesson,” then “homework.” (*Pāṭhaḥ; gṛhakāryam.*)
+
+## Grammar Lens: two complete owned frames
+
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C83-SCHOOL-04, SA-LEX-C255-SCH255-04, SA-VERB-C264-KARISYAMI-01, SA-VERB-C264-PATHISYAMI-02, SA-PATTERN-C267-SCHOOL-PLAN-01] -->
+
+Retrieve the two whole frames introduced in the preceding lesson:
+
+> **गृहकार्यं करिष्यामि।**
+>
+> *Gṛhakāryaṃ kariṣyāmi.*
+>
+> I will do the homework.
+
+> **पाठं पठिष्यामि।**
+>
+> *Pāṭhaṃ paṭhiṣyāmi.*
+>
+> I will read or study the lesson.
+
+The school-plan atom owns both complete lines. This lesson does not derive
+**पाठं** from **पाठः**, generalise a masculine accusative rule, or add a new
+future form.
+
+## Guided Practice
+
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C83-SCHOOL-04, SA-LEX-C255-SCH255-04, SA-VERB-C264-KARISYAMI-01, SA-VERB-C264-PATHISYAMI-02, SA-PATTERN-C267-SCHOOL-PLAN-01] -->
+
+[PAUSE 2s each]
+- [YOU SAY: “I will do the homework”]
+- [YOU SAY: “I will study the lesson”]
+- [YOU SAY: both plans after the exam-time answer]
+
+## Wrap-up Recall
+
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C255-SCH255-04, SA-VERB-C264-KARISYAMI-01, SA-VERB-C264-PATHISYAMI-02, SA-PATTERN-C267-SCHOOL-PLAN-01] -->
+
+[PAUSE 3s] State the homework plan and the study plan without looking.

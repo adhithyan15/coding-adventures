@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 635,
+  "sourceHash": "fnv1a64:7c3a67fdeeb1de63",
+  "lessonIds": [
+    "ES-C635-pacto",
+    "ES-C635-cuestionar",
+    "ES-C635-avalar",
+    "ES-C635-coherencia",
+    "ES-C635-dispuesto"
+  ],
+  "tex": "spanish/book/chapters/ch635-pactos-y-dudas.tex"
+}

@@ -18,9 +18,10 @@
  *   identity.ts — LogicalId, RevisionId branded aliases
  *   kinds.ts    — KIND name set, KindDescriptor, canonical Kinds object,
  *                 Stream helpers, KERNEL_API_VERSION
- *   shapes.ts   — Each built-in kind's TypeScript interface
- *                 plus stub StyleDocument / Interactivity that FM04 / FM05
- *                 will replace.
+ *   shapes.ts   — Each built-in kind's TypeScript interface, plus minimal
+ *                 StyleDocument / Interactivity carrier envelopes. The
+ *                 normative FM04 / FM05 schemas live in leaf-safe sibling
+ *                 packages so forme-types remains dependency-free.
  *   payload.ts  — KindPayload mapped type that infers the value type
  *                 for a stage's `In` and `Out` from its descriptors.
  */

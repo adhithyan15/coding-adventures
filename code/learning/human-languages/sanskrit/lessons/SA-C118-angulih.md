@@ -14,7 +14,8 @@ romanization: "aṅguliḥ"
 concept_tag: SA-THINGS118-ANGULIH
 prerequisites: [SA-C117-tvak, SA-C118-gulphah]
 sounds: []
-roots: []
+roots: [sanskrit-anguli]
+etymology_hook: "aṅguli 'finger, toe' is built on aṅgu-, the base of aṅguṣṭha 'thumb' (CDIAL 135); Hindi uṅglī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C118-gulphah]
 <!-- hl-knowledge: introduces=[SA-LEX-C118-THINGS118-02]; assesses=[] -->
 
 **अंगुलिः** — *aṅguliḥ* — "a finger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*aṅguli* "a finger, a toe" is built on the base *aṅgu-*, the same base as *aṅguṣṭha* "thumb" (CDIAL 135, 137). It lives on as Hindi *uṅglī* "finger" (CDIAL 135).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

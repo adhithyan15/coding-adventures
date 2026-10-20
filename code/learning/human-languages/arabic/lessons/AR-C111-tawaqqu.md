@@ -14,7 +14,8 @@ romanization: "tawaqquʿ"
 concept_tag: AR-WANT111-TAWAQQU
 prerequisites: [AR-C110-mawhiba, AR-C111-ishtaqa, AR-C09-ahmar-azraq, AR-C09-ahmar-azraq]
 sounds: []
-roots: []
+roots: [w-q-ʿ]
+etymology_hook: "tawaqquʿ: built on the root w-q-ʿ, 'to fall' (Lane); tawaqquʿ is the verbal noun of Form V, 'awaiting what will befall'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [AR-C111-ishtaqa]
 <!-- hl-knowledge: introduces=[AR-LEX-C111-WANT111-02]; assesses=[] -->
 
 **توقع** — *tawaqquʿ* — "an expectation".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**توقع** (*tawaqquʿ*) is built on the native Arabic root *w-q-ʿ*, "to fall" (Lane). *Tawaqquʿ* is the verbal noun of Form V, "awaiting what will befall".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C730-encanto",
+  "pathSegment": "ES-PATH-730-ENCANTO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-730-ENCANTO",
+      "order": 1
+    }
+  ]
+}

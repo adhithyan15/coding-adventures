@@ -1,0 +1,11 @@
+{
+  "id": "PT-R350-revisao-343-350",
+  "pathSegment": "PT-PATH-350-ORIGEM",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PT-EXT-350-ORIGEM",
+      "order": 5
+    }
+  ]
+}

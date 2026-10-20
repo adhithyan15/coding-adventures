@@ -14,7 +14,8 @@ romanization: "sakht"
 concept_tag: FA-ADJ60-SAKHT
 prerequisites: [FA-C60-tond, FA-C60-asan]
 sounds: []
-roots: []
+roots: [persian-sakht]
+etymology_hook: "sakht ← Middle Persian saxt (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C60-asan]
 <!-- hl-knowledge: introduces=[FA-LEX-C60-ADJ60-03]; assesses=[] -->
 
 **سخت** — *sakht* — "hard, difficult".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sakht* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *saxt*, "hard" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

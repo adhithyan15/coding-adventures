@@ -14,7 +14,8 @@ romanization: "billī"
 concept_tag: UR-NATURE67-BILLI
 prerequisites: [UR-C67-registan, UR-C67-kutta]
 sounds: []
-roots: []
+roots: [dravidian-bidala-cat]
+etymology_hook: "billī ← *billa, a form CDIAL sets beside Sanskrit biḍāla 'cat' (CDIAL 9237)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C67-kutta]
 <!-- hl-knowledge: introduces=[UR-LEX-C67-NATURE67-03]; assesses=[] -->
 
 **بلی** — *billī* — "a cat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بلی** (*billī*) is inherited. CDIAL lists Hindi *billī*, glossed "kitten", under a reconstructed *\*billa*, a form it sets beside Sanskrit *biḍāla*, "cat" (CDIAL 9237).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

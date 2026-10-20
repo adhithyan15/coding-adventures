@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 770,
+  "sourceHash": "fnv1a64:9e66457f1a1bbb5f",
+  "lessonIds": [
+    "ES-C770-tintoreria",
+    "ES-C770-probador",
+    "ES-C770-ferreteria",
+    "ES-C770-carniceria",
+    "ES-C770-fruteria"
+  ],
+  "tex": "spanish/book/chapters/ch770-las-tiendas-del-barrio.tex"
+}

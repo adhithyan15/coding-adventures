@@ -14,7 +14,8 @@ romanization: "ratnākaraḥ"
 concept_tag: SA-THG196-RATNAKARAH
 prerequisites: [SA-C196-tamram, SA-C196-pasanah]
 sounds: []
-roots: []
+roots: [sanskrit-ratnakara]
+etymology_hook: "ratnākara = ratna 'jewel' + ākara 'mine, store': 'jewel-mine', and so the ocean (MW; CDIAL 10601)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C196-pasanah]
 <!-- hl-knowledge: introduces=[SA-LEX-C196-THG196-03]; assesses=[] -->
 
 **रत्नाकरः** — *ratnākaraḥ* — "the ocean".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ratnākara* is a compound of *ratna*, "jewel", and *ākara*, "mine, store" (MW): a jewel-mine. Poets called the ocean the great store of jewels (CDIAL 10601).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

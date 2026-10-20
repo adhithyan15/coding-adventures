@@ -14,7 +14,8 @@ romanization: "ādhī rāt"
 concept_tag: UR-TIME91-ADHIRAT
 prerequisites: [UR-C91-dopahar, UR-C91-savera]
 sounds: []
-roots: []
+roots: [sanskrit-ardha, sanskrit-ratri]
+etymology_hook: "ādhī ← ardha 'half' (CDIAL 644); rāt ← Sanskrit rātrī 'night' (CDIAL 10702): both inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C91-savera]
 <!-- hl-knowledge: introduces=[UR-LEX-C91-TIME91-03]; assesses=[] -->
 
 **آدھی رات** — *ādhī rāt* — "midnight".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**آدھی رات** (*ādhī rāt*) is "half night". *ādhī*, "half", comes from Sanskrit *ardha*, "half" (CDIAL 644), and *rāt*, "night", from *rātrī*, "night" (CDIAL 10702).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

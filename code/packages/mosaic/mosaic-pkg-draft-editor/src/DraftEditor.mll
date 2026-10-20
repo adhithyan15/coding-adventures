@@ -11,11 +11,12 @@
 //       If (delete-label) HostButton [ draft-editor-delete ]
 //       If (cancel-label) HostButton [ draft-editor-cancel ]
 //
-// The body is the UI25 legacy `Input ( multiline : true )` — the one
-// portable text area. It is reachable here because this package depends on
-// nothing: inside the toolkit, a bare `Input` is rewritten to the toolkit's
-// single-line `Input` component (see the spec). J3b-pre (#15931) made it a
-// real, named text area on every backend.
+// The body is the UI25 legacy `Input ( multiline : true )`. It is reachable
+// here because this package depends on nothing: inside the toolkit, a bare
+// `Input` is rewritten to the toolkit's single-line `Input` component (see
+// the spec). J3b-pre (#15931) made it a real, named text area on every
+// backend. The kernel `HostInput ( multiline : true )` now lowers to the
+// same text area (#15930), so the body can move to it when `Input` retires.
 //
 // The visible label and the accessible name come from the same slot, so a
 // screen reader announces exactly what a sighted user reads.

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C530-torchon",
+  "pathSegment": "FR-PATH-530-VAISSELLE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-530-VAISSELLE",
+      "order": 4
+    }
+  ]
+}

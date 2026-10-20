@@ -4,7 +4,7 @@
   "chapter": 466,
   "title": "Una carta del colegio",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8dba0c576ae42ddc",
+  "sourceHash": "fnv1a64:717fa04d5f18ea9e",
   "lessons": [
     {
       "id": "ES-C466-director",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5e1d2a82fb192ba9",
+      "sourceHash": "fnv1a64:c76d8959d2ac034d",
       "notice": null,
       "blocks": [
         {
@@ -73,7 +73,7 @@
             },
             {
               "kind": "speech",
-              "text": "When you learned el actor, the -tor ending was set out as Latin's way of naming the doer: take a verb, add -tor, get the one who does it. That lesson listed agere becomes actor, docere becomes doctor — and dirigere becomes director. The word was printed in front of you before you needed it."
+              "text": "When you learned el actor, the -tor ending was set out as Latin's way of naming the doer: take a verb, add -tor, get the one who does it. That lesson listed agere becomes actor, docere becomes doctor — and dirigere becomes director. The word was printed in front of you before you needed it. Spanish borrowed it from Late Latin director (EtymDB 2.1)."
             },
             {
               "kind": "speech",
@@ -339,7 +339,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c0a74ecab0ade7d",
+      "sourceHash": "fnv1a64:110cbcfdeb2bd245",
       "notice": null,
       "blocks": [
         {
@@ -389,7 +389,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "com-, together, plus portare, to carry — the portare you had under importar, where carrying something in turned out to be the whole of what Rome meant by it."
+              "text": "com-, together, plus portare, to carry — the portare you had under importar, where carrying something in turned out to be the whole of what Rome meant by it. Comportar from Latin comportāre (EtymDB 2.1)."
             },
             {
               "kind": "speech",

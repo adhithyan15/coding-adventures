@@ -1,0 +1,11 @@
+{
+  "id": "PT-C412-trotinete",
+  "pathSegment": "PT-PATH-412-RODAS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-412-RODAS",
+      "order": 1
+    }
+  ]
+}

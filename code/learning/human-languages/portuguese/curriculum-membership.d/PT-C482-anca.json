@@ -1,0 +1,11 @@
+{
+  "id": "PT-C482-anca",
+  "pathSegment": "PT-PATH-482-CORPO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-482-CORPO",
+      "order": 2
+    }
+  ]
+}

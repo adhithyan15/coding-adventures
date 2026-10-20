@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-597-APRENDE",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "ES-EXT-597-APRENDE"
+  ],
+  "after": []
+}

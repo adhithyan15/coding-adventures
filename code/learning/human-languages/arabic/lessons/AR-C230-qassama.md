@@ -14,7 +14,8 @@ romanization: "qassama"
 concept_tag: AR-VERB-QASSAMA
 prerequisites: [AR-C230-atama, AR-C230-adafa]
 sounds: []
-roots: []
+roots: [q-s-m]
+etymology_hook: "qassama: built on the root q-s-m, 'to divide' (Lane); qassama is Form II, 'to divide up'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C230-adafa]
 <!-- hl-knowledge: introduces=[AR-LEX-C230-ACT230-04]; assesses=[] -->
 
 **قسم** — *qassama* — "to divide, to share out".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قسم** (*qassama*) is built on the native Arabic root *q-s-m*, "to divide" (Lane). *Qassama* is Form II, "to divide up".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "farq"
 concept_tag: FA-CHERA198-FARQ
 prerequisites: [FA-C198-bayad, FA-C198-ide]
 sounds: []
-roots: []
+roots: [arabic-farq]
+etymology_hook: "farq ← Arabic farq 'separation, difference', root f-r-q (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C198-ide]
 <!-- hl-knowledge: introduces=[FA-LEX-C198-CHERA198-03]; assesses=[] -->
 
 **فرق** — *farq* — "a difference".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*farq* is borrowed from Arabic *farq*, "separation, difference". Its Arabic root is *f-r-q* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

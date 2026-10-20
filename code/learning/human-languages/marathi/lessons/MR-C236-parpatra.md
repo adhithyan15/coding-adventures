@@ -14,7 +14,7 @@ romanization: "pārpatra"
 concept_tag: MR-VASTU236-PARPATRA
 prerequisites: [MR-C235-sampurna, MR-C236-phalat]
 sounds: []
-roots: [sanskrit-para, sanskrit-patra]
+roots: [sanskrit-para-bank, sanskrit-patra]
 etymology_hook: "pārpatra: Sanskrit pāra 'the far side' + pattra 'leaf, document' (CDIAL 7733); a modern coinage"
 duration:
   max_seconds: 200

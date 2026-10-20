@@ -4,8 +4,36 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
-Entries added after `task-app-v0.5.6` accumulate here until the next version is
+Entries added after `task-app-v0.5.8` accumulate here until the next version is
 cut.
+
+### Changed — web host theme colours are generated from the stylesheets
+
+The new `tests/host_theme_tokens.rs` reads `TaskApp.{light,dark}.msl` with
+mosstyle and writes `host/web/src/theme-tokens.generated.ts`. That module is
+the eight `part.property` values the web host has to paint before or around
+the emitted component. The test fails when the committed module is stale, and
+it names any part or property the host reads that the stylesheet no longer has.
+This replaces hand-kept copies in `host/web/src/theme.ts`. See
+`host/web/CHANGELOG.md`.
+
+## [0.5.8] - 2026-10-16
+
+### Fixed — Qt milestone diamonds retain their authored rotation (#17675)
+
+Timeline milestone markers and their legend swatches retain centered 45-degree
+rotation in Qt. Both themes now measure 81 Qt style drops instead of 83;
+unsupported transforms remain reported. Release artifact coverage is unchanged.
+
+## [0.5.7] - 2026-10-16
+
+### Fixed — SwiftUI milestone markers retain their diamond rotation (#17502)
+
+TaskApp's timeline and calendar milestone squares now rotate by their authored
+45 degrees in SwiftUI. Single finite degree rotations preserve centered visual
+rotation and the original layout footprint; unsupported units, transform chains,
+and invalid angles remain explicit debt. The measured SwiftUI inventory falls
+from 59 to 57 style drops.
 
 ## [0.5.6] - 2026-10-14
 

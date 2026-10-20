@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 135,
-  "sourceHash": "fnv1a64:444fa570499a03a6",
+  "sourceHash": "fnv1a64:bc8826bbe0377623",
   "lessonIds": [
     "SA-C135-siksate",
     "SA-C135-pathayati",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch135.txt",
   "json": "sanskrit/narration/ch135.json",
-  "textHash": "fnv1a64:3ee79b2fb069d3e7",
-  "jsonHash": "fnv1a64:dc888e7531efabaf",
+  "textHash": "fnv1a64:2afa31f358fd4be8",
+  "jsonHash": "fnv1a64:f40f1d2056666082",
   "findings": []
 }

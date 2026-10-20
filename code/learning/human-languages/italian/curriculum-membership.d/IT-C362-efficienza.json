@@ -1,0 +1,11 @@
+{
+  "id": "IT-C362-efficienza",
+  "pathSegment": "IT-PATH-362-STRESS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-362-STRESS",
+      "order": 2
+    }
+  ]
+}

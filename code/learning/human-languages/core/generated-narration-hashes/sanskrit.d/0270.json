@@ -1,0 +1,16 @@
+{
+  "language": "sanskrit",
+  "chapter": 270,
+  "sourceHash": "fnv1a64:3e2cde0cb8eefa58",
+  "lessonIds": [
+    "SA-C270-modern-technology-first-retrieval",
+    "SA-C270-modern-technology-final-retrieval"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "sanskrit/narration/ch270.txt",
+  "json": "sanskrit/narration/ch270.json",
+  "textHash": "fnv1a64:73d5ecda2e16637f",
+  "jsonHash": "fnv1a64:d86d12e35eb8445a",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 629,
+  "title": "Ganar y perder",
+  "label": "ch:es-ganar-y-perder",
+  "canDo": "I can talk about profit and loss and how something is paid for.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ES-C629-financiar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 629: I can talk about profit and loss and how something is paid for.",
+    "assesses": [
+      "ES-LEX-C629-GANANCIA-03",
+      "ES-LEX-C629-GANANCIA-04",
+      "ES-LEX-C629-GANANCIA-05"
+    ]
+  }
+}

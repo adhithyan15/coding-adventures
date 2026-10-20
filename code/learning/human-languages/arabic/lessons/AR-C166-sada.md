@@ -14,7 +14,8 @@ romanization: "ṣāda"
 concept_tag: AR-VERB-SADA
 prerequisites: [AR-C165-istamarra, AR-C165-anha]
 sounds: []
-roots: []
+roots: [ṣ-y-d]
+etymology_hook: "ṣāda: built on the root ṣ-y-d, 'to hunt' (Lane); ṣāda is the plain verb, 'he hunted'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C165-anha]
 <!-- hl-knowledge: introduces=[AR-LEX-C166-ACT166-01]; assesses=[] -->
 
 **صاد** — *ṣāda* — "to hunt, to catch (fish)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صاد** (*ṣāda*) is built on the native Arabic root *ṣ-y-d*, "to hunt" (Lane). *Ṣāda* is the plain verb, "he hunted".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

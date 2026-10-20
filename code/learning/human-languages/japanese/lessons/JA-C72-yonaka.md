@@ -14,7 +14,8 @@ romanization: "yonaka"
 concept_tag: JA-TIME72-YONAKA
 prerequisites: [JA-C71-mei, JA-C72-gogo]
 sounds: []
-roots: []
+roots: [japanese-yo-night, japanese-naka-middle]
+etymology_hook: "yonaka: native compound of yo 'night' + naka 'middle' (夜中)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C72-gogo]
 <!-- hl-knowledge: introduces=[JA-LEX-C72-TIME72-02]; assesses=[] -->
 
 **よなか** — *yonaka* — "the middle of the night".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**よなか** (*yonaka*) is a native compound, inherited rather than borrowed: *yo*, "night", and *naka*, "middle", both kun'yomi of its kanji (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

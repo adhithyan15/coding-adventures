@@ -14,7 +14,8 @@ romanization: "jāff"
 concept_tag: AR-QUAL151-JAFF
 prerequisites: [AR-C151-samin, AR-C151-muballal]
 sounds: []
-roots: []
+roots: [j-f-f]
+etymology_hook: "jāff: built on the root j-f-f, 'to be dry' (Lane); jāff is the active participle, 'dry'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C151-muballal]
 <!-- hl-knowledge: introduces=[AR-LEX-C151-QUAL151-04]; assesses=[] -->
 
 **جاف** — *jāff* — "dry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جاف** (*jāff*) is built on the native Arabic root *j-f-f*, "to be dry" (Lane). *Jāff* is the active participle, "dry".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

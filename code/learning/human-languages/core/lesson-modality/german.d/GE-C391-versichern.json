@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C391-versichern",
+    "language": "german",
+    "chapter": 391,
+    "sequence": 21160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7a7897b8d264092c"
+  },
+  "findings": []
+}

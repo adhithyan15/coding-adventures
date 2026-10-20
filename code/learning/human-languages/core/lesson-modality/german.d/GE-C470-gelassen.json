@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C470-gelassen",
+    "language": "german",
+    "chapter": 470,
+    "sequence": 25210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:92540455f734445f"
+  },
+  "findings": []
+}

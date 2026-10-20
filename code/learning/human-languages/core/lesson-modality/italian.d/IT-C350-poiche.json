@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C350-poiche",
+    "language": "italian",
+    "chapter": 350,
+    "sequence": 20170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5263b8ef1b7a6aaa"
+  },
+  "findings": []
+}

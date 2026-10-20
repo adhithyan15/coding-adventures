@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 399,
+  "sourceHash": "fnv1a64:f7497ec5ead57534",
+  "lessonIds": [
+    "PT-C399-rede",
+    "PT-C399-navegar",
+    "PT-C399-pesquisar",
+    "PT-C399-motor-de-busca",
+    "PT-C399-hiperligacao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch399.txt",
+  "json": "portuguese/narration/ch399.json",
+  "textHash": "fnv1a64:80e3c6cd2c7b9e45",
+  "jsonHash": "fnv1a64:989ccaeeff026f60",
+  "findings": []
+}

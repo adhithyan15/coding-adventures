@@ -52,7 +52,7 @@ The sign says **ВЫХОД**: the way out. It is **вы-**, "out", with the same
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**выход** is *вы-*, "out", with *ход*, "a going": the way out.
+**выход** is *вы-*, "out", with *ход*, "a going": the way out. Vasmer ties *ход* to the Indo-European root *\*sed-*, "to sit", its *х* grown from an *s* after prefixes.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

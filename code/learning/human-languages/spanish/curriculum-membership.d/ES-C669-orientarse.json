@@ -1,0 +1,11 @@
+{
+  "id": "ES-C669-orientarse",
+  "pathSegment": "ES-PATH-669-PLANO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-669-PLANO",
+      "order": 1
+    }
+  ]
+}

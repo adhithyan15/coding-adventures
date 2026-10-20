@@ -15,6 +15,7 @@ concept_tag: UR-CHIZ201-TASH
 prerequisites: [UR-C201-tenis, UR-C201-shatranj]
 sounds: []
 roots: []
+etymology_hook: "tāsh 'playing cards': origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C201-shatranj]
 <!-- hl-knowledge: introduces=[UR-LEX-C201-CHIZ201-04]; assesses=[] -->
 
 **تاش** — *tāsh* — "playing cards".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **تاش** (*tāsh*) is not settled. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

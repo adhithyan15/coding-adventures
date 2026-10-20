@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C525-herido",
+    "language": "spanish",
+    "chapter": 525,
+    "sequence": 15880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c7cac43c89c0079a"
+  },
+  "findings": []
+}

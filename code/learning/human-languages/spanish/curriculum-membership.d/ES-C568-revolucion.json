@@ -1,0 +1,11 @@
+{
+  "id": "ES-C568-revolucion",
+  "pathSegment": "ES-PATH-568-REY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-568-REY",
+      "order": 1
+    }
+  ]
+}

@@ -14,7 +14,8 @@ romanization: "vazīr"
 concept_tag: UR-KAM179-VAZIR
 prerequisites: [UR-C179-khazanchi, UR-C179-munshi]
 sounds: []
-roots: []
+roots: [arabic-wazir]
+etymology_hook: "vazīr ← Arabic wazīr 'a minister, one who bears a burden', through Persian (Lane, root w-z-r)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C179-munshi]
 <!-- hl-knowledge: introduces=[UR-LEX-C179-KAM179-04]; assesses=[] -->
 
 **وزیر** — *vazīr* — "a minister".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**وزیر** (*vazīr*) is a loan from Arabic *wazīr*, "a minister, one who bears a burden", which reached Urdu through Persian. Its Arabic root is *w-z-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-759-ESCENARIO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about a show, the applause and how the actors performed.",
+  "prerequisites": []
+}

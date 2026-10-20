@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for midnight, then the Sanskrit for dawn.
 You'll want to know: प्रभातम्.
 प्रभातम् — prabhātam — "morning, daybreak".
 
+The word, taken apart.
+Prabhāta is the past participle of pra + the root √bhā, "to shine": "shone forth", and so daybreak (MW, CDIAL 8707).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for dawn, then the Sanskrit for morning.
 
 You'll want to know: सन्ध्या.
 सन्ध्या — sandhyā — "twilight".
+
+The word, taken apart.
+CDIAL 12918 explains sandhyā as first a form of saṃdhi, "junction": the joining of day and night. It lives on as Hindi sāṃjh, "evening".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for morning, then the Sanskrit for twilight
 You'll want to know: हेमन्तः.
 हेमन्तः — hemantaḥ — "early winter".
 
+The word, taken apart.
+Hemanta is a Rigvedic word built on heman, "in winter", which MW files beside hima, "cold, snow" (CDIAL 14164).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for twilight, then the Sanskrit for early w
 You'll want to know: शिशिरः.
 शिशिरः — śiśiraḥ — "late winter".
 
+The word, taken apart.
+Śiśira is probably connected with the root √śyai and with śīta, "cold" (MW, CDIAL 12475). It lives on as Hindi sisir, "cold, dew".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for early winter, then the Sanskrit for lat
 
 You'll want to know: शरद्.
 शरद् — śarad — "autumn".
+
+The word, taken apart.
+MW explains śarad as probably "the time of ripening", from the root √śrā or √śṝ; it is already in the Rigveda (CDIAL 12329).
 
 What you've built.
 One more word for this chapter.

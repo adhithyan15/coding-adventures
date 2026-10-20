@@ -1,0 +1,22 @@
+{
+  "id": "SA-A1-SP-03",
+  "category": "Spatial notions",
+  "label": "movement and direction",
+  "probe": [
+    "SA-LEX-GACCHATI-GO",
+    "SA-LEX-AGACCHATI-COME",
+    "SA-LEX-C18-ASK-04",
+    "SA-LEX-C28-LEAVE-03",
+    "SA-LEX-C16-PLACE-03"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-NG3-04",
+    "A1-NG3-05"
+  ],
+  "note": "gacchati, āgacchati, kutaḥ ('from where'), yātrā ('a journey') and mārgaḥ ('road'). The prefix pair carries this point almost by itself."
+}

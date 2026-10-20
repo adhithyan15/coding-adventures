@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C416-soute",
+    "language": "french",
+    "chapter": 416,
+    "sequence": 23150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:649ecb5ad28f4e2d"
+  },
+  "findings": []
+}

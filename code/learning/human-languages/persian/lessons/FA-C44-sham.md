@@ -14,7 +14,8 @@ romanization: "shâm"
 concept_tag: FA-FOOD44-SHAM
 prerequisites: [FA-C43-sobhane, FA-C43-nahar]
 sounds: []
-roots: []
+roots: [persian-sham]
+etymology_hook: "shâm: inherited, usually traced to Middle Persian šām"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C43-nahar]
 <!-- hl-knowledge: introduces=[FA-LEX-C44-FOOD44-01]; assesses=[] -->
 
 **شام** — *shâm* — "dinner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shâm* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *šām*, "evening meal". (EtymDB links it to Arabic *šām*, the name of Syria, but that is a different word that happens to be spelled the same.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

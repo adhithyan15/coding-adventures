@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-611-CONDIC",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can set a condition with as long as, unless and provided that.",
+  "prerequisites": []
+}

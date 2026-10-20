@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 77,
-  "sourceHash": "fnv1a64:3fcda44aaece8260",
+  "sourceHash": "fnv1a64:af578c4659cf34bf",
   "lessonIds": [
     "JA-C77-futsuka",
     "JA-C77-mikka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch77.txt",
   "json": "japanese/narration/ch77.json",
-  "textHash": "fnv1a64:40d3d6eb5b6a1b6f",
-  "jsonHash": "fnv1a64:5e57c6a5d0e247de",
+  "textHash": "fnv1a64:90d334dcba6a22c4",
+  "jsonHash": "fnv1a64:46d7dd0e17e5fc07",
   "findings": []
 }

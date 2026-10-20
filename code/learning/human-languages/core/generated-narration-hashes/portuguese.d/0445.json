@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 445,
+  "sourceHash": "fnv1a64:ce243482201aa3a3",
+  "lessonIds": [
+    "PT-C445-andaime",
+    "PT-C445-grua",
+    "PT-C445-estaleiro",
+    "PT-C445-desabar",
+    "PT-C445-demolir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch445.txt",
+  "json": "portuguese/narration/ch445.json",
+  "textHash": "fnv1a64:9f9b098cda04efc2",
+  "jsonHash": "fnv1a64:3470612a0b113e0c",
+  "findings": []
+}

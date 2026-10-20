@@ -1,0 +1,11 @@
+{
+  "id": "LA-C352-cribrum",
+  "pathSegment": "LA-PATH-352-SUBIGO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-352-SUBIGO",
+      "order": 1
+    }
+  ]
+}

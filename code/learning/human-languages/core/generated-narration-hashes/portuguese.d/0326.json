@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 326,
+  "sourceHash": "fnv1a64:d0bd316f82da41b8",
+  "lessonIds": [
+    "PT-C326-lenda",
+    "PT-C326-lendario",
+    "PT-C326-mito",
+    "PT-C326-fabula",
+    "PT-C326-fada"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch326.txt",
+  "json": "portuguese/narration/ch326.json",
+  "textHash": "fnv1a64:9973f74dc27664d6",
+  "jsonHash": "fnv1a64:58794b4a65a44261",
+  "findings": []
+}

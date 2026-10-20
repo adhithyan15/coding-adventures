@@ -14,7 +14,8 @@ romanization: "fune"
 concept_tag: JA-WORLD62-FUNE
 prerequisites: [JA-C61-tsuna, JA-C62-nimotsu]
 sounds: []
-roots: []
+roots: [japanese-fune]
+etymology_hook: "fune: native Japanese, inherited, not borrowed; kanji 船 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C62-nimotsu]
 <!-- hl-knowledge: introduces=[JA-LEX-C62-WORLD62-02]; assesses=[] -->
 
 **ふね** — *fune* — "a ship".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ふね** (*fune*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

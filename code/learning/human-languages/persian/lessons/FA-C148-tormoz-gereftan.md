@@ -14,7 +14,8 @@ romanization: "tormoz gereftan"
 concept_tag: FA-VERB-TORMOZ-GEREFTAN
 prerequisites: [FA-C148-dast-zadan, FA-C148-chort-zadan]
 sounds: []
-roots: []
+roots: [russian-tormoz]
+etymology_hook: "tormoz ← Russian tormoz 'brake' (EtymDB), + Persian gereftan 'to take'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C148-chort-zadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C148-KONESH148-03]; assesses=[] -->
 
 **ترمز گرفتن** — *tormoz gereftan* — "to brake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tormoz gereftan* is "to take the brake": *tormoz* is borrowed from Russian *tormoz*, "brake" (EtymDB), and *gereftan*, "to take", is native. *gereftan*, "to take", is an inherited verb; EtymDB takes it back to the Indo-European root *\*gʰrebh₂-*, "to seize".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

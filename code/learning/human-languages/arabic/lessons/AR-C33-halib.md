@@ -6,13 +6,13 @@ sequence: 870
 chapter: 33
 type: word
 headword: حليب
-gloss: "milk" — the opposite case to shāy: a home-grown noun sitting straight on the verb for milking, and a Hebrew twin that is the same word
+gloss: '"milk" — the opposite case to shāy: a home-grown noun sitting straight on the verb for milking, and a Hebrew twin that is the same word'
 concept_tag: AR-DRINK-MILK
 romanization: ḥalīb
 prerequisites: [AR-C33-shay, AR-W07-hook-family-ha-kha]
 sounds: [haa-pharyngeal, long-ii, rtl-known-letters]
 roots: [h-l-b]
-etymology_hook: "حليب (ḥalīb, 'milk') sits on the root ح-ل-ب, whose verb حَلَبَ (ḥalaba) means 'he milked', so the noun is 'the milked thing' — the same verb-to-noun transparency as خبز (khubz) on خ-ب-ز, 'to bake'; Hebrew חָלָב (ḥalav, 'milk') is the same Semitic root, while the Syrian city حَلَب (Ḥalab, Aleppo) only looks related, since the name is attested in Bronze Age records long before Arabic and the milk story told about it is folk etymology"
+etymology_hook: "ḥalīb: root ḥ-l-b 'to milk' (Lane), 'the milked'; Hebrew ḥālāv is a cousin; Aleppo's milk story is folk"
 duration:
   max_seconds: 240
 requires:

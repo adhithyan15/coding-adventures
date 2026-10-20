@@ -14,7 +14,8 @@ romanization: "sāmm"
 concept_tag: AR-SIFA242-SAMM
 prerequisites: [AR-C242-barri, AR-C242-alif]
 sounds: []
-roots: []
+roots: [s-m-m]
+etymology_hook: "sāmm: built on the root s-m-m, 'poison' (Lane); sāmm is 'poisonous', from samm, 'poison'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C242-alif]
 <!-- hl-knowledge: introduces=[AR-LEX-C242-SIFA242-05]; assesses=[] -->
 
 **سام** — *sāmm* — "poisonous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سام** (*sāmm*) is built on the native Arabic root *s-m-m*, "poison" (Lane). *Sāmm* is "poisonous", from *samm*, "poison".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-473-ORGUEIL",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-473-ORGUEIL"
+  ],
+  "after": []
+}

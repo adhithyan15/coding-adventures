@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:34e0bc2d3b109c5c",
+  "lessonIds": [
+    "PT-C365-justica",
+    "PT-C365-injusto",
+    "PT-C365-injustica",
+    "PT-C365-preconceito",
+    "PT-C365-estereotipo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch365.txt",
+  "json": "portuguese/narration/ch365.json",
+  "textHash": "fnv1a64:1598bb0022a97b56",
+  "jsonHash": "fnv1a64:bfbb95fe559cc58e",
+  "findings": []
+}

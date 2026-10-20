@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-389-CRIME",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "PT-EXT-389-CRIME"
+  ],
+  "after": []
+}

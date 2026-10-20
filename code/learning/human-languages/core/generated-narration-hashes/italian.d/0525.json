@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:8267cf90194ab0eb",
+  "lessonIds": [
+    "IT-C525-libraio",
+    "IT-C525-copertina",
+    "IT-C525-sfogliare",
+    "IT-C525-segnalibro",
+    "IT-C525-tascabile"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch525.txt",
+  "json": "italian/narration/ch525.json",
+  "textHash": "fnv1a64:f22785fee1029fd4",
+  "jsonHash": "fnv1a64:648c1955cc47b655",
+  "findings": []
+}

@@ -14,7 +14,8 @@ romanization: "beshak"
 concept_tag: UR-VAJAH192-BESHAK
 prerequisites: [UR-C192-shayad, UR-C192-zarur]
 sounds: []
-roots: []
+roots: [persian-be, arabic-shakk]
+etymology_hook: "beshak: Persian be- 'without' + Arabic shakk 'doubt' (Lane, root sh-k-k)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C192-zarur]
 <!-- hl-knowledge: introduces=[UR-LEX-C192-VAJAH192-04]; assesses=[] -->
 
 **بے شک** — *beshak* — "of course, undoubtedly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بے شک** (*beshak*) is "without doubt". It joins the Persian *be-*, "without", and Arabic *shakk*, "doubt" (Lane, root *sh-k-k*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 515,
+  "sourceHash": "fnv1a64:298273e3ee73b9ec",
+  "lessonIds": [
+    "ES-C515-rumor",
+    "ES-C515-comunicado",
+    "ES-C515-declaracion",
+    "ES-C515-declarar",
+    "ES-C515-confirmar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch515.txt",
+  "json": "spanish/narration/ch515.json",
+  "textHash": "fnv1a64:7cf3a3b632281975",
+  "jsonHash": "fnv1a64:1638b8a61a15934e",
+  "findings": []
+}

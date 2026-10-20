@@ -1,0 +1,19 @@
+{
+  "chapter": 337,
+  "title": "Palma et praemium",
+  "label": "ch:la-palma-et-praemium",
+  "canDo": "I can tell who won a contest: the palm of victory, the prize, to compete, the contest and the applause.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C337-plausus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 337: I can tell who won a contest: the palm of victory, the prize, to compete, the contest and the applause.",
+    "assesses": [
+      "LA-LEX-C337-PALMA-03",
+      "LA-LEX-C337-PALMA-04",
+      "LA-LEX-C337-PALMA-05"
+    ]
+  }
+}

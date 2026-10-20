@@ -1,0 +1,22 @@
+{
+  "chapter": 282,
+  "title": "A short timed Tamil writing checkpoint",
+  "label": "ch:ta-a-short-timed-tamil-writing-checkpoint",
+  "canDo": "I can retrieve six familiar pieces of Tamil writing during one short independent clock.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-W282-a1-timed-production",
+    "kind": "production",
+    "summary": "Complete chapter 282 by writing six familiar Tamil fields during one three-minute independent attempt.",
+    "assesses": [
+      "TA-PHONO-VANAKKAM-01",
+      "TA-LEX-C02-EN-PEYAR-01",
+      "TA-LEX-C04-MINDUM-SANDIPPOM-01",
+      "TA-LEX-C05-NAAN-TAMIZH-PESUGIREN-01",
+      "TA-LEX-TENEER-01",
+      "TA-LEX-C40-DEIXIS-06"
+    ]
+  }
+}

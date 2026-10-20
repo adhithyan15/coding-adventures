@@ -1,0 +1,14 @@
+{
+  "language": "portuguese",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:40b65b375b3314f8",
+  "lessonIds": [
+    "PT-C308-susto",
+    "PT-C308-assustar",
+    "PT-C308-panico",
+    "PT-C308-desmaiar",
+    "PT-C308-torcer",
+    "PT-R308-revisao-301-308"
+  ],
+  "tex": "portuguese/book/chapters/ch308-que-susto.tex"
+}

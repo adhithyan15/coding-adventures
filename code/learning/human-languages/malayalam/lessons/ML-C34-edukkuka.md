@@ -56,7 +56,7 @@ with *u*) + **ക്കു** + **ക**. Curl the tongue back for the **ട**.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C34-EDUKKUKA-01, ML-CONCEPT-C15-VELLAM-ARI-01, ML-CONCEPT-C15-VELLAM-ARI-02] -->
 
 Gundert glosses it "**to raise, lift, take up**," and the lifting came first.
-Tamil **எடு** (*eṭu*) is the same word again — and the etymological dictionary
+Tamil **எடு** (*eṭu*) is the same word again — and DEDR 851
 gives this root no entry of its own, filing *eṭu* inside the family of **എഴു**
 (*eḻu*), "**to rise**." Rise, then raise, then take. Kannada and Telugu say
 **ಎತ್ತು** / **ఎత్తు** (*eṭṭŭ*) for lifting; whether that is the same word the

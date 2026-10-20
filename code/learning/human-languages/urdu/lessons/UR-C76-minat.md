@@ -14,7 +14,8 @@ romanization: "minaṭ"
 concept_tag: UR-TIME76-MINAT
 prerequisites: [UR-C75-sal, UR-C75-ghanta]
 sounds: []
-roots: []
+roots: [english-minute]
+etymology_hook: "minaṭ ← English minute"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C75-ghanta]
 <!-- hl-knowledge: introduces=[UR-LEX-C76-TIME76-01]; assesses=[] -->
 
 **منٹ** — *minaṭ* — "a minute".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**منٹ** (*minaṭ*) is a loan from English *minute*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

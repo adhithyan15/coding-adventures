@@ -14,7 +14,8 @@ romanization: "sarpaḥ"
 concept_tag: SA-ANIMAL-SARPA
 prerequisites: [SA-C39-dog, SA-C37-blessing, SA-C38-soil]
 sounds: []
-roots: []
+roots: [sanskrit-sarpa]
+etymology_hook: "sarpa 'snake' ← the root √sṛp 'creep'; MW compares Latin serpere; Hindi sāṃp (CDIAL 13271)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,12 @@ reviews_of: [SA-C39-dog]
 Latin has the same root, showing up as *serpere*, and *serpent* comes to English straight out of it. *Reptile* arrives by a parallel road from a Latin word meaning much the same thing.
 
 A **सर्पः** belongs in the तृणम् rather than on the शिला, and that is where the old texts usually put it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Sarpa* is built on the root √sṛp, "to creep, glide" (MW, CDIAL 13271). It is
+inherited: MW compares Greek *herpō* and Latin *serpere*, "to creep".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

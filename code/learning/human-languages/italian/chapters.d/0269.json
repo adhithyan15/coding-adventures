@@ -1,0 +1,20 @@
+{
+  "chapter": 269,
+  "title": "How It Felt --- Feelings and Hopes",
+  "label": "ch:it-feelings-and-hopes",
+  "canDo": "I can say how an experience felt, in the past, and what I hope for, with spero di and il mio sogno è.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-C269-ripasso-sentimenti",
+    "kind": "production",
+    "summary": "Complete IT-C269-ripasso-sentimenti: a journey told from both ends, the feeling looking back and the hope looking forward.",
+    "assesses": [
+      "IT-GRAMMAR-SENTIMENTO-PASSATO-01",
+      "IT-GRAMMAR-CONTENTO-DI-02",
+      "IT-LEX-SPERO-DI-01",
+      "IT-GRAMMAR-IL-MIO-SOGNO-02"
+    ]
+  }
+}

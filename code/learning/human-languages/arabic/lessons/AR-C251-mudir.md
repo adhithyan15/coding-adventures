@@ -14,7 +14,8 @@ romanization: "mudīr"
 concept_tag: AR-AMAL251-MUDIR
 prerequisites: [AR-C250-muthallath, AR-C251-nadil]
 sounds: []
-roots: []
+roots: [d-w-r]
+etymology_hook: "mudīr: built on the root d-w-r, 'to turn round' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C251-nadil]
 <!-- hl-knowledge: introduces=[AR-LEX-C251-AMAL251-02]; assesses=[] -->
 
 **مدير** — *mudīr* — "a manager, a director".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مدير** (*mudīr*) is built on the native Arabic root *d-w-r*, "to turn round" (Lane). *Mudīr* is the Form IV participle, "one who makes things turn", a manager.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

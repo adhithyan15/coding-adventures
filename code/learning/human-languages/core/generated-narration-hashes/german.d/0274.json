@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 274,
+  "sourceHash": "fnv1a64:09e92d6ed16a2bc5",
+  "lessonIds": [
+    "GE-C274-geruecht",
+    "GE-C274-quelle",
+    "GE-C274-behaupten",
+    "GE-C274-behauptung",
+    "GE-C274-bestaetigen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch274.txt",
+  "json": "german/narration/ch274.json",
+  "textHash": "fnv1a64:6d3b837863512637",
+  "jsonHash": "fnv1a64:508bd05d3a95655b",
+  "findings": []
+}

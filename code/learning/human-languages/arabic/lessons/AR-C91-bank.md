@@ -14,7 +14,8 @@ romanization: "bank"
 concept_tag: AR-TOWN91-BANK
 prerequisites: [AR-C90-shari, AR-C91-tariq]
 sounds: []
-roots: []
+roots: [italian-banco]
+etymology_hook: "bank: modern loan from Italian banco or French banque 'bank', once a moneychanger's bench"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C91-tariq]
 <!-- hl-knowledge: introduces=[AR-LEX-C91-TOWN91-02]; assesses=[] -->
 
 **بنك** — *bank* — "a bank".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بنك** (*bank*) is borrowed from the European word, Italian *banco* or French *banque*, "bank", once a moneychanger's bench; it has no Arabic root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

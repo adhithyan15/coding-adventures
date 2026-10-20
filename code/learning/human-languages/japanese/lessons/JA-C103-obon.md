@@ -14,7 +14,8 @@ romanization: "obon"
 concept_tag: JA-THINGS103-OBON
 prerequisites: [JA-C103-suidou, JA-C103-yakan]
 sounds: []
-roots: []
+roots: [middle-chinese-bwon]
+etymology_hook: "obon: polite o- + Sino-Japanese bon 盆 'tray, basin'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C103-yakan]
 <!-- hl-knowledge: introduces=[JA-LEX-C103-THINGS103-04]; assesses=[] -->
 
 **おぼん** — *obon* — "a tray".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**おぼん** (*obon*) is the native polite prefix *o-* with *bon*, "tray, basin", the on'yomi of its character, borrowed from Chinese (Middle Chinese *bwon*; JMdict, Unihan).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

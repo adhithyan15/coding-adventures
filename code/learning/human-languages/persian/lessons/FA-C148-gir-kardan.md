@@ -14,7 +14,8 @@ romanization: "gir kardan"
 concept_tag: FA-VERB-GIR-KARDAN
 prerequisites: [FA-C148-tormoz-gereftan, FA-C148-panchar-shodan]
 sounds: []
-roots: []
+roots: [old-persian-grab, pie-kwer]
+etymology_hook: "gir kardan: Persian gir 'catch' (from gereftan) + kardan; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C148-panchar-shodan]
 <!-- hl-knowledge: introduces=[FA-LEX-C148-KONESH148-05]; assesses=[] -->
 
 **گیر کردن** — *gir kardan* — "to get stuck".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gir kardan* pairs *gir*, "catch, grip" (the present stem of *gereftan*, "to take"), with *kardan*: to be caught. Both are native Persian. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

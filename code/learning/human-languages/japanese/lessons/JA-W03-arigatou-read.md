@@ -12,7 +12,7 @@ gloss: five signs, all of them now yours — the thank-you read rather than reca
 prerequisites: [JA-W03-u]
 sounds: [mora]
 roots: []
-etymology_hook: no new sign appears here: ありがとう is five shapes you can already write, set in a row.
+etymology_hook: 'no new sign appears here: ありがとう is five shapes you can already write, set in a row.'
 duration:
   max_seconds: 200
 requires:

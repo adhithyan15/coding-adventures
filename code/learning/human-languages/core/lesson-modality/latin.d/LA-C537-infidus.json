@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C537-infidus",
+    "language": "latin",
+    "chapter": 537,
+    "sequence": 28490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:08ba08cf6973fd14"
+  },
+  "findings": []
+}

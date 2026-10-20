@@ -14,7 +14,8 @@ romanization: "miẓalla"
 concept_tag: AR-THINGS118-MIZALLA
 prerequisites: [AR-C118-jawaz, AR-C118-mihfaza]
 sounds: []
-roots: []
+roots: [ẓ-l-l]
+etymology_hook: "miẓalla: built on the root ẓ-l-l, 'shade, shadow' (Lane); Lane's miẓalla is a large tent or shelter"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C118-mihfaza]
 <!-- hl-knowledge: introduces=[AR-LEX-C118-THINGS118-05]; assesses=[] -->
 
 **مظلة** — *miẓalla* — "an umbrella".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مظلة** (*miẓalla*) is built on the native Arabic root *ẓ-l-l*, "shade, shadow" (Lane). Lane's *miẓalla* is a large tent or shelter; he also records a shade held over kings as they ride.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

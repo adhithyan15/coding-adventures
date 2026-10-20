@@ -14,7 +14,8 @@ romanization: "kīchaṛ"
 concept_tag: UR-CHIZ173-KICHAR
 prerequisites: [UR-C173-pauda, UR-C173-tana]
 sounds: []
-roots: []
+roots: [indo-aryan-kicca]
+etymology_hook: "kīchaṛ ← *kicca 'mud, dirt', a reconstructed form; a tadbhava (CDIAL 3153)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C173-tana]
 <!-- hl-knowledge: introduces=[UR-LEX-C173-CHIZ173-05]; assesses=[] -->
 
 **کیچڑ** — *kīchaṛ* — "mud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کیچڑ** (*kīchaṛ*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*kicca*, "mud, dirt", a form CDIAL reconstructs from its descendants (CDIAL 3153). CDIAL adds the Hindi form in its addenda, and compares Dravidian words.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

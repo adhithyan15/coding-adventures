@@ -1,0 +1,11 @@
+{
+  "id": "LA-C328-nuptialis",
+  "pathSegment": "LA-PATH-328-FLAMMEUM",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-328-FLAMMEUM",
+      "order": 2
+    }
+  ]
+}

@@ -14,7 +14,8 @@ romanization: "sthūlaḥ"
 concept_tag: SA-QUAL131-STHULAH
 prerequisites: [SA-C131-patalah, SA-C131-spastah]
 sounds: []
-roots: []
+roots: [sanskrit-sthula]
+etymology_hook: "sthūla 'large, thick' ← √sthū, a form of sthā 'stand' (MW); Punjabi ṭhullhā 'fat' (CDIAL 13776)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C131-spastah]
 <!-- hl-knowledge: introduces=[SA-LEX-C131-QUAL131-05]; assesses=[] -->
 
 **स्थूलः** — *sthūlaḥ* — "thick, fat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sthūla* "large, thick, stout" comes, according to MW, from √sthū, a form of √sthā "stand": "solid, firm-standing". It is old, in the Atharvaveda, and lives on as Punjabi *ṭhullhā* "fat, coarse" (CDIAL 13776).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

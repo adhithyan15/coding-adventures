@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C520-ruolo",
+    "language": "italian",
+    "chapter": 520,
+    "sequence": 29130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:83118ed1376531c9"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C422-schaukeln",
+    "language": "german",
+    "chapter": 422,
+    "sequence": 22760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9248923a50dbae73"
+  },
+  "findings": []
+}

@@ -14,7 +14,8 @@ romanization: "saqaṭa"
 concept_tag: AR-VERB-SAQATA
 prerequisites: [AR-C198-manaa, AR-C198-hadatha]
 sounds: []
-roots: []
+roots: [s-q-ṭ]
+etymology_hook: "saqaṭa: built on the root s-q-ṭ, 'to fall' (Lane); saqaṭa is the plain verb, 'it fell'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C198-hadatha]
 <!-- hl-knowledge: introduces=[AR-LEX-C198-ACT198-04]; assesses=[] -->
 
 **سقط** — *saqaṭa* — "to fall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سقط** (*saqaṭa*) is built on the native Arabic root *s-q-ṭ*, "to fall" (Lane). *Saqaṭa* is the plain verb, "it fell".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

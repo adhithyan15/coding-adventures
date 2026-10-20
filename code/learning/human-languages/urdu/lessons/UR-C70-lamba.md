@@ -14,7 +14,8 @@ romanization: "lambā"
 concept_tag: UR-ADJ70-LAMBA
 prerequisites: [UR-C70-achchha, UR-C70-bura]
 sounds: []
-roots: []
+roots: [sanskrit-lamba]
+etymology_hook: "lambā ← Sanskrit lamba 'pendent', already 'long' in Sanskrit compounds (CDIAL 10951)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C70-bura]
 <!-- hl-knowledge: introduces=[UR-LEX-C70-ADJ70-05]; assesses=[] -->
 
 **لمبا** — *lambā* — "long, tall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لمبا** (*lambā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *lamba*, "pendent" (CDIAL 10951). Sanskrit already used it for "long" in compounds.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

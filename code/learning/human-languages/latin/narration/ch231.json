@@ -4,7 +4,7 @@
   "chapter": 231,
   "title": "To turn, To enjoy, To shape, To complain, To be missing",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e150e5a467d7a6bd",
+  "sourceHash": "fnv1a64:f995fe08de742943",
   "lessons": [
     {
       "id": "LA-C231-verto",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c22d693ca279bdd9",
+      "sourceHash": "fnv1a64:9082860f52d1fbd9",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "dēsum is dē, \"away from\", with sum, \"to be\": to be away, to be missing."
+              "text": "dēsum is dē, \"away from\", with sum, \"to be\": to be away, to be missing. Sum is inherited from Proto-Indo-European h₁es-, \"to be\" (EtymDB 2.1)."
             }
           ]
         },

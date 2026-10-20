@@ -12,7 +12,7 @@ concept_tag: UR-THAT
 prerequisites: [UR-C18-review-madda, UR-W07-pe]
 sounds: [rtl, short-vowels-unwritten]
 roots: [sanskrit-asau]
-etymology_hook: voh descends from the Old Indo-Aryan far demonstrative that Sanskrit wrote as asau, the partner of the near iyam behind yih; the pair came down together, and Urdu still runs its whole pointing system on the same two-way near-versus-far split, using the far word for he, she, it and they as well, so that the third person and the distant thing are named by one word.
+etymology_hook: "voh ← Sanskrit asau 'that' (CDIAL 972), the far partner of yih; it also serves as he, she, it, they"
 duration:
   max_seconds: 280
 requires:
@@ -69,9 +69,7 @@ when you address someone as *āp*.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-VOH, UR-LEX-YIH, UR-LEX-MAAN] -->
 
-**یہ** and **وہ** did not arrive separately. They come down together from the
-Old Indo-Aryan demonstratives Sanskrit wrote as *iyam* — the near one — and
-*asau* — the far one. Urdu inherited a **pair**, and it still runs the pair the
+**یہ** and **وہ** did not arrive separately. They come down together from Old Indo-Aryan demonstratives: CDIAL lists Hindi *yah* under Sanskrit *eṣa*, "this" — the near one (CDIAL 2530) — and *vah* under *asau*, "that" — the far one (CDIAL 972). Urdu inherited a **pair**, and it still runs the pair the
 way it inherited it: everything Urdu points at gets sorted into near or far
 first, and only then into what it actually is.
 

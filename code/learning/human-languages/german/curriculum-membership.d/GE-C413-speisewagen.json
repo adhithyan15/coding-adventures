@@ -1,0 +1,11 @@
+{
+  "id": "GE-C413-speisewagen",
+  "pathSegment": "GE-PATH-413-NACHTZUG",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-413-NACHTZUG",
+      "order": 1
+    }
+  ]
+}

@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- The helper is spawned through `chief_of_staff_spawn_isolation::spawn`,
+  under the daemon's process-wide spawn lock (D18S P2.8b-1): this runs in
+  the daemon, where on Windows a child created inside the broker applier's
+  inheritable span would inherit a broker's key handles.
+
 - Measure coverage with tarpaulin's LLVM engine (`--engine llvm`) instead of its
   default ptrace engine. `tests/command_provider.rs` re-executes its own binary
   as the approval helper, and ptrace-based instrumentation patches `int3`

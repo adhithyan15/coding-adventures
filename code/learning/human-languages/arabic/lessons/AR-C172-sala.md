@@ -14,7 +14,8 @@ romanization: "ṣāla"
 concept_tag: AR-MAKAN172-SALA
 prerequisites: [AR-C171-nadiran, AR-C171-kathiran]
 sounds: []
-roots: []
+roots: [italian-sala]
+etymology_hook: "ṣāla: usually traced to Italian sala 'hall' (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C171-kathiran]
 <!-- hl-knowledge: introduces=[AR-LEX-C172-MAKAN172-01]; assesses=[] -->
 
 **صالة** — *ṣāla* — "a living room, a hall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صالة** (*ṣāla*) is usually traced to Italian *sala*, "hall" (EtymDB); it has no Arabic root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

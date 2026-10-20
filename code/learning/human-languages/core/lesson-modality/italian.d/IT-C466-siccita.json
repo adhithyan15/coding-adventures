@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C466-siccita",
+    "language": "italian",
+    "chapter": 466,
+    "sequence": 26250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:66e212311576cfb5"
+  },
+  "findings": []
+}

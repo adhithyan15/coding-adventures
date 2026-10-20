@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C324-finale",
+    "language": "italian",
+    "chapter": 324,
+    "sequence": 18740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:59599b3655476b8a"
+  },
+  "findings": []
+}

@@ -14,7 +14,8 @@ romanization: "gonjeshk"
 concept_tag: FA-CHIZ171-GONJESHK
 prerequisites: [FA-C171-heyvan, FA-C171-khorus]
 sounds: []
-roots: []
+roots: [persian-gonjeshk]
+etymology_hook: "gonjeshk ← Middle Persian winjišk (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C171-khorus]
 <!-- hl-knowledge: introduces=[FA-LEX-C171-CHIZ171-05]; assesses=[] -->
 
 **گنجشک** — *gonjeshk* — "a sparrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gonjeshk* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *winjišk*, "sparrow" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

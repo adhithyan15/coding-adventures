@@ -1,0 +1,19 @@
+{
+  "chapter": 654,
+  "title": "En el avión",
+  "label": "ch:es-en-el-avion",
+  "canDo": "I can talk about a flight: take-off and landing, the pilot and the crew.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C654-azafata",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 654: I can talk about a flight: take-off and landing, the pilot and the crew.",
+    "assesses": [
+      "ES-LEX-C654-AVION-03",
+      "ES-LEX-C654-AVION-04",
+      "ES-LEX-C654-AVION-05"
+    ]
+  }
+}

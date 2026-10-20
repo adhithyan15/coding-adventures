@@ -14,7 +14,8 @@ romanization: "sanma"
 concept_tag: JA-THINGS116-SANMA
 prerequisites: [JA-C116-funa, JA-C116-hamachi]
 sounds: []
-roots: []
+roots: [japanese-sanma]
+etymology_hook: "sanma: native; 秋刀魚 'autumn sword fish' read as a whole; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C116-hamachi]
 <!-- hl-knowledge: introduces=[JA-LEX-C116-THINGS116-04]; assesses=[] -->
 
 **さんま** — *sanma* — "a Pacific saury".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**さんま** (*sanma*) is a native word, inherited rather than borrowed. JMdict writes it with characters for "autumn", "sword" and "fish", read as a whole for their meaning. Its older origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

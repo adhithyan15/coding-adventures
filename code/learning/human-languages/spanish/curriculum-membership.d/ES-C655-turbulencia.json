@@ -1,0 +1,11 @@
+{
+  "id": "ES-C655-turbulencia",
+  "pathSegment": "ES-PATH-655-VUELO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-655-VUELO",
+      "order": 1
+    }
+  ]
+}

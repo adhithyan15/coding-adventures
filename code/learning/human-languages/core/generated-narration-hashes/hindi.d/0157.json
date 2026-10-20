@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 157,
-  "sourceHash": "fnv1a64:cc0b07421a8ad613",
+  "sourceHash": "fnv1a64:589b26d75ed2a703",
   "lessonIds": [
     "HI-C157-taza",
     "HI-C157-amir",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch157.txt",
   "json": "hindi/narration/ch157.json",
-  "textHash": "fnv1a64:538c232d3d18a386",
-  "jsonHash": "fnv1a64:3d0e23388dc8b214",
+  "textHash": "fnv1a64:f780d458203632dc",
+  "jsonHash": "fnv1a64:f9df6eb4d184a770",
   "findings": []
 }

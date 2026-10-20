@@ -1,0 +1,19 @@
+{
+  "chapter": 263,
+  "title": "Nachdem und bevor",
+  "label": "ch:ge-nachdem-und-bevor",
+  "canDo": "I can join two past events with after, before, as soon as, as long as and since, with the verb at the end.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C263-seitdem",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 263: I can join two past events with after, before, as soon as, as long as and since, with the verb at the end.",
+    "assesses": [
+      "GE-LEX-C263-NACHDEM-03",
+      "GE-LEX-C263-NACHDEM-04",
+      "GE-LEX-C263-NACHDEM-05"
+    ]
+  }
+}

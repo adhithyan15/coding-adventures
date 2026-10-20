@@ -1052,9 +1052,10 @@ fn emit_jsx_tree(
     // UI29 §2.1 — `HostInput` is the kernel-canonical text-entry primitive.
     // It is intentionally a *sibling* of the legacy `Input` emitter (which is
     // slated for retirement under U29-X1), not a re-use: HostInput has no
-    // `multiline` keyword (a userland `MultilineInput` component owns the
-    // `<textarea>` shape) and no `max-length` numeric prop, so the surface
-    // area is strictly smaller. The value/readOnly/placeholder/onChange/
+    // `max-length` numeric prop, and it carries the kernel-only surfaces
+    // (`auto-focus`, payload-carrying `onCommit`). It does take `multiline`
+    // (#15930): that is the kernel's text area, which is what lets the
+    // legacy `Input` retire. The value/readOnly/placeholder/onChange/
     // onCommit/onCancel patterns are kept identical so existing host wiring
     // continues to work bit-for-bit.
     if node.tag == "HostInput" {
@@ -1820,25 +1821,60 @@ fn push_text_field_aria_label(
     node: &LayoutNode,
     attrs: &mut String,
 ) -> Result<(), PipelineEmitError> {
-    if let Some(prop) = node.props.iter().find(|p| p.name == "a11y-label") {
+    push_text_field_text_attr(node, "a11y-label", "aria-label", attrs)
+}
+
+/// Append `placeholder` for a text field. Shared by `HostInput` and the
+/// legacy `Input`, on both the `<input>` and the `<textarea>` shape.
+///
+/// This used to read string literals only, so `placeholder : slot: x` — the
+/// shape every toolkit `Input` and the note-type editor's template fields
+/// use — emitted no placeholder at all, and nothing reported the drop.
+fn push_text_field_placeholder(
+    node: &LayoutNode,
+    attrs: &mut String,
+) -> Result<(), PipelineEmitError> {
+    push_text_field_text_attr(node, "placeholder", "placeholder", attrs)
+}
+
+/// Lower one text-valued layout prop to a JSX attribute. Every shape the
+/// layout compiler produces for a text value reaches the DOM:
+///
+/// | authored form          | emitted                                    |
+/// |------------------------|--------------------------------------------|
+/// | `prop : "Name"`        | ` attr="Name"`, or ` attr={"…"}` if it needs escaping |
+/// | `prop : slot: s`       | ` attr={s}` (camelCased, validated)        |
+/// | `prop : item`          | ` attr={item}` (a `For` binding, validated)|
+/// | `prop : ( e )`         | ` attr={( e )}` (author expression, UI29 §3.3) |
+/// | `prop : 3`             | ` attr={3}`                                |
+///
+/// A slot or binding name that is not a JavaScript identifier is an error,
+/// never spliced into the `{…}` expression.
+fn push_text_field_text_attr(
+    node: &LayoutNode,
+    prop_name: &str,
+    jsx_attr: &str,
+    attrs: &mut String,
+) -> Result<(), PipelineEmitError> {
+    if let Some(prop) = node.props.iter().find(|p| p.name == prop_name) {
         match &prop.value {
             LayoutPropValue::String(value) => {
-                attrs.push_str(&jsx_string_attr("aria-label", value));
+                attrs.push_str(&jsx_string_attr(jsx_attr, value));
             }
             LayoutPropValue::SlotRef(slot) => {
                 let camel = to_camel_case_first_lower(slot);
                 validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
-                attrs.push_str(&format!(" aria-label={{{camel}}}"));
+                attrs.push_str(&format!(" {jsx_attr}={{{camel}}}"));
             }
             LayoutPropValue::Keyword(value) => {
                 validate_slot_or_field_name(value).map_err(PipelineEmitError::UnsafeSlotName)?;
-                attrs.push_str(&format!(" aria-label={{{value}}}"));
+                attrs.push_str(&format!(" {jsx_attr}={{{value}}}"));
             }
             LayoutPropValue::Expr(value) => {
-                attrs.push_str(&format!(" aria-label={{{value}}}"));
+                attrs.push_str(&format!(" {jsx_attr}={{{value}}}"));
             }
             LayoutPropValue::Number(value) => {
-                attrs.push_str(&format!(" aria-label={{{value}}}"));
+                attrs.push_str(&format!(" {jsx_attr}={{{value}}}"));
             }
             LayoutPropValue::EmitRef(_) => {}
         }
@@ -1856,6 +1892,8 @@ fn push_text_field_aria_label(
 /// | `value: slot: x`         | `value={x}` (camelCased)                                 |
 /// | `read-only: slot: x`     | `readOnly={x}` (camelCased)                              |
 /// | `read-only: true`/`false`| `readOnly={true}` / `readOnly={false}`                   |
+/// | `placeholder: "..."`     | `placeholder="..."` (JSX expression form if it needs escaping) |
+/// | `placeholder: slot: x`   | `placeholder={x}` (camelCased)                           |
 /// | `max-length: 100`        | `maxLength={100}`                                        |
 /// | `onChange: emit: onX`    | `onChange={e => dispatch({type: "x", value: e.target.value})}` |
 /// | `onCommit: emit: onX`    | `onKeyDown` handler with an `e.key === "Enter"` branch   |
@@ -1945,12 +1983,10 @@ fn emit_input_jsx(
         }
     }
 
-    // placeholder="text"  — string-literal moslayout prop (post-PR-H).
-    // Escaping: simple strings stay as JSX quoted attributes; strings that
-    // need JavaScript escaping use JSX expression form.
-    if let Some(s) = find_string_prop(node, "placeholder") {
-        attrs.push_str(&jsx_string_attr("placeholder", s));
-    }
+    // placeholder — a literal (`placeholder="..."`, or JSX expression form
+    // when it needs JavaScript escaping) or a bound value
+    // (`placeholder={x}`).
+    push_text_field_placeholder(node, &mut attrs)?;
 
     // aria-label — the authored accessible name (UI29), which this path
     // dropped while HostInput carried it.
@@ -2008,7 +2044,8 @@ fn emit_input_jsx(
 // HostInput primitive (UI29 §2.1)
 // =====================================================================
 
-/// Lower a moslayout `HostInput` node to an `<input type="text" />` JSX line.
+/// Lower a moslayout `HostInput` node to an `<input type="text" />` JSX line,
+/// or to a `<textarea />` when `multiline: true`.
 ///
 /// `HostInput` is the kernel-canonical text-entry primitive introduced in
 /// UI29.  It is intentionally a *narrower* sibling of [`emit_input_jsx`]
@@ -2016,19 +2053,19 @@ fn emit_input_jsx(
 ///
 /// | Concern         | `Input` (UI25)                  | `HostInput` (UI29)         |
 /// |---|---|---|
-/// | `multiline`     | toggles `<textarea>`            | **not supported** — userland `MultilineInput` owns this |
+/// | `multiline`     | toggles `<textarea>`            | toggles `<textarea>`; Enter is then a newline, not `onCommit` (#15930) |
 /// | `max-length`    | emits `maxLength={N}`           | **not supported** — userland clamping component owns this |
 /// | `value` slot    | `value={x}`                     | `value={x}` (same)          |
 /// | `read-only`     | `readOnly={x}` / literal        | `readOnly={x}` / literal (same) |
-/// | `placeholder`   | `placeholder="..."`             | `placeholder="..."` (same)  |
+/// | `placeholder`   | `placeholder="..."` / `{x}`     | `placeholder="..."` / `{x}` (same) |
 /// | `onChange`      | `onChange={e => dispatch(...)}` | identical                   |
 /// | `onCommit`      | merged into `onKeyDown` Enter   | identical                   |
 /// | `onCancel`      | merged into `onKeyDown` Escape  | identical                   |
 ///
 /// Keeping the same value/readOnly/placeholder/event wiring means a host
 /// component authored against `Input` can be migrated to `HostInput` by
-/// just renaming the primitive and (if it relied on `multiline` /
-/// `max-length`) swapping to the userland component.
+/// just renaming the primitive and (if it relied on `max-length`) swapping
+/// to a userland clamping component.
 fn emit_host_input_jsx(
     node: &LayoutNode,
     indent: usize,
@@ -2037,9 +2074,21 @@ fn emit_host_input_jsx(
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
-    // HostInput is always a single-line `<input type="text">`.  No
-    // textarea fallback — that lives in userland.
-    let mut attrs = String::from(" type=\"text\"");
+    // `multiline: true` (UI29 §2.1, #15930) turns the field into a
+    // `<textarea>`: the one native text area the web has. Everything below
+    // is shared by both shapes except two things — a `<textarea>` takes no
+    // `type`, and Enter belongs to the text (a new line), not to `onCommit`.
+    //
+    //   multiline | element                 | Enter
+    //   ----------+-------------------------+----------------------
+    //   absent    | <input type="text" />   | dispatches onCommit
+    //   true      | <textarea />            | inserts a newline
+    let multiline = find_keyword_prop(node, "multiline") == Some("true");
+    let mut attrs = if multiline {
+        String::new()
+    } else {
+        String::from(" type=\"text\"")
+    };
 
     // Style attr (same part-name lookup as the rest of the tree).
     let part_style_str = node
@@ -2103,10 +2152,10 @@ fn emit_host_input_jsx(
         }
     }
 
-    // placeholder="text" — string-literal moslayout prop.
-    if let Some(s) = find_string_prop(node, "placeholder") {
-        attrs.push_str(&jsx_string_attr("placeholder", s));
-    }
+    // placeholder — a literal (`placeholder="..."`, or JSX expression form
+    // when it needs JavaScript escaping) or a bound value
+    // (`placeholder={x}`).
+    push_text_field_placeholder(node, &mut attrs)?;
 
     if find_keyword_prop(node, "auto-focus") == Some("true") {
         attrs.push_str(" autoFocus");
@@ -2122,8 +2171,9 @@ fn emit_host_input_jsx(
     }
 
     // onCommit + onCancel are merged into a single onKeyDown handler,
-    // exactly as the legacy `emit_input_jsx` does.
-    let commit_emit = find_emit_ref_prop(node, "onCommit");
+    // exactly as the legacy `emit_input_jsx` does. A multiline field has no
+    // commit key: Enter is a line break there (see the table above).
+    let commit_emit = find_emit_ref_prop(node, "onCommit").filter(|_| !multiline);
     let cancel_emit = find_emit_ref_prop(node, "onCancel");
     if commit_emit.is_some() || cancel_emit.is_some() {
         let mut h = String::from(" onKeyDown={e => {");
@@ -2163,7 +2213,8 @@ fn emit_host_input_jsx(
         attrs.push_str(&h);
     }
 
-    Ok(format!("{pad}<input{attrs} />\n"))
+    let tag_name = if multiline { "textarea" } else { "input" };
+    Ok(format!("{pad}<{tag_name}{attrs} />\n"))
 }
 
 // =====================================================================
@@ -8516,6 +8567,102 @@ mod tests {
         );
     }
 
+    /// A slot-bound `placeholder` is a JSX expression attribute naming the
+    /// camelCased prop, on both shapes of the field. This path read only
+    /// string literals, so `placeholder : slot: front-template-placeholder`
+    /// (mosaic-pkg-note-type-editor) emitted no placeholder at all, and the
+    /// degradation report said nothing.
+    #[test]
+    fn host_input_placeholder_slot_ref_binds_to_placeholder_expression() {
+        for multiline in [false, true] {
+            let m = component(
+                "X",
+                vec![slot("front-template-placeholder", SlotType::Text, true)],
+                vec![],
+            );
+            let mut props = vec![LayoutProp {
+                name: "placeholder".to_string(),
+                value: LayoutPropValue::SlotRef("front-template-placeholder".to_string()),
+            }];
+            if multiline {
+                props.push(LayoutProp {
+                    name: "multiline".to_string(),
+                    value: LayoutPropValue::Keyword("true".to_string()),
+                });
+            }
+            let result = from_pipeline(&m, &host_input_layout(props), &empty_style("X")).unwrap();
+            assert!(
+                result.output.contains(" placeholder={frontTemplatePlaceholder}"),
+                "multiline={multiline}: expected placeholder={{frontTemplatePlaceholder}}, got:\n{}",
+                result.output
+            );
+        }
+    }
+
+    /// A loop binding (`placeholder : hint` inside `For ( as: hint )`) and a
+    /// parenthesised expression reach the attribute the same way `value` and
+    /// `a11y-label` do.
+    #[test]
+    fn host_input_placeholder_binding_and_expression_are_expression_attrs() {
+        let m = component("X", vec![], vec![]);
+        let l = host_input_layout(vec![LayoutProp {
+            name: "placeholder".to_string(),
+            value: LayoutPropValue::Keyword("hint".to_string()),
+        }]);
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(out.contains(" placeholder={hint}"), "got:\n{out}");
+
+        let l = host_input_layout(vec![LayoutProp {
+            name: "placeholder".to_string(),
+            value: LayoutPropValue::Expr("( hints[0] )".to_string()),
+        }]);
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(out.contains(" placeholder={( hints[0] )}"), "got:\n{out}");
+    }
+
+    /// A slot name that would not be a JavaScript identifier is refused
+    /// loudly instead of being spliced into the JSX expression.
+    #[test]
+    fn host_input_placeholder_unsafe_slot_name_is_rejected() {
+        let m = component("X", vec![], vec![]);
+        let l = host_input_layout(vec![LayoutProp {
+            name: "placeholder".to_string(),
+            value: LayoutPropValue::SlotRef("x}{alert(1)".to_string()),
+        }]);
+        let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+        assert!(matches!(err, PipelineEmitError::UnsafeSlotName(_)), "got {err:?}");
+    }
+
+    /// The legacy `Input` shares the lowering: `placeholder : slot: x` binds
+    /// on the `<input>` and on the `<textarea>` (mosaic-pkg-spice-workbench's
+    /// netlist editor is a multiline `Input` with a slot placeholder).
+    #[test]
+    fn input_placeholder_slot_ref_binds_to_placeholder_expression() {
+        for multiline in [false, true] {
+            let m = component(
+                "X",
+                vec![slot("netlist-placeholder", SlotType::Text, true)],
+                vec![],
+            );
+            let mut props = vec![LayoutProp {
+                name: "placeholder".to_string(),
+                value: LayoutPropValue::SlotRef("netlist-placeholder".to_string()),
+            }];
+            if multiline {
+                props.push(LayoutProp {
+                    name: "multiline".to_string(),
+                    value: LayoutPropValue::Keyword("true".to_string()),
+                });
+            }
+            let result = from_pipeline(&m, &input_layout(props), &empty_style("X")).unwrap();
+            assert!(
+                result.output.contains(" placeholder={netlistPlaceholder}"),
+                "multiline={multiline}: expected placeholder={{netlistPlaceholder}}, got:\n{}",
+                result.output
+            );
+        }
+    }
+
     #[test]
     fn host_input_auto_focus_requests_native_initial_focus() {
         let m = component("X", vec![], vec![]);
@@ -8584,6 +8731,107 @@ mod tests {
             ),
             "expected Enter branch to carry the input's current value, got:\n{out}"
         );
+    }
+
+    /// #15930 — `multiline: true` makes a `HostInput` a `<textarea>`. React
+    /// used to ignore the keyword and draw a one-line `<input>`, so the
+    /// note-type editor's card templates could not hold a second line here
+    /// while XAML, Compose and Flutter drew real text areas. Everything else
+    /// the single-line field carries must survive the switch.
+    #[test]
+    fn host_input_multiline_lowers_to_textarea_keeping_its_contract() {
+        let m = component(
+            "X",
+            vec![
+                slot("body", SlotType::Text, true),
+                slot("body-label", SlotType::Text, true),
+            ],
+            vec![emit("onBodyChange", vec![param("value", EmitPayloadType::Text)])],
+        );
+        let l = host_input_layout(vec![
+            LayoutProp {
+                name: "multiline".to_string(),
+                value: LayoutPropValue::Keyword("true".to_string()),
+            },
+            LayoutProp {
+                name: "value".to_string(),
+                value: LayoutPropValue::SlotRef("body".to_string()),
+            },
+            LayoutProp {
+                name: "a11y-label".to_string(),
+                value: LayoutPropValue::SlotRef("body-label".to_string()),
+            },
+            LayoutProp {
+                name: "placeholder".to_string(),
+                value: LayoutPropValue::String("Write here".to_string()),
+            },
+            LayoutProp {
+                name: "auto-focus".to_string(),
+                value: LayoutPropValue::Keyword("true".to_string()),
+            },
+            LayoutProp {
+                name: "onChange".to_string(),
+                value: LayoutPropValue::EmitRef("onBodyChange".to_string()),
+            },
+        ]);
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(out.contains("<textarea"), "expected a <textarea>, got:\n{out}");
+        assert!(!out.contains("<input"), "a multiline field is not an <input>:\n{out}");
+        assert!(!out.contains("type=\"text\""), "<textarea> takes no type:\n{out}");
+        for expected in [
+            "value={body}",
+            "aria-label={bodyLabel}",
+            "placeholder=\"Write here\"",
+            " autoFocus",
+            "onChange={e => dispatch({ type: \"bodyChange\", value: e.target.value })}",
+        ] {
+            assert!(out.contains(expected), "expected `{expected}` in:\n{out}");
+        }
+    }
+
+    /// #15930 — in a multiline field Enter inserts a newline, so it cannot
+    /// also be the commit key: a `<textarea>` that dispatched `onCommit` on
+    /// every Enter would commit on every line break. Escape still cancels.
+    #[test]
+    fn host_input_multiline_enter_inserts_a_newline_instead_of_committing() {
+        let m = component(
+            "X",
+            vec![],
+            vec![emit("onSave", vec![]), emit("onDiscard", vec![])],
+        );
+        let l = host_input_layout(vec![
+            LayoutProp {
+                name: "multiline".to_string(),
+                value: LayoutPropValue::Keyword("true".to_string()),
+            },
+            LayoutProp {
+                name: "onCommit".to_string(),
+                value: LayoutPropValue::EmitRef("onSave".to_string()),
+            },
+            LayoutProp {
+                name: "onCancel".to_string(),
+                value: LayoutPropValue::EmitRef("onDiscard".to_string()),
+            },
+        ]);
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(!out.contains("\"Enter\""), "Enter must not commit a textarea:\n{out}");
+        assert!(
+            out.contains("if (e.key === \"Escape\") dispatch({ type: \"discard\" });"),
+            "Escape must still cancel, got:\n{out}"
+        );
+    }
+
+    /// `multiline: false` is the authored spelling of the default.
+    #[test]
+    fn host_input_multiline_false_stays_a_single_line_input() {
+        let m = component("X", vec![], vec![]);
+        let l = host_input_layout(vec![LayoutProp {
+            name: "multiline".to_string(),
+            value: LayoutPropValue::Keyword("false".to_string()),
+        }]);
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(out.contains("<input type=\"text\""), "got:\n{out}");
+        assert!(!out.contains("<textarea"), "got:\n{out}");
     }
 
     /// Sibling case: a VOID onCommit (no declared params, as tested just above

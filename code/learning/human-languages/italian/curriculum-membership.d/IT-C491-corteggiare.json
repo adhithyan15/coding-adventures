@@ -1,0 +1,11 @@
+{
+  "id": "IT-C491-corteggiare",
+  "pathSegment": "IT-PATH-491-INNAMORATI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-491-INNAMORATI",
+      "order": 1
+    }
+  ]
+}

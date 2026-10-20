@@ -26,6 +26,7 @@ The word, taken apart.
 The number is not worn down and not replaced. It stands there whole, and a single syllable goes on the end.
 Macdonell's dictionary prints the word with the join marked — pañca-má — and it will print four more the same way before this chapter is out.
 This lesson does not begin at first. It begins at fifth because -म is the ending that WORKS, and a rule has to be visible before anything can be seen departing from it. The words for first, second and third all depart from it, and they wait.
+Pañca itself is inherited: MW compares Latin quīnque and English five, and the ordinal is as old as the Atharvaveda (CDIAL 7669).
 
 What you've built.
 One ordinal, and the ending that will make the next four for free.
@@ -112,6 +113,7 @@ The word, taken apart.
 Eight is where the cousins stop agreeing. Latin's eighth is octāvus — not octimus, not octus, but a shape that matches nothing else in its own row. English says eighth, keeping its own -th.
 Sanskrit does nothing unusual at all here. अष्ट takes -म exactly as सप्त did.
 That is worth noticing for a reason beyond the word: it tells you that the -म ending is not merely common in Sanskrit but PRODUCTIVE — the ending a speaker reaches for by default, rather than one of several stored shapes. You will meet the one number in this range where that is not true, and it will stand out.
+Aṣṭa is an inherited numeral: MW compares Latin octō and English eight, and the ordinal is already in the Rigveda (CDIAL 937).
 
 What you've built.
 A third ordinal for free, and a reason to expect the fourth.
@@ -208,6 +210,7 @@ number: दश. ordinal: दशमः (daśamaḥ).
 Five ordinals, one ending, nothing memorised.
 Now look at the left-hand column and find what is missing. षट् is not there. You have counted with it since chapter nineteen and this chapter has walked straight past it.
 That was on purpose, and it is not because sixth is rare. षट् is the one number between five and ten whose ordinal does NOT take -म, and the next chapter opens on it — because a hole is only interesting once the thing around it is solid.
+MW compares daśama directly with Latin decimus: the two ordinals are inherited cousins, ending and all (CDIAL 6233).
 
 What you've built.
 Five ordinals from one ending, and one number deliberately left out.

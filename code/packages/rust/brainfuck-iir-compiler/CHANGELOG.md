@@ -1,5 +1,18 @@
 # Changelog — brainfuck-iir-compiler
 
+## [0.4.2] — 2026-10-20 (LANG83 PR1b security review — follow vm-core's fallible JIT handlers)
+
+### Changed — opcode-handler closures name `vm_core::dispatch::JitHandlerMap`
+
+`vm-core` 0.28.0 made JIT handlers fallible (`Fn(&[Value]) -> Result<Value,
+VMError>`) so a trapping JIT-compiled function stops its interpreted caller
+instead of handing it `Value::Null` (the fail-open bug the LANG83 PR1b security
+review found). The `load_mem` / `store_mem` / `label` extension-opcode
+closures spelled the old handler-map type out by hand and stopped compiling;
+they now name the `JitHandlerMap` alias (and the parameter is renamed from the
+misleading `_builtins` to `_jit_handlers`). No behaviour change: Brainfuck's own
+`BrainfuckCirJit` keeps its error slot, read by this crate's wrapper as before.
+
 ## [0.4.1] — 2026-09-10 (VM-042/VM-D031 — correct the stale "BEAM unsupported" README claim)
 
 ### Docs only — no compiler code changed

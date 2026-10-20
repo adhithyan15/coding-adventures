@@ -14,7 +14,7 @@ romanization: "samayappaṭṭika"
 concept_tag: ML-VAYANA180-SAMAYAPPATTIKA
 prerequisites: [ML-C179-tirumanikkuka, ML-C179-pratikshikkuka]
 sounds: []
-roots: [sanskrit-samaya, sanskrit-patta]
+roots: [sanskrit-samaya, sanskrit-pattika]
 etymology_hook: "samayappaṭṭika: Sanskrit samaya 'time' (CDIAL 13185) + paṭṭikā 'tablet, list' (CDIAL 7699)"
 duration:
   max_seconds: 200

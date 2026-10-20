@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 235,
-  "sourceHash": "fnv1a64:7db7691753bd80a9",
+  "sourceHash": "fnv1a64:1770c2c11cfabebb",
   "lessonIds": [
     "FA-C235-tiz",
     "FA-C235-mojud",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch235.txt",
   "json": "persian/narration/ch235.json",
-  "textHash": "fnv1a64:a933500aa337121e",
-  "jsonHash": "fnv1a64:253f28354242ddfd",
+  "textHash": "fnv1a64:798990bc21e1973b",
+  "jsonHash": "fnv1a64:b2d09bad460f560a",
   "findings": []
 }

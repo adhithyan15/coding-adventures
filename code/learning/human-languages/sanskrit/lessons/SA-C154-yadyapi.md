@@ -14,7 +14,8 @@ romanization: "yadyapi"
 concept_tag: SA-WHY154-YADYAPI
 prerequisites: [SA-C154-cet, SA-C154-tathapi]
 sounds: []
-roots: []
+roots: [sanskrit-yadi]
+etymology_hook: "yadyapi ← yadi 'if' + api 'even': 'even if', so 'although' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C154-tathapi]
 <!-- hl-knowledge: introduces=[SA-LEX-C154-WHY154-04]; assesses=[] -->
 
 **यद्यपि** — *yadyapi* — "although".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*yadyapi* is built from *yadi* "if" and *api* "even, also", with *i* turning to *y* before the vowel (MW): "even if", so "although". It pairs with *tathāpi* "even so".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

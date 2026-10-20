@@ -1,0 +1,11 @@
+{
+  "id": "ES-C613-incertidumbre",
+  "pathSegment": "ES-PATH-613-REQUIERE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-613-REQUIERE",
+      "order": 2
+    }
+  ]
+}

@@ -14,7 +14,8 @@ romanization: "muzdaḥim"
 concept_tag: AR-QUAL155-MUZDAHIM
 prerequisites: [AR-C155-thamin, AR-C155-sakhin]
 sounds: []
-roots: []
+roots: [z-ḥ-m]
+etymology_hook: "muzdaḥim: built on the root z-ḥ-m, 'to crowd' (Lane); muzdaḥim is the Form VIII participle, 'crowded'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C155-sakhin]
 <!-- hl-knowledge: introduces=[AR-LEX-C155-QUAL155-05]; assesses=[] -->
 
 **مزدحم** — *muzdaḥim* — "crowded".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مزدحم** (*muzdaḥim*) is built on the native Arabic root *z-ḥ-m*, "to crowd" (Lane). *Muzdaḥim* is the Form VIII participle, "crowded".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

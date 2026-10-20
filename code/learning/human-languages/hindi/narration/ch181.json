@@ -4,7 +4,7 @@
   "chapter": 181,
   "title": "A map, A way, A turn, A crossroads, A ship",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:dd47c492f2da477e",
+  "sourceHash": "fnv1a64:1df85953353075be",
   "lessons": [
     {
       "id": "HI-C181-naqsa",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:30042c007b6108e6",
+      "sourceHash": "fnv1a64:1c435284c5e9de75",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "मोड़ (moṛ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from muṭati, \"twists\" (CDIAL 10186). moṛ, \"a turn\", is the noun of moṛnā, \"to twist, bend\"."
+              "text": "मोड़ (moṛ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. moṛ, \"a turn\", is the noun of moṛnā, \"to twist, bend\". CDIAL lists moṛnā under mōṭati, the second form in its entry for Sanskrit muṭati, \"twists\" (CDIAL 10186), and gives Panjabi moṛ, \"a turn in a road\", from the same form."
             }
           ]
         },

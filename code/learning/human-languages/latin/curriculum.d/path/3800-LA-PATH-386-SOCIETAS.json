@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-386-SOCIETAS",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "LA-EXT-386-SOCIETAS"
+  ],
+  "after": []
+}

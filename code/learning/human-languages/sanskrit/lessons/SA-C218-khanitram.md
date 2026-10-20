@@ -14,7 +14,8 @@ romanization: "khanitram"
 concept_tag: SA-THG218-KHANITRAM
 prerequisites: [SA-C218-sammarjani, SA-C218-kutharah]
 sounds: []
-roots: []
+roots: [sanskrit-khanati]
+etymology_hook: "khanitra 'digging tool' ← root √khan 'dig' + instrument suffix -tra (MW; CDIAL 3814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C218-kutharah]
 <!-- hl-knowledge: introduces=[SA-LEX-C218-THG218-03]; assesses=[] -->
 
 **खनित्रम्** — *khanitram* — "a spade".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khanitra* is built on the root √khan, "to dig", with the instrument suffix *-tra* (MW), and is already in the Rigveda (CDIAL 3814). It is the tool of *khanati*, "digs", which you have already met.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

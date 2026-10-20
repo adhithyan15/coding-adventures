@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 242,
-  "sourceHash": "fnv1a64:0dd27820ca0ec6fa",
+  "sourceHash": "fnv1a64:a1eaa66e3cdc724b",
   "lessonIds": [
     "SA-C242-sulabhah",
     "SA-C242-durlabhah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch242.txt",
   "json": "sanskrit/narration/ch242.json",
-  "textHash": "fnv1a64:a5a4544e83b685a0",
-  "jsonHash": "fnv1a64:77e572003d331fdd",
+  "textHash": "fnv1a64:882deb083cab7b57",
+  "jsonHash": "fnv1a64:2ed295d1bfc6eca0",
   "findings": []
 }

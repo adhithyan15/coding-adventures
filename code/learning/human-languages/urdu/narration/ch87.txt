@@ -12,6 +12,9 @@ Before the new one: say the Urdu for the world, then the Urdu for a colour.
 You'll want to know: گیت.
 گیت — gīt — "a song".
 
+The word, taken apart.
+گیت (gīt) is Sanskrit gīta, "singing", taken over whole as a learned loan, a tatsama (CDIAL 4167).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a colour, then the Urdu for a song.
 
 You'll want to know: سفر.
 سفر — safar — "a journey".
+
+The word, taken apart.
+سفر (safar) is a loan from Arabic safar, "travel, a journey", which reached Urdu through Persian. Its Arabic root is s-f-r (Lane).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a song, then the Urdu for a journey.
 You'll want to know: چھٹی.
 چھٹی — chhuṭṭī — "a holiday, time off".
 
+The word, taken apart.
+چھٹی (chhuṭṭī) goes back to a reconstructed kṣuṭyate, "is released" (CDIAL 3707). CDIAL marks chuṭṭī, "leave", as taken over into Hindi from Punjabi.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a journey, then the Urdu for a holiday.
 You'll want to know: پیار.
 پیار — pyār — "love".
 
+The word, taken apart.
+پیار (pyār) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from priyakāra, "doing a kindness" (CDIAL 8975). It is built from priya, "dear", and kāra, "doing".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for a holiday, then the Urdu for love.
 
 You'll want to know: موسیقی.
 موسیقی — mausīqī — "music".
+
+The word, taken apart.
+موسیقی (mausīqī) is a loan from Arabic mūsīqī, "music", which reached Urdu through Persian. Arabic itself took the word from Greek mousikḗ, "music".
 
 What you've built.
 One more word for this chapter.

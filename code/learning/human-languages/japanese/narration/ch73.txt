@@ -12,6 +12,9 @@ Before the new one: say the Japanese for the evening meal, then the Japanese for
 You'll want to know: ひのいり.
 ひのいり — hinoiri — "sunset".
 
+The word, taken apart.
+ひのいり (hinoiri) is native: hi, "sun", the particle no, "of", and iri, "going in", from iru, "to enter": "the going-in of the sun" (JMdict, KANJIDIC2). It is inherited rather than borrowed.
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for the morning sun, then the Japanese for 
 
 You'll want to know: こんや.
 こんや — konya — "tonight".
+
+The word, taken apart.
+こんや (konya) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kon, "now, this" (Middle Chinese kim) and ya, "night" (yaeH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for sunset, then the Japanese for tonight.
 You'll want to know: あさって.
 あさって — asatte — "the day after tomorrow".
 
+The word, taken apart.
+あさって (asatte) is a native word, inherited rather than borrowed. JMdict writes it with characters for "bright", "after" and "day", read as a whole for their meaning. Its older origin is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for tonight, then the Japanese for the day 
 You'll want to know: おととい.
 おととい — ototoi — "the day before yesterday".
 
+The word, taken apart.
+おととい (ototoi) is a native word, inherited rather than borrowed. JMdict writes it with characters for "one", "past" and "day", read as a whole for their meaning. Its older origin is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for the day after tomorrow, then the Japane
 
 You'll want to know: まいあさ.
 まいあさ — maiasa — "every morning".
+
+The word, taken apart.
+まいあさ (maiasa) mixes the two layers: mai, "every", the on'yomi of its first character, borrowed from Chinese (Middle Chinese mwojX), and native asa, "morning", read as a kun'yomi (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.

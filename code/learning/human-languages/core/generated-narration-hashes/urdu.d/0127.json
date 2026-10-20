@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 127,
-  "sourceHash": "fnv1a64:b1b2dadd41af3bcb",
+  "sourceHash": "fnv1a64:73032b95b1f215b2",
   "lessonIds": [
     "UR-C127-unt",
     "UR-C127-lomri",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch127.txt",
   "json": "urdu/narration/ch127.json",
-  "textHash": "fnv1a64:fd0ec0706ea3d84f",
-  "jsonHash": "fnv1a64:b85aef40de64d759",
+  "textHash": "fnv1a64:40afcde45a925c34",
+  "jsonHash": "fnv1a64:37739a1153e2089c",
   "findings": []
 }

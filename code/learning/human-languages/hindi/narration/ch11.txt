@@ -7,17 +7,18 @@ Lesson 1 of 4.
 
 Warm-up.
 [pause 2 seconds]
-Hindi's word for black hides something bigger inside it: the very same word Sanskrit uses for time itself — and for death.
+Hindi's word for black has a look-alike: the Sanskrit word for time, and for death, sounds the same.
 
-You'll want to know — काला — black, time, and death, tangled together.
-काला (kālā) = "black," from Sanskrit काल (kāla), a word that covers both "black/dark" and "time." Sanskrit's own tradition ties the two together poetically — time devours everything, and that devouring is imagined as dark — and the same word names the fierce goddess Kālī ("the black/dark one") and stands as an epithet of Yama, the god of death. Be honest, though: whether "black" and "time" are truly one and the same root, or two separate ancient words that Sanskrit poetry and theology later fused into a single idea, is a real, still-debated question among linguists — the cultural connection is certain; the precise etymology underneath it is not.
+You'll want to know — काला — black, and a look-alike for time.
+काला (kālā) = "black," from Sanskrit काल (kāla), "black, dark" (CDIAL 3083), which CDIAL takes from a Dravidian word. The goddess Kālī, "the dark one," is named from the same word.
+Sanskrit has a second काल (kāla), "time," and so "fate, death" (CDIAL 3084); as Time the destroyer it is linked with Yama, the god of death. CDIAL gives the two separate entries, and Monier-Williams lists them as two words. MW wonders whether "black" shares the root kal-, "to count," of "time," and marks the guess as uncertain. Sanskrit poetry and religious tradition still pair them: time devours everything, and that devouring is pictured as dark. That pairing is a cultural association, not the word's history.
 
 You'll want to know — सफ़ेद — a Persian loan.
 सफ़ेद (safed) = "white" — borrowed from Persian (سفید safēd), the same kind of Persian-into-Hindi borrowing you've already met in माफ़ (māf, "forgiven," from the "sorry" lesson). Notice the नुक़्ता (nuqtā, the dot under फ): it turns pha into fa, the tell-tale mark of a sound that arrived from Persian or Arabic.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "kāla" — time/black/death, then "kālā" — black]
+[your turn — say: "kālā" — black; then the other काल, "time," a separate word]
 [pause 8 seconds for the answer]
 [your turn — say: "safed" — white, a Persian loan]
 [pause 8 seconds for the answer]
@@ -26,7 +27,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does काला's root काल (kāla) also mean, besides "black"? ("Time" — and by extension, death; the same word names the goddess Kālī and Yama's epithet Kāla.) Is it settled that "black" and "time" are the same root? (No — the cultural link is real and ancient, but linguists still debate whether it's one true root or two words later fused.) Where does सफ़ेद come from? (Persian safēd — the same kind of loan as māf, "sorry.")
+What does the other Sanskrit काल (kāla) mean? ("Time" — and so fate and death.) Is it the काल in काला? (No — CDIAL and MW list them as two words; the dark-and-time pairing is a cultural association.) Where does सफ़ेद come from? (Persian safēd — the same kind of loan as māf, "sorry.")
 
 
 Lesson 2 of 4.

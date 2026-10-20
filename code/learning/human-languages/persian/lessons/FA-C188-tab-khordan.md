@@ -14,7 +14,8 @@ romanization: "tâb khordan"
 concept_tag: FA-VERB-TAB-KHORDAN
 prerequisites: [FA-C188-talaffoz-kardan, FA-C188-hejji-kardan]
 sounds: []
-roots: []
+roots: [persian-khurdan]
+etymology_hook: "tâb khordan: Persian tâb 'swing, twist' + khordan; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C188-hejji-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C188-KONESH188-04]; assesses=[] -->
 
 **تاب خوردن** — *tâb khordan* — "to swing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tâb khordan* pairs *tâb*, "swing, twist", with *khordan*, "to eat": to take a swing. *tâb* is native, usually traced to Middle Persian *tāb*. *khordan*, "to eat", is an inherited verb; EtymDB traces it to Middle Persian *xwar-*, "to eat".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

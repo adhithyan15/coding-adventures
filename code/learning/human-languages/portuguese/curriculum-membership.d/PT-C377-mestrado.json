@@ -1,0 +1,11 @@
+{
+  "id": "PT-C377-mestrado",
+  "pathSegment": "PT-PATH-377-DOCENTE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-377-DOCENTE",
+      "order": 3
+    }
+  ]
+}

@@ -15,6 +15,7 @@ concept_tag: FA-WHY92-ZIRA
 prerequisites: [FA-C91-khahesh, FA-C92-chera]
 sounds: []
 roots: []
+etymology_hook: "zirâ: native Persian; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C92-chera]
 <!-- hl-knowledge: introduces=[FA-LEX-C92-WHY92-02]; assesses=[] -->
 
 **زیرا** — *zirâ* — "because".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*zirâ* is a native Persian word, but no source used here gives its older form, and its origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

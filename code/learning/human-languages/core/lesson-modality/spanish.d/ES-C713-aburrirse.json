@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C713-aburrirse",
+    "language": "spanish",
+    "chapter": 713,
+    "sequence": 25590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:78c065b771a120ea"
+  },
+  "findings": []
+}

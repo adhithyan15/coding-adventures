@@ -14,7 +14,8 @@ romanization: "lekhaḥ"
 concept_tag: SA-THINGS120-LEKHAH
 prerequisites: [SA-C120-mudra, SA-C120-patralayah]
 sounds: []
-roots: []
+roots: [sanskrit-lekha]
+etymology_hook: "lekha 'line; writing' ← √likh 'scratch, write' (CDIAL 11101), which MW compares with Greek ereikō 'tear'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C120-patralayah]
 <!-- hl-knowledge: introduces=[SA-LEX-C120-THINGS120-03]; assesses=[] -->
 
 **लेखः** — *lekhaḥ* — "a letter, an article".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*lekha* "a line, a stroke", then "a writing, a letter", comes from the root √likh "scratch, write" (CDIAL 11101): writing began as scratching. MW compares √likh with Greek *ereikō* "tear".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

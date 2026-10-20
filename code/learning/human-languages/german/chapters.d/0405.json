@@ -1,0 +1,19 @@
+{
+  "chapter": 405,
+  "title": "Kratzer und Dellen",
+  "label": "ch:ge-kratzer-und-dellen",
+  "canDo": "I can describe damage to a car: the boot, the bonnet, a scratch, a dent and denting something.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-R405-review-398-405",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 405: I can describe damage to a car: the boot, the bonnet, a scratch, a dent and denting something.",
+    "assesses": [
+      "GE-LEX-C405-DELLE-03",
+      "GE-LEX-C405-DELLE-04",
+      "GE-LEX-C405-DELLE-05"
+    ]
+  }
+}

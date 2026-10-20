@@ -1,0 +1,19 @@
+{
+  "chapter": 296,
+  "title": "Le braquage",
+  "label": "ch:fr-le-braquage",
+  "canDo": "I can tell the story of a hold-up: the armed robbery, the robbers, a hostage, a ransom and an escape.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C296-echapper",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 296: I can tell the story of a hold-up: the armed robbery, the robbers, a hostage, a ransom and an escape.",
+    "assesses": [
+      "FR-LEX-C296-BRAQUAGE-03",
+      "FR-LEX-C296-BRAQUAGE-04",
+      "FR-LEX-C296-BRAQUAGE-05"
+    ]
+  }
+}

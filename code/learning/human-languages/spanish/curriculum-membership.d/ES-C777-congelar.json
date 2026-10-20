@@ -1,0 +1,11 @@
+{
+  "id": "ES-C777-congelar",
+  "pathSegment": "ES-PATH-777-ENCHUFAR",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-777-ENCHUFAR",
+      "order": 0
+    }
+  ]
+}

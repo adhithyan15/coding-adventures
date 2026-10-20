@@ -1,0 +1,11 @@
+{
+  "id": "LA-C396-obstringo",
+  "pathSegment": "LA-PATH-396-POLLICEOR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-396-POLLICEOR",
+      "order": 4
+    }
+  ]
+}

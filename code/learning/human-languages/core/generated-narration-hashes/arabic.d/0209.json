@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 209,
-  "sourceHash": "fnv1a64:2bce4e089a945df8",
+  "sourceHash": "fnv1a64:cd57ce9c1e0cf9f1",
   "lessonIds": [
     "AR-C209-mashwi",
     "AR-C209-masluq",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "arabic/narration/ch209.txt",
   "json": "arabic/narration/ch209.json",
-  "textHash": "fnv1a64:01480482c8bcb9a6",
-  "jsonHash": "fnv1a64:f8d565c603f223fd",
+  "textHash": "fnv1a64:141ec58687f93dc6",
+  "jsonHash": "fnv1a64:1164bf22c6dcfada",
   "findings": []
 }

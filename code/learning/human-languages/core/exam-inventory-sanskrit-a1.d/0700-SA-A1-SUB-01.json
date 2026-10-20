@@ -1,0 +1,20 @@
+{
+  "id": "SA-A1-SUB-01",
+  "category": "Subordination",
+  "label": "a finite clause as object: saying that you think that something is so",
+  "probe": [
+    "SA-JOIN-ITI-01",
+    "SA-GRAMMAR-ITI-CLAUSE-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-SUB-03",
+    "A1-F2-02",
+    "A1-F2-11"
+  ],
+  "note": "Closed by SA-C54-iti and SA-C54-iti-clause. `cintayati` had been taught since chapter 8 with nothing to think; the quotative now gives it a whole clause as its object, unchanged and unbackshifted."
+}

@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-633-RIQUEZA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can compare rich and poor and say what is free or a luxury.",
+  "prerequisites": []
+}

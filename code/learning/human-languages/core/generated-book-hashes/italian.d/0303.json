@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:d254757846b484e0",
+  "lessonIds": [
+    "IT-C303-esplosione",
+    "IT-C303-esplodere",
+    "IT-C303-scoppiare",
+    "IT-C303-scoppio",
+    "IT-C303-crollo"
+  ],
+  "tex": "italian/book/chapters/ch303-un-boato.tex"
+}

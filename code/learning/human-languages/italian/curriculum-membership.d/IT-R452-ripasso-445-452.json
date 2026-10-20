@@ -1,0 +1,11 @@
+{
+  "id": "IT-R452-ripasso-445-452",
+  "pathSegment": "IT-PATH-452-EDICOLA",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "IT-EXT-452-EDICOLA",
+      "order": 5
+    }
+  ]
+}

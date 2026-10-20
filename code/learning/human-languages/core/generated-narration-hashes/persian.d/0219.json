@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 219,
-  "sourceHash": "fnv1a64:5f86a1bd3c7b43f1",
+  "sourceHash": "fnv1a64:11666804722ab1f5",
   "lessonIds": [
     "FA-C219-tavaqqof-kardan",
     "FA-C219-negah-dashtan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch219.txt",
   "json": "persian/narration/ch219.json",
-  "textHash": "fnv1a64:8852f481872ea752",
-  "jsonHash": "fnv1a64:baea2f4a721ed2e8",
+  "textHash": "fnv1a64:e05622e20fa46a22",
+  "jsonHash": "fnv1a64:95541c797528da55",
   "findings": []
 }

@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 373,
+  "sourceHash": "fnv1a64:8a49d32d7e3fb08c",
+  "lessonIds": [
+    "FR-C373-disponible",
+    "FR-C373-engager",
+    "FR-C373-engagement",
+    "FR-C373-flexible",
+    "FR-C373-envisager",
+    "FR-R373-revision-366-373"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch373.txt",
+  "json": "french/narration/ch373.json",
+  "textHash": "fnv1a64:adebf3a66285277c",
+  "jsonHash": "fnv1a64:aade55cbc748a79d",
+  "findings": []
+}

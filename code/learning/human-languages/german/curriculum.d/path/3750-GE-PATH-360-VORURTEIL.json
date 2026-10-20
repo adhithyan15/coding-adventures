@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-360-VORURTEIL",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "GE-EXT-360-VORURTEIL"
+  ],
+  "after": []
+}

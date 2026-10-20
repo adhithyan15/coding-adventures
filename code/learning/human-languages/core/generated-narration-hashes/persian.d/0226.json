@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 226,
-  "sourceHash": "fnv1a64:a6e6bc76f79bfb48",
+  "sourceHash": "fnv1a64:b0af9898fa88ba82",
   "lessonIds": [
     "FA-C226-kud-dadan",
     "FA-C226-paru-kardan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch226.txt",
   "json": "persian/narration/ch226.json",
-  "textHash": "fnv1a64:2288c07f0fb39951",
-  "jsonHash": "fnv1a64:5f096a8ce3157bd2",
+  "textHash": "fnv1a64:023e0cd6f8e23351",
+  "jsonHash": "fnv1a64:8f6afecde7477fcc",
   "findings": []
 }

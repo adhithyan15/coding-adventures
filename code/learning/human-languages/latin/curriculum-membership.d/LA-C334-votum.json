@@ -1,0 +1,11 @@
+{
+  "id": "LA-C334-votum",
+  "pathSegment": "LA-PATH-334-SACERDOS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-334-SACERDOS",
+      "order": 4
+    }
+  ]
+}

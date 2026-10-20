@@ -1,0 +1,11 @@
+{
+  "id": "ES-C708-envidia",
+  "pathSegment": "ES-PATH-708-CELOS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-708-CELOS",
+      "order": 2
+    }
+  ]
+}

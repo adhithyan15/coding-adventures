@@ -14,7 +14,8 @@ romanization: "uchiwa"
 concept_tag: JA-THINGS67-UCHIWA
 prerequisites: [JA-C66-fue, JA-C66-taiko]
 sounds: []
-roots: []
+roots: [japanese-uchiwa]
+etymology_hook: "uchiwa: native; written 団扇 'circle fan', read as a whole; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C66-taiko]
 <!-- hl-knowledge: introduces=[JA-LEX-C67-THINGS67-01]; assesses=[] -->
 
 **うちわ** — *uchiwa* — "a hand fan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**うちわ** (*uchiwa*) is a native word, inherited rather than borrowed. JMdict writes it with characters for "circle" and "fan", read as a whole, and marks it as usually written in kana. Its older origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

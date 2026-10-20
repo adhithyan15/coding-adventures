@@ -15,6 +15,7 @@ concept_tag: UR-WORLD87-MAUSIQI
 prerequisites: [UR-C87-chhutti, UR-C87-pyar]
 sounds: []
 roots: []
+etymology_hook: "mausīqī ← Arabic mūsīqī 'music', through Persian; Arabic took it from Greek mousikē"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C87-pyar]
 <!-- hl-knowledge: introduces=[UR-LEX-C87-WORLD87-05]; assesses=[] -->
 
 **موسیقی** — *mausīqī* — "music".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**موسیقی** (*mausīqī*) is a loan from Arabic *mūsīqī*, "music", which reached Urdu through Persian. Arabic itself took the word from Greek *mousikḗ*, "music".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

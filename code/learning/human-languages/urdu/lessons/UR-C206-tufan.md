@@ -14,7 +14,8 @@ romanization: "tūfān"
 concept_tag: UR-CHIZ206-TUFAN
 prerequisites: [UR-C206-rakh, UR-C206-chandni]
 sounds: []
-roots: []
+roots: [arabic-tufan]
+etymology_hook: "tūfān ← Arabic ṭūfān 'a flood, a deluge', through Persian (Lane, root ṭ-w-f)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C206-chandni]
 <!-- hl-knowledge: introduces=[UR-LEX-C206-CHIZ206-05]; assesses=[] -->
 
 **طوفان** — *tūfān* — "a tempest, a storm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**طوفان** (*tūfān*) is a loan from Arabic *ṭūfān*, "a flood, a deluge", which reached Urdu through Persian. Its Arabic root is *ṭ-w-f* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

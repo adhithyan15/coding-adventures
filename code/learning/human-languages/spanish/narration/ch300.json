@@ -4,7 +4,7 @@
   "chapter": 300,
   "title": "What the Body Says --- Thirst, Sleep, Skin, Blood, Remedy",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5584ae95d93a6b7e",
+  "sourceHash": "fnv1a64:722c1d6a31ad9b88",
   "lessons": [
     {
       "id": "ES-C300-sed",
@@ -651,7 +651,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1634f02244c3c9da",
+      "sourceHash": "fnv1a64:29bce71b08843d4a",
       "notice": null,
       "blocks": [
         {
@@ -708,7 +708,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two pieces. Re-, again or back, which you have seen doing this work before. And mederi, Latin for to heal or to look after. A remedium is a putting-back of health."
+              "text": "Two pieces. Re-, again or back, which you have seen doing this work before. And mederi, Latin for to heal or to look after. Remedio from Latin remedium, a putting-back of health."
             },
             {
               "kind": "speech",

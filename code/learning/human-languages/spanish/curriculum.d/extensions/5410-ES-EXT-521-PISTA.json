@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-521-PISTA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that someone investigated a case, followed a lead, found proof and suspected someone.",
+  "prerequisites": []
+}

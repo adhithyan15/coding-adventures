@@ -1,0 +1,11 @@
+{
+  "id": "ES-C571-descubrimiento",
+  "pathSegment": "ES-PATH-571-DESCUBRIR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-571-DESCUBRIR",
+      "order": 1
+    }
+  ]
+}

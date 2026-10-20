@@ -14,7 +14,8 @@ romanization: "leṭnā"
 concept_tag: UR-VERB-LETNA
 prerequisites: [UR-C182-thakna, UR-C182-aram-karna]
 sounds: []
-roots: []
+roots: [sanskrit-letyati]
+etymology_hook: "leṭnā ← Sanskrit leṭyati 'sleeps', a tadbhava (CDIAL 11109)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C182-aram-karna]
 <!-- hl-knowledge: introduces=[UR-LEX-C182-ACT182-03]; assesses=[] -->
 
 **لیٹنا** — *leṭnā* — "to lie down".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لیٹنا** (*leṭnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *leṭyati*, "sleeps" (CDIAL 11109). The Sanskrit verb is known only from a grammarians' list, and CDIAL thinks it probably of non-Aryan origin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

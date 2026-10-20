@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C372-provisorio",
+    "language": "portuguese",
+    "chapter": 372,
+    "sequence": 21110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dfb2a3a916bfab36"
+  },
+  "findings": []
+}

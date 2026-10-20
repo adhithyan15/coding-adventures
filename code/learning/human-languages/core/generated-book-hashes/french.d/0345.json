@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:e5364e08542ab9dd",
+  "lessonIds": [
+    "FR-C345-approuver",
+    "FR-C345-desapprouver",
+    "FR-C345-partisan",
+    "FR-C345-adversaire",
+    "FR-C345-argumenter"
+  ],
+  "tex": "french/book/chapters/ch345-pour-ou-contre.tex"
+}

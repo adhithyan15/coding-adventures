@@ -1,0 +1,11 @@
+{
+  "id": "IT-C481-polpaccio",
+  "pathSegment": "IT-PATH-481-GAMBA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-481-GAMBA",
+      "order": 2
+    }
+  ]
+}

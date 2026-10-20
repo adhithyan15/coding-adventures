@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C346-damit",
+    "language": "german",
+    "chapter": 346,
+    "sequence": 18840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d35f12c9e8b1681b"
+  },
+  "findings": []
+}

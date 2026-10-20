@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-337-CONDIRE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can finish a dish: dressing, salting, flavouring, stuffing and garnishing.",
+  "prerequisites": []
+}

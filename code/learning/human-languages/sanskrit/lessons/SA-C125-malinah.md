@@ -14,7 +14,8 @@ romanization: "malinaḥ"
 concept_tag: SA-THINGS125-MALINAH
 prerequisites: [SA-C125-mrduh, SA-C125-suddhah]
 sounds: []
-roots: []
+roots: [sanskrit-mala-dirt]
+etymology_hook: "malina 'dirty' ← mala 'dirt' (MW), which MW compares with Greek melas 'black'; Marathi maḷīṇ (CDIAL 9905)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C125-suddhah]
 <!-- hl-knowledge: introduces=[SA-LEX-C125-THINGS125-05]; assesses=[] -->
 
 **मलिनः** — *malinaḥ* — "dirty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*malina* "dirty, dark" is built on *mala* "dirt, filth" (MW), formed like the colour words in *-na* (CDIAL 9905). MW compares *mala* with Greek *melas* "black", as in *melancholy*; Marathi kept it as *maḷīṇ* "dirty" (CDIAL 9905).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

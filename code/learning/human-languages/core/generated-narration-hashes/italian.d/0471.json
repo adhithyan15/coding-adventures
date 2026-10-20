@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 471,
+  "sourceHash": "fnv1a64:b783b2dd29498896",
+  "lessonIds": [
+    "IT-C471-timidezza",
+    "IT-C471-socievole",
+    "IT-C471-riservato",
+    "IT-C471-chiacchierone",
+    "IT-C471-arrossire"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch471.txt",
+  "json": "italian/narration/ch471.json",
+  "textHash": "fnv1a64:92ba00948aabf72b",
+  "jsonHash": "fnv1a64:a06c3513d53790f3",
+  "findings": []
+}

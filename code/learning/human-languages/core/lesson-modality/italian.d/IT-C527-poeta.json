@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C527-poeta",
+    "language": "italian",
+    "chapter": 527,
+    "sequence": 29510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cb98cd7ba754d858"
+  },
+  "findings": []
+}

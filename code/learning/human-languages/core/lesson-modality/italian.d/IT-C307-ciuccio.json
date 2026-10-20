@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C307-ciuccio",
+    "language": "italian",
+    "chapter": 307,
+    "sequence": 17880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ae87219f3464831e"
+  },
+  "findings": []
+}

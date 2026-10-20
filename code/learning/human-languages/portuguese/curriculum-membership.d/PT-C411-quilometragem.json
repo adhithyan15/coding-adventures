@@ -1,0 +1,11 @@
+{
+  "id": "PT-C411-quilometragem",
+  "pathSegment": "PT-PATH-411-ALUGUER",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-411-ALUGUER",
+      "order": 3
+    }
+  ]
+}

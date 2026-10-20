@@ -12,6 +12,9 @@ Before the new one: say the Urdu for right now, then the Urdu for then.
 You'll want to know: ہمیشہ.
 ہمیشہ — hameshā — "always".
 
+The word, taken apart.
+ہمیشہ (hameshā) is a loan, usually traced to Persian hamēsha, "always".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for then, then the Urdu for always.
 
 You'll want to know: کبھی.
 کبھی — kabhī — "sometimes, ever".
+
+The word, taken apart.
+کبھی (kabhī) is inherited. CDIAL lists it under Sanskrit evam eva, "exactly so", crossed with the question stem ka- of kyā and kaun (CDIAL 2528).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for always, then the Urdu for sometimes.
 You'll want to know: جلدی.
 جلدی — jaldī — "quickly; early".
 
+The word, taken apart.
+جلدی (jaldī) is jald, "quick", usually traced to Persian jald, a word of Arabic origin, with the ending -ī.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for sometimes, then the Urdu for quickly; early
 You'll want to know: دیر.
 دیر — der — "a delay; late".
 
+The word, taken apart.
+دیر (der) is a loan, usually traced to Persian dēr, "late; a long time".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for quickly; early, then the Urdu for a delay; 
 
 You'll want to know: پہلے.
 پہلے — pehle — "before, first".
+
+The word, taken apart.
+پہلے (pehle) is the adverb form of pahlā, "first". CDIAL lists pahlā under prathilla, a variant of a reconstructed prathila, "first", built on Sanskrit prathama, "first" (CDIAL 8652).
 
 What you've built.
 One more word for this chapter.

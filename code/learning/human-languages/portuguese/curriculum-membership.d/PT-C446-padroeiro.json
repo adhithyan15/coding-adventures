@@ -1,0 +1,11 @@
+{
+  "id": "PT-C446-padroeiro",
+  "pathSegment": "PT-PATH-446-ARRAIAL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-446-ARRAIAL",
+      "order": 3
+    }
+  ]
+}

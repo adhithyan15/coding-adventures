@@ -1,0 +1,19 @@
+{
+  "chapter": 274,
+  "title": "Ein Gerücht",
+  "label": "ch:ge-ein-gerucht",
+  "canDo": "I can talk about how true a story is: a rumour, a source, to claim, a claim and to confirm.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C274-bestaetigen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 274: I can talk about how true a story is: a rumour, a source, to claim, a claim and to confirm.",
+    "assesses": [
+      "GE-LEX-C274-GERUECHT-03",
+      "GE-LEX-C274-GERUECHT-04",
+      "GE-LEX-C274-GERUECHT-05"
+    ]
+  }
+}

@@ -14,7 +14,8 @@ romanization: "kuwashii"
 concept_tag: JA-QUAL123-KUWASHII
 prerequisites: [JA-C123-kuyashii, JA-C123-ayashii]
 sounds: []
-roots: []
+roots: [japanese-kuwashii]
+etymology_hook: "kuwashii: native Japanese, inherited, not borrowed; kanji 詳しい attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C123-ayashii]
 <!-- hl-knowledge: introduces=[JA-LEX-C123-QUAL123-05]; assesses=[] -->
 
 **くわしい** — *kuwashii* — "detailed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**くわしい** (*kuwashii*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,17 @@
+{
+  "id": "SA-A1-AG-03",
+  "category": "Agreement and the phrase",
+  "label": "the indirect object",
+  "probe": [
+    "SA-GRAMMAR-DATIVE-OF-PURPOSE"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-SV-05"
+  ],
+  "note": "Sanskrit's dative. The track teaches it only in the purpose sense (punar darśanāya), never as a recipient — 'I give the book to the teacher' is not built anywhere, and no verb of giving is taught."
+}

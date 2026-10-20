@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C710-ansiedad",
+    "language": "spanish",
+    "chapter": 710,
+    "sequence": 25420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:878b3e545429be3e"
+  },
+  "findings": []
+}

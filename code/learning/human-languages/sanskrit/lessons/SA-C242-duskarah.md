@@ -14,7 +14,8 @@ romanization: "duṣkaraḥ"
 concept_tag: SA-QUAL242-DUSKARAH
 prerequisites: [SA-C242-jatilah, SA-C242-sukarah]
 sounds: []
-roots: []
+roots: [sanskrit-dushkara, kr-do]
+etymology_hook: "duṣkara = dus 'hard' + kara 'doing', from √kṛ 'do': 'hard to do' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C242-sukarah]
 <!-- hl-knowledge: introduces=[SA-LEX-C242-QUAL242-05]; assesses=[] -->
 
 **दुष्करः** — *duṣkaraḥ* — "hard to do".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*duṣkara* is built on *dus-*, "hard, ill", and *kara*, "doing", from the root √kṛ, "to do" (MW): "hard to be done". The *s* of *dus* becomes *ṣ* before *k*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C497-rimproverare",
+  "pathSegment": "IT-PATH-497-EDUCARE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-497-EDUCARE",
+      "order": 3
+    }
+  ]
+}

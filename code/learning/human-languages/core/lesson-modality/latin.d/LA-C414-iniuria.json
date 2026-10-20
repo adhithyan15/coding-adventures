@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C414-iniuria",
+    "language": "latin",
+    "chapter": 414,
+    "sequence": 22120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8368d8b3d335e1c5"
+  },
+  "findings": []
+}

@@ -14,7 +14,8 @@ romanization: "prayacchati"
 concept_tag: SA-VERB-PRAYACCHATI
 prerequisites: [SA-C234-arabhate, SA-C234-samapayati]
 sounds: []
-roots: []
+roots: [sanskrit-prayacchati]
+etymology_hook: "prayacchati ← pra 'forth' + √yam 'hold out': 'holds out towards', so 'gives' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C234-samapayati]
 <!-- hl-knowledge: introduces=[SA-LEX-C234-ACT234-05]; assesses=[] -->
 
 **प्रयच्छति** — *prayacchati* — "hands over, gives".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*prayacchati* is built on *pra*, "forth", and the root √yam, whose present is *yacchati*, "holds" (MW). To hold something out towards someone is to hand it over, so MW gives both "stretches forth" and "offers, gives".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

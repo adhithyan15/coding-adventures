@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C376-probabile",
+    "language": "italian",
+    "chapter": 376,
+    "sequence": 21510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6be959c12288993d"
+  },
+  "findings": []
+}

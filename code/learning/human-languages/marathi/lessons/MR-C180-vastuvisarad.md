@@ -14,7 +14,7 @@ romanization: "vāstuviśārad"
 concept_tag: MR-VASTU180-VASTUVISARAD
 prerequisites: [MR-C180-chayacitrakar, MR-C180-patrakar]
 sounds: []
-roots: [sanskrit-vastu, sanskrit-visharada]
+roots: [sanskrit-vastu-site, sanskrit-visharada]
 etymology_hook: "vāstuviśārad: Sanskrit vāstu 'site, building' + viśārada 'skilled'; a modern compound"
 duration:
   max_seconds: 200

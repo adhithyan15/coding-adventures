@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 219,
-  "sourceHash": "fnv1a64:be01233b8534b7cb",
+  "sourceHash": "fnv1a64:063ddd8004055328",
   "lessonIds": [
     "UR-C219-flait",
     "UR-C219-manzil",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch219.txt",
   "json": "urdu/narration/ch219.json",
-  "textHash": "fnv1a64:ca4232f6ad7759f8",
-  "jsonHash": "fnv1a64:2cdd70de3d4dfd7d",
+  "textHash": "fnv1a64:37f13b981801bc2f",
+  "jsonHash": "fnv1a64:d39711755012dea4",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "dāḍimam"
 concept_tag: SA-THINGS109-DADIMAM
 prerequisites: [SA-C108-kusmandam, SA-C108-narikelam]
 sounds: []
-roots: []
+roots: [sanskrit-dadima]
+etymology_hook: "dāḍima 'pomegranate' (MBh) has no derivation in MW or CDIAL; origin uncertain; Bengali dālim (CDIAL 6254)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C108-narikelam]
 <!-- hl-knowledge: introduces=[SA-LEX-C109-THINGS109-01]; assesses=[] -->
 
 **दाडिमम्** — *dāḍimam* — "a pomegranate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dāḍima* "the pomegranate" appears from the Mahābhārata on (MW), and neither MW nor CDIAL gives a derivation, so its origin is uncertain. It lives on as Hindi *dāṛim* and Bengali *dālim* (CDIAL 6254).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

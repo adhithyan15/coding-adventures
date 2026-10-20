@@ -14,7 +14,8 @@ romanization: "ḥajar"
 concept_tag: AR-NATURE76-HAJAR
 prerequisites: [AR-C76-ghaba, AR-C76-nahr]
 sounds: []
-roots: []
+roots: [ḥ-j-r]
+etymology_hook: "ḥajar: built on the root ḥ-j-r, 'a stone' (Lane); Lane lists ḥajar, 'stone', under the same root as ḥajara, 'to hinder'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C76-nahr]
 <!-- hl-knowledge: introduces=[AR-LEX-C76-NATURE76-03]; assesses=[] -->
 
 **حجر** — *ḥajar* — "a stone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حجر** (*ḥajar*) is built on the native Arabic root *ḥ-j-r*, "a stone; to hinder" (Lane). Lane lists *ḥajar*, "stone", under the same root as *ḥajara*, "to hinder".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

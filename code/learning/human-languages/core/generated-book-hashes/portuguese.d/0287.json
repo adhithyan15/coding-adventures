@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 287,
+  "sourceHash": "fnv1a64:f14c84485c3b07f0",
+  "lessonIds": [
+    "PT-C287-roubo",
+    "PT-C287-furto",
+    "PT-C287-furtar",
+    "PT-C287-carteirista",
+    "PT-C287-desaparecimento"
+  ],
+  "tex": "portuguese/book/chapters/ch287-roubos.tex"
+}

@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-318-RICEVIMENTO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-318-RICEVIMENTO"
+  ],
+  "after": []
+}

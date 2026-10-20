@@ -1,0 +1,11 @@
+{
+  "id": "ES-C553-ascenso",
+  "pathSegment": "ES-PATH-553-EMPLEO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-553-EMPLEO",
+      "order": 1
+    }
+  ]
+}

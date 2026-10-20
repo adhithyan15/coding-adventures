@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 378,
+  "sourceHash": "fnv1a64:0fea5645cf7e3b00",
+  "lessonIds": [
+    "PT-C378-rever",
+    "PT-C378-apontamentos",
+    "PT-C378-manual",
+    "PT-C378-decorar",
+    "PT-C378-teste"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch378.txt",
+  "json": "portuguese/narration/ch378.json",
+  "textHash": "fnv1a64:a67788a32760fbcf",
+  "jsonHash": "fnv1a64:7b022e817e414177",
+  "findings": []
+}

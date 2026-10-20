@@ -337,8 +337,34 @@ metadata, sections, periods, and ordered events attached to their preceding
 period. These statements lower into timeline-specific temporal semantic IR.
 Deterministic layout emits dedicated section, spine, and period-card geometry,
 which lowers to backend-neutral PaintScene rectangles, paths, and shaped text
-and is exercised by a Metal-to-PNG fixture. The family remains partial until
-the complete pinned syntax and tolerant visual corpus passes.
+and is exercised by Metal-to-PNG fixtures.
+Timeline `padding`, `useMaxWidth`, and `disableMulticolor` settings from Mermaid
+init directives or YAML front matter survive as typed semantic configuration.
+Padding controls deterministic outer and spine geometry, sectionless single-color
+mode selects stable period Paint styles, and all three settings lower to
+backend-neutral PaintScene metadata.
+Timeline `cScale`, `cScaleLabel`, and `cScaleInv` theme slots also survive
+semantic configuration and select section, period, label, spine, and outline
+colors during backend-neutral PaintInstruction lowering.
+Non-negative `leftMargin` also survives typed configuration and shifts the
+section, spine, period, and event geometry before PaintScene lowering.
+Authored events now resolve to dedicated cards outside their period cards, with
+direction-aware deterministic placement and dashed, arrow-headed connector paths. Both event
+cards and connectors lower as backend-neutral PaintInstructions using the
+resolved Timeline palette.
+Periods and events within an authored section now share one palette slot, while
+sectionless timelines advance per period unless `disableMulticolor` is enabled.
+The timeline spine remains present for single-color sectionless documents.
+Global `fontSize` and theme `fontFamily` settings survive in typed timeline
+configuration, scale title and card geometry during layout, and select fonts for
+backend-neutral shaped text and PaintScene metadata.
+The direction semantic matches Mermaid 11.16.1: an unqualified `timeline`
+defaults to left-to-right layout, while explicit `LR` and `TD` headers select
+their corresponding deterministic layout paths.
+The pinned upstream parser corpus now covers direction headers, sections,
+periods, continued and inline events, Markdown links, and delimiter-rich labels.
+Every accepted fixture passes the backend-neutral visual corpus and Metal PNG
+rendering, so Timeline reaches the manifest's defined `full` level.
 
 ### Mindmap Native Slice
 
@@ -355,10 +381,13 @@ metadata. Integrator-supplied class styles resolve in authored class order
 before layout, so typography participates in node measurement and the resolved
 fill, stroke, and text styling lower through backend-neutral PaintInstructions.
 Integrator-supplied icon glyphs resolve from semantic icon identifiers, reserve
-layout space, and lower through the same backend-neutral shaped-text path. A
-native Metal-to-PNG fixture validates this documented subset; automatic loading
-of external icon packs remains explicitly outside the partial compatibility
-level.
+layout space, and lower through the same backend-neutral shaped-text path.
+Automatic loading of external icon packs remains an integrator responsibility,
+outside the parser-to-Paint compatibility boundary. The pinned upstream syntax
+corpus includes hierarchy, every node shape, explicit IDs, decorations,
+delimiter-rich and Markdown labels, comments, front matter, and invalid root
+structures. Every accepted fixture passes the native visual corpus, so Mindmap
+reaches the manifest's defined `full` level.
 
 ### Block Native Slice
 
@@ -441,12 +470,17 @@ Ticket metadata on sections follows the same typed IR, layout, and backend-neutr
 link-metadata path as card tickets.
 Positive `sectionWidth` and `padding` settings from the same configuration paths
 resolve column width and outer canvas geometry before backend-neutral Paint lowering.
-`diagram-layout-board` resolves
-deterministic column/card geometry and dedicated PaintScene lowering emits
-backend-neutral rectangles and shaped text. A native Metal-to-PNG fixture gates
-this slice; external icon-pack artwork, class-driven styles, non-ticket links, description
-fields, non-ticket section metadata, and configurable field arrangements remain
-unsupported at the partial level.
+`diagram-layout-board` resolves deterministic column/card geometry and dedicated
+PaintScene lowering emits backend-neutral rectangles and shaped text. Mermaid's
+parser accepts deeper card indentation but flattens it into the current section;
+the native parser now preserves that behavior. Section-only assignee, priority,
+and icon metadata is accepted and discarded at the same renderer-data boundary
+as pinned Mermaid 11.16.1. Automatic external icon-pack artwork remains an
+integrator responsibility outside the parser-to-Paint compatibility boundary.
+The pinned syntax corpus covers all upstream parser behaviors plus the native
+Markdown, configuration, and priority-marker extensions, and every accepted
+fixture passes the Metal visual corpus. Kanban therefore reaches the manifest's
+defined `full` level.
 
 ### Architecture Native Slice
 
@@ -477,7 +511,8 @@ lower to canonical backend-neutral glyph geometry. Preserved namespaced identifi
 use a generic fallback when vendor artwork is unavailable. Orthogonal relationship
 layout routes around unrelated service, junction, and group bounds with deterministic
 clearance before the existing backend-neutral PaintScene lowering. Full vendor icon
-artwork remains unsupported at the partial level. Architecture `iconSize`, `fontSize`,
+artwork remains an integrator responsibility outside the parser-to-Paint compatibility
+boundary. Architecture `iconSize`, `fontSize`,
 `nodeSeparation`, `padding`, and
 `idealEdgeLengthMultiplier` values from Mermaid init directives or YAML front matter
 survive as typed semantic configuration and resolve into backend-neutral node geometry,
@@ -488,8 +523,12 @@ routing and backend-neutral PaintScene lowering. `randomize` and signed `seed` v
 survive semantic configuration and select a repeatable seeded permutation of sibling layout
 slots while preserving authored IR order, containment, routing, and backend-neutral PaintScene
 lowering. Unlike Mermaid's nondeterministic `seed: 0` escape hatch, the native pipeline keeps
-zero deterministic. Iteration limits and the remaining fcose-specific tuning controls remain
-unsupported at the partial level.
+zero deterministic. The fcose-specific `numIter` limit survives typed semantic IR and
+layout into PaintScene metadata even though the deterministic native layout does not run
+fcose. Empty diagrams, quoted and escaped titles, nested groups, prototype-safe and numeric
+identifiers, alignments, junctions, edge forms, invalid references, and all native extensions
+are pinned in syntax and visual corpora. Every accepted fixture renders through Metal, so
+Architecture reaches the manifest's defined `full` level.
 
 ### Radar Compatibility
 
@@ -548,14 +587,17 @@ representative pinned visual corpus rendered through Metal-to-PNG. Event
 Modeling is therefore full at the pinned native compatibility level;
 browser-only responsive resizing remains outside the backend-neutral contract.
 
-### Treemap Native Slice
+### Treemap Native Compatibility
 
-The initial Mermaid 11.16.1 Treemap slice recognizes both `treemap` and
+The Mermaid 11.16.1 Treemap implementation recognizes both `treemap` and
 `treemap-beta` and parses quoted parent and leaf nodes, indentation hierarchy,
 colon or comma numeric values, class selectors, titles, and accessibility
 metadata into dedicated hierarchy IR. Empty documents match the upstream
-grammar, while semantic validation rejects a second unindented root with the
-pinned Mermaid diagnostic. Deterministic alternating partitions
+grammar. Multiple unindented sections remain sibling roots under Mermaid's
+renderer-created virtual root, matching every active upstream rendering fixture;
+the registered but parser-invocation-inactive upstream single-root validator is
+not treated as runtime behavior. Style-less `classDef` declarations are also
+accepted as the pinned grammar permits. Deterministic alternating partitions
 lower through backend-neutral rectangles and glyph runs, with native
 Metal-to-PNG validation. Named `classDef` declarations resolve fill, stroke,
 dash, dash offset, fill/stroke/overall opacity, text color, and font styling
@@ -716,38 +758,95 @@ the upstream renderer. Common D3 value-format families lower natively, including
 grouped and fixed decimals, currency, significant digits, scientific notation,
 percentages, SI prefixes, radix output, signs, trimmed zeroes, alternate radix
 prefixes, width, fill, and left/right/center/sign-aware alignment. Exact D3
-locale-specific separators and the broader CSS property surface remain
-unsupported at the partial level. Treemap layout, value visibility, font, and
+locale-specific separators and CSS properties outside the typed Treemap style
+contract remain integrator-owned rather than backend-specific renderer behavior.
+Treemap layout, value visibility, font, and
 border configuration also flow through semantic IR, hierarchy layout, and paint.
 Explicit section and leaf fill, stroke, and stroke-width options, independent
 label/value colors, and title color/size follow the same backend-neutral path;
-named class styles retain precedence over those diagram-wide node options.
+named class styles retain precedence over those diagram-wide node options. The
+complete pinned syntax corpus covers every active upstream Treemap rendering
+fixture plus grammar boundary cases, and the matching visual corpus lowers every
+accepted fixture through hierarchy layout, PaintScene instructions, Metal, and
+PNG. Treemap is therefore full at the pinned native compatibility level.
 
-### Venn Native Slice
+### Venn Native Compatibility
 
-The initial Mermaid 11.16.1 Venn slice parses declared sets, validated
+The Mermaid 11.16.1 Venn implementation parses declared sets, validated
 multi-set unions, labels, numeric sizes, attached text nodes, titles, and the
 documented fill, stroke, opacity, and text styling directives into dedicated
 set IR. Deterministic circle geometry lowers through backend-neutral ellipses
-and glyph runs, with native Metal-to-PNG validation. Exact area-proportional
-overlap optimization, theme-exact styling, configuration overrides, and
-interactive behavior remain unsupported at the partial level.
+and glyph runs, with native Metal-to-PNG validation. Exact browser-side
+area-proportional overlap optimization, theme-exact SVG styling, and interactive
+behavior remain outside the backend-neutral native contract. Positive `width`
+and `height`, non-negative
+`padding`, `useMaxWidth`, and `useDebugLayout` settings from init directives or
+YAML front matter survive typed semantic IR. Canvas dimensions and padding
+control deterministic circle geometry, while every resolved setting remains
+available as backend-neutral PaintScene metadata.
+Venn-specific title and set text colors plus the global font family now resolve
+from `themeVariables`, survive typed config IR and layout, and drive portable
+title and region glyph runs. Per-region authored text colors retain precedence.
+The Mermaid `venn1` through `venn8` theme palette likewise survives semantic IR
+and layout before PaintScene lowering selects set fills. Explicit set fills retain
+precedence, and invalid theme colors fall back independently to the native palette.
+When `useDebugLayout` is enabled, layout applies Mermaid 11.16.1's text-area
+radius and grid-cell equations to the native deterministic centers and records
+explicit debug IR. Paint lowering emits portable dashed purple circles and teal
+cells without backend-specific logic. Attached text always uses those resolved
+grid-cell centers, preventing every note in a set or intersection from collapsing
+onto one centroid even when debug geometry is hidden.
+Unstyled set circles now follow Mermaid's palette-derived stroke, ten-percent
+fill opacity, and width-scaled five-unit stroke defaults. Authored fill opacity,
+stroke color, and stroke width continue to take precedence during Paint lowering.
+Repeated `style` directives now cascade per property in source order for both set
+regions and attached text IDs, matching Mermaid's style-map merge behavior without
+discarding unrelated properties from earlier declarations.
+Venn style colors accept safe CSS names, hex values, and numeric color functions;
+unsafe functional payloads fail parsing. Stroke widths must be finite and
+non-negative, while fill opacity is constrained to the CSS range from zero to one.
+Venn title, set/intersection, and attached-text typography now uses Mermaid's
+width-relative 32, 48, and 40 reference-unit scales. Resolved label sizes live in
+layout IR and reach glyph runs without backend-specific typography decisions.
+The complete pinned syntax corpus covers every upstream parser fixture and every
+active upstream rendering fixture, including partial three-way intersections,
+quoted identifiers, attached text, styles, and asymmetric sizes. The matching
+visual corpus lowers every accepted fixture through set IR, deterministic layout,
+PaintScene instructions, Metal, and PNG. Externally supplied browser themes and
+the rough.js `handDrawn` presentation do not change the pinned Venn source grammar
+and remain presentation concerns; the native pipeline renders those source bodies
+with its deterministic portable geometry. Venn is therefore full at the pinned
+native compatibility level.
 
-### Ishikawa Native Slice
+### Ishikawa Native Compatibility
 
-The initial Mermaid 11.16.1 Ishikawa slice recognizes `ishikawa` and
-`ishikawa-beta`, takes the first content line as the effect, and preserves
-subsequent indentation as dedicated causal-tree IR. Deterministic alternating
-fishbone layout lowers through backend-neutral paths, a rounded effect box,
-and glyph runs, with native Metal-to-PNG validation. Non-negative `diagramPadding`
-values from Mermaid init directives or YAML front matter survive causal IR and
-resolve outer spine, effect-box, and bone geometry before backend-neutral Paint
-lowering. Exact upstream theme and remaining configuration parity, adaptive
-collision avoidance for very wide or deeply
-nested trees, and interactive behavior remain unsupported at the partial
-level.
+The Mermaid 11.16.1 Ishikawa implementation recognizes `ishikawa` and
+`ishikawa-beta`, takes the first content line as the effect, and preserves the
+remaining indentation hierarchy in dedicated causal-tree IR. The first cause
+establishes the indentation baseline, matching upstream behavior when the effect
+or later root causes are indented differently. Root-only diagrams and arbitrarily
+deep cause trees are accepted.
 
-### Wardley Native Slice
+Deterministic alternating fishbone layout carries the causal IR into portable
+spine, branch, arrowhead, label-box, and closed fish-head geometry. The complete
+layout lowers to backend-neutral Paint paths and glyph runs. Cause boxes are
+width-aware, deep trees expand the canvas, and same-side collisions resolve
+outward from the spine before Paint lowering. `diagramPadding`, `useMaxWidth`,
+global `fontSize`, `look: handDrawn`, `handDrawnSeed`, and the `fontFamily`,
+`lineColor`, `mainBkg`, and `textColor` theme variables survive typed configuration.
+Hand-drawn mode uses seeded path perturbations and clipped hachure paths rather
+than backend-specific rough.js objects.
+
+The pinned syntax corpus includes every upstream parser fixture and all thirteen
+active upstream rendering fixtures, including root-only, uneven indentation,
+many-cause, and very deep trees. Its matching visual corpus lowers every valid
+fixture through causal IR, layout, PaintScene instructions, Metal, and PNG.
+Named browser themes affect externally supplied Mermaid theme variables rather
+than Ishikawa source grammar, and browser DOM sizing and interaction behavior are
+outside the portable native contract. Ishikawa is therefore full at the pinned
+native compatibility level.
+
+### Wardley Native Compatibility
 
 The initial Mermaid 11.16.1 Wardley slice recognizes `wardley-beta` and parses
 titles, canvas sizes, custom evolution stages, anchors, components,
@@ -755,9 +854,42 @@ visibility/evolution coordinates, validated dependency links, and evolution
 targets into dedicated strategic-map IR. Deterministic Cartesian mapping
 honors Wardley's `[visibility, evolution]` coordinate order and lowers through
 backend-neutral paths, ellipses, and glyph runs with native Metal-to-PNG
-validation. Pipelines, notes, annotations, accelerators/deaccelerators,
-advanced flow ports, decorators, label offsets, custom stage boundaries, and
-theme-exact rendering remain unsupported at the partial level.
+validation. Mermaid's `wardley-beta` width, height, padding, node radius,
+node-label offset, axis and label font sizes, grid visibility, and max-width
+configuration survive grammar parsing through typed semantic and layout IR.
+The grid lowers to dashed backend-neutral paths and renderer configuration is
+preserved in Paint metadata. Nested Wardley background, axis, grid, component,
+link, and evolution theme colors also survive semantic config and layout IR into
+backend-neutral Paint instructions. Quoted `note` statements preserve their
+visibility/evolution coordinates in strategic-map IR and lower as positioned,
+bold backend-neutral glyph runs. Numbered `annotation` coordinates group by
+number, lower as connected markers, and optionally populate a clamped annotations
+box. Accelerator and deaccelerator statements preserve authored map coordinates
+and lower as labeled right- and left-pointing backend-neutral arrow paths.
+Pipeline blocks inherit the parent component's visibility, preserve child evolution
+coordinates, reposition the parent, and lower the bounded pipeline plus dotted
+evolution links and parent square through backend-neutral Paint instructions.
+Evolution stages preserve dual labels and optional `@` boundaries; layout uses
+the authored widths for dashed separators and centered stage labels.
+Component and pipeline-child `label [x, y]` suffixes preserve signed offsets
+through semantic and layout IR into backend-neutral glyph placement.
+Single-line accessibility titles and single-line or braced multiline accessibility
+descriptions survive semantic and layout IR into PaintScene metadata.
+Component source strategies lower build, buy, outsource, and market overlays;
+inertia lowers as a heavy offset indicator while preserving both decorators in IR.
+Dependency links preserve solid, alternate, and dashed line forms, semicolon annotations,
+forward, backward, and bidirectional flow ports, and inline flow labels. Layout clips
+links to component boundaries and positions rotated labels before backend-neutral paths,
+arrowheads, and glyph groups are emitted. Annotation stroke, text, and fill theme fields
+also survive typed configuration and control marker, connector, and annotations-box Paint.
+The pinned corpus covers every active Mermaid 11.16.1 Wardley parser test and
+renderer acceptance fixture, including compact arrows, consecutive and trailing
+hyphens, all four upstream theme runs, pipelines, and the large GPT tokeniser
+map. Every valid fixture is lowered through `PaintScene` and rendered to PNG by
+the native Metal backend. Browser DOM measurement, responsive SVG sizing, and
+interactive behavior remain outside the portable native contract, so Wardley
+is full at the pinned native compatibility level rather than pixel-identical to
+Mermaid's browser renderer.
 
 ### Cynefin Native Slice
 
@@ -827,7 +959,7 @@ parser and renderer cases, so TreeView is `full` in the compatibility manifest.
 Automatic Iconify pack loading remains host-owned and exact typography remains
 backend-specific; resolved icon identities and geometry stay backend-neutral.
 
-### Railroad Native Slice
+### Railroad Native Compatibility
 
 The initial Mermaid 11.16.1 Railroad slice recognizes `railroad-beta` and
 parses the upstream explicit constructor notation into dedicated recursive
@@ -859,9 +991,43 @@ operators lower to the same recursive Railroad IR. Predicate labels preserve
 the pinned transformer's special-node convention, and a pinned syntax corpus
 plus native Metal-to-PNG fixture exercise the backend-neutral path.
 
-This is intentionally partial. Upstream curve geometry, theme/config
-overrides, and exact typography remain unsupported rather than being counted
-as compatible.
+Railroad `padding`, `verticalSeparation`, and `horizontalSeparation` settings
+from Mermaid init directives or YAML front matter survive typed semantic IR.
+Layout applies them to outer bounds, rule and branch separation, and sequential
+element spacing and content boxes before PaintScene lowering; the resolved values remain
+available as backend-neutral scene metadata.
+Explicit Railroad font family and size; terminal, non-terminal, special,
+connection, marker, and rule-name colors; stroke width; and marker visibility
+and radius follow the same typed semantic and layout path. Font size participates
+in element measurement, while PaintScene emits the resolved portable geometry,
+glyph runs, strokes, fills, and marker ellipses without backend-specific CSS.
+Configured `arcRadius` controls branch, bypass, and loopback lane geometry;
+lowering converts their orthogonal corners to portable cubic Bézier path
+commands that approximate Mermaid's circular SVG arcs before native rendering.
+Root `themeVariables` now provide Mermaid-compatible typography and color
+fallbacks for terminals, non-terminals, specials, connections, markers, and
+rule names. Explicit Railroad options retain precedence, and the resolved
+values continue through layout and backend-neutral PaintScene lowering.
+The pinned compatibility corpus covers every active Mermaid 11.16.1 Railroad
+renderer fixture plus the complete constructor, EBNF, ABNF, and PEG native
+notation corpora. Every valid fixture lowers through `PaintScene` and renders
+to PNG through Metal. Browser DOM text measurement, responsive SVG sizing, and
+interaction remain outside the portable native contract, so Railroad is full
+at the pinned native compatibility level.
+Color and font-family options now follow the pinned Mermaid allowlists before
+entering semantic IR: supported CSS colors and portable family lists survive,
+while unsafe or malformed values fall back to the resolved theme defaults.
+The `compactMode` option is retained as typed semantic configuration and
+PaintScene metadata. Mermaid 11.16.1's pinned Railroad renderer does not branch
+on this value, so native geometry intentionally remains unchanged.
+Rule-name labels now include the pinned ` =` suffix, use bold configured
+typography, and reserve deterministic width before their start markers. Special
+sequence labels likewise retain semantic text while layout and Paint display
+the pinned `? text ?` decoration. Marker centers and connecting paths are
+explicit layout geometry rather than Paint-backend assumptions.
+
+This is intentionally partial. Comment styling and browser-exact text
+measurement remain unsupported rather than being counted as compatible.
 
 ### Info Full Compatibility
 
@@ -874,12 +1040,26 @@ suffixes, and the native Metal-to-PNG path validates the complete family.
 ### ZenUML Partial Compatibility
 
 The native ZenUML frontend accepts the documented title, participant ordering,
-aliases, Actor and Database annotators, and asynchronous `A->B: message` forms.
-It lowers into the shared Sequence IR, layout, and backend-neutral PaintScene
-pipeline, with a Metal-to-PNG fixture. Mermaid 11.16.1 delegates the broader
-language to external `@zenuml/core`; synchronous nesting, creation and reply
-messages, comments-as-notes, and control fragments remain unsupported and fail
-grammar validation rather than degrading silently.
+aliases, Actor, Boundary, Control, Entity, Database, Collections, Queue, and
+Starter annotators, and asynchronous `A->B: message` forms.
+It also parses nested synchronous calls, typed reply assignments, explicit
+return statements, `@return` and `@reply` annotators, creation statements, and
+if, loop, opt, parallel, and try-family scopes into shared Sequence messages,
+activations, participant lifecycle events, notes, and control blocks. Alternative
+and try/catch/finally branches preserve one enclosing fragment and lower to
+typed branch events. Comments attached to messages and fragments lower to
+Sequence notes. These semantics flow through the existing layout and
+backend-neutral PaintScene pipeline, with the expanded reply-and-branch example
+covered by Metal-to-PNG validation. Mermaid 11.16.1 delegates the broader
+language to external `@zenuml/core`. Assigned and typed creation forms preserve
+the authored binding and class label on the created participant, creation blocks
+participate in activation nesting, and statement semicolon terminators are
+accepted without leaking punctuation into semantic labels. Custom participant
+annotators lower to the backend-neutral participant fallback, while inline
+comments attached to messages lower to Sequence notes without treating URL
+slashes or quoted `//` text as comments. Custom annotator glyphs and the full
+external expression grammar remain unsupported, so ZenUML remains at the
+manifest's `partial` level.
 
 ### Structural Groups
 
@@ -1110,6 +1290,12 @@ consecutive-rank separation, and outer scene padding respectively, and remain vi
 scene metadata.
 Shared Flowchart `wrappingWidth` configuration caps measured horizontal process-node width and carries
 that bound into backend-neutral text wrapping and paint lowering.
+Shared Flowchart `padding` configuration expands ordinary process-node geometry and controls its
+backend-neutral label content box without introducing renderer-specific HTML measurement.
+Shared Flowchart `titleTopMargin` configuration reserves layout space above a visible diagram title
+and shifts its backend-neutral glyph paint while leaving untitled diagrams unchanged.
+Shared Flowchart `subGraphTitleMargin.top` and `.bottom` configuration reserves ownership-lane and
+nested-group header space and shifts portable lane or group title glyphs away from their borders.
 Shared Flowchart `curve` configuration accepts the complete supported curve catalog and supplies the
 layout-time default for edges without a direct or class-resolved curve. Per-edge curves retain precedence,
 and the resolved modes lower to backend-neutral line, quadratic, or cubic paint paths.

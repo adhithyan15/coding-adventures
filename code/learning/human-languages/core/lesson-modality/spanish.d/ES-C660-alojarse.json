@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C660-alojarse",
+    "language": "spanish",
+    "chapter": 660,
+    "sequence": 22830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a608706f1dcac65f"
+  },
+  "findings": []
+}

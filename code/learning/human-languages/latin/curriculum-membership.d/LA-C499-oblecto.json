@@ -1,0 +1,11 @@
+{
+  "id": "LA-C499-oblecto",
+  "pathSegment": "LA-PATH-499-VOLU",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-499-VOLU",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-372-IPOTESI",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "IT-EXT-372-IPOTESI"
+  ],
+  "after": []
+}

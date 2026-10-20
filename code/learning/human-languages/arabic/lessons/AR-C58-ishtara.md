@@ -14,7 +14,8 @@ romanization: "ishtarā"
 concept_tag: AR-VERB-ISHTARA
 prerequisites: [AR-C58-rakada, AR-C58-laiba]
 sounds: []
-roots: []
+roots: [sh-r-y]
+etymology_hook: "ishtarā: built on the root sh-r-y, 'to sell' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C58-laiba]
 <!-- hl-knowledge: introduces=[AR-LEX-C58-VERBS58-05]; assesses=[] -->
 
 **اشترى** — *ishtarā* — "to buy (he bought)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اشترى** (*ishtarā*) is built on the native Arabic root *sh-r-y*, "to sell; to buy" (Lane). Lane notes the base verb *sharā* could mean both "to buy" and "to sell"; Form VIII *ishtarā* settled on buying.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

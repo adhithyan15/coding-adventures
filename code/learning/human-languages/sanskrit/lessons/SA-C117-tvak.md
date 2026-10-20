@@ -14,7 +14,8 @@ romanization: "tvak"
 concept_tag: SA-THINGS117-TVAK
 prerequisites: [SA-C117-katih, SA-C117-bhruh]
 sounds: []
-roots: []
+roots: [sanskrit-tvac]
+etymology_hook: "tvak = tvac 'skin' (RV), c becoming k at the end; origin uncertain; Pali taco (CDIAL 6087)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C117-bhruh]
 <!-- hl-knowledge: introduces=[SA-LEX-C117-THINGS117-05]; assesses=[] -->
 
 **त्वक्** — *tvak* — "the skin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tvak* is *tvac* "skin, hide", already in the Rigveda, with the final *c* said as *k* at the end of a word (MW). MW sets it beside a root √tvac "cover" known only from the grammarians, so its origin is uncertain; Pali kept it as *taco* (CDIAL 6087).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

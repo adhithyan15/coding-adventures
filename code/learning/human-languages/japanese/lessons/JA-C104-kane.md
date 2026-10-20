@@ -14,7 +14,8 @@ romanization: "kane"
 concept_tag: JA-THINGS104-KANE
 prerequisites: [JA-C104-okurimono, JA-C104-mari]
 sounds: []
-roots: []
+roots: [japanese-kane-bell]
+etymology_hook: "kane: native Japanese, inherited, not borrowed; kanji 鐘 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C104-mari]
 <!-- hl-knowledge: introduces=[JA-LEX-C104-THINGS104-05]; assesses=[] -->
 
 **かね** — *kane* — "a bell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**かね** (*kane*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

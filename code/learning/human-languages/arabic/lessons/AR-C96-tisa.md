@@ -14,7 +14,8 @@ romanization: "tisʿa"
 concept_tag: AR-CLOTHES96-TISA
 prerequisites: [AR-C96-saba, AR-C96-thamaniya]
 sounds: []
-roots: []
+roots: [t-s-ʿ]
+etymology_hook: "tisʿa: built on the root t-s-ʿ, 'nine' (Lane); Hebrew teshaʿ, 'nine', is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C96-thamaniya]
 <!-- hl-knowledge: introduces=[AR-LEX-C96-CLOTHES96-05]; assesses=[] -->
 
 **تسعة** — *tisʿa* — "nine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تسعة** (*tisʿa*) is built on the native Arabic root *t-s-ʿ*, "nine" (Lane). Hebrew *teshaʿ*, "nine", is its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

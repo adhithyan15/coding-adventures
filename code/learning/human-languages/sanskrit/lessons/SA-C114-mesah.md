@@ -14,7 +14,8 @@ romanization: "meṣaḥ"
 concept_tag: SA-THINGS114-MESAH
 prerequisites: [SA-C113-vrsabhah, SA-C113-mahisah]
 sounds: []
-roots: []
+roots: [sanskrit-mesha]
+etymology_hook: "meṣa 'ram' is inherited from Indo-European (EtymDB), cousin of Persian mīš 'ewe'; it also names Aries (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C113-mahisah]
 <!-- hl-knowledge: introduces=[SA-LEX-C114-THINGS114-01]; assesses=[] -->
 
 **मेषः** — *meṣaḥ* — "a sheep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*meṣa* "a ram, a sheep" is inherited from Indo-European (EtymDB): Avestan *maēša* and Persian *mīš* "ewe" are cousins. In astronomy it names Aries, the first sign of the zodiac (MW). Hindi kept it as *mes* "ram" (CDIAL 10334).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

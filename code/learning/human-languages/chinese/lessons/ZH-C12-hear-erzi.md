@@ -11,8 +11,8 @@ gloss: son
 concept_tag: ZH-FAMILY-SON
 prerequisites: [ZH-C12-nu]
 sounds: [tone-2, tone-neutral]
-roots: []
-etymology_hook: The family word arrives by ear before its first character asks anything of the pen.
+roots: [middle-chinese-nye, middle-chinese-tsix]
+etymology_hook: "érzi 'son': built from Middle Chinese nye 'infant' and tsiX 'offspring', both inherited"
 duration:
   max_seconds: 135
 requires:
@@ -43,6 +43,8 @@ reviews_of: [ZH-C12-ren, ZH-C12-nu, ZH-C08-mingzi]
 
 Hear two beats: rising *ér*, then a short, light *zi*. Say the whole word once
 from the meaning. Keep the characters covered; the new first shape comes next.
+
+*Érzi* is built from Middle Chinese *nye*, "infant", and *tsiX*, "offspring".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ERZI-01] -->

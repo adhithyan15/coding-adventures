@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 229,
-  "sourceHash": "fnv1a64:d3c7aef1e4923151",
+  "sourceHash": "fnv1a64:3e8eef2e44cc931f",
   "lessonIds": [
     "SA-C229-niyamah",
     "SA-C229-dharmah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch229.txt",
   "json": "sanskrit/narration/ch229.json",
-  "textHash": "fnv1a64:24d073662cbe6560",
-  "jsonHash": "fnv1a64:f065adcca9689d10",
+  "textHash": "fnv1a64:780c8bdf726a0d65",
+  "jsonHash": "fnv1a64:8e1218876bbf484e",
   "findings": []
 }

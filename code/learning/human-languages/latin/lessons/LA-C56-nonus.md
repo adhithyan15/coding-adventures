@@ -52,7 +52,8 @@ reviews_of: [LA-C56-octavus, LA-C55-quartus]
 
 *Novem* is **nine**, and this time the word is not lengthened but squeezed:
 *noven-* collapses in on itself and comes out as *nōnus*, with a long *ō* where
-the *ove* used to be. Two ordinals running have now bent the shape in two
+the *ove* used to be (Lewis & Short). *Novem* is inherited, a cousin of English
+*nine* (EtymDB 2.1). Two ordinals running have now bent the shape in two
 different ways.
 
 **November** is this number in a name.

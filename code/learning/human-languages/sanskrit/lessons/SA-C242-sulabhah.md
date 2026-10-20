@@ -14,7 +14,8 @@ romanization: "sulabhaḥ"
 concept_tag: SA-QUAL242-SULABHAH
 prerequisites: [SA-C241-yat, SA-C241-parantu]
 sounds: []
-roots: []
+roots: [sanskrit-sulabha, sanskrit-labhate]
+etymology_hook: "sulabha = su 'well, easily' + √labh 'obtain': 'easy to get' (MW; CDIAL 13512)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C241-parantu]
 <!-- hl-knowledge: introduces=[SA-LEX-C242-QUAL242-01]; assesses=[] -->
 
 **सुलभः** — *sulabhaḥ* — "easy to get, cheap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sulabha* is built on *su-*, "well, easily", and the root √labh, "to take, obtain" (MW; CDIAL 13512). MW compares √labh with Greek *lambanō*, "I take". Pali *sulabha*, "easy to be obtained", carries it on.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

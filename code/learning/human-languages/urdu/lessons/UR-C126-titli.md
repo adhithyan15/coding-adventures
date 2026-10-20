@@ -15,6 +15,7 @@ concept_tag: UR-THINGS126-TITLI
 prerequisites: [UR-C126-kavva, UR-C126-mor2]
 sounds: []
 roots: []
+etymology_hook: "titlī: origin uncertain; CDIAL has no entry"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C126-mor2]
 <!-- hl-knowledge: introduces=[UR-LEX-C126-THINGS126-03]; assesses=[] -->
 
 **تتلی** — *titlī* — "a butterfly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **تتلی** (*titlī*) is uncertain. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

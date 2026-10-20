@@ -1,0 +1,19 @@
+{
+  "chapter": 313,
+  "title": "Es war einmal",
+  "label": "ch:ge-es-war-einmal",
+  "canDo": "I can talk about old tales: a fairy tale, a legend, a fable, a witch and a wizard.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C313-zauberer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 313: I can talk about old tales: a fairy tale, a legend, a fable, a witch and a wizard.",
+    "assesses": [
+      "GE-LEX-C313-MAERCHEN-03",
+      "GE-LEX-C313-MAERCHEN-04",
+      "GE-LEX-C313-MAERCHEN-05"
+    ]
+  }
+}

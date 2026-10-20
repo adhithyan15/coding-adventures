@@ -14,7 +14,8 @@ romanization: "nemasu"
 concept_tag: JA-VERB-NERU
 prerequisites: [JA-C138-kaerimasu, JA-C136-suzushii]
 sounds: []
-roots: []
+roots: [japanese-neru, japanese-masu-polite]
+etymology_hook: "nemasu: native neru 'sleep, lie down' + polite -masu"
 duration:
   max_seconds: 200
 requires:
@@ -60,6 +61,11 @@ Now you have a whole day, and the two ways to find the stem:
 | **はたらく** *hataraku* | **はたらきます** *hatarakimasu* | *-u* becomes *-i* |
 | **あるく** *aruku* | **あるきます** *arukimasu* | *-u* becomes *-i* |
 | **かえる** *kaeru* | **かえります** *kaerimasu* | *-u* becomes *-i* |
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ねます** (*nemasu*) is native *neru*, "to sleep, to lie down", with the polite ending *-masu*. The verb is inherited rather than borrowed; its kanji is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C138-NEMASU, JA-LEX-C138-OKIMASU, JA-LEX-C138-HATARAKIMASU, JA-LEX-C138-ARUKIMASU, JA-LEX-C138-KAERIMASU] -->

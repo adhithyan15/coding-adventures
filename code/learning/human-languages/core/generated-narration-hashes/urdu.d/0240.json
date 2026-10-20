@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 240,
-  "sourceHash": "fnv1a64:de82195a4bfe66fe",
+  "sourceHash": "fnv1a64:1d24d492670684f2",
   "lessonIds": [
     "UR-C240-dhakelna",
     "UR-C240-bujhana",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch240.txt",
   "json": "urdu/narration/ch240.json",
-  "textHash": "fnv1a64:3668ac44f14aaa56",
-  "jsonHash": "fnv1a64:1ab42fc597aafa5b",
+  "textHash": "fnv1a64:806fc5e632844e6f",
+  "jsonHash": "fnv1a64:5a14e211fd9a7c1d",
   "findings": []
 }

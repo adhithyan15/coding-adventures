@@ -14,7 +14,8 @@ romanization: "khodkhâh"
 concept_tag: FA-SEFAT200-KHODKHAH
 prerequisites: [FA-C200-jeddi, FA-C200-tanha]
 sounds: []
-roots: []
+roots: [persian-khwastan]
+etymology_hook: "khodkhâh: Persian khod 'self' + khâh 'wanting' (khâstan); native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C200-tanha]
 <!-- hl-knowledge: introduces=[FA-LEX-C200-SEFAT200-05]; assesses=[] -->
 
 **خودخواه** — *khodkhâh* — "selfish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khodkhâh* is *khod*, "self", with *-khâh*, "wanting" (from *khâstan*, EtymDB): self-wanting. Both are native Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

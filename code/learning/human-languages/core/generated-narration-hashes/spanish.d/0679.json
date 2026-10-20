@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 679,
+  "sourceHash": "fnv1a64:25130faa87a54484",
+  "lessonIds": [
+    "ES-C679-comisaria",
+    "ES-C679-embajada",
+    "ES-C679-estanco",
+    "ES-C679-sello",
+    "ES-C679-aseo",
+    "ES-R679-repaso-672-679"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch679.txt",
+  "json": "spanish/narration/ch679.json",
+  "textHash": "fnv1a64:8917befb4048ac35",
+  "jsonHash": "fnv1a64:9730320ea14c918b",
+  "findings": []
+}

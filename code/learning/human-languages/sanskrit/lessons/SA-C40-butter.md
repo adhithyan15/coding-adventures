@@ -14,7 +14,8 @@ romanization: "navanītam"
 concept_tag: SA-FOOD-NAVANITA
 prerequisites: [SA-C40-sugar, SA-C38-stone, SA-C39-fish]
 sounds: []
-roots: []
+roots: [sanskrit-navanita, sanskrit-nava-new]
+etymology_hook: "navanīta 'fresh butter' ← nava 'new' + nīta, itself an old word for fresh butter (CDIAL 7003, 7545)"
 duration:
   max_seconds: 210
 requires:
@@ -42,16 +43,22 @@ reviews_of: [SA-C40-sugar]
 
 **नवनीतम्** (*navanītam*) — "fresh butter".
 
-**नवनीतम्** is butter just off the churn, and both of its pieces are already yours.
+**नवनीतम्** is butter fresh off the churn, and its first piece is already yours.
 
-The first piece, *nava*, is "new" — the word you learned beside महत् and अल्प. *nīta* is "brought, led", from the same *nī* that stands inside नयति. Butter is the newly-brought thing — what has just been led up out of the दधि.
+The first piece, *nava*, is "new" — the word you learned beside महत् and अल्प. The second, *nīta*, looks like "brought, led", from the *nī* inside नयति, but CDIAL lists a separate old *nīta* that already meant fresh butter, so the "newly brought" reading is a guess. Either way, this is the butter that comes fresh up out of the दधि.
 
 It is the butter of the Kṛṣṇa stories, stolen by the handful, and Hindi *navnīt* is still a name people give a child.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Navanīta* is a compound of *nava*, "new", and *nīta*, which CDIAL 7545 lists on
+its own as "fresh butter" (CDIAL 7003). It lives on as Marathi *loṇī*, "butter".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-Butter, named as the new thing brought up out of the curd.
+Butter, named as the new thing that comes up out of the curd.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C40-FOOD-01, SA-LEX-C40-FOOD-02, SA-LEX-C40-FOOD-03, SA-LEX-C38-EARTH-03, SA-LEX-C39-ANIMAL-03] -->

@@ -14,7 +14,8 @@ romanization: "râhrow"
 concept_tag: FA-MAKAN195-RAHROW
 prerequisites: [FA-C195-bam, FA-C195-balkon]
 sounds: []
-roots: []
+roots: [persian-rah]
+etymology_hook: "râhrow: Persian râh 'way' (EtymDB) + row 'going' (raftan)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C195-balkon]
 <!-- hl-knowledge: introduces=[FA-LEX-C195-MAKAN195-04]; assesses=[] -->
 
 **راهرو** — *râhrow* — "a corridor, a hallway".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*râhrow* is built from *râh*, "road, way", and *-row*, "going" (from *raftan*, "to go"): the way you go through. *râh* is inherited, from Middle Persian *rāh* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

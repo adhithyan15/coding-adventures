@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-502-CAMPEGGIO",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "IT-EXT-502-CAMPEGGIO"
+  ],
+  "after": []
+}

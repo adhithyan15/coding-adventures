@@ -1,0 +1,11 @@
+{
+  "id": "IT-C393-sanzione",
+  "pathSegment": "IT-PATH-393-CARCERE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-393-CARCERE",
+      "order": 4
+    }
+  ]
+}

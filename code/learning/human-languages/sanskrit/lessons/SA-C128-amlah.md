@@ -14,7 +14,8 @@ romanization: "amlaḥ"
 concept_tag: SA-QUAL128-AMLAH
 prerequisites: [SA-C128-mithya, SA-C128-katuh]
 sounds: []
-roots: []
+roots: [sanskrit-amla]
+etymology_hook: "amla 'sour, acid' (Manu); MW gives no derivation, so its origin is uncertain; Bengali āmbal (CDIAL 579)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C128-katuh]
 <!-- hl-knowledge: introduces=[SA-LEX-C128-QUAL128-04]; assesses=[] -->
 
 **अम्लः** — *amlaḥ* — "sour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*amla* "sour, acid" appears from Manu on, and MW gives no derivation for it, so its origin is uncertain. It lives on as Bengali *āmbal* "sour" and Pali *ambila* (CDIAL 579).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-395-LUCRO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "PT-EXT-395-LUCRO"
+  ],
+  "after": []
+}

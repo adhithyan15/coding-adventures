@@ -1,0 +1,20 @@
+{
+  "chapter": 308,
+  "title": "A connected A2 Kannada message",
+  "label": "ch:ka-a-connected-a2-kannada-message",
+  "canDo": "I can plan and write a connected 70–90 word Kannada message in Kannada script for a named reader and practical purpose.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "KA-W308-a2-connected-composition",
+    "kind": "production",
+    "summary": "Complete chapter 308 by writing a model-free 70–90 word connected Kannada message for a named reader and practical purpose.",
+    "assesses": [
+      "KA-LEX-C64-JOIN-01",
+      "KA-LEX-C67-LINK-03",
+      "KA-LEX-C70-TELL-04",
+      "KA-GRAMMAR-C69-ASK-02"
+    ]
+  }
+}

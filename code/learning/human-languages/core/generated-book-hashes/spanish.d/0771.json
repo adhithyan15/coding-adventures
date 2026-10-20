@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 771,
+  "sourceHash": "fnv1a64:4936291c31fca20f",
+  "lessonIds": [
+    "ES-C771-sabor",
+    "ES-C771-picante",
+    "ES-C771-salado",
+    "ES-C771-crudo",
+    "ES-C771-oler"
+  ],
+  "tex": "spanish/book/chapters/ch771-por-el-sabor.tex"
+}

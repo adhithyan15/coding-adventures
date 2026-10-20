@@ -14,7 +14,8 @@ romanization: "nāshtā"
 concept_tag: UR-FOOD57-NASHTA
 prerequisites: [UR-C57-narangi, UR-C57-lemu]
 sounds: []
-roots: []
+roots: [persian-nashta]
+etymology_hook: "nāshtā: usually traced to Persian nāshtā 'not having eaten'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C57-lemu]
 <!-- hl-knowledge: introduces=[UR-LEX-C57-FOOD57-03]; assesses=[] -->
 
 **ناشتہ** — *nāshtā* — "breakfast".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ناشتہ** (*nāshtā*) is a loan, usually traced to Persian *nāshtā*, "not having eaten". The meal is named for the fast it ends.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

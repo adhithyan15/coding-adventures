@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C339-sostenere",
+    "language": "italian",
+    "chapter": 339,
+    "sequence": 19630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cf71c5b63d289b74"
+  },
+  "findings": []
+}

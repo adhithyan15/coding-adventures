@@ -14,7 +14,8 @@ romanization: "eva"
 concept_tag: SA-WHY214-EVA
 prerequisites: [SA-C213-anantaram, SA-C213-yavat]
 sounds: []
-roots: []
+roots: [sanskrit-eva]
+etymology_hook: "eva 'exactly, only', an old particle; MW compares Avestan aēva and Gothic aiw 'ever' (CDIAL 2524)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C213-yavat]
 <!-- hl-knowledge: introduces=[SA-LEX-C214-WHY214-01]; assesses=[] -->
 
 **एव** — *eva* — "exactly, only".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*eva* is an old particle, already in the Rigveda as "so, indeed" (CDIAL 2524). MW derives it from a pronoun stem and compares Avestan *aēva* and Gothic *aiw*, "ever", so it is inherited from Indo-European.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

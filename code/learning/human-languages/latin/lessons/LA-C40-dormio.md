@@ -6,7 +6,7 @@ sequence: 810
 chapter: 40
 type: word
 headword: dormiō, dormīre
-gloss: "I sleep" — the verb behind dormitory and dormant, and the one word English may only look as though it borrowed
+gloss: '"I sleep" — the verb behind dormitory and dormant, and the one word English may only look as though it borrowed'
 concept_tag: VERB-SLEEP
 prerequisites: [LA-C40-audio]
 sounds: [macron-long-vowel, macron-none-short-vowel]

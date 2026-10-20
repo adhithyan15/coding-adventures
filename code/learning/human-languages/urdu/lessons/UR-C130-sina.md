@@ -14,7 +14,8 @@ romanization: "sīnā"
 concept_tag: UR-THINGS130-SINA
 prerequisites: [UR-C130-nakhun, UR-C130-jild]
 sounds: []
-roots: []
+roots: [persian-sina]
+etymology_hook: "sīnā: usually traced to Persian sīna 'chest, breast'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C130-jild]
 <!-- hl-knowledge: introduces=[UR-LEX-C130-THINGS130-05]; assesses=[] -->
 
 **سینہ** — *sīnā* — "the chest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سینہ** (*sīnā*) is a loan, usually traced to Persian *sīna*, "chest, breast".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C266-revision-conditions",
+  "pathSegment": "FR-PATH-266-SI",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-266-SI",
+      "order": 3
+    }
+  ]
+}

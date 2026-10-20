@@ -1,0 +1,180 @@
+Italian, chapter 263: The Scene --- Ero, Era, C'era.
+5 lessons. All 5 can be done entirely by ear.
+
+
+Lesson 1 of 5.
+parlavo — the past that is still running.
+
+Warm-up.
+[pause 2 seconds]
+Say "I spoke" the way chapter fifteen built it. (Ho parlato.)
+[pause 1 second]
+That past has an edge: it happened, and it finished. Italian has a second past with no edge at all, and every story you tell from here on needs both of them.
+
+Grammar Lens: one ending, three families.
+Take the infinitive, drop its last two letters, -re, and add -vo for "I":
+parla-re, parlavo — I was speaking, I used to speak ave-re, avevo — I had, I used to have dormi-re, dormivo — I was sleeping.
+The vowel in front of the -v- is the family's own: -a-, -e-, -i-. Nothing else moves. The other persons keep that -v- and change only what comes after it: parlavo, parlavi, parlava, parlavamo, parlavate, parlavano — I, you, he or she, we, you all, they.
+This is the imperfetto, and it is the most regular tense Italian owns: one recipe for almost every verb. The few that refuse it begin in the next lesson.
+What it means is "was ‑ing", or "used to". Parlavo is speaking with no start and no finish in view, which is exactly what a story needs for its background.
+
+The word, taken apart: why a v.
+Latin already had this past, and it marked it with a b: Latin amābam, "I was loving", and habēbat, "he was having". Between two vowels that b softened to a v, the same softening that turned Latin habēre into avere. So habēbat comes down to aveva sound by sound.
+One piece is younger. Old Italian said io parlava, with the same -a as lui parlava. The -o of parlavo was borrowed later from the present, parlo, so that "I" had an ending of its own. Neither EtymDB nor Lewis & Short records endings this late; that step is the usual explanation in histories of Italian, and it is given here as one.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: parlavo, avevo, dormivo — one -v-, three vowels in front of it]
+[pause 8 seconds for the answer]
+[your turn — say: parlavo, parlavi, parlava, parlavamo, parlavano]
+[pause 8 seconds for the answer]
+[your turn — say: lavoravo — chapter five's verb, still running in the past]
+[pause 8 seconds for the answer]
+[your turn — say: the edge, then no edge — ho parlato, then parlavo]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you build "I was sleeping"? (Drop the -re of dormire and add -vo: dormivo.) Which Latin letter became the -v-? (The b of amābam, softened as in habēre and avere.) Which past has an edge, and which has none? (Ho parlato has one; parlavo has none.)
+
+
+Lesson 2 of 5.
+era, c'era — the two words a scene is made of.
+
+Warm-up.
+[pause 2 seconds]
+Build "I was speaking" from parlare. (Parlavo.) Now say "there is". (C'è.)
+[pause 1 second]
+Hold on to both. This lesson joins them.
+
+You'll want to know: era.
+One verb refuses last lesson's recipe, and it is the one you use most: essere. Its imperfetto is short, and it is old:
+ero — I was, eri — you were, era — he, she or it was eravamo — we were, eravate — you all were, erano — they were.
+Era is the form you will hear most, because a scene is mostly about things and places rather than about you:
+La stazione era piccola. — The station was small. Ero stanco, ma ero contento. — I was tired, but I was happy.
+
+You'll want to know: c'era.
+You have c'è and ci sono, "there is" and "there are". Move them into the imperfetto and you have the way a scene opens:
+c'era — there was, c'erano — there were C'era il sole. — The sun was out. (Literally, "there was the sun".) C'erano molte persone. — There were a lot of people.
+Same ci, same apostrophe where it meets a vowel. Only the verb has moved into the past.
+
+The word, taken apart.
+era from Latin erat, "he was, she was" — inherited, with only the final t worn away. Latin's past of "to be" was irregular already, eram, erās, erat, and it never had the b of amābam, so it never took the -v- either. That is why this one form looks nothing like parlava. (Lewis & Short, under sum.)
+The ero for "I" got its -o late, on the same usual account as parlavo: old Italian said io era. EtymDB's only row for an Italian era is the noun "an era, an age", a different word altogether, from Latin aera.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: ero, eri, era, eravamo, erano]
+[pause 8 seconds for the answer]
+[your turn — say: C'era il sole.]
+[pause 8 seconds for the answer]
+[your turn — say: Ero stanco, ma ero contento.]
+[pause 8 seconds for the answer]
+[your turn — say: from now to then — c'è becomes c'era, ci sono becomes c'erano]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which Latin word is era? (Erat, "he was" — only the t lost.) Why does it not end in -va like parlava? (Latin's own form never had the b.) Say "there were a lot of people". (C'erano molte persone.)
+
+
+Lesson 3 of 5.
+faceva freddo — the weather, made in the past.
+
+Warm-up.
+[pause 2 seconds]
+Say "the sun was out" the way last lesson built it. (C'era il sole.) Then "I was tired". (Ero stanco, or ero stanca.)
+
+You'll want to know: faceva freddo.
+English says the weather was cold. Italian says it made cold:
+Faceva freddo. — It was cold. Faceva caldo. — It was hot.
+Faceva is the imperfetto of a verb meaning "to make, to do", and for heat and cold that is the verb Italian reaches for. It needs no subject: nobody is doing the making.
+Keep era for things. Il caffè era freddo — the coffee was cold — is about the coffee. Faceva freddo is about the whole day.
+And rain takes this chapter's plain recipe: piovere gives pioveva, "it was raining". Put three of them together and you have a whole morning before anything has happened in it:
+Faceva freddo e pioveva. Non c'era il sole.
+
+The phrase, taken apart.
+faceva from Latin faciēbat, "he was making", the imperfect of facere, "to make, to do" — inherited, with the -ēba- worn to -eva, the same b to v as habēbat and aveva. That facere is the root of English fact, factory and effect. (Lewis & Short, under facio.)
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: Faceva freddo. — then Faceva caldo.]
+[pause 8 seconds for the answer]
+[your turn — say: pioveva — piovere on the plain recipe]
+[pause 8 seconds for the answer]
+[your turn — say: a thing, then a day — Il caffè era freddo. then Faceva freddo.]
+[pause 8 seconds for the answer]
+[your turn — say: a whole morning — Faceva freddo e pioveva. Non c'era il sole.]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "it was hot". (Faceva caldo.) Which do you use for the coffee, era or faceva? (Era — it is about a thing.) Which Latin verb is inside faceva, and what English word shares it? (Facere, "to make" — fact, factory.)
+
+
+Lesson 4 of 5.
+dormivo / ho dormito — the same sleep, told two ways.
+
+Warm-up.
+[pause 2 seconds]
+Paint a cold morning in two short sentences. (Faceva freddo. Non c'era il sole.)
+[pause 1 second]
+Nothing has happened in it yet. This lesson is about what happens.
+
+Grammar Lens: the scene and the events.
+Take one fact, that you slept, and let the tense decide what kind of fact it is:
+Dormivo. — I was sleeping. (no edge: what was going on) Ho dormito. — I slept. (an edge: a thing that happened and ended).
+Neither is more correct. They answer different questions, and a told story needs both, in a division of labour:
+The imperfetto paints the scene: what was going on, what things were like. The passato prossimo drops the events into it: what happened.
+Faceva freddo. Dormivo. Mia madre ha telefonato. — It was cold. I was asleep. My mother phoned.
+Mentre, "while", puts both into one sentence. Mentre dormivo, mia madre ha telefonato. The mentre half is the scene, still running; the other half is the event that cut into it.
+English has no separate ending for this. It leans on was ‑ing and used to and lets the context carry the rest. Italian settles it in the ending.
+
+The word, taken apart: why "imperfect".
+imperfetto is a learned word from Latin imperfectus, "unfinished" (EtymDB 2.1): in-, "not", plus perfectus, "carried all the way through", which is itself per-, "through", plus facere, "to do, to make" (Lewis & Short). That facere is the one inside last lesson's faceva.
+So the name is a description of the job. The imperfetto is the not-carried-through past: unfinished in time, with no edge on it. English perfect still means finished all the way through.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the pair — dormivo, then ho dormito]
+[pause 8 seconds for the answer]
+[your turn — say: a scene, then an event — Pioveva. Ho aspettato l'autobus.]
+[pause 8 seconds for the answer]
+[your turn — say: Mentre dormivo, mia madre ha telefonato.]
+[pause 8 seconds for the answer]
+[your turn — say: C'era il sole, quindi ho camminato.]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+In a story, which past paints and which drops the events in? (The imperfetto paints; the passato prossimo drops them in.) What does imperfectus say? (Not carried through.) In mentre dormivo, mia madre ha telefonato, which half is the scene? (Mentre dormivo.)
+
+
+Lesson 5 of 5.
+Review — the scene, and what cut into it.
+
+Warm-up.
+[pause 2 seconds]
+Build "I was reading" from leggere. (Leggevo.) Then say "I was tired". (Ero stanco, or ero stanca.)
+
+What you've built.
+Four lessons, and every piece of a scene is in your hands. The recipe, -vo, on any regular verb: parlavo, leggevo, dormivo. The one verb that keeps its Latin shape: ero, era, c'era. The weather, made rather than being: faceva freddo. And the division of labour: the imperfetto paints, the passato prossimo drops the events in.
+[pause 2 seconds]
+The joint between the two is mentre. Whatever follows it is the scene, still running; the rest of the sentence is the event.
+Mentre leggevo, mia madre ha telefonato. Mentre aspettavo l'autobus, ha cominciato a piovere.
+The second one is worth hearing twice. The rain is an event here, because it began: ha cominciato. Once it is falling, it is scene again: pioveva.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: a scene in three — Faceva freddo. C'era il sole. Ero stanco.]
+[pause 8 seconds for the answer]
+[your turn — say: Mentre leggevo, mia madre ha telefonato.]
+[pause 8 seconds for the answer]
+[your turn — say: the rain as an event — ha cominciato a piovere — then as a scene — pioveva]
+[pause 8 seconds for the answer]
+[your turn — say: one of your own — Mentre plus an imperfetto, then one thing that happened]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+After mentre, which past? (The imperfetto — the scene.) Why is ha cominciato a piovere in the passato prossimo? (The rain began: that is an event.) What does imperfetto mean, taken apart? (Not carried through.) And where did its -v- come from? (The b of Latin amābam.)

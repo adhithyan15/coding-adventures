@@ -14,7 +14,8 @@ romanization: "ronā"
 concept_tag: UR-VERB-RONA
 prerequisites: [UR-C49-dhona, UR-C49-hasna]
 sounds: []
-roots: []
+roots: [sanskrit-roditi]
+etymology_hook: "ronā ← Sanskrit roditi 'weeps', a tadbhava (CDIAL 10840)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C49-hasna]
 <!-- hl-knowledge: introduces=[UR-LEX-C49-VERBS49-05]; assesses=[] -->
 
 **رونا** — *ronā* — "to cry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رونا** (*ronā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *roditi*, "weeps" (CDIAL 10840).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C430-punaise",
+    "language": "french",
+    "chapter": 430,
+    "sequence": 23830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3d8678fc8089c646"
+  },
+  "findings": []
+}

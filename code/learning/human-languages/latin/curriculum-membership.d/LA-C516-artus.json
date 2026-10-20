@@ -1,0 +1,11 @@
+{
+  "id": "LA-C516-artus",
+  "pathSegment": "LA-PATH-516-GUTT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-516-GUTT",
+      "order": 4
+    }
+  ]
+}

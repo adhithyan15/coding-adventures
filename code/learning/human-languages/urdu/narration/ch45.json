@@ -4,7 +4,7 @@
   "chapter": 45,
   "title": "Boy, Girl, Man, Neighbour, Guest",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b54fa8242afd0c65",
+  "sourceHash": "fnv1a64:47338e166626171a",
   "lessons": [
     {
       "id": "UR-C45-larka",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:44c8a3c3aaffad20",
+      "sourceHash": "fnv1a64:e76c7a8e17a081f0",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لڑکا (laṛkā) is a tadbhava, a word inherited and reshaped by sound change. It comes from laḍikka, \"child\", a form CDIAL reconstructs from its descendants (CDIAL 10924). CDIAL calls the group a \"defective\" word for children and notes similar formations in Munda."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0f6a8ae49495ffd",
+      "sourceHash": "fnv1a64:5f62ee10cb3da241",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لڑکی (laṛkī) is a tadbhava, a word inherited and reshaped by sound change. It comes from laḍikka, \"child\", a form CDIAL reconstructs from its descendants (CDIAL 10924). laṛkī is the feminine of laṛkā, \"boy\". CDIAL calls the group a \"defective\" word for children and notes similar formations in Munda."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4682c0523563d712",
+      "sourceHash": "fnv1a64:759dfa16b2812af2",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "آدمی (ādmī) is a loan from Arabic ādamī, \"human, of Adam\", which reached Urdu through Persian. Its Arabic root is ʾ-d-m (Lane). The ending -ī means \"belonging to\", so the word is \"one of Adam's\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ca41105610b16f8b",
+      "sourceHash": "fnv1a64:823c0274ff6a45de",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پڑوسی (paṛosī) is a tadbhava, a word inherited and reshaped by sound change. It comes from prativeśiya, \"neighbour\", a form CDIAL reconstructs from its descendants (CDIAL 8599). It is a variant CDIAL reconstructs beside Sanskrit prativeśya, \"neighbour\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:607b29f455e49bd7",
+      "sourceHash": "fnv1a64:8b96f77c97e5c5bb",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مہمان (mehmān) is a loan, usually traced to Persian mihmān, \"guest\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

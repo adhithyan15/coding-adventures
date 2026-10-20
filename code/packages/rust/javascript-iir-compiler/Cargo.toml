@@ -1,13 +1,21 @@
 [package]
 name = "javascript-iir-compiler"
-version = "0.1.0"
+version = "0.3.0"
 edition = "2021"
-description = "Bounded JavaScript AST to InterpreterIR compiler and native vm-core runner"
+description = "Bounded JavaScript parse tree (the generic GrammarASTNode CST from es2020.grammar, walked directly with no typed-AST lift, per LANG84) to InterpreterIR compiler and native vm-core runner"
 license = "MIT"
 
 [dependencies]
-coding-adventures-javascript-ast = { path = "../javascript-ast" }
 coding-adventures-javascript-parser = { path = "../javascript-parser" }
 coding-adventures-javascript-tokens = { path = "../javascript-tokens" }
 interpreter-ir = { path = "../interpreter-ir" }
+# `GrammarASTNode` / `ASTNodeOrToken` and `Token` — the parse-tree types the
+# compiler walks (LANG84: the IIR compiler's only input is the parse tree).
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
 vm-core = { path = "../vm-core" }
+
+[dev-dependencies]
+# Test oracle only: tests/cst_walk.rs checks the CST number decoding against
+# the typed AST's NumericLiteral values. Never a dependency of the compiler.
+coding-adventures-javascript-ast = { path = "../javascript-ast" }

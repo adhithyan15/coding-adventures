@@ -15,6 +15,7 @@ concept_tag: UR-SEHAT153-PALAK
 prerequisites: [UR-C153-mariz, UR-C153-ambulans]
 sounds: []
 roots: []
+etymology_hook: "palak 'eyelid': origin not settled; neither CDIAL nor DEDR has an entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C153-ambulans]
 <!-- hl-knowledge: introduces=[UR-LEX-C153-SEHAT153-04]; assesses=[] -->
 
 **پلک** — *palak* — "an eyelid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **پلک** (*palak*) is not settled. Neither CDIAL nor DEDR has an entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

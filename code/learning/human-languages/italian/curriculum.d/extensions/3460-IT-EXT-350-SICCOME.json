@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-350-SICCOME",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can link a cause to its result: since, as, so and therefore, and say what something is due to.",
+  "prerequisites": []
+}

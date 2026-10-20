@@ -14,7 +14,8 @@ romanization: "ātithyam"
 concept_tag: SA-COURTESY-ATITHYA
 prerequisites: [SA-C42-much, SA-C41-wheel, SA-C42-sometimes]
 sounds: []
-roots: []
+roots: [sanskrit-atithi]
+etymology_hook: "ātithya 'hospitality' ← atithi 'guest', with a lengthened first vowel and the suffix -ya (MW)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,12 @@ reviews_of: [SA-C42-much]
 The अतिथिः you already know is stretched into the treatment that guest receives, so the word names a duty rather than a person.
 
 Classically it runs in an order, and you have the words for all of it: an आसनम् first, then पानीयम्, then अन्नम्. **आतिथ्यम्** is that whole sequence in one word.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Ātithya* is built from *atithi*, "guest", by lengthening the first vowel and
+adding *-ya*, the usual way Sanskrit makes "what belongs to" a thing (MW).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

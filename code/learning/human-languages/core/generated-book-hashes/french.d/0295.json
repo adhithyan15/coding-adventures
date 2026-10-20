@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 295,
+  "sourceHash": "fnv1a64:2fcea607071a934d",
+  "lessonIds": [
+    "FR-C295-avouer",
+    "FR-C295-aveu",
+    "FR-C295-complice",
+    "FR-C295-acquitter",
+    "FR-C295-relacher"
+  ],
+  "tex": "french/book/chapters/ch295-les-aveux.tex"
+}

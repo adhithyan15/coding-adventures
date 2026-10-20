@@ -1,0 +1,11 @@
+{
+  "id": "FR-C407-creneau",
+  "pathSegment": "FR-PATH-407-STATIONNEMENT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-407-STATIONNEMENT",
+      "order": 3
+    }
+  ]
+}

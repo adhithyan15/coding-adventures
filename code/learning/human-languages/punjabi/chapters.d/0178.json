@@ -1,0 +1,22 @@
+{
+  "chapter": 178,
+  "title": "From Eight Until Ten, Then Home",
+  "label": "ch:pa-a2-schedule-sequence",
+  "canDo": "I can read and give one simple schedule with a whole-hour time, a source, an end limit, a companion, and one after-time step.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "PA-C178-baad",
+    "kind": "production",
+    "summary": "Retrieve one two-sentence schedule note through listening, speaking, reading, and bounded Gurmukhi writing after building five high-reuse forms one joint at a time.",
+    "assesses": [
+      "PA-TIME-VAJE-01",
+      "PA-POSTPOSITION-TON-SOURCE-01",
+      "PA-POSTPOSITION-TAK-LIMIT-01",
+      "PA-POSTPOSITION-NAAL-COMITATIVE-01",
+      "PA-TIME-TON-BAAD-SEQUENCE-01"
+    ],
+    "note": "This is the first prerequisite tranche exposed by Punjabi A2 mock drafting. It does not by itself unblock mock 1 and is not a mock, readiness decision, attainment claim, external equivalence, or human validation."
+  }
+}

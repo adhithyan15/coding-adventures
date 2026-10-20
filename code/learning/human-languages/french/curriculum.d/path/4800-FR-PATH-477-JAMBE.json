@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-477-JAMBE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-477-JAMBE"
+  ],
+  "after": []
+}

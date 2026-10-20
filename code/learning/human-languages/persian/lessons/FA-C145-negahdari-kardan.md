@@ -14,7 +14,8 @@ romanization: "negahdâri kardan"
 concept_tag: FA-VERB-NEGAHDARI-KARDAN
 prerequisites: [FA-C144-tayp-kardan, FA-C145-puzesh-khastan]
 sounds: []
-roots: []
+roots: [persian-negah, pie-kwer]
+etymology_hook: "negahdâri kardan: Persian negah 'watch' + dâr 'holding' + -i + kardan; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C145-puzesh-khastan]
 <!-- hl-knowledge: introduces=[FA-LEX-C145-KONESH145-02]; assesses=[] -->
 
 **نگهداری کردن** — *negahdâri kardan* — "to look after, to take care of".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*negahdâri kardan* pairs *negahdâri*, "keeping", with *kardan*. *negahdâri* is *negah*, "look, watch", with *dâr*, "holding" (from *dâshtan*), and *-i*: keeping watch. All the pieces are native. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

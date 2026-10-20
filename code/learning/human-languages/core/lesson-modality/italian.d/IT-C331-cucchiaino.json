@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C331-cucchiaino",
+    "language": "italian",
+    "chapter": 331,
+    "sequence": 19100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1c04fae799c9fe3f"
+  },
+  "findings": []
+}

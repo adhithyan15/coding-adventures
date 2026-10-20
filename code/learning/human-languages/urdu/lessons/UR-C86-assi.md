@@ -14,7 +14,8 @@ romanization: "assī"
 concept_tag: UR-NUMBERS86-ASSI
 prerequisites: [UR-C85-sath, UR-C86-sattar]
 sounds: []
-roots: []
+roots: [sanskrit-ashiti]
+etymology_hook: "assī ← Sanskrit aśīti 'eighty', a tadbhava (CDIAL 911)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C86-sattar]
 <!-- hl-knowledge: introduces=[UR-LEX-C86-NUMBERS86-02]; assesses=[] -->
 
 **اسی** — *assī* — "eighty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اسی** (*assī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *aśīti*, "eighty" (CDIAL 911).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

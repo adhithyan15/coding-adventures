@@ -1,0 +1,11 @@
+{
+  "id": "FR-C508-marathon",
+  "pathSegment": "FR-PATH-508-COURSE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-508-COURSE",
+      "order": 2
+    }
+  ]
+}

@@ -14,7 +14,8 @@ romanization: "idhan"
 concept_tag: AR-SABAB174-IDHAN
 prerequisites: [AR-C174-natija, AR-C174-li-dhalika]
 sounds: []
-roots: []
+roots: [idhan-then]
+etymology_hook: "idhan: an old particle of consequence with no three-letter root; deeper origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C174-li-dhalika]
 <!-- hl-knowledge: introduces=[AR-LEX-C174-SABAB174-04]; assesses=[] -->
 
 **إذن** — *idhan* — "so, then".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**إذن** (*idhan*) is an old particle of consequence, "then, in that case". It is not built on a three-letter root, and its deeper origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

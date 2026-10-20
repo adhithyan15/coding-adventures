@@ -14,7 +14,8 @@ romanization: "paṭṭī"
 concept_tag: UR-SEHAT244-PATTI
 prerequisites: [UR-C244-chhala, UR-C244-nishan]
 sounds: []
-roots: []
+roots: [sanskrit-patta]
+etymology_hook: "paṭṭī ← Sanskrit paṭṭa 'cloth; bandage', a tadbhava (CDIAL 7700)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C244-nishan]
 <!-- hl-knowledge: introduces=[UR-LEX-C244-SEHAT244-03]; assesses=[] -->
 
 **پٹی** — *paṭṭī* — "a bandage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پٹی** (*paṭṭī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *paṭṭa*, "cloth; bandage" (CDIAL 7700). CDIAL thinks the word probably came from a non-Aryan source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

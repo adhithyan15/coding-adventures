@@ -4,7 +4,7 @@
   "chapter": 52,
   "title": "Welcoming a Guest",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:16e753a3395d52ed",
+  "sourceHash": "fnv1a64:d02fb6d3d4f0eae5",
   "lessons": [
     {
       "id": "KA-C52-door",
@@ -569,7 +569,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:afe3fa0df0f86edb",
+      "sourceHash": "fnv1a64:87056e0ad07f5025",
       "notice": null,
       "blocks": [
         {

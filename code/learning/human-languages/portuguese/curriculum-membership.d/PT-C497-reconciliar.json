@@ -1,0 +1,11 @@
+{
+  "id": "PT-C497-reconciliar",
+  "pathSegment": "PT-PATH-497-SEPARACAO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-497-SEPARACAO",
+      "order": 4
+    }
+  ]
+}

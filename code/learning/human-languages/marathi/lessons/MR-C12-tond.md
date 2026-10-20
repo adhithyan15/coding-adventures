@@ -12,7 +12,7 @@ concept_tag: MR-BODY-MOUTH
 prerequisites: [MR-C12-kaan]
 sounds: []
 roots: [sanskrit-tunda]
-etymology_hook: "तोंड continues Maharastri Prakrit tuṃḍa, from Sanskrit तुण्ड tuṇḍa, \"mouth, snout, beak\" — the everyday word, standing beside the formal doublet मुख mukh borrowed straight from Sanskrit, the same everyday-versus-formal pattern kuṭumb showed for a whole household rather than one body part"
+etymology_hook: "तोंड ← Prakrit tuṃḍa ← Sanskrit tuṇḍa 'mouth, snout, beak'; formal मुख is a tatsama beside it"
 duration:
   max_seconds: 250
 requires:

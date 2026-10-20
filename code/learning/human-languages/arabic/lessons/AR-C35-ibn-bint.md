@@ -12,7 +12,7 @@ romanization: ibn, bint
 prerequisites: [AR-C35-jar]
 sounds: [rtl-known-letters]
 roots: [b-n]
-etymology_hook: "ابن (ibn, 'son') and بنت (bint, 'daughter') are gendered by the added ت alone, the same single letter that separates أخ (akh) from أخت (ukht); Arab grammarians file them under ب-ن-ي, 'to build', but comparative Semitists suspect an older primitive noun instead, since Hebrew בֵּן (ben) and בַּת (bat, from an earlier bint whose ن assimilated) show the same bare shape; the word stands unchanged in Ibn Sīnā and Ibn Baṭṭūṭa, and no English word descends from it"
+etymology_hook: "ibn, bint: filed by the grammarians under b-n-y, though Hebrew ben and bat suggest an older primitive noun"
 duration:
   max_seconds: 240
 requires:

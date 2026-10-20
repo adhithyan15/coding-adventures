@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:b4ab90afd0f2a545",
+  "lessonIds": [
+    "LA-C375-contingo",
+    "LA-C375-exsisto",
+    "LA-C375-fortuitus",
+    "LA-C375-inopinatus",
+    "LA-C375-motus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch375.txt",
+  "json": "latin/narration/ch375.json",
+  "textHash": "fnv1a64:26a71a4412114304",
+  "jsonHash": "fnv1a64:68039288d4182ac9",
+  "findings": []
+}

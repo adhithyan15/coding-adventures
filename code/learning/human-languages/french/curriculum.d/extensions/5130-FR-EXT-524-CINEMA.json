@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-524-CINEMA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about how a film is made and shown.",
+  "prerequisites": []
+}

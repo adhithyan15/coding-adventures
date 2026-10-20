@@ -14,7 +14,8 @@ romanization: "pandrah"
 concept_tag: UR-NUMBERS84-PANDRAH
 prerequisites: [UR-C83-terah, UR-C84-chaudah]
 sounds: []
-roots: []
+roots: [sanskrit-panchadasha]
+etymology_hook: "pandrah ← Sanskrit pañcadaśa 'fifteen', a tadbhava (CDIAL 7662)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C84-chaudah]
 <!-- hl-knowledge: introduces=[UR-LEX-C84-NUMBERS84-02]; assesses=[] -->
 
 **پندرہ** — *pandrah* — "fifteen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پندرہ** (*pandrah*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pañcadaśa*, "fifteen" (CDIAL 7662).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

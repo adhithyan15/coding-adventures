@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 173,
-  "sourceHash": "fnv1a64:8f4bb819baf145b8",
+  "sourceHash": "fnv1a64:fbf8b6e68aadf1d9",
   "lessonIds": [
     "FA-C173-noqre",
     "FA-C173-mes",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch173.txt",
   "json": "persian/narration/ch173.json",
-  "textHash": "fnv1a64:c744b774492fa209",
-  "jsonHash": "fnv1a64:8600a7990dfb2614",
+  "textHash": "fnv1a64:8e1ae231449f0af4",
+  "jsonHash": "fnv1a64:83fe3a7a75e04377",
   "findings": []
 }

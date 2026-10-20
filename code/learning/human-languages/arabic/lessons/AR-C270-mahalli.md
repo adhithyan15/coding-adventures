@@ -14,7 +14,8 @@ romanization: "maḥallī"
 concept_tag: AR-SIFA270-MAHALLI
 prerequisites: [AR-C270-mutah, AR-C270-duwali]
 sounds: []
-roots: []
+roots: [ḥ-l-l]
+etymology_hook: "maḥallī: built on the root ḥ-l-l, 'to untie' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C270-duwali]
 <!-- hl-knowledge: introduces=[AR-LEX-C270-SIFA270-05]; assesses=[] -->
 
 **محلي** — *maḥallī* — "local".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**محلي** (*maḥallī*) is built on the native Arabic root *ḥ-l-l*, "to untie; to alight" (Lane). *Maḥallī* is *maḥall*, "a place of alighting", with the adjective ending *-ī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

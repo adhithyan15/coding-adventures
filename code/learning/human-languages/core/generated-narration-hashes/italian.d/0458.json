@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 458,
+  "sourceHash": "fnv1a64:4942c216d514f070",
+  "lessonIds": [
+    "IT-C458-raccomandata",
+    "IT-C458-spedizione",
+    "IT-C458-mittente",
+    "IT-C458-affrancare",
+    "IT-C458-recapitare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch458.txt",
+  "json": "italian/narration/ch458.json",
+  "textHash": "fnv1a64:9c5d043e38386cc9",
+  "jsonHash": "fnv1a64:4873948bf64c370e",
+  "findings": []
+}

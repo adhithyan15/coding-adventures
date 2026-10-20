@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C658-crucero",
+    "language": "spanish",
+    "chapter": 658,
+    "sequence": 22730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b1bd28b989c40a03"
+  },
+  "findings": []
+}

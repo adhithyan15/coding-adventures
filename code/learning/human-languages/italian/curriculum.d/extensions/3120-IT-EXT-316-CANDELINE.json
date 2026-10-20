@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-316-CANDELINE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a birthday party: the candles, the birthday person, wrapping presents, bows and balloons.",
+  "prerequisites": []
+}

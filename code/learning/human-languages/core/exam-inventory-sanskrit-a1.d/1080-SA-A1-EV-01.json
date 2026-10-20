@@ -1,0 +1,21 @@
+{
+  "id": "SA-A1-EV-01",
+  "category": "Evaluative notions",
+  "label": "general evaluation: good and its opposite",
+  "probe": [
+    "SA-LEX-C15-ADJ-03",
+    "SA-LEX-C27-REPLY-02",
+    "SA-LEX-C28-LEAVE-04"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-NG6-01",
+    "A1-NG6-04",
+    "A1-NG6-07"
+  ],
+  "note": "uttama, sādhu and śubham are all POSITIVE. There is no taught word for bad — no pāpa, no duṣṭa, no asādhu — so a learner can praise and not criticise. Counted covered because the proxy point names good first, and flagged because the missing antonym is the real finding."
+}

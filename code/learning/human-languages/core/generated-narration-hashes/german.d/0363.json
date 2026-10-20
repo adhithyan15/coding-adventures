@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 363,
+  "sourceHash": "fnv1a64:49b8f168fc73efea",
+  "lessonIds": [
+    "GE-C363-umweltschutz",
+    "GE-C363-klimawandel",
+    "GE-C363-nachhaltig",
+    "GE-C363-recyceln",
+    "GE-C363-verbrauchen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch363.txt",
+  "json": "german/narration/ch363.json",
+  "textHash": "fnv1a64:fef1ff719de4a87c",
+  "jsonHash": "fnv1a64:5865ae37b2fe7bb7",
+  "findings": []
+}

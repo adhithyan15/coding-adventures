@@ -14,7 +14,8 @@ romanization: "same"
 concept_tag: JA-THINGS108-SAME
 prerequisites: [JA-C108-kai, JA-C108-tai]
 sounds: []
-roots: []
+roots: [japanese-same]
+etymology_hook: "same: native Japanese, inherited, not borrowed; usually kana, kanji 鮫 as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C108-tai]
 <!-- hl-knowledge: introduces=[JA-LEX-C108-THINGS108-03]; assesses=[] -->
 
 **さめ** — *same* — "a shark".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**さめ** (*same*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

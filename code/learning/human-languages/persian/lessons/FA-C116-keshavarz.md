@@ -14,7 +14,8 @@ romanization: "keshâvarz"
 concept_tag: FA-THINGS116-KESHAVARZ
 prerequisites: [FA-C115-ashpaz, FA-C115-kargar]
 sounds: []
-roots: []
+roots: [persian-keshavarz]
+etymology_hook: "keshâvarz: inherited, usually traced to Middle Persian kišāwarz"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C115-kargar]
 <!-- hl-knowledge: introduces=[FA-LEX-C116-THINGS116-01]; assesses=[] -->
 
 **کشاورز** — *keshâvarz* — "a farmer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*keshâvarz* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *kišāwarz*, "farmer". It is usually explained as built on *keš-*, "to plough".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

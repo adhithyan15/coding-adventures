@@ -14,7 +14,8 @@ romanization: "vicāraḥ"
 concept_tag: SA-WRK256-VICARAH
 prerequisites: [SA-C256-sammelanam, SA-C256-nirnayah]
 sounds: []
-roots: []
+roots: [sanskrit-vicara]
+etymology_hook: "vicāra ← vi + √car 'move about': 'moving to and fro', then 'pondering' (MW; CDIAL 11683)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C256-nirnayah]
 <!-- hl-knowledge: introduces=[SA-LEX-C256-WRK256-04]; assesses=[] -->
 
 **विचारः** — *vicāraḥ* — "a thought, an idea".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vicāra* is built on *vi-*, "apart, about", and the root √car, "to move" (MW): first "mode of acting", then "pondering, deliberation" (CDIAL 11683). Thought is the mind moving to and fro.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,19 @@
+{
+  "chapter": 322,
+  "title": "Die Zutaten",
+  "label": "ch:ge-die-zutaten",
+  "canDo": "I can get ready to cook: an ingredient, a pinch, a tablespoon, to measure out and a bowl.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C322-schuessel",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 322: I can get ready to cook: an ingredient, a pinch, a tablespoon, to measure out and a bowl.",
+    "assesses": [
+      "GE-LEX-C322-ZUTAT-03",
+      "GE-LEX-C322-ZUTAT-04",
+      "GE-LEX-C322-ZUTAT-05"
+    ]
+  }
+}

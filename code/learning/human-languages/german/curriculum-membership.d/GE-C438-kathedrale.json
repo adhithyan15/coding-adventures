@@ -1,0 +1,11 @@
+{
+  "id": "GE-C438-kathedrale",
+  "pathSegment": "GE-PATH-438-ALTSTADT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-438-ALTSTADT",
+      "order": 1
+    }
+  ]
+}

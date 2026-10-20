@@ -19,6 +19,7 @@ And the ما inside it is the same particle the last chapter taught as the negat
 The word, taken apart.
 لماذا and هل are the two ends of Arabic questioning. هل asks for a yes or a no and adds no information; لماذا asks for a whole clause back, and the next lesson supplies the word that clause begins with.
 The letter ذال in the middle of this word has no lesson in this track's script ladder yet, so the word is printed whole here, in the lesson that owns it, and named in romanization wherever else it appears.
+Limādhā is built from li-, "for", and mādhā, "what": native particles with no borrowed part.
 
 Guided Practice.
 [pause 1 second]
@@ -56,6 +57,9 @@ Grammar Lens: the claim, then the reason.
 head word: لكن. what follows it: an objection.
 head word: لأن (li-anna). what follows it: a reason.
 Both stand at the head of the clause they govern, and both come after the claim they attach to. Put them in one sentence and you have the shape of an argument.
+
+The word, taken apart.
+لأن (li-anna) is built from li-, "for", and anna, "that": "for that", hence "because". Both are inherited particles, not built on three-letter roots.
 
 Guided Practice.
 [pause 1 second]
@@ -122,6 +126,7 @@ The clause it opens can come first or second, and Arabic marks the seam with a c
 The word, taken apart.
 حين is an ordinary noun meaning a time, a moment, and ما is the same general particle you have now met three times: as what in chapter two, as the past-tense negator in chapter thirty-nine, and inside limādhā in this chapter. Stuck onto حين it makes at-the-moment-that.
 Arabic writes another word here, ʿindamā, built the same way on a preposition meaning at. It is the commoner of the two in modern prose and it needs a letter this track's script ladder has not reached, so it is named in romanization and left for a script lesson. حينما (ḥīnamā) costs no new letters at all.
+Ḥīn is built on the native root ḥ-y-n, "(of a time) to draw near" (Lane).
 
 Guided Practice.
 [pause 1 second]

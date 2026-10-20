@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-436-PUPPIS",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "LA-EXT-436-PUPPIS"
+  ],
+  "after": []
+}

@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a playground, then the Sanskrit for an 
 You'll want to know: धूलिः.
 धूलिः — dhūliḥ — "dust".
 
+The word, taken apart.
+dhūli "dust, powder, pollen" is inherited from Indo-European, with Latin fūlīgō "soot" as a cousin (EtymDB); MW queries a link with √dhū "shake". It lives on as Hindi dhūl and Marathi dhūḷ "dust" (CDIAL 6835).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for an airport, then the Sanskrit for dust.
 
 You'll want to know: धूमः.
 धूमः — dhūmaḥ — "smoke".
+
+The word, taken apart.
+dhūma "smoke" is old, in the Rigveda, and is inherited from Indo-European: MW sets it beside Latin fumus, the source of English fume (EtymDB agrees). It lives on as Hindi dhūāṁ "smoke" (CDIAL 6849).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for dust, then the Sanskrit for smoke.
 You'll want to know: ज्वाला.
 ज्वाला — jvālā — "a flame".
 
+The word, taken apart.
+jvālā comes from the root √jval "blaze, glow, burn brightly" (MW): "a flame, a blaze". jvalati "burns" is the verb of the same root.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for smoke, then the Sanskrit for a flame.
 You'll want to know: अंगारः.
 अंगारः — aṅgāraḥ — "a live coal".
 
+The word, taken apart.
+aṅgāra "charcoal, a live coal" is old, in the Rigveda, and is inherited from Indo-European: MW sets it beside Lithuanian anglis and Russian ugol' "coal", and EtymDB agrees. It lives on as Hindi aṅgār, aṅgārā "glowing charcoal" (CDIAL 125).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a flame, then the Sanskrit for a live c
 
 You'll want to know: लौहम्.
 लौहम् — lauham — "iron".
+
+The word, taken apart.
+lauha is built from loha "red; copper; iron" with the first vowel strengthened (CDIAL 11172a): "made of metal", and so "iron". MW connects loha with a lost root meaning "be red", and CDIAL 11158 does too; loha lives on as Hindi lohā "iron".
 
 What you've built.
 One more word for this chapter.

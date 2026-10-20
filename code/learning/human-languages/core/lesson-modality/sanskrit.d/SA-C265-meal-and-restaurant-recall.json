@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C265-meal-and-restaurant-recall",
+    "language": "sanskrit",
+    "chapter": 265,
+    "sequence": 15700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1972f594e54ef296"
+  },
+  "findings": []
+}

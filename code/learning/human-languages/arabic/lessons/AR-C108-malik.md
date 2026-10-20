@@ -14,7 +14,8 @@ romanization: "mālik"
 concept_tag: AR-CAN108-MALIK
 prerequisites: [AR-C108-quwwa, AR-C108-haqq]
 sounds: []
-roots: []
+roots: [m-l-k]
+etymology_hook: "mālik: built on the root m-l-k, 'to own, to possess' (Lane); mālik is the active participle, 'one who owns'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C108-haqq]
 <!-- hl-knowledge: introduces=[AR-LEX-C108-CAN108-05]; assesses=[] -->
 
 **مالك** — *mālik* — "an owner".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مالك** (*mālik*) is built on the native Arabic root *m-l-k*, "to own, to possess" (Lane). *Mālik* is the active participle, "one who owns".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

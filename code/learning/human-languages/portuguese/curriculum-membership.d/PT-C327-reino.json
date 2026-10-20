@@ -1,0 +1,11 @@
+{
+  "id": "PT-C327-reino",
+  "pathSegment": "PT-PATH-327-REINO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-327-REINO",
+      "order": 2
+    }
+  ]
+}

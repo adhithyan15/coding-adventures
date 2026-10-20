@@ -14,7 +14,8 @@ romanization: "phephṛā"
 concept_tag: UR-SEHAT186-PHEPHRA
 prerequisites: [UR-C186-hatheli, UR-C186-jigar]
 sounds: []
-roots: []
+roots: [sanskrit-phupphusa]
+etymology_hook: "phephṛā ← Sanskrit phupphusa 'lungs', a tadbhava (CDIAL 9090)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C186-jigar]
 <!-- hl-knowledge: introduces=[UR-LEX-C186-SEHAT186-05]; assesses=[] -->
 
 **پھیپھڑا** — *phephṛā* — "a lung".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پھیپھڑا** (*phephṛā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *phupphusa*, "lungs" (CDIAL 9090). CDIAL thinks it probably imitates the sound of blowing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

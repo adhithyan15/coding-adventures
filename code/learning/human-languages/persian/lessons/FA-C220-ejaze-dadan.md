@@ -14,7 +14,8 @@ romanization: "ejâze dâdan"
 concept_tag: FA-VERB-EJAZE-DADAN
 prerequisites: [FA-C219-busidan, FA-C219-labkhand-zadan]
 sounds: []
-roots: []
+roots: [arabic-ijaza]
+etymology_hook: "ejâze ← Arabic ijāza 'permission', root j-w-z (Lane), + Persian dâdan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C219-labkhand-zadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C220-KONESH220-01]; assesses=[] -->
 
 **اجازه دادن** — *ejâze dâdan* — "to allow, to permit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ejâze dâdan* pairs *ejâze*, borrowed from Arabic *ijāza*, "permission" (root *j-w-z*, Lane), with the Persian verb *dâdan*, "to give". *dâdan*, "to give", is an inherited verb; EtymDB takes it back to the Indo-European root *\*deh₃-*, "to give".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

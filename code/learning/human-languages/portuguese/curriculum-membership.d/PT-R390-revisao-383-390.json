@@ -1,0 +1,11 @@
+{
+  "id": "PT-R390-revisao-383-390",
+  "pathSegment": "PT-PATH-390-CULPA",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PT-EXT-390-CULPA",
+      "order": 5
+    }
+  ]
+}

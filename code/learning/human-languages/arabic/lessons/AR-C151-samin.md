@@ -14,7 +14,8 @@ romanization: "samīn"
 concept_tag: AR-QUAL151-SAMIN
 prerequisites: [AR-C150-dayyiq, AR-C151-nahif]
 sounds: []
-roots: []
+roots: [s-m-n]
+etymology_hook: "samīn: built on the root s-m-n, 'to be fat' (Lane); the same root gives samn, 'clarified butter'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C151-nahif]
 <!-- hl-knowledge: introduces=[AR-LEX-C151-QUAL151-02]; assesses=[] -->
 
 **سمين** — *samīn* — "fat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سمين** (*samīn*) is built on the native Arabic root *s-m-n*, "to be fat" (Lane). The same root gives *samn*, "clarified butter".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

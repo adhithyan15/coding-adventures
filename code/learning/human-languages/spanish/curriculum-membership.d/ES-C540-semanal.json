@@ -1,0 +1,11 @@
+{
+  "id": "ES-C540-semanal",
+  "pathSegment": "ES-PATH-540-TEMPORADA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-540-TEMPORADA",
+      "order": 3
+    }
+  ]
+}

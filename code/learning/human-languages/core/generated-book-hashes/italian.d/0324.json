@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:8f762debe8ffe6ca",
+  "lessonIds": [
+    "IT-C324-eroe",
+    "IT-C324-leggenda",
+    "IT-C324-mito",
+    "IT-C324-finale",
+    "IT-C324-morale"
+  ],
+  "tex": "italian/book/chapters/ch324-miti-ed-eroi.tex"
+}

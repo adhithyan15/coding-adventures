@@ -14,7 +14,8 @@ romanization: "fuṭpāth"
 concept_tag: UR-JAGAH157-FUTPATH
 prerequisites: [UR-C157-jagah, UR-C157-mohalla]
 sounds: []
-roots: []
+roots: [english-footpath]
+etymology_hook: "fuṭpāth ← English footpath"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C157-mohalla]
 <!-- hl-knowledge: introduces=[UR-LEX-C157-JAGAH157-03]; assesses=[] -->
 
 **فٹ پاتھ** — *fuṭpāth* — "a pavement".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فٹ پاتھ** (*fuṭpāth*) is a loan from English *footpath*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "girjā ghar"
 concept_tag: UR-JAGAH191-GIRJA-GHAR
 prerequisites: [UR-C190-makan, UR-C191-chae-khana]
 sounds: []
-roots: []
+roots: [portuguese-igreja, grha-sanskrit]
+etymology_hook: "girjā usually traced to Portuguese igreja 'church'; ghar 'house' (CDIAL 4428)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C191-chae-khana]
 <!-- hl-knowledge: introduces=[UR-LEX-C191-JAGAH191-02]; assesses=[] -->
 
 **گرجا گھر** — *girjā ghar* — "a church".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**گرجا گھر** (*girjā ghar*) is "church house". *girjā* is usually traced to Portuguese *igreja*, "church". *ghar*, "house", is inherited; it is usually taken as a popular form of Sanskrit *gṛha*, a link CDIAL calls phonetically difficult (CDIAL 4428).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "nādil"
 concept_tag: AR-AMAL251-NADIL
 prerequisites: [AR-C250-mattat, AR-C250-muthallath]
 sounds: []
-roots: []
+roots: [n-d-l]
+etymology_hook: "nādil: a modern word, shaped as a participle of n-d-l (Lane); how the waiter sense arose is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C250-muthallath]
 <!-- hl-knowledge: introduces=[AR-LEX-C251-AMAL251-01]; assesses=[] -->
 
 **نادل** — *nādil* — "a waiter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نادل** (*nādil*) is a modern word for a waiter. It has the shape of an active participle of *n-d-l*, a root Lane uses for *mindīl*, "a napkin"; how the waiter sense arose is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

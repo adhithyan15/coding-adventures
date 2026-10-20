@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:46bc58c42c5cf64a",
+  "sourceHash": "fnv1a64:7cee5484f137300c",
   "lessons": [
     {
       "id": "ML-C02-peru",
@@ -911,7 +911,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0f66296dd4a80d3e",
+      "sourceHash": "fnv1a64:7057233da6b06086",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1014,11 +1014,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say athe, then say illa",
+              "instruction": "say ate, then say illa",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *athe*, then say *illa*]"
+              "source": "[YOU RECALL: say *ate*, then say *illa*]"
             },
             {
               "kind": "prompt",

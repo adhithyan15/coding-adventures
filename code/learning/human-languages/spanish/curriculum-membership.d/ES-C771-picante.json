@@ -1,0 +1,11 @@
+{
+  "id": "ES-C771-picante",
+  "pathSegment": "ES-PATH-771-SABOR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-771-SABOR",
+      "order": 1
+    }
+  ]
+}

@@ -1,7 +1,8 @@
 use der_asn1::{
-    decode_bit_string, decode_boolean, decode_ia5_string, decode_implicit_ia5_string,
-    decode_implicit_object_identifier, decode_implicit_octet_string, decode_integer, decode_null,
-    decode_object_identifier, decode_octet_string, Asn1Decoder, Asn1ErrorKind, Asn1Limits,
+    decode_bit_string, decode_boolean, decode_ia5_string, decode_implicit_bit_string,
+    decode_implicit_ia5_string, decode_implicit_object_identifier, decode_implicit_octet_string,
+    decode_integer, decode_null, decode_object_identifier, decode_octet_string, Asn1Decoder,
+    Asn1ErrorKind, Asn1Limits,
 };
 
 fn decode(input: &[u8]) -> (Asn1Decoder, der_asn1::Asn1Element<'_>) {
@@ -55,6 +56,28 @@ fn implicit_primitive_values_require_the_exact_context_tag() {
             Asn1ErrorKind::UnexpectedTag
         );
     }
+}
+
+#[test]
+fn implicit_bit_strings_reuse_canonical_content_validation() {
+    let (_, element) = decode(&[0x81, 0x02, 0x03, 0xa0]);
+    let bits = decode_implicit_bit_string(element, 1).unwrap();
+    assert_eq!(bits.bytes(), &[0xa0]);
+    assert_eq!(bits.unused_bits(), 3);
+    assert_eq!(bits.bit_len(), 5);
+
+    assert_eq!(
+        decode_implicit_bit_string(element, 2).unwrap_err().kind(),
+        Asn1ErrorKind::UnexpectedTag
+    );
+
+    let (_, non_zero_padding) = decode(&[0x81, 0x02, 0x03, 0xa1]);
+    assert_eq!(
+        decode_implicit_bit_string(non_zero_padding, 1)
+            .unwrap_err()
+            .kind(),
+        Asn1ErrorKind::NonZeroBitPadding
+    );
 }
 
 #[test]

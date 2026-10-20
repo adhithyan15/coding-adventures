@@ -1,0 +1,11 @@
+{
+  "id": "IT-C319-mascherarsi",
+  "pathSegment": "IT-PATH-319-CARNEVALE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-319-CARNEVALE",
+      "order": 3
+    }
+  ]
+}

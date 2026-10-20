@@ -14,7 +14,8 @@ romanization: "mufīd"
 concept_tag: AR-QUAL146-MUFID
 prerequisites: [AR-C145-murih, AR-C145-mashhur, AR-C15-ad-duhr-muntasaf-al-layl, AR-C15-ad-duhr-muntasaf-al-layl]
 sounds: []
-roots: []
+roots: [f-y-d]
+etymology_hook: "mufīd: built on the root f-y-d, 'to benefit' (Lane); mufīd is the Form IV participle, 'giving benefit'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [AR-C145-mashhur]
 <!-- hl-knowledge: introduces=[AR-LEX-C146-QUAL146-01]; assesses=[] -->
 
 **مفيد** — *mufīd* — "useful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مفيد** (*mufīd*) is built on the native Arabic root *f-y-d*, "to benefit" (Lane). *Mufīd* is the Form IV participle, "giving benefit".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

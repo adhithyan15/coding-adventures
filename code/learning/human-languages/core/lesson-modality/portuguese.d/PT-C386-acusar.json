@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C386-acusar",
+    "language": "portuguese",
+    "chapter": 386,
+    "sequence": 21820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ec42870c6d69bfc8"
+  },
+  "findings": []
+}

@@ -6,7 +6,7 @@ sequence: 560
 chapter: 32
 type: phrase
 headword: bonum māne
-gloss: "good morning" — a modern, pedagogical phrase (not classically attested); unlike bonam noctem, its grammar is genuinely invisible, since māne is neuter and Latin neuters never distinguish nominative from accusative — Romans instead had a real, richly documented morning GREETING RITUAL, the salūtātiō, whose root is a doublet of salvē's own
+gloss: '"good morning" — a modern, pedagogical phrase (not classically attested); unlike bonam noctem, its grammar is genuinely invisible, since māne is neuter and Latin neuters never distinguish nominative from accusative — Romans instead had a real, richly documented morning GREETING RITUAL, the salūtātiō, whose root is a doublet of salvē''s own'
 concept_tag: GREETING-MORNING
 prerequisites: [LA-C31-mane, LA-C01-salve]
 sounds: [macron-long-vowel]

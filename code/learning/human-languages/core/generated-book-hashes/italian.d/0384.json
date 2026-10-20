@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 384,
+  "sourceHash": "fnv1a64:9a50d3941b51f46e",
+  "lessonIds": [
+    "IT-C384-norma",
+    "IT-C384-regolamento",
+    "IT-C384-obbligatorio",
+    "IT-C384-facoltativo",
+    "IT-C384-obbligo"
+  ],
+  "tex": "italian/book/chapters/ch384-le-regole.tex"
+}

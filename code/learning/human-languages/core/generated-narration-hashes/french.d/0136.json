@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 136,
-  "sourceHash": "fnv1a64:7b82ba43aebf1e64",
+  "sourceHash": "fnv1a64:dfca38cba51ee682",
   "lessonIds": [
     "FR-C136-zero",
     "FR-C136-soixante",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch136.txt",
   "json": "french/narration/ch136.json",
-  "textHash": "fnv1a64:4c15a953a3687d45",
-  "jsonHash": "fnv1a64:aee08da2de51dc99",
+  "textHash": "fnv1a64:bfeb1a3aa06a2212",
+  "jsonHash": "fnv1a64:1a607ac7b0379474",
   "findings": []
 }

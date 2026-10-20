@@ -14,7 +14,8 @@ romanization: "houhou"
 concept_tag: JA-CAN97-HOUHOU
 prerequisites: [JA-C97-tsukaimichi, JA-C97-shudan]
 sounds: []
-roots: []
+roots: [middle-chinese-pjang, middle-chinese-pjop]
+etymology_hook: "houhou: Sino-Japanese 方 'way' + 法 'law', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C97-shudan]
 <!-- hl-knowledge: introduces=[JA-LEX-C97-CAN97-04]; assesses=[] -->
 
 **ほうほう** — *houhou* — "a method".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ほうほう** (*houhou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *hō*, "way, direction" (Middle Chinese *pjang*) and *hō*, "law, method" (*pjop*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

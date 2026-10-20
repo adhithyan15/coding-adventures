@@ -1,0 +1,15 @@
+{
+  "language": "punjabi",
+  "chapter": 179,
+  "sourceHash": "fnv1a64:4eddbbcc1eeeeb5a",
+  "lessonIds": [
+    "PA-C179-samaa",
+    "PA-C179-savere",
+    "PA-C179-khullha",
+    "PA-C179-dupahir",
+    "PA-C179-band",
+    "PA-C179-status-review",
+    "PA-C179-payoff"
+  ],
+  "tex": "punjabi/book/chapters/ch179-morning-open-afternoon-closed.tex"
+}

@@ -14,7 +14,8 @@ romanization: "pansārī"
 concept_tag: UR-KAM263-PANSARI
 prerequisites: [UR-C263-nanbai, UR-C263-halvai]
 sounds: []
-roots: []
+roots: [sanskrit-prasarin]
+etymology_hook: "pansārī ← Sanskrit prasārin 'spreading out', crossed with paṇyaśālā 'shop' (CDIAL 8839)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C263-halvai]
 <!-- hl-knowledge: introduces=[UR-LEX-C263-KAM263-03]; assesses=[] -->
 
 **پنساری** — *pansārī* — "a grocer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پنساری** (*pansārī*) comes from Sanskrit *prasārin*, "spreading out", a trader who spreads out his goods. CDIAL explains the *n* as a blend with *paṇyaśālā*, "a shop" (CDIAL 8839).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

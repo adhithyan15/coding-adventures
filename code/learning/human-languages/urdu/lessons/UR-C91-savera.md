@@ -14,7 +14,8 @@ romanization: "saverā"
 concept_tag: UR-TIME91-SAVERA
 prerequisites: [UR-C90-idhar, UR-C91-dopahar]
 sounds: []
-roots: []
+roots: [indo-aryan-savela]
+etymology_hook: "saverā ← *savela 'in time, early', a reconstructed form; a tadbhava (CDIAL 13291)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C91-dopahar]
 <!-- hl-knowledge: introduces=[UR-LEX-C91-TIME91-02]; assesses=[] -->
 
 **سویرا** — *saverā* — "early morning".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سویرا** (*saverā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*savela*, "in time, early", a form CDIAL reconstructs from its descendants (CDIAL 13291). It is built from *sa-*, "with", and *velā*, "time".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

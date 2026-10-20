@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C501-affectus",
+    "language": "latin",
+    "chapter": 501,
+    "sequence": 26630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5f95e156c2985206"
+  },
+  "findings": []
+}

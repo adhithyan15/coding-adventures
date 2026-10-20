@@ -14,7 +14,8 @@ romanization: "pichhlā"
 concept_tag: UR-TIME95-PICHHLA
 prerequisites: [UR-C95-tarikh, UR-C95-ajkal]
 sounds: []
-roots: []
+roots: [indo-aryan-pashca]
+etymology_hook: "pichhlā: pīchhe 'behind' (CDIAL 7990) with an -l- ending; CDIAL has no entry for pichhlā itself"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C95-ajkal]
 <!-- hl-knowledge: introduces=[UR-LEX-C95-TIME95-04]; assesses=[] -->
 
 **پچھلا** — *pichhlā* — "last, previous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پچھلا** (*pichhlā*) is built on *pīchhe*, "behind", which CDIAL lists under a reconstructed *\*paśca*, "hinder part" (CDIAL 7990), with an *-l-* ending. CDIAL does not list *pichhlā* itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

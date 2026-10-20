@@ -14,7 +14,8 @@ romanization: "muqābalā karnā"
 concept_tag: UR-VERB-MUQABALA-KARNA
 prerequisites: [UR-C241-ponchhna, UR-C242-shikayat-karna]
 sounds: []
-roots: []
+roots: [arabic-muqabala, kr-do]
+etymology_hook: "muqābala ← Arabic muqābala 'facing each other', through Persian (Lane, root q-b-l); karnā (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C242-shikayat-karna]
 <!-- hl-knowledge: introduces=[UR-LEX-C242-ACT242-02]; assesses=[] -->
 
 **مقابلہ کرنا** — *muqābalā karnā* — "to compete".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مقابلہ کرنا** (*muqābalā karnā*) joins *muqābalā*, "a contest", and *karnā*, "to do". *muqābalā* is Arabic *muqābala*, "facing one another", which reached Urdu through Persian (Lane, root *q-b-l*); *karnā* comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

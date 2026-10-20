@@ -1,0 +1,11 @@
+{
+  "id": "LA-C357-opinio",
+  "pathSegment": "LA-PATH-357-SENTENTIA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-357-SENTENTIA",
+      "order": 4
+    }
+  ]
+}

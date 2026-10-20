@@ -14,7 +14,8 @@ romanization: "mune"
 concept_tag: JA-BODY20-MUNE
 prerequisites: [JA-C20-hiza, JA-C20-nodo]
 sounds: []
-roots: []
+roots: [japanese-mune]
+etymology_hook: "mune: native Japanese, inherited, not borrowed; kanji 胸 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C20-nodo]
 <!-- hl-knowledge: introduces=[JA-LEX-C20-BODY20-05]; assesses=[] -->
 
 **むね** — *mune* — "the chest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**むね** (*mune*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

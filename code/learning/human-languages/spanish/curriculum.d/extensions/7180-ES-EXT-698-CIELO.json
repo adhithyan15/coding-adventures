@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-698-CIELO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say whether the sky is cloudy, clear or sunny, and whether it is clearing up.",
+  "prerequisites": []
+}

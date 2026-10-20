@@ -1,0 +1,11 @@
+{
+  "id": "GE-C433-verirren",
+  "pathSegment": "GE-PATH-433-KOMPASS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-433-KOMPASS",
+      "order": 4
+    }
+  ]
+}

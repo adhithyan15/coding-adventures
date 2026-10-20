@@ -1,0 +1,19 @@
+{
+  "chapter": 442,
+  "title": "O centro histórico",
+  "label": "ch:pt-o-centro-historico",
+  "canDo": "I can describe an old town: the walls, the fortress, the monastery, the cloister and wandering round.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C442-deambular",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 442: I can describe an old town: the walls, the fortress, the monastery, the cloister and wandering round.",
+    "assesses": [
+      "PT-LEX-C442-HISTORICO-03",
+      "PT-LEX-C442-HISTORICO-04",
+      "PT-LEX-C442-HISTORICO-05"
+    ]
+  }
+}

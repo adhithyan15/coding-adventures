@@ -14,7 +14,8 @@ romanization: "kasūl"
 concept_tag: AR-QUAL153-KASUL
 prerequisites: [AR-C152-sulb, AR-C152-dhaki]
 sounds: []
-roots: []
+roots: [k-s-l]
+etymology_hook: "kasūl: built on the root k-s-l, 'to be lazy' (Lane); kasūl is the faʿūl adjective, 'lazy'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C152-dhaki]
 <!-- hl-knowledge: introduces=[AR-LEX-C153-QUAL153-01]; assesses=[] -->
 
 **كسول** — *kasūl* — "lazy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**كسول** (*kasūl*) is built on the native Arabic root *k-s-l*, "to be lazy" (Lane). *Kasūl* is the *faʿūl* adjective, "lazy".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

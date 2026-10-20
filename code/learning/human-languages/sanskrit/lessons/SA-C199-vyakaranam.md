@@ -14,7 +14,8 @@ romanization: "vyākaraṇam"
 concept_tag: SA-SCH199-VYAKARANAM
 prerequisites: [SA-C199-vakyam, SA-C199-bhasa]
 sounds: []
-roots: []
+roots: [sanskrit-vyakarana, kr-do]
+etymology_hook: "vyākaraṇa ← vi + ā + √kṛ 'do': 'taking apart', so grammatical analysis (MW; CDIAL 12182)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C199-bhasa]
 <!-- hl-knowledge: introduces=[SA-LEX-C199-SCH199-03]; assesses=[] -->
 
 **व्याकरणम्** — *vyākaraṇam* — "grammar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vyākaraṇa* is built on *vi-ā-* with the root √kṛ, "to do, make" (MW). The verb means "to separate, explain", so grammar is the taking apart of language (CDIAL 12182).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

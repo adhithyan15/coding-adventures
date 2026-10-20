@@ -1,0 +1,19 @@
+{
+  "chapter": 320,
+  "title": "Pavor",
+  "label": "ch:la-pavor",
+  "canDo": "I can describe fear in a story: panic, fear, dread, frightened and to be in a flurry.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C320-trepido",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 320: I can describe fear in a story: panic, fear, dread, frightened and to be in a flurry.",
+    "assesses": [
+      "LA-LEX-C320-PAVOR-03",
+      "LA-LEX-C320-PAVOR-04",
+      "LA-LEX-C320-PAVOR-05"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-287-WRITING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "writing",
+  "canDo": "I can write one line of Persian about myself from words I know, with no model to copy.",
+  "prerequisites": []
+}

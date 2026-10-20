@@ -6,13 +6,13 @@ sequence: 960
 chapter: 35
 type: word
 headword: صديق
-gloss: "friend" — the chapter's payoff, where a root meaning truth explains the word, the faʿīl pattern turns up for the third time, and every family word you own lines up behind it
+gloss: '"friend" — the chapter''s payoff, where a root meaning truth explains the word, the faʿīl pattern turns up for the third time, and every family word you own lines up behind it'
 concept_tag: AR-PERSON-FRIEND
 romanization: ṣadīq
 prerequisites: [AR-C35-ibn-bint, AR-C04-al-salama]
 sounds: [sad-emphatic, long-ii, rtl-known-letters]
 roots: [s-d-q]
-etymology_hook: "صَديق (ṣadīq, 'friend') is the root ص-د-ق, 'to be truthful', in the فَعيل (faʿīl) pattern already worn by حَليب (ḥalīb) and مَليح (malīḥ) — so a friend is the one who is true to you; the same root gives صِدْق (ṣidq, 'truth'), صادِق (ṣādiq, 'truthful' — the doer shape of قائِل and كاتِب), صَدَقة (ṣadaqa, 'voluntary alms', a true gift) and the feminine صَديقة (ṣadīqa), while English took none of it"
+etymology_hook: "ṣadīq: root ṣ-d-q 'to be truthful' (Lane): the one who is true to you"
 duration:
   max_seconds: 240
 requires:

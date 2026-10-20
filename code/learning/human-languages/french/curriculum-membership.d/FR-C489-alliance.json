@@ -1,0 +1,11 @@
+{
+  "id": "FR-C489-alliance",
+  "pathSegment": "FR-PATH-489-NOCES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-489-NOCES",
+      "order": 1
+    }
+  ]
+}

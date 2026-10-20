@@ -14,7 +14,8 @@ romanization: "sabzīvālā"
 concept_tag: UR-KAM263-SABZIVALA
 prerequisites: [UR-C263-pansari, UR-C263-phalvala]
 sounds: []
-roots: []
+roots: [sabz-persian, sanskrit-pala-protector]
+etymology_hook: "sabzī ← Persian sabz 'green' + -ī; vālā 'one who deals in', usually traced to Sanskrit pālaka 'keeper'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C263-phalvala]
 <!-- hl-knowledge: introduces=[UR-LEX-C263-KAM263-05]; assesses=[] -->
 
 **سبزی والا** — *sabzīvālā* — "a greengrocer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سبزی والا** (*sabzīvālā*) is "vegetable-man". *sabzī*, "vegetables, greens", is Persian *sabz*, "green", with the ending *-ī*; *-vālā*, "one who deals in", is usually traced to Sanskrit *pālaka*, "keeper" (see CDIAL 4435).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 149,
-  "sourceHash": "fnv1a64:a89bfc0d079938b5",
+  "sourceHash": "fnv1a64:4029cdfe4f0f3a77",
   "lessonIds": [
     "UR-C149-par-karna",
     "UR-C149-ghumna",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch149.txt",
   "json": "urdu/narration/ch149.json",
-  "textHash": "fnv1a64:f66eb2785b1c8721",
-  "jsonHash": "fnv1a64:e3d5abfbfa9a6fc4",
+  "textHash": "fnv1a64:c1f96471c5e1f848",
+  "jsonHash": "fnv1a64:112e8183816f32e5",
   "findings": []
 }

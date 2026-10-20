@@ -14,7 +14,8 @@ romanization: "madīna"
 concept_tag: AR-TOWN93-MADINA
 prerequisites: [AR-C93-suq, AR-C93-qarya]
 sounds: []
-roots: []
+roots: [d-y-n]
+etymology_hook: "madīna: Lane lists it under d-y-n; Aramaic mdīnā 'province, city' is the same word, perhaps its source"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C93-qarya]
 <!-- hl-knowledge: introduces=[AR-LEX-C93-TOWN93-04]; assesses=[] -->
 
 **مدينة** — *madīna* — "a city".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مدينة** (*madīna*) is listed by Lane under *d-y-n*, "to be subject, to be under authority", as a city held under rule. Aramaic *mdīnā*, "province, city", is the same formation, and many treat the Arabic word as borrowed from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

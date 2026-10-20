@@ -1,0 +1,11 @@
+{
+  "id": "IT-C457-svendita",
+  "pathSegment": "IT-PATH-457-CASSA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-457-CASSA",
+      "order": 3
+    }
+  ]
+}

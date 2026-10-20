@@ -132,7 +132,7 @@ thing: la bomba — the pump. the person who works with it: el bombero.
 thing: el pan — bread. the person who works with it: el panadero.
 thing: la carta — the letter. the person who works with it: el cartero.
 So Spanish has -dor for the one who does the action and -ero for the one who works with the thing.
-Bomba is usually taken to imitate the sound of a boom.
+Bomba is usually taken to imitate the sound of a boom, through Latin bombus, "a booming noise", from Greek (EtymDB 2.1).
 
 Grammar Lens: three endings, three logics.
 [a table of 3 rows, read aloud]

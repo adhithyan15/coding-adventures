@@ -1,0 +1,11 @@
+{
+  "id": "IT-C438-risarcire",
+  "pathSegment": "IT-PATH-438-RECLAMO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-438-RECLAMO",
+      "order": 4
+    }
+  ]
+}

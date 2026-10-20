@@ -110,6 +110,7 @@ marḥaban = hello / welcome.
 
 The word, taken apart.
 The root r–ḥ–b carries spaciousness: raḥb is roomy. So marḥaban is not an empty signal. It suggests, “There is room for you here.” A warm reply is marḥabtayn — literally, “two welcomes.”
+Marḥaban is built on the native root r-ḥ-b, "to be wide, roomy" (Lane).
 
 Guided Practice.
 [pause 1 second]
@@ -167,6 +168,9 @@ Say it: thābit.
 [once you have stopped driving — look: at its shape as you say it.]
 The next lesson takes one piece of it, ب ت ث — مرحبا (bāʾ, tāʾ, thāʾ — marḥaban), and writes it on its own.
 
+The word, taken apart.
+ثابت (thābit) is built on the native Arabic root th-b-t, "to remain fixed, to be firm" (Lane). Thābit is the active participle, "standing firm".
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: thābit]
@@ -223,6 +227,7 @@ The letters in this word.
 
 The word, taken apart.
 ال (al-, "the"). For roughly 800 years Arabic was the Mediterranean's language of science and trade, and English and Spanish absorbed its words with al- still attached: algebra (al-jabr), alcohol (al-kuḥl), algorithm (al-Khwārizmī), alchemy, almanac. Learning Arabic al- is meeting an old friend you've been carrying in English all along.
+The article itself is old Arabic. Hebrew has ha- in the same job, and how the two are related is debated, so its deeper origin is not settled.
 
 Grammar Lens: sun letters and moon letters.
 Here's a rule you can hear. Before about half the consonants — the sun letters (s, sh, n, r, t, d…) — the l of al- assimilates and the next letter doubles:
@@ -259,6 +264,9 @@ The l of al- blends into the following s, so al-salām is pronounced as-salām. 
 The exchange — the reply.
 The fixed reply is wa-ʿalaykum as-salām: “and upon you, peace.” Hear the little wa- at the front; it means “and.”
 
+The word, taken apart.
+as-salāmu ʿalaykum is built from as-salām, "the peace", on the native root s-l-m, "to be safe, whole" (Lane), and ʿalaykum, "upon you": ʿalā, "upon", with -kum, "you". Hebrew shalom ʿalekhem is the same greeting in a cousin language.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: as-salāmu — ʿalaykum]
@@ -285,6 +293,9 @@ You'll want to know: عيد.
 Say it: ʿīd.
 [once you have stopped driving — look: at its shape as you say it.]
 The next lesson takes one piece of it, ع ي (ʿayn, yāʾ), and writes it on its own.
+
+The word, taken apart.
+عيد (ʿīd) is listed by Lane under ʿ-w-d, "to return": a thing that returns, hence a festival that comes round each year. EtymDB instead gives it as borrowed from Syriac ʿēdā, "feast". The two accounts are not settled.
 
 Guided Practice.
 [pause 1 second]
@@ -337,6 +348,9 @@ You'll want to know: كوخ.
 Say it: kūkh.
 [once you have stopped driving — look: at its shape as you say it.]
 The next lesson takes one piece of it, ك و — السلام عليكم (kāf, wāw — as-salāmu ʿalaykum), and writes it on its own.
+
+The word, taken apart.
+كوخ (kūkh) is a hut of reeds with a rounded roof. Lane's sources call it a Persian word, while EtymDB links it with Syriac kūkhītā; which way it travelled is not settled.
 
 Guided Practice.
 [pause 1 second]
@@ -419,6 +433,7 @@ With the rest known, read صباح (ṣabāḥ, "morning") and خير (khayr, "g
 
 The word, taken apart.
 صباح (ṣabāḥ), root ṣ–b–ḥ (dawn/waking: ṣubḥ "dawn," aṣbaḥa "to become / reach morning"). خير (khayr, "good, goodness"), root kh–y–r. Together صباح الخير (ṣabāḥ al-khayr) = "morning of the goodness." Note al-khayr keeps its l — خ is a moon letter — a clean contrast with as-salām.
+Both words are native Arabic, built on these roots (Lane).
 
 Why it's said this way.
 The reply mirrors it beautifully: ṣabāḥ an-nūr — "morning of the light" (al- + nūr, sun-letter n assimilated). You wish someone goodness; they wish you light back.

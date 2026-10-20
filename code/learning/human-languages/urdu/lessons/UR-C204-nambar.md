@@ -14,7 +14,8 @@ romanization: "nambar"
 concept_tag: UR-CHIZ204-NAMBAR
 prerequisites: [UR-C203-bhatija, UR-C203-pota]
 sounds: []
-roots: []
+roots: [english-number]
+etymology_hook: "nambar ← English number"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C203-pota]
 <!-- hl-knowledge: introduces=[UR-LEX-C204-CHIZ204-01]; assesses=[] -->
 
 **نمبر** — *nambar* — "a number".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نمبر** (*nambar*) is a loan from English *number*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

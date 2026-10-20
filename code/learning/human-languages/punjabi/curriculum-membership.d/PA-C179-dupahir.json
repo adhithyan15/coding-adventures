@@ -1,0 +1,11 @@
+{
+  "id": "PA-C179-dupahir",
+  "pathSegment": "PA-PATH-179-A2-SCHEDULE-STATUS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-179-A2-SCHEDULE-STATUS",
+      "order": 3
+    }
+  ]
+}

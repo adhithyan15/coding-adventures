@@ -14,7 +14,8 @@ romanization: "mudgaḥ"
 concept_tag: SA-THINGS106-MUDGAH
 prerequisites: [SA-C106-godhumah, SA-C106-tandulah]
 sounds: []
-roots: []
+roots: [sanskrit-mudga]
+etymology_hook: "mudga 'mung bean' (VS); grammarians link it to √mud (MW); origin uncertain; Hindi mūg (CDIAL 10198)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C106-tandulah]
 <!-- hl-knowledge: introduces=[SA-LEX-C106-THINGS106-04]; assesses=[] -->
 
 **मुद्गः** — *mudgaḥ* — "mung beans".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mudga* "the mung bean" is old, in the Vājasaneyi Saṃhitā; the grammarians quoted by MW derive it from √mud "be glad", a learned guess, so its origin is uncertain. It lives on as Hindi *mūg* and Gujarati *mag* (CDIAL 10198).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 694,
+  "sourceHash": "fnv1a64:2af8dd2e3a470ee1",
+  "lessonIds": [
+    "ES-C694-gaviota",
+    "ES-C694-ave",
+    "ES-C694-insecto",
+    "ES-C694-mariposa",
+    "ES-C694-lagartija"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch694.txt",
+  "json": "spanish/narration/ch694.json",
+  "textHash": "fnv1a64:4432099407e292d2",
+  "jsonHash": "fnv1a64:502086ae580643c0",
+  "findings": []
+}

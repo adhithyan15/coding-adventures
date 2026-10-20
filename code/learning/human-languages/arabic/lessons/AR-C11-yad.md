@@ -12,7 +12,7 @@ concept_tag: AR-BODY-HAND
 prerequisites: [AR-C11-ras]
 sounds: [arabic-rtl, short-word]
 roots: [semitic-yad]
-etymology_hook: "يد yad 'hand' is one of Arabic's oldest, shortest words — and it's nearly IDENTICAL to its Hebrew cousin יד yad, not just related but almost unchanged across the whole Semitic family"
+etymology_hook: "yad: an inherited Semitic noun, listed by Lane under the key y-d; Hebrew yad 'hand' is its cousin"
 duration:
   max_seconds: 240
 requires:
@@ -48,6 +48,11 @@ cousin is spelled and pronounced almost **identically**: **יד** (*yad*).
 Where *raʾs/rosh* show a family resemblance, *yad/yad* is closer to
 twins — one of the more strikingly unchanged shared words across the whole
 Semitic family.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**يد** (*yad*) is an old Semitic noun, inherited, and listed by Lane under the two-letter key *y-d*; Hebrew *yad*, "hand", is its cousin.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C11-YAD-01, AR-CONCEPT-C11-YAD-02] -->

@@ -1864,47 +1864,128 @@ pub struct VennStyle {
 pub struct VennRegion { pub sets: Vec<String>, pub size: f64, pub label: Option<String>, pub style: VennStyle }
 #[derive(Clone, Debug, PartialEq)]
 pub struct VennText { pub sets: Vec<String>, pub id: String, pub label: Option<String>, pub style: VennStyle }
+#[derive(Clone, Debug, PartialEq)]
+pub struct VennConfig { pub width: f64, pub height: f64, pub padding: f64, pub use_max_width: bool, pub use_debug_layout: bool, pub font_family: String, pub title_text_color: String, pub set_text_color: String, pub theme_colors: Vec<String> }
+impl Default for VennConfig { fn default() -> Self { Self { width: 800.0, height: 450.0, padding: 8.0, use_max_width: true, use_debug_layout: false, font_family: "sans-serif".into(), title_text_color: "#0f172a".into(), set_text_color: "#0f172a".into(), theme_colors: ["#60a5fa", "#f59e0b", "#34d399", "#f472b6", "#a78bfa", "#22d3ee", "#fb7185", "#a3e635"].into_iter().map(str::to_string).collect() } } }
 #[derive(Clone, Debug, PartialEq, Default)]
-pub struct VennDiagram { pub title: Option<String>, pub regions: Vec<VennRegion>, pub texts: Vec<VennText> }
+pub struct VennDiagram { pub title: Option<String>, pub config: VennConfig, pub regions: Vec<VennRegion>, pub texts: Vec<VennText> }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedVennCircle {
     pub id: String, pub label: String, pub cx: f64, pub cy: f64, pub radius: f64, pub style: VennStyle,
 }
 #[derive(Clone, Debug, PartialEq)]
-pub struct LayoutedVennLabel { pub text: String, pub x: f64, pub y: f64, pub style: VennStyle }
+pub struct LayoutedVennLabel { pub text: String, pub x: f64, pub y: f64, pub font_size: f64, pub style: VennStyle }
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedVennDebugCircle { pub cx: f64, pub cy: f64, pub radius: f64 }
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedVennDebugCell { pub x: f64, pub y: f64, pub width: f64, pub height: f64 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedVennDiagram {
-    pub width: f64, pub height: f64, pub title: Option<String>,
+    pub width: f64, pub height: f64, pub title: Option<String>, pub config: VennConfig,
     pub circles: Vec<LayoutedVennCircle>, pub labels: Vec<LayoutedVennLabel>,
+    pub debug_circles: Vec<LayoutedVennDebugCircle>, pub debug_cells: Vec<LayoutedVennDebugCell>,
 }
 
 // CAUSAL FAMILY
 #[derive(Clone, Debug, PartialEq)]
 pub struct IshikawaCause { pub id: String, pub label: String, pub parent_id: Option<String>, pub depth: usize }
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+pub enum IshikawaLook { #[default] Classic, HandDrawn }
 #[derive(Clone, Debug, PartialEq)]
-pub struct IshikawaDiagram { pub effect: String, pub causes: Vec<IshikawaCause>, pub diagram_padding: f64 }
+pub struct IshikawaConfig { pub diagram_padding: f64, pub use_max_width: bool, pub font_size: f64, pub font_family: String,
+    pub line_color: String, pub fill_color: String, pub text_color: String, pub look: IshikawaLook, pub hand_drawn_seed: i64 }
+impl Default for IshikawaConfig { fn default() -> Self { Self { diagram_padding: 20.0, use_max_width: false,
+    font_size: 16.0, font_family: "sans-serif".into(), line_color: "#333333".into(), fill_color: "#ffffff".into(),
+    text_color: "#333333".into(), look: IshikawaLook::Classic, hand_drawn_seed: 0 } } }
 #[derive(Clone, Debug, PartialEq)]
-pub struct LayoutedIshikawaBone { pub from: Point, pub to: Point, pub label: String, pub label_position: Point, pub depth: usize }
+pub struct IshikawaDiagram { pub effect: String, pub causes: Vec<IshikawaCause>, pub config: IshikawaConfig }
 #[derive(Clone, Debug, PartialEq)]
-pub struct LayoutedIshikawaDiagram { pub width: f64, pub height: f64, pub effect: String, pub effect_x: f64, pub effect_y: f64, pub effect_width: f64, pub effect_height: f64, pub spine_from: Point, pub spine_to: Point, pub bones: Vec<LayoutedIshikawaBone> }
+pub struct LayoutedIshikawaHatch { pub from: Point, pub to: Point }
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedIshikawaBone { pub from: Point, pub to: Point, pub label: String, pub label_position: Point,
+    pub label_width: f64, pub label_height: f64, pub depth: usize, pub path: Vec<Point>, pub arrowhead: Vec<Point>,
+    pub label_outline: Vec<Point>, pub hatches: Vec<LayoutedIshikawaHatch> }
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedIshikawaDiagram { pub width: f64, pub height: f64, pub effect: String, pub config: IshikawaConfig,
+    pub effect_x: f64, pub effect_y: f64, pub effect_width: f64, pub effect_height: f64,
+    pub spine_from: Point, pub spine_to: Point, pub spine_path: Vec<Point>, pub effect_outline: Vec<Point>,
+    pub effect_hatches: Vec<LayoutedIshikawaHatch>,
+    pub bones: Vec<LayoutedIshikawaBone> }
 
 // STRATEGIC MAP FAMILY
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum WardleySourceStrategy { Build, Buy, Outsource, Market }
 #[derive(Clone, Debug, PartialEq)]
-pub struct WardleyNode { pub id: String, pub label: String, pub visibility: f64, pub evolution: f64, pub anchor: bool }
+pub struct WardleyNode { pub id: String, pub label: String, pub visibility: f64, pub evolution: f64, pub anchor: bool,
+    pub pipeline_parent: bool, pub label_offset_x: Option<f64>, pub label_offset_y: Option<f64>,
+    pub source_strategy: Option<WardleySourceStrategy>, pub inertia: bool }
 #[derive(Clone, Debug, PartialEq)]
-pub struct WardleyLink { pub source: String, pub target: String }
+pub struct WardleyLink { pub source: String, pub target: String, pub dashed: bool,
+    pub label: Option<String>, pub flow: Option<WardleyLinkFlow> }
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum WardleyLinkFlow { Forward, Backward, Bidirectional }
 #[derive(Clone, Debug, PartialEq)]
 pub struct WardleyEvolution { pub component: String, pub target: f64 }
 #[derive(Clone, Debug, PartialEq)]
-pub struct WardleyDiagram { pub title: Option<String>, pub width: f64, pub height: f64, pub stages: Vec<String>, pub nodes: Vec<WardleyNode>, pub links: Vec<WardleyLink>, pub evolves: Vec<WardleyEvolution> }
+pub struct WardleyNote { pub text: String, pub visibility: f64, pub evolution: f64 }
 #[derive(Clone, Debug, PartialEq)]
-pub struct LayoutedWardleyNode { pub id: String, pub label: String, pub position: Point, pub anchor: bool }
+pub struct WardleyAnnotation { pub number: usize, pub text: String, pub coordinates: Vec<(f64, f64)> }
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum WardleyForceKind { Accelerator, Deaccelerator }
 #[derive(Clone, Debug, PartialEq)]
-pub struct LayoutedWardleyLink { pub from: Point, pub to: Point }
+pub struct WardleyForce { pub label: String, pub visibility: f64, pub evolution: f64, pub kind: WardleyForceKind }
+#[derive(Clone, Debug, PartialEq)]
+pub struct WardleyPipeline { pub parent_id: String, pub component_ids: Vec<String> }
+#[derive(Clone, Debug, PartialEq)]
+pub struct WardleyTheme { pub background_color: String, pub axis_color: String, pub axis_text_color: String,
+    pub grid_color: String, pub component_fill: String, pub component_stroke: String,
+    pub component_label_color: String, pub link_stroke: String, pub evolution_stroke: String,
+    pub annotation_stroke: String, pub annotation_text_color: String, pub annotation_fill: String }
+impl Default for WardleyTheme { fn default() -> Self { Self { background_color: "#ffffff".into(), axis_color: "#000000".into(),
+    axis_text_color: "#222222".into(), grid_color: "rgba(100, 100, 100, 0.2)".into(), component_fill: "#ffffff".into(),
+    component_stroke: "#000000".into(), component_label_color: "#222222".into(), link_stroke: "#000000".into(),
+    evolution_stroke: "#dc3545".into(), annotation_stroke: "#000000".into(),
+    annotation_text_color: "#222222".into(), annotation_fill: "#ffffff".into() } } }
+#[derive(Clone, Debug, PartialEq)]
+pub struct WardleyConfig { pub width: f64, pub height: f64, pub padding: f64, pub node_radius: f64,
+    pub node_label_offset: f64, pub axis_font_size: f64, pub label_font_size: f64,
+    pub show_grid: bool, pub use_max_width: bool, pub theme: WardleyTheme }
+impl Default for WardleyConfig { fn default() -> Self { Self { width: 900.0, height: 600.0, padding: 48.0,
+    node_radius: 6.0, node_label_offset: 8.0, axis_font_size: 12.0, label_font_size: 10.0,
+    show_grid: false, use_max_width: true, theme: WardleyTheme::default() } } }
+#[derive(Clone, Debug, PartialEq)]
+pub struct WardleyDiagram { pub title: Option<String>, pub accessibility_title: Option<String>,
+    pub accessibility_description: Option<String>, pub config: WardleyConfig, pub stages: Vec<String>,
+    pub stage_boundaries: Vec<f64>,
+    pub nodes: Vec<WardleyNode>, pub links: Vec<WardleyLink>, pub evolves: Vec<WardleyEvolution>, pub notes: Vec<WardleyNote>,
+    pub annotations_box: Option<(f64, f64)>, pub annotations: Vec<WardleyAnnotation>, pub forces: Vec<WardleyForce>,
+    pub pipelines: Vec<WardleyPipeline> }
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedWardleyNode { pub id: String, pub label: String, pub position: Point, pub anchor: bool,
+    pub pipeline_parent: bool, pub label_offset_x: Option<f64>, pub label_offset_y: Option<f64>,
+    pub source_strategy: Option<WardleySourceStrategy>, pub inertia: bool }
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedWardleyLink { pub from: Point, pub to: Point, pub dashed: bool,
+    pub label: Option<String>, pub label_position: Point, pub label_angle: f64,
+    pub flow: Option<WardleyLinkFlow> }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedWardleyEvolution { pub from: Point, pub to: Point }
 #[derive(Clone, Debug, PartialEq)]
-pub struct LayoutedWardleyDiagram { pub width: f64, pub height: f64, pub title: Option<String>, pub stages: Vec<String>, pub nodes: Vec<LayoutedWardleyNode>, pub links: Vec<LayoutedWardleyLink>, pub evolves: Vec<LayoutedWardleyEvolution> }
+pub struct LayoutedWardleyNote { pub text: String, pub position: Point }
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedWardleyAnnotation { pub number: usize, pub text: String, pub positions: Vec<Point> }
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedWardleyForce { pub label: String, pub position: Point, pub kind: WardleyForceKind }
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedWardleyPipeline { pub x: f64, pub y: f64, pub width: f64, pub height: f64,
+    pub component_positions: Vec<Point> }
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedWardleyDiagram { pub width: f64, pub height: f64, pub title: Option<String>,
+    pub accessibility_title: Option<String>, pub accessibility_description: Option<String>, pub config: WardleyConfig,
+    pub stages: Vec<String>, pub stage_boundaries: Vec<f64>, pub nodes: Vec<LayoutedWardleyNode>, pub links: Vec<LayoutedWardleyLink>,
+    pub evolves: Vec<LayoutedWardleyEvolution>, pub notes: Vec<LayoutedWardleyNote>,
+    pub annotations_box: Option<Point>, pub annotations: Vec<LayoutedWardleyAnnotation>, pub forces: Vec<LayoutedWardleyForce>,
+    pub pipelines: Vec<LayoutedWardleyPipeline> }
 
 // SENSE-MAKING FAMILY
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -2009,7 +2090,9 @@ impl Default for SwimlaneTheme {
 pub struct SwimlaneFlowchartConfig {
     pub node_spacing: Option<f64>, pub rank_spacing: Option<f64>,
     pub diagram_padding: Option<f64>, pub curve: Option<SwimlaneEdgeCurve>,
-    pub wrapping_width: Option<f64>,
+    pub wrapping_width: Option<f64>, pub padding: Option<f64>,
+    pub title_top_margin: Option<f64>,
+    pub subgraph_title_margin_top: Option<f64>, pub subgraph_title_margin_bottom: Option<f64>,
 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct SwimlaneDiagram {
@@ -2069,7 +2152,30 @@ pub enum RailroadExpression {
 #[derive(Clone, Debug, PartialEq)]
 pub struct RailroadRule { pub name: String, pub definition: RailroadExpression }
 #[derive(Clone, Debug, PartialEq)]
-pub struct RailroadDiagram { pub title: Option<String>, pub accessibility_title: Option<String>, pub accessibility_description: Option<String>, pub rules: Vec<RailroadRule> }
+pub struct RailroadConfig {
+    pub compact_mode: bool, pub padding: f64, pub vertical_separation: f64, pub horizontal_separation: f64, pub arc_radius: f64,
+    pub font_size: f64, pub font_family: String,
+    pub terminal_fill: String, pub terminal_stroke: String, pub terminal_text_color: String,
+    pub non_terminal_fill: String, pub non_terminal_stroke: String, pub non_terminal_text_color: String,
+    pub line_color: String, pub stroke_width: f64, pub marker_fill: String,
+    pub special_fill: String, pub special_stroke: String, pub rule_name_color: String,
+    pub show_markers: bool, pub marker_radius: f64,
+}
+impl Default for RailroadConfig {
+    fn default() -> Self {
+        Self {
+            compact_mode: false, padding: 10.0, vertical_separation: 8.0, horizontal_separation: 10.0, arc_radius: 10.0,
+            font_size: 14.0, font_family: "monospace".into(),
+            terminal_fill: "#FFFFC0".into(), terminal_stroke: "#000000".into(), terminal_text_color: "#000000".into(),
+            non_terminal_fill: "#FFFFFF".into(), non_terminal_stroke: "#000000".into(), non_terminal_text_color: "#000000".into(),
+            line_color: "#000000".into(), stroke_width: 2.0, marker_fill: "#000000".into(),
+            special_fill: "#F0E0FF".into(), special_stroke: "#8800CC".into(), rule_name_color: "#000066".into(),
+            show_markers: true, marker_radius: 5.0,
+        }
+    }
+}
+#[derive(Clone, Debug, PartialEq)]
+pub struct RailroadDiagram { pub title: Option<String>, pub accessibility_title: Option<String>, pub accessibility_description: Option<String>, pub config: RailroadConfig, pub rules: Vec<RailroadRule> }
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum RailroadElementKind { Terminal, NonTerminal, Special }
 #[derive(Clone, Debug, PartialEq)]
@@ -2077,9 +2183,9 @@ pub struct LayoutedRailroadElement { pub kind: RailroadElementKind, pub label: S
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedRailroadPath { pub points: Vec<Point>, pub loopback: bool }
 #[derive(Clone, Debug, PartialEq)]
-pub struct LayoutedRailroadRule { pub name: String, pub y: f64, pub height: f64, pub elements: Vec<LayoutedRailroadElement>, pub paths: Vec<LayoutedRailroadPath> }
+pub struct LayoutedRailroadRule { pub name: String, pub y: f64, pub height: f64, pub start_marker: Point, pub end_marker: Point, pub elements: Vec<LayoutedRailroadElement>, pub paths: Vec<LayoutedRailroadPath> }
 #[derive(Clone, Debug, PartialEq)]
-pub struct LayoutedRailroadDiagram { pub width: f64, pub height: f64, pub title: Option<String>, pub accessibility_title: Option<String>, pub accessibility_description: Option<String>, pub rules: Vec<LayoutedRailroadRule> }
+pub struct LayoutedRailroadDiagram { pub width: f64, pub height: f64, pub title: Option<String>, pub accessibility_title: Option<String>, pub accessibility_description: Option<String>, pub config: RailroadConfig, pub rules: Vec<LayoutedRailroadRule> }
 
 // BUILD INFORMATION FAMILY
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -2179,6 +2285,7 @@ pub struct ArchitectureConfig {
     pub padding: f64,
     pub ideal_edge_length_multiplier: f64,
     pub edge_elasticity: f64,
+    pub num_iter: i64,
     pub randomize: bool,
     pub seed: i64,
 }
@@ -2192,6 +2299,7 @@ impl Default for ArchitectureConfig {
             padding: 40.0,
             ideal_edge_length_multiplier: 1.5,
             edge_elasticity: 0.45,
+            num_iter: 2500,
             randomize: false,
             seed: 1,
         }
@@ -2360,6 +2468,7 @@ pub struct LayoutedStructuralDiagram {
     pub title: Option<String>,
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
+    pub architecture_config: Option<ArchitectureConfig>,
     pub groups: Vec<LayoutedStructuralGroup>,
     pub nodes: Vec<LayoutedStructuralNode>,
     pub relationships: Vec<LayoutedStructuralRelationship>,
@@ -2376,9 +2485,40 @@ pub enum TemporalKind {
 
 #[derive(Clone, Copy, Debug, Default, PartialEq)]
 pub enum TimelineDirection {
-    #[default]
     TopDown,
+    #[default]
     LeftRight,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct TimelineConfig {
+    pub padding: f64,
+    pub left_margin: f64,
+    pub font_size: f64,
+    pub font_family: String,
+    pub use_max_width: bool,
+    pub disable_multicolor: bool,
+    pub section_colors: Vec<String>,
+    pub section_label_colors: Vec<String>,
+    pub section_inverse_colors: Vec<String>,
+}
+
+impl Default for TimelineConfig {
+    fn default() -> Self {
+        Self {
+            padding: 50.0,
+            left_margin: 50.0,
+            font_size: 16.0,
+            font_family: "\"trebuchet ms\", verdana, arial, sans-serif".into(),
+            use_max_width: false,
+            disable_multicolor: false,
+            section_colors: ["#dbeafe", "#dcfce7", "#fef3c7", "#fae8ff", "#ffe4e6", "#cffafe"]
+                .map(str::to_string).to_vec(),
+            section_label_colors: vec!["#0f172a".into(); 6],
+            section_inverse_colors: ["#2563eb", "#16a34a", "#d97706", "#a21caf", "#e11d48", "#0891b2"]
+                .map(str::to_string).to_vec(),
+        }
+    }
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -2397,6 +2537,7 @@ pub struct TimelineSection {
 pub struct TimelineDiagram {
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
+    pub config: TimelineConfig,
     pub direction: TimelineDirection,
     pub sections: Vec<TimelineSection>,
 }
@@ -2833,6 +2974,7 @@ pub enum LayoutedTemporalItem {
         width: f64,
         height: f64,
         label: String,
+        color_index: usize,
     },
     TimelinePeriod {
         x: f64,
@@ -2843,6 +2985,21 @@ pub enum LayoutedTemporalItem {
         events: Vec<String>,
         color_index: usize,
     },
+    TimelineEventLink {
+        x1: f64,
+        y1: f64,
+        x2: f64,
+        y2: f64,
+        color_index: usize,
+    },
+    TimelineEvent {
+        x: f64,
+        y: f64,
+        width: f64,
+        height: f64,
+        label: String,
+        color_index: usize,
+    },
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -2851,6 +3008,7 @@ pub struct LayoutedTemporalDiagram {
     pub height: f64,
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
+    pub timeline_config: Option<TimelineConfig>,
     pub interactions: Vec<LayoutedTemporalInteraction>,
     pub items: Vec<LayoutedTemporalItem>,
 }

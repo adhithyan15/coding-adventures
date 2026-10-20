@@ -14,7 +14,8 @@ romanization: "lassī"
 concept_tag: UR-THINGS118-LASSI
 prerequisites: [UR-C118-qahva, UR-C118-sharbat]
 sounds: []
-roots: []
+roots: [indo-aryan-lassi]
+etymology_hook: "lassī ← *lassī 'buttermilk', reconstructed from Punjabi and Sindhi forms; no Hindi or Urdu form listed (CDIAL 10998)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C118-sharbat]
 <!-- hl-knowledge: introduces=[UR-LEX-C118-THINGS118-05]; assesses=[] -->
 
 **لسی** — *lassī* — "lassi, a yoghurt drink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لسی** (*lassī*) goes back to a reconstructed *\*lassī*, "buttermilk", which CDIAL builds from Punjabi and Lahnda *lassī* and Sindhi *lasī* (CDIAL 10998). It lists no Hindi or Urdu form, and it gives no older source.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

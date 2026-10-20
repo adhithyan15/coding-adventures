@@ -1,0 +1,11 @@
+{
+  "id": "FR-C402-klaxonner",
+  "pathSegment": "FR-PATH-402-VITRES",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-402-VITRES",
+      "order": 3
+    }
+  ]
+}

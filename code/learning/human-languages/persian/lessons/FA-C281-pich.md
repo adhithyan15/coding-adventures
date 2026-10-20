@@ -15,6 +15,7 @@ concept_tag: FA-CHIZ281-PICH
 prerequisites: [FA-C280-honar, FA-C280-naqqashi]
 sounds: []
 roots: []
+etymology_hook: "pich: native Persian; older form not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C280-naqqashi]
 <!-- hl-knowledge: introduces=[FA-LEX-C281-CHIZ281-01]; assesses=[] -->
 
 **پیچ** — *pich* — "a screw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pich* is a native Persian word for a twist or screw, but its older form is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

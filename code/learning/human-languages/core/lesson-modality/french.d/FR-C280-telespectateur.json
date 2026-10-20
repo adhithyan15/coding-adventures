@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C280-telespectateur",
+    "language": "french",
+    "chapter": 280,
+    "sequence": 16130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e0217ea46a8eeac0"
+  },
+  "findings": []
+}

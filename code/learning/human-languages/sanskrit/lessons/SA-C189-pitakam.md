@@ -14,7 +14,8 @@ romanization: "piṭakam"
 concept_tag: SA-THG189-PITAKAM
 prerequisites: [SA-C189-manjusa, SA-C189-sikyam]
 sounds: []
-roots: []
+roots: [sanskrit-pitaka]
+etymology_hook: "piṭaka 'basket', which CDIAL calls non-Aryan (CDIAL 8164); MW links it to √piṭ 'gather'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C189-sikyam]
 <!-- hl-knowledge: introduces=[SA-LEX-C189-THG189-03]; assesses=[] -->
 
 **पिटकम्** — *piṭakam* — "a basket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*piṭaka* is probably borrowed from a non-Indo-Aryan language: CDIAL 8164 calls it "non-Aryan", while MW derives it from a root √piṭ, "to gather". The Buddhist canon is the *Tipiṭaka*, "three baskets".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

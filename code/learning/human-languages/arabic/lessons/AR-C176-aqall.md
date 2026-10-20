@@ -14,7 +14,8 @@ romanization: "aqall"
 concept_tag: AR-SABAB176-AQALL
 prerequisites: [AR-C176-baynama, AR-C176-akthar]
 sounds: []
-roots: []
+roots: [q-l-l]
+etymology_hook: "aqall: built on the root q-l-l, 'to be few, to be little' (Lane); aqall is the afʿal comparative, 'less'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C176-akthar]
 <!-- hl-knowledge: introduces=[AR-LEX-C176-SABAB176-04]; assesses=[] -->
 
 **أقل** — *aqall* — "less".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أقل** (*aqall*) is built on the native Arabic root *q-l-l*, "to be few, to be little" (Lane). *Aqall* is the *afʿal* comparative, "less".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C403-starthilfe",
+    "language": "german",
+    "chapter": 403,
+    "sequence": 21770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6554deb56cb1946f"
+  },
+  "findings": []
+}

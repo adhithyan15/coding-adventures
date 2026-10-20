@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 279,
-  "sourceHash": "fnv1a64:3730f72f02d6a249",
+  "sourceHash": "fnv1a64:ade4a0300ee475e2",
   "lessonIds": [
     "AR-C279-mustatil",
     "AR-C279-mishjab",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch279.txt",
   "json": "arabic/narration/ch279.json",
-  "textHash": "fnv1a64:b1603803932eebcd",
-  "jsonHash": "fnv1a64:2623ba75c6373249",
+  "textHash": "fnv1a64:3c25cf940d78a421",
+  "jsonHash": "fnv1a64:2de2b8699d9740d4",
   "findings": []
 }

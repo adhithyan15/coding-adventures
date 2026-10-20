@@ -1,0 +1,11 @@
+{
+  "id": "PT-C429-fronha",
+  "pathSegment": "PT-PATH-429-QUARTO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-429-QUARTO",
+      "order": 1
+    }
+  ]
+}

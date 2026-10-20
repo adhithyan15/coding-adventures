@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C770-ferreteria",
+    "language": "spanish",
+    "chapter": 770,
+    "sequence": 28520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7539bb2f811ac0ae"
+  },
+  "findings": []
+}

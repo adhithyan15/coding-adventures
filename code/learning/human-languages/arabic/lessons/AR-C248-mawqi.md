@@ -14,7 +14,8 @@ romanization: "mawqiʿ"
 concept_tag: AR-SHAY248-MAWQI
 prerequisites: [AR-C247-yasamin, AR-C248-intarnit]
 sounds: []
-roots: []
+roots: [w-q-ʿ]
+etymology_hook: "mawqiʿ: built on the root w-q-ʿ, 'to fall' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C248-intarnit]
 <!-- hl-knowledge: introduces=[AR-LEX-C248-SHAY248-02]; assesses=[] -->
 
 **موقع** — *mawqiʿ* — "a website, a site".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**موقع** (*mawqiʿ*) is built on the native Arabic root *w-q-ʿ*, "to fall" (Lane). *Mawqiʿ* is the *ma-* place noun, "a place where a thing falls", hence "a site"; the website is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

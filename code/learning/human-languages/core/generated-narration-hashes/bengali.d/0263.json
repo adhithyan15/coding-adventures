@@ -1,0 +1,15 @@
+{
+  "language": "bengali",
+  "chapter": 263,
+  "sourceHash": "fnv1a64:945f293f17e8a508",
+  "lessonIds": [
+    "BN-W263-a2-connected-composition"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "bengali/narration/ch263.txt",
+  "json": "bengali/narration/ch263.json",
+  "textHash": "fnv1a64:7a71bce69502fc5c",
+  "jsonHash": "fnv1a64:4562a6fca963f5cc",
+  "findings": []
+}

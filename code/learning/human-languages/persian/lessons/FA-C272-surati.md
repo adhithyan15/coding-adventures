@@ -14,7 +14,8 @@ romanization: "surati"
 concept_tag: FA-SEFAT272-SURATI
 prerequisites: [FA-C272-porru, FA-C272-hasas]
 sounds: []
-roots: []
+roots: [arabic-sura]
+etymology_hook: "surati: surat ← Arabic ṣūra 'form' (Lane) + Persian -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C272-hasas]
 <!-- hl-knowledge: introduces=[FA-LEX-C272-SEFAT272-04]; assesses=[] -->
 
 **صورتی** — *surati* — "pink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*surati* is *surat*, "face", with the colour ending *-i*: face-coloured, rosy. *surat* is borrowed from Arabic *ṣūra*, "form, image" (root *ṣ-w-r*, Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

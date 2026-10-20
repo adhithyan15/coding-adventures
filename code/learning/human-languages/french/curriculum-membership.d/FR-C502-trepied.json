@@ -1,0 +1,11 @@
+{
+  "id": "FR-C502-trepied",
+  "pathSegment": "FR-PATH-502-PHOTO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-502-PHOTO",
+      "order": 4
+    }
+  ]
+}

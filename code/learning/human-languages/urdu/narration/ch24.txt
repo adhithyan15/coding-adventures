@@ -93,6 +93,9 @@ You'll want to know: یہاں.
 Chapter seventeen taught کہاں — where? — and this book has had no way to answer it ever since. A learner could ask the question and could not receive the reply.
 Look at the two words together. کہاں and یہاں (yahāṅ) share their ending, and differ only in the head: ک- asks, یہ- points near. That is not a coincidence to be memorised — it is a frame.
 
+The word, taken apart.
+یہاں (yahāṅ) is inherited. CDIAL sets it beside Sanskrit iha, "here", as a form ultimately connected with it rather than its direct descendant (CDIAL 1605).
+
 Grammar Lens: the frame, two thirds filled.
 [a table of 6 rows, read aloud]
 head: ک- asking. frame: thing. word: کیا.
@@ -138,6 +141,9 @@ head: ک- asking. thing: کیا. place: کہاں.
 head: یہ- near. thing: یہ. place: یہاں (yahāṅ).
 head: وہ- far. thing: وہ. place: وہاں (vahāṅ).
 Six words, three heads, two frames — and every one of them was predictable from the shape of the others.
+
+The word, taken apart.
+وہاں (vahāṅ) joins the stem of voh, "that", to the ending -hāṅ of yahāṅ, "here". Its history is not settled; CDIAL has no entry for it.
 
 Grammar Lens: what a place word can now do.
 These two words and the postpositions of the last chapter answer the same question at different resolutions:

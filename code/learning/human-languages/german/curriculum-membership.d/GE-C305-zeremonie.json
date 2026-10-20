@@ -1,0 +1,11 @@
+{
+  "id": "GE-C305-zeremonie",
+  "pathSegment": "GE-PATH-305-FEIER",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-305-FEIER",
+      "order": 3
+    }
+  ]
+}

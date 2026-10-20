@@ -4,7 +4,7 @@
   "chapter": 114,
   "title": "Toothpaste, Shampoo, Comb, Bin, Broom",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6c66210752f08cad",
+  "sourceHash": "fnv1a64:e72fd86da5884f29",
   "lessons": [
     {
       "id": "FR-C114-dentifrice",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:18a8a594de19d7af",
+      "sourceHash": "fnv1a64:7b984f9e1479915f",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "poubelle — named after Eugène Poubelle, the prefect of Paris who made lidded bins compulsory in 1884."
+              "text": "poubelle comes from the name of Eugène Poubelle, the prefect of Paris who made lidded bins compulsory in 1884."
             }
           ]
         },

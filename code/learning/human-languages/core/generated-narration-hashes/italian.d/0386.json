@@ -1,0 +1,20 @@
+{
+  "language": "italian",
+  "chapter": 386,
+  "sourceHash": "fnv1a64:31bf9c90bab6e31d",
+  "lessonIds": [
+    "IT-C386-violare",
+    "IT-C386-violazione",
+    "IT-C386-infrazione",
+    "IT-C386-trasgredire",
+    "IT-C386-eccezione",
+    "IT-R386-ripasso-379-386"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "italian/narration/ch386.txt",
+  "json": "italian/narration/ch386.json",
+  "textHash": "fnv1a64:5b2c5288ecb0df01",
+  "jsonHash": "fnv1a64:64d8ab15b594cd98",
+  "findings": []
+}

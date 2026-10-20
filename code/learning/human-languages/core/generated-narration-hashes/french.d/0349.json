@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 349,
+  "sourceHash": "fnv1a64:6bfa5ee9f4f60d3d",
+  "lessonIds": [
+    "FR-C349-provenir",
+    "FR-C349-resulter",
+    "FR-C349-influence",
+    "FR-C349-influencer",
+    "FR-C349-engendrer",
+    "FR-R349-revision-342-349"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch349.txt",
+  "json": "french/narration/ch349.json",
+  "textHash": "fnv1a64:e39282fa55177e9e",
+  "jsonHash": "fnv1a64:9c8b049c63893c5d",
+  "findings": []
+}

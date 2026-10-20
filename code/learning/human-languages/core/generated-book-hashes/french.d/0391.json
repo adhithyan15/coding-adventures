@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 391,
+  "sourceHash": "fnv1a64:baf023db4109dd6d",
+  "lessonIds": [
+    "FR-C391-epargne",
+    "FR-C391-epargner",
+    "FR-C391-investir",
+    "FR-C391-investissement",
+    "FR-C391-taux"
+  ],
+  "tex": "french/book/chapters/ch391-mettre-de-cote.tex"
+}

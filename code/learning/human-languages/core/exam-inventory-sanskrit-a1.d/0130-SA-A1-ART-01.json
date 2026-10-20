@@ -1,0 +1,20 @@
+{
+  "id": "SA-A1-ART-01",
+  "category": "Article — the category Sanskrit does not have",
+  "label": "the article: Sanskrit has none, definite or indefinite, and nothing stands in for it",
+  "probe": [
+    "SA-GRAMMAR-C16-NOUN-FAMILIES"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-ART-01",
+    "A1-ART-02",
+    "A1-ART-03",
+    "A1-ART-04"
+  ],
+  "note": "FOUR SPANISH POINTS COLLAPSE INTO ONE FACT. Sanskrit has no article; a bare noun is both 'a house' and 'the house', and definiteness is read off context or carried by a demonstrative. The corpus never teaches an article because there is none to teach, and the noun-families lesson is where a learner meets the bare stem as the citation form. Recording this as covered is a judgement: nothing is TAUGHT here, but nothing is missing either, and leaving it uncovered would report a gap that no lesson could ever close."
+}

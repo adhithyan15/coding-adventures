@@ -14,7 +14,8 @@ romanization: "chigaimasu"
 concept_tag: JA-VERB-CHIGAU
 prerequisites: [JA-C139-desuka, JA-C138-hatarakimasu, JA-W136-ze, JA-W131-small-ya]
 sounds: []
-roots: []
+roots: [japanese-chigau, japanese-masu-polite]
+etymology_hook: "chigaimasu: native chigau 'to differ' + polite -masu"
 duration:
   max_seconds: 200
 requires:
@@ -54,6 +55,11 @@ not, this is the everyday answer.
 > **これは おちゃですか。** — *kore wa ocha desu ka* — "Is this tea?"
 > **いいえ、ちがいます。みずです。** — *iie, chigaimasu. mizu desu* — "No,
 > it isn't. It is water."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ちがいます** (*chigaimasu*) is native *chigau*, "to differ", with the polite ending *-masu*. The verb is inherited rather than borrowed; JMdict lists *tagau*, "to differ", under the same kanji.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C139-CHIGAIMASU, JA-LEX-C139-DESUKA] -->

@@ -1,0 +1,19 @@
+{
+  "chapter": 500,
+  "title": "Desire and envy",
+  "label": "ch:la-desire-and-envy",
+  "canDo": "I can talk about desire, greed and envy.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C500-rivalis",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 500: I can talk about desire, greed and envy.",
+    "assesses": [
+      "LA-LEX-C500-CUPI-03",
+      "LA-LEX-C500-CUPI-04",
+      "LA-LEX-C500-CUPI-05"
+    ]
+  }
+}

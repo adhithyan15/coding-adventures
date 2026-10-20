@@ -14,7 +14,8 @@ romanization: "muze"
 concept_tag: FA-LOC88-MUZE
 prerequisites: [FA-C88-nanvayi, FA-C88-sinema]
 sounds: []
-roots: []
+roots: [french-musee]
+etymology_hook: "muze ← French musée 'museum'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C88-sinema]
 <!-- hl-knowledge: introduces=[FA-LEX-C88-LOC88-05]; assesses=[] -->
 
 **موزه** — *muze* — "a museum".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*muze* is borrowed from French *musée*, "museum" (EtymDB). The French word goes back through Latin to Greek *mouseion*, "seat of the Muses".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

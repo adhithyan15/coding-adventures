@@ -27,7 +27,7 @@ You'll want to know: पहला.
 It agrees like any -ā adjective: पहला दिन (pahlā din), the first day, but पहली किताब (pahlī kitāb), the first book — feminine noun, feminine ending.
 
 The word, taken apart: no एक in it.
-There is no एक inside पहला (pahlā). It comes down from Sanskrit प्रथम (prathama), a word that already meant "foremost" before Hindi existed, and the number was never part of it.
+There is no एक inside पहला (pahlā). It comes down from prathilla, a form CDIAL reconstructs beside prathila, "first", and builds on Sanskrit प्रथम (prathama), a word that already meant "foremost" before Hindi existed (CDIAL 8652). The number was never part of it.
 You will meet its close relative constantly: पहले (pahle) — "before, earlier, first of all". खाने से पहले is "before eating". So in Hindi the word for first and the word for before are the same word wearing a different ending, which is a reasonable thing for a language to decide: putting one thing before another is putting it first.
 
 Guided Practice.

@@ -1,0 +1,19 @@
+{
+  "chapter": 652,
+  "title": "En el aeropuerto",
+  "label": "ch:es-en-el-aeropuerto",
+  "canDo": "I can sort things out at the airport: the terminal, the airline, a label for my bag and luggage that goes missing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C652-mochila",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 652: I can sort things out at the airport: the terminal, the airline, a label for my bag and luggage that goes missing.",
+    "assesses": [
+      "ES-LEX-C652-AEROPUERTO-03",
+      "ES-LEX-C652-AEROPUERTO-04",
+      "ES-LEX-C652-AEROPUERTO-05"
+    ]
+  }
+}

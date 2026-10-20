@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C268-service-location-retrieval",
+    "language": "sanskrit",
+    "chapter": 268,
+    "sequence": 15930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d86b0c658d613772"
+  },
+  "findings": []
+}

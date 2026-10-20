@@ -14,7 +14,8 @@ romanization: "vimānapattanam"
 concept_tag: SA-THG164-VIMANAPATTANAM
 prerequisites: [SA-C164-upavanam, SA-C164-kridanganam]
 sounds: []
-roots: []
+roots: [sanskrit-vimana, sanskrit-pattana]
+etymology_hook: "vimānapattana ← vimāna 'car of the gods' (√mā 'measure') + pattana 'town'; a modern coinage for an airport"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C164-kridanganam]
 <!-- hl-knowledge: introduces=[SA-LEX-C164-THG164-05]; assesses=[] -->
 
 **विमानपत्तनम्** — *vimānapattanam* — "an airport".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vimānapattana* is built from *vimāna* "a car of the gods, an aerial chariot", from *vi-√mā* "measure out, traverse" (CDIAL 11823), and *pattana* "town, city" (MW). Using the pair for an airport is modern.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

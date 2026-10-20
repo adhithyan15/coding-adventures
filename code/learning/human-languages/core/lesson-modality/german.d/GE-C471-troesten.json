@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C471-troesten",
+    "language": "german",
+    "chapter": 471,
+    "sequence": 25280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b11565fe049494b7"
+  },
+  "findings": []
+}

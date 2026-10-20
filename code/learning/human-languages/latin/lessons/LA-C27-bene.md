@@ -6,7 +6,7 @@ sequence: 510
 chapter: 27
 type: word
 headword: bene
-gloss: "well" — a morphologically simple inheritance: French bien and Spanish bien are just bene plus one regular sound change (the same short-e-diphthongizes-to-ie shift as mel→miel), with no extra grafted-on suffix, unlike quōmodo's more roundabout Romance history
+gloss: '"well" — a morphologically simple inheritance: French bien and Spanish bien are just bene plus one regular sound change (the same short-e-diphthongizes-to-ie shift as mel→miel), with no extra grafted-on suffix, unlike quōmodo''s more roundabout Romance history'
 concept_tag: WORD-WELL
 prerequisites: [LA-C19-valeo-family]
 sounds: [macron-none-short-e]

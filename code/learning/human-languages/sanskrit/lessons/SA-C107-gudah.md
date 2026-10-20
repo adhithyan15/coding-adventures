@@ -14,7 +14,8 @@ romanization: "guḍaḥ"
 concept_tag: SA-THINGS107-GUDAH
 prerequisites: [SA-C106-mudgah, SA-C106-supah]
 sounds: []
-roots: []
+roots: [sanskrit-guda]
+etymology_hook: "guḍa 'molasses, jaggery', perhaps guḍa 'ball' (CDIAL 4182 asks); Hindi guṛ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C106-supah]
 <!-- hl-knowledge: introduces=[SA-LEX-C107-THINGS107-01]; assesses=[] -->
 
 **गुडः** — *guḍaḥ* — "jaggery".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*guḍa* "boiled sugarcane juice, molasses" may be the same word as *guḍa* "a ball, a lump"; CDIAL 4182 raises that link as a question, so it is not settled. It lives on as Hindi *guṛ* and Marathi *gūḷ* "jaggery" (CDIAL 4182).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

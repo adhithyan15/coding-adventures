@@ -1,0 +1,11 @@
+{
+  "id": "GE-C510-buhen",
+  "pathSegment": "GE-PATH-510-TRIBUENE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-510-TRIBUENE",
+      "order": 4
+    }
+  ]
+}

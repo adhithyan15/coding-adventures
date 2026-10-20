@@ -14,7 +14,8 @@ romanization: "chon"
 concept_tag: FA-WHY92-CHON
 prerequisites: [FA-C92-chera, FA-C92-zira]
 sounds: []
-roots: []
+roots: [persian-chon]
+etymology_hook: "chon ← Middle Persian čiyōn (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C92-zira]
 <!-- hl-knowledge: introduces=[FA-LEX-C92-WHY92-03]; assesses=[] -->
 
 **چون** — *chon* — "because, since".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*chon* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *čiyōn*, "as, like, how" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

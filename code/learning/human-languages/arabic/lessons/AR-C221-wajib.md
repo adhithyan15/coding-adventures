@@ -14,7 +14,8 @@ romanization: "wājib"
 concept_tag: AR-AMAL221-WAJIB
 prerequisites: [AR-C221-aqd, AR-C221-imtihan]
 sounds: []
-roots: []
+roots: [w-j-b]
+etymology_hook: "wājib: built on the root w-j-b, 'to be due, to fall' (Lane); wājib is the active participle, 'due, required'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C221-imtihan]
 <!-- hl-knowledge: introduces=[AR-LEX-C221-AMAL221-05]; assesses=[] -->
 
 **واجب** — *wājib* — "homework; a duty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**واجب** (*wājib*) is built on the native Arabic root *w-j-b*, "to be due, to fall" (Lane). *Wājib* is the active participle, "due, required".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

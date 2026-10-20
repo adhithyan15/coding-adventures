@@ -14,7 +14,8 @@ romanization: "satl"
 concept_tag: FA-THINGS111-SATL
 prerequisites: [FA-C111-kase, FA-C111-jaru]
 sounds: []
-roots: []
+roots: [latin-situla]
+etymology_hook: "satl ← Arabic saṭl ← Latin situla 'bucket' (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C111-jaru]
 <!-- hl-knowledge: introduces=[FA-LEX-C111-THINGS111-04]; assesses=[] -->
 
 **سطل** — *satl* — "a bucket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*satl* is borrowed from Arabic *saṭl*, "bucket", which goes back through Greek to Latin *situla*, "bucket, pail" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

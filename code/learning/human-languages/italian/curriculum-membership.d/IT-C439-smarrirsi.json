@@ -1,0 +1,11 @@
+{
+  "id": "IT-C439-smarrirsi",
+  "pathSegment": "IT-PATH-439-ORIENTARSI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-439-ORIENTARSI",
+      "order": 1
+    }
+  ]
+}

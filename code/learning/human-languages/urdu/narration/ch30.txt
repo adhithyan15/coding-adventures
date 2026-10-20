@@ -11,7 +11,7 @@ Count one to ten, then say ten on its own.
 
 You'll want to know first — one word.
 بیس — bīs — twenty.
-بیس (bīs) goes back through Sanskrit vimshati to the Indo-European word for twenty, the same word behind Latin vīgintī and, through it, English vigesimal.
+بیس (bīs) goes back through Sanskrit viṃśati, "twenty" (CDIAL 11616), to the Indo-European word for twenty, the same word behind Latin vīgintī and, through it, English vigesimal.
 
 Grammar Lens: what is NOT here, and why.
 Eleven to nineteen are missing from this book on purpose, and the reason is a fact about Urdu rather than a shortage of pages.
@@ -46,7 +46,7 @@ Two letters: the س that opens seven and the و that closes nine. The largest nu
 Say نو and سو (sau) one after the other. One consonant apart, and a hundred apart in value — which is exactly where a price is misheard at a busy counter, so drill them as a pair.
 
 The word, taken apart — centum, hundred, sau.
-سو (sau) continues Sanskrit śata, from Indo-European kmtom, "hundred." Latin centum, Greek hekatón and English hundred are the same word. Anybody who has read a per cent has met its cousin.
+سو (sau) continues Sanskrit śata (CDIAL 12278), from Indo-European kmtom, "hundred." Latin centum, Greek hekatón and English hundred are the same word. Anybody who has read a per cent has met its cousin.
 
 Guided Practice.
 [your turn — say: sau — a hundred]

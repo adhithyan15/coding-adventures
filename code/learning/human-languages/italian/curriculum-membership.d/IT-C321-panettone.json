@@ -1,0 +1,11 @@
+{
+  "id": "IT-C321-panettone",
+  "pathSegment": "IT-PATH-321-PRESEPE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-321-PRESEPE",
+      "order": 1
+    }
+  ]
+}

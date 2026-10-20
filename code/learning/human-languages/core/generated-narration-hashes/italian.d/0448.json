@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 448,
+  "sourceHash": "fnv1a64:912963ea94dbcb1a",
+  "lessonIds": [
+    "IT-C448-panchina",
+    "IT-C448-lampione",
+    "IT-C448-cestino",
+    "IT-C448-tombino",
+    "IT-C448-ingombrare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch448.txt",
+  "json": "italian/narration/ch448.json",
+  "textHash": "fnv1a64:f3a129bbe72421d9",
+  "jsonHash": "fnv1a64:97388b183b53858b",
+  "findings": []
+}

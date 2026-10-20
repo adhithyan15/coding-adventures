@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C380-iscriversi",
+    "language": "italian",
+    "chapter": 380,
+    "sequence": 21720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd88fb5bee6319de"
+  },
+  "findings": []
+}

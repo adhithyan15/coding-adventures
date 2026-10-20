@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a shirt, then the Sanskrit for a teleph
 You'll want to know: दूरदर्शनम्.
 दूरदर्शनम् — dūradarśanam — "a television".
 
+The word, taken apart.
+dūradarśana is built from dūra "far" and darśana "seeing", from the root √dṛś "see" (MW): "far-seeing". It is a modern coinage, made the way English television was made from Greek tele "far" + Latin visio "seeing".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a telephone, then the Sanskrit for a te
 
 You'll want to know: संगणकम्.
 संगणकम् — saṅgaṇakam — "a computer".
+
+The word, taken apart.
+saṅgaṇaka is built from sam "together" and the root √gaṇ "count, reckon" (MW), with the agent suffix -aka: "the one that reckons it all up". It is a modern coinage for the computer, made the way English made computer from compute.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a television, then the Sanskrit for a c
 You'll want to know: यन्त्रम्.
 यन्त्रम् — yantram — "a machine".
 
+The word, taken apart.
+yantra comes from the root √yam "hold, restrain" with the tool suffix -tra (CDIAL 10412): in the Rigveda it is a controlling device, a prop or a fetter, and later any contrivance or machine (MW). Punjabi jandrā "padlock" comes from it (CDIAL 10412).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a computer, then the Sanskrit for a mac
 You'll want to know: व्यजनम्.
 व्यजनम् — vyajanam — "a fan".
 
+The word, taken apart.
+vyajana "a fan" comes from the root √vīj, also written vyaj, "to fan, to cool by fanning" (MW; CDIAL 12043). Its twin vījana lives on as Hindi bījnā "fan" (CDIAL 12043).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a machine, then the Sanskrit for a fan.
 
 You'll want to know: पेटिका.
 पेटिका — peṭikā — "a box".
+
+The word, taken apart.
+peṭikā is peṭaka "a little basket, a box" with the feminine suffix -ikā, and MW takes peṭaka from piṭaka "basket". CDIAL 8164 calls the family non-Aryan, and DEDR 4388 sets it beside Dravidian words for a box; Marathi peṭī "box" belongs to it (CDIAL 8164).
 
 What you've built.
 One more word for this chapter.

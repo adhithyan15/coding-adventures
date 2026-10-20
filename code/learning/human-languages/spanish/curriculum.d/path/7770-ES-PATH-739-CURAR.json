@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-739-CURAR",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ES-EXT-739-CURAR"
+  ],
+  "after": []
+}

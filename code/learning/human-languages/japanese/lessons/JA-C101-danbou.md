@@ -14,7 +14,8 @@ romanization: "danbou"
 concept_tag: JA-THINGS101-DANBOU
 prerequisites: [JA-C101-fusuma, JA-C101-kotatsu]
 sounds: []
-roots: []
+roots: [middle-chinese-nwanx, middle-chinese-bjang-room]
+etymology_hook: "danbou: Sino-Japanese 暖 'warm' + 房 'room', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C101-kotatsu]
 <!-- hl-knowledge: introduces=[JA-LEX-C101-THINGS101-05]; assesses=[] -->
 
 **だんぼう** — *danbou* — "heating".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**だんぼう** (*danbou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *dan*, "warm" (Middle Chinese *nwanX*) and *bō*, "room, house" (*bjang*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "nāvil"
 concept_tag: UR-CHIZ254-NAVIL
 prerequisites: [UR-C253-zarafa, UR-C253-makri]
 sounds: []
-roots: []
+roots: [english-novel]
+etymology_hook: "nāvil ← English novel"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C253-makri]
 <!-- hl-knowledge: introduces=[UR-LEX-C254-CHIZ254-01]; assesses=[] -->
 
 **ناول** — *nāvil* — "a novel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ناول** (*nāvil*) is a loan from English *novel*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

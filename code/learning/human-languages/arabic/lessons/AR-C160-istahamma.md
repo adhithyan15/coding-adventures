@@ -14,7 +14,8 @@ romanization: "istaḥamma"
 concept_tag: AR-VERB-ISTAHAMMA
 prerequisites: [AR-C160-atfaa, AR-C160-malaa]
 sounds: []
-roots: []
+roots: [ḥ-m-m]
+etymology_hook: "istaḥamma: built on the root ḥ-m-m, 'to be hot, to heat' (Lane); istaḥamma is Form X, 'to wash with hot water'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C160-malaa]
 <!-- hl-knowledge: introduces=[AR-LEX-C160-ACT160-05]; assesses=[] -->
 
 **استحم** — *istaḥamma* — "to bathe, to have a shower".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**استحم** (*istaḥamma*) is built on the native Arabic root *ḥ-m-m*, "to be hot, to heat" (Lane). *Istaḥamma* is Form X, "to wash with hot water".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Urdu for an office, then the Urdu for a library.
 You'll want to know: ہوائی جہاز.
 ہوائی جہاز — hawāī jahāz — "an aeroplane".
 
+The phrase, taken apart.
+ہوائی جہاز (hawāī jahāz) is "air-ship": hawāī, "of the air", from Arabic hawāʾ, "air", and jahāz, "ship", from Arabic jahāz, "equipment", both through Persian (Lane, roots h-w-y, j-h-z).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a library, then the Urdu for an aeroplane.
 
 You'll want to know: ریل گاڑی.
 ریل گاڑی — rel gāṛī — "a train".
+
+The phrase, taken apart.
+ریل گاڑی (rel gāṛī) is "rail cart": rel is a loan from English rail, and gāṛī goes back to a reconstructed gāḍḍa, "cart", which CDIAL links, tentatively, with Sanskrit garta, "seat of a chariot" (CDIAL 4116).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for an aeroplane, then the Urdu for a train.
 You'll want to know: پاس.
 پاس — pās — "near; with (someone)".
 
+The word, taken apart.
+پاس (pās) is inherited. It comes from Sanskrit pārśve, "near", a form of pārśva, "side" (CDIAL 8118).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a train, then the Urdu for near; with.
 You'll want to know: سکنا.
 سکنا — saknā — "to be able to, can".
 
+The word, taken apart.
+سکنا (saknā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śaknoti, "is able" (CDIAL 12252).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for near; with, then the Urdu for to be able to
 
 You'll want to know: پانا.
 پانا — pānā — "to manage to, to get".
+
+The word, taken apart.
+پانا (pānā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from prāpayati, "causes to be obtained, obtains" (CDIAL 8943).
 
 What you've built.
 One more word for this chapter.

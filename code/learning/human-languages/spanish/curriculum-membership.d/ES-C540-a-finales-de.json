@@ -1,0 +1,11 @@
+{
+  "id": "ES-C540-a-finales-de",
+  "pathSegment": "ES-PATH-540-TEMPORADA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-540-TEMPORADA",
+      "order": 2
+    }
+  ]
+}

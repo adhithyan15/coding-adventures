@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:8184a46dedbd1469",
+  "lessonIds": [
+    "LA-C351-concido",
+    "LA-C351-seco",
+    "LA-C351-mortarium",
+    "LA-C351-pistillum",
+    "LA-C351-tero"
+  ],
+  "tex": "latin/book/chapters/ch351-concidere-et-terere.tex"
+}

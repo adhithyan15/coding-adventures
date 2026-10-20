@@ -1,0 +1,19 @@
+{
+  "chapter": 706,
+  "title": "Sustos y miedos",
+  "label": "ch:es-sustos-y-miedos",
+  "canDo": "I can tell someone that something gave me a fright or that I fear something.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C706-temer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 706: I can tell someone that something gave me a fright or that I fear something.",
+    "assesses": [
+      "ES-LEX-C706-SUSTO-03",
+      "ES-LEX-C706-SUSTO-04",
+      "ES-LEX-C706-SUSTO-05"
+    ]
+  }
+}

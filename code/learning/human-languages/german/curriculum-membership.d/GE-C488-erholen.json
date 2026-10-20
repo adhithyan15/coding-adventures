@@ -1,0 +1,11 @@
+{
+  "id": "GE-C488-erholen",
+  "pathSegment": "GE-PATH-488-GENESEN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-488-GENESEN",
+      "order": 3
+    }
+  ]
+}

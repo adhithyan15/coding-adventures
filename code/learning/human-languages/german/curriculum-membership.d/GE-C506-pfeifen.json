@@ -1,0 +1,11 @@
+{
+  "id": "GE-C506-pfeifen",
+  "pathSegment": "GE-PATH-506-FUSSBALL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-506-FUSSBALL",
+      "order": 4
+    }
+  ]
+}

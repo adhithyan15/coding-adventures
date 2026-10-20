@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 644,
+  "sourceHash": "fnv1a64:6c32623d1c62fbf9",
+  "lessonIds": [
+    "ES-C644-motor",
+    "ES-C644-volante",
+    "ES-C644-maletero",
+    "ES-C644-cinturon",
+    "ES-C644-abrocharse"
+  ],
+  "tex": "spanish/book/chapters/ch644-dentro-del-coche.tex"
+}

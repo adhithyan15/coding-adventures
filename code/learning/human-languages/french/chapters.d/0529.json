@@ -1,0 +1,19 @@
+{
+  "chapter": 529,
+  "title": "À table",
+  "label": "ch:fr-a-table",
+  "canDo": "I can talk about laying and clearing up after a meal.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-R529-revision-522-529",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 529: I can talk about laying and clearing up after a meal.",
+    "assesses": [
+      "FR-LEX-C529-TABLE-03",
+      "FR-LEX-C529-TABLE-04",
+      "FR-LEX-C529-TABLE-05"
+    ]
+  }
+}

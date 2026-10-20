@@ -1,0 +1,19 @@
+{
+  "chapter": 416,
+  "title": "Su due ruote",
+  "label": "ch:it-su-due-ruote",
+  "canDo": "I can talk about getting round on two wheels and parking: the moped, the scooter, pedalling, the parking meter and stopping.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C416-sostare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 416: I can talk about getting round on two wheels and parking: the moped, the scooter, pedalling, the parking meter and stopping.",
+    "assesses": [
+      "IT-LEX-C416-MOTORINO-03",
+      "IT-LEX-C416-MOTORINO-04",
+      "IT-LEX-C416-MOTORINO-05"
+    ]
+  }
+}

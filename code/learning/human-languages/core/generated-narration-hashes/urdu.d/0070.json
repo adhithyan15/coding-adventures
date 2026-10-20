@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 70,
-  "sourceHash": "fnv1a64:871bd8e8ae00cb0d",
+  "sourceHash": "fnv1a64:83863701b449aa4a",
   "lessonIds": [
     "UR-C70-chhota",
     "UR-C70-naya",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch70.txt",
   "json": "urdu/narration/ch70.json",
-  "textHash": "fnv1a64:b52b0855e3e9a793",
-  "jsonHash": "fnv1a64:09b1d61e198d7ce0",
+  "textHash": "fnv1a64:e747a3427cb2e074",
+  "jsonHash": "fnv1a64:379031dae8372ab7",
   "findings": []
 }

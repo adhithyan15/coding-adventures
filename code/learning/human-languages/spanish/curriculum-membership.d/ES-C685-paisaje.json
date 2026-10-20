@@ -1,0 +1,11 @@
+{
+  "id": "ES-C685-paisaje",
+  "pathSegment": "ES-PATH-685-PAISAJE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-685-PAISAJE",
+      "order": 0
+    }
+  ]
+}

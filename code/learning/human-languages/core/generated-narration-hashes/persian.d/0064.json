@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 64,
-  "sourceHash": "fnv1a64:bbc2c3b493b926cb",
+  "sourceHash": "fnv1a64:f9a57a04a9c3a0f0",
   "lessonIds": [
     "FA-C64-abi",
     "FA-C64-siyah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch64.txt",
   "json": "persian/narration/ch64.json",
-  "textHash": "fnv1a64:5476326299149a86",
-  "jsonHash": "fnv1a64:98147431186b5acc",
+  "textHash": "fnv1a64:9eab7e3e92dc459a",
+  "jsonHash": "fnv1a64:f35a8ee5bda26943",
   "findings": []
 }

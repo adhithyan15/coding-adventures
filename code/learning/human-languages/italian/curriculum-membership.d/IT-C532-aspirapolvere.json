@@ -1,0 +1,11 @@
+{
+  "id": "IT-C532-aspirapolvere",
+  "pathSegment": "IT-PATH-532-PULIZIE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-532-PULIZIE",
+      "order": 4
+    }
+  ]
+}

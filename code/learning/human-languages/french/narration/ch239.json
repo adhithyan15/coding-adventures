@@ -4,7 +4,7 @@
   "chapter": 239,
   "title": "To unite, To be worth, To get used to, To realise, To hurry",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b80d70e35452b5e4",
+  "sourceHash": "fnv1a64:08157e3b8f5e00c8",
   "lessons": [
     {
       "id": "FR-C239-unir",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:23cf843604740fcb",
+      "sourceHash": "fnv1a64:249ea7f13a0721c3",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "se rendre compte — \"to render oneself an account\": rendre, \"to give back\", and compte, \"an account\"."
+              "text": "se rendre compte — \"to render oneself an account\": rendre, \"to give back\", and compte, \"an account\". Rendre from Latin reddere, \"to give back\", and compte from Latin computus, \"a reckoning\" (EtymDB 2.1)."
             }
           ]
         },

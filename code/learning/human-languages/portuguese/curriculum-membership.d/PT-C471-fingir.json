@@ -1,0 +1,11 @@
+{
+  "id": "PT-C471-fingir",
+  "pathSegment": "PT-PATH-471-MENTIRA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-471-MENTIRA",
+      "order": 4
+    }
+  ]
+}

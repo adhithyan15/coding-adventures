@@ -14,7 +14,8 @@ romanization: "qumāma"
 concept_tag: AR-THINGS125-QUMAMA
 prerequisites: [AR-C125-dalw, AR-C125-miknasa]
 sounds: []
-roots: []
+roots: [q-m-m]
+etymology_hook: "qumāma: built on the root q-m-m, 'to sweep' (Lane); qumāma is sweepings, rubbish"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C125-miknasa]
 <!-- hl-knowledge: introduces=[AR-LEX-C125-THINGS125-03]; assesses=[] -->
 
 **قمامة** — *qumāma* — "rubbish".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قمامة** (*qumāma*) is built on the native Arabic root *q-m-m*, "to sweep" (Lane). *Qumāma* is sweepings, rubbish.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

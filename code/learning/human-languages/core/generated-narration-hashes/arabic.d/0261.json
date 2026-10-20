@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 261,
-  "sourceHash": "fnv1a64:e1b24d2587038ed3",
+  "sourceHash": "fnv1a64:960fe24c76e56012",
   "lessonIds": [
     "AR-C261-dhaba",
     "AR-C261-tajammada",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch261.txt",
   "json": "arabic/narration/ch261.json",
-  "textHash": "fnv1a64:bf520d40884864f0",
-  "jsonHash": "fnv1a64:b8e7adb0af73a501",
+  "textHash": "fnv1a64:161746c3b233ccd3",
+  "jsonHash": "fnv1a64:d0094107d3a33820",
   "findings": []
 }

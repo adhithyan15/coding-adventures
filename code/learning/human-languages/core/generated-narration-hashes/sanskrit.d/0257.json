@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 257,
-  "sourceHash": "fnv1a64:5a9b89405fc3a525",
+  "sourceHash": "fnv1a64:97f3042dd3834394",
   "lessonIds": [
     "SA-C257-simantah",
     "SA-C257-lokayanam",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "sanskrit/narration/ch257.txt",
   "json": "sanskrit/narration/ch257.json",
-  "textHash": "fnv1a64:6920b7b628823a6a",
-  "jsonHash": "fnv1a64:798ab8f9d6c67223",
+  "textHash": "fnv1a64:2668346edd766efe",
+  "jsonHash": "fnv1a64:fa134e9341e62a04",
   "findings": []
 }

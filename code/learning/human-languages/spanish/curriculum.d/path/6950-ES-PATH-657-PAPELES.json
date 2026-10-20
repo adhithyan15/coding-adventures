@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-657-PAPELES",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "ES-EXT-657-PAPELES"
+  ],
+  "after": []
+}

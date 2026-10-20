@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:ef74da63485bd71b",
+  "lessonIds": [
+    "IT-C313-morte",
+    "IT-C313-defunto",
+    "IT-C313-funerale",
+    "IT-C313-lutto",
+    "IT-C313-seppellire"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch313.txt",
+  "json": "italian/narration/ch313.json",
+  "textHash": "fnv1a64:114003c187bbe852",
+  "jsonHash": "fnv1a64:55193ba07bbc1bcb",
+  "findings": []
+}

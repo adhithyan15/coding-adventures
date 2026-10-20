@@ -1,0 +1,17 @@
+{
+  "language": "italian",
+  "chapter": 270,
+  "sourceHash": "fnv1a64:d6cc71c7b9d1daaf",
+  "lessonIds": [
+    "IT-C270-piu-di",
+    "IT-C270-da-tre-anni",
+    "IT-C270-ripasso-esperienza"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "italian/narration/ch270.txt",
+  "json": "italian/narration/ch270.json",
+  "textHash": "fnv1a64:22743acc7164cfb6",
+  "jsonHash": "fnv1a64:00fb41d16e998186",
+  "findings": []
+}

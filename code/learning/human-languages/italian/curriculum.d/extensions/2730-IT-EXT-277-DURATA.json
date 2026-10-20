@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-277-DURATA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say how long something lasted, and name a moment, an instant and a stage.",
+  "prerequisites": []
+}

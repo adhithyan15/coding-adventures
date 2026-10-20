@@ -1,7 +1,7 @@
 {
   "language": "chinese",
   "chapter": 4,
-  "sourceHash": "fnv1a64:878d342ee62b2226",
+  "sourceHash": "fnv1a64:fabfa4fb4e7a998f",
   "lessonIds": [
     "ZH-W04-kou",
     "ZH-C04-kou",
@@ -15,7 +15,7 @@
   "drivablePrefix": 0,
   "text": "chinese/narration/ch04.txt",
   "json": "chinese/narration/ch04.json",
-  "textHash": "fnv1a64:e238a7a8cde9861a",
-  "jsonHash": "fnv1a64:7b4fadb57888e7b8",
+  "textHash": "fnv1a64:84a694426e8a3af3",
+  "jsonHash": "fnv1a64:7ef36bd94f590eb8",
   "findings": []
 }

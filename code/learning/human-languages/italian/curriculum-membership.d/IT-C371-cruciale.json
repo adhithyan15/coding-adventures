@@ -1,0 +1,11 @@
+{
+  "id": "IT-C371-cruciale",
+  "pathSegment": "IT-PATH-371-RILEVANTE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-371-RILEVANTE",
+      "order": 1
+    }
+  ]
+}

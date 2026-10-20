@@ -47,7 +47,7 @@ reviews_of: [RU-C199-grazhdanin]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**иностранец** is *иной*, "other", with *страна*, "a country", and *-ец*, "one who": a person from another land.
+**иностранец** is *иной*, "other", with *страна*, "a country", and *-ец*, "one who": a person from another land. Vasmer takes *страна* as borrowed from Church Slavonic, and relates *иной* to Latin *ūnus*, "one".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

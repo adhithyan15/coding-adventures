@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-712-ANIMO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe my mood and cheer up a friend who is down.",
+  "prerequisites": []
+}

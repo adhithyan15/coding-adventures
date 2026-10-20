@@ -14,7 +14,8 @@ romanization: "ʿashara"
 concept_tag: AR-NUMBERS97-ASHARA
 prerequisites: [AR-C96-thamaniya, AR-C96-tisa]
 sounds: []
-roots: []
+roots: [arabic-ashar-ten]
+etymology_hook: "ʿashara: built on the root ʿ-sh-r, 'ten' (Lane); Hebrew ʿeser, 'ten', is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C96-tisa]
 <!-- hl-knowledge: introduces=[AR-LEX-C97-NUMBERS97-01]; assesses=[] -->
 
 **عشرة** — *ʿashara* — "ten".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عشرة** (*ʿashara*) is built on the native Arabic root *ʿ-sh-r*, "ten" (Lane). Hebrew *ʿeser*, "ten", is its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

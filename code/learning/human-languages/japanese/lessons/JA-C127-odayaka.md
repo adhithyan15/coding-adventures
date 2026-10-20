@@ -14,7 +14,8 @@ romanization: "odayaka"
 concept_tag: JA-QUAL127-ODAYAKA
 prerequisites: [JA-C127-sukunai, JA-C127-sawayaka]
 sounds: []
-roots: []
+roots: [japanese-odayaka]
+etymology_hook: "odayaka: native Japanese, inherited, not borrowed; kanji 穏やか attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C127-sawayaka]
 <!-- hl-knowledge: introduces=[JA-LEX-C127-QUAL127-04]; assesses=[] -->
 
 **おだやか** — *odayaka* — "calm".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**おだやか** (*odayaka*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

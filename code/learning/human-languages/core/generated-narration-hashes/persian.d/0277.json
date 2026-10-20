@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 277,
-  "sourceHash": "fnv1a64:46bb8670744c9da6",
+  "sourceHash": "fnv1a64:493fb4752b1c7e64",
   "lessonIds": [
     "FA-C277-valedeyn",
     "FA-C277-namzad",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch277.txt",
   "json": "persian/narration/ch277.json",
-  "textHash": "fnv1a64:1f176a8d8f3686af",
-  "jsonHash": "fnv1a64:e05feb26431db6ae",
+  "textHash": "fnv1a64:c9191b84a1621141",
+  "jsonHash": "fnv1a64:b7f989fa1d48a10a",
   "findings": []
 }

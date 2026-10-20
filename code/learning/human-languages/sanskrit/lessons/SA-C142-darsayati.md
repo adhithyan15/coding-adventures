@@ -14,7 +14,8 @@ romanization: "darśayati"
 concept_tag: SA-VERB-DARSAYATI
 prerequisites: [SA-C142-sramyati, SA-C142-racayati]
 sounds: []
-roots: []
+roots: [sanskrit-darshayati, drish-see]
+etymology_hook: "darśayati 'shows' is the causative of √dṛś 'see' (CDIAL 6210), which MW compares with Greek derkomai"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C142-racayati]
 <!-- hl-knowledge: introduces=[SA-LEX-C142-ACT142-04]; assesses=[] -->
 
 **दर्शयति** — *darśayati* — "shows".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*darśayati* is the causative of the root √dṛś "see": "makes see", so "shows" (CDIAL 6210). MW compares √dṛś with Greek *derkomai* "look", and *darśana* "sight" comes from the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

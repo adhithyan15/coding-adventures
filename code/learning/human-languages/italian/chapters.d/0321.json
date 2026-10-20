@@ -1,0 +1,19 @@
+{
+  "chapter": 321,
+  "title": "Le feste d'inverno",
+  "label": "ch:it-le-feste-d-inverno",
+  "canDo": "I can describe the winter holidays: the nativity scene, the festive cake, the big dinner, decorating and the family game.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C321-tombola",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 321: I can describe the winter holidays: the nativity scene, the festive cake, the big dinner, decorating and the family game.",
+    "assesses": [
+      "IT-LEX-C321-PRESEPE-03",
+      "IT-LEX-C321-PRESEPE-04",
+      "IT-LEX-C321-PRESEPE-05"
+    ]
+  }
+}

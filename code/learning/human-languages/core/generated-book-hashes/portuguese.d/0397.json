@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 397,
+  "sourceHash": "fnv1a64:aa996e50e0443d31",
+  "lessonIds": [
+    "PT-C397-dispositivo",
+    "PT-C397-portatil",
+    "PT-C397-instalar",
+    "PT-C397-desinstalar",
+    "PT-C397-atualizar"
+  ],
+  "tex": "portuguese/book/chapters/ch397-descarregar-uma-aplicacao.tex"
+}

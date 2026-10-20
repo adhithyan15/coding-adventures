@@ -1,0 +1,11 @@
+{
+  "id": "IT-C325-regno",
+  "pathSegment": "IT-PATH-325-REGNO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-325-REGNO",
+      "order": 3
+    }
+  ]
+}

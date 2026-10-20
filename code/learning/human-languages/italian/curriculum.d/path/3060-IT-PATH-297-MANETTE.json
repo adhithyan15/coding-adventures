@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-297-MANETTE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-297-MANETTE"
+  ],
+  "after": []
+}

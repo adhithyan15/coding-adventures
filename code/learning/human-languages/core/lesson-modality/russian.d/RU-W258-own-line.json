@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "RU-W258-own-line",
+    "language": "russian",
+    "chapter": 258,
+    "sequence": 15880,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:bb3a8ce69e61ebc2",
+    "detachableSegments": [
+      "Writing — controlled composition"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

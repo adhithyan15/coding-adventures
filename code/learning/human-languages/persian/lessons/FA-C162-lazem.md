@@ -14,7 +14,8 @@ romanization: "lâzem"
 concept_tag: FA-SEFAT162-LAZEM
 prerequisites: [FA-C162-dowlati, FA-C162-fowri]
 sounds: []
-roots: []
+roots: [arabic-lazim]
+etymology_hook: "lâzem ← Arabic lāzim 'necessary, binding', root l-z-m (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C162-fowri]
 <!-- hl-knowledge: introduces=[FA-LEX-C162-SEFAT162-03]; assesses=[] -->
 
 **لازم** — *lâzem* — "necessary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*lâzem* is borrowed from Arabic *lāzim*, "necessary, binding". Its Arabic root is *l-z-m* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

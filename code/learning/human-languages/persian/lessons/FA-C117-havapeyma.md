@@ -14,7 +14,8 @@ romanization: "havâpeymâ"
 concept_tag: FA-THINGS117-HAVAPEYMA
 prerequisites: [FA-C117-metro, FA-C117-kashti]
 sounds: []
-roots: []
+roots: [arabic-hawa]
+etymology_hook: "havâpeymâ: havâ ← Arabic hawāʾ 'air' (root h-w-y, Lane) + Persian peymâ 'crossing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C117-kashti]
 <!-- hl-knowledge: introduces=[FA-LEX-C117-THINGS117-05]; assesses=[] -->
 
 **هواپیما** — *havâpeymâ* — "an aeroplane".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*havâpeymâ* is *havâ*, "air", with *-peymâ*, "measuring, crossing" (from *peymudan*): the air-crosser. *havâ* is borrowed from Arabic *hawāʾ*, "air" (root *h-w-y*, Lane); *peymâ* is native Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

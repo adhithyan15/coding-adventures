@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 32,
-  "sourceHash": "fnv1a64:6b8c594b67e77a7c",
+  "sourceHash": "fnv1a64:0485ff88c05b28e9",
   "lessonIds": [
     "IT-C32-ma",
     "IT-C32-o",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "italian/narration/ch32.txt",
   "json": "italian/narration/ch32.json",
-  "textHash": "fnv1a64:b16192d451bf1326",
-  "jsonHash": "fnv1a64:6e33b96c4ade1db3",
+  "textHash": "fnv1a64:199240ac0807f276",
+  "jsonHash": "fnv1a64:d5e7854e7438380f",
   "findings": []
 }

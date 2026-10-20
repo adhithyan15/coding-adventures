@@ -1,0 +1,11 @@
+{
+  "id": "IT-C273-dopodiche",
+  "pathSegment": "IT-PATH-273-PRIMA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-273-PRIMA",
+      "order": 4
+    }
+  ]
+}

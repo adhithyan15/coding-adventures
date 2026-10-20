@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Why, and Because",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:1684a53318b40142",
+  "sourceHash": "fnv1a64:819e11389e303d2d",
   "lessons": [
     {
       "id": "MR-C34-kaa-why",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a1a2e5162fc21f21",
+      "sourceHash": "fnv1a64:af91ac5eb6122cca",
       "notice": null,
       "blocks": [
         {
@@ -170,7 +170,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:de9b2e29cf90ff85",
+      "sourceHash": "fnv1a64:37ec011e6de19fcc",
       "notice": null,
       "blocks": [
         {

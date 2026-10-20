@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 419,
+  "sourceHash": "fnv1a64:ae1df171145721fc",
+  "lessonIds": [
+    "PT-C419-cruzeiro",
+    "PT-C419-camarote",
+    "PT-C419-marinheiro",
+    "PT-C419-proa",
+    "PT-C419-popa"
+  ],
+  "tex": "portuguese/book/chapters/ch419-no-navio.tex"
+}

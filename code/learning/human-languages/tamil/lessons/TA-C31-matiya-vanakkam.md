@@ -12,7 +12,7 @@ concept_tag: GREETING-AFTERNOON
 prerequisites: [TA-C28-afternoon-boundary, TA-C29-kaalai-vanakkam]
 sounds: [tamil-vowel-sign-i, tamil-geminate-kka]
 roots: [vaṇaṅku]
-etymology_hook: "மதிய வணக்கம் (matiya vaṇakkam, 'good afternoon') is confirmed by two independently fetched sources for roughly noon to 4 PM; a third source does not list a distinct afternoon greeting, so learn the phrase while keeping the source disagreement visible"
+etymology_hook: "matiya ← Sanskrit madhya 'middle' (CDIAL 9804); vaṇakkam is native, 'a bowing' (DEDR 5236)"
 duration:
   max_seconds: 240
 requires:
@@ -53,7 +53,9 @@ problem to worry about.
 
 Use **மதிய வணக்கம்** when that afternoon slot fits the people and
 setting around you. Treat "noon to 4" as a useful learning window, not
-as a universal clock rule.
+as a universal clock rule. The two words come from different places: *matiya*
+from Sanskrit *madhya*, "middle" (CDIAL 9804), and *vaṇakkam*, native, from
+the verb "to bow" (DEDR 5236).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-AFTERNOON-BOUNDARY-01, TA-LEX-KAALAI-VANAKKAM-01, TA-ETYMON-MATIYA-VANAKKAM-01] -->

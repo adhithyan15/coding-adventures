@@ -1,0 +1,11 @@
+{
+  "id": "IT-C317-tappo",
+  "pathSegment": "IT-PATH-317-SPUMANTE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-317-SPUMANTE",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C359-sindacato",
+    "language": "italian",
+    "chapter": 359,
+    "sequence": 20620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:30c01a2ece0f988f"
+  },
+  "findings": []
+}

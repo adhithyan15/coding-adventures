@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "You're Welcome",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:54d5599fce628a4f",
+  "sourceHash": "fnv1a64:b26cac7e610aba7b",
   "lessons": [
     {
       "id": "AR-C23-afwan",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0cc9401c12727d6",
+      "sourceHash": "fnv1a64:2121a1f3687fd641",
       "notice": null,
       "blocks": [
         {
@@ -47,6 +47,10 @@
             {
               "kind": "speech",
               "text": "عفوا (ʿafwan), root ʿ-f-w (ع-ف-و): the root's core sense is \"to erase, obliterate, remove\" — and \"to pardon, forgive\" grows directly out of that, since forgiving something is, metaphorically, erasing it. The same root gives العفو (al-ʿAfuww, \"the Supreme Pardoner\"), one of the 99 names of Allah in Islamic tradition."
+            },
+            {
+              "kind": "speech",
+              "text": "ʿAfwan is the accusative of ʿafw, \"pardon\", built on the native root ʿ-f-w (Lane)."
             }
           ]
         },

@@ -1,0 +1,15 @@
+{
+  "id": "SA-A1-L-08",
+  "category": "Lipi — the script and its orthography",
+  "label": "ऋ can now be taught and ङ still cannot, for opposite reasons",
+  "probe": null,
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "SA-SCRIPT-DATA",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [],
+  "sanskritSpecific": true,
+  "note": "Sanskrit-specific, and the line this file called its most actionable. ऋ IS NOW TAUGHT: SA-C61-rtu schedules `ṛtuḥ` ('a season') so the letter has a headword to be recognised inside, and SA-S225-letter-vocalic-r then draws it from the four-stroke ductus cited in data/scripts/devanagari.json to Saurmandal's four-panel Commons diagram. Vocabulary first, then the shape, exactly as HL-C217 requires. ङ IS UNCHANGED AND ITS REFUSAL STANDS: it sits in सङ्ख्याशब्दाः in chapter 19 and is ABSENT FROM devanagari.json entirely, so there is no sourced pen path and one must never be invented. RE-MEASURED AGAINST THE FILE, THE SPLIT IS NOT TWO AND TWO BUT THREE AND TWO. ई and घ are in exactly the position ऋ was in -- both have a cited ductus in devanagari.json (Saurmandal for ई, Opiaterein's Deva-घ-order.gif for घ) and neither appears in any Sanskrit HEADWORD, so both are blocked on vocabulary alone and can be unblocked the same way. ँ is in ङ's position: no headword and no entry in devanagari.json at all. Sourcing blocks two; vocabulary blocks two."
+}

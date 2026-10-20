@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C478-beleidigen",
+    "language": "german",
+    "chapter": 478,
+    "sequence": 25640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:44b77af0177cd54a"
+  },
+  "findings": []
+}

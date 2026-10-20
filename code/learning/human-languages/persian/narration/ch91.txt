@@ -12,6 +12,9 @@ Before the new one: say the Persian for a wish, then the Persian for hope.
 You'll want to know: برنامه.
 برنامه — barnâme — "a plan".
 
+The word, taken apart.
+barnâme is built from bar, "on, up", and nâme, "writing, letter" (Middle Persian nāmag); EtymDB lists a Middle Persian barnāmag. Both parts are native Persian.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for hope, then the Persian for a plan.
 
 You'll want to know: نیاز.
 نیاز — niyâz — "a need".
+
+The word, taken apart.
+niyâz is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian niyāz, "need".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for a plan, then the Persian for a need.
 You'll want to know: تصمیم.
 تصمیم — tasmim — "a decision".
 
+The word, taken apart.
+tasmim is borrowed from Arabic taṣmīm, "resolve, determination". Its Arabic root is ṣ-m-m (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for a need, then the Persian for a decision.
 You'll want to know: هدف.
 هدف — hadaf — "a goal".
 
+The word, taken apart.
+hadaf is borrowed from Arabic hadaf, "target, mark". Its Arabic root is h-d-f (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for a decision, then the Persian for a goal.
 
 You'll want to know: خواهش.
 خواهش — khâhesh — "a request".
+
+The word, taken apart.
+khâhesh is khâh-, the present stem of khâstan, "to want", with the noun ending -esh. The verb is inherited: EtymDB traces it to Middle Persian xwāstan.
 
 What you've built.
 One more word for this chapter.

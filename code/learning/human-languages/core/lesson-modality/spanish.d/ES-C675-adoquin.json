@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C675-adoquin",
+    "language": "spanish",
+    "chapter": 675,
+    "sequence": 23630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cc67a1e8c5bbf84b"
+  },
+  "findings": []
+}

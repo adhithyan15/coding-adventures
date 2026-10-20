@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-541-DURAR",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-541-DURAR"
+  ],
+  "after": []
+}

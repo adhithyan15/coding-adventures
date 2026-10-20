@@ -14,7 +14,8 @@ romanization: "rupayā"
 concept_tag: UR-KAM176-RUPAYA
 prerequisites: [UR-C176-pesha, UR-C176-tankhvah]
 sounds: []
-roots: []
+roots: [sanskrit-rupya]
+etymology_hook: "rupayā: usually traced to Sanskrit rūpya 'bearing a stamp; silver' (CDIAL 10805)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C176-tankhvah]
 <!-- hl-knowledge: introduces=[UR-LEX-C176-KAM176-04]; assesses=[] -->
 
 **روپیہ** — *rupayā* — "a rupee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**روپیہ** (*rupayā*) is usually traced to Sanskrit *rūpya*, "bearing a stamp; silver" (CDIAL 10805). CDIAL lists the same word in Hindi as *rūpā*, "silver".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

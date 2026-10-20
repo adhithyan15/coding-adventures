@@ -14,7 +14,8 @@ romanization: "aglā"
 concept_tag: UR-TIME95-AGLA
 prerequisites: [UR-C95-ajkal, UR-C95-pichhla]
 sounds: []
-roots: []
+roots: [sanskrit-agra]
+etymology_hook: "aglā: built on Sanskrit agra 'top, front', with an -l- ending; CDIAL lists āgil 'foremost' (CDIAL 68)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C95-pichhla]
 <!-- hl-knowledge: introduces=[UR-LEX-C95-TIME95-05]; assesses=[] -->
 
 **اگلا** — *aglā* — "next".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اگلا** (*aglā*) is built on Sanskrit *agra*, "top, front", with an *-l-* ending. CDIAL lists Hindi *āgil*, "foremost", made the same way (CDIAL 68), but not *aglā* itself.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

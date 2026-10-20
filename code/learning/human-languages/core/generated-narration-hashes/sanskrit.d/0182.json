@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 182,
-  "sourceHash": "fnv1a64:f277f79019aa9e87",
+  "sourceHash": "fnv1a64:55eb180b7980a975",
   "lessonIds": [
     "SA-C182-vismayah",
     "SA-C182-sokah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch182.txt",
   "json": "sanskrit/narration/ch182.json",
-  "textHash": "fnv1a64:e86ba091dfea4c63",
-  "jsonHash": "fnv1a64:611319b626a3985f",
+  "textHash": "fnv1a64:13a8a515bf65e326",
+  "jsonHash": "fnv1a64:9ffbc48c24a28518",
   "findings": []
 }

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 471,
+  "sourceHash": "fnv1a64:01611c5b4b0c5634",
+  "lessonIds": [
+    "PT-C471-sinceridade",
+    "PT-C471-franqueza",
+    "PT-C471-iludir",
+    "PT-C471-mentiroso",
+    "PT-C471-fingir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch471.txt",
+  "json": "portuguese/narration/ch471.json",
+  "textHash": "fnv1a64:b8414a7f0037a24c",
+  "jsonHash": "fnv1a64:40279591b79221a3",
+  "findings": []
+}

@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 76,
-  "sourceHash": "fnv1a64:1832129e82f66ef6",
+  "sourceHash": "fnv1a64:25b0b21ed95d50f4",
   "lessonIds": [
     "SA-C76-rain",
     "SA-C76-cold",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch76.txt",
   "json": "sanskrit/narration/ch76.json",
-  "textHash": "fnv1a64:7ed6c7329db9af58",
-  "jsonHash": "fnv1a64:1b65b9a97928d1f4",
+  "textHash": "fnv1a64:e4d56ccbfa5ecb1e",
+  "jsonHash": "fnv1a64:7566b3b7150b5815",
   "findings": []
 }

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C627-derrochar",
+  "pathSegment": "ES-PATH-627-GASTO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-627-GASTO",
+      "order": 0
+    }
+  ]
+}

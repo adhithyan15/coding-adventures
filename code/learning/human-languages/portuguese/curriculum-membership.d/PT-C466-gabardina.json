@@ -1,0 +1,11 @@
+{
+  "id": "PT-C466-gabardina",
+  "pathSegment": "PT-PATH-466-CHUVA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-466-CHUVA",
+      "order": 4
+    }
+  ]
+}

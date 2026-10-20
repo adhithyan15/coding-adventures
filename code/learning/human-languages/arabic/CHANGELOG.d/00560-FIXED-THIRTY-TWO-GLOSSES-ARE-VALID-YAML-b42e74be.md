@@ -1,0 +1,5 @@
+## Fixed — thirty-two glosses are valid YAML
+
+- AR-C23-afwan, AR-C25-yawm, AR-C26-layl, AR-C27-tusbih-ala-khayr, AR-C28-dhahaba, AR-C28-jaa, AR-C29-qala, AR-C29-raa, AR-C30-akala, AR-C30-arafa, AR-C31-fahima, AR-C31-kataba, AR-C31-qaraa, AR-C31-saala, AR-C32-ahabba, AR-C32-akhadha, AR-C32-fakkara, AR-C32-saada, AR-C33-halib, AR-C33-qahwa, AR-C33-shay, AR-C33-sukkar, AR-C34-jubn, AR-C34-lahm, AR-C34-milh, AR-C34-taam, AR-C35-jar, AR-C35-sadiq, AR-C36-kub, AR-C36-milaqa, AR-C36-tabaq and AR-C36-zayt had a `gloss:` that opened with a quoted English word and went on past the closing quote (`gloss: "day" — …`), which a strict YAML parser rejects. Each is now one single-quoted scalar, with an apostrophe written `''`. The wording is unchanged.
+- AR-C28-dhahaba's gloss also ended in a quote, so the repository's reader stripped the first and last quote marks and shipped `he went" — … "a school of law`. It now ships the whole gloss. The other thirty-one read exactly as before. Narration and book chapters pick this up when they are regenerated.
+

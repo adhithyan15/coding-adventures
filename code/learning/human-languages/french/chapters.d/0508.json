@@ -1,0 +1,19 @@
+{
+  "chapter": 508,
+  "title": "La course",
+  "label": "ch:fr-la-course",
+  "canDo": "I can talk about races and runners.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C508-chronometrer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 508: I can talk about races and runners.",
+    "assesses": [
+      "FR-LEX-C508-COURSE-03",
+      "FR-LEX-C508-COURSE-04",
+      "FR-LEX-C508-COURSE-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 482,
+  "sourceHash": "fnv1a64:0d12fb085ff55524",
+  "lessonIds": [
+    "GE-C482-verstauchen",
+    "GE-C482-prellung",
+    "GE-C482-verband",
+    "GE-C482-desinfizieren",
+    "GE-C482-narbe"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch482.txt",
+  "json": "german/narration/ch482.json",
+  "textHash": "fnv1a64:87ebee53ae9914e2",
+  "jsonHash": "fnv1a64:bd0dadc59dabcc8b",
+  "findings": []
+}

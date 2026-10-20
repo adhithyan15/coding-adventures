@@ -11,8 +11,8 @@ gloss: my elder brother
 concept_tag: JA-FAMILY-ELDER-BROTHER
 prerequisites: [JA-C13-haha]
 sounds: [mora]
-roots: []
-etymology_hook: Two familiar signs now distinguish an older brother.
+roots: [japanese-ani]
+etymology_hook: "ani: native Japanese, inherited, not borrowed; kanji 兄 attached later as kun'yomi"
 duration:
   max_seconds: 150
 requires:
@@ -41,6 +41,11 @@ Retrieve **はは** once from its meaning.
 
 Thank a stranger with **ありがとうございます**, name the polite-register choice,
 and retrieve any two body words. Then hear *a-ni* and say both morae once.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**あに** (*ani*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANI, JA-SCRIPT-A-01, JA-SCRIPT-NI-01] -->

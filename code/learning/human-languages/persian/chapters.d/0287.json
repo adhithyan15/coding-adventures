@@ -1,0 +1,19 @@
+{
+  "chapter": 287,
+  "title": "Writing --- My Own Line",
+  "label": "ch:fa-my-own-line",
+  "canDo": "I can write one line of Persian about myself from words I know, with no model to copy, and check every dot before anything else.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "FA-W287-khat-e-khodam",
+    "kind": "task",
+    "summary": "Complete FA-W287-khat-e-khodam: one line chosen rather than copied, with the dots checked letter by letter.",
+    "assesses": [
+      "FA-LEX-ESM-E-MAN-AST",
+      "FA-LEX-KHUBAM-REPLY"
+    ],
+    "note": "The first writing step with nothing to reach for. Copying hid the dot decision: in Persian script a dot is part of the letter, so a moved or dropped dot writes a different letter, and final ye carries none."
+  }
+}

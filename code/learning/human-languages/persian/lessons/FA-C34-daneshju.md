@@ -14,7 +14,8 @@ romanization: "dâneshju"
 concept_tag: FA-FAMILY34-DANESHJU
 prerequisites: [FA-C34-hamsaye, FA-C34-mehman]
 sounds: []
-roots: []
+roots: [persian-danish]
+etymology_hook: "dâneshju: Persian dânesh 'knowledge' + ju 'seeking', both from inherited verbs"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C34-mehman]
 <!-- hl-knowledge: introduces=[FA-LEX-C34-FAMILY34-03]; assesses=[] -->
 
 **دانشجو** — *dâneshju* — "a university student".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dâneshju* is built from *dânesh*, "knowledge" (from *dânestan*, "to know"), and *-ju*, "seeking" (from *jostan*, "to seek"): "knowledge-seeker". Both pieces are native Persian verbs, inherited from Middle Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ʿajana"
 concept_tag: AR-VERB-AJANA
 prerequisites: [AR-C229-fakka, AR-C229-saqa]
 sounds: []
-roots: []
+roots: [ʿ-j-n]
+etymology_hook: "ʿajana: built on the root ʿ-j-n, 'to knead' (Lane); ʿajana is the plain verb, 'he kneaded'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C229-saqa]
 <!-- hl-knowledge: introduces=[AR-LEX-C229-ACT229-04]; assesses=[] -->
 
 **عجن** — *ʿajana* — "to knead".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عجن** (*ʿajana*) is built on the native Arabic root *ʿ-j-n*, "to knead" (Lane). *ʿAjana* is the plain verb, "he kneaded".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

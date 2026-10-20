@@ -1,0 +1,11 @@
+{
+  "id": "GE-C492-flirten",
+  "pathSegment": "GE-PATH-492-VERLIEBT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-492-VERLIEBT",
+      "order": 1
+    }
+  ]
+}

@@ -11,8 +11,8 @@ gloss: nine things — four beats, and the first two sound like a word you alrea
 concept_tag: JA-NATIVE-NINE
 prerequisites: [JA-W17-no, JA-C15-ku, JA-C10-koko]
 sounds: [mora]
-roots: []
-etymology_hook: The first two beats are the sounds of koko, here, and the resemblance is an accident worth naming so it is not mistaken for a reason.
+roots: [japanese-kokono-nine, japanese-tsu-counter]
+etymology_hook: "kokonotsu: native kokono 'nine' + native counter -tsu; unrelated to koko 'here'"
 duration:
   max_seconds: 190
 requires:
@@ -57,6 +57,11 @@ that gets named.
 
 What it does mean is that you can write this four-beat word straight away, which
 no other word in the chapter has managed.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ここのつ** (*kokonotsu*) is native: *kokono*, the inherited word for "nine", with the counter *-tsu*. It is not built from *koko*, "here"; the likeness is chance (KANJIDIC2).
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KOKONOTSU, JA-LEX-KOKO, JA-LEX-KU, JA-LEX-YATTSU, JA-LEX-HACHI] -->

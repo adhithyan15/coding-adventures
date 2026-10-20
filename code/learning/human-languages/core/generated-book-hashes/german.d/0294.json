@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 294,
+  "sourceHash": "fnv1a64:130eec18c25b679d",
+  "lessonIds": [
+    "GE-C294-katastrophe",
+    "GE-C294-erdbeben",
+    "GE-C294-ueberschwemmung",
+    "GE-C294-hochwasser",
+    "GE-C294-einstuerzen"
+  ],
+  "tex": "german/book/chapters/ch294-naturkatastrophen.tex"
+}

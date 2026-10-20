@@ -14,7 +14,8 @@ romanization: "mawqid"
 concept_tag: AR-THINGS123-MAWQID
 prerequisites: [AR-C123-wisada, AR-C123-sullam, AR-C25-yawm, AR-C25-yawm]
 sounds: []
-roots: []
+roots: [w-q-d]
+etymology_hook: "mawqid: built on the root w-q-d, 'to burn, to kindle' (Lane); mawqid is the ma- place noun, 'a place of kindling'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [AR-C123-sullam]
 <!-- hl-knowledge: introduces=[AR-LEX-C123-THINGS123-04]; assesses=[] -->
 
 **موقد** — *mawqid* — "a stove".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**موقد** (*mawqid*) is built on the native Arabic root *w-q-d*, "to burn, to kindle" (Lane). *Mawqid* is the *ma-* place noun, "a place of kindling".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

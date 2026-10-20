@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 83,
-  "sourceHash": "fnv1a64:cd42b29ea2b76c05",
+  "sourceHash": "fnv1a64:c12d8435cc03a188",
   "lessonIds": [
     "PA-C83-patla",
     "PA-C83-halka",
@@ -14,6 +14,6 @@
   "text": "punjabi/narration/ch83.txt",
   "json": "punjabi/narration/ch83.json",
   "textHash": "fnv1a64:90e0b26b630200fb",
-  "jsonHash": "fnv1a64:9f305fbc5dea64fb",
+  "jsonHash": "fnv1a64:78ed07a4941b3a9c",
   "findings": []
 }

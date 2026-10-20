@@ -1,0 +1,11 @@
+{
+  "id": "LA-C389-onus",
+  "pathSegment": "LA-PATH-389-SERVITUS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-389-SERVITUS",
+      "order": 3
+    }
+  ]
+}

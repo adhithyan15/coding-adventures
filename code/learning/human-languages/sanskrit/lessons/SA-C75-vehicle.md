@@ -14,7 +14,8 @@ romanization: "vāhanam"
 concept_tag: SA-TRAVEL-VEHICLE
 prerequisites: [SA-C74-shop, SA-C74-market]
 sounds: []
-roots: []
+roots: [sanskrit-vahana]
+etymology_hook: "vāhana 'vehicle, draught animal' ← the root √vah 'carry'; MW compares Latin vehere, vehiculum (CDIAL 11610)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C74-market]
 <!-- hl-knowledge: introduces=[SA-LEX-C75-TRAVEL-01]; assesses=[] -->
 
 **वाहनम्** (*vāhanam*) — "a vehicle", anything that carries you on a **यात्रा**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Vāhana* is built on the root √vah, "to carry, convey" (MW, CDIAL 11610). It is
+inherited: MW compares Latin *vehere*, "to carry", and *vehiculum*, the source of
+English **vehicle**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

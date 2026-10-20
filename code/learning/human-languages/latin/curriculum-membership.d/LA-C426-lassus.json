@@ -1,0 +1,11 @@
+{
+  "id": "LA-C426-lassus",
+  "pathSegment": "LA-PATH-426-LUTULENTUS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-426-LUTULENTUS",
+      "order": 3
+    }
+  ]
+}

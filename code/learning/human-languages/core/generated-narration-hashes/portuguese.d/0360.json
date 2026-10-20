@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:31edfbb8054e526e",
+  "lessonIds": [
+    "PT-C360-promocao",
+    "PT-C360-promover",
+    "PT-C360-cargo",
+    "PT-C360-aumento",
+    "PT-C360-qualificacao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch360.txt",
+  "json": "portuguese/narration/ch360.json",
+  "textHash": "fnv1a64:29cf8a72fb8af312",
+  "jsonHash": "fnv1a64:36feec3025c3d7c0",
+  "findings": []
+}

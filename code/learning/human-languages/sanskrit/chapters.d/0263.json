@@ -1,0 +1,18 @@
+{
+  "chapter": 263,
+  "title": "I will go tomorrow",
+  "label": "ch:sa-first-person-future-going",
+  "canDo": "I can distinguish will go from I will go and say that I will go tomorrow.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "SA-C263-tomorrow-going-recall",
+    "kind": "production",
+    "summary": "Complete chapter 263 by producing a first-person future plan with a known time word.",
+    "assesses": [
+      "SA-VERB-C263-GAMISYAMI-01",
+      "SA-GRAMMAR-C263-FUTURE-FIRST-SINGULAR-02"
+    ]
+  }
+}

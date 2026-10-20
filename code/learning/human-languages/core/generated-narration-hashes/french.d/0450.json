@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 450,
+  "sourceHash": "fnv1a64:f15344501ff0415f",
+  "lessonIds": [
+    "FR-C450-caissier",
+    "FR-C450-encaisser",
+    "FR-C450-debiter",
+    "FR-C450-terminal",
+    "FR-C450-liquide"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch450.txt",
+  "json": "french/narration/ch450.json",
+  "textHash": "fnv1a64:118d4e24b0965896",
+  "jsonHash": "fnv1a64:aab6492aea797718",
+  "findings": []
+}

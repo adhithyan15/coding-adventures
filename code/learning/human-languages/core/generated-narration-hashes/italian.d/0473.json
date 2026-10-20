@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 473,
+  "sourceHash": "fnv1a64:fcc5c7ceec42c5b8",
+  "lessonIds": [
+    "IT-C473-sincero",
+    "IT-C473-bugiardo",
+    "IT-C473-ingenuo",
+    "IT-C473-furbo",
+    "IT-C473-ammirare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch473.txt",
+  "json": "italian/narration/ch473.json",
+  "textHash": "fnv1a64:7d8d12339f71c967",
+  "jsonHash": "fnv1a64:27f8d7ddf7f2635b",
+  "findings": []
+}

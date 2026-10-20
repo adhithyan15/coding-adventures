@@ -1,0 +1,11 @@
+{
+  "id": "GE-C320-vorfahr",
+  "pathSegment": "GE-PATH-320-MITTELALTER",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-320-MITTELALTER",
+      "order": 3
+    }
+  ]
+}

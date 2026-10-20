@@ -14,7 +14,8 @@ romanization: "gach"
 concept_tag: FA-CHIZ248-GACH
 prerequisites: [FA-C248-band-e-kafsh, FA-C248-siman]
 sounds: []
-roots: []
+roots: [akkadian-gassu]
+etymology_hook: "gach: usually traced to Akkadian gaṣṣu 'gypsum' (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C248-siman]
 <!-- hl-knowledge: introduces=[FA-LEX-C248-CHIZ248-05]; assesses=[] -->
 
 **گچ** — *gach* — "plaster; chalk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gach* is usually traced to Akkadian *gaṣṣu*, "gypsum" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

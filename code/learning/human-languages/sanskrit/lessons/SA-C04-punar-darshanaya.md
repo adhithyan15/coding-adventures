@@ -14,7 +14,8 @@ romanization: "punardarśanāya"
 concept_tag: FAREWELL-LATER
 prerequisites: [SA-C04-punah, SA-C04-gacchami]
 sounds: [rd-conjunct, long-aa]
-roots: [punar-again, drsh-see]
+roots: [punar-again, drsh-see, punar]
+etymology_hook: "punar 'again' + darśana 'seeing', from the root √dṛś 'see' (CDIAL 6208); MW lists it as a farewell"
 reviews_of: [SA-C04-gacchami]
 duration:
   max_seconds: 210
@@ -57,6 +58,9 @@ is deep: it is "seeing" in the sense of *beholding* — the *darśan* one takes 
 deity or a revered person, and the name of the six *darśanas*, the schools of
 Indian philosophy ("ways of seeing"). So this farewell promises not just a meeting
 but a *beholding* to come.
+
+*Darśana* is built on the root √dṛś "to see" (CDIAL 6208), and MW records
+the whole phrase *punar-darśanāya* as a farewell in classical drama.
 
 ## Grammar Lens: the dative "for the sake of"
 

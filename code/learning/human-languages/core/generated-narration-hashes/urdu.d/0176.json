@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 176,
-  "sourceHash": "fnv1a64:a1b59a48c76b5869",
+  "sourceHash": "fnv1a64:d90ee08e93740e77",
   "lessonIds": [
     "UR-C176-naukri",
     "UR-C176-pesha",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch176.txt",
   "json": "urdu/narration/ch176.json",
-  "textHash": "fnv1a64:58cead7ca8643f6d",
-  "jsonHash": "fnv1a64:9a50d753591c5b0e",
+  "textHash": "fnv1a64:350ac6053f4e63d9",
+  "jsonHash": "fnv1a64:3ba223c43f691e80",
   "findings": []
 }

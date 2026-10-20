@@ -14,7 +14,8 @@ romanization: "alam"
 concept_tag: AR-HEALTH53-ALAM
 prerequisites: [AR-C53-mustashfa, AR-C53-marid]
 sounds: []
-roots: []
+roots: [ʾ-l-m]
+etymology_hook: "alam: built on the root ʾ-l-m, 'to feel pain' (Lane); alam is the verbal noun, 'pain'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C53-marid]
 <!-- hl-knowledge: introduces=[AR-LEX-C53-HEALTH53-04]; assesses=[] -->
 
 **ألم** — *alam* — "pain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ألم** (*alam*) is built on the native Arabic root *ʾ-l-m*, "to feel pain" (Lane). *Alam* is the verbal noun, "pain".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

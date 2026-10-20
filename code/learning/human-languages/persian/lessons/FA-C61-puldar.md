@@ -14,7 +14,8 @@ romanization: "puldâr"
 concept_tag: FA-ADJ61-PULDAR
 prerequisites: [FA-C61-por, FA-C61-khali]
 sounds: []
-roots: []
+roots: [persian-pul-money, persian-dar-holder]
+etymology_hook: "puldâr: Persian pul 'money' + -dâr 'holding' (from dâshtan, inherited)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C61-khali]
 <!-- hl-knowledge: introduces=[FA-LEX-C61-ADJ61-03]; assesses=[] -->
 
 **پولدار** — *puldâr* — "rich".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*puldâr* is built from *pul*, "money", and *-dâr*, "holding" (from *dâshtan*, "to have"): "money-holder". *-dâr* is inherited, usually traced to Middle Persian *dār*; *pul* first named a small coin and is usually traced to a Greek coin name.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

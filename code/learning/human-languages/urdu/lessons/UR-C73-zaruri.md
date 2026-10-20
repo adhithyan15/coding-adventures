@@ -14,7 +14,8 @@ romanization: "zarūrī"
 concept_tag: UR-ADJ73-ZARURI
 prerequisites: [UR-C73-halka, UR-C73-bhari]
 sounds: []
-roots: []
+roots: [arabic-daruri]
+etymology_hook: "zarūrī ← Arabic ḍarūrī 'necessary', through Persian (Lane, root ḍ-r-r)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C73-bhari]
 <!-- hl-knowledge: introduces=[UR-LEX-C73-ADJ73-05]; assesses=[] -->
 
 **ضروری** — *zarūrī* — "important, necessary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ضروری** (*zarūrī*) is a loan from Arabic *ḍarūrī*, "necessary", which reached Urdu through Persian. Its Arabic root is *ḍ-r-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a flag, then the Sanskrit for a drum.
 You'll want to know: कोशः.
 कोशः — kośaḥ — "a sheath, a treasury".
 
+The word, taken apart.
+kośa is a Rigvedic word for a bucket, then a case, a sheath and a store-room (CDIAL 3539), and so a treasury. MW suggests, with question marks, a root √kuś and a link with kukṣi, "belly"; the origin is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a drum, then the Sanskrit for a sheath.
 
 You'll want to know: निधिः.
 निधिः — nidhiḥ — "a treasure".
+
+The word, taken apart.
+nidhi is built on ni, "down", and the root √dhā, "to put" (MW): a hoard is what is laid down and stored. In the Rigveda it means "setting down" and "hoard" (CDIAL 7207).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a sheath, then the Sanskrit for a treas
 You'll want to know: रूप्यकम्.
 रूप्यकम् — rūpyakam — "a rupee".
 
+The word, taken apart.
+rūpyaka is built on rūpya, "beautiful, bearing a stamp", and then "silver" (CDIAL 10805), from rūpa, "form" (MW). Stamped silver became the coin, and EtymDB traces Hindi rupayā, the rupee, to rūpyaka.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a treasure, then the Sanskrit for a rup
 You'll want to know: पणः.
 पणः — paṇaḥ — "a stake, a wager, a coin".
 
+The word, taken apart.
+paṇa is built on the root √paṇ, "to barter, bet" (MW): "a wager, a stake", and so wages (CDIAL 7714). As the name of a coin, CDIAL 7715 treats it as a separate word, perhaps Austroasiatic. Hindi pan means "promise".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a rupee, then the Sanskrit for a stake.
 
 You'll want to know: शुल्कम्.
 शुल्कम् — śulkam — "a fee, a tax".
+
+The word, taken apart.
+śulka is a Rigvedic word for "price, value", and later "tax, toll" (CDIAL 12543). MW gives no derivation, so its origin is uncertain. A Middle Indo-Aryan form, suṅka, went into Tamil as cuṅkam, "customs duty".
 
 What you've built.
 One more word for this chapter.

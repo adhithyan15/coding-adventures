@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-318-FESTEJAR",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-318-FESTEJAR"
+  ],
+  "after": []
+}

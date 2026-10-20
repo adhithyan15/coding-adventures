@@ -14,7 +14,8 @@ romanization: "karakā"
 concept_tag: SA-THG197-KARAKA
 prerequisites: [SA-C197-venuvanam, SA-C197-indradhanuh]
 sounds: []
-roots: []
+roots: [sanskrit-karaka]
+etymology_hook: "karakā 'hail', a dictionary word (CDIAL 2782); origin uncertain; Gujarati karā 'hail'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C197-indradhanuh]
 <!-- hl-knowledge: introduces=[SA-LEX-C197-THG197-03]; assesses=[] -->
 
 **करका** — *karakā* — "hail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW lists *karaka* as "hail", and CDIAL 2782 knows the word only from the old lexicons. Its origin is uncertain, but it lives on as Gujarati *karā*, "hail"; CDIAL also lists Marathi *gārā*, with a query.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

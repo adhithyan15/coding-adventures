@@ -11,8 +11,8 @@ gloss: one person, two people — the native count reaching into a borrowed coun
 concept_tag: JA-COUNTER-NIN-IRREGULAR
 prerequisites: [JA-C18-nin, JA-W03-ri, JA-C16-hitotsu, JA-C16-futatsu, JA-W11-te]
 sounds: [mora]
-roots: []
-etymology_hook: Wikipedia's counter table gives the people counter as hitori, futari, then sannin -- the first two are the native words, and only the first two.
+roots: [japanese-hito-one, japanese-futa-two, japanese-ri-person]
+etymology_hook: "hitori, futari: native hito 'one', futa 'two' + old native counter -ri for people"
 duration:
   max_seconds: 205
 requires:
@@ -75,6 +75,11 @@ borrowed counter. It is one seam, and it runs the whole length of Japanese
 numbers.
 
 **あね ひとり、あに ふたり** — one elder sister, two elder brothers.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ひとり ふたり** (*hitori futari*) are native: *hito*, "one", and *futa*, "two", with *-ri*, an old native counter for people that KANJIDIC2 lists as a reading of the character for "person". None of it is borrowed.
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-HITORI-FUTARI, JA-LEX-NIN, JA-LEX-ANE, JA-LEX-ANI] -->

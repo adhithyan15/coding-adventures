@@ -1,0 +1,11 @@
+{
+  "id": "IT-C293-vandalo",
+  "pathSegment": "IT-PATH-293-SCASSO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-293-SCASSO",
+      "order": 4
+    }
+  ]
+}

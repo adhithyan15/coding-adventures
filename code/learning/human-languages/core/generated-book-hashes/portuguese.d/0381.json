@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:1dabbd85803b28d6",
+  "lessonIds": [
+    "PT-C381-norma",
+    "PT-C381-regulamento",
+    "PT-C381-obrigatorio",
+    "PT-C381-facultativo",
+    "PT-C381-obrigacao"
+  ],
+  "tex": "portuguese/book/chapters/ch381-as-regras.tex"
+}

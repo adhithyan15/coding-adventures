@@ -1,0 +1,19 @@
+{
+  "chapter": 289,
+  "title": "Ein Sturz",
+  "label": "ch:ge-ein-sturz",
+  "canDo": "I can say how someone fell and got hurt: to slip, to trip, to fall, a fall and to bleed.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C289-bluten",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 289: I can say how someone fell and got hurt: to slip, to trip, to fall, a fall and to bleed.",
+    "assesses": [
+      "GE-LEX-C289-STURZ-03",
+      "GE-LEX-C289-STURZ-04",
+      "GE-LEX-C289-STURZ-05"
+    ]
+  }
+}

@@ -14,7 +14,8 @@ romanization: "murche"
 concept_tag: FA-ANIMALS57-MURCHE
 prerequisites: [FA-C57-khar, FA-C57-parvane]
 sounds: []
-roots: []
+roots: [persian-mur]
+etymology_hook: "murche: Persian mur 'ant' (Middle Persian mōr) + -che 'little'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C57-parvane]
 <!-- hl-knowledge: introduces=[FA-LEX-C57-ANIMALS57-05]; assesses=[] -->
 
 **مورچه** — *murche* — "an ant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*murche* is *mur*, "ant", with the small-thing ending *-che*. *mur* is a native word, usually traced to Middle Persian *mōr*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

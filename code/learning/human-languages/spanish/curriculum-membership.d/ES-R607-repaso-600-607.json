@@ -1,0 +1,11 @@
+{
+  "id": "ES-R607-repaso-600-607",
+  "pathSegment": "ES-PATH-607-AMBIENTE",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ES-EXT-607-AMBIENTE",
+      "order": 5
+    }
+  ]
+}

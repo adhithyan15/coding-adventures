@@ -14,7 +14,8 @@ romanization: "âsân"
 concept_tag: FA-ADJ60-ASAN
 prerequisites: [FA-C59-aheste, FA-C60-tond]
 sounds: []
-roots: []
+roots: [persian-asan]
+etymology_hook: "âsân ← Middle Persian āsān (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C60-tond]
 <!-- hl-knowledge: introduces=[FA-LEX-C60-ADJ60-02]; assesses=[] -->
 
 **آسان** — *âsân* — "easy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âsân* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *āsān*, "easy" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -6,7 +6,7 @@ sequence: 540
 chapter: 30
 type: phrase
 headword: bonam noctem
-gloss: "good night" — genuine Latin grammar (wishes take the accusative, not the nominative), though the fixed phrase itself may be a later/modern convention rather than a directly-attested ancient formula
+gloss: '"good night" — genuine Latin grammar (wishes take the accusative, not the nominative), though the fixed phrase itself may be a later/modern convention rather than a directly-attested ancient formula'
 concept_tag: GREETING-GOODNIGHT
 prerequisites: [LA-C29-nox]
 sounds: [macron-none-short-vowel, accusative-am-em]

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C269-posteriormente",
+  "pathSegment": "PT-PATH-269-PRIMEIRO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-269-PRIMEIRO",
+      "order": 3
+    }
+  ]
+}

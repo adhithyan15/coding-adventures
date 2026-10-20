@@ -14,7 +14,8 @@ romanization: "ṭārch"
 concept_tag: UR-CHIZ232-TARCH
 prerequisites: [UR-C231-hasi, UR-C232-nakami]
 sounds: []
-roots: []
+roots: [english-torch]
+etymology_hook: "ṭārch ← English torch"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C232-nakami]
 <!-- hl-knowledge: introduces=[UR-LEX-C232-CHIZ232-02]; assesses=[] -->
 
 **ٹارچ** — *ṭārch* — "a torch".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ٹارچ** (*ṭārch*) is a loan from English *torch*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

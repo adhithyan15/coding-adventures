@@ -14,7 +14,8 @@ romanization: "tājir"
 concept_tag: AR-AMAL222-TAJIR
 prerequisites: [AR-C222-fiziya, AR-C222-adab]
 sounds: []
-roots: []
+roots: [t-j-r]
+etymology_hook: "tājir: built on the root t-j-r, 'to trade' (Lane); tājir is the active participle, 'one who trades'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C222-adab]
 <!-- hl-knowledge: introduces=[AR-LEX-C222-AMAL222-05]; assesses=[] -->
 
 **تاجر** — *tājir* — "a merchant, a trader".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تاجر** (*tājir*) is built on the native Arabic root *t-j-r*, "to trade" (Lane). *Tājir* is the active participle, "one who trades".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

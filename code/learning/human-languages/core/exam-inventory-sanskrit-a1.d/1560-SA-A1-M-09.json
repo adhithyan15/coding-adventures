@@ -1,0 +1,33 @@
+{
+  "id": "SA-A1-M-09",
+  "category": "Modern life — fields a spoken revival needs and a classical corpus lacks",
+  "label": "shopping: the shop, the shopkeeper, buying",
+  "probe": [
+    "SA-LEX-C74-MARKET-01",
+    "SA-LEX-C74-MARKET-03",
+    "SA-LEX-C74-MARKET-04",
+    "SA-LEX-C74-MARKET-05",
+    "SA-LEX-C24-ASK-03",
+    "SA-LEX-C87-NUMBERS-03",
+    "SA-LEX-C185-WHY185-01",
+    "SA-LEX-C222-THG222-03",
+    "SA-LEX-C222-THG222-04",
+    "SA-LEX-C248-THG248-03",
+    "SA-LEX-DHANYAVADA",
+    "SA-GRAMMAR-C265-DADATU-01",
+    "SA-PATTERN-C265-POLITE-ORDER-02",
+    "SA-VERB-C266-KRINAMI-01",
+    "SA-PATTERN-C266-MARKET-EXCHANGE-02"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "CEFR-CV",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-NE12-01",
+    "A1-NE15-02"
+  ],
+  "note": "Covered by composing the already-owned shop, market, shopkeeper, goods, rupee, fruit, number and courtesy vocabulary with chapter 266's first-person buyer form, price turn and previously taught polite request. This is one small A1 shopping exchange, not bargaining or consumer-rights coverage."
+}

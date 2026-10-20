@@ -14,7 +14,8 @@ romanization: "muballal"
 concept_tag: AR-QUAL151-MUBALLAL
 prerequisites: [AR-C151-nahif, AR-C151-samin]
 sounds: []
-roots: []
+roots: [b-l-l]
+etymology_hook: "muballal: built on the root b-l-l, 'to wet' (Lane); muballal is the Form II passive participle, 'made wet'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C151-samin]
 <!-- hl-knowledge: introduces=[AR-LEX-C151-QUAL151-03]; assesses=[] -->
 
 **مبلل** — *muballal* — "wet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مبلل** (*muballal*) is built on the native Arabic root *b-l-l*, "to wet" (Lane). *Muballal* is the Form II passive participle, "made wet".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

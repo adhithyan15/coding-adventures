@@ -1,0 +1,19 @@
+{
+  "chapter": 312,
+  "title": "Noivos",
+  "label": "ch:pt-noivos",
+  "canDo": "I can talk about getting engaged, rings, weddings, proposals and marriage.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C312-matrimonio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 312: I can talk about getting engaged, rings, weddings, proposals and marriage.",
+    "assesses": [
+      "PT-LEX-C312-NOIVADO-03",
+      "PT-LEX-C312-NOIVADO-04",
+      "PT-LEX-C312-NOIVADO-05"
+    ]
+  }
+}

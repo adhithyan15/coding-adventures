@@ -1,0 +1,11 @@
+{
+  "id": "ES-C699-granizo",
+  "pathSegment": "ES-PATH-699-TORMENTA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-699-TORMENTA",
+      "order": 2
+    }
+  ]
+}

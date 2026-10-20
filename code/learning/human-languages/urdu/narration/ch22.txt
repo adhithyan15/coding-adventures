@@ -17,7 +17,7 @@ Four letters, all of them yours: ک، ہ، ن، ا. Strip the -نا of chapter s
 bolnā is about producing speech — maiṅ urdū boltā hūṅ, I speak Urdu. کہنا (kahnā) is about the content — what somebody actually said. English merges the two under speak and say without a clean rule; Urdu keeps them apart, and after کہنا (kahnā) the clause introduced by کہ follows naturally.
 
 The word, taken apart.
-کہنا (kahnā) is Sanskrit kathayati, "to tell, to relate," on the noun kathā, "a story." That noun is still in Urdu as کہانی, kahānī, "a tale" — the word a chapter-seventeen writing lesson already put in front of you. To say and a story are one root, two syllables apart.
+کہنا (kahnā) is Sanskrit kathayati, "converses with, describes" (CDIAL 2703), on the noun kathā, "a story." Its family is still in Urdu as کہانی, kahānī, "a tale", from kathānaka, "a little tale" (CDIAL 2705) — the word a chapter-seventeen writing lesson already put in front of you. To say and a story are one root, two syllables apart.
 Its stem کہ- looks exactly like the borrowed complementiser کہ of the last chapter and has nothing to do with it: one is inherited from Sanskrit, the other borrowed from Persian, and they collided on the page. Urdu is full of these seams.
 
 Guided Practice.
@@ -50,6 +50,9 @@ You'll want to know: کیا کہا؟.
 کیا کہا؟ — kyā kahā? — what did you say?
 Two words. کیا is the what of chapter three, back in the middle of the sentence where it means what rather than marking a yes-or-no question — the distinction the nineteenth chapter drew. کہا is کہنا (kahnā) in the past, the form you use for something that has already been said.
 Say it with the voice rising and it is a request to repeat. Said flatly, with a frown, it is a challenge — so the tune matters more here than in any sentence this book has taught.
+
+The phrase, taken apart.
+کیا کہا (kyā kahā): kyā, "what", comes from Sanskrit kim (CDIAL 3164); kahā, "said", from kathayati, "describes" (CDIAL 2703).
 
 Grammar Lens: the repair kit, in three sentences.
 [a table of 3 rows, read aloud]
@@ -88,7 +91,7 @@ You'll want to know: آرام سے.
 The wave over the first letter is the alif madda of chapter seven. سے is the postposition with, so the phrase is literally with ease — and the second word is the same سے the book has been showing since chapter three in āp se mil kar.
 
 The word, taken apart.
-آرام is Persian ārām, "rest, ease, repose," on an old Indo-Iranian root for standing still. So Urdu's way of asking somebody to slow down does not ask them to be slow; it asks them to be at ease. That is a gentler thing to say to a stranger than the English request, and it is why ārām se also means take it easy, carefully, and no rush depending on where it lands.
+آرام is usually traced to Persian ārām, "rest, ease, repose", and سے, "with", is inherited: CDIAL lists it under Sanskrit sahita, "together with" (CDIAL 13310), and sama, "equal", has also been suggested (CDIAL 13173). So Urdu's way of asking somebody to slow down does not ask them to be slow; it asks them to be at ease. That is a gentler thing to say to a stranger than the English request, and it is why ārām se also means take it easy, carefully, and no rush depending on where it lands.
 کہیں is کہنا (kahnā) in the polite request form. You are not asked to learn that ending here — only to hear that the verb from the last lesson is inside it.
 
 Grammar Lens: the repair kit is now whole.

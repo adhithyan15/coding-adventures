@@ -14,7 +14,8 @@ romanization: "kṛṣakaḥ"
 concept_tag: SA-PLACE-FARMER
 prerequisites: [SA-C84-hospital, SA-C84-field]
 sounds: []
-roots: []
+roots: [sanskrit-krshaka]
+etymology_hook: "kṛṣaka 'ploughman, farmer' ← the root √kṛṣ 'draw, plough' (MW; CDIAL 3444)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C84-field]
 <!-- hl-knowledge: introduces=[SA-LEX-C84-PLACES-04]; assesses=[] -->
 
 **कृषकः** (*kṛṣakaḥ*) — "a farmer", who works the **क्षेत्रम्**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Kṛṣaka* is built on the root √kṛṣ, "to draw, plough": the farmer is the ploughman
+(MW, CDIAL 3444). *Kṛṣi*, "farming", comes from the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

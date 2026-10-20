@@ -1,0 +1,19 @@
+{
+  "id": "SA-A1-S-05",
+  "category": "Vākya — the sentence",
+  "label": "existence and possession",
+  "probe": [
+    "SA-LEX-ASTI-BHAVATI-BE"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-OS-04",
+    "A1-NG1-01",
+    "A1-NG1-02"
+  ],
+  "note": "asti does existential duty ('there is'). Sanskrit expresses possession with the genitive plus asti and the track never builds that sentence, so 'I have a brother' is not sayable — the point is counted covered on existence and the possession half is called out here."
+}

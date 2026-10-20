@@ -1,0 +1,23 @@
+{
+  "id": "SA-A1-F-10",
+  "category": "Likes, wishes and feelings",
+  "label": "say what you are going to do",
+  "probe": [
+    "SA-VERB-C263-GAMISYAMI-01",
+    "SA-GRAMMAR-C263-FUTURE-FIRST-SINGULAR-02",
+    "SA-VERB-C264-KARISYAMI-01",
+    "SA-VERB-C264-PATHISYAMI-02",
+    "SA-PATTERN-C264-NEAR-TERM-PLAN-03"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "CEFR-CV",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-F3-05",
+    "A1-F3-06"
+  ],
+  "note": "Closed by chapters 263-264. Chapter 139 already supplied third-person future recognition; the new ramp bridges from gamiṣyati to first-person gamiṣyāmi, then adds kariṣyāmi and paṭhiṣyāmi before two model-free rounds of near-term planning with śvaḥ and paraśvaḥ. The slice is explicitly first-person singular, not a complete future paradigm."
+}

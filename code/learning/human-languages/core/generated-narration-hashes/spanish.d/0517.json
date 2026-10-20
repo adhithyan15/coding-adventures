@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 517,
+  "sourceHash": "fnv1a64:08925f75566622a7",
+  "lessonIds": [
+    "ES-C517-testigo",
+    "ES-C517-presenciar",
+    "ES-C517-observar",
+    "ES-C517-percatarse",
+    "ES-C517-detalle"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch517.txt",
+  "json": "spanish/narration/ch517.json",
+  "textHash": "fnv1a64:2502ad46b5f6267f",
+  "jsonHash": "fnv1a64:a64f4dc22e1b62bd",
+  "findings": []
+}

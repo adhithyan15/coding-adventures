@@ -1,0 +1,11 @@
+{
+  "id": "PA-C176-vich",
+  "pathSegment": "PA-PATH-176-POINTING-PLACE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-176-POINTING-PLACE",
+      "order": 1
+    }
+  ]
+}

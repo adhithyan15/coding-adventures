@@ -14,7 +14,8 @@ romanization: "angize"
 concept_tag: FA-CHERA160-ANGIZE
 prerequisites: [FA-C159-dar-hali-ke, FA-C159-makhsusan]
 sounds: []
-roots: []
+roots: [persian-angikhtan]
+etymology_hook: "angize: Persian angiz- 'stir up' (angikhtan) + -e; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C159-makhsusan]
 <!-- hl-knowledge: introduces=[FA-LEX-C160-CHERA160-01]; assesses=[] -->
 
 **انگیزه** — *angize* — "a motive, motivation".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*angize* is built on *angiz-*, the present stem of *angikhtan*, "to stir up", with the noun ending *-e*: what stirs you. It is native Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

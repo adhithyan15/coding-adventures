@@ -14,7 +14,8 @@ romanization: "dulfīn"
 concept_tag: AR-SHAY185-DULFIN
 prerequisites: [AR-C184-zina, AR-C184-film]
 sounds: []
-roots: []
+roots: [greek-delphis]
+etymology_hook: "dulfīn: a loan from Greek delphis, Latin delphinus 'dolphin'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C184-film]
 <!-- hl-knowledge: introduces=[AR-LEX-C185-SHAY185-01]; assesses=[] -->
 
 **دلفين** — *dulfīn* — "a dolphin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دلفين** (*dulfīn*) is a loan from Greek *delphis*, "dolphin", or its Latin form *delphinus*; it has no Arabic root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

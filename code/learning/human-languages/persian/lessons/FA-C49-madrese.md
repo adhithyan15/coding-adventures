@@ -14,7 +14,8 @@ romanization: "madrese"
 concept_tag: FA-SCHOOL49-MADRESE
 prerequisites: [FA-C49-medad, FA-C49-khodkar]
 sounds: []
-roots: []
+roots: [arabic-madrasa]
+etymology_hook: "madrese ← Arabic madrasa 'school', root d-r-s (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C49-khodkar]
 <!-- hl-knowledge: introduces=[FA-LEX-C49-SCHOOL49-03]; assesses=[] -->
 
 **مدرسه** — *madrese* — "a school".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*madrese* is borrowed from Arabic *madrasa*, "school". Its Arabic root is *d-r-s* (Lane). It is the place word of the verb *darasa*, "to study".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

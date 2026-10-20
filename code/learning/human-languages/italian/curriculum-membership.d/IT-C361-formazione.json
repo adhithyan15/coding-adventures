@@ -1,0 +1,11 @@
+{
+  "id": "IT-C361-formazione",
+  "pathSegment": "IT-PATH-361-CARRIERA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-361-CARRIERA",
+      "order": 3
+    }
+  ]
+}

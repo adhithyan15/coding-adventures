@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C517-orchestra",
+    "language": "italian",
+    "chapter": 517,
+    "sequence": 28950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:753416dabfba5a49"
+  },
+  "findings": []
+}

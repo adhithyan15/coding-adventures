@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-493-ZUNEIGUNG",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GE-EXT-493-ZUNEIGUNG"
+  ],
+  "after": []
+}

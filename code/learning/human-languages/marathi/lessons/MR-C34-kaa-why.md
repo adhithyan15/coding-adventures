@@ -12,7 +12,7 @@ concept_tag: MR-JOIN-KAA-WHY
 prerequisites: [MR-R33-ask-and-answer]
 sounds: [matra-aa]
 roots: []
-etymology_hook: "both the का that asks WHY and the का that makes a yes-or-no question descend from the Sanskrit interrogative stem क- (ka-), the same stem behind काय 'what' and कसा 'how' — Marathi's whole question system is one letter with different endings, and Indo-European put that same k- into Latin quis and English who"
+etymology_hook: "both का words descend from the Sanskrit question stem ka-, the stem behind काय and कसा"
 duration:
   max_seconds: 200
 requires:

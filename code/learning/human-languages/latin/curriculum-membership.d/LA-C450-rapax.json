@@ -1,0 +1,11 @@
+{
+  "id": "LA-C450-rapax",
+  "pathSegment": "LA-PATH-450-QUERELA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-450-QUERELA",
+      "order": 3
+    }
+  ]
+}

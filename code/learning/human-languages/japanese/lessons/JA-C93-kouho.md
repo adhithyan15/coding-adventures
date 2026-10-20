@@ -14,7 +14,8 @@ romanization: "kouho"
 concept_tag: JA-WANT93-KOUHO
 prerequisites: [JA-C93-inori, JA-C93-chuumon]
 sounds: []
-roots: []
+roots: [middle-chinese-huwh, middle-chinese-pux]
+etymology_hook: "kouho: Sino-Japanese 候 'wait' + 補 'mend', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C93-chuumon]
 <!-- hl-knowledge: introduces=[JA-LEX-C93-WANT93-04]; assesses=[] -->
 
 **こうほ** — *kouho* — "a candidate, a choice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**こうほ** (*kouho*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *kō*, "wait" (Middle Chinese *huwH*) and *ho*, "mend, fill" (*puX*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

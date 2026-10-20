@@ -56,7 +56,9 @@ describe("Persian assessment contract", () => {
       id: "samfa-academic",
       complete: false,
       missingArtifacts: [
+        "fullMocks[samfa-academic-mock-1].paper (not declared)",
         "fullMocks[samfa-academic-mock-1].humanValidation (not declared)",
+        "fullMocks[samfa-academic-mock-2].paper (not declared)",
         "fullMocks[samfa-academic-mock-2].humanValidation (not declared)",
         "capstones/samfa-academic.json",
         "mocks/samfa-academic/rubric.md",

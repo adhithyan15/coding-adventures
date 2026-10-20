@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 730,
+  "sourceHash": "fnv1a64:7d6f453ee90fc200",
+  "lessonIds": [
+    "ES-C730-encantador",
+    "ES-C730-encanto",
+    "ES-C730-atractivo",
+    "ES-C730-belleza",
+    "ES-C730-elegancia"
+  ],
+  "tex": "spanish/book/chapters/ch730-encanto-y-belleza.tex"
+}

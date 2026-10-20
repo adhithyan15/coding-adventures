@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-353-REAZIONE",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "IT-EXT-353-REAZIONE"
+  ],
+  "after": []
+}

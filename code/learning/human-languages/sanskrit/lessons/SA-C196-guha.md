@@ -14,7 +14,8 @@ romanization: "guhā"
 concept_tag: SA-THG196-GUHA
 prerequisites: [SA-C196-ratnakarah, SA-C196-sarit]
 sounds: []
-roots: []
+roots: [sanskrit-guha]
+etymology_hook: "guhā 'hiding place, cave' ← root √guh 'hide' (MW; CDIAL 4220)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C196-sarit]
 <!-- hl-knowledge: introduces=[SA-LEX-C196-THG196-05]; assesses=[] -->
 
 **गुहा** — *guhā* — "a cave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*guhā* is built on the root √guh, "to hide, conceal" (MW): a cave is a hiding place (CDIAL 4220). The Telugu, Malayalam and Kannada words for cave were borrowed from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

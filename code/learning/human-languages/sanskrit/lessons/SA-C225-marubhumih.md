@@ -14,7 +14,8 @@ romanization: "marubhūmiḥ"
 concept_tag: SA-THG225-MARUBHUMIH
 prerequisites: [SA-C224-bhumih, SA-C225-upatyaka]
 sounds: []
-roots: []
+roots: [sanskrit-maru, sanskrit-bhumi]
+etymology_hook: "marubhūmi = maru 'desert', probably from √mṛ 'die' (MW), + bhūmi 'land'; also the name Marwar"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C225-upatyaka]
 <!-- hl-knowledge: introduces=[SA-LEX-C225-THG225-02]; assesses=[] -->
 
 **मरुभूमिः** — *marubhūmiḥ* — "a desert".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*marubhūmi* is built from *maru*, "wilderness, sandy waste", and *bhūmi*, "land" (MW). MW derives *maru* probably from √mṛ, "to die": the dead land. MW also gives it as the name of a country, Marwar.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

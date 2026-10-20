@@ -14,7 +14,8 @@ romanization: "khulā"
 concept_tag: UR-QUAL137-KHULA
 prerequisites: [UR-C137-sunahra, UR-C137-band]
 sounds: []
-roots: []
+roots: [indo-aryan-khull]
+etymology_hook: "khulā ← *khull 'to be open', a reconstructed form; a tadbhava (CDIAL 3945)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C137-band]
 <!-- hl-knowledge: introduces=[UR-LEX-C137-QUAL137-04]; assesses=[] -->
 
 **کھلا** — *khulā* — "open".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کھلا** (*khulā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*khull*, "to be open", a form CDIAL reconstructs from its descendants (CDIAL 3945).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

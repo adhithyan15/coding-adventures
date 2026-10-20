@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-547-NOVIOS",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-547-NOVIOS"
+  ],
+  "after": []
+}

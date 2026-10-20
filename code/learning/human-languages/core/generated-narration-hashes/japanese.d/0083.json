@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 83,
-  "sourceHash": "fnv1a64:d34c1cb28871dec7",
+  "sourceHash": "fnv1a64:6bebc8fdd75f91f1",
   "lessonIds": [
     "JA-C83-kono",
     "JA-C83-ano",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch83.txt",
   "json": "japanese/narration/ch83.json",
-  "textHash": "fnv1a64:6bbfa600571d5655",
-  "jsonHash": "fnv1a64:f5287cb0ed8a532a",
+  "textHash": "fnv1a64:1b9b29e96a719296",
+  "jsonHash": "fnv1a64:ccba816071a1174c",
   "findings": []
 }

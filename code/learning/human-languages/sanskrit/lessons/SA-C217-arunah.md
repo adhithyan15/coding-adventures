@@ -14,7 +14,8 @@ romanization: "aruṇaḥ"
 concept_tag: SA-QUAL217-ARUNAH
 prerequisites: [SA-C216-buddhiman, SA-C217-raktah]
 sounds: []
-roots: []
+roots: [sanskrit-aruna]
+etymology_hook: "aruṇa 'red, dawn-red', which MW takes from √ṛ; CDIAL 616 hesitantly from aru-; Hindi arun"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C217-raktah]
 <!-- hl-knowledge: introduces=[SA-LEX-C217-QUAL217-02]; assesses=[] -->
 
 **अरुणः** — *aruṇaḥ* — "reddish, dawn-red".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*aruṇa* is the Rigvedic colour of dawn, "reddish, tawny" (CDIAL 616). MW takes it from the root √ṛ, while CDIAL suggests, with a question mark, a stem *aru-*, so the derivation is not settled. Hindi keeps it as *arun*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

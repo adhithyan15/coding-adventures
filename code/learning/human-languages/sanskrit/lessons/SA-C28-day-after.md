@@ -14,7 +14,8 @@ romanization: "paraśvaḥ"
 concept_tag: SA-LEAVE-DAY-AFTER
 prerequisites: [SA-C28-now, SA-C26-student, SA-C27-well-done]
 sounds: []
-roots: []
+roots: [sanskrit-parashvas]
+etymology_hook: "paraśvas ← para 'beyond' + śvas 'tomorrow' (MW); it lives on as Hindi parsoṃ (CDIAL 7799j)"
 duration:
   max_seconds: 210
 requires:
@@ -45,7 +46,14 @@ reviews_of: [SA-C28-now]
 
 You have **श्वः** (*śvaḥ*), "tomorrow". **परश्वः** is *para* + *śvaḥ*: the further tomorrow, the day after it.
 
-English needs four words for this and Sanskrit needs one, because *para* — "beyond, further" — can be bolted onto the front of a time word. The same trick runs backwards from ह्यः, yesterday, to give the day before it. So this is not really a new word to memorise; it is one you can assemble, which is the cheapest kind of vocabulary there is.
+English needs four words for this and Sanskrit needs one, because *para* — "beyond, further" — can be bolted onto the front of a time word. So this is not really a new word to memorise; it is one you can assemble, which is the cheapest kind of vocabulary there is.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Paraśvas* is a compound of *para*, "beyond, further", and *śvas*, "tomorrow"
+(MW). It lives on as Hindi *parsoṃ* and Bengali *parsu*, which mean both the day
+after tomorrow and the day before yesterday (CDIAL 7799j).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C317-spumante",
+    "language": "italian",
+    "chapter": 317,
+    "sequence": 18350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0f9d21a5d3b7471a"
+  },
+  "findings": []
+}

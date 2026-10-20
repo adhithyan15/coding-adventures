@@ -1035,6 +1035,18 @@ R1 in out 1k
     expect(noise.stopFrequencyHz).toBeCloseTo(1.0e3);
   });
 
+  it("accepts parser-style noise tails", () => {
+    const summary = resolveDeckAnalyses(`
+.noise V(out) V1 1k 2k temp=310
+.end
+`);
+
+    expect(summary.diagnostics).toStrictEqual([]);
+    const noise = summary.analyses[0]!;
+    expect(noise.frequenciesHz).toStrictEqual([1.0e3, 2.0e3]);
+    expect(noise.temperatureKelvin).toBeCloseTo(310.0);
+  });
+
   it("reports invalid deck analysis cards", () => {
     const summary = resolveDeckAnalyses(`
 .op extra

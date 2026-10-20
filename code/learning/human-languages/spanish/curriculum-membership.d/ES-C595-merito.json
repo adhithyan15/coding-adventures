@@ -1,0 +1,11 @@
+{
+  "id": "ES-C595-merito",
+  "pathSegment": "ES-PATH-595-CARRERA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-595-CARRERA",
+      "order": 2
+    }
+  ]
+}

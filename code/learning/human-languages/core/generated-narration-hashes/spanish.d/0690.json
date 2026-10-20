@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 690,
+  "sourceHash": "fnv1a64:dc9820a455119f0c",
+  "lessonIds": [
+    "ES-C690-banarse",
+    "ES-C690-broncearse",
+    "ES-C690-sombrilla",
+    "ES-C690-banador",
+    "ES-C690-tumbarse"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch690.txt",
+  "json": "spanish/narration/ch690.json",
+  "textHash": "fnv1a64:8caa27000bf4401f",
+  "jsonHash": "fnv1a64:c6a5aa41fc1974e6",
+  "findings": []
+}

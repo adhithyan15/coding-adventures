@@ -1,0 +1,11 @@
+{
+  "id": "IT-C403-casella",
+  "pathSegment": "IT-PATH-403-PUBBLICARE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-403-PUBBLICARE",
+      "order": 4
+    }
+  ]
+}

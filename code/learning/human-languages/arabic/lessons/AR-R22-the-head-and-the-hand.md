@@ -7,7 +7,7 @@ chapter: 22
 type: review
 headword: رأس · يد · كم عمرك؟
 romanization: raʾs · yad · kam ʿumruka?
-gloss: five words the book met once — two body parts, two pairs of relatives and an age — which turn out to share one property: every root is older than Arabic itself
+gloss: 'five words the book met once — two body parts, two pairs of relatives and an age — which turn out to share one property: every root is older than Arabic itself'
 concept_tag: AR-REVIEW-SEMITIC-STOCK
 prerequisites: [AR-C10-ab-umm, AR-C10-akh-ukht, AR-C11-ras, AR-C11-yad, AR-C17-kam-umruka]
 sounds: []

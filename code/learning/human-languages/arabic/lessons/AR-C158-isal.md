@@ -14,7 +14,8 @@ romanization: "īṣāl"
 concept_tag: AR-QIRAA158-ISAL
 prerequisites: [AR-C158-ijar, AR-C158-ilan]
 sounds: []
-roots: []
+roots: [w-ṣ-l]
+etymology_hook: "īṣāl: built on the root w-ṣ-l, 'to arrive, to join' (Lane); the word īṣāl is the verbal noun of Form IV, 'delivering'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C158-ilan]
 <!-- hl-knowledge: introduces=[AR-LEX-C158-QIRAA158-05]; assesses=[] -->
 
 **إيصال** — *īṣāl* — "a receipt". Ask for it when you pay: **الإيصال من فضلك** — *al-īṣāl min faḍlik* — "The receipt, please."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**إيصال** (*īṣāl*) is built on the native Arabic root *w-ṣ-l*, "to arrive, to join" (Lane). The word *īṣāl* is the verbal noun of Form IV, "delivering"; the receipt is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

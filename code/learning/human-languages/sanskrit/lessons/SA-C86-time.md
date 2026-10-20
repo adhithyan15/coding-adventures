@@ -14,7 +14,8 @@ romanization: "samayaḥ"
 concept_tag: SA-WEEK-TIME
 prerequisites: [SA-C86-saturday, SA-C86-sunday]
 sounds: []
-roots: []
+roots: [sanskrit-samaya]
+etymology_hook: "samaya 'meeting, agreement, time' ← sam 'together' + the root √i 'go' (MW; CDIAL 13185)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C86-sunday]
 <!-- hl-knowledge: introduces=[SA-LEX-C86-WEEKEND-04]; assesses=[] -->
 
 **समयः** (*samayaḥ*) — "time". **कः समयः?** — "what is the time?"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Samaya* is built from *sam*, "together", and the root √i, "to go": first a coming
+together, then an agreement, an appointed time, and time itself (MW, CDIAL 13185).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 238,
-  "sourceHash": "fnv1a64:f99db142e1ee0a22",
+  "sourceHash": "fnv1a64:1b4107bb57882229",
   "lessonIds": [
     "AR-C238-mithl",
     "AR-C238-tamaman",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch238.txt",
   "json": "arabic/narration/ch238.json",
-  "textHash": "fnv1a64:096b0d9390ad7344",
-  "jsonHash": "fnv1a64:c0f92d3e9ff5f566",
+  "textHash": "fnv1a64:3412fdc2621c584e",
+  "jsonHash": "fnv1a64:c02717e611ce46b4",
   "findings": []
 }

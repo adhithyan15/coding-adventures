@@ -11,8 +11,8 @@ gloss: ear; ears
 concept_tag: JA-BODY-EAR
 prerequisites: [JA-C11-te-hand]
 sounds: [mora]
-roots: []
-etymology_hook: A known sign repeats; Japanese does not need a plural ending here for the ordinary body-part label.
+roots: [japanese-mimi]
+etymology_hook: "mimi: native Japanese, inherited, not borrowed; kanji 耳 attached later as kun'yomi"
 duration:
   max_seconds: 145
 requires:
@@ -44,6 +44,11 @@ Then retrieve **て** — hand.
 > **みみ** — *mimi* — ear; ears
 
 No new sign: repeat **み** on two even morae.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**みみ** (*mimi*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-MIMI, JA-SCRIPT-MI-01] -->

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 495,
+  "sourceHash": "fnv1a64:944df516c2b54d56",
+  "lessonIds": [
+    "LA-C495-admiratio",
+    "LA-C495-miror",
+    "LA-C495-stupeo",
+    "LA-C495-attonitus",
+    "LA-C495-obstupesco"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch495.txt",
+  "json": "latin/narration/ch495.json",
+  "textHash": "fnv1a64:39dee1d2f1640038",
+  "jsonHash": "fnv1a64:cd802909db3f3e71",
+  "findings": []
+}

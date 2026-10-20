@@ -15,6 +15,9 @@ You'll want to know: तर्हि.
 Said on its own it answers a condition. Somebody tells you how matters stand; तर्हि (tarhi) is your "then, all right".
 It is built on the same t- that points for you in तत् and in तत्र. Those two point at a thing and at a place; तर्हि (tarhi) points at a moment — at that time, and so, therefore.
 
+The word, taken apart.
+Tarhi is built on the pointing base ta-, the base of tat (MW, CDIAL 5730). It is the partner of yarhi, "when", in the same way that tathā partners yathā.
+
 What you've built.
 A one-word answer to how things stand.
 
@@ -47,6 +50,9 @@ You'll want to know: यथा.
 यथा (yathā) — "as, in the way that".
 You already say तथा, "so, in that way". यथा is its partner, and the two travel together: yathā... tathā, "as... so". Holding one of the pair, you now hold both.
 Said back to somebody on its own, it works as "just so, as you say" — an agreement rather than a description.
+
+The word, taken apart.
+Yathā is built from the relative base ya-, "which", with the manner ending -thā that also ends tathā (MW, CDIAL 10407).
 
 What you've built.
 The other half of a pair you already had half of.
@@ -81,6 +87,9 @@ You'll want to know: केवलम्.
 Put it in front of what you are naming and it narrows the claim: केवलम् (kevalam) दुग्धम्, "only milk". It is the ordinary Sanskrit "only", not a poetic one.
 It also stands alone. Asked how much of a thing there is, केवलम् (kevalam) on its own is a complete and slightly rueful answer.
 
+The word, taken apart.
+Kevalam is the adverb of kevala, "exclusively one's own, alone", already in the Rigveda (MW). Its origin is unclear: MW gives no root for it. Gujarati kevaḷ keeps it (CDIAL 3470).
+
 What you've built.
 A word that narrows whatever it stands in front of.
 
@@ -114,6 +123,9 @@ You'll want to know: मुहुः.
 You have पुनः for "again", meaning one more time. मुहुः is the stronger one: not once more but repeatedly, and doubled as muhur muhuḥ it is stronger still.
 It belongs with muhūrta, a short measured stretch of time. The picture underneath is a thing happening moment after moment after moment.
 
+The word, taken apart.
+Muhuḥ is the Vedic adverb muhur, "suddenly, in a moment", built on the root √muh, "to be dazed", under which MW files it. MW suggests it first meant "bewilderingly"; muhūrta, "a moment", stands next to it in that entry.
+
 What you've built.
 A stronger "again" than the one you had.
 
@@ -145,7 +157,10 @@ You'll want to know: अहो.
 अहो (aho) — "oh!".
 अहो (aho) — "oh!".
 It is the sound of being struck by something: delight, surprise or dismay, with the tone deciding which. अहो (aho) on its own is a whole reply, and one of the few you can give without knowing what comes next.
-It is two small cries stuck together rather than a word with parts, which is why there is no history to trace under it. Sanskrit wrote its exclamations down, and this one has been in the language for as long as anything in it.
+It is an exclamation rather than a word with parts, which is why there is no history to trace under it. Sanskrit wrote its exclamations down, and this one is recorded by Pāṇini and all through the epics.
+
+The word, taken apart.
+Aho is an exclamation of joy or painful surprise, recorded by the grammarian Pāṇini and in the epics (MW, CDIAL 996).
 
 What you've built.
 Five more replies: then, as, only, again and again, and oh.

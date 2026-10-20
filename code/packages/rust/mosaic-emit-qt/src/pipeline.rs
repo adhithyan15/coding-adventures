@@ -2039,6 +2039,7 @@ fn qt_drop_reason(name: &str) -> &'static str {
             "only the supported Mosaic elevation tokens `raised` and `overlay` \
              lower to QtQuick.Effects.MultiEffect"
         }
+        "transform" => "only a single finite rotate(Ndeg) lowers to centered Qt Item rotation",
         "flex-grow" | "flex-shrink" | "flex" => {
             "Qt distributes space with Layout.fillWidth / Layout.preferredWidth \
              inside a RowLayout or ColumnLayout, chosen where the child is \
@@ -2365,7 +2366,7 @@ fn lower_styled_box(node: &LayoutNode, part: &str, ctx: &EmitCtx) -> StyledBox {
         .unwrap_or(&[]);
     let state_layers = collect_state_layers(node, part, ctx.part_styles);
 
-    let mut rect_lines: Vec<String> = Vec::new();
+    let mut rect_lines: Vec<String> = qml_rotation_lines(base, &state_layers);
 
     // --- Geometry -----------------------------------------------------
     // height → implicitHeight (+ Layout.preferredHeight for layout
@@ -2731,8 +2732,33 @@ fn qml_elevation_wrap(
     )
 }
 
+/// Item rotation is visual only: Qt Quick layouts continue using the original
+/// width and height. Canonicalize a finite number instead of interpolating
+/// authored syntax into executable QML; chains and other units remain debt.
+fn qml_rotation_degrees(value: &str) -> Option<String> {
+    let angle = value.trim().trim_matches('"').trim()
+        .strip_prefix("rotate(")?.strip_suffix("deg)")?.trim()
+        .parse::<f64>().ok()?;
+    angle.is_finite().then(|| angle.to_string())
+}
+
+/// Last active state wins, matching the other conditional paint properties.
+/// Record only accepted conversions so a rejected override stays observable.
+fn qml_rotation_lines(base: &[StyleProp], layers: &[StateLayer<'_>]) -> Vec<String> {
+    let mut rotation = lowered_style_prop(base, "transform", qml_rotation_degrees);
+    for layer in layers {
+        if let Some(angle) = lowered_style_prop(layer.props, "transform", qml_rotation_degrees) {
+            rotation = Some(format!("( {} ) ? {angle} : {}", layer.cond_expr,
+                rotation.as_deref().unwrap_or("0")));
+        }
+    }
+    rotation.map(|angle| vec!["transformOrigin: Item.Center".into(), format!("rotation: {angle}")])
+        .unwrap_or_default()
+}
+
 fn qml_rectangle_paint_lines(props: &[StyleProp]) -> Vec<String> {
     let mut lines = Vec::new();
+    lines.extend(qml_rotation_lines(props, &[]));
     if let Some(background) = style_prop(props, "background")
         .or_else(|| style_prop(props, "background-color"))
         .and_then(qml_hex_color_or_none)
@@ -2762,6 +2788,7 @@ fn qml_rectangle_paint_lines_with_states(
     layers: &[StateLayer<'_>],
 ) -> Vec<String> {
     let mut lines = Vec::new();
+    lines.extend(qml_rotation_lines(base, layers));
     let base_background =
         style_prop_any(base, &["background", "background-color"]).and_then(qml_hex_color_or_none);
     if let Some(background) = conditional_color_expr(
@@ -6006,20 +6033,23 @@ fn pick_signal_arg_with(
 /// The Enter / Escape mapping mirrors UI25 §10 (the React backend
 /// merges both into a single `onKeyDown` handler; QML has dedicated
 /// signal handlers for both, so we use them directly).
+///
+/// `multiline: true` (UI29 §2.1) selects Qt Quick Controls' native
+/// `TextArea`, exactly as it does for the legacy `Input`. This path used to
+/// pass a hard-wired `false`, so every multiline `HostInput` was drawn as a
+/// one-line field (#15930).
 fn emit_host_input_qml(
     node: &LayoutNode,
     depth: usize,
     ctx: &EmitCtx,
 ) -> Result<String, PipelineEmitError> {
-    emit_text_input_qml(node, depth, ctx, false)
+    let multiline = find_keyword_prop(node, "multiline") == Some("true");
+    emit_text_input_qml(node, depth, ctx, multiline)
 }
 
-/// Lower the still-supported UI25 `Input` primitive.
-///
-/// UI29 deliberately narrowed `HostInput` to a single-line control, but the
-/// Notes package still needs UI25's multiline editor contract. Keep the
-/// single-line form on the normal host-input path and use Qt Quick Controls'
-/// native `TextArea` for `multiline: true`.
+/// Lower the still-supported UI25 `Input` primitive: the single-line form
+/// shares the host-input path, and `multiline: true` uses Qt Quick
+/// Controls' native `TextArea`, as `HostInput` now does too (#15930).
 fn emit_legacy_input_qml(
     node: &LayoutNode,
     depth: usize,
@@ -8021,13 +8051,14 @@ fn tree_needs_controls_import(node: &LayoutNode) -> bool {
     if node.tag == "HostTable" && host_table_has_native_semantics(node) {
         return true;
     }
-    if node.tag == "Input"
+    // `TextArea` (multiline) and `TextField` (placeholder) both live in
+    // QtQuick.Controls; a bare `TextInput` does not. Both primitives take
+    // `multiline` (#15930), and a `TextArea` without its import is a QML
+    // load error, not a degraded field.
+    if matches!(node.tag.as_str(), "Input" | "HostInput")
         && (find_keyword_prop(node, "multiline") == Some("true")
             || build_placeholder_text_attribute(node).is_some())
     {
-        return true;
-    }
-    if node.tag == "HostInput" && build_placeholder_text_attribute(node).is_some() {
         return true;
     }
     matches!(
@@ -11688,6 +11719,60 @@ mod tests {
             !result.output.contains("onAccepted:"),
             "TextArea Enter must insert a newline rather than commit:\n{}",
             result.output
+        );
+    }
+
+    /// #15930 — the kernel `HostInput` honours `multiline: true` with the
+    /// same native `TextArea` the legacy `Input` gets. Qt hard-wired the
+    /// HostInput path to single-line, so the note-type editor's card
+    /// templates were one-line `TextField`s here.
+    #[test]
+    fn a_multiline_host_input_emits_native_text_area() {
+        let m = component(
+            "Editor",
+            vec![
+                slot("front-template", SlotType::Text, true),
+                slot("front-label", SlotType::Text, true),
+            ],
+            vec![
+                emit_decl("onFrontChange", vec![param("value", EmitPayloadType::Text)]),
+                emit_decl("onSave", vec![]),
+            ],
+        );
+        let prop = |name: &str, value: LayoutPropValue| LayoutProp {
+            name: name.to_string(),
+            value,
+        };
+        let l = LayoutDef {
+            component_name: "Editor".to_string(),
+            root: LayoutNode {
+                tag: "HostInput".to_string(),
+                part_name: Some("front-template-input".to_string()),
+                props: vec![
+                    prop("value", LayoutPropValue::SlotRef("front-template".to_string())),
+                    prop("multiline", LayoutPropValue::Keyword("true".to_string())),
+                    prop("a11y-label", LayoutPropValue::SlotRef("front-label".to_string())),
+                    prop("onChange", LayoutPropValue::EmitRef("onFrontChange".to_string())),
+                    prop("onCommit", LayoutPropValue::EmitRef("onSave".to_string())),
+                ],
+                children: Vec::new(),
+            },
+        };
+
+        let out = from_pipeline(&m, &l, &empty_style("Editor")).unwrap().output;
+        // No placeholder here, so only `multiline` can pull in the import
+        // `TextArea` needs; without it QML refuses to load the file.
+        assert!(out.contains("import QtQuick.Controls"), "got:\n{out}");
+        assert!(out.contains("TextArea {"), "got:\n{out}");
+        assert!(!out.contains("TextField {"), "got:\n{out}");
+        assert!(!out.contains("TextInput {"), "got:\n{out}");
+        assert!(out.contains("objectName: \"front-template-input\""), "got:\n{out}");
+        assert!(out.contains("text: frontTemplate"), "got:\n{out}");
+        assert!(out.contains("Accessible.name: frontLabel"), "got:\n{out}");
+        assert!(out.contains("onTextChanged: frontChange(text)"), "got:\n{out}");
+        assert!(
+            !out.contains("onAccepted:"),
+            "TextArea Enter must insert a newline rather than commit:\n{out}"
         );
     }
 
@@ -16715,6 +16800,52 @@ mod tests {
         StyleProp {
             name: name.to_string(),
             value: value.to_string(),
+        }
+    }
+
+    #[test]
+    fn degree_rotation_is_centered_and_preserves_ordered_states() {
+        let base = vec![sp("transform", "\"rotate(45deg)\"")];
+        let first = vec![sp("transform", "rotate(-90deg)")];
+        let last = vec![sp("transform", "rotate(180deg)")];
+        let layers = vec![
+            StateLayer { cond_expr: "first".into(), props: &first },
+            StateLayer { cond_expr: "last".into(), props: &last },
+        ];
+        assert_eq!(qml_rotation_lines(&base, &layers), vec![
+            "transformOrigin: Item.Center", "rotation: ( last ) ? 180 : ( first ) ? -90 : 45",
+        ]);
+        assert_eq!(qml_rotation_lines(&[], &layers)[1],
+            "rotation: ( last ) ? 180 : ( first ) ? -90 : 0");
+        assert!(qml_rectangle_paint_lines(&base).contains(&"rotation: 45".into()));
+        assert!(qml_rectangle_paint_lines_with_states(&base, &layers)
+            .contains(&"rotation: ( last ) ? 180 : ( first ) ? -90 : 45".into()));
+    }
+
+    #[test]
+    fn unsupported_degree_rotations_are_not_lowered() {
+        for value in ["rotate(1rad)", "rotate(NaNdeg)", "rotate(infdeg)",
+            "rotate(1e999deg)", "rotate(45deg) scale(2)", "translate(2px)",
+            "rotate(45deg);evil()", "rotate()"] {
+            assert_eq!(qml_rotation_degrees(value), None, "{value}");
+            assert!(qml_rotation_lines(&[sp("transform", value)], &[]).is_empty());
+        }
+    }
+
+    #[test]
+    fn degree_rotation_report_matches_emitted_box() {
+        let layout = box_layout_with_part("card");
+        let model = component("X", vec![], vec![]);
+        for (value, supported) in [("rotate(45deg)", true), ("rotate(1rad)", false)] {
+            let style = style_with_part("X", "card", vec![
+                ("background", "#ffffff"), ("width", "8px"),
+                ("height", "8px"), ("transform", value),
+            ]);
+            let output = from_pipeline(&model, &layout, &style).unwrap().output;
+            assert_eq!(output.contains("rotation: 45"), supported, "{output}");
+            let drops = dropped_style_properties(&model, &layout, &style);
+            assert_eq!(drops.iter().any(|drop| drop.name == "transform"), !supported);
+            assert!(output.contains("implicitWidth: 8") && output.contains("implicitHeight: 8"));
         }
     }
 

@@ -14,7 +14,8 @@ romanization: "badakhlâq"
 concept_tag: FA-SEFAT200-BADAKHLAQ
 prerequisites: [FA-C199-shik, FA-C200-khejalati]
 sounds: []
-roots: []
+roots: [persian-bad, arabic-akhlaq]
+etymology_hook: "badakhlâq: Persian bad (not English bad) + akhlâq ← Arabic aḫlāq (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C200-khejalati]
 <!-- hl-knowledge: introduces=[FA-LEX-C200-SEFAT200-02]; assesses=[] -->
 
 **بداخلاق** — *badakhlâq* — "bad-tempered".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*badakhlâq* is *bad*, "bad", with *akhlâq*, "temper, manners". *bad* is native Persian (Middle Persian *wad*), and English *bad* only looks alike: no source links them. *akhlâq* is borrowed from Arabic *aḫlāq* (root *ḫ-l-q*, Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

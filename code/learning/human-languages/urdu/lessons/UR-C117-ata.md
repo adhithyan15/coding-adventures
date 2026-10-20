@@ -14,7 +14,8 @@ romanization: "āṭā"
 concept_tag: UR-THINGS117-ATA
 prerequisites: [UR-C117-dahi, UR-C117-tel]
 sounds: []
-roots: []
+roots: [indo-aryan-arta]
+etymology_hook: "āṭā ← *ārta 'flour', a reconstructed form; a tadbhava (CDIAL 1338)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C117-tel]
 <!-- hl-knowledge: introduces=[UR-LEX-C117-THINGS117-05]; assesses=[] -->
 
 **آٹا** — *āṭā* — "flour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**آٹا** (*āṭā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ārta*, "flour", a form CDIAL reconstructs from its descendants (CDIAL 1338). CDIAL compares Persian *ārd*, "flour".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

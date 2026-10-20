@@ -1,0 +1,19 @@
+{
+  "chapter": 368,
+  "title": "The Orator",
+  "label": "ch:la-the-orator",
+  "canDo": "I can talk about the orator and his eloquence, a debate, and holding forth on a subject.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C368-eloquor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 368: I can talk about the orator and his eloquence, a debate, and holding forth on a subject.",
+    "assesses": [
+      "LA-LEX-C368-ORATOR-03",
+      "LA-LEX-C368-ORATOR-04",
+      "LA-LEX-C368-ORATOR-05"
+    ]
+  }
+}

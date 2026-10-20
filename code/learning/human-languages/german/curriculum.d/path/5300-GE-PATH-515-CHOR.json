@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-515-CHOR",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GE-EXT-515-CHOR"
+  ],
+  "after": []
+}

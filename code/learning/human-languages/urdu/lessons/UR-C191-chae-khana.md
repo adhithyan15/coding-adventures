@@ -14,7 +14,8 @@ romanization: "chāe khānā"
 concept_tag: UR-JAGAH191-CHAE-KHANA
 prerequisites: [UR-C190-kalij, UR-C190-makan]
 sounds: []
-roots: []
+roots: [persian-chay, persian-khana]
+etymology_hook: "chāe 'tea' ← Persian chāy, from Chinese; khānā 'house' ← Persian khāna"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C190-makan]
 <!-- hl-knowledge: introduces=[UR-LEX-C191-JAGAH191-01]; assesses=[] -->
 
 **چائے خانہ** — *chāe khānā* — "a tea house".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چائے خانہ** (*chāe khānā*) is "tea house". *chāe*, "tea", came through Persian *chāy* from Chinese *chá*, and *khānā* is Persian *khāna*, "house, room".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

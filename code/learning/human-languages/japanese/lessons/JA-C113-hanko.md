@@ -14,7 +14,8 @@ romanization: "hanko"
 concept_tag: JA-THINGS113-HANKO
 prerequisites: [JA-C112-shigoto, JA-C112-yasumi]
 sounds: []
-roots: []
+roots: [japanese-hanko]
+etymology_hook: "hanko: usually from Sino-Japanese hankō 'printing, sealing'; 判子 is ateji (JMdict)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C112-yasumi]
 <!-- hl-knowledge: introduces=[JA-LEX-C113-THINGS113-01]; assesses=[] -->
 
 **はんこ** — *hanko* — "a personal seal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**はんこ** (*hanko*) is usually explained as Sino-Japanese *hankō*, "printing; sealing", which JMdict lists, worn down. JMdict marks the spelling with "judge" and "child" as ateji. The account is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

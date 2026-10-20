@@ -1,0 +1,19 @@
+{
+  "chapter": 515,
+  "title": "Según dicen",
+  "label": "ch:es-segun-dicen",
+  "canDo": "I can say that there was a rumour, a statement or an official note, and that someone declared or confirmed it.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C515-confirmar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 515: I can say that there was a rumour, a statement or an official note, and that someone declared or confirmed it.",
+    "assesses": [
+      "ES-LEX-C515-RUMOR-03",
+      "ES-LEX-C515-RUMOR-04",
+      "ES-LEX-C515-RUMOR-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C493-bercer",
+  "pathSegment": "FR-PATH-493-BEBE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-493-BEBE",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C328-eplucher",
+  "pathSegment": "FR-PATH-328-COUPER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-328-COUPER",
+      "order": 1
+    }
+  ]
+}

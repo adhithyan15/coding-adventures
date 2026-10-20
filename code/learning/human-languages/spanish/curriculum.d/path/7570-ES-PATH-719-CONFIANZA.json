@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-719-CONFIANZA",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ES-EXT-719-CONFIANZA"
+  ],
+  "after": []
+}

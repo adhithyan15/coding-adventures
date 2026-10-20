@@ -4,7 +4,7 @@
   "chapter": 95,
   "title": "In the middle, Beside, Everywhere, Elsewhere, Street",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:dc4972e11abdb741",
+  "sourceHash": "fnv1a64:ee2bcebd95f28181",
   "lessons": [
     {
       "id": "SA-C95-madhye",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cc4a71eccac3c95f",
+      "sourceHash": "fnv1a64:c9d4a96fb68d035c",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "madhye is the locative, \"in the middle\", of madhya \"middle\" (MW). MW sets madhya beside Latin medius, Greek mesos and English mid: one inherited Indo-European word. This very locative wore down into Hindi meṁ \"in\" (CDIAL 9804)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4398e0c48eb6bb44",
+      "sourceHash": "fnv1a64:5eedbceabc2b820d",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pārśve is the locative, \"at the side\", of pārśva \"side, flank\", which MW derives from parśu \"rib\": the side is the region of the ribs. pārśva lives on as Hindi pās \"near\" (CDIAL 8118)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:482b5534deabefd1",
+      "sourceHash": "fnv1a64:d55c1034d067b139",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sarvatra is built from sarva \"all\" and the place ending -tra \"in, at\" (MW). MW compares sarva with Greek holos \"whole\" and Latin salvus \"safe\". Pali wore sarvatra down to sabbattha (CDIAL 13278), and sarva itself became Hindi sab \"all\" (CDIAL 13276)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7fd357ffea6b11f0",
+      "sourceHash": "fnv1a64:a8628c834fb8ca83",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "anyatra is built from anya \"other\" and the place ending -tra \"in, at\" (MW). MW sets anya beside Latin alius (English alias) and Greek allos, so it is inherited from Indo-European. It lives on as Hindi anat \"elsewhere\" (CDIAL 401)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:579a49940fbf479c",
+      "sourceHash": "fnv1a64:088b6982e34ea25f",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "MW suggests vīthī \"a row, a street\" comes from the root √vī \"go, approach\", but marks it \"perhaps\", so the source is uncertain. It lives on as Punjabi vīhī \"street\" (CDIAL 12050)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

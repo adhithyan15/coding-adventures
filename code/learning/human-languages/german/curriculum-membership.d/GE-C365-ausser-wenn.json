@@ -1,0 +1,11 @@
+{
+  "id": "GE-C365-ausser-wenn",
+  "pathSegment": "GE-PATH-365-ESSEIDENN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-365-ESSEIDENN",
+      "order": 1
+    }
+  ]
+}

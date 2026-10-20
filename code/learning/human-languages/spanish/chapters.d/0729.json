@@ -1,0 +1,19 @@
+{
+  "chapter": 729,
+  "title": "Defectos de cada día",
+  "label": "ch:es-defectos-de-cada-dia",
+  "canDo": "I can talk about stubborn, lazy, nosy and curious people.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C729-curiosidad",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 729: I can talk about stubborn, lazy, nosy and curious people.",
+    "assesses": [
+      "ES-LEX-C729-PEREZA-03",
+      "ES-LEX-C729-PEREZA-04",
+      "ES-LEX-C729-PEREZA-05"
+    ]
+  }
+}

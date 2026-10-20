@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Four Verbs Between People",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:8a6c745af5da3341",
+  "sourceHash": "fnv1a64:e6e19d9ea02d3dd9",
   "lessons": [
     {
       "id": "TA-C34-edu",
@@ -732,7 +732,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0e2378258f39c8f6",
+      "sourceHash": "fnv1a64:575fda19858691f4",
       "notice": null,
       "blocks": [
         {
@@ -808,7 +808,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The grasp-verb is old and shared: Malayalam പിടിക്കുക (piṭikkuka) and Telugu పట్టు (paṭṭu) both mean \"catch, hold.\" Kannada's is ಹಿಡಿ (hiḍi) — not a different word: Old Kannada wrote piḍi, and the p becomes h shift behind pattu / hattu and pāl / hālu turned it into hiḍi. A third instance of a rule you have already met."
+              "text": "The grasp-verb is native and shared (DEDR 4148): Malayalam പിടിക്കുക (piṭikkuka) and Telugu పట్టు (paṭṭu) both mean \"catch, hold.\" Kannada's is ಹಿಡಿ (hiḍi) — not a different word: Old Kannada wrote piḍi, and the p becomes h shift behind pattu / hattu and pāl / hālu turned it into hiḍi. A third instance of a rule you know."
             },
             {
               "kind": "speech",

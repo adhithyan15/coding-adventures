@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:e745c3410727e346",
+  "lessonIds": [
+    "IT-C375-annullare",
+    "IT-C375-rinviare",
+    "IT-C375-provvisorio",
+    "IT-C375-definitivo",
+    "IT-C375-stabilire"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch375.txt",
+  "json": "italian/narration/ch375.json",
+  "textHash": "fnv1a64:0d94dadac96c23d9",
+  "jsonHash": "fnv1a64:f367e6406fc1ffc4",
+  "findings": []
+}

@@ -14,7 +14,8 @@ romanization: "sanjuu"
 concept_tag: JA-CLOTHES59-SANJUU
 prerequisites: [JA-C59-kutsushita, JA-C59-megane]
 sounds: []
-roots: []
+roots: [middle-chinese-sam, middle-chinese-dzyip]
+etymology_hook: "sanjū: Sino-Japanese 三 'three' + 十 'ten', on'yomi from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C59-megane]
 <!-- hl-knowledge: introduces=[JA-LEX-C59-CLOTHES59-04]; assesses=[] -->
 
 **さんじゅう** — *sanjuu* — "thirty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**さんじゅう** (*sanjū*) is Sino-Japanese: *san*, "three" (Middle Chinese *sam*), and *jū*, "ten" (Middle Chinese *dzyip*), both on'yomi borrowed from Chinese.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

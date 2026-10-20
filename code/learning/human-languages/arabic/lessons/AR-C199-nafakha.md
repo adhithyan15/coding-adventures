@@ -14,7 +14,8 @@ romanization: "nafakha"
 concept_tag: AR-VERB-NAFAKHA
 prerequisites: [AR-C199-hazza, AR-C199-adda]
 sounds: []
-roots: []
+roots: [n-f-kh]
+etymology_hook: "nafakha: built on the root n-f-kh, 'to blow' (Lane); nafakha is the plain verb, 'he blew'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C199-adda]
 <!-- hl-knowledge: introduces=[AR-LEX-C199-ACT199-03]; assesses=[] -->
 
 **نفخ** — *nafakha* — "to blow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نفخ** (*nafakha*) is built on the native Arabic root *n-f-kh*, "to blow" (Lane). *Nafakha* is the plain verb, "he blew".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

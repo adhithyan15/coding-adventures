@@ -17428,3 +17428,153 @@ clear the seven product paths; #17185 has the previously known journal overlap.
 The 3,493-file PR was checked with immutable Git tree comparisons beyond the
 3,000-file API cap. The final journal retains 297 merged, 1,038 pending and one
 in-progress owner, including the distinct coverage-qualification successor.
+
+
+## Post-#17379 inventory and opcode-provider foundation
+
+#17379 merged externally as `d9bb1f83d9e937880c7e06a3a522d725148f8f80`
+from exact reviewed head `2a02fb26abbb61e6aa0601ee19a450d94d8be9b8`.
+The merge is an ancestor of fetched main `5526f94f956ac390fc667af525dabef602ec7fce`;
+all 32 checks were acceptable (13 successful, 19 skipped), both gates passed,
+and selected source at merge matches the reviewed head. No manual merge occurred.
+
+The immutable collision-checked report now contains 1507 established identities,
+4789 occupied slots and 1549 reported identities across 15 established languages.
+There are zero collisions or unknown buckets; five OCaml roots remain emerging.
+The sole new package is the concrete macOS Seatbelt sandbox. Its new pending,
+selection-blocked native-authority review depends on shared spawn isolation;
+it is excluded from autonomous portable delivery and is a launcher prerequisite.
+Current Mermaid, ALGOL, Chief, Mosaic and validation changes remain with existing
+classification owners, with explicit orthogonal line-hop and validator-universe
+scope review notes. No newly unowned eligible portable gap was established.
+
+All 43 pending audit additions from the prior PR plus that excluded review are
+preserved. The reconciled graph has 1380 owners and 2466 edges. Select exactly
+`starlark-compiler-opcode-provider-neutral-conformance` in a fresh clean worktree.
+Its 14 bounded provider follow-ups give more practical leverage than the six
+compiler-IR lane leaves or six-reader duplicate-fixture routing repair. The Ruby
+applicability record remains blocked and AST neutral still has other prerequisites.
+Live product overlap was cleared across 14 open PRs, including immutable checks
+beyond listing caps; CI and journal shared-file overlap requires narrow reconciliation.
+
+The selected slice freezes [STP01](STP01-starlark-opcode-provider.md), its closed
+359-record corpus and an independent strict validator, tests and existing metadata
+CI integration. Per-lane production changes and durable native readers remain
+pending adoption owners. Existing package tests or external API witnesses provide
+validation evidence without crediting a committed shared-corpus adopter. PY03's
+future runtime architecture and Python/Ruby gaps remain explicit. Specs precede
+tests, source, documentation, final-head security review and PR publication.
+
+
+STP01 local validation passes 15 neutral tests with 131/131 measured Python
+coverage statements and 68/68 branches, plus 19 CI-registry checks. Go reference
+native tests and the actual BUILD recipe pass at 98.0% statement coverage;
+Rust provider BUILD passes eight tests and its AST downstream passes 96.
+An external Go witness compares all 359 corpus records through public APIs;
+it is validation evidence, not a committed native-adoption reader. All native
+adoption children remain pending. Ruff, formatting, Bandit and Python compile
+checks pass. Actual detector execution validates 5327 discovered package BUILD
+metadata and orphan gates (38 existing exemptions), evaluates 45 Starlark fronts,
+and emits an empty package-diff selection. This does not compile 5327 packages.
+Parity inventory remains collision-free/identical to pinned main; ten reporter
+and 31 lessons tests pass, with 1163 lesson shards and zero problems. Independent
+correctness and CI-scope reviews found no actionable issue. Exact-head security
+review and hosted CI remain gates before publication and auto-merge.
+
+
+## Post-#17473 merge and Go provider adoption (2026-10-16)
+
+PR #17473 was externally merged as c4f9543aac39a3bbb97d70e700d10f2d5dabdf9e
+from reviewed dea68afaab9db0cbff61c326eef93c4be58ffe69; all 38 checks were
+terminal acceptable (31 success, seven skipped). No manual merge was performed.
+After disk space recovered, the journal transitioned the foundation to merged.
+
+The complete collision-checked Git-tree inventory at f3a7eae08279a7bb9dfa5b7650b598016526770b
+has 15 established languages, 1,508 implementation identities, 4,790 slots and
+1,550 all-reported identities, with zero collisions or unknown buckets. The one
+new Chief Windows sandbox identity is registered as an excluded, blocked native
+authority review before selection. OCaml remains emerging. Parallel inventory,
+classification, dependency ranking and native-reader preparation are retained;
+structural presence does not claim behavioral qualification.
+
+Select only starlark-compiler-go-opcode-provider-conformance-adoption after its
+neutral prerequisite merged. Its existing public APIs support a bounded native
+reader and ownership checks; live open-PR file overlap checks were clear. The
+broader BF03 contract retains 14 direct/19 transitive dependents. Go adoption
+wins this tranche on bounded implementation readiness, not dependency count.
+No actual Go downstream importer was found; AST compiler tests are separate.
+
+
+Go adoption local qualification now consumes every STP01 row through native
+APIs and rejects malformed transport/coordinated semantic corruption. Actual
+provider BUILD/BUILD_windows, vet/build and tests pass with 99.0% production
+statement coverage. Five temporary shared-storage regressions are rejected by
+independently copied baselines; production source is restored byte-for-byte.
+The complete build-tool suite passes with 83.7% aggregate coverage, vet/build
+and its actual generic BUILD on Windows. Exact fixture routing, all three
+platform plans and missing-reader output atomicity are tested. The real
+repository detector emits an unforced plan requiring only Go; dependencies are
+retained. Neutral 15-test/359-row and reporter ten-test checks pass, as do 1,209
+lesson shards. Full materialized Git-visible inventory matches the immutable
+report, including special buckets. Native execution was Windows only; platform
+plan inspection and script execution do not claim native Linux/macOS runs.
+
+## Post-#17677 inventory and backlog reconciliation (2026-10-18)
+
+Go opcode-provider PR #17677 merged externally as
+`a9f4f459c4789405e2b7d44a2493111817388a95` from reviewed head
+`20e8a010c6f4cf55f13c96de817c652292df7aca`. Both required gates passed;
+29 checks succeeded, eight conditional checks skipped and the documented
+CodeQL aggregate was neutral. Actual Go analysis succeeded. Hosted Linux,
+Windows and macOS fronts built the provider and Go build tool on the recorded
+GitHub test merge; local coverage remains a separate Windows measurement.
+The agent performed no manual merge.
+
+The fresh immutable main inventory has 1,508 established identities, 4,790
+occupied slots, 1,550 all-reported identities and 5,198 roots across fifteen
+established lanes. There are zero collisions or unknown buckets. Compared with
+the saved `76955b07` observation, 52 package files were added, with no new or
+removed root or identity/lane gap. Five OCaml identities remain emerging.
+
+Before selecting a successor, register the 24 reviewed finite classifiers from
+the parallel audits: LP00; CAS matching, substitution, pretty printing, list,
+complex and number-theory contracts; LEF/DEF and GDSII; floorplan, placement,
+routing, DRC/LVS, NLDM and technology mapping; resistor, power supply,
+oscillator and electronics models; Oct and Prolog lexer/parser profiles; and
+Nib source-preserving formatting. Six declared prerequisite edges remain.
+These are classification tasks, with explicit finite-domain and reference
+ambiguities in the journal, not completed ports or physical/native guarantees.
+
+Add the required .NET adapter-closure dependency on shared-input digest
+evidence. Keep Haskell coverage and duplicate-fixture CI sequencing optional;
+the full combined .NET digest edge remains scope-conditional. The resulting
+1,480-owner / 2,543-edge graph has no normalized collisions, missing dependency
+or cycle. The independently reviewed scopes and audit evidence remain in the
+dedicated parity coordination checkpoint.
+
+Register nine additional pending core-profile adopters for the existing
+Elixir, Go, Haskell, Lua, Perl, Python, Ruby, Rust and TypeScript compiler-IR
+roots. None currently reads the new shared profile; the six missing-lane port
+owners do not cover this gap. The graph is now 1,489 owners / 2,552 edges,
+without collisions or cycles. These additions precede successor selection.
+
+Select exactly `compiler-ir-aot-neutral-conformance`. Its prior graph has
+14 direct / 19 transitive dependents, including six ports and four immediately
+unblocked foundations/classifiers; the new nine adopters stay pending too.
+The [named BF03 profile](BF03-core-profile.md) resolves ID loss and core-opcode
+admission before tests. This tranche delivers only neutral data/text fixtures
+and their independent validator. Source maps, all native adopters and backend
+execution remain separate. Fourteen live open PR file inventories clear the
+direct product scope; shared workflow/journal hunks are unrelated and retained.
+
+Local foundation validation on source `ccef78f8cf5`: all 50 cases and 25 core
+opcodes pass across 11 tests. Validator coverage is 333/341 statements (97.65%)
+and 180/188 branches (95.74%). CI registry (19), parity reporter (10), STP01
+neutral (15), and lessons (31) tests pass, as do Ruff, Bandit, compilation,
+and the lessons validator. The actual Go build-tool BUILD passes all 15
+package suites; vet and build pass. Its repository plan validates 45 Starlark
+BUILD files and discovers 5,328 packages with no affected native packages
+for this neutral-only change. Both independent security reviews pass the
+exact source head. The Git-visible inventory equals the immutable main
+report. These observations qualify the neutral foundation only; nine existing
+IR lane adopters and six missing-lane ports remain pending.

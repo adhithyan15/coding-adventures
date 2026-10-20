@@ -4,7 +4,7 @@
   "chapter": 181,
   "title": "To spend, To pay off, To measure, To weigh, To check",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c5dc0a73521bb382",
+  "sourceHash": "fnv1a64:bd66768b0bb1caee",
   "lessons": [
     {
       "id": "UR-C181-kharch-karna",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aaf00c07aab57959",
+      "sourceHash": "fnv1a64:68a50c8a21596b43",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خرچ کرنا (kharch karnā) joins kharch, \"spending\", and karnā, \"to do\". kharch is Arabic kharj, \"a going out; expenditure\", which reached Urdu through Persian (Lane, root kh-r-j); karnā comes from Sanskrit karoti, \"does\" (CDIAL 2814)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf6baba33e9231b0",
+      "sourceHash": "fnv1a64:b9677958917bd519",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "چکانا (chukānā) is a tadbhava, a word inherited and reshaped by sound change. It comes from cukk, \"fall short of, stop\", a form CDIAL reconstructs from its descendants (CDIAL 4848). It is the causing form of chuknā, \"to be finished\". CDIAL takes cukk from Prakrit cukka, \"fallen, mistaken\", which replaced Sanskrit cyuta, \"fallen\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5517211048d406e1",
+      "sourceHash": "fnv1a64:182b70ff72665dda",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ناپنا (nāpnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jñāpyate, \"is made known\" (CDIAL 5283). The sense moved from \"making known\" to \"measuring\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f77beacd1c00b915",
+      "sourceHash": "fnv1a64:8289b5258d71d5d5",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تولنا (tolnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from tolayati, \"lifts, weighs, considers\" (CDIAL 5979)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:67c205a8e5fe7404",
+      "sourceHash": "fnv1a64:88024019a71b9f6f",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جانچنا (jāṅchnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from yācyate, \"is asked\" (CDIAL 10449). The sense moved from \"begging\" to \"testing\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 589,
+  "sourceHash": "fnv1a64:c5d8485498d32b06",
+  "lessonIds": [
+    "ES-C589-de-hecho",
+    "ES-C589-en-realidad",
+    "ES-C589-desde-luego",
+    "ES-C589-en-absoluto",
+    "ES-C589-en-el-fondo"
+  ],
+  "tex": "spanish/book/chapters/ch589-en-realidad.tex"
+}

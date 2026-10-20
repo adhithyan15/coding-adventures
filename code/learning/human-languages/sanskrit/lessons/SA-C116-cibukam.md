@@ -14,7 +14,8 @@ romanization: "cibukam"
 concept_tag: SA-THINGS116-CIBUKAM
 prerequisites: [SA-C116-sarasah, SA-C116-kapolah]
 sounds: []
-roots: []
+roots: [sanskrit-cibuka]
+etymology_hook: "cibuka 'chin' is borrowed from Munda (CDIAL 4820, after Kuiper and EWA); Pali cubuka"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C116-kapolah]
 <!-- hl-knowledge: introduces=[SA-LEX-C116-THINGS116-03]; assesses=[] -->
 
 **चिबुकम्** — *cibukam* — "the chin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*cibuka* "the chin" is taken to be borrowed from Munda (CDIAL 4820, after Kuiper and EWA); the Rigveda already has a form *chubuka*. Pali kept it as *cubuka* (CDIAL 4820).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

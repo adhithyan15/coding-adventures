@@ -1,0 +1,11 @@
+{
+  "id": "LA-C541-caldarium",
+  "pathSegment": "LA-PATH-541-BALN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-541-BALN",
+      "order": 1
+    }
+  ]
+}

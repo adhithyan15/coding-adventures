@@ -1,0 +1,11 @@
+{
+  "id": "PT-C373-provavel",
+  "pathSegment": "PT-PATH-373-RISCO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-373-RISCO",
+      "order": 2
+    }
+  ]
+}

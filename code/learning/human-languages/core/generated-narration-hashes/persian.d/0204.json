@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 204,
-  "sourceHash": "fnv1a64:5fe200fe37a64a3e",
+  "sourceHash": "fnv1a64:f54408bc1215567b",
   "lessonIds": [
     "FA-C204-palto",
     "FA-C204-manto",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch204.txt",
   "json": "persian/narration/ch204.json",
-  "textHash": "fnv1a64:a7565a63bfdf63fd",
-  "jsonHash": "fnv1a64:aa6186a038b1d9ec",
+  "textHash": "fnv1a64:6c43b505ebd98abf",
+  "jsonHash": "fnv1a64:b11e42eb3f299984",
   "findings": []
 }

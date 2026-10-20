@@ -12,7 +12,7 @@ concept_tag: UR-NUMBER-TEN
 prerequisites: [UR-C29-nau]
 sounds: [rtl]
 roots: [sanskrit-dasha, proto-indo-european-dekm]
-etymology_hook: "das continues Sanskrit dasha from Proto-Indo-European *dekm -- Latin decem, English ten -- and it is the first number in the book that a market is likely to say aloud."
+etymology_hook: "das ← Sanskrit daśa 'ten' (CDIAL 6227), from PIE *déḱm̥, the same word as English ten"
 duration:
   max_seconds: 270
 requires:
@@ -48,7 +48,7 @@ Two letters again, and the first is two's **د**.
 ## The word, taken apart — decem, ten, das
 <!-- hl-knowledge: introduces=[UR-ETYMON-DAS-TEN-PIE]; assesses=[UR-LEX-DAS, UR-LEX-SAAT] -->
 
-**دس** continues Sanskrit *daśa*, from Indo-European \**dekm*,
+**دس** continues Sanskrit *daśa* (CDIAL 6227), from Indo-European \**dekm*,
 "ten." Latin **decem** — and through it **decimal** and **December** — English
 **ten** and Greek **déka** are the same word.
 

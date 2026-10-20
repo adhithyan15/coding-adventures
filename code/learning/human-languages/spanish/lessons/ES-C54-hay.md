@@ -6,7 +6,7 @@ sequence: 2206
 chapter: 191
 type: word
 headword: hay
-gloss: "there is" and "there are" — one word for both, which no other Spanish verb form manages
+gloss: '"there is" and "there are" — one word for both, which no other Spanish verb form manages'
 concept_tag: ES-LEX-HAY
 prerequisites: [ES-C53-sintesis-frases-largas, ES-C49-haber-completo]
 sounds: [diphthong-ai]

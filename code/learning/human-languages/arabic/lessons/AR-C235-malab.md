@@ -14,7 +14,8 @@ romanization: "malʿab"
 concept_tag: AR-MAKAN235-MALAB
 prerequisites: [AR-C234-taqwim, AR-C235-mathaf]
 sounds: []
-roots: []
+roots: [l-ʿ-b]
+etymology_hook: "malʿab: built on the root l-ʿ-b, 'to play' (Lane); malʿab is the ma- place noun, 'a place of play'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C235-mathaf]
 <!-- hl-knowledge: introduces=[AR-LEX-C235-MAKAN235-02]; assesses=[] -->
 
 **ملعب** — *malʿab* — "a stadium, a sports ground".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ملعب** (*malʿab*) is built on the native Arabic root *l-ʿ-b*, "to play" (Lane). *Malʿab* is the *ma-* place noun, "a place of play".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

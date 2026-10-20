@@ -11,8 +11,8 @@ gloss: my younger sister
 concept_tag: JA-FAMILY-YOUNGER-SISTER
 prerequisites: [JA-C13-otouto]
 sounds: [mora]
-roots: []
-etymology_hook: A different opening leads into the same long-o ending as the younger-brother word.
+roots: [japanese-imouto]
+etymology_hook: "imōto: native; usually explained as old imo 'sister, beloved' + hito 'person'"
 duration:
   max_seconds: 165
 requires:
@@ -42,6 +42,11 @@ Say **おとうと** once and keep its four even morae.
 [YOU WRITE: distant **本** once]
 
 Hear *i-mo-o-to*, say it, then contrast *o-to-o-to*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**いもうと** (*imōto*) is a native word, inherited rather than borrowed. It is usually explained as *imo*, an old word for a sister or a loved woman, with *hito*, "person", worn down; the kanji is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-IMOUTO, JA-SCRIPT-I-01, JA-SCRIPT-MO-01, JA-SCRIPT-U-01, JA-SCRIPT-TO-01] -->

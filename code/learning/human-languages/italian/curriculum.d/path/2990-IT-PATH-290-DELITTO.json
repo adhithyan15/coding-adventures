@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-290-DELITTO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-290-DELITTO"
+  ],
+  "after": []
+}

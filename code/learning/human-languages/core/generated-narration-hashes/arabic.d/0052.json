@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 52,
-  "sourceHash": "fnv1a64:ba52ab9e611b4ee2",
+  "sourceHash": "fnv1a64:92137e1da961ed59",
   "lessonIds": [
     "AR-C52-wajh",
     "AR-C52-dam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch52.txt",
   "json": "arabic/narration/ch52.json",
-  "textHash": "fnv1a64:a6081b23ea19f724",
-  "jsonHash": "fnv1a64:d283bb292c41d0a1",
+  "textHash": "fnv1a64:828949b129d0166b",
+  "jsonHash": "fnv1a64:dad1567fe5e8f593",
   "findings": []
 }

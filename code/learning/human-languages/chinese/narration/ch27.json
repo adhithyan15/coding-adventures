@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Age, and And",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:10b7b74e0cf5268a",
+  "sourceHash": "fnv1a64:1466edefcd7bb5e1",
   "lessons": [
     {
       "id": "ZH-W27-sui",
@@ -230,7 +230,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a64622a902e47555",
+      "sourceHash": "fnv1a64:89ceb60f5fcd5181",
       "notice": null,
       "blocks": [
         {
@@ -372,6 +372,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "岁 (suì) is inherited from Middle Chinese sjwejH, \"year\" (Guangyun); Unihan also gives \"age\"."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -405,7 +416,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -637,7 +648,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:54c28cf10ca623c6",
+      "sourceHash": "fnv1a64:827fd60727337dab",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -765,6 +776,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "和 (hé) is inherited from Middle Chinese hwa, \"in harmony\" (Guangyun, in Baxter's transcription); its use as \"and\" is a later development, usually traced through \"together with\"."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -798,7 +820,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

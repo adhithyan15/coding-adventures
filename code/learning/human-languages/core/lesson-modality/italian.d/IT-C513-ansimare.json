@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C513-ansimare",
+    "language": "italian",
+    "chapter": 513,
+    "sequence": 28790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c48a14533d99b17"
+  },
+  "findings": []
+}

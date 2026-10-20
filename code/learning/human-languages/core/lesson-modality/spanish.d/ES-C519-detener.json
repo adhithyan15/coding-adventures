@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C519-detener",
+    "language": "spanish",
+    "chapter": 519,
+    "sequence": 15530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:88c2b848d325a023"
+  },
+  "findings": []
+}

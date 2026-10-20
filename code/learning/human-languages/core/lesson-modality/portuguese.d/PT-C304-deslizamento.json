@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C304-deslizamento",
+    "language": "portuguese",
+    "chapter": 304,
+    "sequence": 17620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f84b4edcfd6cc1d"
+  },
+  "findings": []
+}

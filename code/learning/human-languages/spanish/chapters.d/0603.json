@@ -1,0 +1,19 @@
+{
+  "chapter": 603,
+  "title": "Derechos",
+  "label": "ch:es-derechos",
+  "canDo": "I can talk about equality, privilege, justice and what is unfair.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C603-injusto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 603: I can talk about equality, privilege, justice and what is unfair.",
+    "assesses": [
+      "ES-LEX-C603-DERECHO-03",
+      "ES-LEX-C603-DERECHO-04",
+      "ES-LEX-C603-DERECHO-05"
+    ]
+  }
+}

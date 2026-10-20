@@ -1,0 +1,19 @@
+{
+  "chapter": 352,
+  "title": "Ohne Arbeit",
+  "label": "ch:ge-ohne-arbeit",
+  "canDo": "I can talk about losing a job and being out of work, and about a trial period and settling into a new job.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C352-einarbeiten",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 352: I can talk about losing a job and being out of work, and about a trial period and settling into a new job.",
+    "assesses": [
+      "GE-LEX-C352-ARBEITSLOS-03",
+      "GE-LEX-C352-ARBEITSLOS-04",
+      "GE-LEX-C352-ARBEITSLOS-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C451-serralheiro",
+  "pathSegment": "PT-PATH-451-ARRANJOS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-451-ARRANJOS",
+      "order": 3
+    }
+  ]
+}

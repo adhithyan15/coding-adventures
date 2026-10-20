@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 13,
-  "sourceHash": "fnv1a64:e454e9d609c8a43f",
+  "sourceHash": "fnv1a64:d232b8e9a1242e62",
   "lessonIds": [
     "RU-C13-moloko",
     "RU-C13-syr",
@@ -13,6 +13,6 @@
   "text": "russian/narration/ch13.txt",
   "json": "russian/narration/ch13.json",
   "textHash": "fnv1a64:3e82dd5c25962712",
-  "jsonHash": "fnv1a64:2e5047fc9584463a",
+  "jsonHash": "fnv1a64:c353b7b2e24fa435",
   "findings": []
 }

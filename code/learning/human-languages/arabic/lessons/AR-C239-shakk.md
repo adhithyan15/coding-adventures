@@ -14,7 +14,8 @@ romanization: "shakk"
 concept_tag: AR-SABAB239-SHAKK
 prerequisites: [AR-C239-niqash, AR-C239-dhikra]
 sounds: []
-roots: []
+roots: [sh-k-k]
+etymology_hook: "shakk: built on the root sh-k-k, 'to doubt' (Lane); shakk is the verbal noun, 'doubt'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C239-dhikra]
 <!-- hl-knowledge: introduces=[AR-LEX-C239-SABAB239-05]; assesses=[] -->
 
 **شك** — *shakk* — "doubt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شك** (*shakk*) is built on the native Arabic root *sh-k-k*, "to doubt" (Lane). *Shakk* is the verbal noun, "doubt".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for flatbread, then the Sanskrit for sweet 
 You'll want to know: गजः.
 गजः (gajaḥ) — "an elephant".
 
+The word, taken apart.
+Gaja appears from the Ṣaḍviṃśa Brāhmaṇa onward (CDIAL 3956). Its origin is not settled: MW gives no root for it.
+
 What you've built.
 The biggest animal on land.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for sweet rice pudding, then the Sanskrit f
 
 You'll want to know: अश्वः.
 अश्वः (aśvaḥ) — "a horse", the animal that pulls a रथः.
+
+The word, taken apart.
+Aśva is inherited: MW compares Avestan aspa, Latin equus and Greek hippos, the source of English equine and hippodrome (CDIAL 920).
 
 What you've built.
 What pulls the chariot.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for an elephant, then the Sanskrit for a ho
 You'll want to know: उष्ट्रः.
 उष्ट्रः (uṣṭraḥ) — "a camel", the animal of the desert.
 
+The word, taken apart.
+Uṣṭra meant a buffalo in the Rigveda and a camel only from the epics on (MW, CDIAL 2387). It lives on as Hindi ūṃṭ, "camel".
+
 What you've built.
 The animal that crosses the sand.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a horse, then the Sanskrit for a camel.
 You'll want to know: मूषकः.
 मूषकः (mūṣakaḥ) — "a mouse", the small animal of the गृहम्.
 
+The word, taken apart.
+Mūṣaka means both "thief" and "mouse"; MW files it under the root √mūṣ, "to steal". It is inherited: MW compares Greek mus, Latin mūs and English mouse.
+
 What you've built.
 The small one in the house.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a camel, then the Sanskrit for a mouse.
 
 You'll want to know: मार्जारः.
 मार्जारः (mārjāraḥ) — "a cat", the one that chases the मूषकः (mūṣakaḥ).
+
+The word, taken apart.
+MW explains mārjāra as probably "the cleaner", from the root √mṛj, "to wipe, clean", after the cat's habit of washing itself (CDIAL 10082).
 
 What you've built.
 The mouse-chaser.

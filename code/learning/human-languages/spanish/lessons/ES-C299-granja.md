@@ -6,7 +6,7 @@ sequence: 4080
 chapter: 299
 type: word
 headword: la granja
-gloss: the farm — from granum, the grain: a farm is named after the one thing it was built to store
+gloss: 'the farm — from granum, the grain: a farm is named after the one thing it was built to store'
 concept_tag: ES-FARM-FARM
 prerequisites: [ES-C299-campo]
 sounds: [j-jota, g-hard]

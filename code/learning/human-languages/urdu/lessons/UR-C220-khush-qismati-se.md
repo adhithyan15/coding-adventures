@@ -14,7 +14,8 @@ romanization: "khush qismatī se"
 concept_tag: UR-VAJAH220-KHUSH-QISMATI-SE
 prerequisites: [UR-C219-angan, UR-C219-balkani]
 sounds: []
-roots: []
+roots: [khush-persian, arabic-qisma, sanskrit-sahita]
+etymology_hook: "khush 'happy' (Persian) + qismat 'fate' ← Arabic qisma (Lane, root q-s-m) + -ī + se (CDIAL 13310)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C219-balkani]
 <!-- hl-knowledge: introduces=[UR-LEX-C220-VAJAH220-01]; assesses=[] -->
 
 **خوش قسمتی سے** — *khush qismatī se* — "fortunately".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خوش قسمتی سے** (*khush qismatī se*) is "with good fortune". *khush*, "happy", is usually traced to Persian *khush*; *qismat*, "fate", is Arabic *qisma*, "a share, a lot", which reached Urdu through Persian (Lane, root *q-s-m*); *-ī* makes a noun, and *se*, "with", is the inherited postposition CDIAL lists under Sanskrit *sahita*, "together with" (CDIAL 13310).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

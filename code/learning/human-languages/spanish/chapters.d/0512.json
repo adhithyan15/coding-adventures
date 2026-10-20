@@ -1,0 +1,19 @@
+{
+  "chapter": 512,
+  "title": "Lo que pasó",
+  "label": "ch:es-lo-que-paso",
+  "canDo": "I can say what happened: that something occurred, came about or took place, and call it an incident or an event.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C512-tener-lugar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 512: I can say what happened: that something occurred, came about or took place, and call it an incident or an event.",
+    "assesses": [
+      "ES-LEX-C512-PASO-03",
+      "ES-LEX-C512-PASO-04",
+      "ES-LEX-C512-PASO-05"
+    ]
+  }
+}

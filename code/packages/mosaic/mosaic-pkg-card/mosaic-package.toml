@@ -18,7 +18,7 @@
 
 [package]
 name = "mosaic-pkg-card"
-version = "0.1.0"
+version = "0.2.0"
 description = "A simple Card component built on UI29 kernel primitives — proves the architecture with the smallest possible package"
 license = "MIT OR Apache-2.0"
 

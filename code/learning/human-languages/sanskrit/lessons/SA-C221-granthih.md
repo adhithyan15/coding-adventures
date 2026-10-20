@@ -14,7 +14,8 @@ romanization: "granthiḥ"
 concept_tag: SA-THG221-GRANTHIH
 prerequisites: [SA-C221-kauseyam, SA-C221-carma]
 sounds: []
-roots: []
+roots: [sanskrit-granthi]
+etymology_hook: "granthi 'knot' ← root √granth 'tie, string together' (MW; CDIAL 4354)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C221-carma]
 <!-- hl-knowledge: introduces=[SA-LEX-C221-THG221-04]; assesses=[] -->
 
 **ग्रन्थिः** — *granthiḥ* — "a knot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*granthi* is built on the root √granth, "to fasten, tie, string together" (MW): a knot. It is a Rigvedic word (CDIAL 4354). The same root gives *grantha*, "a book", words strung together.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

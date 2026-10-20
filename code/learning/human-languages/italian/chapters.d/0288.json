@@ -1,0 +1,19 @@
+{
+  "chapter": 288,
+  "title": "La notizia si diffonde",
+  "label": "ch:it-la-notizia-si-diffonde",
+  "canDo": "I can say that news was announced, revealed and spread, and that someone looked into it more deeply.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-R288-ripasso-281-288",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 288: I can say that news was announced, revealed and spread, and that someone looked into it more deeply.",
+    "assesses": [
+      "IT-LEX-C288-ANNUNCIO-03",
+      "IT-LEX-C288-ANNUNCIO-04",
+      "IT-LEX-C288-ANNUNCIO-05"
+    ]
+  }
+}

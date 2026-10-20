@@ -46,7 +46,7 @@ reviews_of: [FR-C157-au-dessus]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**au-dessous** — *au*, "at the", and *dessous*, "underneath".
+**au-dessous** — *au*, "at the", and *dessous*, "underneath". *Dessous* ← Latin *dē* + *subtus*, "below" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

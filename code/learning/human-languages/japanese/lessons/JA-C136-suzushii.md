@@ -14,7 +14,8 @@ romanization: "suzushii"
 concept_tag: JA-QUAL136-SUZUSHII
 prerequisites: [JA-W136-zu, JA-W03-su, JA-W10-shi, JA-W01-i, JA-C136-kazoku, JA-C134-shinbun, JA-C127-sukunai]
 sounds: [mora]
-roots: []
+roots: [japanese-suzushii]
+etymology_hook: "suzushii: native Japanese, inherited, not borrowed; kanji 涼しい attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -52,6 +53,11 @@ room on a hot day. It is a pleasant word; it is not *cold*.
 The new sign is spent at once. **す**, **ず**, **し** and **い**: four beats,
 *su–zu–shi–i*. The plain **す** and the voiced **ず** stand side by side, so
 you can see the mark do its work. You write every sign in it now.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**すずしい** (*suzushii*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C136-SUZUSHII, JA-SCRIPT-ZU-01, JA-LEX-ANCHOR-MIZU, JA-SCRIPT-SU-01, JA-SCRIPT-SHI-01, JA-SCRIPT-I-01] -->

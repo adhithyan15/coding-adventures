@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 54,
-  "sourceHash": "fnv1a64:1150c768595cb107",
+  "sourceHash": "fnv1a64:90badba379df8a10",
   "lessonIds": [
     "UR-C54-chaval",
     "UR-C54-dal",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch54.txt",
   "json": "urdu/narration/ch54.json",
-  "textHash": "fnv1a64:4b4c97b5b8a5eda2",
-  "jsonHash": "fnv1a64:7d6f495955a74844",
+  "textHash": "fnv1a64:9297addcfe194e5a",
+  "jsonHash": "fnv1a64:5ac87a2cb931e18d",
   "findings": []
 }

@@ -1,0 +1,18 @@
+{
+  "chapter": 270,
+  "title": "Two modern-technology words, retrieved twice",
+  "label": "ch:sa-modern-technology-retrieval",
+  "canDo": "I can retrieve the familiar words for computer and internet from meaning.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C270-modern-technology-final-retrieval",
+    "kind": "production",
+    "summary": "Complete chapter 270 by independently retrieving internet and computer in a second order.",
+    "assesses": [
+      "SA-LEX-C105-THINGS105-02",
+      "SA-LEX-C269-MEDIA-02"
+    ]
+  }
+}

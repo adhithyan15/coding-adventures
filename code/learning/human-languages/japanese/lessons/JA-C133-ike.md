@@ -14,8 +14,8 @@ romanization: "ike"
 concept_tag: JA-ANCHOR-IKE
 prerequisites: [JA-C133-kinou, JA-W01-i, JA-W132-ru, JA-W131-small-ya, JA-C120-katai]
 sounds: [mora]
-roots: []
-etymology_hook: Ike covers any pond or small lake, whether it formed by itself or was dug for a garden or a park.
+roots: [japanese-ike]
+etymology_hook: "ike: native Japanese, inherited, not borrowed; kanji 池 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -50,6 +50,11 @@ reviews_of: [JA-C133-kinou, JA-W01-i, JA-W132-ru, JA-W131-small-ya, JA-C120-kata
 
 Two beats: *i–ke*. The first sign is the **い** you already write. The second one
 is new, and the next lesson writes it.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**いけ** (*ike*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-IKE, JA-SCRIPT-I-01] -->

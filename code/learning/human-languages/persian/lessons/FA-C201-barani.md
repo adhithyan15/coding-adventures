@@ -14,7 +14,8 @@ romanization: "bârâni"
 concept_tag: FA-SEFAT201-BARANI
 prerequisites: [FA-C201-aftabi, FA-C201-abri]
 sounds: []
-roots: []
+roots: [persian-baran]
+etymology_hook: "bârâni: Persian bârân 'rain' (Middle Persian wārān, EtymDB) + -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C201-abri]
 <!-- hl-knowledge: introduces=[FA-LEX-C201-SEFAT201-05]; assesses=[] -->
 
 **بارانی** — *bârâni* — "rainy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bârâni* is *bârân*, "rain", with the ending *-i*. *bârân* is inherited, from Middle Persian *wārān* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

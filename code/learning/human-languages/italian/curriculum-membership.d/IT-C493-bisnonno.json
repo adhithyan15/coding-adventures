@@ -1,0 +1,11 @@
+{
+  "id": "IT-C493-bisnonno",
+  "pathSegment": "IT-PATH-493-PARENTI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-493-PARENTI",
+      "order": 2
+    }
+  ]
+}

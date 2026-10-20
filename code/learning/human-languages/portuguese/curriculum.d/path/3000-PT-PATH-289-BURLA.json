@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-289-BURLA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-289-BURLA"
+  ],
+  "after": []
+}

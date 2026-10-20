@@ -1,0 +1,11 @@
+{
+  "id": "IT-C509-rigore",
+  "pathSegment": "IT-PATH-509-ARBITRO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-509-ARBITRO",
+      "order": 3
+    }
+  ]
+}

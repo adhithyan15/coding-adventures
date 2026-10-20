@@ -1,0 +1,11 @@
+{
+  "id": "IT-C488-ricoverare",
+  "pathSegment": "IT-PATH-488-OSPEDALE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-488-OSPEDALE",
+      "order": 1
+    }
+  ]
+}

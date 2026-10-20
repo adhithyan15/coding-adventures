@@ -14,7 +14,8 @@ romanization: "qurṭ"
 concept_tag: AR-THINGS127-QURT
 prerequisites: [AR-C127-mindil, AR-C127-siwar]
 sounds: []
-roots: []
+roots: [q-r-ṭ]
+etymology_hook: "qurṭ: built on the root q-r-ṭ, 'an earring' (Lane); qurṭ is an earring"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C127-siwar]
 <!-- hl-knowledge: introduces=[AR-LEX-C127-THINGS127-05]; assesses=[] -->
 
 **قرط** — *qurṭ* — "an earring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قرط** (*qurṭ*) is built on the native Arabic root *q-r-ṭ*, "an earring" (Lane). *Qurṭ* is an earring.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

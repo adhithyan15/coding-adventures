@@ -1,0 +1,11 @@
+{
+  "id": "SA-C267-exam-time",
+  "pathSegment": "SA-PATH-267-SCHOOL267",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-267-SCHOOL267",
+      "order": 1
+    }
+  ]
+}

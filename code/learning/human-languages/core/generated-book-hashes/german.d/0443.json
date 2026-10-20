@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 443,
+  "sourceHash": "fnv1a64:968cf5a741bb1e58",
+  "lessonIds": [
+    "GE-C443-feinkostgeschaeft",
+    "GE-C443-konditorei",
+    "GE-C443-gemuesehaendler",
+    "GE-C443-drogerie",
+    "GE-C443-reformhaus"
+  ],
+  "tex": "german/book/chapters/ch443-kleine-laden.tex"
+}

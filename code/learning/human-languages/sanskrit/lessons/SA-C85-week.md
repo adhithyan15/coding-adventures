@@ -14,7 +14,8 @@ romanization: "saptāhaḥ"
 concept_tag: SA-WEEK-WEEK
 prerequisites: [SA-C84-farmer, SA-C84-merchant]
 sounds: []
-roots: []
+roots: [sanskrit-saptaha, sanskrit-sapta]
+etymology_hook: "saptāha ← sapta 'seven' + aha 'day': 'seven days' (MW; CDIAL 13161)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C84-merchant]
 <!-- hl-knowledge: introduces=[SA-LEX-C85-WEEK-01]; assesses=[] -->
 
 **सप्ताहः** (*saptāhaḥ*) — "a week": **सप्त**, "seven", with **अह**, "day".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Saptāha* is built from *sapta*, "seven", and *aha*, "day" (MW, CDIAL 13161). In
+the Brāhmaṇas it names a seven-day rite; the plain sense "week" is later.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

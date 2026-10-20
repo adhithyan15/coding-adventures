@@ -101,7 +101,7 @@ The word, taken apart.
 Now the stem from જ્યારે stands alone. જે (je) opens a clause that describes somebody or something, instead of naming them:
 જે (je) (what they do) … — "the one who …"
 Notice the pairing: જ્યારે was when, જે (je) is who or which, and both begin the same way. Gujarati marks a describing clause at its front, the way it marked a condition with જો.
-CDIAL lists જે (je) under the Sanskrit relative ya-, noting that the Gujarati word took its -e after te, "that" (CDIAL 10391).
+જે (je) is usually traced to the Sanskrit relative ya-, "who, which". CDIAL does not list a modern Gujarati form in that entry. It gives Old Gujarati ju, "if", and adds in a note that Gujarati je took its -e after the pointing words te and e (CDIAL 10391). So the link is likely, but it rests on a passing note.
 
 Guided Practice.
 [pause 1 second]
@@ -132,7 +132,7 @@ The pattern, taken apart.
 જે (je) (description), તે (te) (the one meant).
 This is the same shape as જો … તો …, and recognising that is most of the work. Gujarati marks both ends: the clause that describes, and the thing it describes. English collapses the two — the one who came is my friend — and Gujarati keeps them visibly paired.
 Once you see the pair you can hear it everywhere: જો … તો, જ્યારે … ત્યારે, જે (je) … તે (te). One family, one habit, three uses.
-Je goes back to the Sanskrit relative ya- (CDIAL 10391), and te to the demonstrative ta- (CDIAL 5612).
+Je is usually traced to the Sanskrit relative ya-, though CDIAL names the Gujarati word only in a note in that entry (CDIAL 10391); te is usually traced to the demonstrative ta-, though CDIAL 5612 lists only the Gujarati form teṇe.
 
 Guided Practice.
 [pause 1 second]

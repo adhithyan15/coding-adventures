@@ -14,7 +14,8 @@ romanization: "tār"
 concept_tag: UR-CHIZ198-TAR
 prerequisites: [UR-C197-brash, UR-C197-ustara]
 sounds: []
-roots: []
+roots: [persian-tar]
+etymology_hook: "tār: usually traced to Persian tār 'thread, string'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C197-ustara]
 <!-- hl-knowledge: introduces=[UR-LEX-C198-CHIZ198-01]; assesses=[] -->
 
 **تار** — *tār* — "a wire".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تار** (*tār*) is a loan, usually traced to Persian *tār*, "thread, string". Urdu uses it for a wire.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

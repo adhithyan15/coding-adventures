@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 524,
+  "sourceHash": "fnv1a64:43445a541c74eacf",
+  "lessonIds": [
+    "PT-C524-poesia",
+    "PT-C524-poeta",
+    "PT-C524-verso",
+    "PT-C524-rima",
+    "PT-C524-declamar"
+  ],
+  "tex": "portuguese/book/chapters/ch524-versos-e-rimas.tex"
+}

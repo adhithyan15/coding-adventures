@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C456-moos",
+    "language": "german",
+    "chapter": 456,
+    "sequence": 24500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a3ae6e043373570"
+  },
+  "findings": []
+}

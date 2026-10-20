@@ -14,7 +14,8 @@ romanization: "atari"
 concept_tag: JA-LOC81-ATARI
 prerequisites: [JA-C80-chikamichi, JA-C80-mawari]
 sounds: []
-roots: []
+roots: [japanese-ataru]
+etymology_hook: "atari: native, usually taken as the noun from ataru 'to touch, to face'; written 辺り"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C80-mawari]
 <!-- hl-knowledge: introduces=[JA-LEX-C81-LOC81-01]; assesses=[] -->
 
 **あたり** — *atari* — "the area around".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**あたり** (*atari*) is native, usually taken as the noun made from *ataru*, "to touch, to face", by its stem; JMdict writes it with a character for "side, vicinity", read as a kun'yomi. It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

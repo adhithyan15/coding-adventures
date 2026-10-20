@@ -46,7 +46,7 @@ reviews_of: [FR-C114-peigne]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**poubelle** — named after Eugène Poubelle, the prefect of Paris who made lidded bins compulsory in 1884.
+**poubelle** comes from the name of Eugène Poubelle, the prefect of Paris who made lidded bins compulsory in 1884.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

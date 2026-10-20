@@ -14,7 +14,8 @@ romanization: "esterâhat kardan"
 concept_tag: FA-VERB-ESTERAHAT-KARDAN
 prerequisites: [FA-C218-dam-kardan, FA-C218-sorfe-kardan]
 sounds: []
-roots: []
+roots: [arabic-istiraha]
+etymology_hook: "esterâhat ← Arabic istirāḥa 'resting', root r-w-ḥ (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C218-sorfe-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C218-KONESH218-03]; assesses=[] -->
 
 **استراحت کردن** — *esterâhat kardan* — "to rest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*esterâhat kardan* pairs *esterâhat*, borrowed from Arabic *istirāḥa*, "resting" (root *r-w-ḥ*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

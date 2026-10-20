@@ -1,0 +1,11 @@
+{
+  "id": "PT-C337-convincente",
+  "pathSegment": "PT-PATH-337-ARGUMENTAR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-337-ARGUMENTAR",
+      "order": 2
+    }
+  ]
+}

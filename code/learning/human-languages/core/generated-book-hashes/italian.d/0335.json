@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:a5e4c633bcde1c37",
+  "lessonIds": [
+    "IT-C335-impastare",
+    "IT-C335-impasto",
+    "IT-C335-lievito",
+    "IT-C335-lievitare",
+    "IT-C335-mattarello"
+  ],
+  "tex": "italian/book/chapters/ch335-mani-in-pasta.tex"
+}

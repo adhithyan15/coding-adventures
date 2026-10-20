@@ -1,0 +1,11 @@
+{
+  "id": "FR-C430-punaise",
+  "pathSegment": "FR-PATH-430-BESTIOLES",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-430-BESTIOLES",
+      "order": 0
+    }
+  ]
+}

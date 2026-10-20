@@ -1,0 +1,19 @@
+{
+  "chapter": 401,
+  "title": "Na autoestrada",
+  "label": "ch:pt-na-autoestrada",
+  "canDo": "I can talk about a motorway trip: the lanes, the hard shoulder, the central reservation, the junction and speeding up.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C401-acelerar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 401: I can talk about a motorway trip: the lanes, the hard shoulder, the central reservation, the junction and speeding up.",
+    "assesses": [
+      "PT-LEX-C401-AUTOESTRADA-03",
+      "PT-LEX-C401-AUTOESTRADA-04",
+      "PT-LEX-C401-AUTOESTRADA-05"
+    ]
+  }
+}

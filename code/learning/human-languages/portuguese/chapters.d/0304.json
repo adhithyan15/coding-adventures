@@ -1,0 +1,19 @@
+{
+  "chapter": 304,
+  "title": "Catástrofes",
+  "label": "ch:pt-catastrofes",
+  "canDo": "I can talk about catastrophes, disasters, tragedies and landslides.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C304-soterrar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 304: I can talk about catastrophes, disasters, tragedies and landslides.",
+    "assesses": [
+      "PT-LEX-C304-CATASTROFE-03",
+      "PT-LEX-C304-CATASTROFE-04",
+      "PT-LEX-C304-CATASTROFE-05"
+    ]
+  }
+}

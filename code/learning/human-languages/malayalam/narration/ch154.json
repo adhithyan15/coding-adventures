@@ -4,7 +4,7 @@
   "chapter": 154,
   "title": "Elbow, Knee, Tongue, Skin, Forehead",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e5bcf5527800608b",
+  "sourceHash": "fnv1a64:abb344fc8e3d9c9d",
   "lessons": [
     {
       "id": "ML-C154-kaimuttu",
@@ -421,9 +421,9 @@
     {
       "id": "ML-C154-toli",
       "sequence": 6380,
-      "title": "തൊലി (tolī) — skin",
+      "title": "തൊലി (toli) — skin",
       "headword": "തൊലി",
-      "romanization": "tolī",
+      "romanization": "toli",
       "gloss": "skin",
       "script": "malayalam",
       "modality": "voice",
@@ -431,7 +431,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:67b5585d2f916b2f",
+      "sourceHash": "fnv1a64:35a222ffe147d3b7",
       "notice": null,
       "blocks": [
         {
@@ -458,7 +458,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "തൊലി — tolī — \"skin\"."
+              "text": "തൊലി — toli — \"skin\"."
             }
           ]
         },
@@ -469,7 +469,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "തൊലി (tolī) is native Dravidian, one word with Tamil tōl and Kannada tōl(u) (DEDR 3559)."
+              "text": "തൊലി (toli) is native Dravidian, one word with Tamil tōl and Kannada tōl(u) (DEDR 3559)."
             }
           ]
         },
@@ -498,38 +498,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "tolī",
+              "instruction": "toli",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *tolī*]"
+              "source": "[YOU SAY: *toli*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "tolī, once more",
+              "instruction": "toli, once more",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *tolī*, once more]"
+              "source": "[YOU SAY: *toli*, once more]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "say tolī",
+              "instruction": "say toli",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: say *tolī*]"
+              "source": "[YOU SAY: say *toli*]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say the Malayalam for a knee, then the Malayalam for a tongue, then say tolī again",
+              "instruction": "say the Malayalam for a knee, then the Malayalam for a tongue, then say toli again",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say the Malayalam for a knee, then the Malayalam for a tongue, then say *tolī* again]"
+              "source": "[YOU RECALL: say the Malayalam for a knee, then the Malayalam for a tongue, then say *toli* again]"
             }
           ]
         },
@@ -546,7 +546,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does തൊലി (tolī) mean? (\"Skin\".) Say it once more."
+              "text": "What does തൊലി (toli) mean? (\"Skin\".) Say it once more."
             }
           ]
         }

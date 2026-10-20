@@ -6,7 +6,7 @@ sequence: 2208
 chapter: 193
 type: grammar
 headword: hay que
-gloss: "one must" — obligation with nobody obliged, and the second of Spanish's two ways to leave a person out
+gloss: '"one must" — obligation with nobody obliged, and the second of Spanish''s two ways to leave a person out'
 concept_tag: ES-GRAMMAR-HAY-QUE
 prerequisites: [ES-C54-ha-mas-y]
 sounds: []

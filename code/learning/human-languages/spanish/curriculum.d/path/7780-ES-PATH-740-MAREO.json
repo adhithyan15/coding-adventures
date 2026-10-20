@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-740-MAREO",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ES-EXT-740-MAREO"
+  ],
+  "after": []
+}

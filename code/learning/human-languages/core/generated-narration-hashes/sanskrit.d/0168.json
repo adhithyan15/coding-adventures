@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 168,
-  "sourceHash": "fnv1a64:96084f5b1586d9c6",
+  "sourceHash": "fnv1a64:6ac25fee09af1196",
   "lessonIds": [
     "SA-C168-kaksa",
     "SA-C168-adhyayah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch168.txt",
   "json": "sanskrit/narration/ch168.json",
-  "textHash": "fnv1a64:b611d1f4c7d95884",
-  "jsonHash": "fnv1a64:ebda28e2f9dbd723",
+  "textHash": "fnv1a64:ceebebf41a06bfe2",
+  "jsonHash": "fnv1a64:d16d37471174041e",
   "findings": []
 }

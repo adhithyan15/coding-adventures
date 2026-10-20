@@ -14,7 +14,8 @@ romanization: "khelā"
 concept_tag: SA-THG249-KHELA
 prerequisites: [SA-C249-kavyam, SA-C249-citrapatah]
 sounds: []
-roots: []
+roots: [indo-aryan-khel]
+etymology_hook: "khelā 'play, sport' ← khel 'shake, play'; CDIAL 3918: may be connected with the khel 'play' words"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C249-citrapatah]
 <!-- hl-knowledge: introduces=[SA-LEX-C249-THG249-05]; assesses=[] -->
 
 **खेला** — *khelā* — "a game".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khelā*, "sport, play" (MW), is the noun of *khelati*, "plays", which you have already met; MW's first sense of the root √khel is "to shake". CDIAL 3918 says these forms may be connected with the group behind Hindi *khel*, "game", whose origin is uncertain, perhaps non-Aryan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

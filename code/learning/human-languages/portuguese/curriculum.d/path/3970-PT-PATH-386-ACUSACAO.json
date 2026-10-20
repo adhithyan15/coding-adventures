@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-386-ACUSACAO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "PT-EXT-386-ACUSACAO"
+  ],
+  "after": []
+}

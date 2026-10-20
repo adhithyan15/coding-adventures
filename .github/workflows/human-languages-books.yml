@@ -31,6 +31,7 @@ on:
       - "code/scripts/tests/test_build_human_language_book_catalog.py"
       - "code/scripts/tests/test_check_book_tree_hygiene.py"
       - "code/scripts/tests/test-check-book-compile-guards.sh"
+      - "code/scripts/tests/test-check-book-compile-bash-compat.sh"
       - "code/scripts/tests/test_scan_latex_log_warnings.py"
       - ".github/workflows/human-languages-books.yml"
   pull_request:
@@ -104,6 +105,16 @@ jobs:
               'code/learning/human-languages/tamil/CHANGELOG.d/*.md'
               'code/learning/human-languages/telugu/CHANGELOG.d/*.md'
               'code/learning/human-languages/urdu/CHANGELOG.d/*.md'
+              'code/learning/human-languages/arabic/CHANGELOG.d/*.md'
+              'code/learning/human-languages/chinese/CHANGELOG.d/*.md'
+              'code/learning/human-languages/french/CHANGELOG.d/*.md'
+              'code/learning/human-languages/german/CHANGELOG.d/*.md'
+              'code/learning/human-languages/italian/CHANGELOG.d/*.md'
+              'code/learning/human-languages/latin/CHANGELOG.d/*.md'
+              'code/learning/human-languages/persian/CHANGELOG.d/*.md'
+              'code/learning/human-languages/portuguese/CHANGELOG.d/*.md'
+              'code/learning/human-languages/russian/CHANGELOG.d/*.md'
+              'code/learning/human-languages/spanish/CHANGELOG.d/*.md'
               'code/packages/typescript/human-language-data/CHANGELOG.d/*.md'
               'code/programs/typescript/language-ladder/CHANGELOG.d/*.md'
               'code/packages/rust/lang-aot/CHANGELOG.d/*.md'
@@ -170,6 +181,16 @@ jobs:
             code/learning/human-languages/tamil/CHANGELOG.md \
             code/learning/human-languages/telugu/CHANGELOG.md \
             code/learning/human-languages/urdu/CHANGELOG.md \
+            code/learning/human-languages/arabic/CHANGELOG.md \
+            code/learning/human-languages/chinese/CHANGELOG.md \
+            code/learning/human-languages/french/CHANGELOG.md \
+            code/learning/human-languages/german/CHANGELOG.md \
+            code/learning/human-languages/italian/CHANGELOG.md \
+            code/learning/human-languages/latin/CHANGELOG.md \
+            code/learning/human-languages/persian/CHANGELOG.md \
+            code/learning/human-languages/portuguese/CHANGELOG.md \
+            code/learning/human-languages/russian/CHANGELOG.md \
+            code/learning/human-languages/spanish/CHANGELOG.md \
             code/learning/human-languages/bengali/roadmap.md \
             code/learning/human-languages/bengali/session-map.md \
             code/learning/human-languages/gujarati/roadmap.md \
@@ -251,6 +272,7 @@ jobs:
             code/scripts/tests/test_build_human_language_book_catalog.py \
             code/scripts/tests/test_check_book_tree_hygiene.py \
             code/scripts/tests/test-check-book-compile-guards.sh \
+            code/scripts/tests/test-check-book-compile-bash-compat.sh \
             code/scripts/tests/test_scan_latex_log_warnings.py \
             .github/workflows/human-languages-books.yml
           diff_status=$?
@@ -270,6 +292,47 @@ jobs:
               exit "$diff_status"
               ;;
           esac
+
+  # Exercise the compile driver with the system Bash on both platforms. The
+  # fixtures stub TeX and use the existing static book-root seam, so this job
+  # catches shell compatibility failures before the costly all-books build.
+  bash_compat:
+    name: Compile driver Bash compatibility (${{ matrix.os }})
+    needs: detect
+    if: needs.detect.outputs.books == 'true'
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Test with the system Bash
+        shell: bash
+        run: bash code/scripts/tests/test-check-book-compile-bash-compat.sh
+
+  # Junctions need no symlink privilege on Windows. Keep the shard writer's
+  # handle-relative escape tests in the same required gate as the Unix symlink
+  # fixtures, so a platform-only regression cannot hide behind green books.
+  windows_shard_boundary:
+    name: Python shard boundary (windows-latest)
+    needs: detect
+    if: needs.detect.outputs.books == 'true'
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Test Windows junction and handle-relative shard safety
+        run: python code/learning/human-languages/data/scripts/test_sharded_ledger.py -v
 
   # Building and publishing are two jobs, not one, because they need opposite
   # things from the token.
@@ -832,7 +895,7 @@ jobs:
   # repository — the thing a build turns into code — never enters this job.
   publish:
     name: Publish books to Pages and Releases
-    needs: [detect, build]
+    needs: [detect, build, bash_compat, windows_shard_boundary]
     if: >-
       github.event_name == 'push' &&
       github.ref == 'refs/heads/main' &&
@@ -921,7 +984,7 @@ jobs:
     # main, so requiring it would make this gate un-satisfiable on the pull
     # requests it exists to gate. `build` is the job that proves the books are
     # sound; `publish` merely moves the result it produced.
-    needs: [detect, build]
+    needs: [detect, build, bash_compat, windows_shard_boundary]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -931,24 +994,26 @@ jobs:
           DETECT_RESULT: ${{ needs.detect.result }}
           BOOKS_RELEVANT: ${{ needs.detect.outputs.books }}
           BUILD_RESULT: ${{ needs.build.result }}
+          BASH_COMPAT_RESULT: ${{ needs.bash_compat.result }}
+          WINDOWS_SHARD_RESULT: ${{ needs.windows_shard_boundary.result }}
         run: |
           set -euo pipefail
-          echo "detect=$DETECT_RESULT relevant=$BOOKS_RELEVANT build=$BUILD_RESULT"
+          echo "detect=$DETECT_RESULT relevant=$BOOKS_RELEVANT build=$BUILD_RESULT bash_compat=$BASH_COMPAT_RESULT windows_shard=$WINDOWS_SHARD_RESULT"
 
           if [ "$DETECT_RESULT" != "success" ]; then
             echo "::error::Human-language book change detection did not succeed."
             exit 1
           fi
 
-          case "$BOOKS_RELEVANT:$BUILD_RESULT" in
-            true:success)
-              echo "The required all-books build passed."
+          case "$BOOKS_RELEVANT:$BUILD_RESULT:$BASH_COMPAT_RESULT:$WINDOWS_SHARD_RESULT" in
+            true:success:success:success)
+              echo "The required all-books build, Bash checks, and Windows shard boundary passed."
               ;;
-            false:skipped)
-              echo "No book inputs changed; the all-books build was legitimately skipped."
+            false:skipped:skipped:skipped)
+              echo "No book inputs changed; the all-books build, Bash checks, and Windows shard check were legitimately skipped."
               ;;
             *)
-              echo "::error::Unexpected books gate state: relevant=$BOOKS_RELEVANT build=$BUILD_RESULT"
+              echo "::error::Unexpected books gate state: relevant=$BOOKS_RELEVANT build=$BUILD_RESULT bash_compat=$BASH_COMPAT_RESULT windows_shard=$WINDOWS_SHARD_RESULT"
               exit 1
               ;;
           esac

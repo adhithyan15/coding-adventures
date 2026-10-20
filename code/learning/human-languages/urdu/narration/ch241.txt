@@ -12,6 +12,9 @@ Before the new one: say the Urdu for to halt, then the Urdu for to turn.
 You'll want to know: پالنا.
 پالنا — pālnā — "to bring up, to keep (animals)".
 
+The word, taken apart.
+پالنا (pālnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from pālayati, "guards, protects" (CDIAL 8129).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for to turn, then the Urdu for to bring up.
 
 You'll want to know: بونا.
 بونا — bonā — "to sow".
+
+The word, taken apart.
+بونا (bonā) goes back to Sanskrit vapati, "scatters, sows" (CDIAL 11282). CDIAL marks the form bonā as taken over from Gujarati.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for to bring up, then the Urdu for to sow.
 You'll want to know: اگانا.
 اگانا — ugānā — "to cultivate, to grow (plants)".
 
+The word, taken apart.
+اگانا (ugānā) is a tadbhava, a word inherited and reshaped by sound change. It comes from udgāti, "rises, comes forth", a form CDIAL reconstructs from its descendants (CDIAL 1954). ugānā is its causing form, "to make spring up".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for to sow, then the Urdu for to cultivate.
 You'll want to know: جھاڑو لگانا.
 جھاڑو لگانا — jhāṛū lagānā — "to sweep".
 
+The phrase, taken apart.
+جھاڑو لگانا (jhāṛū lagānā) is "to apply the broom". jhāṛū is built on jhāṛnā, "to sweep", which CDIAL lists under jhāṭayati, "shakes down" (CDIAL 5328); lagānā is the causing form of lagnā, "to be attached", which CDIAL lists under Sanskrit lagyati (CDIAL 10895).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for to cultivate, then the Urdu for to sweep.
 
 You'll want to know: پونچھنا.
 پونچھنا — ponchhnā — "to wipe".
+
+The word, taken apart.
+پونچھنا (ponchhnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from proñchati, "wipes off" (CDIAL 9011).
 
 What you've built.
 One more word for this chapter.

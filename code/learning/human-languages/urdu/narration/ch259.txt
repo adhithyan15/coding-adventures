@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a tap, then the Urdu for a shower.
 You'll want to know: پکوان.
 پکوان — pakvān — "a dish (of food)".
 
+The word, taken apart.
+پکوان (pakvān) is usually taken from Sanskrit pakvānna, "cooked food", built from pakva, "cooked", and anna, "food". CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a shower, then the Urdu for a dish.
 
 You'll want to know: مینیو.
 مینیو — menyū — "a menu".
+
+The word, taken apart.
+مینیو (menyū) is a loan from English menu.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a dish, then the Urdu for a menu.
 You'll want to know: چٹپٹا.
 چٹپٹا — chaṭpaṭā — "tangy".
 
+The word, taken apart.
+The origin of چٹپٹا (chaṭpaṭā) is not settled. CDIAL lists only a Hindi chaṭpaṭī, "restlessness", under a reconstructed chaṭṭa, "sudden movement" (CDIAL 4969), which may or may not be the same word.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a menu, then the Urdu for tangy.
 You'll want to know: میدہ.
 میدہ — maidā — "fine white flour".
 
+The word, taken apart.
+میدہ (maidā) is a loan, usually traced to Persian maida, "fine flour".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for tangy, then the Urdu for fine white flour.
 
 You'll want to know: سوجی.
 سوجی — sūjī — "semolina".
+
+The word, taken apart.
+سوجی (sūjī) is a tadbhava, a word inherited and reshaped by sound change. It comes from sūjjī, "coarse wheat meal", a form CDIAL reconstructs from its descendants (CDIAL 13552).
 
 What you've built.
 One more word for this chapter.

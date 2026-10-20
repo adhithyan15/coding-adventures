@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "The Core Verbs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:a5503b2ccfaca847",
+  "sourceHash": "fnv1a64:e2d7a4dd87a85d24",
   "lessons": [
     {
       "id": "KA-C32-iru",
@@ -176,7 +176,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:001353899f930b86",
+      "sourceHash": "fnv1a64:d76ad41fba2e2c32",
       "notice": null,
       "blocks": [
         {
@@ -218,7 +218,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Tamil's word for \"go\" is போ / போகு (pō / pōgu). Kannada's is hōgu, and that h is not a different root. Around a thousand years ago Kannada softened every old word-initial p- to h- — and Kannada is the only one of the four literary Dravidian languages that did it."
+              "text": "Tamil's word for \"go\" is போ / போகு (pō / pōgu). Kannada's is hōgu: the same native Dravidian root (DEDR 4572). Around a thousand years ago Kannada softened every old word-initial p- to h- — and Kannada is the only one of the four literary Dravidian languages that did it."
             },
             {
               "kind": "speech",

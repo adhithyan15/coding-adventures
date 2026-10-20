@@ -14,7 +14,8 @@ romanization: "unnīs"
 concept_tag: UR-NUMBERS85-UNNIS
 prerequisites: [UR-C84-satrah, UR-C84-atharah]
 sounds: []
-roots: []
+roots: [sanskrit-unavimshati]
+etymology_hook: "unnīs ← Sanskrit ūnaviṃśati 'nineteen, twenty less one', a tadbhava (CDIAL 2411)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C84-atharah]
 <!-- hl-knowledge: introduces=[UR-LEX-C85-NUMBERS85-01]; assesses=[] -->
 
 **انیس** — *unnīs* — "nineteen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**انیس** (*unnīs*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ūnaviṃśati*, "nineteen, twenty less one" (CDIAL 2411).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

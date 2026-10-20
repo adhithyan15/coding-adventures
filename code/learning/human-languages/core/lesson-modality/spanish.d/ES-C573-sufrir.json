@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C573-sufrir",
+    "language": "spanish",
+    "chapter": 573,
+    "sequence": 18330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5aeb1e0fc2d98a10"
+  },
+  "findings": []
+}

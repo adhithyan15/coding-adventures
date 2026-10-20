@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C266-market-transaction-retrieval",
+    "language": "sanskrit",
+    "chapter": 266,
+    "sequence": 15810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a96fa77a91b53701"
+  },
+  "findings": []
+}

@@ -11,7 +11,7 @@ romanization: "hūmāle"
 concept_tag: KA-NOUN-GARLAND
 prerequisites: [KA-C52-flower, KA-C50-farewell]
 sounds: []
-roots: [dravidian-puu-flower, sanskrit-mala]
+roots: [dravidian-puu-flower, sanskrit-mala-garland]
 etymology_hook: "hūmāle: native hū 'flower' (DEDR 4345) + māle ← Sanskrit mālā, which CDIAL 10092 takes from Dravidian"
 duration:
   max_seconds: 210

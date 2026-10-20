@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:65315fed9f0699bb",
+  "lessonIds": [
+    "PT-C375-escola-secundaria",
+    "PT-C375-frequentar",
+    "PT-C375-falta",
+    "PT-C375-pauta",
+    "PT-C375-disciplina"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch375.txt",
+  "json": "portuguese/narration/ch375.json",
+  "textHash": "fnv1a64:2dd8877cd6f65d6e",
+  "jsonHash": "fnv1a64:117d58512ba11691",
+  "findings": []
+}

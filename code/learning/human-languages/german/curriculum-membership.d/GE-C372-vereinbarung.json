@@ -1,0 +1,11 @@
+{
+  "id": "GE-C372-vereinbarung",
+  "pathSegment": "GE-PATH-372-VEREINBARUNG",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-372-VEREINBARUNG",
+      "order": 1
+    }
+  ]
+}

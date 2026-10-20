@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-392-DIFESA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a trial: the accused, the defence, the verdict, the conviction and the sentence.",
+  "prerequisites": []
+}

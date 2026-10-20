@@ -14,7 +14,8 @@ romanization: "moddat"
 concept_tag: FA-ZAMAN229-MODDAT
 prerequisites: [FA-C228-tahvil-e-sal, FA-C228-tavallod]
 sounds: []
-roots: []
+roots: [arabic-mudda]
+etymology_hook: "moddat ← Arabic mudda 'period, space of time', root m-d-d (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C228-tavallod]
 <!-- hl-knowledge: introduces=[FA-LEX-C229-ZAMAN229-01]; assesses=[] -->
 
 **مدت** — *moddat* — "a period, a length of time".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*moddat* is borrowed from Arabic *mudda*, "period, space of time". Its Arabic root is *m-d-d* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

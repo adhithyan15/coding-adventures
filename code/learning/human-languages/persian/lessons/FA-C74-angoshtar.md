@@ -14,7 +14,8 @@ romanization: "angoshtar"
 concept_tag: FA-CLOTHES74-ANGOSHTAR
 prerequisites: [FA-C74-jurab, FA-C74-jib]
 sounds: []
-roots: []
+roots: [persian-angusht]
+etymology_hook: "angoshtar: built on Persian angosht 'finger' (Middle Persian angust); native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C74-jib]
 <!-- hl-knowledge: introduces=[FA-LEX-C74-CLOTHES74-03]; assesses=[] -->
 
 **انگشتر** — *angoshtar* — "a ring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*angoshtar* is built on *angosht*, "finger", a native word usually traced to Middle Persian *angust*: the ring is the finger's piece.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

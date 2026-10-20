@@ -14,7 +14,8 @@ romanization: "dūrataḥ"
 concept_tag: SA-LOC184-DURATAH
 prerequisites: [SA-C183-ciram, SA-C183-cirat]
 sounds: []
-roots: []
+roots: [sanskrit-dura]
+etymology_hook: "dūratas ← dūra 'far' + -tas 'from'; dūra is probably from √du (MW); Hindi dūr (CDIAL 6495)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C183-cirat]
 <!-- hl-knowledge: introduces=[SA-LEX-C184-LOC184-01]; assesses=[] -->
 
 **दूरतः** — *dūrataḥ* — "from afar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dūrataḥ* is *dūra*, "far", with the ending *-tas*, "from" (MW). MW thinks *dūra* probably comes from the root √du, and it lives on as Hindi *dūr* (CDIAL 6495).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

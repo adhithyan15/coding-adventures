@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C471-mentiroso",
+    "language": "portuguese",
+    "chapter": 471,
+    "sequence": 26230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9b5f3ba96ce70216"
+  },
+  "findings": []
+}

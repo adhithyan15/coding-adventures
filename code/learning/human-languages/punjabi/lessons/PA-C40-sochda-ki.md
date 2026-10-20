@@ -11,7 +11,7 @@ gloss: I think that... - the frame an opinion travels in
 concept_tag: PA-JOIN-SOCHDA-KI
 prerequisites: [PA-C40-ki, PA-C03-main]
 sounds: [hora-o, kanna-aa]
-roots: [shoc-grieve, persian-ki]
+roots: [sanskrit-shocyate, persian-ki]
 etymology_hook: "soch-, from socṇā 'to think' ← śocyate 'is made to feel pain' (CDIAL 12621); ki ← Persian ki 'that'"
 duration:
   max_seconds: 260

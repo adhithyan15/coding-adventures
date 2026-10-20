@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.75.0";
+pub const VERSION: &str = "0.76.0";
 
 use std::collections::HashMap;
 
@@ -36,7 +36,7 @@ use diagram_ir::{
     EdgeMarker, EventModelEntityKind, LayoutedEventModelDiagram, LayoutedEventModelItem,
     LayoutedCynefinDiagram, LayoutedInfoDiagram, LayoutedIshikawaDiagram, LayoutedSwimlaneDiagram,
     LayoutedSwimlaneEdge, LayoutedRailroadDiagram,
-    LayoutedTreeViewDiagram, LayoutedTreemapDiagram, LayoutedVennDiagram, LayoutedWardleyDiagram,
+    LayoutedTreeViewDiagram, LayoutedTreemapDiagram, LayoutedVennDiagram, LayoutedWardleyDiagram, WardleyForceKind, WardleyLinkFlow, WardleySourceStrategy,
     LayoutedGeometricDiagram, LayoutedGraphDiagram, LayoutedGraphEdge, LayoutedGraphNode,
     LayoutedBoardCard, LayoutedBoardDiagram, LayoutedPacketDiagram,
     LayoutedSequenceDiagram, LayoutedSequenceItem, LayoutedStructuralDiagram,
@@ -867,7 +867,7 @@ where
         text_children.push(text_node(
             &lane.label,
             lane.x + 8.0,
-            lane.y + 7.0,
+            lane.y + 7.0 + diagram.flowchart_config.subgraph_title_margin_top.unwrap_or(0.0),
             lane.width - 16.0,
             26.0,
             title_font,
@@ -898,7 +898,11 @@ where
         if let Some(italic) = group.style.font_italic { label_font.italic = italic; }
         if let Some(family) = &group.style.font_family { label_font.family.clone_from(family); }
         text_children.push(text_node(
-            &group.label, group.x + 8.0, group.y + 4.0, group.width - 16.0, 22.0,
+            &group.label,
+            group.x + 8.0,
+            group.y + 4.0 + diagram.flowchart_config.subgraph_title_margin_top.unwrap_or(0.0),
+            group.width - 16.0,
+            22.0,
             label_font, group.style.text_color.as_deref().or(diagram.theme.title_color.as_deref())
                 .and_then(parse_css_color)
                 .unwrap_or(Color { r: 69, g: 90, b: 100, a: 255 }),
@@ -1551,7 +1555,15 @@ where
                     node.width - 16.0,
                     node.height * 2.0 / 3.0 - 8.0,
                 ),
-                _ => (node.x + 8.0, node.y + 10.0, node.width - 16.0, node.height - 16.0),
+                _ => diagram.flowchart_config.padding.map_or(
+                    (node.x + 8.0, node.y + 10.0, node.width - 16.0, node.height - 16.0),
+                    |padding| (
+                        node.x + padding,
+                        node.y + padding,
+                        (node.width - padding * 2.0).max(1.0),
+                        (node.height - padding * 2.0).max(1.0),
+                    ),
+                ),
             };
             text_children.push(text_node(
                 &node.label,
@@ -1571,7 +1583,7 @@ where
         text_children.push(text_node(
             title,
             10.0,
-            5.0,
+            5.0 + diagram.flowchart_config.title_top_margin.unwrap_or(0.0),
             diagram.width - 20.0,
             30.0,
             title_font,
@@ -1679,6 +1691,18 @@ where
     }
     if let Some(width) = diagram.flowchart_config.wrapping_width {
         metadata.insert("swimlane.flowchart.wrappingWidth".into(), width.to_string());
+    }
+    if let Some(padding) = diagram.flowchart_config.padding {
+        metadata.insert("swimlane.flowchart.padding".into(), padding.to_string());
+    }
+    if let Some(margin) = diagram.flowchart_config.title_top_margin {
+        metadata.insert("swimlane.flowchart.titleTopMargin".into(), margin.to_string());
+    }
+    if let Some(margin) = diagram.flowchart_config.subgraph_title_margin_top {
+        metadata.insert("swimlane.flowchart.subGraphTitleMargin.top".into(), margin.to_string());
+    }
+    if let Some(margin) = diagram.flowchart_config.subgraph_title_margin_bottom {
+        metadata.insert("swimlane.flowchart.subGraphTitleMargin.bottom".into(), margin.to_string());
     }
     for (index, group) in diagram.groups.iter().enumerate() {
         metadata.insert(format!("swimlane.group.{index}.id"), group.id.clone());
@@ -1932,31 +1956,102 @@ fn rounded_swimlane_path(points: &[Point], radius: f64) -> (Vec<PathCommand>, Po
     });
     (commands, start_previous, end_previous)
 }
+
+fn rounded_railroad_path(points: &[Point], radius: f64) -> Vec<PathCommand> {
+    const QUARTER_CIRCLE_KAPPA: f64 = 0.552_284_749_830_793_6;
+
+    let mut commands = vec![PathCommand::MoveTo { x: points[0].x, y: points[0].y }];
+    for index in 1..points.len() - 1 {
+        let previous = &points[index - 1];
+        let corner = &points[index];
+        let next = &points[index + 1];
+        let incoming_x = corner.x - previous.x;
+        let incoming_y = corner.y - previous.y;
+        let outgoing_x = next.x - corner.x;
+        let outgoing_y = next.y - corner.y;
+        let incoming_length = incoming_x.hypot(incoming_y);
+        let outgoing_length = outgoing_x.hypot(outgoing_y);
+        if incoming_length <= f64::EPSILON || outgoing_length <= f64::EPSILON {
+            continue;
+        }
+        let incoming_unit_x = incoming_x / incoming_length;
+        let incoming_unit_y = incoming_y / incoming_length;
+        let outgoing_unit_x = outgoing_x / outgoing_length;
+        let outgoing_unit_y = outgoing_y / outgoing_length;
+        let cross = incoming_unit_x * outgoing_unit_y - incoming_unit_y * outgoing_unit_x;
+        if cross.abs() <= f64::EPSILON {
+            commands.push(PathCommand::LineTo { x: corner.x, y: corner.y });
+            continue;
+        }
+        let cut = radius.min(incoming_length / 2.0).min(outgoing_length / 2.0);
+        let before = Point {
+            x: corner.x - incoming_unit_x * cut,
+            y: corner.y - incoming_unit_y * cut,
+        };
+        let after = Point {
+            x: corner.x + outgoing_unit_x * cut,
+            y: corner.y + outgoing_unit_y * cut,
+        };
+        commands.push(PathCommand::LineTo { x: before.x, y: before.y });
+        commands.push(PathCommand::CubicTo {
+            cx1: before.x + incoming_unit_x * cut * QUARTER_CIRCLE_KAPPA,
+            cy1: before.y + incoming_unit_y * cut * QUARTER_CIRCLE_KAPPA,
+            cx2: after.x - outgoing_unit_x * cut * QUARTER_CIRCLE_KAPPA,
+            cy2: after.y - outgoing_unit_y * cut * QUARTER_CIRCLE_KAPPA,
+            x: after.x,
+            y: after.y,
+        });
+    }
+    commands.push(PathCommand::LineTo {
+        x: points[points.len() - 1].x,
+        y: points[points.len() - 1].y,
+    });
+    commands
+}
 /// Lower Railroad rules into backend-neutral paths, markers, boxes, and glyphs.
 pub fn diagram_to_paint_railroad<S, M, R>(diagram: &LayoutedRailroadDiagram, options: &DiagramToPaintOptions<'_, S, M, R>) -> PaintScene
 where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle = S::Handle> {
     let mut instructions = Vec::new(); let mut text_children = Vec::new();
-    if let Some(title) = &diagram.title { text_children.push(text_node(title, 10.0, 5.0, diagram.width - 20.0, 30.0,
+    let mut railroad_font = options.label_font.clone();
+    railroad_font.family = diagram.config.font_family.clone();
+    railroad_font.size = diagram.config.font_size;
+    if let Some(title) = &diagram.title { text_children.push(text_node(title, diagram.config.padding, 5.0, diagram.width - diagram.config.padding * 2.0, 30.0,
         options.title_font.clone(), Color { r: 15, g: 23, b: 42, a: 255 })); }
     for rule in &diagram.rules {
-        let center = rule.y + rule.height / 2.0;
-        text_children.push(text_node_no_wrap(&rule.name, 10.0, center - 14.0, 92.0, 28.0,
-            options.label_font.clone(), Color { r: 30, g: 64, b: 175, a: 255 }));
-        instructions.push(PaintInstruction::Ellipse(PaintEllipse { base: PaintBase::default(), cx: 110.0, cy: center,
-            rx: 5.0, ry: 5.0, fill: Some("#111827".into()), stroke: None, stroke_width: None, stroke_dash: None, stroke_dash_offset: None }));
-        let end_x = rule.paths.iter().flat_map(|path| path.points.iter().map(|point| point.x)).fold(140.0, f64::max);
-        instructions.push(PaintInstruction::Ellipse(PaintEllipse { base: PaintBase::default(), cx: end_x + 6.0, cy: center,
-            rx: 5.0, ry: 5.0, fill: Some("#111827".into()), stroke: None, stroke_width: None, stroke_dash: None, stroke_dash_offset: None }));
-        for path in &rule.paths { let mut paint = line_path(&path.points, "#334155", 1.8);
+        let mut rule_name_font = railroad_font.clone();
+        rule_name_font.weight = 700;
+        text_children.push(text_node_no_wrap(&format!("{} =", rule.name), diagram.config.padding, rule.start_marker.y - 14.0,
+            rule.start_marker.x - diagram.config.padding, 28.0, rule_name_font, css_to_color(&diagram.config.rule_name_color)));
+        if diagram.config.show_markers {
+            for marker in [&rule.start_marker, &rule.end_marker] {
+                instructions.push(PaintInstruction::Ellipse(PaintEllipse { base: PaintBase::default(), cx: marker.x, cy: marker.y,
+                    rx: diagram.config.marker_radius, ry: diagram.config.marker_radius,
+                    fill: Some(diagram.config.marker_fill.clone()), stroke: None, stroke_width: None,
+                    stroke_dash: None, stroke_dash_offset: None }));
+            }
+        }
+        for path in &rule.paths { let mut paint = line_path(&path.points, &diagram.config.line_color, diagram.config.stroke_width);
+            if diagram.config.arc_radius > 0.0 && path.points.len() > 2 {
+                paint.commands = rounded_railroad_path(&path.points, diagram.config.arc_radius);
+            }
             if path.loopback { paint.stroke_dash = Some(vec![4.0, 3.0]); } instructions.push(PaintInstruction::Path(paint)); }
         for element in &rule.elements {
-            let (fill, stroke, radius) = match element.kind { RailroadElementKind::Terminal => ("#fef3c7", "#92400e", 14.0),
-                RailroadElementKind::NonTerminal => ("#ffffff", "#334155", 2.0), RailroadElementKind::Special => ("#f3e8ff", "#7e22ce", 7.0) };
+            let (fill, stroke, text_color, radius) = match element.kind {
+                RailroadElementKind::Terminal => (&diagram.config.terminal_fill, &diagram.config.terminal_stroke,
+                    &diagram.config.terminal_text_color, 14.0),
+                RailroadElementKind::NonTerminal => (&diagram.config.non_terminal_fill, &diagram.config.non_terminal_stroke,
+                    &diagram.config.non_terminal_text_color, 2.0),
+                RailroadElementKind::Special => (&diagram.config.special_fill, &diagram.config.special_stroke,
+                    &diagram.config.non_terminal_text_color, 7.0),
+            };
             instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: element.x, y: element.y,
-                width: element.width, height: element.height, fill: Some(fill.into()), stroke: Some(stroke.into()),
-                stroke_width: Some(1.7), corner_radius: Some(radius), stroke_dash: None, stroke_dash_offset: None }));
-            text_children.push(text_node_no_wrap(&element.label, element.x + 10.0, element.y + 7.0,
-                element.width - 20.0, 24.0, options.label_font.clone(), Color { r: 15, g: 23, b: 42, a: 255 }));
+                width: element.width, height: element.height, fill: Some(fill.clone()), stroke: Some(stroke.clone()),
+                stroke_width: Some(diagram.config.stroke_width), corner_radius: Some(radius),
+                stroke_dash: (element.kind == RailroadElementKind::Special).then(|| vec![5.0, 3.0]), stroke_dash_offset: None }));
+            text_children.push(text_node_no_wrap(&element.label, element.x + diagram.config.padding,
+                element.y + (element.height - 24.0) / 2.0,
+                (element.width - diagram.config.padding * 2.0).max(1.0), 24.0,
+                railroad_font.clone(), css_to_color(text_color)));
         }
     }
     let text_scene = layout_to_paint(&PositionedNode { x: 0.0, y: 0.0, width: diagram.width, height: diagram.height,
@@ -1966,32 +2061,63 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     instructions.extend(text_scene.instructions); let mut metadata = HashMap::new();
     if let Some(title) = &diagram.accessibility_title { metadata.insert("accessibility.title".into(), title.clone()); }
     if let Some(description) = &diagram.accessibility_description { metadata.insert("accessibility.description".into(), description.clone()); }
+    metadata.insert("railroad.compactMode".into(), diagram.config.compact_mode.to_string());
+    metadata.insert("railroad.padding".into(), diagram.config.padding.to_string());
+    metadata.insert("railroad.verticalSeparation".into(), diagram.config.vertical_separation.to_string());
+    metadata.insert("railroad.horizontalSeparation".into(), diagram.config.horizontal_separation.to_string());
+    metadata.insert("railroad.arcRadius".into(), diagram.config.arc_radius.to_string());
+    metadata.insert("railroad.fontSize".into(), diagram.config.font_size.to_string());
+    metadata.insert("railroad.fontFamily".into(), diagram.config.font_family.clone());
+    metadata.insert("railroad.lineColor".into(), diagram.config.line_color.clone());
+    metadata.insert("railroad.strokeWidth".into(), diagram.config.stroke_width.to_string());
+    metadata.insert("railroad.markerFill".into(), diagram.config.marker_fill.clone());
+    metadata.insert("railroad.showMarkers".into(), diagram.config.show_markers.to_string());
+    metadata.insert("railroad.markerRadius".into(), diagram.config.marker_radius.to_string());
     PaintScene { width: diagram.width, height: diagram.height,
         background: format!("rgb({},{},{})", options.background.r, options.background.g, options.background.b),
-        instructions, id: None, metadata: (!metadata.is_empty()).then_some(metadata) }
+        instructions, id: None, metadata: Some(metadata) }
 }
 
 /// Lower Venn circle geometry into backend-neutral ellipses and glyph runs.
 pub fn diagram_to_paint_venn<S, M, R>(diagram: &LayoutedVennDiagram, options: &DiagramToPaintOptions<'_, S, M, R>) -> PaintScene
 where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle = S::Handle> {
-    const FILLS: &[&str] = &["#60a5fa", "#f59e0b", "#34d399", "#f472b6", "#a78bfa"];
     let mut instructions = Vec::new();
+    let scale = diagram.width / 1600.0;
     for (index, circle) in diagram.circles.iter().enumerate() {
-        let fill = circle.style.fill.clone().unwrap_or_else(|| FILLS[index % FILLS.len()].into());
+        let fill = circle.style.fill.clone().unwrap_or_else(|| {
+            diagram.config.theme_colors.get(index % diagram.config.theme_colors.len().max(1))
+                .cloned().unwrap_or_else(|| "#60a5fa".into())
+        });
         instructions.push(PaintInstruction::Ellipse(PaintEllipse {
             base: PaintBase::default(), cx: circle.cx, cy: circle.cy, rx: circle.radius, ry: circle.radius,
-            fill: Some(with_opacity(&fill, circle.style.fill_opacity.unwrap_or(0.38))),
-            stroke: Some(circle.style.stroke.clone().unwrap_or_else(|| "#334155".into())),
-            stroke_width: Some(circle.style.stroke_width.unwrap_or(2.0)), stroke_dash: None, stroke_dash_offset: None,
+            fill: Some(with_opacity(&fill, circle.style.fill_opacity.unwrap_or(0.1))),
+            stroke: Some(circle.style.stroke.clone().unwrap_or_else(|| fill.clone())),
+            stroke_width: Some(circle.style.stroke_width.unwrap_or(5.0 * scale)), stroke_dash: None, stroke_dash_offset: None,
         }));
     }
+    for circle in &diagram.debug_circles {
+        instructions.push(PaintInstruction::Ellipse(PaintEllipse { base: PaintBase::default(), cx: circle.cx, cy: circle.cy,
+            rx: circle.radius, ry: circle.radius, fill: None, stroke: Some("#800080".into()), stroke_width: Some(1.5 * diagram.width / 1600.0),
+            stroke_dash: Some(vec![6.0 * diagram.width / 1600.0, 4.0 * diagram.width / 1600.0]), stroke_dash_offset: None }));
+    }
+    for cell in &diagram.debug_cells {
+        instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: cell.x, y: cell.y,
+            width: cell.width, height: cell.height, fill: None, stroke: Some("#008080".into()),
+            stroke_width: Some(diagram.width / 1600.0), corner_radius: None,
+            stroke_dash: Some(vec![4.0 * diagram.width / 1600.0, 3.0 * diagram.width / 1600.0]), stroke_dash_offset: None }));
+    }
     let mut text_children = Vec::new();
+    let mut title_font = options.title_font.clone(); title_font.family = diagram.config.font_family.clone();
+    title_font.size = 32.0 * scale;
+    let mut label_font = options.label_font.clone(); label_font.family = diagram.config.font_family.clone();
     if let Some(title) = &diagram.title {
-        text_children.push(text_node(title, 8.0, 5.0, diagram.width - 16.0, 28.0, options.title_font.clone(), Color { r: 15, g: 23, b: 42, a: 255 }));
+        text_children.push(text_node(title, 8.0, 5.0, diagram.width - 16.0, 28.0, title_font,
+            css_to_color(&diagram.config.title_text_color)));
     }
     for label in &diagram.labels {
-        text_children.push(text_node(&label.text, label.x - 70.0, label.y - 12.0, 140.0, 26.0, options.label_font.clone(),
-            label.style.text_color.as_deref().map(css_to_color).unwrap_or(Color { r: 15, g: 23, b: 42, a: 255 })));
+        let mut font = label_font.clone(); font.size = label.font_size;
+        text_children.push(text_node(&label.text, label.x - 70.0, label.y - 12.0, 140.0, 26.0, font,
+            label.style.text_color.as_deref().map(css_to_color).unwrap_or_else(|| css_to_color(&diagram.config.set_text_color))));
     }
     let text_scene = layout_to_paint(&PositionedNode { x: 0.0, y: 0.0, width: diagram.width, height: diagram.height,
         id: None, content: None, children: text_children, ext: HashMap::new() }, &LayoutToPaintOptions {
@@ -1999,78 +2125,360 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
         shaper: options.shaper, metrics: options.metrics, resolver: options.resolver,
     });
     instructions.extend(text_scene.instructions);
+    let mut metadata = HashMap::new();
+    metadata.insert("venn.width".into(), diagram.config.width.to_string());
+    metadata.insert("venn.height".into(), diagram.config.height.to_string());
+    metadata.insert("venn.padding".into(), diagram.config.padding.to_string());
+    metadata.insert("venn.useMaxWidth".into(), diagram.config.use_max_width.to_string());
+    metadata.insert("venn.useDebugLayout".into(), diagram.config.use_debug_layout.to_string());
+    metadata.insert("venn.fontFamily".into(), diagram.config.font_family.clone());
+    metadata.insert("venn.titleTextColor".into(), diagram.config.title_text_color.clone());
+    metadata.insert("venn.setTextColor".into(), diagram.config.set_text_color.clone());
+    for (index, color) in diagram.config.theme_colors.iter().enumerate() {
+        metadata.insert(format!("venn.themeColor{}", index + 1), color.clone());
+    }
     PaintScene { width: diagram.width, height: diagram.height,
         background: format!("rgb({},{},{})", options.background.r, options.background.g, options.background.b),
-        instructions, id: None, metadata: None }
+        instructions, id: None, metadata: Some(metadata) }
 }
 
 /// Lower Ishikawa fishbone geometry into backend-neutral paths, a rect, and glyph runs.
 pub fn diagram_to_paint_ishikawa<S, M, R>(diagram: &LayoutedIshikawaDiagram, options: &DiagramToPaintOptions<'_, S, M, R>) -> PaintScene
 where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle = S::Handle> {
-    let stroke = "#334155".to_string();
-    let mut instructions = vec![PaintInstruction::Path(line_path(
-        &[diagram.spine_from.clone(), diagram.spine_to.clone()], &stroke, 3.0,
-    ))];
+    let stroke = diagram.config.line_color.clone();
+    let text_color = css_to_color(&diagram.config.text_color);
+    let mut label_font = options.label_font.clone();
+    label_font.family.clone_from(&diagram.config.font_family);
+    label_font.size = diagram.config.font_size;
+    let mut title_font = options.title_font.clone();
+    title_font.family.clone_from(&diagram.config.font_family);
+    title_font.size = diagram.config.font_size;
+    let hand_drawn = diagram.config.look == diagram_ir::IshikawaLook::HandDrawn;
+    let mut instructions = vec![PaintInstruction::Path(line_path(&diagram.spine_path, &stroke, 3.0))];
     let mut text_children = Vec::new();
     for bone in &diagram.bones {
-        instructions.push(PaintInstruction::Path(line_path(
-            &[bone.from.clone(), bone.to.clone()], &stroke, if bone.depth == 1 { 2.5 } else { 1.5 },
-        )));
-        text_children.push(text_node(&bone.label, bone.label_position.x - 55.0, bone.label_position.y - 10.0,
-            110.0, 24.0, options.label_font.clone(), Color { r: 30, g: 41, b: 59, a: 255 }));
+        instructions.push(PaintInstruction::Path(line_path(&bone.path, &stroke,
+            if bone.depth == 1 { 2.5 } else { 1.5 })));
+        let mut arrow_commands = Vec::with_capacity(bone.arrowhead.len() + 1);
+        for (index, point) in bone.arrowhead.iter().enumerate() {
+            arrow_commands.push(if index == 0 { PathCommand::MoveTo { x: point.x, y: point.y } }
+                else { PathCommand::LineTo { x: point.x, y: point.y } });
+        }
+        arrow_commands.push(PathCommand::Close);
+        instructions.push(PaintInstruction::Path(PaintPath { base: PaintBase::default(), commands: arrow_commands,
+            fill: Some(stroke.clone()), fill_rule: None, stroke: Some(stroke.clone()), stroke_width: Some(1.0),
+            stroke_cap: Some(StrokeCap::Round), stroke_join: Some(StrokeJoin::Round), stroke_dash: None, stroke_dash_offset: None }));
+        let label_x = bone.label_position.x - bone.label_width / 2.0;
+        let label_y = bone.label_position.y - bone.label_height / 2.0;
+        if hand_drawn {
+            for hatch in &bone.hatches {
+                instructions.push(PaintInstruction::Path(line_path(&[hatch.from.clone(), hatch.to.clone()],
+                    &diagram.config.fill_color, 2.5)));
+            }
+            instructions.push(ishikawa_outline_instruction(&bone.label_outline, "none", &stroke, 1.0));
+        } else {
+            instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: label_x, y: label_y,
+                width: bone.label_width, height: bone.label_height, fill: Some(diagram.config.fill_color.clone()),
+                stroke: Some(stroke.clone()), stroke_width: Some(1.0), corner_radius: Some(4.0),
+                stroke_dash: None, stroke_dash_offset: None }));
+        }
+        text_children.push(text_node(&bone.label, label_x + 6.0, label_y + 2.0,
+            bone.label_width - 12.0, bone.label_height - 4.0, label_font.clone(), text_color));
     }
-    instructions.push(PaintInstruction::Rect(PaintRect {
-        base: PaintBase::default(), x: diagram.effect_x, y: diagram.effect_y, width: diagram.effect_width,
-        height: diagram.effect_height, fill: Some("#fef3c7".into()), stroke: Some("#92400e".into()),
-        stroke_width: Some(2.0), corner_radius: Some(8.0), stroke_dash: None, stroke_dash_offset: None,
-    }));
-    text_children.push(text_node(&diagram.effect, diagram.effect_x + 8.0, diagram.effect_y + 8.0,
-        diagram.effect_width - 16.0, diagram.effect_height - 16.0, options.title_font.clone(),
-        Color { r: 120, g: 53, b: 15, a: 255 }));
+    for hatch in &diagram.effect_hatches {
+        instructions.push(PaintInstruction::Path(line_path(&[hatch.from.clone(), hatch.to.clone()],
+            &diagram.config.fill_color, 2.5)));
+    }
+    instructions.push(ishikawa_outline_instruction(&diagram.effect_outline,
+        if hand_drawn { "none" } else { &diagram.config.fill_color }, &stroke, 2.0));
+    let effect_label_width = diagram.effect_width / 2.4;
+    text_children.push(text_node(&diagram.effect, diagram.effect_x + 3.0, diagram.effect_y + diagram.effect_height * 0.3,
+        effect_label_width - 6.0, diagram.effect_height * 0.4, title_font, text_color));
     let text_scene = layout_to_paint(&PositionedNode { x: 0.0, y: 0.0, width: diagram.width, height: diagram.height,
         id: None, content: None, children: text_children, ext: HashMap::new() }, &LayoutToPaintOptions {
         width: diagram.width, height: diagram.height, background: Color { r: 0, g: 0, b: 0, a: 0 }, device_pixel_ratio: 1.0,
         shaper: options.shaper, metrics: options.metrics, resolver: options.resolver,
     });
     instructions.extend(text_scene.instructions);
+    let mut metadata = HashMap::new();
+    metadata.insert("ishikawa.diagramPadding".into(), diagram.config.diagram_padding.to_string());
+    metadata.insert("ishikawa.useMaxWidth".into(), diagram.config.use_max_width.to_string());
+    metadata.insert("ishikawa.fontSize".into(), diagram.config.font_size.to_string());
+    metadata.insert("ishikawa.look".into(), match diagram.config.look {
+        diagram_ir::IshikawaLook::Classic => "classic", diagram_ir::IshikawaLook::HandDrawn => "handDrawn",
+    }.into());
+    metadata.insert("ishikawa.handDrawnSeed".into(), diagram.config.hand_drawn_seed.to_string());
+    metadata.insert("ishikawa.fontFamily".into(), diagram.config.font_family.clone());
+    metadata.insert("ishikawa.lineColor".into(), diagram.config.line_color.clone());
+    metadata.insert("ishikawa.fillColor".into(), diagram.config.fill_color.clone());
+    metadata.insert("ishikawa.textColor".into(), diagram.config.text_color.clone());
     PaintScene { width: diagram.width, height: diagram.height,
         background: format!("rgb({},{},{})", options.background.r, options.background.g, options.background.b),
-        instructions, id: None, metadata: None }
+        instructions, id: None, metadata: Some(metadata) }
+}
+
+fn ishikawa_outline_instruction(points: &[Point], fill: &str, stroke: &str, stroke_width: f64) -> PaintInstruction {
+    let mut commands = Vec::with_capacity(points.len() + 1);
+    for (index, point) in points.iter().enumerate() {
+        commands.push(if index == 0 { PathCommand::MoveTo { x: point.x, y: point.y } }
+            else { PathCommand::LineTo { x: point.x, y: point.y } });
+    }
+    commands.push(PathCommand::Close);
+    PaintInstruction::Path(PaintPath { base: PaintBase::default(), commands, fill: Some(fill.into()), fill_rule: None,
+        stroke: Some(stroke.into()), stroke_width: Some(stroke_width), stroke_cap: Some(StrokeCap::Round),
+        stroke_join: Some(StrokeJoin::Round), stroke_dash: None, stroke_dash_offset: None })
 }
 
 /// Lower a Wardley strategic map into backend-neutral paths, ellipses, and glyph runs.
 pub fn diagram_to_paint_wardley<S, M, R>(diagram: &LayoutedWardleyDiagram, options: &DiagramToPaintOptions<'_, S, M, R>) -> PaintScene
 where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle = S::Handle> {
-    let left = 62.0; let right = diagram.width - 28.0; let top = if diagram.title.is_some() { 48.0 } else { 24.0 }; let bottom = diagram.height - 52.0;
-    let mut instructions = vec![PaintInstruction::Path(line_path(&[Point { x: left, y: top }, Point { x: left, y: bottom }, Point { x: right, y: bottom }], "#475569", 2.0))];
+    let left = diagram.config.padding.min(diagram.width / 3.0); let right = diagram.width - left;
+    let top = diagram.config.padding.min(diagram.height / 3.0); let bottom = diagram.height - top;
+    let theme = &diagram.config.theme;
+    let axis_text_color = css_to_color(&theme.axis_text_color);
+    let component_label_color = css_to_color(&theme.component_label_color);
+    let mut instructions = vec![PaintInstruction::Path(line_path(&[Point { x: left, y: top }, Point { x: left, y: bottom }, Point { x: right, y: bottom }], &theme.axis_color, 1.0))];
     let mut text_children = Vec::new();
+    let mut rotated_link_labels = Vec::new();
     if let Some(title) = &diagram.title {
-        text_children.push(text_node(title, 10.0, 5.0, diagram.width - 20.0, 30.0, options.title_font.clone(), Color { r: 15, g: 23, b: 42, a: 255 }));
+        text_children.push(text_node(title, 10.0, 5.0, diagram.width - 20.0, 30.0,
+            font_with_size(&options.title_font, Some(diagram.config.axis_font_size * 1.05)), axis_text_color));
+    }
+    if diagram.config.show_grid {
+        for step in 1..5 {
+            let ratio = step as f64 / 5.0;
+            let x = left + (right - left) * ratio; let y = bottom - (bottom - top) * ratio;
+            let mut vertical = line_path(&[Point { x, y: top }, Point { x, y: bottom }], &theme.grid_color, 1.0);
+            vertical.stroke_dash = Some(vec![2.0, 6.0]); instructions.push(PaintInstruction::Path(vertical));
+            let mut horizontal = line_path(&[Point { x: left, y }, Point { x: right, y }], &theme.grid_color, 1.0);
+            horizontal.stroke_dash = Some(vec![2.0, 6.0]); instructions.push(PaintInstruction::Path(horizontal));
+        }
     }
     for (index, stage) in diagram.stages.iter().enumerate() {
-        let x = left + (right - left) * index as f64 / (diagram.stages.len().saturating_sub(1).max(1)) as f64;
-        if index > 0 { instructions.push(PaintInstruction::Path(line_path(&[Point { x, y: top }, Point { x, y: bottom }], "#cbd5e1", 1.0))); }
-        text_children.push(text_node(stage, (x - 45.0).clamp(2.0, diagram.width - 92.0), bottom + 8.0, 90.0, 24.0, options.label_font.clone(), Color { r: 71, g: 85, b: 105, a: 255 }));
+        let custom = diagram.stage_boundaries.len() == diagram.stages.len();
+        let start = if custom { if index == 0 { 0.0 } else { diagram.stage_boundaries[index - 1] } }
+            else { index as f64 / diagram.stages.len().max(1) as f64 };
+        let end = if custom { diagram.stage_boundaries[index] }
+            else { (index + 1) as f64 / diagram.stages.len().max(1) as f64 };
+        let start_x = left + (right - left) * start; let stage_width = (right - left) * (end - start);
+        if index > 0 {
+            let mut separator = line_path(&[Point { x: start_x, y: top }, Point { x: start_x, y: bottom }], "rgba(0,0,0,0.8)", 1.0);
+            separator.stroke_dash = Some(vec![5.0, 5.0]); instructions.push(PaintInstruction::Path(separator));
+        }
+        text_children.push(text_node_no_wrap(stage, start_x, bottom + 8.0, stage_width, 24.0,
+            font_with_size(&options.label_font, Some(diagram.config.axis_font_size - 2.0)), axis_text_color));
     }
-    for link in &diagram.links { instructions.push(PaintInstruction::Path(line_path(&[link.from.clone(), link.to.clone()], "#64748b", 1.5))); }
-    for evolution in &diagram.evolves { instructions.push(PaintInstruction::Path(line_path(&[evolution.from.clone(), evolution.to.clone()], "#dc2626", 2.0))); }
+    for pipeline in &diagram.pipelines {
+        for positions in pipeline.component_positions.windows(2) {
+            let mut connector = line_path(positions, &theme.link_stroke, 1.0);
+            connector.stroke_dash = Some(vec![4.0, 4.0]); instructions.push(PaintInstruction::Path(connector));
+        }
+        instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: pipeline.x, y: pipeline.y,
+            width: pipeline.width, height: pipeline.height, fill: None, stroke: Some(theme.axis_color.clone()),
+            stroke_width: Some(1.5), corner_radius: Some(4.0), stroke_dash: None, stroke_dash_offset: None }));
+    }
+    for link in &diagram.links {
+        let mut path = line_path(&[link.from.clone(), link.to.clone()], &theme.link_stroke, 1.0);
+        if link.dashed { path.stroke_dash = Some(vec![6.0, 6.0]); }
+        instructions.push(PaintInstruction::Path(path));
+        if matches!(link.flow, Some(WardleyLinkFlow::Forward | WardleyLinkFlow::Bidirectional)) {
+            instructions.push(PaintInstruction::Path(wardley_flow_arrowhead(&link.from, &link.to, &theme.link_stroke)));
+        }
+        if matches!(link.flow, Some(WardleyLinkFlow::Backward | WardleyLinkFlow::Bidirectional)) {
+            instructions.push(PaintInstruction::Path(wardley_flow_arrowhead(&link.to, &link.from, &theme.link_stroke)));
+        }
+        if let Some(label) = &link.label {
+            let width = (label.chars().count() as f64 * diagram.config.label_font_size * 0.65).max(30.0);
+            rotated_link_labels.push((text_node_no_wrap(label, link.label_position.x - width / 2.0,
+                link.label_position.y - 10.0, width, 20.0,
+                font_with_size(&options.label_font, Some(diagram.config.label_font_size)), axis_text_color),
+                link.label_angle, link.label_position.x, link.label_position.y));
+        }
+    }
+    for evolution in &diagram.evolves { instructions.push(PaintInstruction::Path(line_path(&[evolution.from.clone(), evolution.to.clone()], &theme.evolution_stroke, 1.0))); }
     for node in &diagram.nodes {
-        let radius = if node.anchor { 8.0 } else { 6.0 };
-        instructions.push(PaintInstruction::Ellipse(PaintEllipse { base: PaintBase::default(), cx: node.position.x, cy: node.position.y,
-            rx: radius, ry: radius, fill: Some(if node.anchor { "#0f172a" } else { "#ffffff" }.into()), stroke: Some("#0f172a".into()),
-            stroke_width: Some(2.0), stroke_dash: None, stroke_dash_offset: None }));
-        text_children.push(text_node(&node.label, node.position.x + 9.0, node.position.y - 16.0, 150.0, 24.0,
-            options.label_font.clone(), Color { r: 15, g: 23, b: 42, a: 255 }));
+        if let Some(strategy) = node.source_strategy {
+            let (fill, stroke) = match strategy {
+                WardleySourceStrategy::Build => ("#eeeeee", "#000000"),
+                WardleySourceStrategy::Buy => ("#cccccc", theme.component_stroke.as_str()),
+                WardleySourceStrategy::Outsource => ("#666666", theme.component_stroke.as_str()),
+                WardleySourceStrategy::Market => ("#ffffff", theme.component_stroke.as_str()),
+            };
+            instructions.push(PaintInstruction::Ellipse(PaintEllipse { base: PaintBase::default(), cx: node.position.x, cy: node.position.y,
+                rx: diagram.config.node_radius * 2.0, ry: diagram.config.node_radius * 2.0, fill: Some(fill.into()), stroke: Some(stroke.into()),
+                stroke_width: Some(1.0), stroke_dash: None, stroke_dash_offset: None }));
+            if strategy == WardleySourceStrategy::Market {
+                let triangle_radius = diagram.config.node_radius * 1.2; let dot_radius = diagram.config.node_radius * 0.7;
+                let top_dot = Point { x: node.position.x, y: node.position.y - triangle_radius };
+                let left_dot = Point { x: node.position.x - triangle_radius * (std::f64::consts::PI / 6.0).cos(),
+                    y: node.position.y + triangle_radius * (std::f64::consts::PI / 6.0).sin() };
+                let right_dot = Point { x: node.position.x + triangle_radius * (std::f64::consts::PI / 6.0).cos(), y: left_dot.y };
+                instructions.push(PaintInstruction::Path(line_path(&[top_dot.clone(), left_dot.clone(), right_dot.clone(), top_dot.clone()],
+                    &theme.component_stroke, 1.0)));
+                for dot in [top_dot, left_dot, right_dot] {
+                    instructions.push(PaintInstruction::Ellipse(PaintEllipse { base: PaintBase::default(), cx: dot.x, cy: dot.y,
+                        rx: dot_radius, ry: dot_radius, fill: Some("#ffffff".into()), stroke: Some(theme.component_stroke.clone()),
+                        stroke_width: Some(2.0), stroke_dash: None, stroke_dash_offset: None }));
+                }
+            }
+        }
+        if node.pipeline_parent {
+            let size = diagram.config.node_radius * 1.6;
+            instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: node.position.x - size / 2.0,
+                y: node.position.y - size / 2.0, width: size, height: size, fill: Some(theme.component_fill.clone()),
+                stroke: Some(theme.component_stroke.clone()), stroke_width: Some(1.0), corner_radius: None,
+                stroke_dash: None, stroke_dash_offset: None }));
+        } else if node.source_strategy != Some(WardleySourceStrategy::Market) {
+            let radius = if node.anchor { diagram.config.node_radius * 1.35 } else { diagram.config.node_radius };
+            instructions.push(PaintInstruction::Ellipse(PaintEllipse { base: PaintBase::default(), cx: node.position.x, cy: node.position.y,
+                rx: radius, ry: radius, fill: Some(theme.component_fill.clone()), stroke: Some(theme.component_stroke.clone()),
+                stroke_width: Some(1.0), stroke_dash: None, stroke_dash_offset: None }));
+        }
+        if node.inertia {
+            let square_size = diagram.config.node_radius * 1.6;
+            let mut offset = if node.pipeline_parent { square_size / 2.0 + 15.0 } else { diagram.config.node_radius + 15.0 };
+            if node.source_strategy.is_some() { offset += diagram.config.node_radius + 10.0; }
+            let line_height = if node.pipeline_parent { square_size } else { diagram.config.node_radius * 2.0 };
+            instructions.push(PaintInstruction::Path(line_path(&[
+                Point { x: node.position.x + offset, y: node.position.y - line_height / 2.0 },
+                Point { x: node.position.x + offset, y: node.position.y + line_height / 2.0 },
+            ], &theme.component_stroke, 6.0)));
+        }
+        let mut font = font_with_size(&options.label_font, Some(diagram.config.label_font_size));
+        if node.anchor { font.weight = 700; }
+        if node.anchor {
+            text_children.push(text_node_no_wrap(&node.label, node.position.x - 75.0 + node.label_offset_x.unwrap_or(0.0),
+                node.position.y - 8.0 + node.label_offset_y.unwrap_or(-3.0), 150.0, 22.0, font, css_to_color("#000000")));
+        } else {
+            let strategy_spacing = if node.source_strategy.is_some() { 10.0 } else { 0.0 };
+            let x = node.position.x + node.label_offset_x.unwrap_or(diagram.config.node_label_offset + strategy_spacing);
+            let y = node.position.y + node.label_offset_y.unwrap_or(-diagram.config.node_label_offset - strategy_spacing) - 8.0;
+            text_children.push(align_text_node(text_node_no_wrap(&node.label, x, y, 150.0, 24.0,
+                font, component_label_color), TextAlign::Start));
+        }
     }
-    text_children.push(text_node("Visibility", 2.0, top, 56.0, 24.0, options.label_font.clone(), Color { r: 71, g: 85, b: 105, a: 255 }));
+    text_children.push(text_node("Visibility", 2.0, top, 56.0, 24.0,
+        font_with_size(&options.label_font, Some(diagram.config.axis_font_size)), axis_text_color));
+    let mut annotation_number_font = font_with_size(&options.label_font, Some(10.0)); annotation_number_font.weight = 700;
+    for annotation in &diagram.annotations {
+        for positions in annotation.positions.windows(2) {
+            let mut connector = line_path(positions, &theme.annotation_stroke, 1.5);
+            connector.stroke_dash = Some(vec![4.0, 4.0]); instructions.push(PaintInstruction::Path(connector));
+        }
+        for position in &annotation.positions {
+            instructions.push(PaintInstruction::Ellipse(PaintEllipse { base: PaintBase::default(), cx: position.x, cy: position.y,
+                rx: 10.0, ry: 10.0, fill: Some(theme.annotation_fill.clone()), stroke: Some(theme.annotation_stroke.clone()),
+                stroke_width: Some(1.5), stroke_dash: None, stroke_dash_offset: None }));
+            text_children.push(text_node(&annotation.number.to_string(), position.x - 10.0, position.y - 10.0, 20.0, 20.0,
+                annotation_number_font.clone(), css_to_color(&theme.annotation_text_color)));
+        }
+    }
+    if let Some(box_position) = &diagram.annotations_box {
+        let entries: Vec<_> = diagram.annotations.iter().filter(|annotation| !annotation.text.is_empty()).collect();
+        if !entries.is_empty() {
+            let box_width = entries.iter().map(|annotation| annotation.text.chars().count() as f64 * 6.5 + 145.0)
+                .fold(180.0, f64::max).min(diagram.width - diagram.config.padding * 2.0);
+            let box_height = entries.len() as f64 * 16.0 + 28.0;
+            let box_x = box_position.x.clamp(diagram.config.padding, diagram.width - diagram.config.padding - box_width);
+            let box_y = box_position.y.clamp(diagram.config.padding, diagram.height - diagram.config.padding - box_height);
+            instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: box_x, y: box_y,
+                width: box_width, height: box_height, fill: Some(theme.annotation_fill.clone()), stroke: Some(theme.annotation_stroke.clone()),
+                stroke_width: Some(1.5), corner_radius: Some(4.0), stroke_dash: None, stroke_dash_offset: None }));
+            for (index, annotation) in entries.iter().enumerate() {
+                text_children.push(text_node_no_wrap(&format!("{}. {}", annotation.number, annotation.text), box_x + 10.0,
+                    box_y + 10.0 + index as f64 * 16.0, box_width - 20.0, 16.0,
+                    font_with_size(&options.label_font, Some(11.0)), css_to_color(&theme.annotation_text_color)));
+            }
+        }
+    }
+    let mut note_font = font_with_size(&options.label_font, Some(11.0)); note_font.weight = 700;
+    for note in &diagram.notes {
+        text_children.push(text_node_no_wrap(&note.text, note.position.x, note.position.y - 12.0,
+            (diagram.width - note.position.x - 8.0).max(40.0), 24.0, note_font.clone(), axis_text_color));
+    }
+    let mut force_font = font_with_size(&options.label_font, Some(10.0)); force_font.weight = 700;
+    for force in &diagram.forces {
+        let x = force.position.x; let y = force.position.y; let width = 60.0; let height = 30.0; let head = 20.0;
+        let points = match force.kind {
+            WardleyForceKind::Accelerator => vec![(x, y - height / 2.0), (x + width - head, y - height / 2.0),
+                (x + width - head, y - height / 2.0 - 8.0), (x + width, y),
+                (x + width - head, y + height / 2.0 + 8.0), (x + width - head, y + height / 2.0), (x, y + height / 2.0)],
+            WardleyForceKind::Deaccelerator => vec![(x + width, y - height / 2.0), (x + head, y - height / 2.0),
+                (x + head, y - height / 2.0 - 8.0), (x, y), (x + head, y + height / 2.0 + 8.0),
+                (x + head, y + height / 2.0), (x + width, y + height / 2.0)],
+        };
+        instructions.push(PaintInstruction::Path(PaintPath { base: PaintBase::default(), commands: polygon_path_commands(&points),
+            fill: Some("#ffffff".into()), fill_rule: None, stroke: Some(theme.component_stroke.clone()),
+            stroke_width: Some(1.0), stroke_cap: None, stroke_join: Some(StrokeJoin::Round), stroke_dash: None, stroke_dash_offset: None }));
+        text_children.push(text_node(&force.label, x, y + height / 2.0 + 5.0, width, 20.0,
+            force_font.clone(), axis_text_color));
+    }
     let text_scene = layout_to_paint(&PositionedNode { x: 0.0, y: 0.0, width: diagram.width, height: diagram.height,
         id: None, content: None, children: text_children, ext: HashMap::new() }, &LayoutToPaintOptions {
         width: diagram.width, height: diagram.height, background: Color { r: 0, g: 0, b: 0, a: 0 }, device_pixel_ratio: 1.0,
         shaper: options.shaper, metrics: options.metrics, resolver: options.resolver,
     });
     instructions.extend(text_scene.instructions);
+    for (node, rotation_degrees, pivot_x, pivot_y) in rotated_link_labels {
+        let scene = layout_to_paint(&PositionedNode { x: 0.0, y: 0.0, width: diagram.width, height: diagram.height,
+            id: None, content: None, children: vec![node], ext: HashMap::new() }, &LayoutToPaintOptions {
+            width: diagram.width, height: diagram.height, background: Color { r: 0, g: 0, b: 0, a: 0 }, device_pixel_ratio: 1.0,
+            shaper: options.shaper, metrics: options.metrics, resolver: options.resolver,
+        });
+        let radians = rotation_degrees.to_radians(); let cosine = radians.cos(); let sine = radians.sin();
+        instructions.push(PaintInstruction::Group(PaintGroup { base: PaintBase::default(), children: scene.instructions,
+            transform: Some([cosine, sine, -sine, cosine, pivot_x - cosine * pivot_x + sine * pivot_y,
+                pivot_y - sine * pivot_x - cosine * pivot_y]), opacity: None }));
+    }
+    let mut metadata = HashMap::new();
+    metadata.insert("wardley.padding".into(), diagram.config.padding.to_string());
+    metadata.insert("wardley.nodeRadius".into(), diagram.config.node_radius.to_string());
+    metadata.insert("wardley.nodeLabelOffset".into(), diagram.config.node_label_offset.to_string());
+    metadata.insert("wardley.axisFontSize".into(), diagram.config.axis_font_size.to_string());
+    metadata.insert("wardley.labelFontSize".into(), diagram.config.label_font_size.to_string());
+    metadata.insert("wardley.showGrid".into(), diagram.config.show_grid.to_string());
+    metadata.insert("wardley.useMaxWidth".into(), diagram.config.use_max_width.to_string());
+    metadata.insert("wardley.backgroundColor".into(), theme.background_color.clone());
+    metadata.insert("wardley.axisColor".into(), theme.axis_color.clone());
+    metadata.insert("wardley.axisTextColor".into(), theme.axis_text_color.clone());
+    metadata.insert("wardley.gridColor".into(), theme.grid_color.clone());
+    metadata.insert("wardley.componentFill".into(), theme.component_fill.clone());
+    metadata.insert("wardley.componentStroke".into(), theme.component_stroke.clone());
+    metadata.insert("wardley.componentLabelColor".into(), theme.component_label_color.clone());
+    metadata.insert("wardley.linkStroke".into(), theme.link_stroke.clone());
+    metadata.insert("wardley.evolutionStroke".into(), theme.evolution_stroke.clone());
+    metadata.insert("wardley.annotationStroke".into(), theme.annotation_stroke.clone());
+    metadata.insert("wardley.annotationTextColor".into(), theme.annotation_text_color.clone());
+    metadata.insert("wardley.annotationFill".into(), theme.annotation_fill.clone());
+    metadata.insert("wardley.noteCount".into(), diagram.notes.len().to_string());
+    metadata.insert("wardley.annotationCount".into(), diagram.annotations.len().to_string());
+    metadata.insert("wardley.forceCount".into(), diagram.forces.len().to_string());
+    metadata.insert("wardley.pipelineCount".into(), diagram.pipelines.len().to_string());
+    metadata.insert("wardley.stageBoundaryCount".into(), diagram.stage_boundaries.len().to_string());
+    metadata.insert("wardley.customLabelCount".into(), diagram.nodes.iter().filter(|node| node.label_offset_x.is_some()).count().to_string());
+    metadata.insert("wardley.strategyCount".into(), diagram.nodes.iter().filter(|node| node.source_strategy.is_some()).count().to_string());
+    metadata.insert("wardley.inertiaCount".into(), diagram.nodes.iter().filter(|node| node.inertia).count().to_string());
+    metadata.insert("wardley.flowLinkCount".into(), diagram.links.iter().filter(|link| link.flow.is_some()).count().to_string());
+    metadata.insert("wardley.dashedLinkCount".into(), diagram.links.iter().filter(|link| link.dashed).count().to_string());
+    metadata.insert("wardley.labeledLinkCount".into(), diagram.links.iter().filter(|link| link.label.is_some()).count().to_string());
+    if let Some(title) = &diagram.accessibility_title { metadata.insert("accessibility.title".into(), title.clone()); }
+    if let Some(description) = &diagram.accessibility_description {
+        metadata.insert("accessibility.description".into(), description.clone());
+    }
     PaintScene { width: diagram.width, height: diagram.height,
-        background: format!("rgb({},{},{})", options.background.r, options.background.g, options.background.b), instructions, id: None, metadata: None }
+        background: theme.background_color.clone(), instructions, id: None, metadata: Some(metadata) }
+}
+
+fn wardley_flow_arrowhead(previous: &Point, tip: &Point, stroke: &str) -> PaintPath {
+    let dx = tip.x - previous.x; let dy = tip.y - previous.y; let length = dx.hypot(dy).max(1e-9);
+    let ux = dx / length; let uy = dy / length; let size = 5.0; let half_width = 2.5;
+    let base_x = tip.x - ux * size; let base_y = tip.y - uy * size;
+    PaintPath { base: PaintBase::default(), commands: vec![
+        PathCommand::MoveTo { x: tip.x, y: tip.y },
+        PathCommand::LineTo { x: base_x - uy * half_width, y: base_y + ux * half_width },
+        PathCommand::LineTo { x: base_x + uy * half_width, y: base_y - ux * half_width }, PathCommand::Close,
+    ], fill: Some(stroke.into()), fill_rule: None, stroke: None, stroke_width: None,
+        stroke_cap: None, stroke_join: None, stroke_dash: None, stroke_dash_offset: None }
 }
 
 /// Lower Cynefin domains and transitions into backend-neutral geometry and glyphs.
@@ -6654,6 +7062,9 @@ where
     if let Some(description) = &diagram.accessibility_description {
         scene_metadata.insert("accessibility.description".into(), description.clone());
     }
+    if let Some(config) = &diagram.architecture_config {
+        scene_metadata.insert("architecture.numIter".into(), config.num_iter.to_string());
+    }
     let lf = options.label_font.clone();
     let ls = lf.size;
 
@@ -8128,6 +8539,10 @@ fn git_commit_symbol_instructions(
     }
 }
 
+fn timeline_color<'a>(colors: &'a [String], index: usize, fallback: &'a str) -> &'a str {
+    colors.get(index % colors.len().max(1)).map(String::as_str).unwrap_or(fallback)
+}
+
 /// Lower a [`LayoutedTemporalDiagram`] into a [`PaintScene`].
 pub fn diagram_to_paint_temporal<S, M, R>(
     diagram: &LayoutedTemporalDiagram,
@@ -8140,8 +8555,14 @@ where
 {
     let mut instructions: Vec<PaintInstruction> = Vec::new();
     let mut text_children: Vec<PositionedNode> = Vec::new();
-    let lf = options.label_font.clone();
+    let timeline_config = diagram.timeline_config.clone().unwrap_or_default();
+    let mut lf = options.label_font.clone();
+    lf.size = timeline_config.font_size;
+    lf.family.clone_from(&timeline_config.font_family);
     let ls = lf.size;
+    let mut title_font = options.title_font.clone();
+    title_font.size = timeline_config.font_size * 2.0;
+    title_font.family.clone_from(&timeline_config.font_family);
 
     for item in &diagram.items {
         match item {
@@ -8158,7 +8579,7 @@ where
                     *y + 6.0,
                     *width - 16.0,
                     *height - 12.0,
-                    options.title_font.clone(),
+                    title_font.clone(),
                     Color {
                         r: 17,
                         g: 24,
@@ -8170,39 +8591,46 @@ where
             LayoutedTemporalItem::TimelineSpine { x1, y1, x2, y2 } => {
                 instructions.push(PaintInstruction::Path(line_path(
                     &[Point { x: *x1, y: *y1 }, Point { x: *x2, y: *y2 }],
-                    "#475569", 3.0,
+                    timeline_color(&timeline_config.section_inverse_colors, 0, "#475569"), 3.0,
                 )));
             }
-            LayoutedTemporalItem::TimelineSection { x, y, width, height, label } => {
+            LayoutedTemporalItem::TimelineSection {
+                x, y, width, height, label, color_index,
+            } => {
                 instructions.push(PaintInstruction::Rect(PaintRect {
                     base: PaintBase::default(), x: *x, y: *y, width: *width, height: *height,
-                    fill: Some("#0f172a".into()), stroke: None, stroke_width: None,
+                    fill: Some(timeline_color(
+                        &timeline_config.section_colors, *color_index, "#0f172a",
+                    ).into()),
+                    stroke: None, stroke_width: None,
                     corner_radius: Some(15.0), stroke_dash: None, stroke_dash_offset: None,
                 }));
                 text_children.push(text_node(
                     label, *x + 10.0, *y + 6.0, *width - 20.0, *height - 12.0, lf.clone(),
-                    Color { r: 255, g: 255, b: 255, a: 255 },
+                    css_to_color(timeline_color(
+                        &timeline_config.section_label_colors, *color_index, "#ffffff",
+                    )),
                 ));
             }
             LayoutedTemporalItem::TimelinePeriod {
                 x, y, width, height, label, events, color_index,
             } => {
-                const FILLS: [&str; 6] = [
-                    "#dbeafe", "#dcfce7", "#fef3c7", "#fae8ff", "#ffe4e6", "#cffafe",
-                ];
-                const STROKES: [&str; 6] = [
-                    "#2563eb", "#16a34a", "#d97706", "#a21caf", "#e11d48", "#0891b2",
-                ];
-                let palette_index = *color_index % FILLS.len();
                 instructions.push(PaintInstruction::Rect(PaintRect {
                     base: PaintBase::default(), x: *x, y: *y, width: *width, height: *height,
-                    fill: Some(FILLS[palette_index].into()),
-                    stroke: Some(STROKES[palette_index].into()), stroke_width: Some(2.0),
+                    fill: Some(timeline_color(
+                        &timeline_config.section_colors, *color_index, "#dbeafe",
+                    ).into()),
+                    stroke: Some(timeline_color(
+                        &timeline_config.section_inverse_colors, *color_index, "#2563eb",
+                    ).into()),
+                    stroke_width: Some(2.0),
                     corner_radius: Some(8.0), stroke_dash: None, stroke_dash_offset: None,
                 }));
                 text_children.push(text_node(
                     label, *x + 12.0, *y + 8.0, *width - 24.0, 22.0,
-                    options.title_font.clone(), Color { r: 15, g: 23, b: 42, a: 255 },
+                    lf.clone(), css_to_color(timeline_color(
+                        &timeline_config.section_label_colors, *color_index, "#0f172a",
+                    )),
                 ));
                 if !events.is_empty() {
                     let event_text = events.iter().map(|event| format!("- {event}"))
@@ -8210,9 +8638,70 @@ where
                     text_children.push(text_node(
                         &event_text, *x + 12.0, *y + 32.0, *width - 24.0,
                         (*height - 38.0).max(12.0), lf.clone(),
-                        Color { r: 51, g: 65, b: 85, a: 255 },
+                        css_to_color(timeline_color(
+                            &timeline_config.section_label_colors, *color_index, "#334155",
+                        )),
                     ));
                 }
+            }
+            LayoutedTemporalItem::TimelineEventLink {
+                x1, y1, x2, y2, color_index,
+            } => {
+                let stroke = timeline_color(
+                    &timeline_config.section_inverse_colors, *color_index, "#2563eb",
+                );
+                instructions.push(PaintInstruction::Path(PaintPath {
+                    base: PaintBase::default(),
+                    commands: vec![
+                        PathCommand::MoveTo { x: *x1, y: *y1 },
+                        PathCommand::LineTo { x: *x2, y: *y2 },
+                    ],
+                    fill: None,
+                    fill_rule: None,
+                    stroke: Some(stroke.into()),
+                    stroke_width: Some(2.0),
+                    stroke_cap: Some(StrokeCap::Round),
+                    stroke_join: Some(StrokeJoin::Round),
+                    stroke_dash: Some(vec![5.0, 5.0]),
+                    stroke_dash_offset: None,
+                }));
+                instructions.push(PaintInstruction::Path(simple_arrowhead(
+                    &Point { x: *x1, y: *y1 },
+                    &Point { x: *x2, y: *y2 },
+                    stroke,
+                )));
+            }
+            LayoutedTemporalItem::TimelineEvent {
+                x, y, width, height, label, color_index,
+            } => {
+                instructions.push(PaintInstruction::Rect(PaintRect {
+                    base: PaintBase::default(),
+                    x: *x,
+                    y: *y,
+                    width: *width,
+                    height: *height,
+                    fill: Some(timeline_color(
+                        &timeline_config.section_colors, *color_index, "#dbeafe",
+                    ).into()),
+                    stroke: Some(timeline_color(
+                        &timeline_config.section_inverse_colors, *color_index, "#2563eb",
+                    ).into()),
+                    stroke_width: Some(1.5),
+                    corner_radius: Some(6.0),
+                    stroke_dash: None,
+                    stroke_dash_offset: None,
+                }));
+                text_children.push(text_node(
+                    label,
+                    *x + 10.0,
+                    *y + 6.0,
+                    *width - 20.0,
+                    *height - 12.0,
+                    lf.clone(),
+                    css_to_color(timeline_color(
+                        &timeline_config.section_label_colors, *color_index, "#0f172a",
+                    )),
+                ));
             }
             LayoutedTemporalItem::JourneyTitle {
                 x,
@@ -8793,6 +9282,26 @@ where
     if let Some(description) = &diagram.accessibility_description {
         metadata.insert("accessibility.description".to_string(), description.clone());
     }
+    if let Some(config) = &diagram.timeline_config {
+        metadata.insert("timeline.padding".into(), config.padding.to_string());
+        metadata.insert("timeline.leftMargin".into(), config.left_margin.to_string());
+        metadata.insert("timeline.fontSize".into(), config.font_size.to_string());
+        metadata.insert("timeline.fontFamily".into(), config.font_family.clone());
+        metadata.insert("timeline.useMaxWidth".into(), config.use_max_width.to_string());
+        metadata.insert(
+            "timeline.disableMulticolor".into(),
+            config.disable_multicolor.to_string(),
+        );
+        for (index, color) in config.section_colors.iter().enumerate() {
+            metadata.insert(format!("timeline.theme.cScale{index}"), color.clone());
+        }
+        for (index, color) in config.section_label_colors.iter().enumerate() {
+            metadata.insert(format!("timeline.theme.cScaleLabel{index}"), color.clone());
+        }
+        for (index, color) in config.section_inverse_colors.iter().enumerate() {
+            metadata.insert(format!("timeline.theme.cScaleInv{index}"), color.clone());
+        }
+    }
     for interaction in &diagram.interactions {
         let prefix = format!("gantt.task.{}", interaction.task_id);
         if let Some(link) = &interaction.link {
@@ -9150,6 +9659,25 @@ mod tests {
     };
 
     #[test]
+    fn railroad_corners_lower_to_portable_circular_cubics() {
+        let commands = rounded_railroad_path(&[
+            Point { x: 0.0, y: 0.0 },
+            Point { x: 10.0, y: 0.0 },
+            Point { x: 10.0, y: 10.0 },
+        ], 4.0);
+
+        assert!(matches!(commands[1], PathCommand::LineTo { x: 6.0, y: 0.0 }));
+        assert!(matches!(commands[2], PathCommand::CubicTo { x: 10.0, y: 4.0, .. }));
+        assert!(commands.iter().all(|command| !matches!(command, PathCommand::QuadTo { .. })));
+        if let PathCommand::CubicTo { cx1, cy1, cx2, cy2, .. } = commands[2] {
+            assert!((cx1 - 8.209_138_999_323_175).abs() < 1e-9);
+            assert_eq!(cy1, 0.0);
+            assert_eq!(cx2, 10.0);
+            assert!((cy2 - 1.790_861_000_676_825_7).abs() < 1e-9);
+        }
+    }
+
+    #[test]
     fn swimlane_line_hops_accept_every_orthogonal_friendly_curve() {
         let edge = |curve| LayoutedSwimlaneEdge {
             id: None, from: Point { x: 10.0, y: 20.0 }, to: Point { x: 110.0, y: 120.0 },
@@ -9353,7 +9881,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.75.0");
+        assert_eq!(crate::VERSION, "0.76.0");
     }
 
     #[test]
@@ -9444,6 +9972,7 @@ mod tests {
             title: None,
             accessibility_title: None,
             accessibility_description: None,
+            architecture_config: None,
             groups: vec![],
             nodes: vec![diagram_ir::LayoutedStructuralNode {
                 id: "api".into(),
@@ -9489,6 +10018,32 @@ mod tests {
     }
 
     #[test]
+    fn architecture_iteration_limit_lowers_to_scene_metadata() {
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let layout = LayoutedStructuralDiagram {
+            width: 200.0,
+            height: 100.0,
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            architecture_config: Some(diagram_ir::ArchitectureConfig {
+                num_iter: 5000,
+                ..diagram_ir::ArchitectureConfig::default()
+            }),
+            groups: vec![],
+            nodes: vec![],
+            relationships: vec![],
+        };
+
+        let scene = diagram_to_paint_structural(&layout, &opts);
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+            metadata.get("architecture.numIter")), Some(&"5000".to_string()));
+    }
+
+    #[test]
     fn structural_bidirectional_relationship_lowers_both_arrowheads() {
         let shaper = FakeShaper;
         let metrics = FakeMetrics;
@@ -9500,6 +10055,7 @@ mod tests {
             title: None,
             accessibility_title: None,
             accessibility_description: None,
+            architecture_config: None,
             groups: vec![],
             nodes: vec![],
             relationships: vec![diagram_ir::LayoutedStructuralRelationship {
@@ -9767,6 +10323,7 @@ mod tests {
             height: 96.0,
             accessibility_title: None,
             accessibility_description: None,
+            timeline_config: None,
             interactions: Vec::new(),
             items: vec![
                 LayoutedTemporalItem::JourneyTitle {
@@ -9848,6 +10405,69 @@ mod tests {
     }
 
     #[test]
+    fn timeline_config_lowers_to_scene_metadata() {
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let layout = LayoutedTemporalDiagram {
+            width: 320.0,
+            height: 180.0,
+            accessibility_title: None,
+            accessibility_description: None,
+            timeline_config: Some(diagram_ir::TimelineConfig {
+                padding: 72.0,
+                left_margin: 80.0,
+                font_size: 20.0,
+                font_family: "Avenir Next".into(),
+                use_max_width: true,
+                disable_multicolor: true,
+                section_colors: vec!["#112233".into()],
+                section_label_colors: vec!["#fefefe".into()],
+                section_inverse_colors: vec!["#445566".into()],
+            }),
+            interactions: Vec::new(),
+            items: vec![
+                LayoutedTemporalItem::TimelinePeriod {
+                    x: 20.0, y: 20.0, width: 120.0, height: 60.0,
+                    label: "2025".into(), events: Vec::new(), color_index: 0,
+                },
+                LayoutedTemporalItem::TimelineEventLink {
+                    x1: 140.0, y1: 50.0, x2: 170.0, y2: 50.0, color_index: 0,
+                },
+                LayoutedTemporalItem::TimelineEvent {
+                    x: 170.0, y: 35.0, width: 120.0, height: 30.0,
+                    label: "Public beta".into(), color_index: 0,
+                },
+            ],
+        };
+        let scene = diagram_to_paint_temporal(&layout, &opts);
+        let metadata = scene.metadata.unwrap();
+        assert_eq!(metadata.get("timeline.padding").map(String::as_str), Some("72"));
+        assert_eq!(metadata.get("timeline.leftMargin").map(String::as_str), Some("80"));
+        assert_eq!(metadata.get("timeline.fontSize").map(String::as_str), Some("20"));
+        assert_eq!(metadata.get("timeline.fontFamily").map(String::as_str), Some("Avenir Next"));
+        assert_eq!(metadata.get("timeline.useMaxWidth").map(String::as_str), Some("true"));
+        assert_eq!(metadata.get("timeline.disableMulticolor").map(String::as_str), Some("true"));
+        assert_eq!(metadata.get("timeline.theme.cScale0").map(String::as_str), Some("#112233"));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Rect(rect)
+                if rect.fill.as_deref() == Some("#112233")
+                    && rect.stroke.as_deref() == Some("#445566")
+        )));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Path(path)
+                if path.stroke_dash.as_deref() == Some(&[5.0, 5.0][..])
+        )));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::GlyphRun(run) if run.font_size == 20.0
+        )));
+    }
+
+    #[test]
     fn today_marker_style_lowers_to_backend_neutral_path() {
         let shaper = FakeShaper;
         let metrics = FakeMetrics;
@@ -9858,6 +10478,7 @@ mod tests {
             height: 180.0,
             accessibility_title: None,
             accessibility_description: None,
+            timeline_config: None,
             interactions: Vec::new(),
             items: vec![diagram_ir::LayoutedTemporalItem::TodayMarker {
                 x: 160.0,
@@ -11218,15 +11839,69 @@ mod tests {
         let opts = make_opts(&shaper, &metrics, &resolver);
         let layout = LayoutedVennDiagram {
             width: 400.0, height: 300.0, title: Some("Overlap".into()),
+            config: diagram_ir::VennConfig { width: 400.0, height: 300.0, ..Default::default() },
             circles: vec![diagram_ir::LayoutedVennCircle {
                 id: "A".into(), label: "Alpha".into(), cx: 200.0, cy: 160.0, radius: 90.0,
                 style: diagram_ir::VennStyle { fill: Some("#ff0000".into()), fill_opacity: Some(0.5), ..Default::default() },
             }],
-            labels: vec![diagram_ir::LayoutedVennLabel { text: "Alpha".into(), x: 200.0, y: 160.0, style: Default::default() }],
+            labels: vec![diagram_ir::LayoutedVennLabel { text: "Alpha".into(), x: 200.0, y: 160.0,
+                font_size: 12.0, style: Default::default() }],
+            debug_circles: vec![], debug_cells: vec![],
         };
         let scene = diagram_to_paint_venn(&layout, &opts);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Ellipse(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::GlyphRun(run) if run.font_size == 8.0)));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::GlyphRun(run) if run.font_size == 12.0)));
+    }
+
+    #[test]
+    fn venn_uses_theme_palette_unless_a_set_has_an_authored_fill() {
+        let shaper = FakeShaper; let metrics = FakeMetrics; let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let layout = LayoutedVennDiagram {
+            width: 400.0, height: 300.0, title: None,
+            config: diagram_ir::VennConfig { theme_colors: vec!["#112233".into(), "#445566".into()], ..Default::default() },
+            circles: vec![
+                diagram_ir::LayoutedVennCircle { id: "A".into(), label: "A".into(), cx: 140.0, cy: 150.0,
+                    radius: 80.0, style: Default::default() },
+                diagram_ir::LayoutedVennCircle { id: "B".into(), label: "B".into(), cx: 260.0, cy: 150.0,
+                    radius: 80.0, style: diagram_ir::VennStyle { fill: Some("#abcdef".into()), ..Default::default() } },
+            ], labels: vec![], debug_circles: vec![], debug_cells: vec![],
+        };
+        let scene = diagram_to_paint_venn(&layout, &opts);
+        let fills: Vec<_> = scene.instructions.iter().filter_map(|instruction| match instruction {
+            PaintInstruction::Ellipse(ellipse) => ellipse.fill.as_deref(), _ => None,
+        }).collect();
+        assert_eq!(fills, ["rgba(17,34,51,0.1)", "rgba(171,205,239,0.1)"]);
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("venn.themeColor1")),
+            Some(&"#112233".to_string()));
+        let ellipses: Vec<_> = scene.instructions.iter().filter_map(|instruction| match instruction {
+            PaintInstruction::Ellipse(ellipse) => Some(ellipse), _ => None,
+        }).collect();
+        assert_eq!(ellipses[0].stroke.as_deref(), Some("#112233"));
+        assert_eq!(ellipses[0].stroke_width, Some(1.25));
+        assert_eq!(ellipses[1].stroke.as_deref(), Some("#abcdef"));
+    }
+
+    #[test]
+    fn venn_lowers_debug_layout_to_dashed_backend_neutral_geometry() {
+        let shaper = FakeShaper; let metrics = FakeMetrics; let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let layout = LayoutedVennDiagram {
+            width: 800.0, height: 450.0, title: None, config: Default::default(), circles: vec![], labels: vec![],
+            debug_circles: vec![diagram_ir::LayoutedVennDebugCircle { cx: 200.0, cy: 180.0, radius: 60.0 }],
+            debug_cells: vec![diagram_ir::LayoutedVennDebugCell { x: 150.0, y: 160.0, width: 100.0, height: 40.0 }],
+        };
+        let scene = diagram_to_paint_venn(&layout, &opts);
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Ellipse(ellipse) if ellipse.stroke.as_deref() == Some("#800080")
+                && ellipse.stroke_dash.as_deref() == Some(&[3.0, 2.0]))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Rect(rect) if rect.stroke.as_deref() == Some("#008080")
+                && rect.stroke_dash.as_deref() == Some(&[2.0, 1.5]))));
     }
 
     #[test]
@@ -11234,28 +11909,126 @@ mod tests {
         let shaper = FakeShaper; let metrics = FakeMetrics; let resolver = FakeResolver;
         let opts = make_opts(&shaper, &metrics, &resolver);
         let layout = LayoutedIshikawaDiagram { width: 600.0, height: 360.0, effect: "Delay".into(),
+            config: diagram_ir::IshikawaConfig { font_size: 22.0, font_family: "Georgia".into(), line_color: "#123456".into(),
+                fill_color: "#abcdef".into(), text_color: "#654321".into(), ..Default::default() },
             effect_x: 430.0, effect_y: 150.0, effect_width: 150.0, effect_height: 60.0,
             spine_from: Point { x: 30.0, y: 180.0 }, spine_to: Point { x: 430.0, y: 180.0 },
+            spine_path: vec![Point { x: 30.0, y: 180.0 }, Point { x: 430.0, y: 180.0 }],
+            effect_outline: vec![Point { x: 430.0, y: 150.0 }, Point { x: 430.0, y: 210.0 },
+                Point { x: 580.0, y: 180.0 }],
+            effect_hatches: vec![],
             bones: vec![diagram_ir::LayoutedIshikawaBone { from: Point { x: 100.0, y: 80.0 },
                 to: Point { x: 180.0, y: 180.0 }, label: "People".into(),
-                label_position: Point { x: 100.0, y: 68.0 }, depth: 1 }], };
+                label_position: Point { x: 100.0, y: 68.0 }, label_width: 80.0, label_height: 28.0, depth: 1,
+                path: vec![Point { x: 100.0, y: 80.0 }, Point { x: 180.0, y: 180.0 }],
+                arrowhead: vec![Point { x: 180.0, y: 180.0 }, Point { x: 168.0, y: 180.0 }, Point { x: 180.0, y: 168.0 }],
+                label_outline: vec![Point { x: 60.0, y: 54.0 }, Point { x: 140.0, y: 54.0 },
+                    Point { x: 140.0, y: 82.0 }, Point { x: 60.0, y: 82.0 }], hatches: vec![] }], };
         let scene = diagram_to_paint_ishikawa(&layout, &opts);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
-        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
-        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#123456"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.fill.as_deref() == Some("#123456")
+                && path.commands.last() == Some(&PathCommand::Close))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#abcdef")
+                && rect.stroke.as_deref() == Some("#123456"))));
+        assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#abcdef"))).count(), 1);
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.fill.as_deref() == Some("#abcdef")
+                && path.stroke_width == Some(2.0))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::GlyphRun(run) if run.fill.as_deref() == Some("rgb(101, 67, 33)"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::GlyphRun(run) if (run.font_size - 22.0).abs() < 0.001)));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("ishikawa.fontFamily")), Some(&"Georgia".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("ishikawa.fontSize")), Some(&"22".to_string()));
     }
 
 
     #[test]
     fn wardley_lowers_to_backend_neutral_paths_ellipses_and_glyphs() {
         let shaper = FakeShaper; let metrics = FakeMetrics; let resolver = FakeResolver; let opts = make_opts(&shaper, &metrics, &resolver);
-        let layout = LayoutedWardleyDiagram { width: 500.0, height: 320.0, title: Some("Map".into()), stages: vec!["Genesis".into(), "Commodity".into()],
-            nodes: vec![diagram_ir::LayoutedWardleyNode { id: "a".into(), label: "User".into(), position: Point { x: 200.0, y: 100.0 }, anchor: true }],
-            links: vec![], evolves: vec![] };
+        let layout = LayoutedWardleyDiagram { width: 500.0, height: 320.0, title: Some("Map".into()),
+            accessibility_title: Some("Strategy map".into()), accessibility_description: Some("Components and dependencies".into()),
+            config: diagram_ir::WardleyConfig { show_grid: true, theme: diagram_ir::WardleyTheme {
+                background_color: "#f8fafc".into(), axis_color: "#123456".into(), axis_text_color: "#234567".into(),
+                grid_color: "#345678".into(), component_fill: "#abcdef".into(), component_stroke: "#456789".into(),
+                component_label_color: "#56789a".into(), link_stroke: "#6789ab".into(), evolution_stroke: "#dc2626".into(),
+                annotation_stroke: "#7c3aed".into(), annotation_text_color: "#f97316".into(), annotation_fill: "#fef3c7".into() },
+                ..Default::default() }, stages: vec!["Genesis".into(), "Commodity".into()], stage_boundaries: vec![0.3, 1.0],
+            nodes: vec![diagram_ir::LayoutedWardleyNode { id: "a".into(), label: "User".into(), position: Point { x: 200.0, y: 100.0 }, anchor: true, pipeline_parent: true, label_offset_x: None, label_offset_y: None, source_strategy: Some(WardleySourceStrategy::Build), inertia: false },
+                diagram_ir::LayoutedWardleyNode { id: "b".into(), label: "Child".into(), position: Point { x: 150.0, y: 120.0 }, anchor: false, pipeline_parent: false, label_offset_x: Some(-30.0), label_offset_y: Some(12.0), source_strategy: Some(WardleySourceStrategy::Market), inertia: true },
+                diagram_ir::LayoutedWardleyNode { id: "c".into(), label: "Normal".into(), position: Point { x: 260.0, y: 120.0 }, anchor: false, pipeline_parent: false, label_offset_x: None, label_offset_y: None, source_strategy: None, inertia: false }],
+            links: vec![diagram_ir::LayoutedWardleyLink { from: Point { x: 205.0, y: 102.0 }, to: Point { x: 155.0, y: 118.0 },
+                dashed: true, label: Some("constraint".into()), label_position: Point { x: 178.0, y: 102.0 },
+                label_angle: -17.7, flow: Some(WardleyLinkFlow::Bidirectional) }],
+            evolves: vec![], notes: vec![diagram_ir::LayoutedWardleyNote { text: "Decision".into(), position: Point { x: 240.0, y: 140.0 } }],
+            annotations_box: Some(Point { x: 60.0, y: 220.0 }), annotations: vec![diagram_ir::LayoutedWardleyAnnotation {
+                number: 1, text: "Risk".into(), positions: vec![Point { x: 280.0, y: 180.0 }, Point { x: 320.0, y: 160.0 }] }],
+            forces: vec![diagram_ir::LayoutedWardleyForce { label: "Adoption".into(), position: Point { x: 100.0, y: 170.0 },
+                kind: WardleyForceKind::Accelerator }, diagram_ir::LayoutedWardleyForce { label: "Legacy".into(),
+                position: Point { x: 360.0, y: 90.0 }, kind: WardleyForceKind::Deaccelerator }],
+            pipelines: vec![diagram_ir::LayoutedWardleyPipeline { x: 120.0, y: 110.0, width: 120.0, height: 24.0,
+                component_positions: vec![Point { x: 135.0, y: 122.0 }, Point { x: 225.0, y: 122.0 }] }] };
         let scene = diagram_to_paint_wardley(&layout, &opts);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Ellipse(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[2.0, 6.0]))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Ellipse(ellipse) if ellipse.fill.as_deref() == Some("#abcdef")
+                && ellipse.stroke.as_deref() == Some("#456789"))));
+        assert_eq!(scene.background, "#f8fafc");
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.showGrid")), Some(&"true".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.noteCount")), Some(&"1".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.annotationCount")), Some(&"1".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.forceCount")), Some(&"2".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.pipelineCount")), Some(&"1".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.stageBoundaryCount")), Some(&"2".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.customLabelCount")), Some(&"1".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.strategyCount")), Some(&"2".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.inertiaCount")), Some(&"1".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.flowLinkCount")), Some(&"1".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.dashedLinkCount")), Some(&"1".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.labeledLinkCount")), Some(&"1".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.annotationStroke")), Some(&"#7c3aed".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.annotationTextColor")), Some(&"#f97316".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("wardley.annotationFill")), Some(&"#fef3c7".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("accessibility.title")), Some(&"Strategy map".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("accessibility.description")), Some(&"Components and dependencies".to_string()));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Ellipse(ellipse) if ellipse.fill.as_deref() == Some("#fef3c7")
+                && ellipse.stroke.as_deref() == Some("#7c3aed"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#fef3c7")
+                && rect.stroke.as_deref() == Some("#7c3aed"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::GlyphRun(run) if run.fill.as_deref() == Some("rgb(249, 115, 22)"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[6.0, 6.0]))));
+        assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.fill.as_deref() == Some("#6789ab") && path.stroke.is_none())).count(), 2);
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Group(group) if group.transform.is_some())));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[4.0, 4.0]))));
+        assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.fill.as_deref() == Some("#ffffff")
+                && path.stroke.as_deref() == Some("#456789"))).count(), 2);
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Rect(rect) if rect.fill.is_none() && rect.corner_radius == Some(4.0)
+                && rect.stroke.as_deref() == Some("#123456"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[5.0, 5.0]))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Ellipse(ellipse) if ellipse.fill.as_deref() == Some("#eeeeee"))));
+        assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+            PaintInstruction::Ellipse(ellipse) if ellipse.fill.as_deref() == Some("#ffffff")
+                && ellipse.stroke_width == Some(2.0))).count(), 3);
     }
 
 

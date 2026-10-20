@@ -1,0 +1,11 @@
+{
+  "id": "IT-C509-ammonire",
+  "pathSegment": "IT-PATH-509-ARBITRO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-509-ARBITRO",
+      "order": 4
+    }
+  ]
+}

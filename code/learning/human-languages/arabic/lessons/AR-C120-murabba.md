@@ -14,7 +14,8 @@ romanization: "murabbā"
 concept_tag: AR-THINGS120-MURABBA
 prerequisites: [AR-C119-asha, AR-C119-khall]
 sounds: []
-roots: []
+roots: [r-b-b]
+etymology_hook: "murabbā: Lane gives murabbā, 'preserved', of ginger kept in rubb, thick fruit juice (r-b-b); jam is later"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C119-khall]
 <!-- hl-knowledge: introduces=[AR-LEX-C120-THINGS120-01]; assesses=[] -->
 
 **مربى** — *murabbā* — "jam".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مربى** (*murabbā*) is fruit preserved in *rubb*, a thickened fruit juice: Lane gives *murabbab* and *murabbā* for ginger so preserved, under the root *r-b-b* (Lane). Jam is the later use.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

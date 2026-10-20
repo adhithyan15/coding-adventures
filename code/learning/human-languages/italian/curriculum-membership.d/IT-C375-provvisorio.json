@@ -1,0 +1,11 @@
+{
+  "id": "IT-C375-provvisorio",
+  "pathSegment": "IT-PATH-375-PROGRAMMA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-375-PROGRAMMA",
+      "order": 2
+    }
+  ]
+}

@@ -14,7 +14,8 @@ romanization: "garmiyāṅ"
 concept_tag: UR-TIME94-GARMIYAN
 prerequisites: [UR-C94-mausam, UR-C94-bahar]
 sounds: []
-roots: []
+roots: [persian-garmi]
+etymology_hook: "garmiyāṅ: plural of garmī, usually traced to Persian garmī 'heat'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C94-bahar]
 <!-- hl-knowledge: introduces=[UR-LEX-C94-TIME94-04]; assesses=[] -->
 
 **گرمیاں** — *garmiyāṅ* — "summer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**گرمیاں** (*garmiyāṅ*) is the plural of *garmī*, "heat", which is usually traced to Persian *garmī*, "heat", built on *garm*, "warm".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

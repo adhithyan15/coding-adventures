@@ -1,0 +1,11 @@
+{
+  "id": "PT-C317-emigracao",
+  "pathSegment": "PT-PATH-317-REFORMA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-317-REFORMA",
+      "order": 3
+    }
+  ]
+}

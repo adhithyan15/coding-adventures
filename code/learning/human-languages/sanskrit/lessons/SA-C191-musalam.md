@@ -14,7 +14,8 @@ romanization: "musalam"
 concept_tag: SA-THG191-MUSALAM
 prerequisites: [SA-C191-kumbhah, SA-C191-ulukhalam]
 sounds: []
-roots: []
+roots: [sanskrit-musala]
+etymology_hook: "musala 'pestle', probably non-Aryan, perhaps borrowed from Dravidian (CDIAL 10223); Hindi mūsal"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C191-ulukhalam]
 <!-- hl-knowledge: introduces=[SA-LEX-C191-THG191-04]; assesses=[] -->
 
 **मुसलम्** — *musalam* — "a pestle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*musala* is probably not an Indo-Aryan word: CDIAL 10223 says its sounds point to a non-Aryan origin, with Bloch suggesting Dravidian. It lives on as Hindi *mūsal*, "small pestle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

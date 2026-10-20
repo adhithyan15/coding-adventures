@@ -1,0 +1,11 @@
+{
+  "id": "IT-C435-termosifone",
+  "pathSegment": "IT-PATH-435-RISCALDAMENTO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-435-RISCALDAMENTO",
+      "order": 1
+    }
+  ]
+}

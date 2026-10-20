@@ -15,6 +15,7 @@ concept_tag: UR-VERB-BATANA
 prerequisites: [UR-C52-katna, UR-C52-rokna]
 sounds: []
 roots: []
+etymology_hook: "batānā: origin not settled; CDIAL has no entry for it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C52-rokna]
 <!-- hl-knowledge: introduces=[UR-LEX-C52-VERBS52-04]; assesses=[] -->
 
 **بتانا** — *batānā* — "to tell".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **بتانا** (*batānā*) is not settled. CDIAL has no entry for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

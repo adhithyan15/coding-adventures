@@ -1,0 +1,11 @@
+{
+  "id": "IT-C504-bluffare",
+  "pathSegment": "IT-PATH-504-CARTE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-504-CARTE",
+      "order": 1
+    }
+  ]
+}

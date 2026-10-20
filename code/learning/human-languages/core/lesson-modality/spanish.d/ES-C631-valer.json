@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C631-valer",
+    "language": "spanish",
+    "chapter": 631,
+    "sequence": 21350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:68da2986f95a8f6d"
+  },
+  "findings": []
+}

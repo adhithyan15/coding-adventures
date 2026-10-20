@@ -14,7 +14,8 @@ romanization: "anna"
 concept_tag: JA-DEF83-ANNA
 prerequisites: [JA-C83-dono, JA-C83-konna, JA-C18-ippon]
 sounds: []
-roots: []
+roots: [japanese-a-that]
+etymology_hook: "anna: native, on a- 'over there'; usually explained as from ano yō na 'of that kind'"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [JA-C83-konna]
 <!-- hl-knowledge: introduces=[JA-LEX-C83-DEF83-05]; assesses=[] -->
 
 **あんな** — *anna* — "that kind of".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**あんな** (*anna*) is native, built on *a-*, the root that points away from both speakers; it is usually explained as a shortening of *ano yō na*, "of that kind". It is inherited rather than borrowed and has no kanji (JMdict).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

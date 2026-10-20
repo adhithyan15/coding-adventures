@@ -14,7 +14,8 @@ romanization: "beyn"
 concept_tag: FA-LOC86-BEYN
 prerequisites: [FA-C85-zir, FA-C86-ruye]
 sounds: []
-roots: []
+roots: [arabic-bayna]
+etymology_hook: "beyn ← Arabic bayna 'between', root b-y-n (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C86-ruye]
 <!-- hl-knowledge: introduces=[FA-LEX-C86-LOC86-02]; assesses=[] -->
 
 **بین** — *beyn* — "between".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*beyn* is borrowed from Arabic *bayna*, "between". Its Arabic root is *b-y-n* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

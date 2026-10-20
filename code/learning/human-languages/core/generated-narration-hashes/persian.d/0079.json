@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 79,
-  "sourceHash": "fnv1a64:d55f4cac13c4f2dc",
+  "sourceHash": "fnv1a64:396e27d89cd8cd6f",
   "lessonIds": [
     "FA-C79-zohr",
     "FA-C79-pariruz",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch79.txt",
   "json": "persian/narration/ch79.json",
-  "textHash": "fnv1a64:ab9266bfc1a354ce",
-  "jsonHash": "fnv1a64:9f5ea235754de578",
+  "textHash": "fnv1a64:55a19750f4c38536",
+  "jsonHash": "fnv1a64:39c68407da2cc248",
   "findings": []
 }

@@ -49,7 +49,8 @@ the wall around a city, the wall of a fort. The wall between two rooms is a
 English has one word for both and has to add an adjective — *city wall*,
 *interior wall*. That is a small, ordinary example of something this book will
 show you again and again: a language's vocabulary records what its speakers
-needed to tell apart.
+needed to tell apart. *Mūrus* is inherited: Old Latin spelled it *moerus*, and
+Lewis & Short links it with *moenia*, "city walls".
 
 From *mūrus* English has **mural**, a painting made *on* a wall, and **immure**,
 to shut someone inside one. The Roman wall of Britain is still called by its

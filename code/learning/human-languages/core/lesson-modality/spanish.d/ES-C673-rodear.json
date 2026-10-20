@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C673-rodear",
+    "language": "spanish",
+    "chapter": 673,
+    "sequence": 23520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b2ee497ca2b1c2ab"
+  },
+  "findings": []
+}

@@ -14,7 +14,8 @@ romanization: "peste"
 concept_tag: FA-THINGS101-PESTE
 prerequisites: [FA-C100-gerdu, FA-C101-badam]
 sounds: []
-roots: []
+roots: [persian-peste]
+etymology_hook: "peste ← Middle Persian pistag (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C101-badam]
 <!-- hl-knowledge: introduces=[FA-LEX-C101-THINGS101-02]; assesses=[] -->
 
 **پسته** — *peste* — "a pistachio".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*peste* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *pistag*, "pistachio" (EtymDB). English *pistachio* comes from this Persian word through Greek, Latin and Italian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

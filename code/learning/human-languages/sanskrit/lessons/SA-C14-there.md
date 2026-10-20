@@ -14,7 +14,8 @@ romanization: "tatra"
 concept_tag: SA-DEIXIS-THERE
 prerequisites: [SA-C14-here]
 sounds: []
-roots: []
+roots: [sanskrit-tatra]
+etymology_hook: "tatra 'there' ← the far pronoun base ta- + the place suffix -tra (MW); Marathi keeps it (CDIAL 5643)"
 duration:
   max_seconds: 210
 requires:
@@ -49,6 +50,12 @@ it does not mean anything on its own, it means whatever the speaker is pointing 
 Its partner is **अत्र** *atra*, which you have just met. The two of them
 differ by one sound at the front — **t-** for far — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Tatra* is built from the far pronoun base *ta-*, the base of *tat*, with the
+place ending *-tra* (MW). CDIAL 5643 traces Marathi's word for "there" to it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C14-DEIXIS-04] -->

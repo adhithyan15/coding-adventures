@@ -5,8 +5,8 @@ spine_node: SPINE-COUNT-ONE-TO-FIVE
 sequence: 2780
 chapter: 33
 type: listening-speaking
-headword: no
-romanization: no
+headword: 'no'
+romanization: 'no'
 gloss: nine — two sounds, and it rhymes with the two you learned first
 concept_tag: MW-NUMBER-NINE
 prerequisites: [MW-C33-aath]

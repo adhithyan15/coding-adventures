@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-444-INDIRIZZO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can find an address: the neighbourhood, the outskirts, tracking someone down, the house number and the intercom.",
+  "prerequisites": []
+}

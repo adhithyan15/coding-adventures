@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-726-HUMILDE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ES-EXT-726-HUMILDE"
+  ],
+  "after": []
+}

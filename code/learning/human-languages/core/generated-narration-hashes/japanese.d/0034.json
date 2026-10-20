@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 34,
-  "sourceHash": "fnv1a64:b307914fdef7c2a7",
+  "sourceHash": "fnv1a64:248848af9b3bb2c1",
   "lessonIds": [
     "JA-C34-suika",
     "JA-C34-daikon",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch34.txt",
   "json": "japanese/narration/ch34.json",
-  "textHash": "fnv1a64:88d44261ac553c46",
-  "jsonHash": "fnv1a64:26c675649080832c",
+  "textHash": "fnv1a64:d439a3aef5cbff4a",
+  "jsonHash": "fnv1a64:165d6f58cc06968d",
   "findings": []
 }

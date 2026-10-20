@@ -7,12 +7,12 @@ chapter: 26
 type: word
 headword: ليل
 romanization: "layl"
-gloss: "night" — the word already hiding inside muntaṣaf al-layl ('midnight'), and yawm's pan-Semitic partner, cognate with Hebrew layla
+gloss: '"night" — the word already hiding inside muntaṣaf al-layl (''midnight''), and yawm''s pan-Semitic partner, cognate with Hebrew layla'
 concept_tag: TIME-NIGHT
 prerequisites: [AR-C15-ad-duhr-muntasaf-al-layl, AR-C25-yawm]
 sounds: [lam-yeh-lam, long-i-glide]
 roots: [l-y-l]
-etymology_hook: "ليل (layl, 'night') ← Proto-Semitic *layl-, cognate with Hebrew לילה (layla/laylah — as in the Passover question 'mah nishtana ha-layla ha-zeh,' 'why is this NIGHT different'), Aramaic/Syriac lēlyā, and Akkadian līliātum; scholars genuinely debate whether Proto-Semitic had this simple triradical *layl- or a reduplicated *laylay- form — an open question, not settled"
+etymology_hook: "layl: an inherited Semitic noun, cousin of Hebrew laylā and Aramaic lēlyā 'night'"
 duration:
   max_seconds: 240
 requires:

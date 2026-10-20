@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 632,
+  "sourceHash": "fnv1a64:afc8d1cecb6b251d",
+  "lessonIds": [
+    "ES-C632-abonar",
+    "ES-C632-mensualidad",
+    "ES-C632-fraccionar",
+    "ES-C632-ingresar",
+    "ES-C632-pension"
+  ],
+  "tex": "spanish/book/chapters/ch632-pagos.tex"
+}

@@ -14,7 +14,8 @@ romanization: "sitāra"
 concept_tag: AR-THINGS127-SITARA
 prerequisites: [AR-C126-luba, AR-C126-thallaja]
 sounds: []
-roots: []
+roots: [s-t-r]
+etymology_hook: "sitāra: built on the root s-t-r, 'to veil, to cover' (Lane); sitāra is a thing that covers"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C126-thallaja]
 <!-- hl-knowledge: introduces=[AR-LEX-C127-THINGS127-01]; assesses=[] -->
 
 **ستارة** — *sitāra* — "a curtain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ستارة** (*sitāra*) is built on the native Arabic root *s-t-r*, "to veil, to cover" (Lane). *Sitāra* is a thing that covers.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

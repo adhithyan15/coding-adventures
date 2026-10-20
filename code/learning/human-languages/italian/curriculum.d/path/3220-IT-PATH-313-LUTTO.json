@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-313-LUTTO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-313-LUTTO"
+  ],
+  "after": []
+}

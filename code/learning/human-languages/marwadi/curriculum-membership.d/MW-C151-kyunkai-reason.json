@@ -1,0 +1,11 @@
+{
+  "id": "MW-C151-kyunkai-reason",
+  "pathSegment": "MW-PATH-151-JOINING",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-151-JOINING",
+      "order": 3
+    }
+  ]
+}

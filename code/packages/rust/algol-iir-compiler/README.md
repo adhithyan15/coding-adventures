@@ -239,8 +239,13 @@ already integral `-1`, `0`, or `1`; unrestricted runtime `entier` remains gated.
 Unary `+` and `-` around the built-in `sign` result preserve the same bound.
 Built-in integer `abs` may also map that bounded result to exact `0` or `1`
 before `entier`; a user-declared `abs` remains conservative.
-Variable-free exact additive zero terms may surround that bounded result before
-`entier`; nonzero or dynamic additive terms remain conservative.
+Variable-free whole-number additive terms may surround that bounded result
+before `entier` while their checked total stays within `2^53 - 1` units
+(`MAX_SIGN_OFFSET_UNITS`), the range in which `sign(x) ± offset` is still an
+exact binary64 integer. Fractional, oversized, and dynamic additive terms
+remain conservative. The budget is tracked through parentheses, supported
+standard-function wrappers, and runtime conditional branches; each conditional
+path receives its own budget.
 Variable-free exact multiplicative unit factors may likewise surround it;
 non-unit or variable factors remain conservative.
 Exact unit division is also permitted when the bounded result is the numerator;

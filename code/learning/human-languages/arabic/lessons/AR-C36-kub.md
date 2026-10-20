@@ -6,13 +6,13 @@ sequence: 980
 chapter: 36
 type: word
 headword: كوب
-gloss: "a cup" — the word that opens Arabic's broken plural, where more than one is not made by adding anything but by re-pouring the word into a new shape
+gloss: '"a cup" — the word that opens Arabic''s broken plural, where more than one is not made by adding anything but by re-pouring the word into a new shape'
 concept_tag: AR-OBJECT-CUP
 romanization: kūb
 prerequisites: [AR-C36-zayt, AR-C23-afwan]
 sounds: [long-uu, rtl-known-letters]
 roots: [k-w-b]
-etymology_hook: "كوب (kūb, 'a cup') has the plural أكواب (akwāb), which adds nothing to the end but re-pours the root ك-و-ب into the shape أَفْعال — Arabic's broken plural, and the first the learner meets head on; the word sits close to a cup-word that travelled the whole Mediterranean, Latin cuppa behind English cup, but whether Arabic borrowed it or merely resembles it is not settled, so it is offered as a resemblance rather than a descent"
+etymology_hook: "kūb: a handleless cup in Lane (k-w-b); a link with Latin cuppa is not settled"
 duration:
   max_seconds: 240
 requires:

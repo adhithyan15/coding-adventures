@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 367,
+  "sourceHash": "fnv1a64:9c94154cff535b65",
+  "lessonIds": [
+    "GE-C367-eventuell",
+    "GE-C367-moeglicherweise",
+    "GE-C367-zumindest",
+    "GE-C367-immerhin",
+    "GE-C367-womoeglich"
+  ],
+  "tex": "german/book/chapters/ch367-vielleicht.tex"
+}

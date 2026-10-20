@@ -6,7 +6,7 @@ sequence: 740
 chapter: 23
 type: word
 headword: நாள்
-gloss: "day" — Tamil's everyday, native Dravidian word, already met inside "tomorrow"; unlike Kannada's dina, Telugu's rōju, and Malayalam's divasam, Tamil's plain day-word is NOT a loanword at all — நாள் just is the everyday word, no Sanskrit or Persian substitute doing that job
+gloss: '"day" — Tamil''s everyday, native Dravidian word, already met inside "tomorrow"; unlike Kannada''s dina, Telugu''s rōju, and Malayalam''s divasam, Tamil''s plain day-word is NOT a loanword at all — நாள் just is the everyday word, no Sanskrit or Persian substitute doing that job'
 romanization: "nāḷ"
 concept_tag: TIME-DAY
 prerequisites: [TA-C04-naalai, TA-C17-transparent-middle-synonyms, TA-C22-paccai-manjal]

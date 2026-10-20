@@ -46,7 +46,7 @@ reviews_of: [GE-C94-immer]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**sofort** is *so* + an adverb meaning "forth": "so forth", straight on without a pause. The two grew together into one word.
+**sofort** is *so* + an adverb meaning "forth": "so forth", straight on without a pause. The two grew together into one word. *So* ← Proto-Germanic *\*swa* (EtymDB 2.1), and *fort* is the same word as English *forth*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

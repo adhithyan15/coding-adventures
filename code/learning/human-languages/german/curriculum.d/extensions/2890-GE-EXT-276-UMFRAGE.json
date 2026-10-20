@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-276-UMFRAGE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can report numbers in the news: a survey, statistics, a share, to increase and to fall.",
+  "prerequisites": []
+}

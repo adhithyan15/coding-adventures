@@ -1,0 +1,19 @@
+{
+  "chapter": 428,
+  "title": "Ärger im Bad",
+  "label": "ch:ge-arger-im-bad",
+  "canDo": "I can report a bathroom problem: the drain, a blockage, dripping, a leak and the plumber.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C428-klempner",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 428: I can report a bathroom problem: the drain, a blockage, dripping, a leak and the plumber.",
+    "assesses": [
+      "GE-LEX-C428-ABFLUSS-03",
+      "GE-LEX-C428-ABFLUSS-04",
+      "GE-LEX-C428-ABFLUSS-05"
+    ]
+  }
+}

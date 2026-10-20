@@ -14,7 +14,8 @@ romanization: "aṅgāraḥ"
 concept_tag: SA-THG165-ANGARAH
 prerequisites: [SA-C165-dhumah, SA-C165-jvala]
 sounds: []
-roots: []
+roots: [sanskrit-angara]
+etymology_hook: "aṅgāra 'glowing charcoal' (RV) is inherited, cousin of Lithuanian anglis 'coal' (MW; EtymDB); Hindi aṅgārā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C165-jvala]
 <!-- hl-knowledge: introduces=[SA-LEX-C165-THG165-04]; assesses=[] -->
 
 **अंगारः** — *aṅgāraḥ* — "a live coal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*aṅgāra* "charcoal, a live coal" is old, in the Rigveda, and is inherited from Indo-European: MW sets it beside Lithuanian *anglis* and Russian *ugol'* "coal", and EtymDB agrees. It lives on as Hindi *aṅgār*, *aṅgārā* "glowing charcoal" (CDIAL 125).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

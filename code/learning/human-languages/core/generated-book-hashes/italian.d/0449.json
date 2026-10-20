@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 449,
+  "sourceHash": "fnv1a64:cf3084d2e5df0cd4",
+  "lessonIds": [
+    "IT-C449-condominio",
+    "IT-C449-impalcatura",
+    "IT-C449-gru",
+    "IT-C449-crollare",
+    "IT-C449-sgomberare"
+  ],
+  "tex": "italian/book/chapters/ch449-lavori-in-corso.tex"
+}

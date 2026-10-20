@@ -15,6 +15,7 @@ concept_tag: FA-CHIZ241-AJIL
 prerequisites: [FA-C241-anjir, FA-C241-narangi]
 sounds: []
 roots: []
+etymology_hook: "âjil: origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C241-narangi]
 <!-- hl-knowledge: introduces=[FA-LEX-C241-CHIZ241-04]; assesses=[] -->
 
 **آجیل** — *âjil* — "mixed nuts".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âjil* is the word for mixed nuts, but no source used here gives its origin, which is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

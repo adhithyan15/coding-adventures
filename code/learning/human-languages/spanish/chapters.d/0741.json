@@ -1,0 +1,19 @@
+{
+  "chapter": 741,
+  "title": "Cansancio y descanso",
+  "label": "ch:es-cansancio-y-descanso",
+  "canDo": "I can say how tired I am and how I sleep.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C741-siesta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 741: I can say how tired I am and how I sleep.",
+    "assesses": [
+      "ES-LEX-C741-CANSANCIO-03",
+      "ES-LEX-C741-CANSANCIO-04",
+      "ES-LEX-C741-CANSANCIO-05"
+    ]
+  }
+}

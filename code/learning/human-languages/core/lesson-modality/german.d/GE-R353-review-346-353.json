@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-R353-review-346-353",
+    "language": "german",
+    "chapter": 353,
+    "sequence": 19220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c3f1e80a26785679"
+  },
+  "findings": []
+}

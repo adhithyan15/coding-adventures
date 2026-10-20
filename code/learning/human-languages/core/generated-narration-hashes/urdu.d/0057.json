@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 57,
-  "sourceHash": "fnv1a64:8e099b8700471350",
+  "sourceHash": "fnv1a64:342f8a4abab84986",
   "lessonIds": [
     "UR-C57-narangi",
     "UR-C57-lemu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch57.txt",
   "json": "urdu/narration/ch57.json",
-  "textHash": "fnv1a64:2b4a8639f5b0d382",
-  "jsonHash": "fnv1a64:df56d21fd5989aa5",
+  "textHash": "fnv1a64:6880ddce4b684ed4",
+  "jsonHash": "fnv1a64:fcc08a0841102bcd",
   "findings": []
 }

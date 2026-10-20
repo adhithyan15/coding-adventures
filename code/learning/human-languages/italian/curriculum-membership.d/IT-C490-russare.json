@@ -1,0 +1,11 @@
+{
+  "id": "IT-C490-russare",
+  "pathSegment": "IT-PATH-490-SONNO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-490-SONNO",
+      "order": 1
+    }
+  ]
+}

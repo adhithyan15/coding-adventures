@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 401,
+  "sourceHash": "fnv1a64:1f9ae04f65b43c34",
+  "lessonIds": [
+    "FR-C401-accelerer",
+    "FR-C401-braquer",
+    "FR-C401-deraper",
+    "FR-C401-caler",
+    "FR-C401-pedale"
+  ],
+  "tex": "french/book/chapters/ch401-au-volant.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 292,
+  "title": "Repente et cōnfestim",
+  "label": "ch:la-repente-et-confestim",
+  "canDo": "I can tell how suddenly things happened: suddenly, at once, straightaway, in an instant and immediately.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C292-protinus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 292: I can tell how suddenly things happened: suddenly, at once, straightaway, in an instant and immediately.",
+    "assesses": [
+      "LA-LEX-C292-REPENTE-03",
+      "LA-LEX-C292-REPENTE-04",
+      "LA-LEX-C292-REPENTE-05"
+    ]
+  }
+}

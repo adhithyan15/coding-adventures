@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:90dd2787819bab86",
+  "lessonIds": [
+    "GE-C334-zustimmen",
+    "GE-C334-zustimmung",
+    "GE-C334-einverstanden",
+    "GE-C334-zugeben",
+    "GE-C334-einraeumen"
+  ],
+  "tex": "german/book/chapters/ch334-zustimmen-und-zugeben.tex"
+}

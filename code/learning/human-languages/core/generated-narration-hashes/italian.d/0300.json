@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:675ecce00fbf86df",
+  "lessonIds": [
+    "IT-C300-travolgere",
+    "IT-C300-ferito",
+    "IT-C300-ferire",
+    "IT-C300-illeso",
+    "IT-C300-cavarsela"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch300.txt",
+  "json": "italian/narration/ch300.json",
+  "textHash": "fnv1a64:e7b04fe57914b6f3",
+  "jsonHash": "fnv1a64:1792a6c66498624d",
+  "findings": []
+}

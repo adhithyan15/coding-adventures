@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:f3a642a145260541",
+  "lessonIds": [
+    "IT-C392-imputato",
+    "IT-C392-difesa",
+    "IT-C392-sentenza",
+    "IT-C392-condanna",
+    "IT-C392-pena"
+  ],
+  "tex": "italian/book/chapters/ch392-in-tribunale.tex"
+}

@@ -14,7 +14,8 @@ romanization: "daryā"
 concept_tag: UR-NATURE64-DARYA
 prerequisites: [UR-C64-pahar, UR-C64-jangal]
 sounds: []
-roots: []
+roots: [persian-darya]
+etymology_hook: "daryā: usually traced to Persian daryā 'sea, great river'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C64-jangal]
 <!-- hl-knowledge: introduces=[UR-LEX-C64-NATURE64-04]; assesses=[] -->
 
 **دریا** — *daryā* — "a river".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دریا** (*daryā*) is a loan, usually traced to Persian *daryā*, "sea, great river".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

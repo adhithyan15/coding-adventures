@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-363-CONCEDO",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "LA-EXT-363-CONCEDO"
+  ],
+  "after": []
+}

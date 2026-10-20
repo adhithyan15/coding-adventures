@@ -1,0 +1,11 @@
+{
+  "id": "PT-C355-contratar",
+  "pathSegment": "PT-PATH-355-CANDIDATURA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-355-CANDIDATURA",
+      "order": 4
+    }
+  ]
+}

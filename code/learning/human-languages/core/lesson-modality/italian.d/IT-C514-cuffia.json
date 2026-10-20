@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C514-cuffia",
+    "language": "italian",
+    "chapter": 514,
+    "sequence": 28810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d071b1c91ce0ac7"
+  },
+  "findings": []
+}

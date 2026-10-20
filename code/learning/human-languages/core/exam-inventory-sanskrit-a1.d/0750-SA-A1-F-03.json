@@ -1,0 +1,22 @@
+{
+  "id": "SA-A1-F-03",
+  "category": "Giving and asking for information",
+  "label": "confirm or deny what was just said",
+  "probe": [
+    "SA-LEX-AM-YES",
+    "SA-LEX-NA-NO",
+    "SA-LEX-C27-REPLY-04",
+    "SA-CULTURE-SANSKRIT-ANSWERING"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "CEFR-CV",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-F1-04",
+    "A1-F1-05"
+  ],
+  "note": "ām, na and satyam ('true'). The TAG question Spanish asks for — 'you're coming, aren't you?' — has no taught Sanskrit exponent (nanu, na vā), so the confirm half is covered and the asking-for-confirmation half is not."
+}

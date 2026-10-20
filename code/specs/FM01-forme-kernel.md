@@ -1,6 +1,8 @@
 # FM01 — Forme Kernel: Types, Kinds, Stages, Capabilities, Identity, Manifest
 
-> **Status:** Code-ready specification. Read alongside FM00 (vision).
+> **Status:** Implemented through the completed Forme v1 release contract. The
+> 2026-10-18 audit found one remaining conformance gap in extension-kind subtype
+> enforcement, tracked as FM-B074. Read alongside FM00 (vision).
 > **Scope:** The kernel packages that every other Forme package imports —
 > `forme-types`, `forme-stage`, `forme-capability`, `forme-identity`,
 > `forme-manifest`, and the shared error model.
@@ -16,7 +18,7 @@
 | Identity and revision primitives | Implemented | `forme-identity` covers logical IDs, UUIDv7 identities, and canonical revisions. |
 | Manifest validation | Implemented | `forme-manifest` validates first-party manifest data; FM02 owns host enforcement. |
 | Shared diagnostics | Implemented | `forme-errors` supplies the common error surface. |
-| Interactivity shape | Placeholder active for compatibility | [FM05](FM05-forme-interactivity-ir.md) defines the normative v1 contract; FM-B059 supplies its dedicated package before a later kernel migration. |
+| Style/interactivity compatibility shapes | Retained by design | `forme-types` remains the dependency-graph leaf with minimal carrier envelopes; the normative FM04/FM05 contracts and validators live in `forme-style-ir` and `forme-interactivity-ir`. |
 | Terminal output shape | Implemented | `TerminalBuffer` carries bounded ANSI text, exact usage, canonical provenance, a content/config revision, and explicit non-web degradation records in the live FM-B017 product path. |
 
 ---
@@ -726,31 +728,42 @@ subtype-of    = "ContentNode"  # optional
 ```
 
 The host registers the new kind descriptor and makes it available to
-stages that declare it as input or output.
+stages that declare it as input or output. Registration constructs one
+immutable global registry for the pipeline. The host rejects duplicate kind
+names across plugins, missing parents, cycles, and any subtype edge whose
+resolved parent descriptor changes identity or version while the registry is
+being built; discovery order must never choose a kind's meaning.
 
 Kernel-level kinds cannot be extended — plugins cannot change
 `ContentSource` — but they can declare kinds that are **subtypes** of
-kernel kinds. A stage declaring `ext:youtube-embed` as input accepts
-any `ContentNode` that matches the subtype's constraints.
+kernel kinds. A stage producing `ext:youtube-embed` may feed a stage consuming
+`ContentNode`; the reverse is unsafe and is rejected. Narrowing a generic
+`ContentNode` to `ext:youtube-embed` requires an explicit refinement stage that
+validates the subtype schema before declaring the specialized output kind.
 
 Subtypes let plugins specialise. For instance, a first-party
 `parse-markdown` produces plain `ContentNode`; a plugin can register
 `ext:blog-post` as a subtype of `ContentNode` with required frontmatter
-fields, and a downstream `collect-chronological` that declares
-`ext:blog-post` as input statically excludes non-posts.
+fields. A validating refinement stage consumes plain `ContentNode`, checks the
+required fields, and produces `ext:blog-post`; downstream stages that consume
+`ext:blog-post` then statically exclude unrefined nodes, while ordinary
+`ContentNode` consumers safely accept either kind.
 
 ### 2.6 Kind compatibility rules
 
 When the orchestrator wires stage A's output edge to stage B's input
 edge, it checks:
 
-1. **Name match or subtype.** `B.consumes.name === A.produces.name`,
-   OR `B.consumes.name` is a subtype of `A.produces.name` (via the
-   `subtype-of` chain in the kind registry).
+1. **Name match or safe covariance.** `B.consumes.name === A.produces.name`,
+   OR `A.produces.name` is a subtype of `B.consumes.name` (via the
+   `subtype-of` chain in the immutable kind registry). A base-kind producer
+   never satisfies a specialized consumer.
 2. **Version compatibility.** `A.produces.version >= B.consumes.version`,
    subject to major-version match. A `1.2` producer can feed a `1.1`
    consumer; a `2.0` producer cannot feed a `1.x` consumer without an
-   explicit adapter.
+   explicit adapter. A subtype edge is bound to the exact parent descriptor
+   and version resolved when the registry is built; traversal checks version
+   compatibility at every edge rather than comparing only the endpoint names.
 3. **Discriminant match (if declared).** If both declare a
    discriminant, they must be equal.
 4. **Constraint satisfaction.** Constraints are open-ended. A
@@ -758,7 +771,9 @@ edge, it checks:
    produces. The orchestrator does best-effort structural matching;
    unmatched constraints generate warnings, not errors, so the
    user can declare custom constraints without knowing how to teach
-   the orchestrator about them.
+   the orchestrator about them. Advisory constraints never authorize
+   base-to-subtype narrowing; only a declared specialized producer or an
+   explicit validating refinement stage can do that.
 
 If compatibility fails, the orchestrator refuses to start the pipeline
 with an error pointing at the exact edge.

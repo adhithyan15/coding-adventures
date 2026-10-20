@@ -14,7 +14,8 @@ romanization: "misṭara"
 concept_tag: AR-AMAL253-MISTARA
 prerequisites: [AR-C252-barid, AR-C253-tijara]
 sounds: []
-roots: []
+roots: [s-ṭ-r]
+etymology_hook: "misṭara: built on the root s-ṭ-r, 'to write; to rule lines' (Lane); a thing for ruling lines"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C253-tijara]
 <!-- hl-knowledge: introduces=[AR-LEX-C253-AMAL253-02]; assesses=[] -->
 
 **مسطرة** — *misṭara* — "a ruler".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مسطرة** (*misṭara*) is built on the native Arabic root *s-ṭ-r*, "to write; to rule lines" (Lane). *Misṭara* is an instrument noun, "a thing for ruling lines".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

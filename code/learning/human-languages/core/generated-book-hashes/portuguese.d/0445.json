@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 445,
+  "sourceHash": "fnv1a64:9702e67cb7debcb6",
+  "lessonIds": [
+    "PT-C445-andaime",
+    "PT-C445-grua",
+    "PT-C445-estaleiro",
+    "PT-C445-desabar",
+    "PT-C445-demolir"
+  ],
+  "tex": "portuguese/book/chapters/ch445-obras-na-rua.tex"
+}

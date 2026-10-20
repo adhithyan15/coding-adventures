@@ -1,0 +1,19 @@
+{
+  "chapter": 295,
+  "title": "Les aveux",
+  "label": "ch:fr-les-aveux",
+  "canDo": "I can say that someone confessed, had an accomplice, was acquitted or was let go.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C295-relacher",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 295: I can say that someone confessed, had an accomplice, was acquitted or was let go.",
+    "assesses": [
+      "FR-LEX-C295-AVEUX-03",
+      "FR-LEX-C295-AVEUX-04",
+      "FR-LEX-C295-AVEUX-05"
+    ]
+  }
+}

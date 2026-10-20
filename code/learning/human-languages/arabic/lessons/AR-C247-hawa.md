@@ -14,7 +14,8 @@ romanization: "hawāʾ"
 concept_tag: AR-SHAY247-HAWA
 prerequisites: [AR-C246-tawam, AR-C246-aris]
 sounds: []
-roots: []
+roots: [h-w-y]
+etymology_hook: "hawāʾ: built on the root h-w-y, 'to fall' (Lane); hawāʾ is the air"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C246-aris]
 <!-- hl-knowledge: introduces=[AR-LEX-C247-SHAY247-01]; assesses=[] -->
 
 **هواء** — *hawāʾ* — "air".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**هواء** (*hawāʾ*) is built on the native Arabic root *h-w-y*, "to fall; air" (Lane). *Hawāʾ* is the air.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

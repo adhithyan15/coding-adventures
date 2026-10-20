@@ -1,0 +1,19 @@
+{
+  "chapter": 379,
+  "title": "Passar ou chumbar",
+  "label": "ch:pt-passar-ou-chumbar",
+  "canDo": "I can talk about results: failing or passing, the assessment, my average mark and my degree.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "PT-C379-licenciatura",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 379: I can talk about results: failing or passing, the assessment, my average mark and my degree.",
+    "assesses": [
+      "PT-LEX-C379-CHUMBAR-03",
+      "PT-LEX-C379-CHUMBAR-04",
+      "PT-LEX-C379-CHUMBAR-05"
+    ]
+  }
+}

@@ -14,7 +14,8 @@ romanization: "sharīf"
 concept_tag: UR-SIFAT223-SHARIF
 prerequisites: [UR-C222-sachcha, UR-C223-chalak]
 sounds: []
-roots: []
+roots: [arabic-sharif]
+etymology_hook: "sharīf ← Arabic sharīf 'noble, of high rank', through Persian (Lane, root sh-r-f)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C223-chalak]
 <!-- hl-knowledge: introduces=[UR-LEX-C223-SIFAT223-02]; assesses=[] -->
 
 **شریف** — *sharīf* — "decent, well-mannered".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شریف** (*sharīf*) is a loan from Arabic *sharīf*, "noble, of high rank", which reached Urdu through Persian. Its Arabic root is *sh-r-f* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

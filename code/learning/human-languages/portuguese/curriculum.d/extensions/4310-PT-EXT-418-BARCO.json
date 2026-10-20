@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-418-BARCO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about small boats: the dinghy, the oar, rowing, the canoe and the boatman.",
+  "prerequisites": []
+}

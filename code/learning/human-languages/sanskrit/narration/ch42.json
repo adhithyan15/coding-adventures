@@ -4,7 +4,7 @@
   "chapter": 42,
   "title": "Five More Replies",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:17e16fc0d4f27c02",
+  "sourceHash": "fnv1a64:6ea37ce9cde52820",
   "lessons": [
     {
       "id": "SA-C42-sometimes",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e271b10ae5df30da",
+      "sourceHash": "fnv1a64:faaf0ae4af7444d3",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Kadācit is built from kadā, \"when\", and the particle cit, which turns a question word into an indefinite one (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -74,7 +85,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -132,7 +143,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -163,7 +174,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7dd6b163f5c92909",
+      "sourceHash": "fnv1a64:4af6a9b19cd9c932",
       "notice": null,
       "blocks": [
         {
@@ -208,6 +219,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sahasā is the instrumental case of sahas, \"force, might\", built on the root √sah, \"to prevail\" (MW): \"by force\", and so \"at a rush\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -218,7 +240,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -276,7 +298,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -307,7 +329,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:907daadb241bbf3b",
+      "sourceHash": "fnv1a64:c7404181f15371da",
       "notice": null,
       "blocks": [
         {
@@ -342,7 +364,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it when something holds most of the time and you would rather not promise more than that. It is pra-, \"forward\", with the going-piece you met in विहगः: what runs out in front, what happens in the main."
+              "text": "Say it when something holds most of the time and you would rather not promise more than that. It is usually read as pra-, \"forward\", with aya, \"a going\": what runs out in front, what happens in the main."
             },
             {
               "kind": "speech",
@@ -352,6 +374,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CDIAL 8951 explains prāyaḥ as an old comparative connected with puru, \"much\", which speakers later heard as pra + aya, \"going forth\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -362,7 +395,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -420,7 +453,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -451,7 +484,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e2423114103ef3f9",
+      "sourceHash": "fnv1a64:1ab284dd9c966231",
       "notice": null,
       "blocks": [
         {
@@ -496,6 +529,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Kiñcit is built from kim, \"what\", and the particle cit (CDIAL 3144). It lives on as Hindi kuch, \"some, something\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -506,7 +550,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -564,7 +608,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -595,7 +639,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3b45afdc77b78c94",
+      "sourceHash": "fnv1a64:28961bd3908faa0e",
       "notice": null,
       "blocks": [
         {

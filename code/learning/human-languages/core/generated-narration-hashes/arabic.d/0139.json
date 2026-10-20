@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 139,
-  "sourceHash": "fnv1a64:6d70959ec1182287",
+  "sourceHash": "fnv1a64:5e629d2826861512",
   "lessonIds": [
     "AR-C139-lihya",
     "AR-C139-sharib",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "arabic/narration/ch139.txt",
   "json": "arabic/narration/ch139.json",
-  "textHash": "fnv1a64:a107a12101ab78b7",
-  "jsonHash": "fnv1a64:e362c574e18fca25",
+  "textHash": "fnv1a64:15ed330d06070e1a",
+  "jsonHash": "fnv1a64:51610327853bec63",
   "findings": []
 }

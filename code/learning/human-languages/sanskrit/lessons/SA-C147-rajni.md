@@ -14,7 +14,8 @@ romanization: "rājñī"
 concept_tag: SA-PPL147-RAJNI
 prerequisites: [SA-C147-svami, SA-C147-sevakah]
 sounds: []
-roots: []
+roots: [sanskrit-rajni, sanskrit-rajan]
+etymology_hook: "rājñī 'queen' is the feminine of rājan 'king' (MW); Hindi rānī (CDIAL 10692)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C147-sevakah]
 <!-- hl-knowledge: introduces=[SA-LEX-C147-PPL147-03]; assesses=[] -->
 
 **राज्ञी** — *rājñī* — "a queen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*rājñī* is the feminine of *rājan* "king" (MW), already in the Vājasaneyi Saṃhitā. It lives on as Hindi *rānī* "queen" (CDIAL 10692).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

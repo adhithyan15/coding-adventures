@@ -14,7 +14,8 @@ romanization: "pārk"
 concept_tag: UR-LOC101-PARK
 prerequisites: [UR-C100-thana, UR-C101-mahal]
 sounds: []
-roots: []
+roots: [english-park]
+etymology_hook: "pārk ← English park"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C101-mahal]
 <!-- hl-knowledge: introduces=[UR-LEX-C101-LOC101-02]; assesses=[] -->
 
 **پارک** — *pārk* — "a park".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پارک** (*pārk*) is a loan from English *park*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

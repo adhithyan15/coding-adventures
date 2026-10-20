@@ -14,7 +14,8 @@ romanization: "al-māḍī"
 concept_tag: AR-MADI156-AL-MADI
 prerequisites: [AR-C156-hadithan, AR-C156-bil-fil]
 sounds: []
-roots: []
+roots: [m-ḍ-y]
+etymology_hook: "al-māḍī: built on the root m-ḍ-y, 'to pass, to go on' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C156-bil-fil]
 <!-- hl-knowledge: introduces=[AR-LEX-C156-MADI156-03]; assesses=[] -->
 
 **الماضي** — *al-māḍī* — "last, past". After a time word: **الأسبوع الماضي** — *al-usbūʿ al-māḍī* — "last week"; **العام الماضي** — *al-ʿām al-māḍī* — "last year".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**الماضي** (*al-māḍī*) is built on the native Arabic root *m-ḍ-y*, "to pass, to go on" (Lane). *Al-māḍī* is the active participle with the article, "the one that has passed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

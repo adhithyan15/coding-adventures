@@ -14,7 +14,8 @@ romanization: "niyya"
 concept_tag: AR-WANT115-NIYYA
 prerequisites: [AR-C115-faddala, AR-C115-talaba]
 sounds: []
-roots: []
+roots: [n-w-y]
+etymology_hook: "niyya: built on the root n-w-y, 'to intend' (Lane); niyya is the noun, 'an intention'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C115-talaba]
 <!-- hl-knowledge: introduces=[AR-LEX-C115-WANT115-05]; assesses=[] -->
 
 **نية** — *niyya* — "an intention".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نية** (*niyya*) is built on the native Arabic root *n-w-y*, "to intend" (Lane). *Niyya* is the noun, "an intention".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

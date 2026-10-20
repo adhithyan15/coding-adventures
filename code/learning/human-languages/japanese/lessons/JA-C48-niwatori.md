@@ -14,7 +14,8 @@ romanization: "niwatori"
 concept_tag: JA-ANIMALS48-NIWATORI
 prerequisites: [JA-C47-kame, JA-C47-ookami]
 sounds: []
-roots: []
+roots: [japanese-niwa, japanese-tori]
+etymology_hook: "niwatori: native compound niwa 'yard' + tori 'bird'; the yard bird"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C47-ookami]
 <!-- hl-knowledge: introduces=[JA-LEX-C48-ANIMALS48-01]; assesses=[] -->
 
 **にわとり** — *niwatori* — "a chicken".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**にわとり** (*niwatori*) is a native compound, inherited rather than borrowed: *niwa*, "yard, garden", and *tori*, "bird", the bird of the yard. JMdict writes it with one character for "chicken", read as a whole.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

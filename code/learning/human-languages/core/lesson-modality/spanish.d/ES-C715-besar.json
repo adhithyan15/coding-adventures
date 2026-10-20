@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C715-besar",
+    "language": "spanish",
+    "chapter": 715,
+    "sequence": 25690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d126e5257ce8687c"
+  },
+  "findings": []
+}

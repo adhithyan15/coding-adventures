@@ -14,7 +14,8 @@ romanization: "milnā"
 concept_tag: UR-VERB-MILNA
 prerequisites: [UR-C50-gana, UR-C50-nachna]
 sounds: []
-roots: []
+roots: [mil-meet]
+etymology_hook: "milnā ← Sanskrit milati 'meets', a tadbhava (CDIAL 10133)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C50-nachna]
 <!-- hl-knowledge: introduces=[UR-LEX-C50-VERBS50-03]; assesses=[] -->
 
 **ملنا** — *milnā* — "to meet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ملنا** (*milnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *milati*, "meets" (CDIAL 10133).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

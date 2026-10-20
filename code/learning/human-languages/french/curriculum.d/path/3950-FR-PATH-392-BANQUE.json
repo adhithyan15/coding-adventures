@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-392-BANQUE",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "FR-EXT-392-BANQUE"
+  ],
+  "after": []
+}

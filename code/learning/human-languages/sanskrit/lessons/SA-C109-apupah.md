@@ -14,7 +14,8 @@ romanization: "apūpaḥ"
 concept_tag: SA-THINGS109-APUPAH
 prerequisites: [SA-C109-panasam, SA-C109-nimbukam]
 sounds: []
-roots: []
+roots: [sanskrit-apupa]
+etymology_hook: "apūpa 'cake' (RV); Charpentier took it from Dravidian, cf. Tamil appam (CDIAL 491); Hindi pūā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C109-nimbukam]
 <!-- hl-knowledge: introduces=[SA-LEX-C109-THINGS109-05]; assesses=[] -->
 
 **अपूपः** — *apūpaḥ* — "a cake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*apūpa* "a cake of flour" is old, in the Rigveda (MW), but its origin is uncertain: CDIAL 491 reports Charpentier's view that it was borrowed from Dravidian, comparing Tamil *appam*. It lives on as Hindi *pūā*, a sweet fried cake (CDIAL 491).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

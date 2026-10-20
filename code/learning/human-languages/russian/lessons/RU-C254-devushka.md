@@ -47,7 +47,7 @@ reviews_of: [RU-C254-paren]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**девушка** is *дева*, "a maiden", with the fond *-ушка*.
+**девушка** is *дева*, "a maiden", with the fond *-ушка*. Vasmer derives *дева* from an Indo-European root "to suckle", the root behind Latin *fēmina*, "woman".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

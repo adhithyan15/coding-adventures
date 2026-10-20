@@ -14,7 +14,8 @@ romanization: "mughlaq"
 concept_tag: AR-QUAL146-MUGHLAQ
 prerequisites: [AR-C146-amin, AR-C146-maftuh]
 sounds: []
-roots: []
+roots: [gh-l-q]
+etymology_hook: "mughlaq: built on the root gh-l-q, 'to shut, to lock' (Lane); mughlaq is the Form IV passive participle, 'shut'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C146-maftuh]
 <!-- hl-knowledge: introduces=[AR-LEX-C146-QUAL146-05]; assesses=[] -->
 
 **مغلق** — *mughlaq* — "closed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مغلق** (*mughlaq*) is built on the native Arabic root *gh-l-q*, "to shut, to lock" (Lane). *Mughlaq* is the Form IV passive participle, "shut".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

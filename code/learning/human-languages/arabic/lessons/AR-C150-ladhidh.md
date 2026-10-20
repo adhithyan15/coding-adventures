@@ -14,7 +14,8 @@ romanization: "ladhīdh"
 concept_tag: AR-QUAL150-LADHIDH
 prerequisites: [AR-C149-gharib, AR-C149-mumti]
 sounds: []
-roots: []
+roots: [l-dh-dh]
+etymology_hook: "ladhīdh: built on the root l-dh-dh, 'to be delicious' (Lane); ladhīdh is the faʿīl adjective, 'delicious'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C149-mumti]
 <!-- hl-knowledge: introduces=[AR-LEX-C150-QUAL150-01]; assesses=[] -->
 
 **لذيذ** — *ladhīdh* — "delicious".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لذيذ** (*ladhīdh*) is built on the native Arabic root *l-dh-dh*, "to be delicious" (Lane). *Ladhīdh* is the *faʿīl* adjective, "delicious".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

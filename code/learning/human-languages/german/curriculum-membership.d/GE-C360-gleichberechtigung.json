@@ -1,0 +1,11 @@
+{
+  "id": "GE-C360-gleichberechtigung",
+  "pathSegment": "GE-PATH-360-VORURTEIL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-360-VORURTEIL",
+      "order": 4
+    }
+  ]
+}

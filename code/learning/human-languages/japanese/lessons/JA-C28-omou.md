@@ -14,7 +14,8 @@ romanization: "omou"
 concept_tag: JA-VERB-OMOU
 prerequisites: [JA-C28-utau, JA-C28-iu]
 sounds: []
-roots: []
+roots: [japanese-omou]
+etymology_hook: "omou: native Japanese, inherited, not borrowed; kanji 思う attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C28-iu]
 <!-- hl-knowledge: introduces=[JA-LEX-C28-VERBS28-04]; assesses=[] -->
 
 **おもう** — *omou* — "to think".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**おもう** (*omou*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

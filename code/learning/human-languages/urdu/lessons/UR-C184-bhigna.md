@@ -14,7 +14,8 @@ romanization: "bhīgnā"
 concept_tag: UR-VERB-BHIGNA
 prerequisites: [UR-C184-sujna, UR-C184-kanpna]
 sounds: []
-roots: []
+roots: [indo-aryan-bhiyagna]
+etymology_hook: "bhīgnā ← *bhiyagna 'smeared, wet', a reconstructed form; a tadbhava (CDIAL 9500)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C184-kanpna]
 <!-- hl-knowledge: introduces=[UR-LEX-C184-ACT184-04]; assesses=[] -->
 
 **بھیگنا** — *bhīgnā* — "to get wet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بھیگنا** (*bhīgnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*bhiyagna*, "smeared, wet", a form CDIAL reconstructs from its descendants (CDIAL 9500). CDIAL builds it on Sanskrit *añj-*, "to anoint".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

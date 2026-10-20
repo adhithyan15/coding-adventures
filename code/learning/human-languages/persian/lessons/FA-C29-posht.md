@@ -14,7 +14,8 @@ romanization: "posht"
 concept_tag: FA-BODY29-POSHT
 prerequisites: [FA-C29-khun, FA-C29-zanu]
 sounds: []
-roots: []
+roots: [persian-posht]
+etymology_hook: "posht: inherited, usually traced to Middle Persian pušt"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C29-zanu]
 <!-- hl-knowledge: introduces=[FA-LEX-C29-BODY29-03]; assesses=[] -->
 
 **پشت** — *posht* — "the back".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*posht* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *pušt*, "back".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C467-vaidoso",
+  "pathSegment": "PT-PATH-467-ORGULHO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-467-ORGULHO",
+      "order": 2
+    }
+  ]
+}

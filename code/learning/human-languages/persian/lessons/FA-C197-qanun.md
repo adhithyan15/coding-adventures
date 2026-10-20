@@ -14,7 +14,8 @@ romanization: "qânun"
 concept_tag: FA-CHERA197-QANUN
 prerequisites: [FA-C196-hamkaf, FA-C197-shart]
 sounds: []
-roots: []
+roots: [arabic-qanun, greek-kanon]
+etymology_hook: "qânun ← Arabic qānūn ← Greek kanōn 'rule' (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C197-shart]
 <!-- hl-knowledge: introduces=[FA-LEX-C197-CHERA197-02]; assesses=[] -->
 
 **قانون** — *qânun* — "a law, a rule".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*qânun* is borrowed from Arabic *qānūn*, "rule, law", which goes back to Greek *kanōn*, "rule, measuring rod" (EtymDB), the word behind English *canon*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

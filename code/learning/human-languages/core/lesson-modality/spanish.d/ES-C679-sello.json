@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C679-sello",
+    "language": "spanish",
+    "chapter": 679,
+    "sequence": 23820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4851300e40f50e15"
+  },
+  "findings": []
+}

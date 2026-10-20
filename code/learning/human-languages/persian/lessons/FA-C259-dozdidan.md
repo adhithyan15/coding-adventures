@@ -14,7 +14,8 @@ romanization: "dozdidan"
 concept_tag: FA-VERB-DOZDIDAN
 prerequisites: [FA-C259-barrasi-kardan, FA-C259-chane-zadan]
 sounds: []
-roots: []
+roots: [persian-duzd]
+etymology_hook: "dozdidan: Persian dozd 'thief' (Middle Persian duzd) + -idan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C259-chane-zadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C259-KONESH259-03]; assesses=[] -->
 
 **دزدیدن** — *dozdidan* — "to steal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dozdidan* is built on *dozd*, "thief", with the verb ending *-idan*. *dozd* is native, usually traced to Middle Persian *duzd*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

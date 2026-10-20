@@ -14,7 +14,8 @@ romanization: "wāsiʿ"
 concept_tag: AR-QUAL148-WASI
 prerequisites: [AR-C147-ghadib, AR-C148-masrur]
 sounds: []
-roots: []
+roots: [w-s-ʿ]
+etymology_hook: "wāsiʿ: built on the root w-s-ʿ, 'to be wide' (Lane); wāsiʿ is the active participle, 'wide'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C148-masrur]
 <!-- hl-knowledge: introduces=[AR-LEX-C148-QUAL148-02]; assesses=[] -->
 
 **واسع** — *wāsiʿ* — "spacious, wide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**واسع** (*wāsiʿ*) is built on the native Arabic root *w-s-ʿ*, "to be wide" (Lane). *Wāsiʿ* is the active participle, "wide".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

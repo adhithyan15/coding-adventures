@@ -4,7 +4,7 @@
   "chapter": 133,
   "title": "Low, High, Flies, Swims, Jumps",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:07cc5fd3831fa330",
+  "sourceHash": "fnv1a64:314a4baa468980cc",
   "lessons": [
     {
       "id": "SA-C133-nicah",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8f059b0959e66e73",
+      "sourceHash": "fnv1a64:0664bd09b9277038",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nīca is built from ni \"down\" and the root √añc \"bend, turn\" (MW; CDIAL 7540): \"turned downward\", so \"low\". It lives on as Hindi and Punjabi nīcā \"low\" (CDIAL 7540)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:24a986c06b6658c6",
+      "sourceHash": "fnv1a64:ec52f20fe4e57af1",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "unnata is the past participle of ud-√nam \"bend upward, rise\", the root √nam \"bend, bow\" with ud \"up\" (MW; CDIAL 2099): \"raised, high, tall\". It is the same root as namas in namaste, the greeting you already know."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0cce5d4fcd816c6f",
+      "sourceHash": "fnv1a64:aa974739d133b1c3",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "uḍḍayate comes from ud-√ḍī \"fly up, soar\", the root √ḍī \"fly\" with ud \"up\" (MW; CDIAL 1697). It lives on as Hindi uṛnā and Marathi uḍṇe \"to fly\" (CDIAL 1697)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9bcd90810647c820",
+      "sourceHash": "fnv1a64:472cc96874054222",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tarati comes from the root √tṝ \"cross over\", and then \"float, swim\" (CDIAL 5702). The root is inherited from Indo-European (EtymDB), and MW sets it beside Latin trans \"across\" and terminus \"boundary\". It lives on as Hindi tarnā \"to cross\" and Punjabi tarnā \"to swim\" (CDIAL 5702)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5693fb3cf3f8e5ed",
+      "sourceHash": "fnv1a64:16516bafb918306d",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kūrdati \"leaps, jumps\" is probably borrowed from Dravidian: CDIAL 3412, after Burrow, compares a Dravidian verb for springing. It lives on as Hindi kūdnā \"to jump\" (CDIAL 3412)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -14,7 +14,8 @@ romanization: "hamân"
 concept_tag: FA-DEF83-HAMAN
 prerequisites: [FA-C83-anha, FA-C83-hamin]
 sounds: []
-roots: []
+roots: [persian-ham, persian-an]
+etymology_hook: "hamân: Persian ham- 'same' + ân 'that' (EtymDB); native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C83-hamin]
 <!-- hl-knowledge: introduces=[FA-LEX-C83-DEF83-03]; assesses=[] -->
 
 **همان** — *hamân* — "that very".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hamân* is *ham-*, "same, very", with *ân*, "that" (EtymDB): "that very". Both pieces are native Persian, usually traced to Middle Persian *ham* and *ān*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

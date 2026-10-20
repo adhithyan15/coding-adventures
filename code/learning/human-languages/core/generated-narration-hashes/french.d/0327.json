@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 327,
+  "sourceHash": "fnv1a64:4ec4e518a1c85b67",
+  "lessonIds": [
+    "FR-C327-recette",
+    "FR-C327-ingredient",
+    "FR-C327-pincee",
+    "FR-C327-cuilleree",
+    "FR-C327-prechauffer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch327.txt",
+  "json": "french/narration/ch327.json",
+  "textHash": "fnv1a64:c8120d227c54ab31",
+  "jsonHash": "fnv1a64:b33c87e856ec727b",
+  "findings": []
+}

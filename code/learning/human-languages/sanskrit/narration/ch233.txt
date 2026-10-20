@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for is lost, then the Sanskrit for gets ang
 You'll want to know: वर्षति.
 वर्षति — varṣati — "rains".
 
+The word, taken apart.
+varṣati is the present of the root √vṛṣ, "to rain" (MW), a Rigvedic verb (CDIAL 11394). It lives on as Hindi barasnā, "to rain", and its noun varṣa, "rain, year", gives Hindi baras, "year" (CDIAL 11392).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for gets angry, then the Sanskrit for rains
 
 You'll want to know: रोहति.
 रोहति — rohati — "sprouts, grows".
+
+The word, taken apart.
+rohati is the present of the root √ruh, "to rise, grow, mount" (MW). In the Rigveda it means both "grows" and "climbs" (CDIAL 10862), and Hindi rohanā means "to mount, climb".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for rains, then the Sanskrit for sprouts.
 You'll want to know: प्रतीक्षते.
 प्रतीक्षते — pratīkṣate — "waits".
 
+The word, taken apart.
+pratīkṣate is built on prati, "towards", and the root √īkṣ, "to look" (MW): to wait is to look out for someone. It means "beholds" in the Atharvaveda and "waits for" in the Taittirīya Saṃhitā (CDIAL 8620); Marathi paikhṇẽ means "to wait for".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for sprouts, then the Sanskrit for waits.
 You'll want to know: अनुगच्छति.
 अनुगच्छति — anugacchati — "follows".
 
+The word, taken apart.
+anugacchati is built on anu, "after", and gacchati, "goes", from the root √gam (MW). To follow is to go after; √gam is the root of gacchāmi, "I go", which you have already met.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for waits, then the Sanskrit for follows.
 
 You'll want to know: निर्गच्छति.
 निर्गच्छति — nirgacchati — "goes out".
+
+The word, taken apart.
+nirgacchati is built on nis, "out", and gacchati, "goes", from the root √gam (MW): "goes out, comes forth". The s of nis becomes r before g.
 
 What you've built.
 One more word for this chapter.

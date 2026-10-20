@@ -14,7 +14,8 @@ romanization: "qadam"
 concept_tag: AR-BODY51-QADAM
 prerequisites: [AR-C50-sinn, AR-C51-shar]
 sounds: []
-roots: []
+roots: [q-d-m]
+etymology_hook: "qadam: built on the root q-d-m, 'to go before' (Lane), which also gives qadam 'the foot' and qadīm 'old'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C51-shar]
 <!-- hl-knowledge: introduces=[AR-LEX-C51-BODY51-02]; assesses=[] -->
 
 **قدم** — *qadam* — "a foot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قدم** (*qadam*) is built on the native Arabic root *q-d-m*, "to go before, to precede" (Lane). Lane gives *qadam*, the foot, under this root, which also gives *qadīm*, "old".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

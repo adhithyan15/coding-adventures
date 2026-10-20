@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "After You",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:950d48762c305900",
+  "sourceHash": "fnv1a64:dff44ba0c9c7175f",
   "lessons": [
     {
       "id": "ZH-W11-qing",
@@ -187,7 +187,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b761a25bb0f5a71",
+      "sourceHash": "fnv1a64:c722698513f4b9fe",
       "notice": null,
       "blocks": [
         {
@@ -223,6 +223,10 @@
             {
               "kind": "speech",
               "text": "Which is why it works on its own. Hold a door and say 请 (qǐng) — that is after you, go ahead, be my guest. Offer someone a seat and say 请 (qǐng). No other words needed, and none of them would be an apology for asking."
+            },
+            {
+              "kind": "speech",
+              "text": "The word is inherited from Middle Chinese tshjengX, glossed \"to beg, to request, to ask\" (Guangyun, in Baxter's transcription): the asking sense is the old one."
             }
           ]
         },

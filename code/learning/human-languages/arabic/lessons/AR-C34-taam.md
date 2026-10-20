@@ -6,13 +6,13 @@ sequence: 930
 chapter: 34
 type: word
 headword: طعام
-gloss: "food" — the chapter's payoff, where a root you have never met hands you the word for restaurant free of charge, because you already own the pattern
+gloss: '"food" — the chapter''s payoff, where a root you have never met hands you the word for restaurant free of charge, because you already own the pattern'
 concept_tag: AR-FOOD-GENERAL
 romanization: ṭaʿām
 prerequisites: [AR-C34-jubn]
 sounds: [taa-emphatic, ayn, rtl-known-letters]
 roots: [t-a-m]
-etymology_hook: "طَعام (ṭaʿām, 'food') is the root ط-ع-م, whose verb طَعِمَ (ṭaʿima) is 'he tasted' and whose noun طَعْم (ṭaʿm) is 'taste'; poured into the ma- place shape already met in مَكْتَب (maktab, an office) and مَذْهَب (madhhab), it gives مَطْعَم (maṭʿam, 'a restaurant' — the place of eating), so the learner generates the word rather than memorising it; its ط is the emphatic partner of ت, joining the ص of صباح and the ض of من فضلك"
+etymology_hook: "ṭaʿām: root ṭ-ʿ-m 'to eat, to taste' (Lane), which also gives maṭʿam 'restaurant'"
 duration:
   max_seconds: 240
 requires:

@@ -14,7 +14,8 @@ romanization: "hanuz"
 concept_tag: FA-NAFY136-HANUZ
 prerequisites: [FA-C135-chaspandan, FA-C135-charkhidan]
 sounds: []
-roots: []
+roots: [persian-hanuz]
+etymology_hook: "hanuz: inherited, usually traced to Middle Persian hanūz"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C135-charkhidan]
 <!-- hl-knowledge: introduces=[FA-LEX-C136-NAFY136-01]; assesses=[] -->
 
 **هنوز** — *hanuz* — "still; (with a negative) not yet". Persian negates a verb with **ن** (*na-*, *ne-*): **من هنوز آماده نیستم** — *man hanuz âmâde nistam* — "I'm not ready yet." **نیستم** is the negative of **هستم**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hanuz* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *hanūz*, "still, yet".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

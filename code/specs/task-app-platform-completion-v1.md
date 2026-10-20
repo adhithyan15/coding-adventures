@@ -148,6 +148,18 @@ rather than letting them read as silent gaps.
 
 ### Product quality ratchet
 
+**Completed bounded visual fix — #17502: SwiftUI milestone rotations.** TaskApp's
+timeline and calendar milestones both author a centered `rotate(45deg)` to
+make diamonds. Lower a single finite degree rotation after sizing and surface
+paint but before elevation shadows. Keep native layout footprint unchanged,
+preserve state precedence, and report malformed, non-finite, multi-transform,
+and other-unit forms. Verify authored output before retiring the two transform
+allowances. Translation, scaling, and transform-origin remain outside scope.
+
+Fresh package-expanded source generation measures 57 SwiftUI style drops and
+zero transform drops, down from 59. Both authored themes emit two centered
+45-degree rotations. Runtime generation and Swift compilation require macOS CI.
+
 10. **P1 [#16182](https://github.com/adhithyan15/coding-adventures/issues/16182)
     — ratchet TaskApp's native style degradations.** All five native reporters
     are now wired. The initial `native-complete` generation recorded 77 XAML,
@@ -273,12 +285,41 @@ behavior are unchanged; this is reporting reconciliation.
 manifest match the source commit, all twelve checksum entries match GitHub
 asset digests, and the existing artifact coverage and limitations are retained.
 
-**Next release checkpoint — P1 [#17491](https://github.com/adhithyan15/coding-adventures/issues/17491):
-publish `task-app-v0.5.6`.** Roll forward the compatible SwiftUI drag-body
-gap reporting correction (#17483). This corrects diagnostics and tightens the
-style regression gate; emitted drag behavior is unchanged. Validate the existing
-release matrix, publish from main, and audit the immutable assets. Static HTML,
-Web Components, and Paint remain CI-only; signing and installers remain #13977.
+**Published checkpoint — [#17491](https://github.com/adhithyan15/coding-adventures/issues/17491):
+`task-app-v0.5.6`.** Published from #17492 and audited: immutable tag and
+manifest match the source commit, and all twelve checksums match asset digests.
+
+**Published and audited release checkpoint — P1 [#17610](https://github.com/adhithyan15/coding-adventures/issues/17610):
+publish `task-app-v0.5.7`.** Roll forward the compatible SwiftUI milestone
+rotation fix (#17503): timeline and calendar markers retain their 45-degree
+diamond shape, reducing the measured SwiftUI style inventory from 59 to 57.
+Published from `93206f2a5b2cb3c02f30bb7dd23c7573898d2334` after every payload lane
+passed in run 38971558648. The immutable tag and manifest match that source;
+all 13 assets and twelve checksum entries were audited against GitHub digests.
+Static HTML, Web Components, and Paint remain CI-only; signing, notarization,
+and installers remain #13977.
+
+### Completed bounded fidelity item — #17675: Qt milestone rotations
+
+After the P0 native lifecycle gates and v0.5.7 publication, preserve the two
+authored timeline milestone and legend-swatch `rotate(45deg)` declarations in
+Qt. Use native centered Item rotation without changing layout dimensions.
+Accept only a single finite degree rotation; preserve ordered state precedence
+with a zero-degree fallback, and keep rejected values in degradation reports.
+Translation, scaling, transform chains, and transform-origin are excluded.
+Assert exact emitted bindings, negative inputs, and both authored themes before
+retiring the two Qt transform allowances (83 to 81 measured drops). Validate
+native Qt payload generation/build in CI; do not claim local Qt runtime proof.
+
+### Next release checkpoint — #17682: TaskApp v0.5.8
+
+Roll forward the compatible Qt milestone rotation fix merged in #17676 as
+`task-app-v0.5.8`. Both themes preserve the two centered 45-degree diamonds;
+the Qt style inventory falls from 83 to 81. Validate every existing payload on
+the selected source commit, publish from main after preparation merges, then
+audit the immutable tag, manifest source, thirteen assets and twelve checksums.
+Static HTML, Web Components, and Paint remain CI-only; signing, notarization,
+and installers remain #13977. Preparation is not publication.
 
 ### Tier C — reach, stated honestly
 

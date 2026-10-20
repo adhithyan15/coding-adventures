@@ -14,7 +14,8 @@ romanization: "kopi gereftan"
 concept_tag: FA-VERB-KOPI-GEREFTAN
 prerequisites: [FA-C220-qabul-shodan, FA-C220-chap-kardan]
 sounds: []
-roots: []
+roots: [french-copie]
+etymology_hook: "kopi ← French copie 'copy' (EtymDB), + Persian gereftan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C220-chap-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C220-KONESH220-05]; assesses=[] -->
 
 **کپی گرفتن** — *kopi gereftan* — "to photocopy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kopi gereftan* is "to take a copy": *kopi* is borrowed from French *copie*, "copy" (EtymDB), and *gereftan*, "to take", is native. *gereftan*, "to take", is an inherited verb; EtymDB takes it back to the Indo-European root *\*gʰrebh₂-*, "to seize".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

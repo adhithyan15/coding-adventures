@@ -1,4 +1,28 @@
 # Changelog — `twig-aot`
+## [0.56.0] — 2026-10-19 (LANG83 PR1b — native runtime `write_i64` and `trap`)
+
+- **`__twig_write_i64(int64_t)`** — decimal, no newline, on the same `stdout`
+  `FILE*` as `__twig_print_i64`/`__twig_putchar`/`__twig_print_string`; it does
+  not flush per call (every exit path flushes).
+- **`__twig_trap(int32_t kind_id)`** (noreturn) — the native end of
+  [LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)'s `trap`
+  and of the floor-division traps: `fflush(stdout)` first, then
+  `trap: <kind>` on stderr, then `abort()`. Kind names come from a C table
+  indexed by the stable `exception_kind::trap_kind_id`.
+- Tests: `runtime_trap_kind_table_matches_exception_kind` pins the C table to
+  the Rust one; `lang83_floor_ops_write_i64_and_trap_run_natively` (Linux)
+  compiles an IIR module with `write_i64`, `putchar`, both floor ops and a
+  `1 // 0`, runs it, and asserts stdout `-4 1` survived the trap and stderr
+  names `Trap.DivZero`.
+
+## Unreleased — direct-call arity check before native codegen
+
+`compile_module_x86_64_to_text` and the arm64 text path now refuse any direct
+`call` whose argument count differs from the in-module callee's parameter count,
+with the new `AotError::CallArityMismatch`. `x86_64-backend` now passes
+parameters beyond the register set on the stack. A short call would therefore
+let the callee read the caller's saved `rbp` and return address as arguments.
+
 ## Unreleased — FLOW-MATIC EOF peek (VM-039a)
 
 Support the zero-argument `input_more` builtin through the shared C runtime.

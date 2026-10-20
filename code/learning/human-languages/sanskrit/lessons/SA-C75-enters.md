@@ -14,7 +14,8 @@ romanization: "praviśati"
 concept_tag: SA-VERB-ENTER
 prerequisites: [SA-C75-boat, SA-C75-plane]
 sounds: []
-roots: []
+roots: [sanskrit-pravishati]
+etymology_hook: "praviśati 'enters' ← pra + the root √viś 'enter, settle' (MW); Hindi paisnā (CDIAL 8803)"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,13 @@ reviews_of: [SA-C75-plane]
 
 **प्रविशति** (*praviśati*) — "(he, she) goes in". **गृहं प्रविशति** — "goes into the
 house".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Praviśati* is built from *pra*, "forward", and the root √viś, "to enter, settle"
+(MW), the root of *upaviśati*. It lives on as Hindi *paisnā*, "to enter" (CDIAL
+8803).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

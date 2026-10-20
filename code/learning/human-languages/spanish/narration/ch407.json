@@ -4,7 +4,7 @@
   "chapter": 407,
   "title": "Middle, Below, Outside and Beside",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:75c185092b35bf69",
+  "sourceHash": "fnv1a64:1aab004964145dd8",
   "lessons": [
     {
       "id": "ES-C407-medio",
@@ -137,7 +137,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1704a98540c84c23",
+      "sourceHash": "fnv1a64:4b7851eaf6772fe9",
       "notice": null,
       "blocks": [
         {
@@ -164,7 +164,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The history is visible: de + bajo. Bajo is low; debajo names the lower position. The DLE defines it as a place below another higher one."
+              "text": "The history is visible: de + bajo. Bajo is low; debajo names the lower position. The DLE defines it as a place below another higher one. Bajo from Late Latin bassus, \"low\" (EtymDB 2.1), and de from Latin dē."
             }
           ]
         },

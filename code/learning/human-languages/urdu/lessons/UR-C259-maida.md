@@ -14,7 +14,8 @@ romanization: "maidā"
 concept_tag: UR-CHIZ259-MAIDA
 prerequisites: [UR-C259-menyu, UR-C259-chatpata]
 sounds: []
-roots: []
+roots: [persian-maida]
+etymology_hook: "maidā: usually traced to Persian maida 'fine flour'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C259-chatpata]
 <!-- hl-knowledge: introduces=[UR-LEX-C259-CHIZ259-04]; assesses=[] -->
 
 **میدہ** — *maidā* — "fine white flour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**میدہ** (*maidā*) is a loan, usually traced to Persian *maida*, "fine flour".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

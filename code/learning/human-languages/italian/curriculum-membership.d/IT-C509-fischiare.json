@@ -1,0 +1,11 @@
+{
+  "id": "IT-C509-fischiare",
+  "pathSegment": "IT-PATH-509-ARBITRO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-509-ARBITRO",
+      "order": 1
+    }
+  ]
+}

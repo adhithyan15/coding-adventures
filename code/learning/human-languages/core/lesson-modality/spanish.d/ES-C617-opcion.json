@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C617-opcion",
+    "language": "spanish",
+    "chapter": 617,
+    "sequence": 20610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:16066979e728b80c"
+  },
+  "findings": []
+}

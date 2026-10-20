@@ -14,7 +14,8 @@ romanization: "ḍifdaʿ"
 concept_tag: AR-THINGS138-DIFDA
 prerequisites: [AR-C137-ghurab, AR-C138-nasr]
 sounds: []
-roots: []
+roots: [ḍ-f-d-ʿ]
+etymology_hook: "ḍifdaʿ: built on the root ḍ-f-d-ʿ, 'a frog' (Lane); Hebrew tsefardeaʿ, 'frog', is usually counted a cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C138-nasr]
 <!-- hl-knowledge: introduces=[AR-LEX-C138-THINGS138-02]; assesses=[] -->
 
 **ضفدع** — *ḍifdaʿ* — "a frog".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ضفدع** (*ḍifdaʿ*) is built on the native Arabic root *ḍ-f-d-ʿ*, "a frog" (Lane). Hebrew *tsefardeaʿ*, "frog", is usually counted a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

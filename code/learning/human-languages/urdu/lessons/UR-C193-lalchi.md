@@ -14,7 +14,8 @@ romanization: "lālchī"
 concept_tag: UR-SIFAT193-LALCHI
 prerequisites: [UR-C193-buzdil, UR-C193-kanjus]
 sounds: []
-roots: []
+roots: [sanskrit-lalitya]
+etymology_hook: "lālchī: lālach 'greed' + -ī; CDIAL lists lālac 'cupidity' under Sanskrit lālitya (CDIAL 11029)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C193-kanjus]
 <!-- hl-knowledge: introduces=[UR-LEX-C193-SIFAT193-04]; assesses=[] -->
 
 **لالچی** — *lālchī* — "greedy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لالچی** (*lālchī*) is *lālach*, "greed", with the ending *-ī*, "one who has it". CDIAL lists Hindi *lālac*, "cupidity", under Sanskrit *lālitya*, "amorousness" (CDIAL 11029).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

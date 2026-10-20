@@ -15,14 +15,14 @@ roots: []
 duration:
   max_seconds: 190
 requires:
-  knowledge: [MR-GRAMMAR-ADJ-PRENOMINAL, MR-GRAMMAR-ADJ-AGREEMENT, MR-LEX-MOTHA, MR-LEX-DAAVA, MR-GRAMMAR-POSSESSION, MR-LEX-SANGNE, MR-ETYMON-SANGNE-KENS, MR-LEX-KHOLI]
+  knowledge: [MR-GRAMMAR-ADJ-PRENOMINAL, MR-GRAMMAR-ADJ-AGREEMENT, MR-LEX-MOTHA, MR-LEX-DAAVA, MR-GRAMMAR-POSSESSION, MR-LEX-SANGNE, MR-ETYMON-SANGNE-SAMKHYA, MR-LEX-KHOLI]
 introduces:
   knowledge: []
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-GRAMMAR-ADJ-PRENOMINAL, MR-GRAMMAR-ADJ-AGREEMENT, MR-LEX-MOTHA, MR-LEX-DAAVA, MR-GRAMMAR-POSSESSION, MR-LEX-SANGNE, MR-ETYMON-SANGNE-KENS, MR-LEX-KHOLI]
+  knowledge: [MR-GRAMMAR-ADJ-PRENOMINAL, MR-GRAMMAR-ADJ-AGREEMENT, MR-LEX-MOTHA, MR-LEX-DAAVA, MR-GRAMMAR-POSSESSION, MR-LEX-SANGNE, MR-ETYMON-SANGNE-SAMKHYA, MR-LEX-KHOLI]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -40,7 +40,7 @@ reviews_of: [MR-C49-motha, MR-C49-adj-agreement, MR-C49-adj-prenominal, MR-C48-p
 Name the rules before you use the word.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-MOTHA, MR-GRAMMAR-ADJ-AGREEMENT, MR-GRAMMAR-ADJ-PRENOMINAL, MR-LEX-KHOLI, MR-GRAMMAR-POSSESSION, MR-LEX-DAAVA, MR-LEX-SANGNE, MR-ETYMON-SANGNE-KENS] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-MOTHA, MR-GRAMMAR-ADJ-AGREEMENT, MR-GRAMMAR-ADJ-PRENOMINAL, MR-LEX-KHOLI, MR-GRAMMAR-POSSESSION, MR-LEX-DAAVA, MR-LEX-SANGNE, MR-ETYMON-SANGNE-SAMKHYA] -->
 
 <!-- hl-activity: {"id":"MR-R49-big-run","kind":"text","assesses":["MR-GRAMMAR-ADJ-AGREEMENT","MR-GRAMMAR-ADJ-PRENOMINAL","MR-LEX-MOTHA"],"prompt":"Label a big room, claim that your house is big, and say that you have a big house.","answer":"moṭhī khoolī; mājhaṁ ghar moṭhaṁ āhe; mājhyākaḍe moṭhaṁ ghar āhe","accepted":["मोठी खोली माझं घर मोठं आहे माझ्याकडे मोठं घर आहे"],"feedback":{"correct":"Label, claim, possession — one adjective in all three.","incorrect":"The ending follows the noun; the position follows the job."},"response_seconds":32} -->
 

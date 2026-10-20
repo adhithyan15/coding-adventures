@@ -14,7 +14,8 @@ romanization: "mes"
 concept_tag: FA-CHIZ173-MES
 prerequisites: [FA-C172-seriyal, FA-C173-noqre]
 sounds: []
-roots: []
+roots: [persian-mes]
+etymology_hook: "mes: inherited, usually traced to Middle Persian mis"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C173-noqre]
 <!-- hl-knowledge: introduces=[FA-LEX-C173-CHIZ173-02]; assesses=[] -->
 
 **مس** — *mes* — "copper".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mes* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *mis*, "copper".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

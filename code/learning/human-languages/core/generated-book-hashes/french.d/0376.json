@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 376,
+  "sourceHash": "fnv1a64:2e1a24402171cd84",
+  "lessonIds": [
+    "FR-C376-faculte",
+    "FR-C376-inscrire",
+    "FR-C376-inscription",
+    "FR-C376-semestre",
+    "FR-C376-amphitheatre"
+  ],
+  "tex": "french/book/chapters/ch376-a-l-universite.tex"
+}

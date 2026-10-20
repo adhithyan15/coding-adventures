@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-407-BLITZER",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-407-BLITZER"
+  ],
+  "after": []
+}

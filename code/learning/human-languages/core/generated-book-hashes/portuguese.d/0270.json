@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 270,
+  "sourceHash": "fnv1a64:f63f4ef2ed587432",
+  "lessonIds": [
+    "PT-C270-entretanto",
+    "PT-C270-simultaneamente",
+    "PT-C270-assim-que",
+    "PT-C270-logo-que",
+    "PT-C270-subitamente"
+  ],
+  "tex": "portuguese/book/chapters/ch270-entretanto.tex"
+}

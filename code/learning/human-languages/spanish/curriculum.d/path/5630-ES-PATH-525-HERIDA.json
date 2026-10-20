@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-525-HERIDA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-525-HERIDA"
+  ],
+  "after": []
+}

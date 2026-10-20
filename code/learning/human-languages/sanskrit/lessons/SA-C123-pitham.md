@@ -14,7 +14,8 @@ romanization: "pīṭham"
 concept_tag: SA-THINGS123-PITHAM
 prerequisites: [SA-C122-bhandam, SA-C122-khatva]
 sounds: []
-roots: []
+roots: [sanskrit-pitha]
+etymology_hook: "pīṭha 'stool, seat': MW wonders if it is pi-sad 'sit on'; CDIAL 8222 suspects non-Aryan origin; Hindi pīṛhā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C122-khatva]
 <!-- hl-knowledge: introduces=[SA-LEX-C123-THINGS123-01]; assesses=[] -->
 
 **पीठम्** — *pīṭham* — "a seat, a stool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pīṭha* "a stool, a seat" has an uncertain origin: MW wonders whether it is a worn form of *pi-sad* "sit upon", while CDIAL 8222 thinks the variety of its forms points to a non-Aryan source. It lives on as Hindi *pīṛhā* "low stool" (CDIAL 8222).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C522-juez",
+  "pathSegment": "ES-PATH-522-JUEZ",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-522-JUEZ",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 609,
+  "sourceHash": "fnv1a64:43abd3f4e050f132",
+  "lessonIds": [
+    "ES-C609-progreso",
+    "ES-C609-perfeccionar",
+    "ES-C609-desafio",
+    "ES-C609-afrontar",
+    "ES-C609-perseverar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch609.txt",
+  "json": "spanish/narration/ch609.json",
+  "textHash": "fnv1a64:eb0d1619719ed385",
+  "jsonHash": "fnv1a64:0b5a2e4b3bb14b1d",
+  "findings": []
+}

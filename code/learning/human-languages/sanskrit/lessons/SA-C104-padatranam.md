@@ -14,7 +14,8 @@ romanization: "pādatrāṇam"
 concept_tag: SA-THINGS104-PADATRANAM
 prerequisites: [SA-C103-uttariyam, SA-C104-satika]
 sounds: []
-roots: []
+roots: [sanskrit-pada-foot]
+etymology_hook: "pādatrāṇa ← pāda 'foot' + trāṇa 'protection': 'foot-guard', a shoe (MW; CDIAL 8060)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C104-satika]
 <!-- hl-knowledge: introduces=[SA-LEX-C104-THINGS104-02]; assesses=[] -->
 
 **पादत्राणम्** — *pādatrāṇam* — "a shoe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pādatrāṇa* is built from *pāda* "foot" and *trāṇa* "protection" (MW): "foot-guard". The pair is old, already in Suśruta (CDIAL 8060), and *pāda* is the inherited word for "foot" that MW sets beside Latin *pes* and English *foot*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

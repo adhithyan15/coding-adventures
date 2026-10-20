@@ -4,7 +4,7 @@
   "chapter": 199,
   "title": "To compare, To persuade, To blame, To share, To avoid",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cb59adea359b309d",
+  "sourceHash": "fnv1a64:629974978e4ac56b",
   "lessons": [
     {
       "id": "LA-C199-comparo",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:04a755eb9d294546",
+      "sourceHash": "fnv1a64:e9131d3d668fbbb6",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "persuādeō is per, \"thoroughly\", with suādeō, \"to advise, to urge\": to urge someone all the way. suādeō belongs with suāvis, \"sweet\"."
+              "text": "persuādeō is per, \"thoroughly\", with suādeō, \"to advise, to urge\": to urge someone all the way. suādeō belongs with suāvis, \"sweet\", and is inherited from Proto-Italic swādēō, \"to advise\" (EtymDB 2.1)."
             }
           ]
         },

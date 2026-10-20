@@ -14,7 +14,8 @@ romanization: "darpaṇaḥ"
 concept_tag: SA-CRAFT-DARPANA
 prerequisites: [SA-C41-boat, SA-C39-dog, SA-C40-vegetable]
 sounds: []
-roots: []
+roots: [sanskrit-darpana]
+etymology_hook: "darpaṇa 'mirror', lit. 'causing vanity' ← darpa 'pride', from the root √dṛp (MW; CDIAL 6201)"
 duration:
   max_seconds: 210
 requires:
@@ -44,9 +45,15 @@ reviews_of: [SA-C41-boat]
 
 **दर्पणः** is a mirror — a disc of metal polished bright, centuries before glass could do the job.
 
-It stands on *dṛp*, "to be proud", so the object is named for what people do in front of it rather than for what it is made of. That is a small joke three thousand years old.
+It stands on *dṛp*, "to be proud", so the object is named for what people do in front of it rather than for what it is made of. That is a small joke, and an old one.
 
 Hindi *darpaṇ* is the same word, unchanged.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW explains *darpaṇa* as "causing vanity", built on *darpa*, "pride", from the
+root √dṛp; CDIAL 6201 marks the root with a question mark.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,19 @@
+{
+  "id": "SA-A1-ADJ-01",
+  "category": "Viśeṣaṇa — the adjective",
+  "label": "qualifying adjectives, attributive and predicative",
+  "probe": [
+    "SA-GRAMMAR-C15-ADJ-SYSTEM",
+    "SA-LEX-C15-ADJ-01",
+    "SA-LEX-C15-ADJ-02"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-ADJ-01"
+  ],
+  "note": "mahat and alpa, and chapter 15 states the system that governs their use."
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 428,
+  "sourceHash": "fnv1a64:02e27f51a31af085",
+  "lessonIds": [
+    "FR-C428-fuite",
+    "FR-C428-robinet",
+    "FR-C428-lavabo",
+    "FR-C428-goutter",
+    "FR-C428-deboucher"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch428.txt",
+  "json": "french/narration/ch428.json",
+  "textHash": "fnv1a64:4ba7ddaf25a36192",
+  "jsonHash": "fnv1a64:3cc2cd73837ba7cc",
+  "findings": []
+}

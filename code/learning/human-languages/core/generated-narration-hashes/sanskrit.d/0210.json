@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 210,
-  "sourceHash": "fnv1a64:6528964de2d73d07",
+  "sourceHash": "fnv1a64:a1a17abbb3f41572",
   "lessonIds": [
     "SA-C210-acaryah",
     "SA-C210-pradhanacaryah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch210.txt",
   "json": "sanskrit/narration/ch210.json",
-  "textHash": "fnv1a64:cf2bb5ac641a7e49",
-  "jsonHash": "fnv1a64:acbe07f48a1d2322",
+  "textHash": "fnv1a64:8c9ac750f6fdba57",
+  "jsonHash": "fnv1a64:7985253df98d7f84",
   "findings": []
 }

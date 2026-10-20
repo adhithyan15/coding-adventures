@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 61,
-  "sourceHash": "fnv1a64:4c9a2586ad8150d5",
+  "sourceHash": "fnv1a64:dbde3c4974d99654",
   "lessonIds": [
     "JA-C61-ito",
     "JA-C61-hari",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch61.txt",
   "json": "japanese/narration/ch61.json",
-  "textHash": "fnv1a64:38341d35aa41d3c9",
-  "jsonHash": "fnv1a64:0d1b49da570b1deb",
+  "textHash": "fnv1a64:4d76306f2cfa282a",
+  "jsonHash": "fnv1a64:c720479d5c2ace8a",
   "findings": []
 }

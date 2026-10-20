@@ -12,7 +12,7 @@ concept_tag: MR-JOIN-SAATHI
 prerequisites: [MR-C35-kii, MR-C24-shikne]
 sounds: [retroflex-na, matra-aa, retroflex-tha, matra-ii]
 roots: []
-etymology_hook: "साठी is a postposition from Sanskrit सार्थे (sārthe, 'for the sake of'), and the -ण्या- in front of it is the OBLIQUE shape every Marathi postposition demands of the word before it — the general oblique rule is still owed to you, and this lesson teaches only the one swap"
+etymology_hook: "साठी 'for the sake of': CDIAL files it under Sanskrit saṁsthá (13049), rather than sārtha (13364)"
 duration:
   max_seconds: 220
 requires:

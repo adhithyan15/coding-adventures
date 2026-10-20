@@ -14,7 +14,8 @@ romanization: "nauyānam"
 concept_tag: SA-THINGS123-NAUYANAM
 prerequisites: [SA-C123-dvicakrika, SA-C123-yanam]
 sounds: []
-roots: []
+roots: [sanskrit-yana]
+etymology_hook: "nauyāna ← nau 'ship' + yāna 'vehicle' (MW); MW compares nau with Greek naus and Latin navis, cf. navy"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C123-yanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C123-THINGS123-04]; assesses=[] -->
 
 **नौयानम्** — *nauyānam* — "a ship".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nauyāna* is built from *nau* "ship, boat" and *yāna* "going, vehicle", from the root √yā "go"; MW already records it as "a ship". MW sets *nau* beside Greek *naus* and Latin *navis*, the source of English *navy* and *naval*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

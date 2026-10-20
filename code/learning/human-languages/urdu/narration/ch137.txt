@@ -12,6 +12,9 @@ Before the new one: say the Urdu for ripe, then the Urdu for pink.
 You'll want to know: جامنی.
 جامنی — jāmnī — "purple".
 
+The word, taken apart.
+جامنی (jāmnī) is "jāmun-coloured", the purple of the jambolan fruit, with the ending -ī. CDIAL lists Hindi jāmun and jāman, the tree and its fruit, under jambūna, a form beside Sanskrit jambula (CDIAL 5136).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for pink, then the Urdu for purple.
 
 You'll want to know: سنہرا.
 سنہرا — sunahrā — "golden".
+
+The word, taken apart.
+سنہرا (sunahrā) is a tadbhava, a word inherited and reshaped by sound change. It comes from suvarṇadhara, "containing gold", a form CDIAL reconstructs from its descendants (CDIAL 13522). It is built from suvarṇa, "gold", and dhara, "holding".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for purple, then the Urdu for golden.
 You'll want to know: بند.
 بند — band — "closed".
 
+The word, taken apart.
+بند (band) is a loan, usually traced to Persian band, "shut, bound".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for golden, then the Urdu for closed.
 You'll want to know: کھلا.
 کھلا — khulā — "open".
 
+The word, taken apart.
+کھلا (khulā) is a tadbhava, a word inherited and reshaped by sound change. It comes from khull, "to be open", a form CDIAL reconstructs from its descendants (CDIAL 3945).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for closed, then the Urdu for open.
 
 You'll want to know: جاگنا.
 جاگنا — jāgnā — "to wake up".
+
+The word, taken apart.
+جاگنا (jāgnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from jāgrati, "are awake" (CDIAL 5175).
 
 What you've built.
 One more word for this chapter.

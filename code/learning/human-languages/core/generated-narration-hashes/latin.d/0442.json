@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 442,
+  "sourceHash": "fnv1a64:0d8cde7c79653197",
+  "lessonIds": [
+    "LA-C442-salum",
+    "LA-C442-pelagus",
+    "LA-C442-aequor",
+    "LA-C442-marinus",
+    "LA-C442-maritimus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch442.txt",
+  "json": "latin/narration/ch442.json",
+  "textHash": "fnv1a64:1d52d028e04881ea",
+  "jsonHash": "fnv1a64:97f314d1832df511",
+  "findings": []
+}

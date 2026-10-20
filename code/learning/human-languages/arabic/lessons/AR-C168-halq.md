@@ -14,7 +14,8 @@ romanization: "ḥalq"
 concept_tag: AR-SIHHA168-HALQ
 prerequisites: [AR-C168-jism, AR-C168-kahil]
 sounds: []
-roots: []
+roots: [ḥ-l-q]
+etymology_hook: "ḥalq: built on the root ḥ-l-q, 'the throat' (Lane); ḥalq is the throat"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C168-kahil]
 <!-- hl-knowledge: introduces=[AR-LEX-C168-SIHHA168-04]; assesses=[] -->
 
 **حلق** — *ḥalq* — "the throat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حلق** (*ḥalq*) is built on the native Arabic root *ḥ-l-q*, "the throat; to shave" (Lane). *Ḥalq* is the throat.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

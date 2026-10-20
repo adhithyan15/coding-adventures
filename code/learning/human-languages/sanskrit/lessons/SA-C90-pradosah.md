@@ -14,7 +14,8 @@ romanization: "pradoṣaḥ"
 concept_tag: SA-TIME90-PRADOSAH
 prerequisites: [SA-C89-sweet, SA-C90-ahah]
 sounds: []
-roots: []
+roots: [sanskrit-pradosha]
+etymology_hook: "pradoṣa 'first part of the night' ← pra + doṣā 'darkness, evening' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C90-ahah]
 <!-- hl-knowledge: introduces=[SA-LEX-C90-TIME90-02]; assesses=[] -->
 
 **प्रदोषः** — *pradoṣaḥ* — "early evening".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Pradoṣa* is built from *pra* and *doṣā*, "darkness, night", a Rigvedic word (MW):
+the first part of the night.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

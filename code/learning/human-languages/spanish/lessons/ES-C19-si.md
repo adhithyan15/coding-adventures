@@ -6,7 +6,7 @@ sequence: 264
 chapter: 7
 type: word
 headword: sí
-gloss: yes
+gloss: 'yes'
 concept_tag: RESPONSE-YES
 prerequisites: [ES-C01-hola]
 sounds: [vowel-i, written-accent]

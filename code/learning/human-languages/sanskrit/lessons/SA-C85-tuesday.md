@@ -14,7 +14,8 @@ romanization: "maṅgalavāsaraḥ"
 concept_tag: SA-WEEK-TUESDAY
 prerequisites: [SA-C85-week, SA-C85-monday]
 sounds: []
-roots: []
+roots: [sanskrit-mangala, sanskrit-vasara]
+etymology_hook: "maṅgalavāsara ← maṅgala 'welfare', the name of Mars + vāsara 'day' (MW records the compound)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C85-monday]
 <!-- hl-knowledge: introduces=[SA-LEX-C85-WEEK-03]; assesses=[] -->
 
 **मंगलवासरः** (*maṅgalavāsaraḥ*) — "Tuesday", the day of **मंगल**, Mars.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Maṅgalavāsara* is built from *maṅgala*, "welfare, auspiciousness", the name given
+to the planet Mars, and *vāsara*, "day" (MW).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

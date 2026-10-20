@@ -14,7 +14,8 @@ romanization: "ubhayataḥ"
 concept_tag: SA-LOC153-UBHAYATAH
 prerequisites: [SA-C153-itah, SA-C153-tatah]
 sounds: []
-roots: []
+roots: [sanskrit-ubhaya]
+etymology_hook: "ubhayataḥ ← ubhaya 'both' + -tas 'from'; MW sets ubha beside Latin ambo and Gothic bai, cf. both"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C153-tatah]
 <!-- hl-knowledge: introduces=[SA-LEX-C153-LOC153-03]; assesses=[] -->
 
 **उभयतः** — *ubhayataḥ* — "on both sides".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ubhayataḥ* is built from *ubhaya* "both, of both kinds" and the ending *-tas* "from, on the side of": "on both sides" (MW). MW sets *ubha* "both" beside Greek *amphō*, Latin *ambo* and Gothic *bai*, the cousin of English *both*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

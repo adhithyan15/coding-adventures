@@ -14,7 +14,8 @@ romanization: "gâz dâdan"
 concept_tag: FA-VERB-GAZ-DADAN
 prerequisites: [FA-C186-khazidan, FA-C187-liz-khordan]
 sounds: []
-roots: []
+roots: [french-gaz, pie-deh3]
+etymology_hook: "gâz ← French gaz 'gas', + Persian dâdan 'to give'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C187-liz-khordan]
 <!-- hl-knowledge: introduces=[FA-LEX-C187-KONESH187-02]; assesses=[] -->
 
 **گاز دادن** — *gâz dâdan* — "to accelerate, to step on the gas".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gâz dâdan* is "to give gas": *gâz* is borrowed from French *gaz*, "gas", and *dâdan*, "to give", is native. *dâdan*, "to give", is an inherited verb; EtymDB takes it back to the Indo-European root *\*deh₃-*, "to give".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

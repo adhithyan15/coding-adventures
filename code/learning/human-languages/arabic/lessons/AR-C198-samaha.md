@@ -14,7 +14,8 @@ romanization: "samaḥa"
 concept_tag: AR-VERB-SAMAHA
 prerequisites: [AR-C197-intabaha, AR-C197-itabara]
 sounds: []
-roots: []
+roots: [s-m-ḥ]
+etymology_hook: "samaḥa: built on the root s-m-ḥ, 'to be generous, to grant' (Lane); samaḥa is the plain verb, 'he allowed'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C197-itabara]
 <!-- hl-knowledge: introduces=[AR-LEX-C198-ACT198-01]; assesses=[] -->
 
 **سمح** — *samaḥa* — "to allow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سمح** (*samaḥa*) is built on the native Arabic root *s-m-ḥ*, "to be generous, to grant" (Lane). *Samaḥa* is the plain verb, "he allowed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

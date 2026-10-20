@@ -1,0 +1,19 @@
+{
+  "chapter": 447,
+  "title": "Bedbug, To bite, To scratch, Sleepless, To lie down",
+  "label": "ch:la-bedbug-to-bite-to-scratch-sleepless-to-lie-down",
+  "canDo": "I can complain about a bad night: bedbugs, being bitten, scratching, a sleepless night, and lying down.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C447-cubo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 447: I can complain about a bad night: bedbugs, being bitten, scratching, a sleepless night, and lying down.",
+    "assesses": [
+      "LA-LEX-C447-CIMEX-03",
+      "LA-LEX-C447-CIMEX-04",
+      "LA-LEX-C447-CIMEX-05"
+    ]
+  }
+}

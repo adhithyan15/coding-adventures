@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C491-lacrimo",
+    "language": "latin",
+    "chapter": 491,
+    "sequence": 26100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d873de780194e5e3"
+  },
+  "findings": []
+}

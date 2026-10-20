@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-284-INCHIESTA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-284-INCHIESTA"
+  ],
+  "after": []
+}

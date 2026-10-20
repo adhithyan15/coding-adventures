@@ -14,7 +14,8 @@ romanization: "bâd"
 concept_tag: FA-NATURE54-BAD
 prerequisites: [FA-C53-barf, FA-C54-khak]
 sounds: []
-roots: []
+roots: [persian-bad-wind]
+etymology_hook: "bâd: inherited, usually traced to Middle Persian wād"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C54-khak]
 <!-- hl-knowledge: introduces=[FA-LEX-C54-NATURE54-02]; assesses=[] -->
 
 **باد** — *bâd* — "wind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bâd* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *wād*, "wind".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

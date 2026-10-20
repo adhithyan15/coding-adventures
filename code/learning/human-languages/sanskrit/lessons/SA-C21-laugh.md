@@ -14,7 +14,8 @@ romanization: "hasati"
 concept_tag: SA-VERB-LAUGH
 prerequisites: [SA-C21-dance, SA-C19-eight]
 sounds: []
-roots: []
+roots: [sanskrit-hasati]
+etymology_hook: "hasati ← the root √has 'laugh' (MW); it lives on as Hindi hasnā 'to laugh' (CDIAL 14021)"
 duration:
   max_seconds: 210
 requires:
@@ -44,6 +45,12 @@ reviews_of: [SA-C21-dance]
 **हसति** (*hasati*) — "he, she or it laughs".
 
 From **√हस्** (*has*). It is the word inside *hāsya*, the comic mood in the classical theory of drama — one of the nine *rasas*, so laughter here is a category of art, not only a noise.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Hasati* is the present of the root √has, "to laugh" (MW). It lives on as Hindi
+*hasnā*, "to laugh" (CDIAL 14021).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

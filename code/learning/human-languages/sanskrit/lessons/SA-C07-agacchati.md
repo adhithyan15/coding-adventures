@@ -15,7 +15,7 @@ concept_tag: VERB-COME
 prerequisites: [SA-C07-gacchati]
 sounds: [long-aa, conjunct-ccha]
 roots: [upasarga-aa, pie-gwem]
-etymology_hook: "Sanskrit has no separate word for come: it is आ- toward plus गच्छति goes; the उपसर्ग prefixes re-aim a root the way Latin ad- re-aims venire into advent"
+etymology_hook: "āgacchati ← ā 'toward' + gacchati 'goes', from √gam, which MW compares with English come"
 duration:
   max_seconds: 265
 requires:
@@ -87,6 +87,8 @@ Latin aims *venīre* "come" with the same kind of prefix: *ad-* "toward" gives
 
 Sanskrit simply runs the system harder and more openly, with the seams left
 visible.
+
+The root itself, √gam, is inherited: MW compares English **come**.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-AGACCHATI-COME, SA-LEX-GACCHATI-GO, SA-GRAMMAR-UPASARGA-PREFIX] -->

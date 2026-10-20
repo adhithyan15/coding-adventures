@@ -4,7 +4,7 @@
   "chapter": 60,
   "title": "Which One in the Line",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:06b7fcfab7419b97",
+  "sourceHash": "fnv1a64:10c4796425b85347",
   "lessons": [
     {
       "id": "MR-C60-dusra-ordinal",
@@ -431,7 +431,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9e043cbb99d76409",
+      "sourceHash": "fnv1a64:0a43855a2b9cc5db",
       "notice": null,
       "blocks": [
         {
@@ -659,7 +659,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4f9826db68306857",
+      "sourceHash": "fnv1a64:0fd3ae91eec3c0a4",
       "notice": null,
       "blocks": [
         {

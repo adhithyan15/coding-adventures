@@ -6,7 +6,7 @@ sequence: 690
 chapter: 31
 type: word
 headword: ja
-gloss: yes
+gloss: 'yes'
 concept_tag: RESPONSE-YES
 prerequisites: [GE-C01-hallo]
 sounds: [vowel-a-long, j-as-y]

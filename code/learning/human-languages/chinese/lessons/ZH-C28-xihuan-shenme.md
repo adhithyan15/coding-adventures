@@ -11,8 +11,8 @@ gloss: "asking what somebody likes, out of four words the book already had"
 concept_tag: ZH-ASK-LIKE
 prerequisites: [ZH-C28-xihuan, ZH-C27-he, ZH-C24-ge, ZH-C18-hear-shu, ZH-C08-wo]
 sounds: []
-roots: []
-etymology_hook: "什么 was taught in the asking chapter and had almost nothing to ask about; 喜欢 is what it was waiting for."
+roots: [middle-chinese-xix, middle-chinese-xwan]
+etymology_hook: "nǐ xǐhuan shénme: Chinese words throughout; xǐhuan is from Middle Chinese xiX + xwan, shénme not settled"
 duration:
   max_seconds: 215
 requires:
@@ -73,6 +73,12 @@ And the whole exchange, with the particle from the last chapter:
 
 > — **你喜欢什么**
 > — **我喜欢看书你呢**
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Chinese built the question from words it already had: *nǐ*, *xǐhuan*, from
+Middle Chinese *xiX* and *xwan*, and *shénme*, whose origin is not settled.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-XIHUAN-SHENME-01] -->

@@ -1,0 +1,17 @@
+{
+  "id": "SA-A1-M-12",
+  "category": "Modern life — fields a spoken revival needs and a classical corpus lacks",
+  "label": "economy, industry, energy and organisations",
+  "probe": null,
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "CEFR-CV",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-NE15-03",
+    "A1-NE15-04"
+  ],
+  "note": "UNCOVERED and arguably not A1 in any language; recorded so the proxy accounting is complete rather than because it is a priority."
+}

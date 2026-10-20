@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-336-FORNO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-336-FORNO"
+  ],
+  "after": []
+}

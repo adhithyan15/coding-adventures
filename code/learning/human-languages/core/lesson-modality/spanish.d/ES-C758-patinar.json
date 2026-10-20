@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C758-patinar",
+    "language": "spanish",
+    "chapter": 758,
+    "sequence": 27890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:023026856acfc0e5"
+  },
+  "findings": []
+}

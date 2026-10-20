@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 396,
+  "sourceHash": "fnv1a64:55f2049f95abc642",
+  "lessonIds": [
+    "PT-C396-aplicacao",
+    "PT-C396-utilizador",
+    "PT-C396-aceder",
+    "PT-C396-senha",
+    "PT-C396-perfil"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch396.txt",
+  "json": "portuguese/narration/ch396.json",
+  "textHash": "fnv1a64:7050ab605f3a0f10",
+  "jsonHash": "fnv1a64:7deb54a8766fec03",
+  "findings": []
+}

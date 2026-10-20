@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C549-casar",
+    "language": "spanish",
+    "chapter": 549,
+    "sequence": 17090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:edaa6917b9612a7f"
+  },
+  "findings": []
+}

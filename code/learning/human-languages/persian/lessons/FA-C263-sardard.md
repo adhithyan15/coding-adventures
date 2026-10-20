@@ -14,7 +14,8 @@ romanization: "sardard"
 concept_tag: FA-SALAMAT263-SARDARD
 prerequisites: [FA-C263-asib, FA-C263-sargije]
 sounds: []
-roots: []
+roots: [persian-sar, persian-dard]
+etymology_hook: "sardard: Persian sar 'head' + dard 'pain' (EtymDB); native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C263-sargije]
 <!-- hl-knowledge: introduces=[FA-LEX-C263-SALAMAT263-03]; assesses=[] -->
 
 **سردرد** — *sardard* — "a headache".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sardard* is *sar*, "head", with *dard*, "pain" (EtymDB): head-pain. Both are native Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

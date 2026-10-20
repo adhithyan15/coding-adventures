@@ -1,0 +1,19 @@
+{
+  "chapter": 528,
+  "title": "Müll und Unordnung",
+  "label": "ch:ge-mull-und-unordnung",
+  "canDo": "I can talk about rubbish and clearing out.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C528-entsorgen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 528: I can talk about rubbish and clearing out.",
+    "assesses": [
+      "GE-LEX-C528-MUELL-03",
+      "GE-LEX-C528-MUELL-04",
+      "GE-LEX-C528-MUELL-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 518,
+  "title": "Intonati e stonati",
+  "label": "ch:it-intonati-e-stonati",
+  "canDo": "I can talk about singing in tune and out of tune.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-R518-ripasso-511-518",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 518: I can talk about singing in tune and out of tune.",
+    "assesses": [
+      "IT-LEX-C518-CANTO-03",
+      "IT-LEX-C518-CANTO-04",
+      "IT-LEX-C518-CANTO-05"
+    ]
+  }
+}

@@ -14,7 +14,8 @@ romanization: "baje"
 concept_tag: UR-TIME92-BAJE
 prerequisites: [UR-C92-mangal, UR-C92-budh]
 sounds: []
-roots: []
+roots: [sanskrit-vadyate]
+etymology_hook: "baje: from bajnā 'to sound' ← Sanskrit vādyate 'is made to sound' (CDIAL 11513)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C92-budh]
 <!-- hl-knowledge: introduces=[UR-LEX-C92-TIME92-03]; assesses=[] -->
 
 **بجے** — *baje* — "o'clock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بجے** (*baje*) is a form of *bajnā*, "to sound, to strike", which CDIAL lists under Sanskrit *vādyate*, "is made to sound" (CDIAL 11513): the hours were once struck on a bell.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

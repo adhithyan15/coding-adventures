@@ -1,0 +1,11 @@
+{
+  "id": "IT-C370-democrazia",
+  "pathSegment": "IT-PATH-370-MAGGIORANZA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-370-MAGGIORANZA",
+      "order": 2
+    }
+  ]
+}

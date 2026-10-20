@@ -14,7 +14,8 @@ romanization: "śṛgālaḥ"
 concept_tag: SA-THINGS112-SRGALAH
 prerequisites: [SA-C112-suryah, SA-C112-bhallukah]
 sounds: []
-roots: []
+roots: [sanskrit-shrgala]
+etymology_hook: "śṛgāla 'jackal' (ŚBr) is of doubtful derivation (MW); Hindi siyār, Bengali siyāl (CDIAL 12578)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C112-bhallukah]
 <!-- hl-knowledge: introduces=[SA-LEX-C112-THINGS112-05]; assesses=[] -->
 
 **शृगालः** — *śṛgālaḥ* — "a jackal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW calls *śṛgāla* "a jackal" (also written *sṛgāla*) of doubtful derivation, so its origin is uncertain; it is old, in the Śatapatha Brāhmaṇa. It lives on as Hindi *siyār* and Bengali *siyāl* "jackal" (CDIAL 12578).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

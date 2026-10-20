@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-535-ATTREZZI",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "IT-EXT-535-ATTREZZI"
+  ],
+  "after": []
+}

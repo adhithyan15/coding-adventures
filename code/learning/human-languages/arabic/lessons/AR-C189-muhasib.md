@@ -14,7 +14,8 @@ romanization: "muḥāsib"
 concept_tag: AR-AMAL189-MUHASIB
 prerequisites: [AR-C188-zabun, AR-C188-sarraf]
 sounds: []
-roots: []
+roots: [ḥ-s-b]
+etymology_hook: "muḥāsib: built on the root ḥ-s-b, 'to count, to reckon' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C188-sarraf]
 <!-- hl-knowledge: introduces=[AR-LEX-C189-AMAL189-01]; assesses=[] -->
 
 **محاسب** — *muḥāsib* — "an accountant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**محاسب** (*muḥāsib*) is built on the native Arabic root *ḥ-s-b*, "to count, to reckon" (Lane). *Muḥāsib* is the Form III participle, "one who settles accounts".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

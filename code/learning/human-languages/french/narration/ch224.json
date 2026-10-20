@@ -4,7 +4,7 @@
   "chapter": 224,
   "title": "Employee, Pilot, Accountant, Scientist, Researcher",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:152c5631b458b1ce",
+  "sourceHash": "fnv1a64:1aebba2fed84e8b8",
   "lessons": [
     {
       "id": "FR-C224-employe",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7c8d50ec18094945",
+      "sourceHash": "fnv1a64:0204fabea392a4e5",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "comptable — compter, \"to count\", with -able: one who keeps the counts."
+              "text": "comptable — compter, \"to count\", with -able: one who keeps the counts. Compter from Latin computāre, \"to reckon\" (EtymDB 2.1)."
             }
           ]
         },
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:203eb05244ed317b",
+      "sourceHash": "fnv1a64:3a544e866e296acb",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "chercheur — chercher, \"to look for\", with -eur: one who searches."
+              "text": "chercheur — chercher, \"to look for\", with -eur: one who searches. Chercher from Old French cerchier, from Late Latin circāre, \"to go around\" (EtymDB 2.1)."
             }
           ]
         },

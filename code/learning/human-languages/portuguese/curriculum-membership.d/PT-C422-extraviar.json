@@ -1,0 +1,11 @@
+{
+  "id": "PT-C422-extraviar",
+  "pathSegment": "PT-PATH-422-BAGAGENS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-422-BAGAGENS",
+      "order": 4
+    }
+  ]
+}

@@ -14,7 +14,8 @@ romanization: "miqlama"
 concept_tag: AR-AMAL282-MIQLAMA
 prerequisites: [AR-C281-mumaththil, AR-C282-hasiba]
 sounds: []
-roots: []
+roots: [greek-kalamos]
+etymology_hook: "miqlama: a case for pens (qalam); qalam is usually traced to Greek kalamos 'reed pen'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C282-hasiba]
 <!-- hl-knowledge: introduces=[AR-LEX-C282-AMAL282-02]; assesses=[] -->
 
 **مقلمة** — *miqlama* — "a pencil case".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مقلمة** (*miqlama*) is a case for pens (*qalam*). Lane lists *qalam* under *q-l-m*, and it is usually traced to Greek *kalamos*, "reed pen".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

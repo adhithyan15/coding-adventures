@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C668-arrastrar",
+    "language": "spanish",
+    "chapter": 668,
+    "sequence": 23270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:df3de42df0ebb5d7"
+  },
+  "findings": []
+}

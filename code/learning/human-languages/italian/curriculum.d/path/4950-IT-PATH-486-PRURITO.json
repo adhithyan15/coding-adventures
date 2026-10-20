@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-486-PRURITO",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "IT-EXT-486-PRURITO"
+  ],
+  "after": []
+}

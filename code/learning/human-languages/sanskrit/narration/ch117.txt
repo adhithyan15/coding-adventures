@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for an elbow, then the Sanskrit for a wrist
 You'll want to know: अंगुष्ठः.
 अंगुष्ठः — aṅguṣṭhaḥ — "a thumb".
 
+The word, taken apart.
+aṅguṣṭha "the thumb" is built on aṅgu-, the same base as aṅguli "finger" (CDIAL 137). It lives on as Hindi and Punjabi aṅgūṭhā "thumb" (CDIAL 137).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a wrist, then the Sanskrit for a thumb.
 
 You'll want to know: वक्षः.
 वक्षः — vakṣaḥ — "the chest".
+
+The word, taken apart.
+vakṣaḥ is vakṣas "breast, chest", already in the Rigveda, with the final s said as ḥ at the end of a phrase (MW). MW lists it under √vakṣ "grow, increase" without deriving it, so its source is uncertain; Kashmiri kept it as wach "chest" (CDIAL 11188).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a thumb, then the Sanskrit for the ches
 You'll want to know: कटिः.
 कटिः — kaṭiḥ — "the waist".
 
+The word, taken apart.
+kaṭi "the hip, the waist" has a disputed origin: CDIAL 2639 notes an Indo-European proposal but thinks it rather borrowed from Dravidian, comparing Kannada kaḍe "side". It lives on as Marathi kaḍ "side, waist" (CDIAL 2639).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for the chest, then the Sanskrit for the wa
 You'll want to know: भ्रूः.
 भ्रूः — bhrūḥ — "an eyebrow".
 
+The word, taken apart.
+bhrū "an eyebrow" is inherited from Indo-European (EtymDB): MW sets it beside Greek ophrys and English brow. It lives on as Hindi bhauṁh "eyebrow" (CDIAL 9688).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for the waist, then the Sanskrit for an eye
 
 You'll want to know: त्वक्.
 त्वक् — tvak — "the skin".
+
+The word, taken apart.
+tvak is tvac "skin, hide", already in the Rigveda, with the final c said as k at the end of a word (MW). MW sets it beside a root √tvac "cover" known only from the grammarians, so its origin is uncertain; Pali kept it as taco (CDIAL 6087).
 
 What you've built.
 One more word for this chapter.

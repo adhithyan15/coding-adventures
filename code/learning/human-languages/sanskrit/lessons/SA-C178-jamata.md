@@ -14,7 +14,8 @@ romanization: "jāmātā"
 concept_tag: SA-PPL178-JAMATA
 prerequisites: [SA-C178-svasurah, SA-C178-svasruh]
 sounds: []
-roots: []
+roots: [sanskrit-jamatr]
+etymology_hook: "jāmātṛ 'son-in-law', which MW explains as 'maker of offspring' (jā- + -mātṛ); Hindi jamāī (CDIAL 5198)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C178-svasruh]
 <!-- hl-knowledge: introduces=[SA-LEX-C178-PPL178-04]; assesses=[] -->
 
 **जामाता** — *jāmātā* — "a son-in-law".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jāmātā* is the nominative of the stem *jāmātṛ*. MW explains it as *jā-* "offspring" with *-mātṛ*, a "maker of new offspring", and offers that only as an explanation. It lives on as Hindi *jamāī* and *jawāī* (CDIAL 5198).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

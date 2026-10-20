@@ -1,0 +1,11 @@
+{
+  "id": "PT-C387-sentenca",
+  "pathSegment": "PT-PATH-387-TRIBUNAL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-387-TRIBUNAL",
+      "order": 4
+    }
+  ]
+}

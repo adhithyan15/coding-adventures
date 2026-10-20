@@ -14,7 +14,8 @@ romanization: "fizik"
 concept_tag: FA-KAR285-FIZIK
 prerequisites: [FA-C284-ketabdar, FA-C284-hesabdar]
 sounds: []
-roots: []
+roots: [french-physique]
+etymology_hook: "fizik: a loan, usually traced to French physique 'physics'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C284-hesabdar]
 <!-- hl-knowledge: introduces=[FA-LEX-C285-KAR285-01]; assesses=[] -->
 
 **فیزیک** — *fizik* — "physics".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*fizik* is a loan, usually traced to French *physique*, "physics".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

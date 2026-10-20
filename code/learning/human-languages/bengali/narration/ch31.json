@@ -4,7 +4,7 @@
   "chapter": 31,
   "title": "The Letter in the Way",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:62b1beaa9a0b675d",
+  "sourceHash": "fnv1a64:933caff9ed205292",
   "lessons": [
     {
       "id": "BN-W05-tta",
@@ -572,7 +572,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c07f8bad1f70e24",
+      "sourceHash": "fnv1a64:35bc67b2bcaef9ee",
       "notice": null,
       "blocks": [
         {

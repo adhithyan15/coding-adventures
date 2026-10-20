@@ -1,0 +1,11 @@
+{
+  "id": "LA-C494-fastidio",
+  "pathSegment": "LA-PATH-494-ODI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-494-ODI",
+      "order": 2
+    }
+  ]
+}

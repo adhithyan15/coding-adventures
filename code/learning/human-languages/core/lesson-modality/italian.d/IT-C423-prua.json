@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C423-prua",
+    "language": "italian",
+    "chapter": 423,
+    "sequence": 24050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3ee33c817bf2d756"
+  },
+  "findings": []
+}

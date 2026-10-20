@@ -14,7 +14,8 @@ romanization: "doktor"
 concept_tag: FA-THINGS115-DOKTOR
 prerequisites: [FA-C114-amuzgar, FA-C115-shagerd]
 sounds: []
-roots: []
+roots: [french-docteur]
+etymology_hook: "doktor ← French docteur 'doctor'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C115-shagerd]
 <!-- hl-knowledge: introduces=[FA-LEX-C115-THINGS115-02]; assesses=[] -->
 
 **دکتر** — *doktor* — "a doctor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*doktor* is borrowed from French *docteur*, "doctor" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

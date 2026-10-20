@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-291-NOTRUF",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe calling for help: the emergency number, the emergency doctor, a helicopter, a paramedic and the emergency room.",
+  "prerequisites": []
+}

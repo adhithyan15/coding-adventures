@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-381-CAUSIDICUS",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "LA-EXT-381-CAUSIDICUS"
+  ],
+  "after": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 399,
+  "sourceHash": "fnv1a64:e074bd88455c1beb",
+  "lessonIds": [
+    "IT-C399-account",
+    "IT-C399-password",
+    "IT-C399-utente",
+    "IT-C399-accedere",
+    "IT-C399-registrarsi"
+  ],
+  "tex": "italian/book/chapters/ch399-il-mio-account.tex"
+}

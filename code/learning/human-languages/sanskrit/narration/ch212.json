@@ -4,7 +4,7 @@
   "chapter": 212,
   "title": "Intelligence, Mind, Self, Dream, Satisfaction",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b23e6ae56575e3a3",
+  "sourceHash": "fnv1a64:d3a0831352e935cc",
   "lessons": [
     {
       "id": "SA-C212-buddhih",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c084a04e01f14b23",
+      "sourceHash": "fnv1a64:27a9ee906030500f",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "buddhi is built on the root √budh, \"to wake, notice, understand\" (MW), the root of buddha, \"the awakened one\". MW compares the root with Greek pynthanomai, \"I learn\". It lives on as Hindi budh, \"intelligence\" (CDIAL 9277)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f9177cd126e5a07a",
+      "sourceHash": "fnv1a64:e6e18aa99e45cae9",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "manas is built on the root √man, \"to think\" (MW). It is inherited from Indo-European: MW compares Greek menos, \"spirit, force\", and the root itself with English mean. It lives on as Hindi man, \"mind\" (CDIAL 9822)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:beca4004c39bccdd",
+      "sourceHash": "fnv1a64:9992baf9d21c7d61",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ātmā is the nominative of ātman, which first meant \"breath\" and then \"soul, self\" (CDIAL 1135). MW notes it is variously derived, from roots meaning \"to breathe\", \"to move\" or \"to blow\", and compares German Atem, \"breath\". Hindi āp, the polite \"you\", comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:586c74a615a8121d",
+      "sourceHash": "fnv1a64:54a7b525a003848d",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "svapna is built on the root √svap, \"to sleep\" (MW): first \"sleep\", then \"dream\" (CDIAL 13904). The root is inherited from Indo-European: MW compares Latin somnus, \"sleep\", and Greek hypnos. Hindi sapnā, \"dream\", goes back to it, though CDIAL 13904 does not list the Hindi form."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:064c1efb5d945db5",
+      "sourceHash": "fnv1a64:db3d185f6a72495d",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tṛpti is built on the root √tṛp, \"to be satisfied\", with the noun suffix -ti (MW). It is a Rigvedic word (CDIAL 5931), and Tamil borrowed it as tirupti."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

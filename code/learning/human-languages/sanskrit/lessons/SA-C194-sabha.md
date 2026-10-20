@@ -14,7 +14,8 @@ romanization: "sabhā"
 concept_tag: SA-THG194-SABHA
 prerequisites: [SA-C194-paritosikam, SA-C194-nimantranam]
 sounds: []
-roots: []
+roots: [sanskrit-sabha]
+etymology_hook: "sabhā 'assembly', of unknown derivation (MW); MW compares Gothic sibja 'kinship', English gossip"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C194-nimantranam]
 <!-- hl-knowledge: introduces=[SA-LEX-C194-THG194-03]; assesses=[] -->
 
 **सभा** — *sabhā* — "an assembly, a meeting".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sabhā* is of unknown derivation, MW says, though probably connected with *sa-*, "together". MW compares Gothic *sibja*, "kinship", and English *gossip*, which MW also cites in its older form *god-sib*. It is a Rigvedic word for an assembly or hall (CDIAL 13167).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

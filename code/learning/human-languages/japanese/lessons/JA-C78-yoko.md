@@ -14,7 +14,8 @@ romanization: "yoko"
 concept_tag: JA-LOC78-YOKO
 prerequisites: [JA-C78-chikaku, JA-C78-ushiro]
 sounds: []
-roots: []
+roots: [japanese-yoko]
+etymology_hook: "yoko: native Japanese, inherited, not borrowed; kanji 横 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C78-ushiro]
 <!-- hl-knowledge: introduces=[JA-LEX-C78-LOC78-04]; assesses=[] -->
 
 **よこ** — *yoko* — "beside".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**よこ** (*yoko*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

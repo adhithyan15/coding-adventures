@@ -1,0 +1,19 @@
+{
+  "chapter": 627,
+  "title": "Las cuentas de casa",
+  "label": "ch:es-las-cuentas-de-casa",
+  "canDo": "I can talk about income, wasting money, debt and getting into debt.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ES-C627-invertir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 627: I can talk about income, wasting money, debt and getting into debt.",
+    "assesses": [
+      "ES-LEX-C627-GASTO-03",
+      "ES-LEX-C627-GASTO-04",
+      "ES-LEX-C627-GASTO-05"
+    ]
+  }
+}

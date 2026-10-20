@@ -1,0 +1,19 @@
+{
+  "chapter": 505,
+  "title": "Mercy and kindness",
+  "label": "ch:la-mercy-and-kindness",
+  "canDo": "I can talk about mercy, kindness and goodwill.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C505-benevolentia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 505: I can talk about mercy, kindness and goodwill.",
+    "assesses": [
+      "LA-LEX-C505-CLEM-03",
+      "LA-LEX-C505-CLEM-04",
+      "LA-LEX-C505-CLEM-05"
+    ]
+  }
+}

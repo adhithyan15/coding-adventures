@@ -14,7 +14,8 @@ romanization: "gorosne"
 concept_tag: FA-HEALTH31-GOROSNE
 prerequisites: [FA-C31-daru, FA-C31-teshne]
 sounds: []
-roots: []
+roots: [persian-gorosne]
+etymology_hook: "gorosne: inherited, usually traced to Middle Persian gursag"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C31-teshne]
 <!-- hl-knowledge: introduces=[FA-LEX-C31-HEALTH31-04]; assesses=[] -->
 
 **گرسنه** — *gorosne* — "hungry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gorosne* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *gursag*, "hungry".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

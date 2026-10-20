@@ -14,7 +14,8 @@ romanization: "zīrā"
 concept_tag: UR-CHIZ199-ZIRA
 prerequisites: [UR-C199-masala, UR-C199-haldi]
 sounds: []
-roots: []
+roots: [persian-zira, sanskrit-jiraka]
+etymology_hook: "zīrā: Persian zīra 'cumin'; CDIAL lists Hindi jīrā under Sanskrit jīraka (CDIAL 5234)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C199-haldi]
 <!-- hl-knowledge: introduces=[UR-LEX-C199-CHIZ199-05]; assesses=[] -->
 
 **زیرہ** — *zīrā* — "cumin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**زیرہ** (*zīrā*) is spelt as Persian *zīra*, "cumin". CDIAL lists the Hindi form *jīrā* under Sanskrit *jīraka*, "cumin seed" (CDIAL 5234).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C388-tessera",
+  "pathSegment": "IT-PATH-388-VALIDO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-388-VALIDO",
+      "order": 4
+    }
+  ]
+}

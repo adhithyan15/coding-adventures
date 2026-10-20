@@ -14,7 +14,8 @@ romanization: "nakhaḥ"
 concept_tag: SA-BODY-NAIL
 prerequisites: [SA-C69-forehead, SA-C69-tongue]
 sounds: []
-roots: []
+roots: [sanskrit-nakha]
+etymology_hook: "nakha 'nail, claw' is inherited: MW compares Greek onux, Latin unguis and English nail (CDIAL 6914)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C69-tongue]
 <!-- hl-knowledge: introduces=[SA-LEX-C70-BODY2-01]; assesses=[] -->
 
 **नखः** (*nakhaḥ*) — "a nail", at the tip of every finger.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Nakha* is inherited: MW compares Greek *onux*, Latin *unguis* and English
+**nail** (CDIAL 6914). It is already in the Rigveda.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

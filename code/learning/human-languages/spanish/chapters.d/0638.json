@@ -1,0 +1,19 @@
+{
+  "chapter": 638,
+  "title": "Límites",
+  "label": "ch:es-limites",
+  "canDo": "I can say how much room there is, what is limited and controlled, with one exception.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ES-C638-excepto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 638: I can say how much room there is, what is limited and controlled, with one exception.",
+    "assesses": [
+      "ES-LEX-C638-LIMITE-03",
+      "ES-LEX-C638-LIMITE-04",
+      "ES-LEX-C638-LIMITE-05"
+    ]
+  }
+}

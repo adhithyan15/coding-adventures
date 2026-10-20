@@ -14,7 +14,8 @@ romanization: "sune"
 concept_tag: JA-THINGS110-SUNE
 prerequisites: [JA-C110-shippo, JA-C110-kakato]
 sounds: []
-roots: []
+roots: [japanese-sune]
+etymology_hook: "sune: native Japanese, inherited, not borrowed; usually kana, kanji 脛 as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C110-kakato]
 <!-- hl-knowledge: introduces=[JA-LEX-C110-THINGS110-05]; assesses=[] -->
 
 **すね** — *sune* — "a shin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**すね** (*sune*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ʿaẓm"
 concept_tag: AR-THINGS141-AZM
 prerequisites: [AR-C141-saq, AR-C141-jild]
 sounds: []
-roots: []
+roots: [ʿ-ẓ-m]
+etymology_hook: "ʿaẓm: built on the root ʿ-ẓ-m, 'a bone' (Lane); Hebrew ʿetsem, 'bone', is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C141-jild]
 <!-- hl-knowledge: introduces=[AR-LEX-C141-THINGS141-05]; assesses=[] -->
 
 **عظم** — *ʿaẓm* — "a bone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عظم** (*ʿaẓm*) is built on the native Arabic root *ʿ-ẓ-m*, "a bone; to be great" (Lane). Hebrew *ʿetsem*, "bone", is its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-337-CONDIRE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-337-CONDIRE"
+  ],
+  "after": []
+}

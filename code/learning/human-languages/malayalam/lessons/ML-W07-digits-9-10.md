@@ -38,7 +38,7 @@ reviews_of: [ML-W07-digits-6-8]
 ## Script
 <!-- hl-knowledge: introduces=[ML-SCRIPT-DIGITS-9-10-07]; assesses=[] -->
 
-- **൯** means 9: *ombatŭ*.
+- **൯** means 9: *ompatŭ*.
 - **൰** means 10: *pattŭ*.
 
 Point through **൬ ൭ ൮ ൯ ൰** and say the words once.
@@ -48,10 +48,10 @@ Point through **൬ ൭ ൮ ൯ ൰** and say the words once.
 <!-- hl-writing-stage: observe-trace -->
 
 Trace **൯** once and **൰** once with their models visible. Circle the one you
-hear: [YOU HEAR: *ombatŭ*]. (**൯**.)
+hear: [YOU HEAR: *ompatŭ*]. (**൯**.)
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C07-NUMBERS-6-10-01, ML-SCRIPT-DIGITS-9-10-07] -->
 
-[PAUSE 3s] Which shape means ten? (**൰**.) Read **൯**. (***Ompathu.***) This
+[PAUSE 3s] Which shape means ten? (**൰**.) Read **൯**. (***Ompatŭ.***) This
 lesson added two shapes, not five.

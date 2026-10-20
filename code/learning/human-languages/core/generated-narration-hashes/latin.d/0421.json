@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 421,
+  "sourceHash": "fnv1a64:16a7060b2c6d66ce",
+  "lessonIds": [
+    "LA-C421-commercium",
+    "LA-C421-negotior",
+    "LA-C421-nundinae",
+    "LA-C421-portorium",
+    "LA-C421-lucror"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch421.txt",
+  "json": "latin/narration/ch421.json",
+  "textHash": "fnv1a64:65a355a0ffe66067",
+  "jsonHash": "fnv1a64:309472821841c0ec",
+  "findings": []
+}

@@ -14,7 +14,8 @@ romanization: "tuṣyati"
 concept_tag: SA-VERB-TUSYATI
 prerequisites: [SA-C141-sprsati, SA-C141-tyajati]
 sounds: []
-roots: []
+roots: [sanskrit-tushyati]
+etymology_hook: "tuṣyati ← √tuṣ 'become calm, be pleased' (CDIAL 5897), inherited from Indo-European (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C141-tyajati]
 <!-- hl-knowledge: introduces=[SA-LEX-C142-ACT142-01]; assesses=[] -->
 
 **तुष्यति** — *tuṣyati* — "is pleased, is satisfied".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tuṣyati* comes from the root √tuṣ "become calm, be satisfied, be pleased" (CDIAL 5897), inherited from Indo-European (EtymDB). *santoṣa* "contentment" comes from the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

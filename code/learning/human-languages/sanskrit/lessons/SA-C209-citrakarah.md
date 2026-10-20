@@ -14,7 +14,8 @@ romanization: "citrakāraḥ"
 concept_tag: SA-PPL209-CITRAKARAH
 prerequisites: [SA-C209-gayakah, SA-C209-nartakah]
 sounds: []
-roots: []
+roots: [sanskrit-citrakara, sanskrit-citra]
+etymology_hook: "citrakāra = citra 'picture' + kāra 'maker', from √kṛ (MW; CDIAL 4807)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C209-nartakah]
 <!-- hl-knowledge: introduces=[SA-LEX-C209-PPL209-04]; assesses=[] -->
 
 **चित्रकारः** — *citrakāraḥ* — "a painter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*citrakāra* is a compound of *citra*, "bright, variegated; a picture", and *kāra*, "maker", from the root √kṛ (MW; CDIAL 4807). It lives on as Hindi *citārī*, "painter".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

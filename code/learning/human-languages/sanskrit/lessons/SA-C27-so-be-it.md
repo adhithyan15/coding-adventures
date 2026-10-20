@@ -14,7 +14,8 @@ romanization: "astu"
 concept_tag: SA-REPLY-SO-BE-IT
 prerequisites: [SA-C26-physician, SA-C25-hand, SA-C26-teacher]
 sounds: []
-roots: []
+roots: [as-be, sanskrit-asti]
+etymology_hook: "astu 'let it be' ← the command form of the root √as 'be', the root of asti, a cousin of English is (MW)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,12 @@ reviews_of: [SA-C26-physician]
 You have had **आम्** and **न** for yes and no since the first chapter, and they are blunt. **अस्तु** is the agreeable middle: *let it be so*, *all right*, *fine*.
 
 It is not a new word so much as a new face on one you know. **अस्ति** (*asti*), "is", was the third person of the root *as*, "to be". अस्तु is the same verb in the commanding form: **let it be**. Sanskrit answers a request by ordering the world to comply.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Astu* is the third-person command form of the root √as, "to be" (MW), the same
+root as *asti*. That root is inherited: MW compares Greek *esti* and Latin *est*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

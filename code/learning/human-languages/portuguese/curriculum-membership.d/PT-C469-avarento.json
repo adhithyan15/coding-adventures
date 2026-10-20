@@ -1,0 +1,11 @@
+{
+  "id": "PT-C469-avarento",
+  "pathSegment": "PT-PATH-469-TEIMOSIA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-469-TEIMOSIA",
+      "order": 3
+    }
+  ]
+}

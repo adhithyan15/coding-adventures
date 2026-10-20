@@ -1,0 +1,19 @@
+{
+  "id": "SA-A1-SUB-02",
+  "category": "Subordination",
+  "label": "the relative clause",
+  "probe": [
+    "SA-GRAMMAR-CORRELATIVE-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-SUB-04",
+    "A1-SUB-05",
+    "A1-SN-01"
+  ],
+  "note": "Closed by SA-C53-yah-sah, and by the same atom as SA-A1-PRON-07 because in Sanskrit they are one fact: the relative CLAUSE is the correlative pair, not a clause hung off a noun. SA-C53-yatra-tatra then shows the same hinge on a second axis."
+}

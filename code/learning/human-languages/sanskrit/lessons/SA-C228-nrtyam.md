@@ -14,7 +14,8 @@ romanization: "nṛtyam"
 concept_tag: SA-SCH228-NRTYAM
 prerequisites: [SA-C228-bhugolah, SA-C228-sangitam]
 sounds: []
-roots: []
+roots: [sanskrit-nrtya, sanskrit-nrtyati]
+etymology_hook: "nṛtya 'dancing' ← root √nṛt 'dance' (MW); Hindi nāc (CDIAL 7582)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C228-sangitam]
 <!-- hl-knowledge: introduces=[SA-LEX-C228-SCH228-04]; assesses=[] -->
 
 **नृत्यम्** — *nṛtyam* — "dance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nṛtya* is built on the root √nṛt, "to dance" (MW), the root of *nṛtyati*, "dances". It lives on as Hindi *nāc*, "dancing" (CDIAL 7582), which EtymDB gives as the source of English *nautch*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

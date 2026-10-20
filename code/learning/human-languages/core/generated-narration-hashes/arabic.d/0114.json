@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 114,
-  "sourceHash": "fnv1a64:66c95357e37084b9",
+  "sourceHash": "fnv1a64:7e4c59b8ef5d5619",
   "lessonIds": [
     "AR-C114-hadaf",
     "AR-C114-khutta",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch114.txt",
   "json": "arabic/narration/ch114.json",
-  "textHash": "fnv1a64:626262db7aaab610",
-  "jsonHash": "fnv1a64:b316c01969ec0691",
+  "textHash": "fnv1a64:b091d2c535de9cca",
+  "jsonHash": "fnv1a64:c2e6d6aa881c908a",
   "findings": []
 }

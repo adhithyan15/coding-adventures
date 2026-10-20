@@ -14,7 +14,8 @@ romanization: "unglī"
 concept_tag: UR-BODY39-UNGLI
 prerequisites: [UR-C39-pet, UR-C39-kandha]
 sounds: []
-roots: []
+roots: [sanskrit-anguli]
+etymology_hook: "unglī ← Sanskrit aṅguli 'finger, toe', a tadbhava (CDIAL 135)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C39-kandha]
 <!-- hl-knowledge: introduces=[UR-LEX-C39-BODY39-03]; assesses=[] -->
 
 **انگلی** — *unglī* — "a finger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**انگلی** (*unglī*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *aṅguli*, "finger, toe" (CDIAL 135).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "qad"
 concept_tag: UR-SEHAT243-QAD
 prerequisites: [UR-C243-taqat, UR-C243-vazan]
 sounds: []
-roots: []
+roots: [arabic-qadd]
+etymology_hook: "qad ← Arabic qadd 'stature, height', through Persian (Lane, root q-d-d)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C243-vazan]
 <!-- hl-knowledge: introduces=[UR-LEX-C243-SEHAT243-04]; assesses=[] -->
 
 **قد** — *qad* — "height".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قد** (*qad*) is a loan from Arabic *qadd*, "stature, height", which reached Urdu through Persian. Its Arabic root is *q-d-d* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

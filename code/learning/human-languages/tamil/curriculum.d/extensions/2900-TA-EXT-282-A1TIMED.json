@@ -1,0 +1,10 @@
+{
+  "id": "TA-EXT-282-A1TIMED",
+  "stage": "A1",
+  "kind": "required",
+  "category": "writing",
+  "canDo": "I can retrieve six familiar pieces of Tamil writing during one short independent clock.",
+  "prerequisites": [
+    "TA-EXT-281-A1WRITING"
+  ]
+}

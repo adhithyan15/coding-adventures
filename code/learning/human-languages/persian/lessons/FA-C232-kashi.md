@@ -14,7 +14,8 @@ romanization: "kâshi"
 concept_tag: FA-MAKAN232-KASHI
 prerequisites: [FA-C231-vatan, FA-C231-zadgah]
 sounds: []
-roots: []
+roots: [persian-kashan]
+etymology_hook: "kâshi: usually said to be named after the city of Kâshân; EtymDB links it with kâsh 'glass'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C231-zadgah]
 <!-- hl-knowledge: introduces=[FA-LEX-C232-MAKAN232-01]; assesses=[] -->
 
 **کاشی** — *kâshi* — "a tile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kâshi* is usually said to be named after the city of Kâshân, long famous for its glazed tiles. EtymDB gives a second account, linking it with an old Persian word for glass, *kâsh*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

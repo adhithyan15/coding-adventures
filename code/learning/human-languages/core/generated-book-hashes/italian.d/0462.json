@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 462,
+  "sourceHash": "fnv1a64:29a82d1e894ac0ad",
+  "lessonIds": [
+    "IT-C462-vetta",
+    "IT-C462-pendio",
+    "IT-C462-burrone",
+    "IT-C462-caverna",
+    "IT-C462-arrampicarsi"
+  ],
+  "tex": "italian/book/chapters/ch462-in-montagna.tex"
+}

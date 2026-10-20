@@ -11,7 +11,7 @@ concept_tag: RU-FOOD-JUICE
 romanization: sok
 prerequisites: [RU-C13-syr]
 sounds: []
-roots: [pie-uncertain]
+roots: [slavic-soku]
 etymology_hook: "сок continues a reconstructed PIE root *sokwos, well attested across Balto-Slavic, but with no clear reflex anywhere in English or the rest of Germanic — a genuinely ancient word that simply never crossed into the language you speak"
 duration:
   max_seconds: 250

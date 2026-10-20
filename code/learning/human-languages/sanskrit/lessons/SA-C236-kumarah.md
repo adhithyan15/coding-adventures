@@ -14,7 +14,8 @@ romanization: "kumāraḥ"
 concept_tag: SA-PPL236-KUMARAH
 prerequisites: [SA-C235-cumbati, SA-C236-sisuh]
 sounds: []
-roots: []
+roots: [sanskrit-kumara]
+etymology_hook: "kumāra 'boy', first 'weak, tender' (CDIAL 3303); MW's derivations are hedged, so its origin is uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C236-sisuh]
 <!-- hl-knowledge: introduces=[SA-LEX-C236-PPL236-02]; assesses=[] -->
 
 **कुमारः** — *kumāraḥ* — "a boy, a youth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kumāra* is a Rigvedic word for "boy" (CDIAL 3303). CDIAL suggests a first sense "weak, tender", perhaps related to *komala*, "soft", which you have already met. MW offers two hedged derivations, so the origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

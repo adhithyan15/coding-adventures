@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 55,
-  "sourceHash": "fnv1a64:11224b72b4a4e0ab",
+  "sourceHash": "fnv1a64:68b599d50f7a2f2e",
   "lessonIds": [
     "UR-C55-alu",
     "UR-C55-tamatar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch55.txt",
   "json": "urdu/narration/ch55.json",
-  "textHash": "fnv1a64:4f4eacf4ae4cf6ef",
-  "jsonHash": "fnv1a64:9e0d3e2eb09efb0a",
+  "textHash": "fnv1a64:22cf9586f8e4248e",
+  "jsonHash": "fnv1a64:a58536c5e4d31950",
   "findings": []
 }

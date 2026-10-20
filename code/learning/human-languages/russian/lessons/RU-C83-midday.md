@@ -47,7 +47,7 @@ reviews_of: [RU-C82-such]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**полдень** is *пол-*, "half", with *день*, "day": the middle of the day.
+**полдень** is *пол-*, "half", with *день*, "day": the middle of the day. Vasmer relates *день* to Lithuanian *dienà*, "day", and thinks *пол-* probably kin to Albanian *palë*, "side".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

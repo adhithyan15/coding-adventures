@@ -1006,8 +1006,11 @@ impl ActiveHostToolRuntime {
             .stdout(Stdio::piped());
         // D18S S-I2, S-I3: stderr to /dev/null, nothing above fd 2
         // inherited, no terminal on the standard descriptors.
-        let mut child = chief_of_staff_spawn_isolation::isolate(&mut command)
-            .spawn()
+        chief_of_staff_spawn_isolation::isolate(&mut command);
+        // Under the spawn lock, as every spawn in the daemon process is
+        // (D18S P2.8b-1): on Windows this child inherits every inheritable
+        // handle, so it must not be created while a broker's keys are.
+        let mut child = chief_of_staff_spawn_isolation::spawn(&mut command)
             .map_err(|error| self.process_io_error(format!("spawn Deno agent: {error}")))?;
 
         let result = self.serve_agent_process(&mut child);

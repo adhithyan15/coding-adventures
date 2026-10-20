@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 449,
+  "sourceHash": "fnv1a64:83bbb0f27e456223",
+  "lessonIds": [
+    "PT-C449-drogaria",
+    "PT-C449-retrosaria",
+    "PT-C449-perfumaria",
+    "PT-C449-ervanaria",
+    "PT-C449-ourivesaria"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch449.txt",
+  "json": "portuguese/narration/ch449.json",
+  "textHash": "fnv1a64:4a6f1d7a675f97ce",
+  "jsonHash": "fnv1a64:e02c3ffa5cac8998",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 532,
+  "title": "Uma casa acolhedora",
+  "label": "ch:pt-uma-casa-acolhedora",
+  "canDo": "I can describe a cosy home.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-R532-revisao-final-532",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 532: I can describe a cosy home.",
+    "assesses": [
+      "PT-LEX-C532-ACOLHEDORA-03",
+      "PT-LEX-C532-ACOLHEDORA-04",
+      "PT-LEX-C532-ACOLHEDORA-05"
+    ]
+  }
+}

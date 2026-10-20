@@ -15,7 +15,7 @@ concept_tag: HI-POST-COMPOUND-SAATH
 prerequisites: [HI-C92-sintesis-maatra, HI-C84-uska, HI-C84-apna, HI-C39-dost, HI-C91-bacche-ko]
 sounds: []
 roots: [sanskrit-sartha]
-etymology_hook: "sāth ← Sanskrit sārtha 'caravan, company'; sārthena meant 'in company with' (CDIAL 13364)"
+etymology_hook: "sāth 'with' ← Sanskrit sārthena 'in company with', a case form of sārtha 'caravan, company' (CDIAL 13364)"
 duration:
   max_seconds: 244
 requires:
@@ -52,7 +52,7 @@ is new.
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*sāth*, "with", comes from Sanskrit *sārtha*, "caravan, company", whose form *sārthena* meant "in company with" (CDIAL 13364).
+*sāth*, "with", comes from Sanskrit *sārthena*, "in company with", the instrumental case of *sārtha*, "caravan, company"; CDIAL lists the Hindi word under that case form (CDIAL 13364).
 
 ## The two words
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C93-REL-01, HI-LEX-C84-POSS-01] -->

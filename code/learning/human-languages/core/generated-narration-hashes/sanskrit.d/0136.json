@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 136,
-  "sourceHash": "fnv1a64:98bfb7dc27782c61",
+  "sourceHash": "fnv1a64:b1db57942d6a05f5",
   "lessonIds": [
     "SA-C136-prapnoti",
     "SA-C136-dharayati",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch136.txt",
   "json": "sanskrit/narration/ch136.json",
-  "textHash": "fnv1a64:cb5c4981f6b22016",
-  "jsonHash": "fnv1a64:191af1bcb3bbb9c1",
+  "textHash": "fnv1a64:bf44729024175ae7",
+  "jsonHash": "fnv1a64:9081562e7507e9a3",
   "findings": []
 }

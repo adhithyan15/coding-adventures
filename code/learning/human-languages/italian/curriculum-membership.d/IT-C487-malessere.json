@@ -1,0 +1,11 @@
+{
+  "id": "IT-C487-malessere",
+  "pathSegment": "IT-PATH-487-STOMACO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-487-STOMACO",
+      "order": 2
+    }
+  ]
+}

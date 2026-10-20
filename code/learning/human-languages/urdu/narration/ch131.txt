@@ -12,6 +12,9 @@ Before the new one: say the Urdu for the skin, then the Urdu for the chest.
 You'll want to know: کڑوا.
 کڑوا — kaṛvā — "bitter".
 
+The word, taken apart.
+کڑوا (kaṛvā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kaṭuka, "pungent, bitter" (CDIAL 2641). CDIAL lists the Hindi form as kaṛuā.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for the chest, then the Urdu for bitter.
 
 You'll want to know: کھٹا.
 کھٹا — khaṭṭā — "sour".
+
+The word, taken apart.
+کھٹا (khaṭṭā) goes back to Sanskrit khaṭṭa, "sour", a word known only from the old word-lists (CDIAL 3777). CDIAL marks the Hindi form as taken over from Punjabi, and asks whether khaṭṭa is connected with kaṭu, "bitter".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for bitter, then the Urdu for sour.
 You'll want to know: نمکین.
 نمکین — namkīn — "salty".
 
+The word, taken apart.
+نمکین (namkīn) is a loan, usually traced to Persian namakīn, "salty". It is built on namak, "salt".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for sour, then the Urdu for salty.
 You'll want to know: تیز.
 تیز — tez — "fast, sharp".
 
+The word, taken apart.
+تیز (tez) is a loan, usually traced to Persian tēz, "sharp, swift".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for salty, then the Urdu for fast.
 
 You'll want to know: دھیما.
 دھیما — dhīmā — "slow, quiet".
+
+The word, taken apart.
+دھیما (dhīmā) is a tadbhava, a word inherited and reshaped by sound change. It comes from dhīmma, "slow", a form CDIAL reconstructs from its descendants (CDIAL 6814). CDIAL asks whether it is related to ḍhīmma, "lump".
 
 What you've built.
 One more word for this chapter.

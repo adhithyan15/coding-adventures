@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 241,
-  "sourceHash": "fnv1a64:d86fb13a84b38675",
+  "sourceHash": "fnv1a64:095d82b1213d4c32",
   "lessonIds": [
     "SA-C241-krte",
     "SA-C241-yena",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch241.txt",
   "json": "sanskrit/narration/ch241.json",
-  "textHash": "fnv1a64:d769663e1e22319b",
-  "jsonHash": "fnv1a64:e252e1fab7d86906",
+  "textHash": "fnv1a64:fe799009dc168162",
+  "jsonHash": "fnv1a64:e9767d8b5386c258",
   "findings": []
 }

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C442-costeggiare",
+    "language": "italian",
+    "chapter": 442,
+    "sequence": 25010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:97eba61b7d6e5563"
+  },
+  "findings": []
+}

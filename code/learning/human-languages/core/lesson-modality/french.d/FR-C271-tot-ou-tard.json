@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C271-tot-ou-tard",
+    "language": "french",
+    "chapter": 271,
+    "sequence": 15690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d9420f97ee0b77a4"
+  },
+  "findings": []
+}

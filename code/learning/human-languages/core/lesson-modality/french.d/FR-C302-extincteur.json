@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C302-extincteur",
+    "language": "french",
+    "chapter": 302,
+    "sequence": 17250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0e6006ca5528c521"
+  },
+  "findings": []
+}

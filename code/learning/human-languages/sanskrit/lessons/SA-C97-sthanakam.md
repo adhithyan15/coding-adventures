@@ -14,7 +14,8 @@ romanization: "sthānakam"
 concept_tag: SA-LOC97-STHANAKAM
 prerequisites: [SA-C97-karyalayah, SA-C97-bhojanalayah]
 sounds: []
-roots: []
+roots: [sanskrit-sthana]
+etymology_hook: "sthānaka ← sthāna 'place' (√sthā 'stand', cf. Latin stare, English stand) + -ka (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C97-bhojanalayah]
 <!-- hl-knowledge: introduces=[SA-LEX-C97-LOC97-03]; assesses=[] -->
 
 **स्थानकम्** — *sthānakam* — "a station".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sthānaka* is *sthāna* "place, standing" with the suffix *-ka*; MW already has it as "a place, a spot", and "station" for trains is a modern use. *sthāna* comes from the root √sthā "stand", which MW sets beside Latin *stare* and English *stand*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

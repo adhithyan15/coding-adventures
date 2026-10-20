@@ -12,7 +12,7 @@ concept_tag: VERB-WRITE
 prerequisites: [MR-C08-vachne]
 sounds: [matra-i, retroflex-na]
 roots: [sanskrit-likhati-scratch, sanskrit-rekha-line]
-etymology_hook: "लिहिणे is Sanskrit लिखति likhati, whose root meant to SCRATCH before it meant to write — the same move Latin made with scrībere 'to scratch' behind scribe and script, and English made with write, once 'to tear, to score'"
+etymology_hook: "लिहिणे ← Sanskrit likhati, whose root meant 'to scratch' before 'to write', as Latin scrībere did"
 duration:
   max_seconds: 285
 requires:

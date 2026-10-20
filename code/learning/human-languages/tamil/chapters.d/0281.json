@@ -1,0 +1,18 @@
+{
+  "chapter": 281,
+  "title": "A controlled Tamil location question",
+  "label": "ch:ta-a-controlled-tamil-location-question",
+  "canDo": "I can assemble one familiar Tamil location question from meaning without a visible model.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-W281-enge-controlled-question",
+    "kind": "production",
+    "summary": "Complete chapter 281 by writing one untimed, model-free Tamil location question from meaning.",
+    "assesses": [
+      "TA-LEX-TENEER-01",
+      "TA-LEX-C40-DEIXIS-06"
+    ]
+  }
+}

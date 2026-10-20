@@ -1,0 +1,11 @@
+{
+  "id": "FR-C403-demarrer",
+  "pathSegment": "FR-PATH-403-POMPE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-403-POMPE",
+      "order": 4
+    }
+  ]
+}

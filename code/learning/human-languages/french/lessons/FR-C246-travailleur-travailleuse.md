@@ -46,7 +46,7 @@ reviews_of: [FR-C246-paresseux-paresseuse]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**travailleur** — *travailler*, "to work", with *-eur*, "one who".
+**travailleur** — *travailler*, "to work", with *-eur*, "one who". *Travailler* ← Vulgar Latin *\*tripaliāre*, "to torture" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-614-RIESGO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "ES-EXT-614-RIESGO"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C530-gurgeln",
+    "language": "german",
+    "chapter": 530,
+    "sequence": 28290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:22a51cab70bcc256"
+  },
+  "findings": []
+}

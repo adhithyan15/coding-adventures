@@ -14,7 +14,8 @@ romanization: "mathalan"
 concept_tag: AR-SABAB268-MATHALAN
 prerequisites: [AR-C268-hasaba, AR-C268-bidun]
 sounds: []
-roots: []
+roots: [m-th-l]
+etymology_hook: "mathalan: built on the root m-th-l, 'to be like' (Lane); mathalan is mathal, 'a likeness', with the adverb ending -an"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C268-bidun]
 <!-- hl-knowledge: introduces=[AR-LEX-C268-SABAB268-04]; assesses=[] -->
 
 **مثلا** — *mathalan* — "for example".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مثلا** (*mathalan*) is built on the native Arabic root *m-th-l*, "to be like" (Lane). *Mathalan* is *mathal*, "a likeness", with the adverb ending *-an*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,26 @@
+{
+  "id": "SA-A1-PRON-03",
+  "category": "Sarvanāma — the pronoun",
+  "label": "object pronouns",
+  "probe": [
+    "SA-PRON-C260-MAM-01",
+    "SA-PRON-C260-TVAM-02",
+    "SA-GRAMMAR-C260-SINGULAR-OBJECTS-03",
+    "SA-PRON-C261-AVAM-01",
+    "SA-PRON-C261-YUVAM-02",
+    "SA-GRAMMAR-C261-DUAL-OBJECTS-03",
+    "SA-PRON-C262-ASMAN-01",
+    "SA-PRON-C262-YUSMAN-02",
+    "SA-GRAMMAR-C262-OBJECT-PERSON-NUMBER-03"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-PRON-02",
+    "A1-PRON-08"
+  ],
+  "note": "Closed by chapters 260-262. The six independent first- and second-person accusatives are taught one number at a time: mām/tvām, āvām/yuvām, then asmān/yuṣmān. A separate rule lesson makes the learner choose person and number, and a terminal retrieval produces all six in the already-known paśyati frame. This is deliberately not a claim that the first two personal-pronoun paradigms are complete: their short enclitic alternatives, respectful bhavantam and third-person objects remain outside this point."
+}

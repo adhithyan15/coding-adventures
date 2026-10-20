@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C319-sipho",
+    "language": "latin",
+    "chapter": 319,
+    "sequence": 17230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cdb012c1f5046202"
+  },
+  "findings": []
+}

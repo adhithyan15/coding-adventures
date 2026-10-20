@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 435,
+  "sourceHash": "fnv1a64:0d1be77c364051b0",
+  "lessonIds": [
+    "IT-C435-riscaldamento",
+    "IT-C435-termosifone",
+    "IT-C435-condizionatore",
+    "IT-C435-rinfrescare",
+    "IT-C435-scaldabagno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch435.txt",
+  "json": "italian/narration/ch435.json",
+  "textHash": "fnv1a64:da9d3b6f9c23cfcd",
+  "jsonHash": "fnv1a64:6b8669ce227f6bab",
+  "findings": []
+}

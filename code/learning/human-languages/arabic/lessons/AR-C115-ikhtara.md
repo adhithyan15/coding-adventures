@@ -14,7 +14,8 @@ romanization: "ikhtāra"
 concept_tag: AR-VERB-IKHTARA
 prerequisites: [AR-C114-tamanna, AR-C115-qarar]
 sounds: []
-roots: []
+roots: [kh-y-r]
+etymology_hook: "ikhtāra: built on the root kh-y-r, 'good' (Lane); Form VIII ikhtāra is 'to take the best', to choose"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C115-qarar]
 <!-- hl-knowledge: introduces=[AR-LEX-C115-WANT115-02]; assesses=[] -->
 
 **اختار** — *ikhtāra* — "to choose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اختار** (*ikhtāra*) is built on the native Arabic root *kh-y-r*, "good; to choose" (Lane). Form VIII *ikhtāra* is "to take the best", to choose.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

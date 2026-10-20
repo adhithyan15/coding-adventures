@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C672-senalizacion",
+    "language": "spanish",
+    "chapter": 672,
+    "sequence": 23470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:df9dc33232aae072"
+  },
+  "findings": []
+}

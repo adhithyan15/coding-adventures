@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-448-TABACARIA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-448-TABACARIA"
+  ],
+  "after": []
+}

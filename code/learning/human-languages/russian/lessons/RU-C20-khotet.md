@@ -11,7 +11,7 @@ concept_tag: VERB-WANT
 romanization: khatét
 prerequisites: [RU-W10-zapyataya]
 sounds: []
-roots: [pie-uncertain]
+roots: [slavic-khoteti]
 etymology_hook: "хотеть is native Slavic with no secure cousin outside the family — one of the plainest, oldest words in the language and one of the least traceable"
 duration:
   max_seconds: 250

@@ -14,7 +14,8 @@ romanization: "khânande"
 concept_tag: FA-KAR215-KHANANDE
 prerequisites: [FA-C215-khabarnegar, FA-C215-bazigar]
 sounds: []
-roots: []
+roots: [proto-iranian-hwan]
+etymology_hook: "khânande: Persian khân- 'sing' (khândan) + -ande '-ing'; inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C215-bazigar]
 <!-- hl-knowledge: introduces=[FA-LEX-C215-KAR215-05]; assesses=[] -->
 
 **خواننده** — *khânande* — "a singer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khânande* is *khân-*, the present stem of *khândan*, "to read, to sing", with *-ande*, "-ing": the one singing. The verb is inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

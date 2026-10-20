@@ -1,0 +1,19 @@
+{
+  "chapter": 494,
+  "title": "Quando finisce",
+  "label": "ch:it-quando-finisce",
+  "canDo": "I can talk about relationships ending and starting again.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-R494-ripasso-487-494",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 494: I can talk about relationships ending and starting again.",
+    "assesses": [
+      "IT-LEX-C494-SEPARARSI-03",
+      "IT-LEX-C494-SEPARARSI-04",
+      "IT-LEX-C494-SEPARARSI-05"
+    ]
+  }
+}

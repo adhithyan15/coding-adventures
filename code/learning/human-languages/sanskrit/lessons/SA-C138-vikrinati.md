@@ -14,7 +14,8 @@ romanization: "vikrīṇāti"
 concept_tag: SA-VERB-VIKRINATI
 prerequisites: [SA-C137-raksati, SA-C137-jvalati]
 sounds: []
-roots: []
+roots: [sanskrit-vikrinati, sanskrit-krinati]
+etymology_hook: "vikrīṇāti ← vi 'away' + √krī 'buy': 'sells' (MW); MW compares √krī with English hire"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C137-jvalati]
 <!-- hl-knowledge: introduces=[SA-LEX-C138-ACT138-01]; assesses=[] -->
 
 **विक्रीणाति** — *vikrīṇāti* — "sells".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vikrīṇāti* comes from *vi* "away, apart" and the root √krī "buy" (MW): "buys away", which is to sell. MW sets √krī beside Greek *priamai* "buy" and English *hire*, and the plain *krīṇāti* "buys" lives on as Nepali *kinnu* and Bengali *kinā* "to buy" (CDIAL 3594).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

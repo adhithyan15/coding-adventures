@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 331,
+  "sourceHash": "fnv1a64:73156b9a9efeab0d",
+  "lessonIds": [
+    "PT-C331-temperar",
+    "PT-C331-tempero",
+    "PT-C331-refogar",
+    "PT-C331-refogado",
+    "PT-C331-lume-brando"
+  ],
+  "tex": "portuguese/book/chapters/ch331-cebola-e-alho.tex"
+}

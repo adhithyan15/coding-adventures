@@ -14,7 +14,8 @@ romanization: "ārāmdeh"
 concept_tag: UR-SIFAT249-ARAMDEH
 prerequisites: [UR-C249-rangin, UR-C249-pursukun]
 sounds: []
-roots: []
+roots: [persian-aram]
+etymology_hook: "ārāmdeh: Persian ārām 'rest' + deh 'giving'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C249-pursukun]
 <!-- hl-knowledge: introduces=[UR-LEX-C249-SIFAT249-04]; assesses=[] -->
 
 **آرام دہ** — *ārāmdeh* — "comfortable".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**آرام دہ** (*ārāmdeh*) is "rest-giving". It joins Persian *ārām*, "rest, ease", and *-deh*, "giving".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sâye"
 concept_tag: FA-CHIZ208-SAYE
 prerequisites: [FA-C208-yakh, FA-C208-tagarg]
 sounds: []
-roots: []
+roots: [persian-saya]
+etymology_hook: "sâye: inherited, usually traced to Middle Persian sāyag"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C208-tagarg]
 <!-- hl-knowledge: introduces=[FA-LEX-C208-CHIZ208-04]; assesses=[] -->
 
 **سایه** — *sâye* — "shade, a shadow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sâye* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *sāyag*, "shade". EtymDB takes it back to the Indo-European word for "shade" behind Greek *skia*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

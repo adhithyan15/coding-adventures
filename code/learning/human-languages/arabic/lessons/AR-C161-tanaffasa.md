@@ -14,7 +14,8 @@ romanization: "tanaffasa"
 concept_tag: AR-VERB-TANAFFASA
 prerequisites: [AR-C160-istahamma, AR-C161-atasa]
 sounds: []
-roots: []
+roots: [n-f-s]
+etymology_hook: "tanaffasa: built on the root n-f-s, 'breath' (Lane); tanaffasa is Form V, 'to draw breath'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C161-atasa]
 <!-- hl-knowledge: introduces=[AR-LEX-C161-ACT161-02]; assesses=[] -->
 
 **تنفس** — *tanaffasa* — "to breathe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تنفس** (*tanaffasa*) is built on the native Arabic root *n-f-s*, "breath; the soul" (Lane). *Tanaffasa* is Form V, "to draw breath".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

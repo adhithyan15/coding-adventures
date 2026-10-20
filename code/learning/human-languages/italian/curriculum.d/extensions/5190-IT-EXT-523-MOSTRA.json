@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-523-MOSTRA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about visiting an exhibition.",
+  "prerequisites": []
+}

@@ -14,7 +14,8 @@ romanization: "jāmnī"
 concept_tag: UR-QUAL137-JAMNI
 prerequisites: [UR-C136-pakka, UR-C136-gulabi]
 sounds: []
-roots: []
+roots: [indo-aryan-jambuna]
+etymology_hook: "jāmnī: the colour of the jāmun fruit, which CDIAL lists as jāman under *jambūna (CDIAL 5136)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C136-gulabi]
 <!-- hl-knowledge: introduces=[UR-LEX-C137-QUAL137-01]; assesses=[] -->
 
 **جامنی** — *jāmnī* — "purple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جامنی** (*jāmnī*) is "jāmun-coloured", the purple of the jambolan fruit, with the ending *-ī*. CDIAL lists Hindi *jāmun* and *jāman*, the tree and its fruit, under *\*jambūna*, a form beside Sanskrit *jambula* (CDIAL 5136).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

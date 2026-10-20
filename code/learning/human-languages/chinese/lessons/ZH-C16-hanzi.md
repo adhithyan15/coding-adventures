@@ -11,8 +11,8 @@ concept_tag: ZH-LANGUAGE-IDENTITY-HANZI
 gloss: Chinese character; Han character
 prerequisites: [ZH-W16-han-delayed]
 sounds: [tone-4]
-roots: []
-etymology_hook: Han Chinese plus written character makes the precise compound 汉字.
+roots: [middle-chinese-xanh, middle-chinese-dzih]
+etymology_hook: "hànzì: Middle Chinese xanH, a river, then the Han dynasty, + dziH 'written character'"
 duration:
   max_seconds: 155
 requires:
@@ -42,6 +42,10 @@ reviews_of: [ZH-C16-hear-hanzi, ZH-W16-han-delayed, ZH-C16-zi]
 > **汉字** — *hànzì* — **Chinese character**
 
 [YOU READ: the two characters first without pinyin — Han Chinese + written character]
+
+Both are inherited from Middle Chinese. *xanH* was the name of a river
+(Guangyun); the Han dynasty took its name from that region, and Han came to mean
+Chinese. *dziH* is "written character".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-HANZI-01] -->

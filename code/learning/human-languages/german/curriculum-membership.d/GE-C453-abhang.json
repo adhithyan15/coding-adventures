@@ -1,0 +1,11 @@
+{
+  "id": "GE-C453-abhang",
+  "pathSegment": "GE-PATH-453-GIPFEL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-453-GIPFEL",
+      "order": 3
+    }
+  ]
+}

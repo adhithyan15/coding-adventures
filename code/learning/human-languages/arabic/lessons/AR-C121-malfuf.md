@@ -14,7 +14,8 @@ romanization: "malfūf"
 concept_tag: AR-THINGS121-MALFUF
 prerequisites: [AR-C120-khass, AR-C120-badhinjan, AR-C21-kalb-qitt, AR-C21-kalb-qitt]
 sounds: []
-roots: []
+roots: [l-f-f]
+etymology_hook: "malfūf: built on the root l-f-f, 'to wrap, to roll up' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [AR-C120-badhinjan]
 <!-- hl-knowledge: introduces=[AR-LEX-C121-THINGS121-01]; assesses=[] -->
 
 **ملفوف** — *malfūf* — "a cabbage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ملفوف** (*malfūf*) is built on the native Arabic root *l-f-f*, "to wrap, to roll up" (Lane). *Malfūf* is the passive participle, "wrapped", for the cabbage's folded leaves.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

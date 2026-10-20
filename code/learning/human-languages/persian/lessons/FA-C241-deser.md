@@ -14,7 +14,8 @@ romanization: "deser"
 concept_tag: FA-CHIZ241-DESER
 prerequisites: [FA-C241-narangi, FA-C241-ajil]
 sounds: []
-roots: []
+roots: [french-dessert]
+etymology_hook: "deser ← French dessert 'dessert'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C241-ajil]
 <!-- hl-knowledge: introduces=[FA-LEX-C241-CHIZ241-05]; assesses=[] -->
 
 **دسر** — *deser* — "a dessert".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*deser* is borrowed from French *dessert*, "dessert" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,19 @@
+{
+  "chapter": 613,
+  "title": "Lo que hace falta",
+  "label": "ch:es-lo-que-hace-falta",
+  "canDo": "I can say what something requires and how likely it is.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ES-C613-probabilidad",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 613: I can say what something requires and how likely it is.",
+    "assesses": [
+      "ES-LEX-C613-REQUIERE-03",
+      "ES-LEX-C613-REQUIERE-04",
+      "ES-LEX-C613-REQUIERE-05"
+    ]
+  }
+}

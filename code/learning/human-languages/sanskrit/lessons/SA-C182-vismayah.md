@@ -14,7 +14,8 @@ romanization: "vismayaḥ"
 concept_tag: SA-WEL182-VISMAYAH
 prerequisites: [SA-C181-nadi, SA-C181-svasthyam]
 sounds: []
-roots: []
+roots: [sanskrit-vismaya]
+etymology_hook: "vismaya ← vi- + √smi 'smile'; MW compares English smile and Latin mīrus 'wonderful' (CDIAL 12019)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C181-svasthyam]
 <!-- hl-knowledge: introduces=[SA-LEX-C182-WEL182-01]; assesses=[] -->
 
 **विस्मयः** — *vismayaḥ* — "wonder, surprise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vismaya* is built on *vi-* and the root √smi, "to smile" (MW), so wonder starts as a smile of surprise (CDIAL 12019). The root is inherited from Indo-European: MW compares English *smile* and Latin *mīrus*, "wonderful".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

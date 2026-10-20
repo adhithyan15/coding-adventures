@@ -1,0 +1,19 @@
+{
+  "chapter": 503,
+  "title": "Giochi da tavolo",
+  "label": "ch:it-giochi-da-tavolo",
+  "canDo": "I can talk about board games.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-C503-barare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 503: I can talk about board games.",
+    "assesses": [
+      "IT-LEX-C503-GIOCHI-03",
+      "IT-LEX-C503-GIOCHI-04",
+      "IT-LEX-C503-GIOCHI-05"
+    ]
+  }
+}

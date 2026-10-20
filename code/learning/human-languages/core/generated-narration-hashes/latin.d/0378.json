@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 378,
+  "sourceHash": "fnv1a64:33d0471a6d0796be",
+  "lessonIds": [
+    "LA-C378-exerceo",
+    "LA-C378-fabricor",
+    "LA-C378-texo",
+    "LA-C378-suo",
+    "LA-C378-sculpo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch378.txt",
+  "json": "latin/narration/ch378.json",
+  "textHash": "fnv1a64:51e431d3bd01f243",
+  "jsonHash": "fnv1a64:daa4a9ea288033a6",
+  "findings": []
+}

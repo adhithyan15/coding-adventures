@@ -14,7 +14,8 @@ romanization: "ʿāṣima"
 concept_tag: AR-MAKAN204-ASIMA
 prerequisites: [AR-C204-mintaqa, AR-C204-markaz]
 sounds: []
-roots: []
+roots: [ʿ-ṣ-m]
+etymology_hook: "ʿāṣima: built on the root ʿ-ṣ-m, 'to protect, to hold back' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C204-markaz]
 <!-- hl-knowledge: introduces=[AR-LEX-C204-MAKAN204-04]; assesses=[] -->
 
 **عاصمة** — *ʿāṣima* — "a capital city".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عاصمة** (*ʿāṣima*) is built on the native Arabic root *ʿ-ṣ-m*, "to protect, to hold back" (Lane). *ʿĀṣima* is the feminine active participle, "one that protects"; the capital city is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

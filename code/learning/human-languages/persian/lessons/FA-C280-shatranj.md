@@ -14,7 +14,8 @@ romanization: "shatranj"
 concept_tag: FA-CHIZ280-SHATRANJ
 prerequisites: [FA-C279-lale, FA-C279-yas]
 sounds: []
-roots: []
+roots: [sanskrit-chaturanga]
+etymology_hook: "shatranj ← Arabic šaṭranj ← Middle Persian čatrang ← Sanskrit caturaṅga (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C279-yas]
 <!-- hl-knowledge: introduces=[FA-LEX-C280-CHIZ280-01]; assesses=[] -->
 
 **شطرنج** — *shatranj* — "chess".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shatranj* is borrowed from Arabic *šaṭranj*, which goes back to Middle Persian *čatrang*, and that to Sanskrit *caturaṅga*, the "four-limbed" army (EtymDB). Persian took its own word back in Arabic dress.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,21 @@
+{
+  "id": "SA-A1-X-15",
+  "category": "Specific notions — the lexical fields",
+  "label": "hospitality as a field of its own",
+  "probe": [
+    "SA-LEX-C43-COURTESY-01",
+    "SA-LEX-C26-ROLE-04",
+    "SA-CULTURE-WELCOMING-A-GUEST",
+    "SA-LEX-SVAGATAM",
+    "SA-LEX-C30-WELCOME-05",
+    "SA-LEX-C37-COURTESY-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [],
+  "sanskritSpecific": true,
+  "note": "Sanskrit-specific. ātithyam, atithiḥ, svāgatam, añjaliḥ, śāntiḥ and a culture atom about receiving a guest. No Spanish A1 point asks for this and three Sanskrit chapters are devoted to it; a proxy-shaped inventory would have missed the field entirely."
+}

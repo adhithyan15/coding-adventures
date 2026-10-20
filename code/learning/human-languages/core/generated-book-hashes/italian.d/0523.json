@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 523,
+  "sourceHash": "fnv1a64:7f0c3712b02c4300",
+  "lessonIds": [
+    "IT-C523-mostra",
+    "IT-C523-capolavoro",
+    "IT-C523-ritratto",
+    "IT-C523-affresco",
+    "IT-C523-restaurare"
+  ],
+  "tex": "italian/book/chapters/ch523-una-mostra.tex"
+}

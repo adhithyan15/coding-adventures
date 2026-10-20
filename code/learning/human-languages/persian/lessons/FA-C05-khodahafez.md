@@ -12,7 +12,7 @@ concept_tag: FAREWELL
 prerequisites: [FA-C05-hafez]
 sounds: [rtl, kh, long-a, short-vowels-unwritten]
 roots: [middle-persian-xwaday, arabic-h-f-z]
-etymology_hook: The standard farewell joins inherited Persian khodâ with Arabic-rooted hâfez in a compact protective wish; Persian normally writes the two spoken pieces together as خداحافظ.
+etymology_hook: "khodâ hâfez: inherited khodâ, Middle Persian xwadāy 'lord', + Arabic ḥāfiẓ 'guardian' (Lane, ḥ-f-ẓ)"
 duration:
   max_seconds: 220
 requires:
@@ -49,6 +49,11 @@ Persian normally writes the two spoken pieces together. Start with **خدا**, a
 **حافظ**. [YOU READ: the joined spelling **خداحافظ** from the right edge]
 
 Keep the two meaning layers available underneath the complete form.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khodâ hâfez* is "God, the guardian". *khodâ* is inherited, from Middle Persian *xwadāy*, "lord"; *hâfez* is borrowed from Arabic *ḥāfiẓ*, "guardian, keeper" (EtymDB; root *ḥ-f-ẓ*, Lane).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-KHODAHAFEZ, FA-SCRIPT-KHODAHAFEZ-JOINED] -->

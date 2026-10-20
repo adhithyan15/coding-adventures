@@ -14,7 +14,8 @@ romanization: "pariruz"
 concept_tag: FA-TIME79-PARIRUZ
 prerequisites: [FA-C78-dastan, FA-C79-zohr]
 sounds: []
-roots: []
+roots: [persian-roz]
+etymology_hook: "pariruz: Persian pari- 'before' + ruz 'day' (Middle Persian rōz, EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C79-zohr]
 <!-- hl-knowledge: introduces=[FA-LEX-C79-TIME79-02]; assesses=[] -->
 
 **پریروز** — *pariruz* — "the day before yesterday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pariruz* is *pari-*, "before", with *ruz*, "day". *ruz* continues Middle Persian *rōz* (EtymDB), and *pari-* is usually traced to an old prefix meaning "before".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

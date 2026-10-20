@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 444,
+  "sourceHash": "fnv1a64:c0a1e56e1a133eec",
+  "lessonIds": [
+    "PT-C444-poste",
+    "PT-C444-ecoponto",
+    "PT-C444-sarjeta",
+    "PT-C444-pilarete",
+    "PT-C444-obstruir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch444.txt",
+  "json": "portuguese/narration/ch444.json",
+  "textHash": "fnv1a64:b9cda34491729c19",
+  "jsonHash": "fnv1a64:8259bf47a5ddd7bb",
+  "findings": []
+}

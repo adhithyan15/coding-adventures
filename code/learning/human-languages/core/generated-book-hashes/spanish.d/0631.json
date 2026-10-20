@@ -1,0 +1,14 @@
+{
+  "language": "spanish",
+  "chapter": 631,
+  "sourceHash": "fnv1a64:f522a292ffd4bcee",
+  "lessonIds": [
+    "ES-C631-liquidacion",
+    "ES-C631-rebaja",
+    "ES-C631-venta",
+    "ES-C631-demanda",
+    "ES-C631-valer",
+    "ES-R631-repaso-624-631"
+  ],
+  "tex": "spanish/book/chapters/ch631-ofertas-y-rebajas.tex"
+}

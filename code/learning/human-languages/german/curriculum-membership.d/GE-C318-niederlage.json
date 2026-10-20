@@ -1,0 +1,11 @@
+{
+  "id": "GE-C318-niederlage",
+  "pathSegment": "GE-PATH-318-KRIEG",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-318-KRIEG",
+      "order": 4
+    }
+  ]
+}

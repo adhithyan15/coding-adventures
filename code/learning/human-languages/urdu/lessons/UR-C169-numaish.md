@@ -14,7 +14,8 @@ romanization: "numāish"
 concept_tag: UR-CHIZ169-NUMAISH
 prerequisites: [UR-C169-bansuri, UR-C169-nach]
 sounds: []
-roots: []
+roots: [persian-numayish]
+etymology_hook: "numāish: usually traced to Persian numāyish 'display, a showing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C169-nach]
 <!-- hl-knowledge: introduces=[UR-LEX-C169-CHIZ169-03]; assesses=[] -->
 
 **نمائش** — *numāish* — "an exhibition".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نمائش** (*numāish*) is a loan, usually traced to Persian *numāyish*, "display, a showing". It is built on *numūdan*, "to show".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

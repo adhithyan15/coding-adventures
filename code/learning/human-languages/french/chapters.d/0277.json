@@ -1,0 +1,19 @@
+{
+  "chapter": 277,
+  "title": "Étape par étape",
+  "label": "ch:fr-etape-par-etape",
+  "canDo": "I can describe the stages of an event: a step, a phase, the order of events, an instant, and what came at the end.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C277-a-l-issue-de",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 277: I can describe the stages of an event: a step, a phase, the order of events, an instant, and what came at the end.",
+    "assesses": [
+      "FR-LEX-C277-ETAPE-03",
+      "FR-LEX-C277-ETAPE-04",
+      "FR-LEX-C277-ETAPE-05"
+    ]
+  }
+}

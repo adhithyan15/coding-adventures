@@ -1,0 +1,19 @@
+{
+  "chapter": 474,
+  "title": "Di che umore sei?",
+  "label": "ch:it-di-che-umore-sei",
+  "canDo": "I can describe moods: calm, moody or on edge.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-C474-sbuffare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 474: I can describe moods: calm, moody or on edge.",
+    "assesses": [
+      "IT-LEX-C474-UMORE-03",
+      "IT-LEX-C474-UMORE-04",
+      "IT-LEX-C474-UMORE-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-613-REQUIERE",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "ES-EXT-613-REQUIERE"
+  ],
+  "after": []
+}

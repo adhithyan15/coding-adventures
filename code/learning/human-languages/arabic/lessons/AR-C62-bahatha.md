@@ -14,7 +14,8 @@ romanization: "baḥatha"
 concept_tag: AR-VERB-BAHATHA
 prerequisites: [AR-C61-qataa, AR-C62-waqafa]
 sounds: []
-roots: []
+roots: [b-ḥ-th]
+etymology_hook: "baḥatha: built on the root b-ḥ-th, 'to dig, to scratch up the earth' (Lane); Lane's first sense is digging in the ground"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C62-waqafa]
 <!-- hl-knowledge: introduces=[AR-LEX-C62-VERBS62-02]; assesses=[] -->
 
 **بحث** — *baḥatha* — "to look for (he looked for)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بحث** (*baḥatha*) is built on the native Arabic root *b-ḥ-th*, "to dig, to scratch up the earth; to search" (Lane). Lane's first sense is digging in the ground; searching grew from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

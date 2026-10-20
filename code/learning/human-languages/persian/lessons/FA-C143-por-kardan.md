@@ -14,7 +14,8 @@ romanization: "por kardan"
 concept_tag: FA-VERB-POR-KARDAN
 prerequisites: [FA-C143-faramush-kardan, FA-C143-yad-dadan]
 sounds: []
-roots: []
+roots: [persian-pur, pie-kwer]
+etymology_hook: "por kardan: por ← Middle Persian purr 'full' (EtymDB) + kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C143-yad-dadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C143-KONESH143-04]; assesses=[] -->
 
 **پر کردن** — *por kardan* — "to fill; to fill in (a form)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*por kardan* pairs *por*, "full", with *kardan*, "to make". *por* is inherited: EtymDB traces it to Middle Persian *purr* and further to the Indo-European word behind English *full*. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

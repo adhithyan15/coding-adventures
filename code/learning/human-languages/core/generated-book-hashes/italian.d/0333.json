@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:41f493c8f7daa06b",
+  "lessonIds": [
+    "IT-C333-bollire",
+    "IT-C333-lessare",
+    "IT-C333-scolare",
+    "IT-C333-coperchio",
+    "IT-C333-tegame"
+  ],
+  "tex": "italian/book/chapters/ch333-sul-fuoco.tex"
+}

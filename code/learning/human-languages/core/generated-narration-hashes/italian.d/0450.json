@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 450,
+  "sourceHash": "fnv1a64:692a4590e352c9b4",
+  "lessonIds": [
+    "IT-C450-sagra",
+    "IT-C450-corteo",
+    "IT-C450-processione",
+    "IT-C450-patrono",
+    "IT-C450-bancarella"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch450.txt",
+  "json": "italian/narration/ch450.json",
+  "textHash": "fnv1a64:b3bcc910b0e7f710",
+  "jsonHash": "fnv1a64:3ded8a455fe9e53f",
+  "findings": []
+}

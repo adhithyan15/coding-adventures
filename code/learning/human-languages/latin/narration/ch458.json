@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 458,
+  "title": "Alley, Neighbourhood, Privy, Sewer, Water tower",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:6740a9bc98a7516a",
+  "lessons": [
+    {
+      "id": "LA-C458-angiportum",
+      "sequence": 24390,
+      "title": "angiportum, angiportī — an alley, a narrow lane",
+      "headword": "angiportum, angiportī",
+      "romanization": "angiportum, angiportī",
+      "gloss": "an alley, a narrow lane",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:66a228838281887e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a timber, then the Latin for a beam."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: angiportum, angiportī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "angiportum, angiportī — \"an alley, a narrow lane\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Nocte angiportum obscūrum et perīculōsum est. At night the alley is dark and dangerous."
+            },
+            {
+              "kind": "speech",
+              "text": "Second declension, neuter: angiportum, angiportī n.; also angiportus, angiportūs m. A narrow side street between houses."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "angiportum is built, as Lewis & Short explain under angiportus, on the root of angustus 'narrow' and on portus in its old sense 'passage'. EtymDB does not list it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "angiportum, angiportī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *angiportum, angiportī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "angiportum, angiportī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *angiportum, angiportī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with angiportum, angiportī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *angiportum, angiportī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a timber, then the Latin for a beam, then say angiportum, angiportī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a timber, then the Latin for a beam, then say *angiportum, angiportī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does angiportum, angiportī mean? (\"An alley, a narrow lane\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C458-vicinia",
+      "sequence": 24400,
+      "title": "vīcīnia, vīcīniae — a neighbourhood; the neighbours",
+      "headword": "vīcīnia, vīcīniae",
+      "romanization": "vīcīnia, vīcīniae",
+      "gloss": "a neighbourhood; the neighbours",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:24b98135c4c1b3c8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a beam, then the Latin for an alley."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: vīcīnia, vīcīniae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vīcīnia, vīcīniae — \"a neighbourhood; the neighbours\"."
+            },
+            {
+              "kind": "speech",
+              "text": "In nostrā vīcīniā taberna bona est. In our neighbourhood there is a good shop."
+            },
+            {
+              "kind": "speech",
+              "text": "First declension, feminine: vīcīnia, vīcīniae f., from vīcīnus 'neighbour'. English vicinity comes from the related vīcīnitās."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vīcīnia is built on vīcīnus 'neighbour' with the suffix -ia (EtymDB; Lewis & Short), and vīcīnus comes from vīcus 'street, village'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vīcīnia, vīcīniae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vīcīnia, vīcīniae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vīcīnia, vīcīniae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vīcīnia, vīcīniae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with vīcīnia, vīcīniae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *vīcīnia, vīcīniae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a beam, then the Latin for an alley, then say vīcīnia, vīcīniae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a beam, then the Latin for an alley, then say *vīcīnia, vīcīniae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does vīcīnia, vīcīniae mean? (\"A neighbourhood; the neighbours\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C458-latrina",
+      "sequence": 24410,
+      "title": "lātrīna, lātrīnae — a latrine, a privy, a lavatory",
+      "headword": "lātrīna, lātrīnae",
+      "romanization": "lātrīna, lātrīnae",
+      "gloss": "a latrine, a privy, a lavatory",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:33497f67527122d4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for an alley, then the Latin for a neighbourhood."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: lātrīna, lātrīnae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lātrīna, lātrīnae — \"a latrine, a privy, a lavatory\"."
+            },
+            {
+              "kind": "speech",
+              "text": "In thermīs lātrīna pūblica est. In the baths there is a public lavatory."
+            },
+            {
+              "kind": "speech",
+              "text": "First declension, feminine: lātrīna, lātrīnae f. Lewis & Short note that it first meant a bath. English latrine comes from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lātrīna is shortened from lavātrīna 'a place for washing', built on lavō 'to wash' (Lewis & Short). English latrine comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lātrīna, lātrīnae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lātrīna, lātrīnae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lātrīna, lātrīnae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lātrīna, lātrīnae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with lātrīna, lātrīnae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *lātrīna, lātrīnae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for an alley, then the Latin for a neighbourhood, then say lātrīna, lātrīnae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for an alley, then the Latin for a neighbourhood, then say *lātrīna, lātrīnae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does lātrīna, lātrīnae mean? (\"A latrine, a privy, a lavatory\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C458-cloaca",
+      "sequence": 24420,
+      "title": "cloāca, cloācae — a sewer, a drain",
+      "headword": "cloāca, cloācae",
+      "romanization": "cloāca, cloācae",
+      "gloss": "a sewer, a drain",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e392129d460445c4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a neighbourhood, then the Latin for a latrine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: cloāca, cloācae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cloāca, cloācae — \"a sewer, a drain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Aqua sordida per cloācam in flūmen it. Dirty water runs through the sewer into the river."
+            },
+            {
+              "kind": "speech",
+              "text": "First declension, feminine: cloāca, cloācae f. The great sewers of old towns still carry water."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cloāca is built on an old verb cluō 'to cleanse, to purge' (EtymDB; Lewis & Short), so it is a channel that washes the city clean. English keeps cloaca as a term in zoology."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cloāca, cloācae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cloāca, cloācae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cloāca, cloācae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cloāca, cloācae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with cloāca, cloācae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *cloāca, cloācae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a neighbourhood, then the Latin for a latrine, then say cloāca, cloācae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a neighbourhood, then the Latin for a latrine, then say *cloāca, cloācae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does cloāca, cloācae mean? (\"A sewer, a drain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C458-castellum",
+      "sequence": 24430,
+      "title": "castellum, castellī — a water tower, a reservoir; a fort, a stronghold",
+      "headword": "castellum, castellī",
+      "romanization": "castellum, castellī",
+      "gloss": "a water tower, a reservoir; a fort, a stronghold",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:96675450c01b7088",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a latrine, then the Latin for a sewer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: castellum, castellī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "castellum, castellī — \"a water tower, a reservoir; a fort, a stronghold\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Aqua ex aquaeductū in castellum venit et inde in urbem. Water comes from the aqueduct into the water tower and from there into the city."
+            },
+            {
+              "kind": "speech",
+              "text": "Second declension, neuter: castellum, castellī n., a diminutive of castrum 'fort'. The castellum aquae shared the water out to the pipes. English castle comes from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "castellum is a diminutive of castrum 'fort, fortified place' (EtymDB; Lewis & Short), and Lewis & Short also give the water reservoir of an aqueduct. English castle comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "castellum, castellī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *castellum, castellī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "castellum, castellī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *castellum, castellī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with castellum, castellī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *castellum, castellī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a latrine, then the Latin for a sewer, then say castellum, castellī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a latrine, then the Latin for a sewer, then say *castellum, castellī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does castellum, castellī mean? (\"A water tower, a reservoir; a fort, a stronghold\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

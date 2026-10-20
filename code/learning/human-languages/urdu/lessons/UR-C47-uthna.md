@@ -14,7 +14,8 @@ romanization: "uṭhnā"
 concept_tag: UR-VERB-UTHNA
 prerequisites: [UR-C47-baithna, UR-C47-sona]
 sounds: []
-roots: []
+roots: [indo-aryan-ut-sthati]
+etymology_hook: "uṭhnā ← *ut-sthāti 'stands up', a reconstructed form; a tadbhava (CDIAL 1900)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C47-sona]
 <!-- hl-knowledge: introduces=[UR-LEX-C47-VERBS47-03]; assesses=[] -->
 
 **اٹھنا** — *uṭhnā* — "to get up".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اٹھنا** (*uṭhnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ut-sthāti*, "stands up", a form CDIAL reconstructs from its descendants (CDIAL 1900).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

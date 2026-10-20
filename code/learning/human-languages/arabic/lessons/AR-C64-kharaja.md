@@ -14,7 +14,8 @@ romanization: "kharaja"
 concept_tag: AR-VERB-KHARAJA
 prerequisites: [AR-C63-sanaa, AR-C63-dakhala]
 sounds: []
-roots: []
+roots: [kh-r-j]
+etymology_hook: "kharaja: built on the root kh-r-j, 'to go out' (Lane); kharaja is the plain verb, 'he went out'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C63-dakhala]
 <!-- hl-knowledge: introduces=[AR-LEX-C64-VERBS64-01]; assesses=[] -->
 
 **خرج** — *kharaja* — "to go out (he went out)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خرج** (*kharaja*) is built on the native Arabic root *kh-r-j*, "to go out" (Lane). *Kharaja* is the plain verb, "he went out".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

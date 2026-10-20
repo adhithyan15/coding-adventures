@@ -14,7 +14,8 @@ romanization: "kṣudhā"
 concept_tag: SA-NEEDS-HUNGER
 prerequisites: [SA-C66-health, SA-C67-sleep]
 sounds: []
-roots: []
+roots: [sanskrit-kshudha]
+etymology_hook: "kṣudhā 'hunger', the later form of Vedic kṣudh, from the root √kṣudh 'be hungry' (MW; CDIAL 3716)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C67-sleep]
 <!-- hl-knowledge: introduces=[SA-LEX-C67-NEEDS-02]; assesses=[] -->
 
 **क्षुधा** (*kṣudhā*) — "hunger". **मम क्षुधा अस्ति** — "I am hungry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Kṣudhā* is the later form of Vedic *kṣudh*, "hunger", built on the root √kṣudh,
+"to be hungry" (MW, CDIAL 3716).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

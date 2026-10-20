@@ -1,0 +1,11 @@
+{
+  "id": "SA-C272-condolence-first-retrieval",
+  "pathSegment": "SA-PATH-272-CONDOLENCE272",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-272-CONDOLENCE272",
+      "order": 1
+    }
+  ]
+}

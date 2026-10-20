@@ -14,7 +14,8 @@ romanization: "aḍāfa"
 concept_tag: AR-VERB-ADAFA
 prerequisites: [AR-C230-nabaha, AR-C230-atama]
 sounds: []
-roots: []
+roots: [ḍ-y-f]
+etymology_hook: "aḍāfa: built on the root ḍ-y-f, 'to lodge as a guest' (Lane); aḍāfa is Form IV, 'to attach, to add'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C230-atama]
 <!-- hl-knowledge: introduces=[AR-LEX-C230-ACT230-03]; assesses=[] -->
 
 **أضاف** — *aḍāfa* — "to add".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**أضاف** (*aḍāfa*) is built on the native Arabic root *ḍ-y-f*, "to lodge as a guest" (Lane). *Aḍāfa* is Form IV, "to attach, to add".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

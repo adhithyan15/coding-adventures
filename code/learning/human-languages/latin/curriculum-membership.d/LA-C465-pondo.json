@@ -1,0 +1,11 @@
+{
+  "id": "LA-C465-pondo",
+  "pathSegment": "LA-PATH-465-MODIUS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-465-MODIUS",
+      "order": 2
+    }
+  ]
+}

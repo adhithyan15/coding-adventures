@@ -14,7 +14,8 @@ romanization: "nava"
 concept_tag: SA-ADJ-NEW
 prerequisites: [SA-C15-good]
 sounds: []
-roots: []
+roots: [sanskrit-nava-new]
+etymology_hook: "nava 'new' is inherited: MW compares Latin novus and Greek neos; Hindi naī comes from it (CDIAL 6983)"
 duration:
   max_seconds: 210
 requires:
@@ -50,6 +51,13 @@ You met *uttama* a moment ago. Put them side by side and nothing about either on
 
 The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Nava* is inherited from Proto-Indo-European: MW compares Latin *novus* and
+Greek *neos*, and English **new** is the same word. It lives on as Hindi
+*nawā* and *naī* (CDIAL 6983).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C15-ADJ-04] -->

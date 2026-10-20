@@ -14,7 +14,8 @@ romanization: "taku"
 concept_tag: JA-VERB-TAKU
 prerequisites: [JA-C85-suu, JA-C85-maku]
 sounds: []
-roots: []
+roots: [japanese-taku]
+etymology_hook: "taku: native Japanese, inherited, not borrowed; kanji 炊く attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C85-maku]
 <!-- hl-knowledge: introduces=[JA-LEX-C85-ACT85-04]; assesses=[] -->
 
 **たく** — *taku* — "to cook (rice)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**たく** (*taku*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

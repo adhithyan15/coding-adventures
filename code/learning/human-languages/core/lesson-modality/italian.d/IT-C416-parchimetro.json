@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C416-parchimetro",
+    "language": "italian",
+    "chapter": 416,
+    "sequence": 23690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5eb34bf8c562a9ae"
+  },
+  "findings": []
+}

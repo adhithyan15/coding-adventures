@@ -1,0 +1,11 @@
+{
+  "id": "GE-C419-festsitzen",
+  "pathSegment": "GE-PATH-419-ZWISCHENLANDUNG",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-419-ZWISCHENLANDUNG",
+      "order": 3
+    }
+  ]
+}

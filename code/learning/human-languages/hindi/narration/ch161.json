@@ -4,7 +4,7 @@
   "chapter": 161,
   "title": "To cook, To cut, To break, To fall, To fly",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f41ca7ea355e3fc2",
+  "sourceHash": "fnv1a64:293648b620f25b52",
   "lessons": [
     {
       "id": "HI-C161-pakana",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d5870a2606437d44",
+      "sourceHash": "fnv1a64:203a9f4431489384",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "उड़ना (uṛnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from uḍḍīyate, \"flies up\" (CDIAL 1697)."
+              "text": "उड़ना (uṛnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from uḍḍayate, \"flies up\", which CDIAL lists as the second form in its entry for uḍḍīyate, \"flies up\" (CDIAL 1697)."
             }
           ]
         },

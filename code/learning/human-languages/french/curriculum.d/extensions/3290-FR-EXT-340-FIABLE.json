@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-340-FIABLE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say whether a person or a story is reliable, believable, dubious, likely or hard to believe.",
+  "prerequisites": []
+}

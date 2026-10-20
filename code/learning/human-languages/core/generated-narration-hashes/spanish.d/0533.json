@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 533,
+  "sourceHash": "fnv1a64:c08f35c1ed40df69",
+  "lessonIds": [
+    "ES-C533-casualidad",
+    "ES-C533-coincidencia",
+    "ES-C533-fortuito",
+    "ES-C533-inesperado",
+    "ES-C533-repentino"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch533.txt",
+  "json": "spanish/narration/ch533.json",
+  "textHash": "fnv1a64:471cd1067b9e1cec",
+  "jsonHash": "fnv1a64:f504a29153847a2a",
+  "findings": []
+}

@@ -14,7 +14,8 @@ romanization: "durgam"
 concept_tag: SA-THG250-DURGAM
 prerequisites: [SA-C249-citrapatah, SA-C249-khela]
 sounds: []
-roots: []
+roots: [sanskrit-durga, gam-go]
+etymology_hook: "durga = dus 'hard' + -ga 'going', from √gam 'go': 'hard to approach', a fort (MW; CDIAL 6429)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C249-khela]
 <!-- hl-knowledge: introduces=[SA-LEX-C250-THG250-01]; assesses=[] -->
 
 **दुर्गम्** — *durgam* — "a fort".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*durga* is built on *dus-*, "hard", and *-ga*, "going", from the root √gam, "to go" (MW): "difficult of access", and so a fort. In the Rigveda it means "a difficult passage, danger" (CDIAL 6429). The goddess Durgā is "the hard to reach".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

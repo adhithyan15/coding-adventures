@@ -14,7 +14,8 @@ romanization: "jvaraḥ"
 concept_tag: SA-UNWELL-FEVER
 prerequisites: [SA-C63-second, SA-C63-first, SA-C64-prathama-pathanam]
 sounds: []
-roots: []
+roots: [sanskrit-jvara]
+etymology_hook: "jvara 'fever' ← the root √jvar 'be feverish', a side form of √jval 'burn' (MW; CDIAL 5303)"
 duration:
   max_seconds: 200
 requires:
@@ -46,6 +47,12 @@ reviews_of: [SA-C63-first]
 
 **ज्वरः** (*jvaraḥ*) — "a fever". **मम ज्वरः अस्ति** (*mama jvaraḥ asti*) — "I have a
 fever", literally "of me a fever is", with **मम** and **अस्ति**, which you know.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Jvara* is built on the root √jvar, "to be feverish", which MW sets beside √jval,
+"to burn, blaze" (CDIAL 5303). It lives on as Hindi and Bengali *jar*, "fever".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

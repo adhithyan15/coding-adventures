@@ -14,7 +14,8 @@ romanization: "kupitaḥ"
 concept_tag: SA-QUAL157-KUPITAH
 prerequisites: [SA-C156-candah, SA-C156-krurah]
 sounds: []
-roots: []
+roots: [sanskrit-kupita]
+etymology_hook: "kupita 'angry' is the past participle of √kup 'be agitated, be angry' (MW); MW compares Latin cupio"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C156-krurah]
 <!-- hl-knowledge: introduces=[SA-LEX-C157-QUAL157-01]; assesses=[] -->
 
 **कुपितः** — *kupitaḥ* — "angry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kupita* is the past participle of the root √kup "be agitated, be angry" (MW): "provoked, angry". MW compares √kup with Latin *cupio* "desire", but the link is old and not secure.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

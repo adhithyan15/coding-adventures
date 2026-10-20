@@ -14,7 +14,8 @@ romanization: "totā"
 concept_tag: UR-THINGS128-TOTA
 prerequisites: [UR-C128-hiran, UR-C128-kabutar]
 sounds: []
-roots: []
+roots: [persian-tuti]
+etymology_hook: "totā: usually traced to Persian ṭūṭī 'parrot'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C128-kabutar]
 <!-- hl-knowledge: introduces=[UR-LEX-C128-THINGS128-03]; assesses=[] -->
 
 **طوطا** — *totā* — "a parrot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**طوطا** (*totā*) is a loan, usually traced to Persian *ṭūṭī*, "parrot".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

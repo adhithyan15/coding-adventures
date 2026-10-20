@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 528,
+  "sourceHash": "fnv1a64:f07f872dc014eb76",
+  "lessonIds": [
+    "ES-C528-desastre",
+    "ES-C528-catastrofe",
+    "ES-C528-tragedia",
+    "ES-C528-terremoto",
+    "ES-C528-inundacion"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch528.txt",
+  "json": "spanish/narration/ch528.json",
+  "textHash": "fnv1a64:3a3441cb06cafa32",
+  "jsonHash": "fnv1a64:e7c8fd37505a3acd",
+  "findings": []
+}

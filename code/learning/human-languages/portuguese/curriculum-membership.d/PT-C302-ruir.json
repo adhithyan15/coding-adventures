@@ -1,0 +1,11 @@
+{
+  "id": "PT-C302-ruir",
+  "pathSegment": "PT-PATH-302-SISMO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-302-SISMO",
+      "order": 3
+    }
+  ]
+}

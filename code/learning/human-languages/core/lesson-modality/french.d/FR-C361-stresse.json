@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C361-stresse",
+    "language": "french",
+    "chapter": 361,
+    "sequence": 20280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4034b35f3c4f9010"
+  },
+  "findings": []
+}

@@ -14,7 +14,8 @@ romanization: "masālā"
 concept_tag: UR-CHIZ199-MASALA
 prerequisites: [UR-C199-chapati, UR-C199-ghi]
 sounds: []
-roots: []
+roots: [arabic-masalih]
+etymology_hook: "masālā ← Arabic maṣāliḥ 'things that are needful', through Persian (Lane, root ṣ-l-ḥ)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C199-ghi]
 <!-- hl-knowledge: introduces=[UR-LEX-C199-CHIZ199-03]; assesses=[] -->
 
 **مسالہ** — *masālā* — "spice".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مسالہ** (*masālā*) is a loan from Arabic *maṣāliḥ*, "things that are needful", which reached Urdu through Persian. Its Arabic root is *ṣ-l-ḥ* (Lane). Urdu took the plural through Persian and narrowed it to cooking.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

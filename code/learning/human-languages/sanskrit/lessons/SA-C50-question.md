@@ -14,7 +14,8 @@ romanization: "praśnaḥ"
 concept_tag: SA-SOUND-PRASHNA
 prerequisites: [SA-C50-sound, SA-C48-wolf, SA-C49-as]
 sounds: []
-roots: []
+roots: [sanskrit-prashna]
+etymology_hook: "praśna 'question' ← the root √prach 'ask'; MW compares Latin precēs and German fragen (CDIAL 8818)"
 duration:
   max_seconds: 210
 requires:

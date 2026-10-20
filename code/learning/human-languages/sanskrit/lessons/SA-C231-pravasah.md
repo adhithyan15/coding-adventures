@@ -14,7 +14,8 @@ romanization: "pravāsaḥ"
 concept_tag: SA-TRV231-PRAVASAH
 prerequisites: [SA-C231-nivasah, SA-C231-atithigrham]
 sounds: []
-roots: []
+roots: [sanskrit-pravasa, vas-dwell]
+etymology_hook: "pravāsa ← pra 'forth, away' + √vas 'dwell': 'dwelling abroad' (MW; CDIAL 8802)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C231-atithigrham]
 <!-- hl-knowledge: introduces=[SA-LEX-C231-TRV231-05]; assesses=[] -->
 
 **प्रवासः** — *pravāsaḥ* — "a stay abroad, a journey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pravāsa* is built on *pra*, "forth, away", and the root √vas, "to dwell" (MW): dwelling away from home. It is a Rigvedic word (CDIAL 8802), and Sinhala *puvaha*, "sojourning abroad", comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

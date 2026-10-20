@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 702,
+  "sourceHash": "fnv1a64:6957d5535ada803e",
+  "lessonIds": [
+    "ES-C702-mojarse",
+    "ES-C702-empapado",
+    "ES-C702-charco",
+    "ES-C702-barro",
+    "ES-C702-impermeable"
+  ],
+  "tex": "spanish/book/chapters/ch702-mojarse.tex"
+}

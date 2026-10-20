@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 170,
-  "sourceHash": "fnv1a64:87812b52f723545f",
+  "sourceHash": "fnv1a64:eeaf8d27c895d2f2",
   "lessonIds": [
     "RU-C170-dolzhnost",
     "RU-C170-zarplata",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch170.txt",
   "json": "russian/narration/ch170.json",
-  "textHash": "fnv1a64:d04e8d86d20748ff",
-  "jsonHash": "fnv1a64:64ce201b5f39d477",
+  "textHash": "fnv1a64:d73e5d8c78b4617c",
+  "jsonHash": "fnv1a64:340dafca407264af",
   "findings": []
 }

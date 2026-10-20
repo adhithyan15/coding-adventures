@@ -1,0 +1,19 @@
+{
+  "chapter": 709,
+  "title": "Echar de menos",
+  "label": "ch:es-echar-de-menos",
+  "canDo": "I can say that I feel lonely and miss people and places.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C709-anorar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 709: I can say that I feel lonely and miss people and places.",
+    "assesses": [
+      "ES-LEX-C709-SOLEDAD-03",
+      "ES-LEX-C709-SOLEDAD-04",
+      "ES-LEX-C709-SOLEDAD-05"
+    ]
+  }
+}

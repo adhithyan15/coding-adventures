@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C360-proroga",
+    "language": "italian",
+    "chapter": 360,
+    "sequence": 20700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2a198b64ddbb78bb"
+  },
+  "findings": []
+}

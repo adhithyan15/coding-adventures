@@ -4,7 +4,7 @@
   "chapter": 91,
   "title": "Midday, Early morning, Midnight, Day after tomorrow, Sunday",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f759ef04fb42b5d3",
+  "sourceHash": "fnv1a64:a7ffe48d6c0be069",
   "lessons": [
     {
       "id": "UR-C91-dopahar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c3b61565ea0ffc08",
+      "sourceHash": "fnv1a64:aec43831725d134d",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دوپہر (dopahar) is \"two watches\": do, \"two\" (CDIAL 6648), and pahar, a watch of about three hours, counted from sunrise. CDIAL lists pahar under Sanskrit prahara, \"a watch\", and asks whether that word is a Sanskritization of Persian pahra, \"watch\" (CDIAL 8900)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4f701a5e89a2c098",
+      "sourceHash": "fnv1a64:12167e347c41ded3",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سویرا (saverā) is a tadbhava, a word inherited and reshaped by sound change. It comes from savela, \"in time, early\", a form CDIAL reconstructs from its descendants (CDIAL 13291). It is built from sa-, \"with\", and velā, \"time\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4bf63a0a6024b030",
+      "sourceHash": "fnv1a64:c4bdc92ae00aac73",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "آدھی رات (ādhī rāt) is \"half night\". ādhī, \"half\", comes from Sanskrit ardha, \"half\" (CDIAL 644), and rāt, \"night\", from rātrī, \"night\" (CDIAL 10702)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eb07d6efdaf10a02",
+      "sourceHash": "fnv1a64:959f641405489dba",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پرسوں (parsoṅ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from paraśvas, \"the day after tomorrow\" (CDIAL 7799j)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:427edd9fc46abac7",
+      "sourceHash": "fnv1a64:c284165dfc7a649c",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اتوار (itvār) is usually traced to ādityavāra, \"Sunday\", the day of āditya, the sun, with vāra, \"day of the week\". CDIAL reconstructs that word from Prakrit and Sindhi forms and lists no Hindi or Urdu form (CDIAL 1154)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

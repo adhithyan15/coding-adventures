@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-336-EINIGUNG",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can weigh up both sides of a question, give way and reach an agreement.",
+  "prerequisites": []
+}

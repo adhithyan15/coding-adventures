@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 110,
-  "sourceHash": "fnv1a64:506a8fc48143ec66",
+  "sourceHash": "fnv1a64:2de33b54392e856c",
   "lessonIds": [
     "SA-C110-girih",
     "SA-C110-prapatah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch110.txt",
   "json": "sanskrit/narration/ch110.json",
-  "textHash": "fnv1a64:88d41f1814574052",
-  "jsonHash": "fnv1a64:4fe690cf9ff386eb",
+  "textHash": "fnv1a64:9210f2849aad88e7",
+  "jsonHash": "fnv1a64:712c69811fa02745",
   "findings": []
 }

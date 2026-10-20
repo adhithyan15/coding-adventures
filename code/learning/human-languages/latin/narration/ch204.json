@@ -4,7 +4,7 @@
   "chapter": 204,
   "title": "To state firmly, To hurt, To decorate, To throw together, To cease",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:dc51474de83b044e",
+  "sourceHash": "fnv1a64:f15c7e76999289bf",
   "lessons": [
     {
       "id": "LA-C204-affirmo",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2322c1aab93ce22e",
+      "sourceHash": "fnv1a64:f38baa4991a0ec62",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "dēsinō is dē, \"off, away\", with sinō, \"to let, to leave\": to leave off."
+              "text": "dēsinō is dē, \"off, away\", with sinō, \"to let, to leave\": to leave off. Sinō is inherited, but its deeper origin is uncertain: EtymDB 2.1 records two different roots."
             }
           ]
         },

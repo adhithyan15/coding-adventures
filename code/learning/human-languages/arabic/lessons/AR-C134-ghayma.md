@@ -14,7 +14,8 @@ romanization: "ghayma"
 concept_tag: AR-THINGS134-GHAYMA
 prerequisites: [AR-C134-zill, AR-C134-zalam]
 sounds: []
-roots: []
+roots: [gh-y-m]
+etymology_hook: "ghayma: built on the root gh-y-m, 'clouds' (Lane); ghayma is one cloud of ghaym"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C134-zalam]
 <!-- hl-knowledge: introduces=[AR-LEX-C134-THINGS134-04]; assesses=[] -->
 
 **غيمة** — *ghayma* — "a cloud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**غيمة** (*ghayma*) is built on the native Arabic root *gh-y-m*, "clouds" (Lane). *Ghayma* is one cloud of *ghaym*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

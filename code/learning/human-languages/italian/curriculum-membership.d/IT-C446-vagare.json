@@ -1,0 +1,11 @@
+{
+  "id": "IT-C446-vagare",
+  "pathSegment": "IT-PATH-446-BORGO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-446-BORGO",
+      "order": 4
+    }
+  ]
+}

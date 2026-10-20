@@ -1,0 +1,11 @@
+{
+  "id": "IT-C412-investire",
+  "pathSegment": "IT-PATH-412-VIGILE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-412-VIGILE",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 456,
+  "title": "No bosque",
+  "label": "ch:pt-no-bosque",
+  "canDo": "I can describe a walk in the woods: a clearing, a brook, a stream, a bush and wading across.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-R456-revisao-449-456",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 456: I can describe a walk in the woods: a clearing, a brook, a stream, a bush and wading across.",
+    "assesses": [
+      "PT-LEX-C456-BOSQUE-03",
+      "PT-LEX-C456-BOSQUE-04",
+      "PT-LEX-C456-BOSQUE-05"
+    ]
+  }
+}

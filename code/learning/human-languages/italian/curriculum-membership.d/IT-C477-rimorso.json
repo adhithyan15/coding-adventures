@@ -1,0 +1,11 @@
+{
+  "id": "IT-C477-rimorso",
+  "pathSegment": "IT-PATH-477-NOSTALGIA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-477-NOSTALGIA",
+      "order": 4
+    }
+  ]
+}

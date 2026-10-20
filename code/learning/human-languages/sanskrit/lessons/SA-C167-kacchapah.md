@@ -14,7 +14,8 @@ romanization: "kacchapaḥ"
 concept_tag: SA-THG167-KACCHAPAH
 prerequisites: [SA-C166-vatah, SA-C166-talah]
 sounds: []
-roots: []
+roots: [sanskrit-kacchapa]
+etymology_hook: "kacchapa 'turtle': MW 'marsh-keeper' (kaccha + pa); CDIAL 2619 a folk reshaping of kaśyapa; Hindi kachuā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C166-talah]
 <!-- hl-knowledge: introduces=[SA-LEX-C167-THG167-01]; assesses=[] -->
 
 **कच्छपः** — *kacchapaḥ* — "a turtle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW reads *kacchapa* "a turtle" as *kaccha* "marsh" + *-pa* "keeping": "the one that keeps to the marsh". CDIAL 2619 thinks that a popular reshaping of the older *kaśyapa*, so its origin is disputed. It lives on as Hindi *kachuā* and Gujarati *kācbo* (CDIAL 2619).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "nārikelam"
 concept_tag: SA-THINGS108-NARIKELAM
 prerequisites: [SA-C108-vrntakam, SA-C108-kusmandam]
 sounds: []
-roots: []
+roots: [sanskrit-narikela]
+etymology_hook: "nārikela 'coconut' ← a Dravidian compound, after Bloch (CDIAL 7075); Hindi nāriyal"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C108-kusmandam]
 <!-- hl-knowledge: introduces=[SA-LEX-C108-THINGS108-05]; assesses=[] -->
 
 **नारिकेलम्** — *nārikelam* — "a coconut".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nārikela* "coconut" is borrowed from Dravidian: CDIAL 7075, after Bloch, takes it from a Dravidian compound, comparing Tamil *nāri* "fibre". It lives on as Hindi *nāriyal* and Marathi *nāreḷ* "coconut" (CDIAL 7075).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

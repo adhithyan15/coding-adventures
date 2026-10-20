@@ -1,0 +1,19 @@
+{
+  "chapter": 274,
+  "title": "Nel frattempo",
+  "label": "ch:it-nel-frattempo",
+  "canDo": "I can say that two things happened at the same time, or that something broke in all of a sudden.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C274-d-un-tratto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 274: I can say that two things happened at the same time, or that something broke in all of a sudden.",
+    "assesses": [
+      "IT-LEX-C274-FRATTEMPO-03",
+      "IT-LEX-C274-FRATTEMPO-04",
+      "IT-LEX-C274-FRATTEMPO-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C366-discriminar",
+    "language": "portuguese",
+    "chapter": 366,
+    "sequence": 20800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fbc5352221448a70"
+  },
+  "findings": []
+}

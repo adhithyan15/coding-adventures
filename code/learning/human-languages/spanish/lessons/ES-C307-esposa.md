@@ -46,7 +46,8 @@ reviews_of: [ES-C306-esposo]
 
 **la esposa** --- "the wife."
 
-The same pledge, the same ending switch. English *spouse* does not bother to
+The same pledge, the same ending switch: *esposa* ← Latin *spōnsa*, "a woman
+promised" (EtymDB 2.1). English *spouse* does not bother to
 mark who it means; Spanish always does.
 
 Now the strange part, and it is worth knowing because it is unmistakable once you

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C592-sede",
+    "language": "spanish",
+    "chapter": 592,
+    "sequence": 19350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2c4b4115b13f7f90"
+  },
+  "findings": []
+}

@@ -14,7 +14,8 @@ romanization: "jigar"
 concept_tag: UR-SEHAT186-JIGAR
 prerequisites: [UR-C186-mutthi, UR-C186-hatheli]
 sounds: []
-roots: []
+roots: [persian-jigar]
+etymology_hook: "jigar: usually traced to Persian jigar 'the liver'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C186-hatheli]
 <!-- hl-knowledge: introduces=[UR-LEX-C186-SEHAT186-04]; assesses=[] -->
 
 **جگر** — *jigar* — "the liver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جگر** (*jigar*) is a loan, usually traced to Persian *jigar*, "the liver".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

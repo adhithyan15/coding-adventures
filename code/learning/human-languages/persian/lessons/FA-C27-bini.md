@@ -14,7 +14,8 @@ romanization: "bini"
 concept_tag: FA-BODY27-BINI
 prerequisites: [FA-C27-sar, FA-C27-gush]
 sounds: []
-roots: []
+roots: [persian-bini]
+etymology_hook: "bini ← Middle Persian wēnīg (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C27-gush]
 <!-- hl-knowledge: introduces=[FA-LEX-C27-BODY27-03]; assesses=[] -->
 
 **بینی** — *bini* — "a nose".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bini* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *wēnīg*, "nose" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

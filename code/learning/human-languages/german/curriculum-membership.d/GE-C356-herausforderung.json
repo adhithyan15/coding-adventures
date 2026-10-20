@@ -1,0 +1,11 @@
+{
+  "id": "GE-C356-herausforderung",
+  "pathSegment": "GE-PATH-356-KARRIERE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-356-KARRIERE",
+      "order": 2
+    }
+  ]
+}

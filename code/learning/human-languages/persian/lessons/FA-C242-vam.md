@@ -14,7 +14,8 @@ romanization: "vâm"
 concept_tag: FA-CHIZ242-VAM
 prerequisites: [FA-C241-ajil, FA-C241-deser]
 sounds: []
-roots: []
+roots: [persian-vam]
+etymology_hook: "vâm: inherited, usually traced to Middle Persian abām"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C241-deser]
 <!-- hl-knowledge: introduces=[FA-LEX-C242-CHIZ242-01]; assesses=[] -->
 
 **وام** — *vâm* — "a loan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vâm* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *abām*, "debt, loan".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

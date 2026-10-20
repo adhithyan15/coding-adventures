@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 317,
-  "sourceHash": "fnv1a64:1bb743b976672367",
+  "sourceHash": "fnv1a64:b8c4563058d55d52",
   "lessonIds": [
     "ES-C317-algo",
     "ES-C317-alguien",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch317.txt",
   "json": "spanish/narration/ch317.json",
-  "textHash": "fnv1a64:fb6b0e77c7cdb63c",
-  "jsonHash": "fnv1a64:737bdb3f5b4b4c6d",
+  "textHash": "fnv1a64:7ebaa2a84be3cf92",
+  "jsonHash": "fnv1a64:4229119b5abf516f",
   "findings": []
 }

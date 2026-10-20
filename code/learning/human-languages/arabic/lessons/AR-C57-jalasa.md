@@ -14,7 +14,8 @@ romanization: "jalasa"
 concept_tag: AR-VERB-JALASA
 prerequisites: [AR-C57-shariba, AR-C57-samia]
 sounds: []
-roots: []
+roots: [j-l-s]
+etymology_hook: "jalasa: built on the root j-l-s, 'to sit' (Lane); the same root gives majlis, 'a place of sitting, a council'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C57-samia]
 <!-- hl-knowledge: introduces=[AR-LEX-C57-FAMILY57-04]; assesses=[] -->
 
 **جلس** — *jalasa* — "to sit (he sat)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جلس** (*jalasa*) is built on the native Arabic root *j-l-s*, "to sit" (Lane). The same root gives *majlis*, "a place of sitting, a council".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

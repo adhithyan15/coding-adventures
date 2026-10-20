@@ -14,7 +14,8 @@ romanization: "pursukūn"
 concept_tag: UR-SIFAT249-PURSUKUN
 prerequisites: [UR-C249-dubla, UR-C249-rangin]
 sounds: []
-roots: []
+roots: [persian-pur, arabic-sukun]
+etymology_hook: "pursukūn: Persian pur 'full' + Arabic sukūn 'stillness' (Lane, root s-k-n)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C249-rangin]
 <!-- hl-knowledge: introduces=[UR-LEX-C249-SIFAT249-03]; assesses=[] -->
 
 **پرسکون** — *pursukūn* — "peaceful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پرسکون** (*pursukūn*) is "full of calm". It joins Persian *pur*, "full", and Arabic *sukūn*, "stillness, rest", which reached Urdu through Persian (Lane, root *s-k-n*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C490-sbadigliare",
+    "language": "italian",
+    "chapter": 490,
+    "sequence": 27600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:845d3b5ba05c64b3"
+  },
+  "findings": []
+}

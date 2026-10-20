@@ -14,7 +14,8 @@ romanization: "sakhā"
 concept_tag: SA-PPL208-SAKHA
 prerequisites: [SA-C208-parivarah, SA-C208-bandhuh]
 sounds: []
-roots: []
+roots: [sanskrit-sakhi]
+etymology_hook: "sakhi (nom. sakhā) 'friend'; MW compares Latin socius 'companion' (CDIAL 13074)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C208-bandhuh]
 <!-- hl-knowledge: introduces=[SA-LEX-C208-PPL208-03]; assesses=[] -->
 
 **सखा** — *sakhā* — "a companion, a (male) friend".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sakhā* is the nominative of *sakhi*, "friend, companion", which MW files under the root √sac, "to accompany". MW compares Latin *socius*, "companion". Its feminine *sakhī* lives on as Hindi *sahelī* (CDIAL 13074).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

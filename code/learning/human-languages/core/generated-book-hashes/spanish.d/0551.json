@@ -1,0 +1,14 @@
+{
+  "language": "spanish",
+  "chapter": 551,
+  "sourceHash": "fnv1a64:e13524aa362bf18f",
+  "lessonIds": [
+    "ES-C551-acogida",
+    "ES-C551-instalarse",
+    "ES-C551-establecerse",
+    "ES-C551-emigrar",
+    "ES-C551-adaptarse",
+    "ES-R551-repaso-544-551"
+  ],
+  "tex": "spanish/book/chapters/ch551-una-vida-nueva.tex"
+}

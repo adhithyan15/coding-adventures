@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 218,
-  "sourceHash": "fnv1a64:e03ebb43f4a5385c",
+  "sourceHash": "fnv1a64:9e3e28ceb6596733",
   "lessonIds": [
     "BN-C218-jodio",
     "BN-C218-jmon",
@@ -14,6 +14,6 @@
   "text": "bengali/narration/ch218.txt",
   "json": "bengali/narration/ch218.json",
   "textHash": "fnv1a64:7f60f3be38abf56b",
-  "jsonHash": "fnv1a64:2d0f126ff93c5d52",
+  "jsonHash": "fnv1a64:8b19dcd4edf8c175",
   "findings": []
 }

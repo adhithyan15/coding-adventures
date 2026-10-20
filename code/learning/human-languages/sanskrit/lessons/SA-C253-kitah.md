@@ -14,7 +14,8 @@ romanization: "kīṭaḥ"
 concept_tag: SA-THG253-KITAH
 prerequisites: [SA-C252-mallika, SA-C252-tulasi]
 sounds: []
-roots: []
+roots: [sanskrit-kita]
+etymology_hook: "kīṭa 'insect, worm', in the Śatapatha Brāhmaṇa (CDIAL 3193); origin uncertain; Hindi kīṛā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C252-tulasi]
 <!-- hl-knowledge: introduces=[SA-LEX-C253-THG253-01]; assesses=[] -->
 
 **कीटः** — *kīṭaḥ* — "an insect".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kīṭa* is an insect or worm, already in the Śatapatha Brāhmaṇa (CDIAL 3193). MW gives no derivation, so its origin is uncertain. It lives on as Hindi *kīṛā*, "insect, worm".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

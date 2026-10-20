@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 161,
-  "sourceHash": "fnv1a64:d02b373e87b6902b",
+  "sourceHash": "fnv1a64:11f67c29c064b53d",
   "lessonIds": [
     "UR-C161-mahfuz",
     "UR-C161-nazuk",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch161.txt",
   "json": "urdu/narration/ch161.json",
-  "textHash": "fnv1a64:30560dffcaeb631e",
-  "jsonHash": "fnv1a64:1ec073e5fe5d5b17",
+  "textHash": "fnv1a64:875af3dab3878723",
+  "jsonHash": "fnv1a64:089a304f6b3d924d",
   "findings": []
 }

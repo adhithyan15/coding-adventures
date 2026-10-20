@@ -1,0 +1,11 @@
+{
+  "id": "IT-C376-rischioso",
+  "pathSegment": "IT-PATH-376-RISCHIO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-376-RISCHIO",
+      "order": 1
+    }
+  ]
+}

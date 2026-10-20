@@ -14,7 +14,8 @@ romanization: "pârs kardan"
 concept_tag: FA-VERB-PARS-KARDAN
 prerequisites: [FA-C221-hasudi-kardan, FA-C222-ab-dadan]
 sounds: []
-roots: []
+roots: [pie-kwer]
+etymology_hook: "pârs kardan: pârs 'barking' (not settled; not Pârs 'Persia') + kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C222-ab-dadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C222-KONESH222-02]; assesses=[] -->
 
 **پارس کردن** — *pârs kardan* — "to bark".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pârs kardan* pairs *pârs*, "barking", with *kardan*. Where *pârs* comes from is not settled; it is not the name *Pârs*, "Persia", which EtymDB lists beside it. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

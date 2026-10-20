@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C436-allee",
+    "language": "german",
+    "chapter": 436,
+    "sequence": 23460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:69af0ab0cb95c2a7"
+  },
+  "findings": []
+}

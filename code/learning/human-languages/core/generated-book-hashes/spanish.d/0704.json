@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 704,
+  "sourceHash": "fnv1a64:d00f4f75ebf990d3",
+  "lessonIds": [
+    "ES-C704-alegria",
+    "ES-C704-melancolia",
+    "ES-C704-dicha",
+    "ES-C704-emocionarse",
+    "ES-C704-llorar"
+  ],
+  "tex": "spanish/book/chapters/ch704-alegrias-y-penas.tex"
+}

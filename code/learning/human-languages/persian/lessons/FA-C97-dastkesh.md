@@ -14,7 +14,8 @@ romanization: "dastkesh"
 concept_tag: FA-THINGS97-DASTKESH
 prerequisites: [FA-C96-daman, FA-C97-shal]
 sounds: []
-roots: []
+roots: [persian-dast]
+etymology_hook: "dastkesh: Persian dast 'hand' (EtymDB) + kesh 'pulling' (keshidan); native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C97-shal]
 <!-- hl-knowledge: introduces=[FA-LEX-C97-THINGS97-02]; assesses=[] -->
 
 **دستکش** — *dastkesh* — "gloves".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dastkesh* is *dast*, "hand" (EtymDB), with *-kesh*, "pulling" (from *keshidan*, "to pull"): what you pull onto the hand. Both are native Persian; Old Persian had *dasta-*, "hand" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

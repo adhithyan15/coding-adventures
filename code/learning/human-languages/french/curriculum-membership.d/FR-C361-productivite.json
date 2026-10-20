@@ -1,0 +1,11 @@
+{
+  "id": "FR-C361-productivite",
+  "pathSegment": "FR-PATH-361-STRESS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-361-STRESS",
+      "order": 4
+    }
+  ]
+}

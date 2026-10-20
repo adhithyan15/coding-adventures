@@ -11,7 +11,7 @@ concept_tag: GE-COURTESY-MANY-THANKS
 prerequisites: [GE-C01-der-die-das, GE-C03-danke]
 sounds: [vowel-a-german, f-final]
 roots: [denken-german]
-etymology_hook: "Dank is the noun thank hiding inside danke, and viel is English full, so vielen Dank is a full measure"
+etymology_hook: "Dank is the noun inside danke; viel ← Old High German filu 'many', whose English match fela died out"
 duration:
   max_seconds: 150
 requires:
@@ -50,7 +50,9 @@ Said *dahnk*, with the final **k** crisp.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[GE-LEX-VIELEN-DANK-02]; assesses=[GE-LEX-DANK-NOUN-01, GE-ETYMON-DANKE-DENKEN-02] -->
 
-**viel** means "much," and it is English **full** — a full measure of something.
+**viel** means "much," inherited from Old High German *filu*, "many" (EtymDB 2.1).
+English *full* is not the same word; *viel*'s English match, Old English *fela*,
+died out.
 Put it in front of *Dank* and you get the phrase Germans reach for when *danke*
 alone feels too thin:
 
@@ -74,5 +76,5 @@ So the family now reads: *danke* (I thank) · *der Dank* (the thanks) ·
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-VIELEN-DANK-02, GE-LEX-DANK-NOUN-01] -->
 
-[PAUSE 3s] What is the noun behind *danke*? (*Der Dank*.) What English word is
-*viel*? (*Full* — a full measure.) Say "many thanks." (*Vielen Dank*.)
+[PAUSE 3s] What is the noun behind *danke*? (*Der Dank*.) What does *viel* mean,
+and where does it come from? (*Much* — Old High German *filu*.) Say "many thanks." (*Vielen Dank*.)

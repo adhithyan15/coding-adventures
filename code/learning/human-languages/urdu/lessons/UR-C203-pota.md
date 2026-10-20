@@ -14,7 +14,8 @@ romanization: "potā"
 concept_tag: UR-CHIZ203-POTA
 prerequisites: [UR-C203-phuphi, UR-C203-bhatija]
 sounds: []
-roots: []
+roots: [sanskrit-pautra]
+etymology_hook: "potā ← Sanskrit pautra 'son's son', a tadbhava (CDIAL 8416)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C203-bhatija]
 <!-- hl-knowledge: introduces=[UR-LEX-C203-CHIZ203-05]; assesses=[] -->
 
 **پوتا** — *potā* — "a grandson (son's son)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پوتا** (*potā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *pautra*, "son's son" (CDIAL 8416). It is built on *putra*, "son".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

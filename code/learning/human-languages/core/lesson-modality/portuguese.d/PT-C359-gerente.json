@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C359-gerente",
+    "language": "portuguese",
+    "chapter": 359,
+    "sequence": 20430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:726f5ebdc54796e7"
+  },
+  "findings": []
+}

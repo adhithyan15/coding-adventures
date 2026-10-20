@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "italian",
+  "chapter": 320,
+  "title": "Feste di paese",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:d3ee3c5bd844badb",
+  "lessons": [
+    {
+      "id": "IT-C320-fiera",
+      "sequence": 18500,
+      "title": "la fiera — the fair, the trade show",
+      "headword": "la fiera",
+      "romanization": "la fiera",
+      "gloss": "the fair, the trade show",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5ea16987b5a7158d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for to dress up in costume, then the Italian for to parade."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la fiera",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la fiera — \"the fair, the trade show\"."
+            },
+            {
+              "kind": "speech",
+              "text": "A ottobre c'è la fiera del libro. In October there is the book fair."
+            },
+            {
+              "kind": "speech",
+              "text": "An old, unrelated fiera means a wild beast."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fiera \"fair\" is inherited from Late Latin fēria \"a holiday, a feast day\" (Lewis & Short, under fēriae \"holidays\"). EtymDB lists fiera under Latin fera \"wild beast\", the source of a different fiera."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la fiera",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la fiera*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la fiera, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la fiera*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la fiera",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la fiera*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for to dress up in costume, then the Italian for to parade, then say la fiera again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for to dress up in costume, then the Italian for to parade, then say *la fiera* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la fiera mean? (\"The fair, the trade show\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C320-palio",
+      "sequence": 18510,
+      "title": "il palio — the palio, the traditional horse race",
+      "headword": "il palio",
+      "romanization": "il palio",
+      "gloss": "the palio, the traditional horse race",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b587b5ba4e3f9dea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for to parade, then the Italian for the fair."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: il palio",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "il palio — \"the palio, the traditional horse race\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Il palio si corre in piazza due volte l'anno. The palio is run in the square twice a year."
+            },
+            {
+              "kind": "speech",
+              "text": "Named after the prize, a painted banner."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "palio is inherited from Latin pallium \"a cloak, a cloth\" (Lewis & Short): the race is run for a precious cloth."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il palio",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il palio*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il palio, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il palio*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with il palio",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *il palio*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for to parade, then the Italian for the fair, then say il palio again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for to parade, then the Italian for the fair, then say *il palio* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does il palio mean? (\"The palio, the traditional horse race\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C320-giostra",
+      "sequence": 18520,
+      "title": "la giostra — the merry-go-round, the funfair ride",
+      "headword": "la giostra",
+      "romanization": "la giostra",
+      "gloss": "the merry-go-round, the funfair ride",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f2e9f5ceecc6618b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for the fair, then the Italian for the palio."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la giostra",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la giostra — \"the merry-go-round, the funfair ride\"."
+            },
+            {
+              "kind": "speech",
+              "text": "I bambini vogliono andare sulla giostra. The children want to go on the merry-go-round."
+            },
+            {
+              "kind": "speech",
+              "text": "Long ago, la giostra was a joust between knights."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "giostra was borrowed from Old French joste \"a joust\" (EtymDB), from Vulgar Latin iuxtāre \"to come close\", built on iuxtā \"near\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la giostra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la giostra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la giostra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la giostra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la giostra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la giostra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for the fair, then the Italian for the palio, then say la giostra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for the fair, then the Italian for the palio, then say *la giostra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la giostra mean? (\"The merry-go-round, the funfair ride\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C320-onomastico",
+      "sequence": 18530,
+      "title": "l'onomastico — the name day",
+      "headword": "l'onomastico",
+      "romanization": "l'onomastico",
+      "gloss": "the name day",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4670f0c0aea7bde4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for the palio, then the Italian for the merry-go-round."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: l'onomastico",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "l'onomastico — \"the name day\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Oggi è il mio onomastico. Today is my name day."
+            },
+            {
+              "kind": "speech",
+              "text": "The feast of the saint whose name you bear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "onomastico is usually traced to Greek onomastikós \"of names\", built on ónoma \"name\" (EtymDB has no Italian entry)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'onomastico",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'onomastico*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'onomastico, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'onomastico*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with l'onomastico",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *l'onomastico*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for the palio, then the Italian for the merry-go-round, then say l'onomastico again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for the palio, then the Italian for the merry-go-round, then say *l'onomastico* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does l'onomastico mean? (\"The name day\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C320-santo",
+      "sequence": 18540,
+      "title": "il santo — the saint",
+      "headword": "il santo",
+      "romanization": "il santo",
+      "gloss": "the saint",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:331edb2dda916510",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for the merry-go-round, then the Italian for the name day."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: il santo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "il santo — \"the saint\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ogni paese festeggia il suo santo. Every village celebrates its own saint."
+            },
+            {
+              "kind": "speech",
+              "text": "Before a man's name it usually becomes San, or Sant' before a vowel; a woman saint is santa."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "santo is inherited from Latin sānctus \"holy\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il santo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il santo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "il santo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *il santo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with il santo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *il santo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for the merry-go-round, then the Italian for the name day, then say il santo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for the merry-go-round, then the Italian for the name day, then say *il santo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does il santo mean? (\"The saint\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-R320-ripasso-313-320",
+      "sequence": 18550,
+      "title": "Ripasso dei capitoli 313–320",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 313-320",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d81bd7c08e198f64",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Italian for death and the deceased."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "death, the deceased, the funeral, mourning, to bury",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: death, the deceased, the funeral, mourning, to bury]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the will, to inherit, the inheritance, the heir, the grave",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the will, to inherit, the inheritance, the heir, the grave]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to celebrate formally, the recurring occasion, the anniversary, best wishes, to wish",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to celebrate formally, the recurring occasion, the anniversary, best wishes, to wish]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the birthday candle, the person being celebrated, to wrap, the bow, the balloon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the birthday candle, the person being celebrated, to wrap, the bow, the balloon]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the sparkling wine, the cork, to uncork, the corkscrew, the banquet",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the sparkling wine, the cork, to uncork, the corkscrew, the banquet]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the invitation, the guest, the reception, the refreshments, the sugared almond",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the invitation, the guest, the reception, the refreshments, the sugared almond]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the carnival, the mask, the confetti, to dress up in costume, to parade",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the carnival, the mask, the confetti, to dress up in costume, to parade]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the fair, the palio, the merry-go-round, the name day, the saint",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the fair, the palio, the merry-go-round, the name day, the saint]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Death? (la morte.) The deceased? (il defunto.) The funeral? (il funerale.) Mourning? (il lutto.) To bury? (seppellire.) The will? (il testamento.) To inherit? (ereditare.) The inheritance? (l'eredità.) The heir? (l'erede.) The grave? (la tomba.) To celebrate formally? (celebrare.) The recurring occasion? (la ricorrenza.) The anniversary? (l'anniversario.) Best wishes? (gli auguri.) To wish? (augurare.) The birthday candle? (la candelina.) The person being celebrated? (il festeggiato.) To wrap? (incartare.) The bow? (il fiocco.) The balloon? (il palloncino.) The sparkling wine? (lo spumante.) The cork? (il tappo.) To uncork? (stappare.) The corkscrew? (il cavatappi.) The banquet? (il banchetto.) The invitation? (l'invito.) The guest? (l'invitato.) The reception? (il ricevimento.) The refreshments? (il rinfresco.) The sugared almond? (il confetto.) The carnival? (il carnevale.) The mask? (la maschera.) The confetti? (i coriandoli.) To dress up in costume? (mascherarsi.) To parade? (sfilare.) The fair? (la fiera.) The palio? (il palio.) The merry-go-round? (la giostra.) The name day? (l'onomastico.) The saint? (il santo.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -14,7 +14,8 @@ romanization: "dhenuḥ"
 concept_tag: SA-ANIMAL-DHENU
 prerequisites: [SA-C38-soil, SA-C37-peace, SA-C38-fire]
 sounds: []
-roots: []
+roots: [sanskrit-dhenu]
+etymology_hook: "dhenu 'milch cow' ← the root √dhe 'suck'; MW compares Greek thēlē 'nipple' and Latin fēlāre (CDIAL 6877)"
 duration:
   max_seconds: 210
 requires:
@@ -44,7 +45,7 @@ reviews_of: [SA-C38-soil]
 
 **धेनुः** is a cow, and first of all a cow in milk.
 
-It stands on *dhe*, "to suckle" — a root that reaches a long way west: Latin *fēmina*, the one who nurses, and *fīlius*, the one nursed, and English *fecund* behind them both.
+It stands on *dhe*, "to suckle" — a root that reaches a long way west: MW compares Greek *thēlē*, "nipple", and Latin *fēlāre*, "to suck".
 
 दुग्धम्, the milk you already ask for, comes from a different root altogether, the one that means to draw milk off. The animal is named for the giving, the drink for the taking.
 

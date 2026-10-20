@@ -14,7 +14,8 @@ romanization: "pasandâz kardan"
 concept_tag: FA-VERB-PASANDAZ-KARDAN
 prerequisites: [FA-C187-gaz-dadan, FA-C187-derow-kardan]
 sounds: []
-roots: []
+roots: [persian-pas, pie-kwer]
+etymology_hook: "pasandâz kardan: Persian pas 'back' + andâz 'throwing' + kardan; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C187-derow-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C187-KONESH187-04]; assesses=[] -->
 
 **پس انداز کردن** — *pasandâz kardan* — "to save (money)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pasandâz kardan* pairs *pasandâz*, "savings", with *kardan*. *pasandâz* is *pas*, "back" (EtymDB), with *andâz*, "throwing" (from *andâkhtan*): what is thrown back for later. All are native Persian. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

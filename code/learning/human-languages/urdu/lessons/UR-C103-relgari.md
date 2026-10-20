@@ -14,7 +14,8 @@ romanization: "rel gāṛī"
 concept_tag: UR-LOC103-RELGARI
 prerequisites: [UR-C102-kutubkhana, UR-C103-hawaijahaz]
 sounds: []
-roots: []
+roots: [english-rail, indo-aryan-gadda]
+etymology_hook: "rel ← English rail; gāṛī ← *gāḍḍa 'cart' (CDIAL 4116)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C103-hawaijahaz]
 <!-- hl-knowledge: introduces=[UR-LEX-C103-LOC103-02]; assesses=[] -->
 
 **ریل گاڑی** — *rel gāṛī* — "a train".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ریل گاڑی** (*rel gāṛī*) is "rail cart": *rel* is a loan from English *rail*, and *gāṛī* goes back to a reconstructed *\*gāḍḍa*, "cart", which CDIAL links, tentatively, with Sanskrit *garta*, "seat of a chariot" (CDIAL 4116).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

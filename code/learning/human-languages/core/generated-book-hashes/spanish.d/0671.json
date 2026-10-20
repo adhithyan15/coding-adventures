@@ -1,0 +1,14 @@
+{
+  "language": "spanish",
+  "chapter": 671,
+  "sourceHash": "fnv1a64:2b62d052214bbb8f",
+  "lessonIds": [
+    "ES-C671-cercano",
+    "ES-C671-lejano",
+    "ES-C671-atajo",
+    "ES-C671-adelante",
+    "ES-C671-rodeo",
+    "ES-R671-repaso-664-671"
+  ],
+  "tex": "spanish/book/chapters/ch671-cerca-y-lejos.tex"
+}

@@ -14,7 +14,8 @@ romanization: "noskhe"
 concept_tag: FA-SALAMAT189-NOSKHE
 prerequisites: [FA-C188-nasb-kardan, FA-C189-ampul]
 sounds: []
-roots: []
+roots: [arabic-nusha]
+etymology_hook: "noskhe ← Arabic nusḫa 'copy', root n-s-ḫ (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C189-ampul]
 <!-- hl-knowledge: introduces=[FA-LEX-C189-SALAMAT189-02]; assesses=[] -->
 
 **نسخه** — *noskhe* — "a prescription".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*noskhe* is borrowed from Arabic *nusḫa*, "copy". Its Arabic root is *n-s-ḫ* (Lane). Persian also uses it for a prescription.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

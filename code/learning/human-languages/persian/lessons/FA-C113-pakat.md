@@ -14,7 +14,8 @@ romanization: "pâkat"
 concept_tag: FA-THINGS113-PAKAT
 prerequisites: [FA-C113-bilit, FA-C113-tamr]
 sounds: []
-roots: []
+roots: [paquet-french]
+etymology_hook: "pâkat: a loan, usually traced to French paquet 'packet'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C113-tamr]
 <!-- hl-knowledge: introduces=[FA-LEX-C113-THINGS113-04]; assesses=[] -->
 
 **پاکت** — *pâkat* — "an envelope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pâkat* is a loan, usually traced to French *paquet*, "packet".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

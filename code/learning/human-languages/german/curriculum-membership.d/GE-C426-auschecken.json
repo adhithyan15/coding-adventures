@@ -1,0 +1,11 @@
+{
+  "id": "GE-C426-auschecken",
+  "pathSegment": "GE-PATH-426-REZEPTION",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-426-REZEPTION",
+      "order": 4
+    }
+  ]
+}

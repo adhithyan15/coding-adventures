@@ -50,7 +50,8 @@ word there too — *me too* becomes *me neither*.
 **tampoco** = **tan** + **poco**.
 
 [PAUSE 2s] The same *tan* you met yesterday. The new half is ***poco***, which
-means *little* — a small amount of something.
+means *little* — a small amount of something. *Poco* ← Latin *paucus*, "few"
+(EtymDB 2.1).
 
 | | | |
 |---|---|---|

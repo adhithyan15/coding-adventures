@@ -1,0 +1,19 @@
+{
+  "chapter": 416,
+  "title": "Atrasos e transbordos",
+  "label": "ch:pt-atrasos-e-transbordos",
+  "canDo": "I can deal with delays and changes: the departures board, the delay, running late, a cancelled service and changing trains.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-R416-revisao-409-416",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 416: I can deal with delays and changes: the departures board, the delay, running late, a cancelled service and changing trains.",
+    "assesses": [
+      "PT-LEX-C416-ATRASOS-03",
+      "PT-LEX-C416-ATRASOS-04",
+      "PT-LEX-C416-ATRASOS-05"
+    ]
+  }
+}

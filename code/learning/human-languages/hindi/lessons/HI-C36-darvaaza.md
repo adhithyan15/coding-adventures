@@ -14,7 +14,7 @@ romanization: "darvāzā"
 concept_tag: HI-HOME-DOOR
 prerequisites: [HI-S146-letter-va, HI-C36-ghar, HI-W05-write-namaste, HI-C27-shubh-raatri]
 sounds: [nuqta-za, devanagari-long-aa]
-roots: [persian-dar, pie-dhwer]
+roots: [persian-dar-door, pie-dhwer]
 etymology_hook: "दरवाज़ा (darvāzā) is Persian دروازه — and Persian dar 'door' descends from the same PIE *dʰwer- as English door, Latin forēs, Greek thúrā and Sanskrit द्वार dvāra, so the borrowed word and Hindi's own inherited द्वार are one ancient word arriving twice by different roads; the second element is usually connected to a Persian word for 'open' but its source is disputed, and the ज़ carries a nuqta because Persian brought a z Devanagari had no letter for"
 duration:
   max_seconds: 250

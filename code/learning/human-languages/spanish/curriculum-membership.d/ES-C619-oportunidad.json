@@ -1,0 +1,11 @@
+{
+  "id": "ES-C619-oportunidad",
+  "pathSegment": "ES-PATH-619-QUIZA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-619-QUIZA",
+      "order": 2
+    }
+  ]
+}

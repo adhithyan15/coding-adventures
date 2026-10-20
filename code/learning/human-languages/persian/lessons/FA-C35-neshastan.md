@@ -14,7 +14,8 @@ romanization: "neshastan"
 concept_tag: FA-VERB-NESHASTAN
 prerequisites: [FA-C35-didan, FA-C35-shenidan]
 sounds: []
-roots: []
+roots: [persian-neshastan]
+etymology_hook: "neshastan: inherited, usually traced to Middle Persian nišastan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C35-shenidan]
 <!-- hl-knowledge: introduces=[FA-LEX-C35-VERBS35-05]; assesses=[] -->
 
 **نشستن** — *neshastan* — "to sit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*neshastan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *nišastan*, "to sit". It is usually analysed as *ni-*, "down", on the Indo-European root that also gives English *sit*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

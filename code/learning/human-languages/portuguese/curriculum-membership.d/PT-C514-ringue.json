@@ -1,0 +1,11 @@
+{
+  "id": "PT-C514-ringue",
+  "pathSegment": "PT-PATH-514-RINGUE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-514-RINGUE",
+      "order": 1
+    }
+  ]
+}

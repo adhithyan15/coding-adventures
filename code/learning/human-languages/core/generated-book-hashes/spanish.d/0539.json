@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 539,
+  "sourceHash": "fnv1a64:55e4c1a80d1d9b39",
+  "lessonIds": [
+    "ES-C539-semestre",
+    "ES-C539-quincena",
+    "ES-C539-lustro",
+    "ES-C539-milenio",
+    "ES-C539-periodo"
+  ],
+  "tex": "spanish/book/chapters/ch539-semestres-y-quincenas.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C273-successivamente",
+    "language": "italian",
+    "chapter": 273,
+    "sequence": 16130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c5406b24bc4ea451"
+  },
+  "findings": []
+}

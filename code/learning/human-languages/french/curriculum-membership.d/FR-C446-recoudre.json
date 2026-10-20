@@ -1,0 +1,11 @@
+{
+  "id": "FR-C446-recoudre",
+  "pathSegment": "FR-PATH-446-CORDONNIER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-446-CORDONNIER",
+      "order": 4
+    }
+  ]
+}

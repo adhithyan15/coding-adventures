@@ -12,6 +12,9 @@ Before the new one: say the Urdu for an eyelid, then the Urdu for an eyebrow.
 You'll want to know: ٹیکا.
 ٹیکا — ṭīkā — "a vaccination".
 
+The word, taken apart.
+ٹیکا (ṭīkā) is a tadbhava, a word inherited and reshaped by sound change. It comes from ṭikka, "mark, spot", a form CDIAL reconstructs from its descendants (CDIAL 5458). CDIAL glosses the Hindi word "caste-mark"; Urdu also uses it for a vaccination.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for an eyebrow, then the Urdu for a vaccination
 
 You'll want to know: دھڑکن.
 دھڑکن — dhaṛkan — "a heartbeat".
+
+The word, taken apart.
+دھڑکن (dhaṛkan) is the noun of dhaṛaknā, "to throb", which CDIAL lists under a reconstructed dhaḍ, "throb, beat" (CDIAL 6711).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a vaccination, then the Urdu for a heartbea
 You'll want to know: پسینہ.
 پسینہ — pasīnā — "sweat".
 
+The word, taken apart.
+پسینہ (pasīnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from prasvidana, "sweating", a form CDIAL reconstructs from its descendants (CDIAL 8895). CDIAL also allows prasvinna, "sweated".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a heartbeat, then the Urdu for sweat.
 You'll want to know: الٹی.
 الٹی — ulṭī — "vomiting".
 
+The word, taken apart.
+الٹی (ulṭī) is "an overturning", from ulaṭnā, "to be overturned", which CDIAL lists under a reconstructed ullaṭati, "turns over", in its form ullaṭyate, "is upset" (CDIAL 2368).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for sweat, then the Urdu for vomiting.
 
 You'll want to know: چکر.
 چکر — chakkar — "dizziness; a round".
+
+The word, taken apart.
+چکر (chakkar) goes back to Sanskrit cakra, "wheel, circle". CDIAL lists the inherited Hindi cāk, "wheel", under it (CDIAL 4538), but not chakkar itself, which keeps more of the Sanskrit shape.
 
 What you've built.
 One more word for this chapter.

@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 239,
-  "sourceHash": "fnv1a64:4d7b2c2a4423da85",
+  "sourceHash": "fnv1a64:f26275121a843a6b",
   "lessonIds": [
     "SA-C239-asa",
     "SA-C239-prema",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch239.txt",
   "json": "sanskrit/narration/ch239.json",
-  "textHash": "fnv1a64:8c43d21bfcc4459a",
-  "jsonHash": "fnv1a64:29d2a3bcf1876fb5",
+  "textHash": "fnv1a64:86559d5c12a53a0a",
+  "jsonHash": "fnv1a64:abe0d82c3ca655a9",
   "findings": []
 }

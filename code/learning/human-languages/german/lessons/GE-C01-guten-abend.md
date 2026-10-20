@@ -52,7 +52,8 @@ AH-bent*. *guten* again — the third masculine day-part in a row.
 
 You now have the daytime arc: **Guten Morgen** (morning) → **Guten Tag**
 (midday/afternoon) → **Guten Abend** (evening). All *guten*, all masculine.
-Only bedtime is left — and it breaks the pattern.
+Only bedtime is left — and it breaks the pattern. *Abend* ← Old High German
+*āband* (EtymDB 2.1), kin to the *even* of English *evening*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-GUTEN-ABEND-01, GE-LEX-GUTEN-MORGEN-01, GE-LEX-GUTEN-TAG-01] -->

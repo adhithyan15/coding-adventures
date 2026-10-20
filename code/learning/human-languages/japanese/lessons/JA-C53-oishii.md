@@ -14,7 +14,8 @@ romanization: "oishii"
 concept_tag: JA-ADJ53-OISHII
 prerequisites: [JA-C52-atatakai, JA-C53-tsumetai]
 sounds: []
-roots: []
+roots: [japanese-oishii]
+etymology_hook: "oishii: native; written 美味しい 'beautiful taste', read for meaning"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C53-tsumetai]
 <!-- hl-knowledge: introduces=[JA-LEX-C53-ADJ53-02]; assesses=[] -->
 
 **おいしい** — *oishii* — "tasty".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**おいしい** (*oishii*) is a native word, inherited rather than borrowed. JMdict writes it with characters for "beautiful" and "taste", read as a whole for their meaning. Its older origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

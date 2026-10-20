@@ -14,7 +14,8 @@ romanization: "samayasāraṇī"
 concept_tag: SA-READ140-SAMAYASARANI
 prerequisites: [SA-C139-gamisyati, SA-C140-sucana]
 sounds: []
-roots: []
+roots: [sanskrit-samaya]
+etymology_hook: "samayasāraṇī ← samaya 'time' + sāraṇī 'stream, channel' (MW); a modern coinage for a timetable"
 duration:
   max_seconds: 200
 requires:
@@ -47,6 +48,11 @@ reviews_of: [SA-C140-sucana]
 
 The timetable at the station says **धूमयानम् — प्रातः दश।** The train leaves at
 ten in the morning: be at the **स्थानकम्** before ten.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*samayasāraṇī* is built from *samaya* "time", first "a coming together" from *sam-√i* "go together" (MW), and *sāraṇī* "a stream, a channel" (MW). The pairing for a timetable is modern.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

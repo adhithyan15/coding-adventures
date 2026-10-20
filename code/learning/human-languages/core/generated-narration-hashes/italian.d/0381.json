@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:506b8efd6e89f758",
+  "lessonIds": [
+    "IT-C381-docente",
+    "IT-C381-relatore",
+    "IT-C381-borsa-di-studio",
+    "IT-C381-dottorato",
+    "IT-C381-appello"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch381.txt",
+  "json": "italian/narration/ch381.json",
+  "textHash": "fnv1a64:e25ffd1625494cee",
+  "jsonHash": "fnv1a64:ed7400bf1bd6164a",
+  "findings": []
+}

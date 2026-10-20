@@ -14,7 +14,8 @@ romanization: "zabūn"
 concept_tag: AR-AMAL188-ZABUN
 prerequisites: [AR-C188-fatura, AR-C188-khasm]
 sounds: []
-roots: []
+roots: [z-b-n]
+etymology_hook: "zabūn: post-classical in Lane (z-b-n); EtymDB gives Aramaic zābōnā 'buyer'; not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C188-khasm]
 <!-- hl-knowledge: introduces=[AR-LEX-C188-AMAL188-04]; assesses=[] -->
 
 **زبون** — *zabūn* — "a customer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**زبون** (*zabūn*) is listed by Lane under *z-b-n*, "to push", and his sources call its use for a customer post-classical. EtymDB gives an Aramaic source, *zābōnā*, "buyer"; the origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

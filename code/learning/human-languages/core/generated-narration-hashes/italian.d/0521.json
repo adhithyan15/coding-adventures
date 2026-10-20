@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:57aa18d95ee71445",
+  "lessonIds": [
+    "IT-C521-pittura",
+    "IT-C521-pennello",
+    "IT-C521-tela",
+    "IT-C521-cavalletto",
+    "IT-C521-acquerello"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch521.txt",
+  "json": "italian/narration/ch521.json",
+  "textHash": "fnv1a64:f90709ec5eb26164",
+  "jsonHash": "fnv1a64:9adacaef25e57a11",
+  "findings": []
+}

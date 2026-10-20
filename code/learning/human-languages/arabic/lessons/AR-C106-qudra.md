@@ -14,7 +14,8 @@ romanization: "qudra"
 concept_tag: AR-CAN106-QUDRA
 prerequisites: [AR-C106-najah, AR-C106-itqan]
 sounds: []
-roots: []
+roots: [q-d-r]
+etymology_hook: "qudra: built on the root q-d-r, 'to measure' (Lane); qudra is power, the ability to do"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C106-itqan]
 <!-- hl-knowledge: introduces=[AR-LEX-C106-CAN106-05]; assesses=[] -->
 
 **قدرة** — *qudra* — "ability".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قدرة** (*qudra*) is built on the native Arabic root *q-d-r*, "to measure; to have power" (Lane). *Qudra* is power, the ability to do.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

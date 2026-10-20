@@ -1,0 +1,11 @@
+{
+  "id": "IT-C357-dimissioni",
+  "pathSegment": "IT-PATH-357-DIMISSIONI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-357-DIMISSIONI",
+      "order": 2
+    }
+  ]
+}

@@ -14,7 +14,8 @@ romanization: "panīr"
 concept_tag: UR-FOOD56-PANIR
 prerequisites: [UR-C56-mirch, UR-C56-makkhan]
 sounds: []
-roots: []
+roots: [persian-panir]
+etymology_hook: "panīr: usually traced to Persian panīr 'cheese'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C56-makkhan]
 <!-- hl-knowledge: introduces=[UR-LEX-C56-FOOD56-03]; assesses=[] -->
 
 **پنیر** — *panīr* — "cheese".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پنیر** (*panīr*) is a loan, usually traced to Persian *panīr*, "cheese".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

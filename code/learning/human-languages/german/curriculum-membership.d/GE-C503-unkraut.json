@@ -1,0 +1,11 @@
+{
+  "id": "GE-C503-unkraut",
+  "pathSegment": "GE-PATH-503-GARTEN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-503-GARTEN",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 503,
+  "title": "Jogos de mesa",
+  "label": "ch:pt-jogos-de-mesa",
+  "canDo": "I can talk about board games, cards and puzzles.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C503-palavras-cruzadas",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 503: I can talk about board games, cards and puzzles.",
+    "assesses": [
+      "PT-LEX-C503-JOGOS-03",
+      "PT-LEX-C503-JOGOS-04",
+      "PT-LEX-C503-JOGOS-05"
+    ]
+  }
+}

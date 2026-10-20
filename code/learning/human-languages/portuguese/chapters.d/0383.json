@@ -1,0 +1,19 @@
+{
+  "chapter": 383,
+  "title": "Fora das regras",
+  "label": "ch:pt-fora-das-regras",
+  "canDo": "I can talk about exceptions and requirements, say what is ruled out, and name offences.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "PT-C383-transgredir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 383: I can talk about exceptions and requirements, say what is ruled out, and name offences.",
+    "assesses": [
+      "PT-LEX-C383-EXCECAO-03",
+      "PT-LEX-C383-EXCECAO-04",
+      "PT-LEX-C383-EXCECAO-05"
+    ]
+  }
+}

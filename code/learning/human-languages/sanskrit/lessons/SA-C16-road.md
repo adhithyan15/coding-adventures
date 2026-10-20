@@ -14,7 +14,8 @@ romanization: "mārgaḥ"
 concept_tag: SA-NOUN-ROAD
 prerequisites: [SA-C16-village, SA-C15-old]
 sounds: []
-roots: []
+roots: [sanskrit-marga]
+etymology_hook: "mārga ← mṛga 'wild animal': first an animal's track, then any road (MW; CDIAL 10071)"
 duration:
   max_seconds: 210
 requires:
@@ -52,6 +53,12 @@ From the root √मृग् (*mṛg*), "to track, to hunt, to search out." A r
 So the word does not name a built thing at all. It names the trace of a search,
 and only later the paved version of it. English keeps that metaphor alive when it
 speaks of a *line of enquiry*.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Mārga* is formed from *mṛga*, "wild animal": first the track of an animal,
+then any road (MW). It lives on as Hindi and Gujarati *māg* (CDIAL 10071).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

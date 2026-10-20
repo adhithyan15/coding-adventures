@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C386-concordia",
+    "language": "latin",
+    "chapter": 386,
+    "sequence": 20720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1a4616e19112870"
+  },
+  "findings": []
+}

@@ -14,7 +14,8 @@ romanization: "natsuyasumi"
 concept_tag: JA-THINGS69-NATSUYASUMI
 prerequisites: [JA-C69-shimo, JA-C69-koori]
 sounds: []
-roots: []
+roots: [japanese-natsu, japanese-yasumu]
+etymology_hook: "natsuyasumi: native natsu 'summer' + yasumi 'rest' (from yasumu)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C69-koori]
 <!-- hl-knowledge: introduces=[JA-LEX-C69-THINGS69-05]; assesses=[] -->
 
 **なつやすみ** — *natsuyasumi* — "the summer holidays".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**なつやすみ** (*natsuyasumi*) is a native compound, inherited rather than borrowed: *natsu*, "summer", and *yasumi*, "rest", the noun from *yasumu*, "to rest" (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

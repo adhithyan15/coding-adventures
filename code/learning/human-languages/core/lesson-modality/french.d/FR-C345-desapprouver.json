@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C345-desapprouver",
+    "language": "french",
+    "chapter": 345,
+    "sequence": 19470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c37e9b2f857d7a35"
+  },
+  "findings": []
+}

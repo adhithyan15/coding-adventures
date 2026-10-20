@@ -1,0 +1,11 @@
+{
+  "id": "PT-C454-portes",
+  "pathSegment": "PT-PATH-454-CORREIOS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-454-CORREIOS",
+      "order": 2
+    }
+  ]
+}

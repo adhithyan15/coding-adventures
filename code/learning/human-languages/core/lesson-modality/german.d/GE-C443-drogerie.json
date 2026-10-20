@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C443-drogerie",
+    "language": "german",
+    "chapter": 443,
+    "sequence": 23830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:db38f9420e3aefb0"
+  },
+  "findings": []
+}

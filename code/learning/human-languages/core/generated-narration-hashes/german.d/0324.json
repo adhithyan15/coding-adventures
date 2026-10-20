@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:8bd378a463e88af7",
+  "lessonIds": [
+    "GE-C324-ruehren",
+    "GE-C324-umruehren",
+    "GE-C324-verquirlen",
+    "GE-C324-aufschlagen",
+    "GE-C324-schneebesen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch324.txt",
+  "json": "german/narration/ch324.json",
+  "textHash": "fnv1a64:d1e6f5c2d08ffd34",
+  "jsonHash": "fnv1a64:1fa00445e0539dab",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:f1d3388cbe5c9497",
+  "lessonIds": [
+    "LA-C502-iocus",
+    "LA-C502-iocor",
+    "LA-C502-iocosus",
+    "LA-C502-ridiculus",
+    "LA-C502-facetus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch502.txt",
+  "json": "latin/narration/ch502.json",
+  "textHash": "fnv1a64:0c8bc15a0e97919e",
+  "jsonHash": "fnv1a64:4f832baed11367f1",
+  "findings": []
+}

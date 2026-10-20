@@ -100,14 +100,14 @@
     {
       "id": "mindmap",
       "headers": ["mindmap"],
-      "status": "partial",
+      "status": "full",
       "ir": "tree",
       "smoke_source": "mindmap\nroot((mindmap))\n  Topic"
     },
     {
       "id": "timeline",
       "headers": ["timeline"],
-      "status": "partial",
+      "status": "full",
       "ir": "temporal",
       "smoke_source": "timeline\n2026 : Started"
     },
@@ -142,14 +142,14 @@
     {
       "id": "kanban",
       "headers": ["kanban"],
-      "status": "partial",
+      "status": "full",
       "ir": "board",
       "smoke_source": "kanban\nTodo\n  task1[Task]"
     },
     {
       "id": "architecture",
       "headers": ["architecture", "architecture-beta"],
-      "status": "partial",
+      "status": "full",
       "ir": "structural",
       "smoke_source": "architecture-beta\nservice api(server)[API]"
     },
@@ -170,28 +170,28 @@
     {
       "id": "treemap",
       "headers": ["treemap", "treemap-beta"],
-      "status": "partial",
+      "status": "full",
       "ir": "hierarchy",
       "smoke_source": "treemap\n\"Root\"\n  \"Child\": 10"
     },
     {
       "id": "venn",
       "headers": ["venn-beta"],
-      "status": "partial",
+      "status": "full",
       "ir": "set",
       "smoke_source": "venn-beta\nset A\nset B"
     },
     {
       "id": "ishikawa",
       "headers": ["ishikawa", "ishikawa-beta"],
-      "status": "partial",
+      "status": "full",
       "ir": "causal",
       "smoke_source": "ishikawa-beta\nProblem\n  Cause"
     },
     {
       "id": "wardley",
       "headers": ["wardley-beta"],
-      "status": "partial",
+      "status": "full",
       "ir": "wardley",
       "smoke_source": "wardley-beta\ncomponent User [0.9, 0.5]"
     },
@@ -219,7 +219,7 @@
     {
       "id": "railroad",
       "headers": ["railroad-beta", "railroad-ebnf-beta", "railroad-abnf-beta", "railroad-peg-beta"],
-      "status": "partial",
+      "status": "full",
       "ir": "railroad",
       "smoke_source": "railroad-beta\nexpression = nonterminal(\"term\");"
     },

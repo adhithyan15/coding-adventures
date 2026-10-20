@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 279,
+  "sourceHash": "fnv1a64:f1a397b8f3276007",
+  "lessonIds": [
+    "GE-C279-ereignis",
+    "GE-C279-ereignen",
+    "GE-C279-stattfinden",
+    "GE-C279-vorkommen",
+    "GE-C279-vorfall"
+  ],
+  "tex": "german/book/chapters/ch279-was-geschah.tex"
+}

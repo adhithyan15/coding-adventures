@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 233,
-  "sourceHash": "fnv1a64:e2fb2d5142119eb2",
+  "sourceHash": "fnv1a64:9eaf72e177f8098c",
   "lessonIds": [
     "ES-C61-o"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "spanish/narration/ch233.txt",
   "json": "spanish/narration/ch233.json",
-  "textHash": "fnv1a64:b62efa07bef7a7e4",
-  "jsonHash": "fnv1a64:eb1051715f13e18b",
+  "textHash": "fnv1a64:1e38982fe92f1aa7",
+  "jsonHash": "fnv1a64:facd75193820fbcf",
   "findings": []
 }

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C414-fas",
+  "pathSegment": "LA-PATH-414-INIURIA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-414-INIURIA",
+      "order": 2
+    }
+  ]
+}

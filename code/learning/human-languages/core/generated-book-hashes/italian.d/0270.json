@@ -1,0 +1,11 @@
+{
+  "language": "italian",
+  "chapter": 270,
+  "sourceHash": "fnv1a64:7a5542ec6da59f5d",
+  "lessonIds": [
+    "IT-C270-piu-di",
+    "IT-C270-da-tre-anni",
+    "IT-C270-ripasso-esperienza"
+  ],
+  "tex": "italian/book/chapters/ch270-comparing-and-how-long.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 598,
+  "sourceHash": "fnv1a64:5f36cbe5f9e87160",
+  "lessonIds": [
+    "ES-C598-conocimiento",
+    "ES-C598-habilidad",
+    "ES-C598-capacidad",
+    "ES-C598-esforzarse",
+    "ES-C598-aportar"
+  ],
+  "tex": "spanish/book/chapters/ch598-saber-hacer.tex"
+}

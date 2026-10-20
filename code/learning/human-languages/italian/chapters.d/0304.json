@@ -1,0 +1,19 @@
+{
+  "chapter": 304,
+  "title": "La terra trema",
+  "label": "ch:it-la-terra-trema",
+  "canDo": "I can talk about an earthquake: the tremor, the rubble, the people who had to leave and the evacuation.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-R304-ripasso-297-304",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 304: I can talk about an earthquake: the tremor, the rubble, the people who had to leave and the evacuation.",
+    "assesses": [
+      "IT-LEX-C304-TERREMOTO-03",
+      "IT-LEX-C304-TERREMOTO-04",
+      "IT-LEX-C304-TERREMOTO-05"
+    ]
+  }
+}

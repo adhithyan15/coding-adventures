@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-342-CLADES",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-342-CLADES"
+  ],
+  "after": []
+}

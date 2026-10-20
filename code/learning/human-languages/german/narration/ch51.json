@@ -4,7 +4,7 @@
   "chapter": 51,
   "title": "The Bracket",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:63b4fd6e8b34e129",
+  "sourceHash": "fnv1a64:81ffdfd4f48fdee1",
   "lessons": [
     {
       "id": "GE-C38-koennen",
@@ -176,7 +176,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5ea2e5f5135d5bea",
+      "sourceHash": "fnv1a64:b56db6f7954569ac",
       "notice": null,
       "blocks": [
         {
@@ -238,7 +238,7 @@
             },
             {
               "kind": "speech",
-              "text": "A past-shaped verb standing in the present puts a little distance between the speaker and the demand. Both languages found the same politeness strategy, and German marks it with two dots."
+              "text": "A past-shaped verb standing in the present puts a little distance between the speaker and the demand. Both languages found the same politeness strategy, and German marks it with two dots. Mögen from Old High German mugan from Proto-Germanic maganą (EtymDB 2.1), the same verb as English may."
             }
           ]
         },
@@ -332,7 +332,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:12108cb97f77567d",
+      "sourceHash": "fnv1a64:40d8d55c1634c5dd",
       "notice": null,
       "blocks": [
         {
@@ -390,7 +390,7 @@
             },
             {
               "kind": "speech",
-              "text": "So the missing -t in er muss and the missing -s in he must are the same missing ending, and if the English one has never bothered you, the German one need not either."
+              "text": "So the missing -t in er muss and the missing -s in he must are the same missing ending, and if the English one has never bothered you, the German one need not either. Müssen from Old High German muozan from Proto-Germanic mōtaną (EtymDB 2.1), the same verb as English must."
             }
           ]
         },

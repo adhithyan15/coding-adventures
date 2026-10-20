@@ -1,0 +1,19 @@
+{
+  "chapter": 464,
+  "title": "Animali selvatici",
+  "label": "ch:it-animali-selvatici",
+  "canDo": "I can name wild animals I might see: the wild boar, the deer, the hare, the falcon, and animals grazing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C464-brucare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 464: I can name wild animals I might see: the wild boar, the deer, the hare, the falcon, and animals grazing.",
+    "assesses": [
+      "IT-LEX-C464-SELVATICI-03",
+      "IT-LEX-C464-SELVATICI-04",
+      "IT-LEX-C464-SELVATICI-05"
+    ]
+  }
+}

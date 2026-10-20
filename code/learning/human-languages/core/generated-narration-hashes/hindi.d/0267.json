@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 267,
-  "sourceHash": "fnv1a64:1e639063e8828ee6",
+  "sourceHash": "fnv1a64:ccaa4f616aa1a207",
   "lessonIds": [
     "HI-C267-rajai",
     "HI-C267-maccharadani",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch267.txt",
   "json": "hindi/narration/ch267.json",
-  "textHash": "fnv1a64:7bd5197e6ab62877",
-  "jsonHash": "fnv1a64:3589882d44ff61f6",
+  "textHash": "fnv1a64:fc8d33ed02f78f5b",
+  "jsonHash": "fnv1a64:27ed457bcb6f8abd",
   "findings": []
 }

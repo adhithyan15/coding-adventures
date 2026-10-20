@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 329,
+  "sourceHash": "fnv1a64:306988aacb1a1337",
+  "lessonIds": [
+    "IT-C329-rivolta",
+    "IT-C329-ribellarsi",
+    "IT-C329-invadere",
+    "IT-C329-arrendersi",
+    "IT-C329-liberare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch329.txt",
+  "json": "italian/narration/ch329.json",
+  "textHash": "fnv1a64:336fffae65f6acc8",
+  "jsonHash": "fnv1a64:daf7d0f5aadf2b66",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 519,
+  "sourceHash": "fnv1a64:c040535b8ca7d7d2",
+  "lessonIds": [
+    "IT-C519-palcoscenico",
+    "IT-C519-sipario",
+    "IT-C519-platea",
+    "IT-C519-loggione",
+    "IT-C519-applauso"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch519.txt",
+  "json": "italian/narration/ch519.json",
+  "textHash": "fnv1a64:17b93d876af2fad8",
+  "jsonHash": "fnv1a64:7fbe24105269c761",
+  "findings": []
+}

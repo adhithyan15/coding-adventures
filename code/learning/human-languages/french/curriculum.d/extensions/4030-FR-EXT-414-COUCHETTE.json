@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-414-COUCHETTE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can travel on a night train: the berth, the end of the line, the left-luggage office, the luggage trolley and the shuttle.",
+  "prerequisites": []
+}

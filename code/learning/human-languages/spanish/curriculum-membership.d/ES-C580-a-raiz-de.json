@@ -1,0 +1,11 @@
+{
+  "id": "ES-C580-a-raiz-de",
+  "pathSegment": "ES-PATH-580-MOTIVO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-580-MOTIVO",
+      "order": 1
+    }
+  ]
+}

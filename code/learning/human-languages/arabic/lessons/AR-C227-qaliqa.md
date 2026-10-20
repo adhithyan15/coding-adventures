@@ -14,7 +14,8 @@ romanization: "qaliqa"
 concept_tag: AR-VERB-QALIQA
 prerequisites: [AR-C226-ittafaqa, AR-C227-khajila]
 sounds: []
-roots: []
+roots: [q-l-q]
+etymology_hook: "qaliqa: built on the root q-l-q, 'to be restless' (Lane); qaliqa is the plain verb, 'he was uneasy'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C227-khajila]
 <!-- hl-knowledge: introduces=[AR-LEX-C227-ACT227-02]; assesses=[] -->
 
 **قلق** — *qaliqa* — "to worry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قلق** (*qaliqa*) is built on the native Arabic root *q-l-q*, "to be restless" (Lane). *Qaliqa* is the plain verb, "he was uneasy".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

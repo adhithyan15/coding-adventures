@@ -12,6 +12,9 @@ Before the new one: say the Persian for surely... not?, then the Persian for whe
 You'll want to know: به تازگی.
 به تازگی — be-tâzegi — "recently". Persian's past for "I" ends in -am: به تازگی یک کتاب خواندم — be-tâzegi yek ketâb khândam — "I recently read a book."
 
+The word, taken apart.
+be-tâzegi is be, "with, in", with tâzegi, "freshness" (from tâze, "fresh"): "freshly". All the pieces are native; tâze is usually traced to Middle Persian tāzag.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for when, then the Persian for recently.
 
 You'll want to know: قبلا.
 قبلا — qablan — "already; before". قبلا ناهار خوردم — qablan nâhâr khordam — "I've already had lunch."
+
+The word, taken apart.
+qablan is borrowed from Arabic qablan, "before, previously". Its Arabic root is q-b-l (Lane).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for recently, then the Persian for already.
 You'll want to know: پارسال.
 پارسال — pârsâl — "last year". پارسال به شیراز رفتم — pârsâl be shirâz raftam — "Last year I went to Shiraz."
 
+The word, taken apart.
+pârsâl is pâr, "last year", with sâl, "year". sâl continues Middle Persian sāl (EtymDB); EtymDB links pâr to the Indo-European per-, "before".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for already, then the Persian for last year.
 You'll want to know: یک بار.
 یک بار — yek bâr — "once, one time". یک بار به تهران رفتم — yek bâr be tehrân raftam — "I went to Tehran once."
 
+The word, taken apart.
+yek bâr is yek, "one", with bâr, "time, turn": one time. Both are native Persian; yek is inherited from Middle Persian ēk.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for last year, then the Persian for once.
 
 You'll want to know: سپری کردن.
 سپری کردن — separi kardan — "to spend (time)". Said of time: تابستان را در روستا سپری کردم — tâbestân râ dar rustâ separi kardam — "I spent the summer in the village."
+
+The word, taken apart.
+separi kardan pairs separi, "spent, finished", with kardan, "to do". separi is usually traced to Middle Persian spurrīg, "complete". kardan is inherited, from Middle Persian kardan (EtymDB).
 
 What you've built.
 One more word for this chapter.

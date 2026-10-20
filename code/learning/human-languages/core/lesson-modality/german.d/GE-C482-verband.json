@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C482-verband",
+    "language": "german",
+    "chapter": 482,
+    "sequence": 25840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d3b12cee68c4bdf"
+  },
+  "findings": []
+}

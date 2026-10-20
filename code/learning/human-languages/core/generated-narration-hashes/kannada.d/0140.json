@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 140,
-  "sourceHash": "fnv1a64:6efe54b53dad4aca",
+  "sourceHash": "fnv1a64:1f34082818df6ce9",
   "lessonIds": [
     "KA-C140-gadda",
     "KA-C140-pada",
@@ -14,6 +14,6 @@
   "text": "kannada/narration/ch140.txt",
   "json": "kannada/narration/ch140.json",
   "textHash": "fnv1a64:d09e1d861f2fa6c2",
-  "jsonHash": "fnv1a64:4c2ac9ef98f9c201",
+  "jsonHash": "fnv1a64:598198c764a4c8c3",
   "findings": []
 }

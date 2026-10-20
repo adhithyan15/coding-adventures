@@ -1,0 +1,14 @@
+{
+  "language": "italian",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:32d77f91cb0b719d",
+  "lessonIds": [
+    "IT-C502-campeggiare",
+    "IT-C502-torcia",
+    "IT-C502-fornelletto",
+    "IT-C502-escursione",
+    "IT-C502-esplorare",
+    "IT-R502-ripasso-495-502"
+  ],
+  "tex": "italian/book/chapters/ch502-sotto-le-stelle.tex"
+}

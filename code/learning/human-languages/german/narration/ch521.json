@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "german",
+  "chapter": 521,
+  "title": "Gedichte und Reime",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:b2fa3bb8af052325",
+  "lessons": [
+    {
+      "id": "GE-C521-gedicht",
+      "sequence": 27810,
+      "title": "das Gedicht — poem",
+      "headword": "das Gedicht",
+      "romanization": "das Gedicht",
+      "gloss": "poem",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6c5d286dfd065e17",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for non-fiction book, then the German for villain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: das Gedicht",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "das Gedicht — \"poem\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Zum Muttertag hat das Kind ein Gedicht gelernt. The child learnt a poem for Mother's Day."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Gedichte."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Gedicht is inherited from Middle High German getiht, built on tihten \"to compose\" (EtymDB), which is usually traced to Latin dictāre \"to say often, to dictate\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "das Gedicht",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *das Gedicht*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "das Gedicht, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *das Gedicht*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with das Gedicht",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *das Gedicht*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for non-fiction book, then the German for villain, then say das Gedicht again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for non-fiction book, then the German for villain, then say *das Gedicht* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does das Gedicht mean? (\"Poem\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C521-dichter",
+      "sequence": 27820,
+      "title": "der Dichter — poet",
+      "headword": "der Dichter",
+      "romanization": "der Dichter",
+      "gloss": "poet",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:049e3f43355e7bc7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for villain, then the German for poem."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: der Dichter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "der Dichter — \"poet\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Der Dichter las im Café aus seinem neuen Buch vor. The poet read from his new book in the café."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Dichter. A woman is die Dichterin."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Dichter is built on dichten \"to write poetry\" with -er; EtymDB lists dichten without a source, and it is usually traced to Latin dictāre \"to say often, to dictate\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Dichter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Dichter*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Dichter, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Dichter*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with der Dichter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *der Dichter*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for villain, then the German for poem, then say der Dichter again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for villain, then the German for poem, then say *der Dichter* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does der Dichter mean? (\"Poet\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C521-reim",
+      "sequence": 27830,
+      "title": "der Reim — rhyme",
+      "headword": "der Reim",
+      "romanization": "der Reim",
+      "gloss": "rhyme",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b224415d48b15b32",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for poem, then the German for poet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: der Reim",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "der Reim — \"rhyme\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Das Kinderlied hat lustige Reime. The children's song has funny rhymes."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Reime."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Reim is usually traced to Old French rime \"rhyme\", whose own origin is disputed; EtymDB sets the German word beside French rime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Reim",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Reim*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Reim, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Reim*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with der Reim",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *der Reim*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for poem, then the German for poet, then say der Reim again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for poem, then the German for poet, then say *der Reim* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does der Reim mean? (\"Rhyme\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C521-reimen",
+      "sequence": 27840,
+      "title": "reimen — to rhyme",
+      "headword": "reimen",
+      "romanization": "reimen",
+      "gloss": "to rhyme",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2dbb31b998a1d759",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for poet, then the German for rhyme."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: reimen",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "reimen — \"to rhyme\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Herz reimt sich auf Schmerz. Herz rhymes with Schmerz."
+            },
+            {
+              "kind": "speech",
+              "text": "Mostly reflexive: sich reimen auf + accusative."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "reimen is inherited from Middle High German rīmen \"to compose, to put into verse, to rhyme\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "reimen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *reimen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "reimen, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *reimen*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with reimen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *reimen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for poet, then the German for rhyme, then say reimen again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for poet, then the German for rhyme, then say *reimen* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does reimen mean? (\"To rhyme\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C521-schriftsteller",
+      "sequence": 27850,
+      "title": "der Schriftsteller — writer, author",
+      "headword": "der Schriftsteller",
+      "romanization": "der Schriftsteller",
+      "gloss": "writer, author",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:82a8a8d21cc885ef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for rhyme, then the German for to rhyme."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: der Schriftsteller",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "der Schriftsteller — \"writer, author\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mein Onkel ist Schriftsteller und schreibt Krimis. My uncle is a writer and writes crime novels."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Schriftsteller. A woman is die Schriftstellerin."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Schriftsteller is built on Schrift \"writing\", which came through Old High German scrift from Latin scrīptum (EtymDB), and Steller, from stellen \"to set\": one who sets down writing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Schriftsteller",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Schriftsteller*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Schriftsteller, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Schriftsteller*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with der Schriftsteller",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *der Schriftsteller*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for rhyme, then the German for to rhyme, then say der Schriftsteller again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for rhyme, then the German for to rhyme, then say *der Schriftsteller* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does der Schriftsteller mean? (\"Writer, author\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-R521-review-514-521",
+      "sequence": 27860,
+      "title": "Words from chapters 514–521 — a review",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 514-521",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d42909f92f8936f1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the German for melody and rhythm."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "melody, rhythm, beat, verse, to hum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: melody, rhythm, beat, verse, to hum]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "choir, orchestra, conductor, to conduct, to compose",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: choir, orchestra, conductor, to conduct, to compose]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stage, to rehearse, stage fright, to perform, appearance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: stage, to rehearse, stage fright, to perform, appearance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "actor, director, audience, to applaud, applause",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: actor, director, audience, to applaud, applause]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "painting, paintbrush, canvas, easel, watercolour",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: painting, paintbrush, canvas, easel, watercolour]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gallery, to exhibit, sculpture, sculptor, work of art",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: gallery, to exhibit, sculpture, sculptor, work of art]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "crime novel, biography, short story, non-fiction book, villain",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: crime novel, biography, short story, non-fiction book, villain]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poem, poet, rhyme, to rhyme, writer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: poem, poet, rhyme, to rhyme, writer]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Melody? (die Melodie.) Rhythm? (der Rhythmus.) Beat? (der Takt.) Verse? (die Strophe.) To hum? (summen.) Choir? (der Chor.) Orchestra? (das Orchester.) Conductor? (der Dirigent.) To conduct? (dirigieren.) To compose? (komponieren.) Stage? (die Bühne.) To rehearse? (proben.) Stage fright? (das Lampenfieber.) To perform? (auftreten.) Appearance? (der Auftritt.) Actor? (der Schauspieler.) Director? (der Regisseur.) Audience? (das Publikum.) To applaud? (klatschen.) Applause? (der Applaus.) Painting? (das Gemälde.) Paintbrush? (der Pinsel.) Canvas? (die Leinwand.) Easel? (die Staffelei.) Watercolour? (das Aquarell.) Gallery? (die Galerie.) To exhibit? (ausstellen.) Sculpture? (die Skulptur.) Sculptor? (der Bildhauer.) Work of art? (das Kunstwerk.) Crime novel? (der Krimi.) Biography? (die Biografie.) Short story? (die Kurzgeschichte.) Non-fiction book? (das Sachbuch.) Villain? (der Bösewicht.) Poem? (das Gedicht.) Poet? (der Dichter.) Rhyme? (der Reim.) To rhyme? (reimen.) Writer? (der Schriftsteller.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

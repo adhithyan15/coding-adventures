@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-320-FIERA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-320-FIERA"
+  ],
+  "after": []
+}

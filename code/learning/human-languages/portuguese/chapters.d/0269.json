@@ -1,0 +1,19 @@
+{
+  "chapter": 269,
+  "title": "Primeiro de tudo",
+  "label": "ch:pt-primeiro-de-tudo",
+  "canDo": "I can put the steps of a story in order: firstly, initially, next, later and finally.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C269-por-fim",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 269: I can put the steps of a story in order: firstly, initially, next, later and finally.",
+    "assesses": [
+      "PT-LEX-C269-PRIMEIRO-03",
+      "PT-LEX-C269-PRIMEIRO-04",
+      "PT-LEX-C269-PRIMEIRO-05"
+    ]
+  }
+}

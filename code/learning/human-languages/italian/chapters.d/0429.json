@@ -1,0 +1,19 @@
+{
+  "chapter": 429,
+  "title": "Dove dormire",
+  "label": "ch:it-dove-dormire",
+  "canDo": "I can choose where to sleep: a hostel, a farm stay, an inn, a guesthouse or a campsite.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C429-campeggio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 429: I can choose where to sleep: a hostel, a farm stay, an inn, a guesthouse or a campsite.",
+    "assesses": [
+      "IT-LEX-C429-DORMIRE-03",
+      "IT-LEX-C429-DORMIRE-04",
+      "IT-LEX-C429-DORMIRE-05"
+    ]
+  }
+}

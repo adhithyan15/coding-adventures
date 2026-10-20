@@ -1,0 +1,19 @@
+{
+  "chapter": 346,
+  "title": "Pensar com lógica",
+  "label": "ch:pt-pensar-com-logica",
+  "canDo": "I can follow a line of reasoning, deduce and conclude, and name the criterion I use.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C346-criterio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 346: I can follow a line of reasoning, deduce and conclude, and name the criterion I use.",
+    "assesses": [
+      "PT-LEX-C346-RACIOCINIO-03",
+      "PT-LEX-C346-RACIOCINIO-04",
+      "PT-LEX-C346-RACIOCINIO-05"
+    ]
+  }
+}

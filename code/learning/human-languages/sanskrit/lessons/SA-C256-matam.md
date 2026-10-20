@@ -14,7 +14,8 @@ romanization: "matam"
 concept_tag: SA-WRK256-MATAM
 prerequisites: [SA-C256-nirnayah, SA-C256-vicarah]
 sounds: []
-roots: []
+roots: [sanskrit-mata]
+etymology_hook: "mata 'thought', the past participle of √man 'think'; MW compares Latin meminisse 'remember'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C256-vicarah]
 <!-- hl-knowledge: introduces=[SA-LEX-C256-WRK256-05]; assesses=[] -->
 
 **मतम्** — *matam* — "an opinion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mata* is the past participle of the root √man, "to think" (MW): "what is thought", an opinion. MW compares √man with Latin *meminisse*, "to remember", and *monēre*, "to remind". The same root gives *manas*, "mind".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

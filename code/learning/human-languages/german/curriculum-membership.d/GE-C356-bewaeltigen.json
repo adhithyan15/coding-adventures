@@ -1,0 +1,11 @@
+{
+  "id": "GE-C356-bewaeltigen",
+  "pathSegment": "GE-PATH-356-KARRIERE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-356-KARRIERE",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-263-SCENA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-263-SCENA"
+  ],
+  "after": []
+}

@@ -14,7 +14,8 @@ romanization: "baṭan"
 concept_tag: UR-THINGS122-BATAN
 prerequisites: [UR-C121-pajama, UR-C122-chappal]
 sounds: []
-roots: []
+roots: [english-button]
+etymology_hook: "baṭan ← English button"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C122-chappal]
 <!-- hl-knowledge: introduces=[UR-LEX-C122-THINGS122-02]; assesses=[] -->
 
 **بٹن** — *baṭan* — "a button".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بٹن** (*baṭan*) is a loan from English *button*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

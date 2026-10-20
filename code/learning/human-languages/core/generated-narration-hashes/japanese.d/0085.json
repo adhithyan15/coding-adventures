@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 85,
-  "sourceHash": "fnv1a64:457be1d332cb15fb",
+  "sourceHash": "fnv1a64:fbbcd571a908a233",
   "lessonIds": [
     "JA-C85-utsu",
     "JA-C85-suu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch85.txt",
   "json": "japanese/narration/ch85.json",
-  "textHash": "fnv1a64:ac5342ef55cc1fe3",
-  "jsonHash": "fnv1a64:31e0ddfab5f36989",
+  "textHash": "fnv1a64:cf784dcf62149d7d",
+  "jsonHash": "fnv1a64:c29bbea19c4c5d30",
   "findings": []
 }

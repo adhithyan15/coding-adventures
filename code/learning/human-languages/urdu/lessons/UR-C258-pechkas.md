@@ -14,7 +14,8 @@ romanization: "pechkas"
 concept_tag: UR-CHIZ258-PECHKAS
 prerequisites: [UR-C257-dosti, UR-C257-sharm]
 sounds: []
-roots: []
+roots: [persian-pech, persian-kash]
+etymology_hook: "pechkas: Persian pēch 'screw' + kash 'pulling, turning'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C257-sharm]
 <!-- hl-knowledge: introduces=[UR-LEX-C258-CHIZ258-01]; assesses=[] -->
 
 **پیچ کس** — *pechkas* — "a screwdriver".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پیچ کس** (*pechkas*) is "screw-turner". It joins Persian *pēch*, "a twist, a screw", and *kash*, "pulling, drawing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

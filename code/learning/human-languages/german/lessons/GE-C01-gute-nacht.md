@@ -48,7 +48,8 @@ what German's endings are tracking.
 <!-- hl-knowledge: introduces=[GE-LEX-GUTE-NACHT-01]; assesses=[] -->
 
 **Gute Nacht** = **gut** ("good") + **Nacht** ("night") = "good night," *GOO-te
-nahkht*.
+nahkht*. *Nacht* ← Proto-Germanic *\*nahts*, the same word as English *night*
+(EtymDB 2.1).
 
 ## Grammar Lens: *gute*, not *guten*
 <!-- hl-knowledge: introduces=[GE-GRAMMAR-ADJ-ACC-FEM-02]; assesses=[GE-GRAMMAR-ADJ-ACC-MASC-02, GE-LEX-NACHT-02] -->

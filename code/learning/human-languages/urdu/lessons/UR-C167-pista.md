@@ -14,7 +14,8 @@ romanization: "pistā"
 concept_tag: UR-CHIZ167-PISTA
 prerequisites: [UR-C166-har, UR-C166-churi]
 sounds: []
-roots: []
+roots: [persian-pista]
+etymology_hook: "pistā: usually traced to Persian pista 'pistachio'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C166-churi]
 <!-- hl-knowledge: introduces=[UR-LEX-C167-CHIZ167-01]; assesses=[] -->
 
 **پستہ** — *pistā* — "a pistachio".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پستہ** (*pistā*) is a loan, usually traced to Persian *pista*, "pistachio".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

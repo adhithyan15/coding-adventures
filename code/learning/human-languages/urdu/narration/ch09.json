@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "People You'd Introduce",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:ae2635f7e5bc7352",
+  "sourceHash": "fnv1a64:9de17ade83e46e14",
   "lessons": [
     {
       "id": "UR-C09-bhai",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6a3b7bdcf8ebd2fd",
+      "sourceHash": "fnv1a64:807a31ac8503c566",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -100,7 +100,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "bhāī comes from Sanskrit bhrā́tṛ, \"brother,\" from Proto-Indo-Iranian bʰráHtā, from Proto-Indo-European bʰréh₂tēr. English brother comes from the very same root. Unlike pasand's disputed link to candēre two lessons ago, this one is settled: Sanskrit and English are both Indo-European, so bhāī and brother are real relatives, not two languages landing on the same idea by accident."
+              "text": "bhāī comes from Sanskrit bhrā́tṛ, \"brother\" (CDIAL 9661), from Proto-Indo-Iranian bʰráHtā, from Proto-Indo-European bʰréh₂tēr. English brother comes from the very same root. Unlike pasand's disputed link to candēre two lessons ago, this one is settled: Sanskrit and English are both Indo-European, so bhāī and brother are real relatives, not two languages landing on the same idea by accident."
             }
           ]
         },
@@ -192,7 +192,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f8e8d5576afa1b4d",
+      "sourceHash": "fnv1a64:5f7b3ea77ca8a4f0",
       "notice": null,
       "blocks": [
         {
@@ -257,7 +257,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "bahan continues Sanskrit bhaginī, traditionally connected to bhaj-, \"to share, to portion out\" — a sister pictured as a co-heir, sharing the family's portion. Specialists flag a real problem with the sound history, though: the aspiration in bhaginī does not shift the way this derivation needs it to. Hold this one loosely, the way pasand's candēre link was held loosely — a plausible story, not a settled one like bhāī's."
+              "text": "bahan continues Sanskrit bhaginī, \"sister\" (CDIAL 9349). Where bhaginī comes from is debated. One view, which CDIAL reports as the more probable, takes it from bhagin, \"fortunate\", on bhaj-, \"to share, to portion out\", as a good wish for an unmarried sister; other derivations have been proposed. CDIAL also flags a problem with the sound history: the breathy h that bhaginī has at its start sits in the middle of bahan, a shift that is hard to explain. Hold this one loosely, the way pasand's candēre link was held loosely — a plausible story, not a settled one like bhāī's."
             }
           ]
         },
@@ -369,7 +369,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:86da5ed0cb4bab11",
+      "sourceHash": "fnv1a64:5b42453fda706fd7",
       "notice": null,
       "blocks": [
         {
@@ -520,7 +520,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:61e5abcce08cfe6f",
+      "sourceHash": "fnv1a64:0b058ce6393a2146",
       "notice": null,
       "blocks": [
         {

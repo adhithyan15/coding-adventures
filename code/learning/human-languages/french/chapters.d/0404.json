@@ -1,0 +1,19 @@
+{
+  "chapter": 404,
+  "title": "Un pneu à plat",
+  "label": "ch:fr-un-pneu-a-plat",
+  "canDo": "I can deal with a flat tyre: the puncture, getting one, the tyre, the jack and pumping it up.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C404-gonfler",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 404: I can deal with a flat tyre: the puncture, getting one, the tyre, the jack and pumping it up.",
+    "assesses": [
+      "FR-LEX-C404-CREVAISON-03",
+      "FR-LEX-C404-CREVAISON-04",
+      "FR-LEX-C404-CREVAISON-05"
+    ]
+  }
+}

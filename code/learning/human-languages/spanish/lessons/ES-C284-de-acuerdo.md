@@ -6,7 +6,7 @@ sequence: 3320
 chapter: 284
 type: phrase
 headword: de acuerdo
-gloss: agreed — from cor, the heart: an agreement is two hearts brought together
+gloss: 'agreed — from cor, the heart: an agreement is two hearts brought together'
 concept_tag: ES-REPLY-AGREED
 prerequisites: [ES-C283-no-hay-de-que]
 sounds: [diphthong-ue, r-tap]

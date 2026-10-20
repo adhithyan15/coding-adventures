@@ -1,0 +1,11 @@
+{
+  "id": "LA-C472-lanificium",
+  "pathSegment": "LA-PATH-472-COLUS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-472-COLUS",
+      "order": 4
+    }
+  ]
+}

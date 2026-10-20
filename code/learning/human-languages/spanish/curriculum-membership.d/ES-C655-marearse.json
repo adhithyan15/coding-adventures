@@ -1,0 +1,11 @@
+{
+  "id": "ES-C655-marearse",
+  "pathSegment": "ES-PATH-655-VUELO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-655-VUELO",
+      "order": 3
+    }
+  ]
+}

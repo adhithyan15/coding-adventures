@@ -14,7 +14,8 @@ romanization: "hendevâne"
 concept_tag: FA-THINGS99-HENDEVANE
 prerequisites: [FA-C99-polow, FA-C99-ash]
 sounds: []
-roots: []
+roots: [persian-hind]
+etymology_hook: "hendevâne: usually explained as 'the Indian one', built on Persian Hendu 'India'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C99-ash]
 <!-- hl-knowledge: introduces=[FA-LEX-C99-THINGS99-03]; assesses=[] -->
 
 **هندوانه** — *hendevâne* — "a watermelon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hendevâne* is usually explained as "the Indian one", built on *Hendu*, "India, Indian", with the ending *-âne*: the watermelon named for the land it was thought to come from.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ordak"
 concept_tag: FA-THINGS106-ORDAK
 prerequisites: [FA-C106-kabutar, FA-C106-tavus]
 sounds: []
-roots: []
+roots: [turkic-ordek]
+etymology_hook: "ordak: a loan, usually traced to Turkic ördek 'duck'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C106-tavus]
 <!-- hl-knowledge: introduces=[FA-LEX-C106-THINGS106-04]; assesses=[] -->
 
 **اردک** — *ordak* — "a duck".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ordak* is a loan, usually traced to Turkic *ördek*, "duck".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

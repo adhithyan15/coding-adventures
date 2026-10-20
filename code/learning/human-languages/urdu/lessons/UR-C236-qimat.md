@@ -14,7 +14,8 @@ romanization: "qīmat"
 concept_tag: UR-KAM236-QIMAT
 prerequisites: [UR-C235-jhinga, UR-C236-bachat]
 sounds: []
-roots: []
+roots: [arabic-qima]
+etymology_hook: "qīmat ← Arabic qīma 'value', through Persian (Lane, root q-w-m)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C236-bachat]
 <!-- hl-knowledge: introduces=[UR-LEX-C236-KAM236-02]; assesses=[] -->
 
 **قیمت** — *qīmat* — "a price".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قیمت** (*qīmat*) is a loan from Arabic *qīma*, "value", which reached Urdu through Persian. Its Arabic root is *q-w-m* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

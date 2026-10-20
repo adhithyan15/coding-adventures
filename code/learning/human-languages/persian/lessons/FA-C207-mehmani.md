@@ -14,7 +14,8 @@ romanization: "mehmâni"
 concept_tag: FA-CHIZ207-MEHMANI
 prerequisites: [FA-C207-hediye, FA-C207-sonnat]
 sounds: []
-roots: []
+roots: [persian-mihman]
+etymology_hook: "mehmâni: Persian mehmân 'guest' (EtymDB) + -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C207-sonnat]
 <!-- hl-knowledge: introduces=[FA-LEX-C207-CHIZ207-04]; assesses=[] -->
 
 **مهمانی** — *mehmâni* — "a party".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mehmâni* is *mehmân*, "guest", with the ending *-i*: an occasion for guests. *mehmân* is inherited: EtymDB traces it to Middle Persian *mehmān*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

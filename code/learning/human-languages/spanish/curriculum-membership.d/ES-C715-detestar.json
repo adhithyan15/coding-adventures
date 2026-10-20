@@ -1,0 +1,11 @@
+{
+  "id": "ES-C715-detestar",
+  "pathSegment": "ES-PATH-715-AMOR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-715-AMOR",
+      "order": 1
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 83,
-  "sourceHash": "fnv1a64:55d5eec084822a74",
+  "sourceHash": "fnv1a64:9c0ae2b2f6e430fd",
   "lessonIds": [
     "RU-C83-midday",
     "RU-C83-midnight",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch83.txt",
   "json": "russian/narration/ch83.json",
-  "textHash": "fnv1a64:88014e32371e5044",
-  "jsonHash": "fnv1a64:8d08b9d3bc65f925",
+  "textHash": "fnv1a64:37dbbdac920a80e1",
+  "jsonHash": "fnv1a64:d54849057e2a98b7",
   "findings": []
 }

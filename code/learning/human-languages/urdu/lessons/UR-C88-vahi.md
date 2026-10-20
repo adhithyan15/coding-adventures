@@ -14,7 +14,8 @@ romanization: "vahī"
 concept_tag: UR-DEF88-VAHI
 prerequisites: [UR-C87-mausiqi, UR-C88-yihi]
 sounds: []
-roots: []
+roots: [sanskrit-asau]
+etymology_hook: "vahī: voh 'that' (CDIAL 972) with the emphatic -hī, 'that and no other'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C88-yihi]
 <!-- hl-knowledge: introduces=[UR-LEX-C88-DEF88-02]; assesses=[] -->
 
 **وہی** — *vahī* — "that very one".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**وہی** (*vahī*) is *voh*, "that", with the emphatic *-hī*: "that one and no other". CDIAL lists Hindi *wah*, "that", under Sanskrit *asau*, "that" (CDIAL 972).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

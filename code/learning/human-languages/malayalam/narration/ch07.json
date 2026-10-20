@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Numbers One to Ten",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a6cd6bdf34c96fbc",
+  "sourceHash": "fnv1a64:19124c7df2750ec2",
   "lessons": [
     {
       "id": "ML-C07-numbers-1-5",
@@ -705,7 +705,7 @@
       "id": "ML-C07-numbers-6-10",
       "sequence": 347,
       "title": "Six to ten — voice first",
-      "headword": "āṟŭ ēḻŭ eṭṭŭ ombatŭ pattŭ",
+      "headword": "āṟŭ ēḻŭ eṭṭŭ ompatŭ pattŭ",
       "romanization": "",
       "gloss": "hear and say six to ten before meeting their written forms",
       "script": "malayalam",
@@ -714,7 +714,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c6c1d6c9eaa6b05",
+      "sourceHash": "fnv1a64:1beee613f488c313",
       "notice": null,
       "blocks": [
         {
@@ -751,7 +751,7 @@
                 "quantity: 6. said: āṟŭ.",
                 "quantity: 7. said: ēḻŭ.",
                 "quantity: 8. said: eṭṭŭ.",
-                "quantity: 9. said: ombatŭ.",
+                "quantity: 9. said: ompatŭ.",
                 "quantity: 10. said: pattŭ."
               ]
             },
@@ -784,7 +784,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Ompathu grew from an old word for one plus pattŭ, ten: one short of ten. Before p, the older n becomes m. Say on-pattŭ slowly, then let it settle into ombatŭ."
+              "text": "Ompatŭ is usually read as an old word for one plus pattŭ, ten: one short of ten. It is native Dravidian (DEDR 1025), but how it was built is uncertain: DEDR sets it beside both \"one\" and an older word for nine. Before p, the older n becomes m. Say on-pattŭ slowly, then let it settle into ompatŭ."
             }
           ]
         },
@@ -796,11 +796,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "āṟŭ, ēḻŭ, eṭṭŭ, ombatŭ, pattŭ",
+              "instruction": "āṟŭ, ēḻŭ, eṭṭŭ, ompatŭ, pattŭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *āṟŭ, ēḻŭ, eṭṭŭ, ombatŭ, pattŭ*]"
+              "source": "[YOU SAY: *āṟŭ, ēḻŭ, eṭṭŭ, ompatŭ, pattŭ*]"
             },
             {
               "kind": "prompt",
@@ -814,11 +814,11 @@
             {
               "kind": "prompt",
               "action": "HEAR",
-              "instruction": "ombatŭ, then say the number — nine",
+              "instruction": "ompatŭ, then say the number — nine",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: *ombatŭ*, then say the number — nine]"
+              "source": "[YOU HEAR: *ompatŭ*, then say the number — nine]"
             },
             {
               "kind": "prompt",
@@ -844,7 +844,7 @@
             },
             {
               "kind": "speech",
-              "text": "Count six to ten. Which word preserves the rare zh? (Ezhu.) How is ombatŭ built? (One plus ten: one short of ten.) Next, the numeral shapes arrive in groups of three or fewer."
+              "text": "Count six to ten. Which word preserves the rare zh? (Ezhu.) How is ompatŭ built? (One plus ten: one short of ten.) Next, the numeral shapes arrive in groups of three or fewer."
             }
           ]
         }
@@ -967,7 +967,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:9f55f7e673ebc8ff",
+      "sourceHash": "fnv1a64:a11fe36ed889e8f3",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1007,7 +1007,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "൯ means 9: ombatŭ."
+              "text": "൯ means 9: ompatŭ."
             },
             {
               "kind": "speech",
@@ -1031,11 +1031,11 @@
             {
               "kind": "prompt",
               "action": "HEAR",
-              "instruction": "ombatŭ",
+              "instruction": "ompatŭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: *ombatŭ*]"
+              "source": "[YOU HEAR: *ompatŭ*]"
             },
             {
               "kind": "speech",
@@ -1056,7 +1056,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which shape means ten? (൰.) Read ൯. (Ompathu.) This lesson added two shapes, not five."
+              "text": "Which shape means ten? (൰.) Read ൯. (Ompatŭ.) This lesson added two shapes, not five."
             }
           ]
         }
@@ -1078,7 +1078,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:dc57331b70d23fb0",
+      "sourceHash": "fnv1a64:e15c81a75fd00438",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1141,7 +1141,7 @@
                 "numeral: ൬. word: ആറ്. said: āṟŭ.",
                 "numeral: ൭. word: ഏഴ്. said: ēḻŭ.",
                 "numeral: ൮. word: എട്ട്. said: eṭṭŭ.",
-                "numeral: ൯. word: ഒമ്പത്. said: ombatŭ.",
+                "numeral: ൯. word: ഒമ്പത്. said: ompatŭ.",
                 "numeral: ൰. word: പത്ത്. said: pattŭ."
               ]
             }
@@ -1327,7 +1327,7 @@
         "writing-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:07afccdbfbe98ca2",
+      "sourceHash": "fnv1a64:5843de8eda1e4712",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1360,11 +1360,11 @@
             {
               "kind": "prompt",
               "action": "HEAR",
-              "instruction": "āṟŭ — ēḻŭ — ombatŭ",
+              "instruction": "āṟŭ — ēḻŭ — ompatŭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: *āṟŭ — ēḻŭ — ombatŭ*]"
+              "source": "[YOU HEAR: *āṟŭ — ēḻŭ — ompatŭ*]"
             },
             {
               "kind": "speech",
@@ -1405,7 +1405,7 @@
         "writing-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:518728d01b5615da",
+      "sourceHash": "fnv1a64:df7f6a1b66ccaeb0",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1465,7 +1465,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which word means one short of ten? (ഒമ്പത്, ombatŭ, nine.)"
+              "text": "Which word is usually read as one short of ten? (ഒമ്പത്, ompatŭ, nine.)"
             },
             {
               "kind": "speech",

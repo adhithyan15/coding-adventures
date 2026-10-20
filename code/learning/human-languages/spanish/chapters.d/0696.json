@@ -1,0 +1,19 @@
+{
+  "chapter": 696,
+  "title": "Tiempo y temperatura",
+  "label": "ch:es-tiempo-y-temperatura",
+  "canDo": "I can understand a weather forecast and talk about the thermometer and the humidity.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C696-humedad",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 696: I can understand a weather forecast and talk about the thermometer and the humidity.",
+    "assesses": [
+      "ES-LEX-C696-CLIMA-03",
+      "ES-LEX-C696-CLIMA-04",
+      "ES-LEX-C696-CLIMA-05"
+    ]
+  }
+}

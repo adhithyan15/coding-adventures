@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C433-bolor",
+    "language": "portuguese",
+    "chapter": 433,
+    "sequence": 24270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dde813307141a180"
+  },
+  "findings": []
+}

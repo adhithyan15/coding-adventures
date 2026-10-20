@@ -1,0 +1,11 @@
+{
+  "id": "FR-C514-entracte",
+  "pathSegment": "FR-PATH-514-THEATRE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-514-THEATRE",
+      "order": 4
+    }
+  ]
+}

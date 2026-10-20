@@ -14,7 +14,8 @@ romanization: "ṭikaṭ"
 concept_tag: UR-LOC102-TIKAT
 prerequisites: [UR-C102-bavarchikhana, UR-C102-bathrum]
 sounds: []
-roots: []
+roots: [english-ticket]
+etymology_hook: "ṭikaṭ ← English ticket"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C102-bathrum]
 <!-- hl-knowledge: introduces=[UR-LEX-C102-LOC102-03]; assesses=[] -->
 
 **ٹکٹ** — *ṭikaṭ* — "a ticket".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ٹکٹ** (*ṭikaṭ*) is a loan from English *ticket*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

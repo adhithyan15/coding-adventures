@@ -1,0 +1,11 @@
+{
+  "id": "FR-C487-draguer",
+  "pathSegment": "FR-PATH-487-AMOUREUX",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-487-AMOUREUX",
+      "order": 2
+    }
+  ]
+}

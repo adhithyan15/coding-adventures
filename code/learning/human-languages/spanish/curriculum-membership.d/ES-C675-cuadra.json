@@ -1,0 +1,11 @@
+{
+  "id": "ES-C675-cuadra",
+  "pathSegment": "ES-PATH-675-AFUERAS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-675-AFUERAS",
+      "order": 1
+    }
+  ]
+}

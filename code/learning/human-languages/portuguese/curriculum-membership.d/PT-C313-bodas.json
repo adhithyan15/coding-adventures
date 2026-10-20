@@ -1,0 +1,11 @@
+{
+  "id": "PT-C313-bodas",
+  "pathSegment": "PT-PATH-313-BODAS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-313-BODAS",
+      "order": 1
+    }
+  ]
+}

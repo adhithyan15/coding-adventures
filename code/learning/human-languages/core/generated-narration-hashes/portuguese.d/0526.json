@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 526,
+  "sourceHash": "fnv1a64:3ac6adb59c05179c",
+  "lessonIds": [
+    "PT-C526-episodio",
+    "PT-C526-temporada",
+    "PT-C526-telenovela",
+    "PT-C526-legendado",
+    "PT-C526-dobragem"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch526.txt",
+  "json": "portuguese/narration/ch526.json",
+  "textHash": "fnv1a64:096328922ffeeb0f",
+  "jsonHash": "fnv1a64:1b095f7711f28ee6",
+  "findings": []
+}

@@ -14,7 +14,8 @@ romanization: "khonak"
 concept_tag: FA-SEFAT161-KHONAK
 prerequisites: [FA-C160-shans, FA-C161-khoshmaze]
 sounds: []
-roots: []
+roots: [persian-khonak]
+etymology_hook: "khonak: inherited, usually traced to Middle Persian xunuk"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C161-khoshmaze]
 <!-- hl-knowledge: introduces=[FA-LEX-C161-SEFAT161-02]; assesses=[] -->
 
 **خنک** — *khonak* — "cool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khonak* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *xunuk*, "cool".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -6,7 +6,7 @@ sequence: 3520
 chapter: 288
 type: word
 headword: la salida
-gloss: the way out — from salir, and Latin salire, to jump: a Roman jumped out of a room
+gloss: 'the way out — from salir, and Latin salire, to jump: a Roman jumped out of a room'
 concept_tag: ES-LEAVE-EXIT
 prerequisites: [ES-C287-plato]
 sounds: [vowel-i, d-soft]

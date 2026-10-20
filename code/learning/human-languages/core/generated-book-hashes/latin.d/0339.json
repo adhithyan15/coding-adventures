@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 339,
+  "sourceHash": "fnv1a64:d5d1aeef6adda08c",
+  "lessonIds": [
+    "LA-C339-proelium",
+    "LA-C339-acies",
+    "LA-C339-agmen",
+    "LA-C339-incursio",
+    "LA-C339-dimico"
+  ],
+  "tex": "latin/book/chapters/ch339-proelium.tex"
+}

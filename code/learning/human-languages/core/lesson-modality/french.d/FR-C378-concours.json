@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C378-concours",
+    "language": "french",
+    "chapter": 378,
+    "sequence": 21170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c6e3f64c48867943"
+  },
+  "findings": []
+}

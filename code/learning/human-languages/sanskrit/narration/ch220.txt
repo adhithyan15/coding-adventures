@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for an apple, then the Sanskrit for flatten
 You'll want to know: तुला.
 तुला — tulā — "a balance, scales".
 
+The word, taken apart.
+tulā is built on the root √tul, "to lift up, weigh" (MW): a balance lifts things to weigh them (CDIAL 5886). MW compares the root with Latin tulī, "I carried", an inherited Indo-European root. It is also the sign Libra, the Scales.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for flattened rice, then the Sanskrit for a
 
 You'll want to know: मानदण्डः.
 मानदण्डः — mānadaṇḍaḥ — "a measuring rod".
+
+The word, taken apart.
+mānadaṇḍa is a compound of māna, "measure, standard" (CDIAL 10041), built on the root √mā, "to measure", and daṇḍa, "stick, rod". MW does not list the compound, so the pairing for a measuring rod is modern; mānadaṇḍa also means "standard".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a balance, then the Sanskrit for a meas
 You'll want to know: दण्डः.
 दण्डः — daṇḍaḥ — "a stick".
 
+The word, taken apart.
+daṇḍa is a Rigvedic word for "stick, club" (CDIAL 6128). MW relates it to Greek dendron, "tree", and to Sanskrit dāru, "wood", but CDIAL thinks it probably non-Aryan and finds no support for the Greek comparison, so the origin is not settled. It later also meant "punishment", the stick that rules.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a measuring rod, then the Sanskrit for 
 You'll want to know: यष्टिः.
 यष्टिः — yaṣṭiḥ — "a staff".
 
+The word, taken apart.
+yaṣṭi means "any support, a staff, pole" (MW), and MW derives it, probably, from √yam, "to hold, support". It is in the Śatapatha Brāhmaṇa, and Hindi jāṭh, "post, beam in a sugar mill", comes from it (CDIAL 10444).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a stick, then the Sanskrit for a staff.
 
 You'll want to know: धनुः.
 धनुः — dhanuḥ — "an archer's bow".
+
+The word, taken apart.
+dhanuḥ is the nominative of dhanus, "bow", already in the Rigveda (CDIAL 6726). MW gives no derivation, so its origin is uncertain. It is the second half of indradhanus, "rainbow", which you have already met.
 
 What you've built.
 One more word for this chapter.

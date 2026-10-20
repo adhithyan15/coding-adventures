@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-283-ZEUGE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about witnesses: a witness, to testify, a statement, to observe and to recount.",
+  "prerequisites": []
+}

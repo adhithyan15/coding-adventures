@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 398,
+  "sourceHash": "fnv1a64:edd2b3420ce77570",
+  "lessonIds": [
+    "IT-C398-guadagnare",
+    "IT-C398-guadagno",
+    "IT-C398-profitto",
+    "IT-C398-perdita",
+    "IT-C398-fallire"
+  ],
+  "tex": "italian/book/chapters/ch398-guadagni-e-perdite.tex"
+}

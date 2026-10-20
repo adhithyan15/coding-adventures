@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C383-promuovere",
+    "language": "italian",
+    "chapter": 383,
+    "sequence": 21870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:352e24eb16372e7b"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 393,
+  "sourceHash": "fnv1a64:47d4f75a91e51359",
+  "lessonIds": [
+    "IT-C393-carcere",
+    "IT-C393-detenuto",
+    "IT-C393-punire",
+    "IT-C393-punizione",
+    "IT-C393-sanzione"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch393.txt",
+  "json": "italian/narration/ch393.json",
+  "textHash": "fnv1a64:b082dd797261f005",
+  "jsonHash": "fnv1a64:f5cd484a115506fe",
+  "findings": []
+}

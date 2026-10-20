@@ -1,0 +1,11 @@
+{
+  "id": "PT-C454-expedir",
+  "pathSegment": "PT-PATH-454-CORREIOS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-454-CORREIOS",
+      "order": 3
+    }
+  ]
+}

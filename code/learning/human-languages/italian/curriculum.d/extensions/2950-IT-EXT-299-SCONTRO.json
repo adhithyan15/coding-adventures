@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-299-SCONTRO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a road crash: the collision, crashing into something, dents and damage.",
+  "prerequisites": []
+}

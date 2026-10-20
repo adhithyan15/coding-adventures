@@ -14,7 +14,8 @@ romanization: "qiṣṣa"
 concept_tag: AR-WORLD99-QISSA
 prerequisites: [AR-C99-balad, AR-C99-lugha]
 sounds: []
-roots: []
+roots: [q-ṣ-ṣ]
+etymology_hook: "qiṣṣa: built on the root q-ṣ-ṣ, 'to follow a track' (Lane); qiṣṣa is a story, a thing narrated"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C99-lugha]
 <!-- hl-knowledge: introduces=[AR-LEX-C99-WORLD99-05]; assesses=[] -->
 
 **قصة** — *qiṣṣa* — "a story".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قصة** (*qiṣṣa*) is built on the native Arabic root *q-ṣ-ṣ*, "to follow a track; to narrate" (Lane). *Qiṣṣa* is a story, a thing narrated.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

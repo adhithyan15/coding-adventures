@@ -14,7 +14,8 @@ romanization: "tannūra"
 concept_tag: AR-SHAY182-TANNURA
 prerequisites: [AR-C182-muthallajat, AR-C182-wajba]
 sounds: []
-roots: []
+roots: [tannur-oven]
+etymology_hook: "tannūra: Lane has only tannūr 'oven', called Persian; whether the skirt word comes from it is not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C182-wajba]
 <!-- hl-knowledge: introduces=[AR-LEX-C182-SHAY182-05]; assesses=[] -->
 
 **تنورة** — *tannūra* — "a skirt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تنورة** (*tannūra*) is a later word for a skirt. Lane has only *tannūr*, "an oven", which his sources call arabicized, originally Persian; whether the skirt word comes from it is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

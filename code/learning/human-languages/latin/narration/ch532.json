@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 532,
+  "title": "Freedom",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f4f23d7719e70914",
+  "lessons": [
+    {
+      "id": "LA-C532-manumissio",
+      "sequence": 28200,
+      "title": "manūmissiō, manūmissiōnis — the freeing of a slave",
+      "headword": "manūmissiō, manūmissiōnis",
+      "romanization": "manūmissiō, manūmissiōnis",
+      "gloss": "the freeing of a slave",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d0994d890fbeaea4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a litter-bearer, then the Latin for a farm housekeeper."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: manūmissiō, manūmissiōnis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "manūmissiō, manūmissiōnis — \"the freeing of a slave\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Post manūmissiōnem servus lībertus est. After being set free, the slave is a freedman."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, third declension: manus 'hand' + mittō 'to send' — to let go from the hand. English manumission."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "manūmissiō is built on manūmittō \"to set free\", from manus \"hand, power\" and mittō \"to let go\" (Lewis & Short). English manumission comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manūmissiō, manūmissiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manūmissiō, manūmissiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manūmissiō, manūmissiōnis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manūmissiō, manūmissiōnis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with manūmissiō, manūmissiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *manūmissiō, manūmissiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a litter-bearer, then the Latin for a farm housekeeper, then say manūmissiō, manūmissiōnis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a litter-bearer, then the Latin for a farm housekeeper, then say *manūmissiō, manūmissiōnis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does manūmissiō, manūmissiōnis mean? (\"The freeing of a slave\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C532-libertinus",
+      "sequence": 28210,
+      "title": "lībertīnus, lībertīnī — a freedman (by rank)",
+      "headword": "lībertīnus, lībertīnī",
+      "romanization": "lībertīnus, lībertīnī",
+      "gloss": "a freedman (by rank)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bde15d5ecfa78f74",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a farm housekeeper, then the Latin for the freeing of a slave."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: lībertīnus, lībertīnī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lībertīnus, lībertīnī — \"a freedman (by rank)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Multī lībertīnī in urbe tabernās habent. Many freedmen keep shops in the city."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine. Lībertīnus names a freed slave's rank in society, lībertus his tie to his former master."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lībertīnus is built on lībertus \"freedman\" (Lewis & Short; EtymDB), from līber \"free\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lībertīnus, lībertīnī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lībertīnus, lībertīnī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lībertīnus, lībertīnī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lībertīnus, lībertīnī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with lībertīnus, lībertīnī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *lībertīnus, lībertīnī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a farm housekeeper, then the Latin for the freeing of a slave, then say lībertīnus, lībertīnī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a farm housekeeper, then the Latin for the freeing of a slave, then say *lībertīnus, lībertīnī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does lībertīnus, lībertīnī mean? (\"A freedman (by rank)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C532-vindicta",
+      "sequence": 28220,
+      "title": "vindicta, vindictae — the rod of freedom (in freeing a slave); vengeance",
+      "headword": "vindicta, vindictae",
+      "romanization": "vindicta, vindictae",
+      "gloss": "the rod of freedom (in freeing a slave); vengeance",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:606d2709adc1c073",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for the freeing of a slave, then the Latin for a freedman."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: vindicta, vindictae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vindicta, vindictae — \"the rod of freedom (in freeing a slave); vengeance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Magistrātus servum vindictā tangit, et servus līber fit. The magistrate touches the slave with the rod, and the slave becomes free."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, first declension. In one way of freeing a slave, he was touched with this rod before a magistrate. Later it also means vengeance; English vindictive."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vindicta is built on vindicō \"to lay claim to, set free\" (Lewis & Short; EtymDB), from vindex \"a defender\". English vindictive comes from its later sense, vengeance."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vindicta, vindictae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vindicta, vindictae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vindicta, vindictae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vindicta, vindictae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with vindicta, vindictae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *vindicta, vindictae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for the freeing of a slave, then the Latin for a freedman, then say vindicta, vindictae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for the freeing of a slave, then the Latin for a freedman, then say *vindicta, vindictae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does vindicta, vindictae mean? (\"The rod of freedom (in freeing a slave); vengeance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C532-ingenuus",
+      "sequence": 28230,
+      "title": "ingenuus, ingenua, ingenuum — free-born; frank",
+      "headword": "ingenuus, ingenua, ingenuum",
+      "romanization": "ingenuus, ingenua, ingenuum",
+      "gloss": "free-born; frank",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d9a7062c6979b35f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a freedman, then the Latin for the rod of freedom."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ingenuus, ingenua, ingenuum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ingenuus, ingenua, ingenuum — \"free-born; frank\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Hic puer ingenuus est, nōn servus. This boy is free-born, not a slave."
+            },
+            {
+              "kind": "speech",
+              "text": "Born free, as against lībertīnus; then honest, frank. English ingenuous."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ingenuus is built on in- and the root of gignō \"to beget\" (Lewis & Short): born in the place, then born free. English ingenuous comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ingenuus, ingenua, ingenuum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ingenuus, ingenua, ingenuum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ingenuus, ingenua, ingenuum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ingenuus, ingenua, ingenuum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ingenuus, ingenua, ingenuum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ingenuus, ingenua, ingenuum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a freedman, then the Latin for the rod of freedom, then say ingenuus, ingenua, ingenuum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a freedman, then the Latin for the rod of freedom, then say *ingenuus, ingenua, ingenuum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ingenuus, ingenua, ingenuum mean? (\"Free-born; frank\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C532-pilleus",
+      "sequence": 28240,
+      "title": "pilleus, pilleī — a felt cap",
+      "headword": "pilleus, pilleī",
+      "romanization": "pilleus, pilleī",
+      "gloss": "a felt cap",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:61ad46a28e960b20",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for the rod of freedom, then the Latin for free-born."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: pilleus, pilleī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pilleus, pilleī — \"a felt cap\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Servus līberātus pilleum gerit. The freed slave wears the felt cap."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine, second declension. A newly freed slave put on the pilleus, a sign of liberty."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pilleus is usually linked with Greek pilos \"felt, felt cap\" (Lewis & Short), but whether it is a loan or a cousin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pilleus, pilleī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pilleus, pilleī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pilleus, pilleī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pilleus, pilleī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with pilleus, pilleī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *pilleus, pilleī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for the rod of freedom, then the Latin for free-born, then say pilleus, pilleī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for the rod of freedom, then the Latin for free-born, then say *pilleus, pilleī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does pilleus, pilleī mean? (\"A felt cap\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

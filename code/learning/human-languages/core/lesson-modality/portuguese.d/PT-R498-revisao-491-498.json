@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-R498-revisao-491-498",
+    "language": "portuguese",
+    "chapter": 498,
+    "sequence": 27630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6468e88ed5f32b7c"
+  },
+  "findings": []
+}

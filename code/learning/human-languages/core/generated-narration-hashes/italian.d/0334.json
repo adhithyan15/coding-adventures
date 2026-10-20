@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:366c76bbfbc0f2cc",
+  "lessonIds": [
+    "IT-C334-soffriggere",
+    "IT-C334-rosolare",
+    "IT-C334-friggere",
+    "IT-C334-sfumare",
+    "IT-C334-soffritto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch334.txt",
+  "json": "italian/narration/ch334.json",
+  "textHash": "fnv1a64:a9a596a6a8268d45",
+  "jsonHash": "fnv1a64:4073a97aeabba87e",
+  "findings": []
+}

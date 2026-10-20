@@ -1,0 +1,19 @@
+{
+  "chapter": 428,
+  "title": "Pernoitar",
+  "label": "ch:pt-pernoitar",
+  "canDo": "I can talk about where I stay: accommodation, spending the night, an overnight stay, putting someone up and the doorman.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C428-porteiro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 428: I can talk about where I stay: accommodation, spending the night, an overnight stay, putting someone up and the doorman.",
+    "assesses": [
+      "PT-LEX-C428-PERNOITAR-03",
+      "PT-LEX-C428-PERNOITAR-04",
+      "PT-LEX-C428-PERNOITAR-05"
+    ]
+  }
+}

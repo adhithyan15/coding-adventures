@@ -1,0 +1,19 @@
+{
+  "chapter": 626,
+  "title": "En el tribunal",
+  "label": "ch:es-en-el-tribunal",
+  "canDo": "I can follow a short news item about a court, a charge, a verdict and a fraud.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ES-C626-fraude",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 626: I can follow a short news item about a court, a charge, a verdict and a fraud.",
+    "assesses": [
+      "ES-LEX-C626-JUICIO-03",
+      "ES-LEX-C626-JUICIO-04",
+      "ES-LEX-C626-JUICIO-05"
+    ]
+  }
+}

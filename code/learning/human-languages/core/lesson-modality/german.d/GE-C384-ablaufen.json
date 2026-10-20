@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C384-ablaufen",
+    "language": "german",
+    "chapter": 384,
+    "sequence": 20800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b5a576caabdc386c"
+  },
+  "findings": []
+}

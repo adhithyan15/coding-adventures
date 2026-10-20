@@ -1,0 +1,19 @@
+{
+  "chapter": 361,
+  "title": "Fare carriera",
+  "label": "ch:it-fare-carriera",
+  "canDo": "I can talk about getting on at work: a pay rise, qualifications, skills, training and a consultant.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C361-consulente",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 361: I can talk about getting on at work: a pay rise, qualifications, skills, training and a consultant.",
+    "assesses": [
+      "IT-LEX-C361-CARRIERA-03",
+      "IT-LEX-C361-CARRIERA-04",
+      "IT-LEX-C361-CARRIERA-05"
+    ]
+  }
+}

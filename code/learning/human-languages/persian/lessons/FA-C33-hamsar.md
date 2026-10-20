@@ -14,7 +14,8 @@ romanization: "hamsar"
 concept_tag: FA-FAMILY33-HAMSAR
 prerequisites: [FA-C33-khale, FA-C33-shohar]
 sounds: []
-roots: []
+roots: [persian-ham, persian-sar]
+etymology_hook: "hamsar: Persian ham- 'same' + sar 'head'; native, both parts inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C33-shohar]
 <!-- hl-knowledge: introduces=[FA-LEX-C33-FAMILY33-03]; assesses=[] -->
 
 **همسر** — *hamsar* — "a spouse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hamsar* is built from *ham-*, "same, together", and *sar*, "head": first "an equal, one of the same rank", then a spouse. Both parts are native Persian; *sar* continues Middle Persian *sar* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

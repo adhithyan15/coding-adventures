@@ -1,0 +1,19 @@
+{
+  "id": "SA-A1-M-13",
+  "category": "Modern life — fields a spoken revival needs and a classical corpus lacks",
+  "label": "computing and new technology",
+  "probe": [
+    "SA-LEX-C105-THINGS105-02",
+    "SA-LEX-C269-MEDIA-02"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "CEFR-CV",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-NE16-02"
+  ],
+  "note": "COVERED LEXICAL RETRIEVAL ONLY. Chapter 270 requires two model-free retrievals of the already-owned words for computer and internet. This closes recognition and recall of those two modern-technology nouns only; it does not evidence device use, internet navigation, digital literacy, technological competence, human validation, learner attainment, or exam readiness."
+}

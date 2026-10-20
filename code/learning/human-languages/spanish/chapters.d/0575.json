@@ -1,0 +1,19 @@
+{
+  "chapter": 575,
+  "title": "El pasado",
+  "label": "ch:es-el-pasado",
+  "canDo": "I can talk about the ancient world, the present and what lies ahead, about old times and how things used to be.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-R575-repaso-final-575",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 575: I can talk about the ancient world, the present and what lies ahead, about old times and how things used to be.",
+    "assesses": [
+      "ES-LEX-C575-PASADO-03",
+      "ES-LEX-C575-PASADO-04",
+      "ES-LEX-C575-PASADO-05"
+    ]
+  }
+}

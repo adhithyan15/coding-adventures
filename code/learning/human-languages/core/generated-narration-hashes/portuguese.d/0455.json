@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 455,
+  "sourceHash": "fnv1a64:0182a67a85fc0551",
+  "lessonIds": [
+    "PT-C455-levantamento",
+    "PT-C455-cobrar",
+    "PT-C455-debitar",
+    "PT-C455-extrato",
+    "PT-C455-comissao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch455.txt",
+  "json": "portuguese/narration/ch455.json",
+  "textHash": "fnv1a64:9015e43ec312c96a",
+  "jsonHash": "fnv1a64:3539d332f054f260",
+  "findings": []
+}

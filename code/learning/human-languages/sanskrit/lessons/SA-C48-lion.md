@@ -14,7 +14,8 @@ romanization: "siṁhaḥ"
 concept_tag: SA-BEAST-SIMHA
 prerequisites: [SA-C47-floor, SA-C46-sun, SA-C47-wall]
 sounds: []
-roots: []
+roots: [sanskrit-simha]
+etymology_hook: "siṃha 'lion': MW suggests √sah 'prevail', 'the powerful one'; no outside cousin agreed (CDIAL 13384)"
 duration:
   max_seconds: 210
 requires:
@@ -47,6 +48,12 @@ reviews_of: [SA-C47-floor]
 You have been handed this word twice without being told it. *Siṁhapura*, the lion town, is what *Singapore* was worn down from; and *Narasiṁha*, the man-lion, sets it beside नरः, the man you can already say. Here is the word on its own at last.
 
 Its own parentage is unsettled — no cousin outside the family has been agreed on. How far it travelled is not in doubt: the language and the people of Sri Lanka are called Sinhala after it. Ends in **-अः**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW takes *siṃha* as probably "the powerful one", from the root √sah, "to prevail",
+but no cousin outside India is agreed, so its origin is not settled (CDIAL 13384).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

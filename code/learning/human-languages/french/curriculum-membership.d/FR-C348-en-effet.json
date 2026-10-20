@@ -1,0 +1,11 @@
+{
+  "id": "FR-C348-en-effet",
+  "pathSegment": "FR-PATH-348-GRACE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-348-GRACE",
+      "order": 2
+    }
+  ]
+}

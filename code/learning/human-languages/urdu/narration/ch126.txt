@@ -12,6 +12,9 @@ Before the new one: say the Urdu for an island, then the Urdu for a sparrow.
 You'll want to know: کوا.
 کوا — kavvā — "a crow".
 
+The word, taken apart.
+کوا (kavvā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kāka, "crow" (CDIAL 2993). CDIAL notes that the later forms partly imitate the bird's call.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a sparrow, then the Urdu for a crow.
 
 You'll want to know: مور.
 مور — mor — "a peacock".
+
+The word, taken apart.
+مور (mor) is inherited. CDIAL lists it under mora, a form beside Sanskrit mayūra, "peacock" (CDIAL 9865). Some trace the Sanskrit word to Dravidian or to Austroasiatic; Bailey connects it with a Khotanese word and takes it as an old Indo-Iranian colour word.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a crow, then the Urdu for a peacock.
 You'll want to know: تتلی.
 تتلی — titlī — "a butterfly".
 
+The word, taken apart.
+The origin of تتلی (titlī) is uncertain. CDIAL has no entry for it.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a peacock, then the Urdu for a butterfly.
 You'll want to know: چیونٹی.
 چیونٹی — chyūṅṭī — "an ant".
 
+The word, taken apart.
+The origin of چیونٹی (chyūṅṭī) is not settled, and CDIAL has no entry for it. CDIAL does list a Hindi cyū̃ṭā, a form close to this word, among pinching words under a reconstructed cimb, "pinch" (CDIAL 4822). If the two belong together, the ant is named for its nip.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for a butterfly, then the Urdu for an ant.
 
 You'll want to know: گدھا.
 گدھا — gadhā — "a donkey".
+
+The word, taken apart.
+گدھا (gadhā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from gardabha, "ass" (CDIAL 4054).
 
 What you've built.
 One more word for this chapter.

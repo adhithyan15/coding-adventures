@@ -1,0 +1,20 @@
+{
+  "language": "italian",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:2466f0007a482e85",
+  "lessonIds": [
+    "IT-C312-antenato",
+    "IT-C312-posteri",
+    "IT-C312-discendenza",
+    "IT-C312-stirpe",
+    "IT-C312-albero-genealogico",
+    "IT-R312-ripasso-305-312"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "italian/narration/ch312.txt",
+  "json": "italian/narration/ch312.json",
+  "textHash": "fnv1a64:6f4bb0676d2f4b71",
+  "jsonHash": "fnv1a64:0f543ab505da349e",
+  "findings": []
+}

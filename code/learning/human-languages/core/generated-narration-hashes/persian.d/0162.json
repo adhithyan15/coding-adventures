@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 162,
-  "sourceHash": "fnv1a64:1c091904318db66a",
+  "sourceHash": "fnv1a64:5e152d28dca639e1",
   "lessonIds": [
     "FA-C162-dowlati",
     "FA-C162-fowri",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch162.txt",
   "json": "persian/narration/ch162.json",
-  "textHash": "fnv1a64:3f1611850fa388eb",
-  "jsonHash": "fnv1a64:29e30a68a79b3c2e",
+  "textHash": "fnv1a64:a066ad66a0343257",
+  "jsonHash": "fnv1a64:660f201a8c098bfa",
   "findings": []
 }

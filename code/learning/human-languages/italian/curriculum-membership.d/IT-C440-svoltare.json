@@ -1,0 +1,11 @@
+{
+  "id": "IT-C440-svoltare",
+  "pathSegment": "IT-PATH-440-INDICAZIONI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-440-INDICAZIONI",
+      "order": 2
+    }
+  ]
+}

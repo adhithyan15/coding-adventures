@@ -14,7 +14,8 @@ romanization: "jodâ kardan"
 concept_tag: FA-VERB-JODA-KARDAN
 prerequisites: [FA-C224-feshar-dadan, FA-C224-vasl-kardan]
 sounds: []
-roots: []
+roots: [persian-juda, pie-kwer]
+etymology_hook: "jodâ ← Middle Persian judāg 'separate' (EtymDB), + kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C224-vasl-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C224-KONESH224-04]; assesses=[] -->
 
 **جدا کردن** — *jodâ kardan* — "to separate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jodâ kardan* pairs *jodâ*, "separate", with *kardan*. *jodâ* is inherited: EtymDB traces it to Middle Persian *judāg*, "separate, different". (It also lists Arabic *jiddan*, a different word.) *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

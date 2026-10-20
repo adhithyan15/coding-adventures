@@ -14,7 +14,8 @@ romanization: "bastari shodan"
 concept_tag: FA-VERB-BASTARI-SHODAN
 prerequisites: [FA-C260-sut-zadan, FA-C261-panseman-kardan]
 sounds: []
-roots: []
+roots: [persian-bistar, persian-shudan]
+etymology_hook: "bastari shodan: Persian bastar 'bed' + -i + shodan; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C261-panseman-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C261-KONESH261-02]; assesses=[] -->
 
 **بستری شدن** — *bastari shodan* — "to be admitted to hospital".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bastari shodan* is "to become bedded": *bastari* is *bastar*, "bed", with *-i*, and *shodan*. *bastar* is native Persian. *shodan*, "to become", is an inherited verb; it is usually traced to Middle Persian *šudan*, "to go".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -11,8 +11,8 @@ romanization: as-salāma
 concept_tag: AR-WORD-SALAMA
 prerequisites: [AR-C04-maa-with, AR-C01-salam, AR-C01-al]
 sounds: [sun-letter-assimilation, ta-marbuta]
-roots: [semitic-s-l-m]
-etymology_hook: "salāma is salām run through the faʿāla pattern, which turns a thing into the STATE of that thing — peace → safety/soundness; the ة (tāʾ marbūṭa) marks it feminine, as Arabic abstract nouns usually are, and س is a sun letter so al- assimilates to as-"
+roots: [s-l-m]
+etymology_hook: "as-salāma: salāma 'safety, soundness', root s-l-m 'to be safe' (Lane), with the article al-"
 duration:
   max_seconds: 240
 requires:
@@ -77,6 +77,11 @@ same thing happens in **الس**لام عليكم — the greeting you have said
 
 **2. The feminine ة.** *Tāʾ marbūṭa* marks *salāma* as **feminine**. Arabic
 abstract nouns very often are.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**السلامة** (*as-salāma*) is *salāma*, "safety, soundness", built on the native root *s-l-m*, "to be safe, whole" (Lane), with the article *al-*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C04-AL-SALAMA-01, AR-CONCEPT-C04-AL-SALAMA-02] -->

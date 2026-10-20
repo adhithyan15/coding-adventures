@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C534-lavastoviglie",
+    "language": "italian",
+    "chapter": 534,
+    "sequence": 29820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1e200ac0ff66ba49"
+  },
+  "findings": []
+}

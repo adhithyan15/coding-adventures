@@ -1,0 +1,11 @@
+{
+  "id": "PT-C344-subjetivo",
+  "pathSegment": "PT-PATH-344-JUIZO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-344-JUIZO",
+      "order": 4
+    }
+  ]
+}

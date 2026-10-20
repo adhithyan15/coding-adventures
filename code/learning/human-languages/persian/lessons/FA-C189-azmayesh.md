@@ -14,7 +14,8 @@ romanization: "âzmâyesh"
 concept_tag: FA-SALAMAT189-AZMAYESH
 prerequisites: [FA-C189-ampul, FA-C189-noskhe]
 sounds: []
-roots: []
+roots: [persian-azmudan]
+etymology_hook: "âzmâyesh: Persian âzmâ- 'test' (âzmudan) + -yesh; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C189-noskhe]
 <!-- hl-knowledge: introduces=[FA-LEX-C189-SALAMAT189-03]; assesses=[] -->
 
 **آزمایش** — *âzmâyesh* — "a medical test".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âzmâyesh* is *âzmâ-*, the present stem of *âzmudan*, "to test", with *-yesh*: a test. The verb is native, usually traced to Middle Persian *uzmūdan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

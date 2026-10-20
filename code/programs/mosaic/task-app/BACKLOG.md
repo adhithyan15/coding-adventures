@@ -69,12 +69,14 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Product completion queue
 
-**Next priority: [#17491](https://github.com/adhithyan15/coding-adventures/issues/17491)
-— publish `task-app-v0.5.6`.** The P0 native lifecycle gates are complete.
-The Qt shadow and XAML calendar checkpoint v0.5.5 is published and audited.
-SwiftUI drag-body gap reporting is fixed in #17483; prepare its compatible
-diagnostic patch, validate every existing payload lane, then publish and audit
-the immutable assets. Artifact coverage and emitted drag behavior are unchanged.
+**Next priority: [#17682](https://github.com/adhithyan15/coding-adventures/issues/17682)
+— publish and audit `task-app-v0.5.8`.** The P0 native lifecycle gates and the
+immutable v0.5.7 publication/audit (#17610) are complete. The timeline
+milestone and legend-swatch diamonds now retain centered native Qt rotation
+through #17676, with both themes measuring 81 style drops instead of 83.
+Validate every existing release payload, publish after preparation merges,
+and audit the immutable assets before closing #17682. Artifact coverage is
+unchanged; preparation is not publication.
 
 The durable product backlog is [GitHub issue #13517](https://github.com/adhithyan15/coding-adventures/issues/13517).
 It tracks the local-first, Rust-scheduled, native TaskApp completion loop and

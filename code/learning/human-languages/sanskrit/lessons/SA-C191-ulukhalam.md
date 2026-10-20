@@ -14,7 +14,8 @@ romanization: "ulūkhalam"
 concept_tag: SA-THG191-ULUKHALAM
 prerequisites: [SA-C191-saravah, SA-C191-kumbhah]
 sounds: []
-roots: []
+roots: [sanskrit-ulukhala]
+etymology_hook: "ulūkhala 'wooden mortar', a Rigvedic word that CDIAL 2360 takes as borrowed from Dravidian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C191-kumbhah]
 <!-- hl-knowledge: introduces=[SA-LEX-C191-THG191-03]; assesses=[] -->
 
 **उलूखलम्** — *ulūkhalam* — "a mortar".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ulūkhala* is a wooden mortar, already in the Rigveda. CDIAL 2360 takes it as borrowed from Dravidian, following Mayrhofer, and notes it shares the ending *-ala* with *musala*, "pestle". Punjabi *ukkhal*, "small wooden mortar", comes from a variant of it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

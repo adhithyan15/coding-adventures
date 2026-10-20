@@ -12,7 +12,7 @@ concept_tag: UR-C05-HAFIZ
 prerequisites: [UR-C05-khuda]
 sounds: [rtl, long-a, short-vowels-unwritten]
 roots: [arabic-h-f-z]
-etymology_hook: Urdu hāfiz continues Arabic ḥāfiẓ, an active participle from the root ḥ-f-ẓ “guard, preserve”; Urdu pronounces final ظ as z here.
+etymology_hook: "hāfiz ← Arabic ḥāfiẓ 'guardian', an active participle, through Persian (Lane, root ḥ-f-ẓ)"
 duration:
   max_seconds: 210
 requires:

@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 465,
+  "sourceHash": "fnv1a64:15904a453df3254a",
+  "lessonIds": [
+    "IT-C465-lucertola",
+    "IT-C465-vipera",
+    "IT-C465-rospo",
+    "IT-C465-lumaca",
+    "IT-C465-strisciare"
+  ],
+  "tex": "italian/book/chapters/ch465-piccoli-animali.tex"
+}

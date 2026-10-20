@@ -6,13 +6,13 @@ sequence: 780
 chapter: 31
 type: word
 headword: فهم
-gloss: "he understood" — the first verb whose middle vowel is not an a, marking it a state rather than a deed, and the done-to shape that turns it into the word for a concept
+gloss: '"he understood" — the first verb whose middle vowel is not an a, marking it a state rather than a deed, and the done-to shape that turns it into the word for a concept'
 concept_tag: VERB-UNDERSTAND
 romanization: fahima
 prerequisites: [AR-C30-akala]
 sounds: [waw, faa, rtl-known-letters]
 roots: [f-h-m]
-etymology_hook: "فهم (fahima, 'he understood') runs a-i-a rather than a-a-a — the فَعِلَ (faʿila) shape Arabic keeps for states rather than deeds — and its root ف-ه-م yields فَهْم (fahm, 'understanding') and مَفْهوم (mafhūm), the done-to shape met in mashkūr and maqūl, which as a noun is 'a concept', a thing that has been understood; English fathom is Germanic and no relative, and this root, like أكل, has no English cousin at all"
+etymology_hook: "fahima: root f-h-m 'to understand' (Lane), giving fahm 'understanding' and mafhūm 'concept'"
 duration:
   max_seconds: 240
 requires:

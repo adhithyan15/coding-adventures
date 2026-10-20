@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 319,
+  "sourceHash": "fnv1a64:17eba6c84d841d7b",
+  "lessonIds": [
+    "FR-C319-reveillon",
+    "FR-C319-reveillonner",
+    "FR-C319-sapin",
+    "FR-C319-buche",
+    "FR-C319-galette"
+  ],
+  "tex": "french/book/chapters/ch319-le-reveillon.tex"
+}

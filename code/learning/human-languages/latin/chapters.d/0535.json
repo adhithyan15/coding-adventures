@@ -1,0 +1,19 @@
+{
+  "chapter": 535,
+  "title": "Lovers",
+  "label": "ch:la-lovers",
+  "canDo": "I can talk about lovers, admirers and suitors.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C535-procus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 535: I can talk about lovers, admirers and suitors.",
+    "assesses": [
+      "LA-LEX-C535-AMAN-03",
+      "LA-LEX-C535-AMAN-04",
+      "LA-LEX-C535-AMAN-05"
+    ]
+  }
+}

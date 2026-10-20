@@ -4,7 +4,7 @@
   "chapter": 56,
   "title": "Sextus ad Decimum",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8e2489c83c33830e",
+  "sourceHash": "fnv1a64:f48c838284476094",
   "lessons": [
     {
       "id": "LA-C56-sextus",
@@ -179,7 +179,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b0bd814cb35817ad",
+      "sourceHash": "fnv1a64:2b22b5e341a7c63b",
       "notice": null,
       "blocks": [
         {
@@ -264,7 +264,7 @@
             },
             {
               "kind": "speech",
-              "text": "Septem is seven. Put the ending on and the vowel in the middle goes quiet: septem becomes septimus, with e worn down to i because nothing is leaning on it. Latin does that to unstressed middles constantly, and once you have heard it here you will hear it everywhere."
+              "text": "Septem is seven, inherited, a cousin of English seven (EtymDB 2.1). Put the ending on and the vowel in the middle goes quiet: septem becomes septimus, with e worn down to i because nothing is leaning on it. Latin does that to unstressed middles constantly, and once you have heard it here you will hear it everywhere."
             },
             {
               "kind": "speech",
@@ -348,7 +348,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ac3086ecb64ff11a",
+      "sourceHash": "fnv1a64:4391629f40d29c94",
       "notice": null,
       "blocks": [
         {
@@ -433,7 +433,7 @@
             },
             {
               "kind": "speech",
-              "text": "Octō is eight. By now you would expect octus, and it is not that. This one takes -āvus, and it is the only ordinal in the ten that does."
+              "text": "Octō is eight. By now you would expect octus, and it is not that. This one takes -āvus, and it is the only ordinal in the ten that does. EtymDB 2.1 traces octāvus straight to a Proto-Indo-European ordinal built on \"eight\"."
             },
             {
               "kind": "speech",
@@ -517,7 +517,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:82b4e034f895cf70",
+      "sourceHash": "fnv1a64:175dc06d5acbba7c",
       "notice": null,
       "blocks": [
         {
@@ -602,7 +602,7 @@
             },
             {
               "kind": "speech",
-              "text": "Novem is nine, and this time the word is not lengthened but squeezed: noven- collapses in on itself and comes out as nōnus, with a long ō where the ove used to be. Two ordinals running have now bent the shape in two different ways."
+              "text": "Novem is nine, and this time the word is not lengthened but squeezed: noven- collapses in on itself and comes out as nōnus, with a long ō where the ove used to be (Lewis & Short). Novem is inherited, a cousin of English nine (EtymDB 2.1). Two ordinals running have now bent the shape in two different ways."
             },
             {
               "kind": "speech",
@@ -686,7 +686,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3d3863652e317380",
+      "sourceHash": "fnv1a64:29c122e0a6f4ba0a",
       "notice": null,
       "blocks": [
         {
@@ -771,7 +771,7 @@
             },
             {
               "kind": "speech",
-              "text": "Decem is ten, and the ending goes on with the same worn-down middle you met in septimus: decem becomes decimus. Remember that c is hard — DEK-imus."
+              "text": "Decem is ten, and the ending goes on with the same worn-down middle you met in septimus: decem becomes decimus. Remember that c is hard — DEK-imus. Decem is inherited, a cousin of English ten (EtymDB 2.1)."
             },
             {
               "kind": "speech",

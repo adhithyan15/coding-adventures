@@ -14,7 +14,8 @@ romanization: "peṭikā"
 concept_tag: SA-THINGS105-PETIKA
 prerequisites: [SA-C105-yantram, SA-C105-vyajanam]
 sounds: []
-roots: []
+roots: [sanskrit-pitaka]
+etymology_hook: "peṭikā 'box' ← peṭaka, which MW takes from piṭaka 'basket'; CDIAL 8164 calls the family non-Aryan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C105-vyajanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C105-THINGS105-05]; assesses=[] -->
 
 **पेटिका** — *peṭikā* — "a box".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*peṭikā* is *peṭaka* "a little basket, a box" with the feminine suffix *-ikā*, and MW takes *peṭaka* from *piṭaka* "basket". CDIAL 8164 calls the family non-Aryan, and DEDR 4388 sets it beside Dravidian words for a box; Marathi *peṭī* "box" belongs to it (CDIAL 8164).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

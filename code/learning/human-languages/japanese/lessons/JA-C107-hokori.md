@@ -14,7 +14,8 @@ romanization: "hokori"
 concept_tag: JA-THINGS107-HOKORI
 prerequisites: [JA-C106-koishi, JA-C107-doro]
 sounds: []
-roots: []
+roots: [japanese-hokori]
+etymology_hook: "hokori: native Japanese, inherited, not borrowed; usually kana, kanji 埃 as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C107-doro]
 <!-- hl-knowledge: introduces=[JA-LEX-C107-THINGS107-02]; assesses=[] -->
 
 **ほこり** — *hokori* — "dust".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ほこり** (*hokori*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

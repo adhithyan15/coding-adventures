@@ -1,0 +1,11 @@
+{
+  "id": "PT-C465-furacao",
+  "pathSegment": "PT-PATH-465-TEMPORAL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-465-TEMPORAL",
+      "order": 3
+    }
+  ]
+}

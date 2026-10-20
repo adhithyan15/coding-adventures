@@ -14,7 +14,8 @@ romanization: "denā"
 concept_tag: UR-VERB-DENA
 prerequisites: [UR-C48-kharidna, UR-C48-bechna]
 sounds: []
-roots: []
+roots: [sanskrit-dadati]
+etymology_hook: "denā ← Sanskrit dadāti 'gives', a tadbhava (CDIAL 6141)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C48-bechna]
 <!-- hl-knowledge: introduces=[UR-LEX-C48-VERBS48-04]; assesses=[] -->
 
 **دینا** — *denā* — "to give".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دینا** (*denā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dadāti*, "gives" (CDIAL 6141).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

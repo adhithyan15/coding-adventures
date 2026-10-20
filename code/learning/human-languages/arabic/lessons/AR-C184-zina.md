@@ -14,7 +14,8 @@ romanization: "zīna"
 concept_tag: AR-SHAY184-ZINA
 prerequisites: [AR-C184-dawa, AR-C184-munasaba]
 sounds: []
-roots: []
+roots: [z-y-n]
+etymology_hook: "zīna: built on the root z-y-n, 'to adorn' (Lane); zīna is ornament, decoration"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C184-munasaba]
 <!-- hl-knowledge: introduces=[AR-LEX-C184-SHAY184-04]; assesses=[] -->
 
 **زينة** — *zīna* — "decorations".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**زينة** (*zīna*) is built on the native Arabic root *z-y-n*, "to adorn" (Lane). *Zīna* is ornament, decoration.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

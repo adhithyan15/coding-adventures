@@ -14,7 +14,8 @@ romanization: "bhatījā"
 concept_tag: UR-CHIZ203-BHATIJA
 prerequisites: [UR-C203-khala, UR-C203-phuphi]
 sounds: []
-roots: []
+roots: [sanskrit-bhratriya]
+etymology_hook: "bhatījā ← Sanskrit bhrātrīya 'brother's son', a tadbhava (CDIAL 9672)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C203-phuphi]
 <!-- hl-knowledge: introduces=[UR-LEX-C203-CHIZ203-04]; assesses=[] -->
 
 **بھتیجا** — *bhatījā* — "a nephew (brother's son)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بھتیجا** (*bhatījā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bhrātrīya*, "brother's son" (CDIAL 9672). It is built on *bhrātṛ*, "brother".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

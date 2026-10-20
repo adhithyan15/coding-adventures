@@ -15,6 +15,7 @@ concept_tag: UR-CLOTHES82-PATLUN
 prerequisites: [UR-C82-kapre, UR-C82-kurta]
 sounds: []
 roots: []
+etymology_hook: "patlūn: usually traced to English pantaloons"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C82-kurta]
 <!-- hl-knowledge: introduces=[UR-LEX-C82-CLOTHES82-03]; assesses=[] -->
 
 **پتلون** — *patlūn* — "trousers".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پتلون** (*patlūn*) is usually traced to English *pantaloons*, "trousers".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

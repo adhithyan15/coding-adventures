@@ -14,7 +14,8 @@ romanization: "jâru kardan"
 concept_tag: FA-VERB-JARU-KARDAN
 prerequisites: [FA-C259-dozdidan, FA-C259-farar-kardan]
 sounds: []
-roots: []
+roots: [persian-ruftan, pie-kwer]
+etymology_hook: "jâru kardan: Persian jâru 'broom' (from ruftan 'sweep') + kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C259-farar-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C259-KONESH259-05]; assesses=[] -->
 
 **جارو کردن** — *jâru kardan* — "to sweep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jâru kardan* pairs *jâru*, "broom", with *kardan*. *jâru* is short for *jârub*, usually explained as built on *rub-*, "sweep" (from *ruftan*). Both are native. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

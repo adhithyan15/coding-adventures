@@ -1,0 +1,23 @@
+{
+  "lesson": {
+    "id": "IT-C264-lettura",
+    "language": "italian",
+    "chapter": 264,
+    "sequence": 15770,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "reading-type",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "reading-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8d1377c86c1a7c1d"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C482-sopracciglio",
+  "pathSegment": "IT-PATH-482-VISO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-482-VISO",
+      "order": 0
+    }
+  ]
+}

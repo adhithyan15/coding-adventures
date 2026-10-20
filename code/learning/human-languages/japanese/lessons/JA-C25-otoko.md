@@ -14,7 +14,8 @@ romanization: "otoko"
 concept_tag: JA-FAMILY25-OTOKO
 prerequisites: [JA-C25-tomodachi, JA-C25-otona]
 sounds: []
-roots: []
+roots: [japanese-otoko]
+etymology_hook: "otoko: native Japanese, inherited, not borrowed; kanji 男 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C25-otona]
 <!-- hl-knowledge: introduces=[JA-LEX-C25-FAMILY25-03]; assesses=[] -->
 
 **おとこ** — *otoko* — "a man".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**おとこ** (*otoko*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

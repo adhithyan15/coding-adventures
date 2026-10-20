@@ -13,6 +13,9 @@ You'll want to know: नृत्यति.
 नृत्यति (nṛtyati) — "he, she or it dances".
 From √नृत् (nṛt), 'to dance'. It gives nṛtya, the danced half of the classical performing arts, as against nāṭya, the acted half — a distinction Sanskrit draws that English does not.
 
+The word, taken apart.
+Nṛtyati is the present of the root √nṛt, "to dance", already in the Rigveda (MW). It lives on as Hindi nācnā, "to dance" (CDIAL 7583).
+
 What you've built.
 One more everyday action. Three more follow, and each reuses the ones before it.
 
@@ -42,6 +45,9 @@ You'll want to know: हसति.
 हसति (hasati) — "he, she or it laughs".
 From √हस् (has). It is the word inside hāsya, the comic mood in the classical theory of drama — one of the nine rasas, so laughter here is a category of art, not only a noise.
 
+The word, taken apart.
+Hasati is the present of the root √has, "to laugh" (MW). It lives on as Hindi hasnā, "to laugh" (CDIAL 14021).
+
 What you've built.
 One more everyday action. Three more follow, and each reuses the ones before it.
 
@@ -69,7 +75,7 @@ Before the new one: what did hasati mean?
 
 You'll want to know: तिष्ठति.
 तिष्ठति (tiṣṭhati) — "he, she or it stands".
-From √स्था (sthā), 'to stand' — the same root as Latin stare and English stand, stable, status. The ti- at the front is reduplication again, exactly as in nṛtyati.
+From √स्था (sthā), 'to stand' — the same root as Latin stare and English stand, stable, status. The ti- at the front is reduplication: the root's first sound, doubled.
 
 What you've built.
 One more everyday action. Three more follow, and each reuses the ones before it.
@@ -100,6 +106,9 @@ Before the new one: what did tiṣṭhati mean?
 You'll want to know: स्मरति.
 स्मरति (smarati) — "he, she or it remembers".
 From √स्मृ (smṛ), 'to remember'. It gives smṛti, 'that which is remembered' — the name for a whole class of texts, as against śruti, 'that which is heard'. A memory word doing bibliographic work.
+
+The word, taken apart.
+Smarati is the present of the root √smṛ, "to remember" (MW, CDIAL 13863). MW compares Latin memor, "mindful", the source of English memory.
 
 What you've built.
 One more everyday action. That closes the run: four everyday actions, each met on its own.

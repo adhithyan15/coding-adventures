@@ -1,0 +1,11 @@
+{
+  "id": "IT-C349-fattore",
+  "pathSegment": "IT-PATH-349-CAUSA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-349-CAUSA",
+      "order": 3
+    }
+  ]
+}

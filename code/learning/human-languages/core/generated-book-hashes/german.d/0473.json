@@ -1,0 +1,14 @@
+{
+  "language": "german",
+  "chapter": 473,
+  "sourceHash": "fnv1a64:f7fc1f8520a38682",
+  "lessonIds": [
+    "GE-C473-kichern",
+    "GE-C473-grinsen",
+    "GE-C473-schmunzeln",
+    "GE-C473-albern",
+    "GE-C473-kitzeln",
+    "GE-R473-review-466-473"
+  ],
+  "tex": "german/book/chapters/ch473-kichern-und-grinsen.tex"
+}

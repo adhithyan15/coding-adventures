@@ -14,7 +14,8 @@ romanization: "varṇaḥ"
 concept_tag: SA-SCH168-VARNAH
 prerequisites: [SA-C168-adhyayah, SA-C168-aksaram]
 sounds: []
-roots: []
+roots: [sanskrit-varna]
+etymology_hook: "varṇa 'covering', then 'colour', then 'letter', probably from √vṛ 'cover' (MW; CDIAL 11338, 11339)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C168-aksaram]
 <!-- hl-knowledge: introduces=[SA-LEX-C168-SCH168-04]; assesses=[] -->
 
 **वर्णः** — *varṇaḥ* — "a colour, a letter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*varṇa* probably comes from the root √vṛ "cover" (MW): "a covering", then "colour, appearance, class" (CDIAL 11338), and as a sound or written syllable "a letter" (CDIAL 11339).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

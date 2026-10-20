@@ -14,7 +14,8 @@ romanization: "śikṣate"
 concept_tag: SA-VERB-SIKSATE
 prerequisites: [SA-C134-presayati, SA-C134-anvisyati]
 sounds: []
-roots: []
+roots: [sanskrit-shikshate]
+etymology_hook: "śikṣate 'learns' is the desiderative of √śak 'be able': 'wishes to be able' (MW); Hindi sīkhnā (CDIAL 12430)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C134-anvisyati]
 <!-- hl-knowledge: introduces=[SA-LEX-C135-ACT135-01]; assesses=[] -->
 
 **शिक्षते** — *śikṣate* — "learns".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śikṣate* comes from the desiderative of the root √śak "be able" (MW): "wishes to be able", and so "learns". It lives on as Hindi *sīkhnā* "to learn" (CDIAL 12430).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

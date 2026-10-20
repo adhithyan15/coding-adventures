@@ -76,7 +76,8 @@ make "tomorrow" out of "morning":
 | French | *matin* | *demain* |
 
 And English did it too, then half forgot: **morrow** meant *morning*, and
-**tomorrow** is literally *to (the) morrow*. So *bis morgen* is "see you on the
+**tomorrow** is literally *to (the) morrow*. German *morgen* ← Old High German
+*morgan* (EtymDB 2.1), the same word as English *morrow*. So *bis morgen* is "see you on the
 morrow," almost word for word.
 
 ## Guided Practice

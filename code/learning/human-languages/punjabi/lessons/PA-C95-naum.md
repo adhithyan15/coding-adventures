@@ -14,7 +14,7 @@ romanization: "nauṁ"
 concept_tag: PA-NUMBERS95-NAUM
 prerequisites: [PA-C95-satt, PA-C95-atth]
 sounds: []
-roots: [sanskrit-nava]
+roots: [sanskrit-nava-nine]
 etymology_hook: "nauṁ ← Sanskrit nava 'nine', a tadbhava (CDIAL 6984)"
 duration:
   max_seconds: 200

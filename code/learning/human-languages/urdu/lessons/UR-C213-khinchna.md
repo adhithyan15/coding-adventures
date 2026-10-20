@@ -14,7 +14,8 @@ romanization: "khīṅchnā"
 concept_tag: UR-VERB-KHINCHNA
 prerequisites: [UR-C213-girana, UR-C213-phenkna]
 sounds: []
-roots: []
+roots: [indo-aryan-khinc]
+etymology_hook: "khīṅchnā ← *khiñc 'drag, pull', a reconstructed form; a tadbhava (CDIAL 3881)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C213-phenkna]
 <!-- hl-knowledge: introduces=[UR-LEX-C213-ACT213-05]; assesses=[] -->
 
 **کھینچنا** — *khīṅchnā* — "to pull".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کھینچنا** (*khīṅchnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*khiñc*, "drag, pull", a form CDIAL reconstructs from its descendants (CDIAL 3881).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,7 @@ romanization: "chātī"
 concept_tag: MR-THINGS146-CHATI
 prerequisites: [MR-C146-path, MR-C146-kambar]
 sounds: []
-roots: [indo-aryan-chatti]
+roots: [indo-aryan-chatti-chest]
 etymology_hook: "chātī: as Hindi chātī ← *chātti 'chest, breast' (CDIAL 5014); CDIAL lists no Marathi form"
 duration:
   max_seconds: 200

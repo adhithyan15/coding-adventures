@@ -6,7 +6,7 @@ sequence: 410
 chapter: 10
 type: word
 headword: o pai, a mãe
-gloss: father and mother — the most worn-down of all: pater→pai, mater→mãe
+gloss: 'father and mother — the most worn-down of all: pater→pai, mater→mãe'
 concept_tag: PT-FAMILY-PARENTS
 prerequisites: [PT-C09-estacoes, PT-C01-ola]
 sounds: [nasal-ae, diphthong-ai]

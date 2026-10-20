@@ -1,0 +1,19 @@
+{
+  "chapter": 309,
+  "title": "Les premières années",
+  "label": "ch:fr-les-premieres-annees",
+  "canDo": "I can talk about early childhood: the maternity ward, a christening, christening a child, a pushchair and childhood.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C309-enfance",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 309: I can talk about early childhood: the maternity ward, a christening, christening a child, a pushchair and childhood.",
+    "assesses": [
+      "FR-LEX-C309-BAPTEME-03",
+      "FR-LEX-C309-BAPTEME-04",
+      "FR-LEX-C309-BAPTEME-05"
+    ]
+  }
+}

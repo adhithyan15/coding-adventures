@@ -1,0 +1,11 @@
+{
+  "id": "ES-C623-sancion",
+  "pathSegment": "ES-PATH-623-SANCION",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-623-SANCION",
+      "order": 2
+    }
+  ]
+}

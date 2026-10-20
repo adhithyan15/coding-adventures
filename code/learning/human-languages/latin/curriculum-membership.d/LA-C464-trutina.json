@@ -1,0 +1,11 @@
+{
+  "id": "LA-C464-trutina",
+  "pathSegment": "LA-PATH-464-STATERA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-464-STATERA",
+      "order": 1
+    }
+  ]
+}

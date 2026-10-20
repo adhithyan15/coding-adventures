@@ -14,7 +14,8 @@ romanization: "naraḥ"
 concept_tag: SA-NOUN-MAN
 prerequisites: [SA-C19-number-family, SA-C18-when, SA-C19-six, SA-C18-k-words]
 sounds: []
-roots: []
+roots: [sanskrit-nara]
+etymology_hook: "nara 'man' ← nṛ 'man, hero'; MW compares Greek anēr; it lives on as Hindi nar (CDIAL 6970)"
 duration:
   max_seconds: 210
 requires:
@@ -51,6 +52,13 @@ element inside English **android** and the name **Andrew**.
 
 Ending in *-aḥ*, so you already know its family: masculine, like ग्रामः and
 मार्गः.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Nara* is built on the older stem *nṛ*, "man, hero", and it is inherited: MW
+compares Avestan *nar* and Greek *anēr*. It lives on as Hindi *nar*, "man" (CDIAL
+6970).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

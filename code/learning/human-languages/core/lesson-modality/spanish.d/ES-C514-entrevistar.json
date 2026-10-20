@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C514-entrevistar",
+    "language": "spanish",
+    "chapter": 514,
+    "sequence": 15300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:79df4fa8b3c1ec76"
+  },
+  "findings": []
+}

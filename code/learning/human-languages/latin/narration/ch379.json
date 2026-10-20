@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 379,
+  "title": "Earning a Living",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c73aa2b3e567116c",
+  "lessons": [
+    {
+      "id": "LA-C379-quaestus",
+      "sequence": 20320,
+      "title": "quaestus, quaestūs — gain, profit; a way of earning a living",
+      "headword": "quaestus, quaestūs",
+      "romanization": "quaestus, quaestūs",
+      "gloss": "gain, profit; a way of earning a living",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c9936c4a6042cd26",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to sew, then the Latin for to carve."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: quaestus, quaestūs",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "quaestus, quaestūs — \"gain, profit; a way of earning a living\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Piscātor ex marī quaestum facit. The fisherman makes his living from the sea."
+            },
+            {
+              "kind": "speech",
+              "text": "quaestus, quaestūs m., built on quaerō, to seek: what you go out to get. Quaestum facere, to make money."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "quaestus is the noun built on quaerō \"to seek, to get\" (EtymDB; Lewis & Short): what a man goes out to win."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "quaestus, quaestūs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *quaestus, quaestūs*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "quaestus, quaestūs, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *quaestus, quaestūs*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with quaestus, quaestūs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *quaestus, quaestūs*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to sew, then the Latin for to carve, then say quaestus, quaestūs again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to sew, then the Latin for to carve, then say *quaestus, quaestūs* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does quaestus, quaestūs mean? (\"Gain, profit; a way of earning a living\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C379-stipendium",
+      "sequence": 20330,
+      "title": "stīpendium, stīpendiī — pay, wages (especially a soldier's)",
+      "headword": "stīpendium, stīpendiī",
+      "romanization": "stīpendium, stīpendiī",
+      "gloss": "pay, wages (especially a soldier's)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:12684ee3a74aebf2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to carve, then the Latin for gain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: stīpendium, stīpendiī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "stīpendium, stīpendiī — \"pay, wages (especially a soldier's)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mīlitēs stīpendium accēpērunt. The soldiers received their pay."
+            },
+            {
+              "kind": "speech",
+              "text": "stīpendium, stīpendiī n. A soldier's pay, then a year of service: vīgintī stīpendia, twenty campaigns. English stipend."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "stīpendium is contracted from stipipendium, built from stips \"a small coin\" and pendō \"to weigh out, to pay\" (Lewis & Short): coins weighed out. English stipend comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stīpendium, stīpendiī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *stīpendium, stīpendiī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stīpendium, stīpendiī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *stīpendium, stīpendiī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with stīpendium, stīpendiī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *stīpendium, stīpendiī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to carve, then the Latin for gain, then say stīpendium, stīpendiī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to carve, then the Latin for gain, then say *stīpendium, stīpendiī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does stīpendium, stīpendiī mean? (\"Pay, wages (especially a soldier's)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C379-mercenarius",
+      "sequence": 20340,
+      "title": "mercēnārius, mercēnāriī — a hired worker; a mercenary",
+      "headword": "mercēnārius, mercēnāriī",
+      "romanization": "mercēnārius, mercēnāriī",
+      "gloss": "a hired worker; a mercenary",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f06f60b0cd22bbd1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for gain, then the Latin for pay."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: mercēnārius, mercēnāriī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mercēnārius, mercēnāriī — \"a hired worker; a mercenary\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mercēnāriī prō mercēde labōrant. Hired men work for a wage."
+            },
+            {
+              "kind": "speech",
+              "text": "mercēnārius, mercēnāriī m. (also spelled mercennārius), built on mercēs, a wage. As an adjective, hired. English mercenary."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mercēnārius is built on mercēs, mercēdis \"wages, hire\" (Lewis & Short), which belongs with merx \"goods\". English mercenary comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mercēnārius, mercēnāriī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mercēnārius, mercēnāriī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mercēnārius, mercēnāriī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mercēnārius, mercēnāriī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with mercēnārius, mercēnāriī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *mercēnārius, mercēnāriī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for gain, then the Latin for pay, then say mercēnārius, mercēnāriī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for gain, then the Latin for pay, then say *mercēnārius, mercēnāriī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does mercēnārius, mercēnāriī mean? (\"A hired worker; a mercenary\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C379-laboriosus",
+      "sequence": 20350,
+      "title": "labōriōsus, labōriōsa, labōriōsum — toilsome; hard-working",
+      "headword": "labōriōsus, labōriōsa, labōriōsum",
+      "romanization": "labōriōsus, labōriōsa, labōriōsum",
+      "gloss": "toilsome; hard-working",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2f6c6419135396eb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for pay, then the Latin for a hired worker."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: labōriōsus, labōriōsa, labōriōsum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "labōriōsus, labōriōsa, labōriōsum — \"toilsome; hard-working\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Vīta agricolae labōriōsa est. A farmer's life is full of toil."
+            },
+            {
+              "kind": "speech",
+              "text": "labōriōsus, labōriōsa, labōriōsum: of a task, toilsome; of a person, hard-working. English laborious."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "labōriōsus is built on labor, labōris \"toil\" (EtymDB; Lewis & Short), with the ending -ōsus \"full of\". English laborious comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "labōriōsus, labōriōsa, labōriōsum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *labōriōsus, labōriōsa, labōriōsum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "labōriōsus, labōriōsa, labōriōsum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *labōriōsus, labōriōsa, labōriōsum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with labōriōsus, labōriōsa, labōriōsum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *labōriōsus, labōriōsa, labōriōsum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for pay, then the Latin for a hired worker, then say labōriōsus, labōriōsa, labōriōsum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for pay, then the Latin for a hired worker, then say *labōriōsus, labōriōsa, labōriōsum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does labōriōsus, labōriōsa, labōriōsum mean? (\"Toilsome; hard-working\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C379-diligentia",
+      "sequence": 20360,
+      "title": "dīligentia, dīligentiae — care, diligence",
+      "headword": "dīligentia, dīligentiae",
+      "romanization": "dīligentia, dīligentiae",
+      "gloss": "care, diligence",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:642a3ddb11bda3a1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a hired worker, then the Latin for toilsome."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dīligentia, dīligentiae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dīligentia, dīligentiae — \"care, diligence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Opus magnā dīligentiā perfēcit. He finished the work with great care."
+            },
+            {
+              "kind": "speech",
+              "text": "dīligentia, dīligentiae f., the noun of dīligēns, careful, hard-working. English diligence."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dīligentia is the noun built on dīligēns \"careful\" (Lewis & Short), the participle of a verb made from dis- and legō \"to pick out\". English diligence comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dīligentia, dīligentiae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dīligentia, dīligentiae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dīligentia, dīligentiae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dīligentia, dīligentiae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dīligentia, dīligentiae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dīligentia, dīligentiae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a hired worker, then the Latin for toilsome, then say dīligentia, dīligentiae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a hired worker, then the Latin for toilsome, then say *dīligentia, dīligentiae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dīligentia, dīligentiae mean? (\"Care, diligence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

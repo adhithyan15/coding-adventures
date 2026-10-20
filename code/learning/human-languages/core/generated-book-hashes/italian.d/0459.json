@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 459,
+  "sourceHash": "fnv1a64:5763eee6373c3812",
+  "lessonIds": [
+    "IT-C459-prelevare",
+    "IT-C459-prelievo",
+    "IT-C459-addebitare",
+    "IT-C459-bonifico",
+    "IT-C459-rata"
+  ],
+  "tex": "italian/book/chapters/ch459-in-banca.tex"
+}

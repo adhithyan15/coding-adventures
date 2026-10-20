@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:b8f87c3e88c2719f",
+  "lessonIds": [
+    "ES-C525-herida",
+    "ES-C525-herir",
+    "ES-C525-ambulancia",
+    "ES-C525-socorrer",
+    "ES-C525-herido"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch525.txt",
+  "json": "spanish/narration/ch525.json",
+  "textHash": "fnv1a64:b985d98a2a7330f7",
+  "jsonHash": "fnv1a64:4fb92a7a72c0a388",
+  "findings": []
+}

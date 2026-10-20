@@ -1,138 +1,56 @@
-import { expect, it } from "vitest";
-import { loadEverything, loadExamInventory } from "../../../src/loader.js";
-import { formatExamCoverage, measureExamCoverage } from "../../../src/exam-inventory.js";
-import {
-  expectLanguageContinuity,
-  expectLanguageLessonBudgets,
-  expectLanguageModality,
-  languageWritingStages,
-} from "../assert-language-corpus.js";
+import { readFileSync, readdirSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { it } from "vitest";
+import type { LessonBudgetKind } from "../../../src/lesson-budgets.js";
+import { expectLanguageLessonBudgets } from "../assert-language-corpus.js";
 
-it("pins Sanskrit lesson-content budgets", () =>
+const OWNER_NAME = /^(idiom|sense|culture-claim)--(SA-[A-Z0-9-]+)\.json$/;
+
+function directUnitOwners(): Record<LessonBudgetKind, string[]> {
+  const directory = join(dirname(fileURLToPath(import.meta.url)), "lesson-content-units.d");
+  const units: Record<LessonBudgetKind, string[]> = {
+    idiom: [],
+    sense: [],
+    "culture-claim": [],
+  };
+  const folded = new Set<string>();
+  for (const entry of readdirSync(directory, { withFileTypes: true })) {
+    if (!entry.isFile()) {
+      throw new Error(`lesson-content unit owner '${entry.name}' must be a regular file`);
+    }
+    const match = OWNER_NAME.exec(entry.name);
+    if (match === null) throw new Error(`unexpected lesson-content unit owner '${entry.name}'`);
+    const lower = entry.name.toLowerCase();
+    if (folded.has(lower)) {
+      throw new Error(`lesson-content unit owner case-fold collision: '${entry.name}'`);
+    }
+    folded.add(lower);
+
+    const [kind, unitId] = match.slice(1) as [LessonBudgetKind, string];
+    const path = join(directory, entry.name);
+    const raw = readFileSync(path, "utf8");
+    const owner = JSON.parse(raw) as Record<string, unknown>;
+    if (
+      Object.keys(owner).sort().join(",") !== "kind,unitId" ||
+      owner.kind !== kind ||
+      owner.unitId !== unitId
+    ) {
+      throw new Error(`lesson-content unit owner '${entry.name}' must bind its filename identity`);
+    }
+    if (raw !== `${JSON.stringify(owner, null, 2)}\n`) {
+      throw new Error(`lesson-content unit owner '${entry.name}' must use canonical JSON`);
+    }
+    units[kind].push(unitId);
+  }
+  return units;
+}
+
+// Every canonical lesson participates in complete-measurement and budget
+// checks. Stable unit identities have direct owners, so adding one unit adds
+// one file and deleting a declaration leaves an unmatched owner.
+it("derives exact Sanskrit lesson-content budgets without shared counters", () =>
   expectLanguageLessonBudgets("sanskrit", {
-    // 245 -> 270: the script ladder was rebuilt and moved earlier. Twenty-five new
-    // recognition segments (SA-S200..SA-S224) join the twenty-three that already
-    // existed, and every one of the forty-eight now credits EXACTLY ONE new
-    // Devanagari character, scheduled so the character lands before the first lesson
-    // that asks the reader to decode it.
-    //
-    // Each declares zero idioms, senses and culture claims, so only the measured-lesson
-    // count moves; the three content totals below are unchanged, which is the check that
-    // the segments really are script lessons and not vocabulary wearing a script label.
-    //
-    // 270 -> 304: chapters 1-5 left the hand-written set, so their thirty lessons
-    // migrated to schema v2 and became measurable at all (the track now has zero
-    // measurement-blind lessons); three lessons that each packed two headwords
-    // split in two — yes/no, the two words for "you", and "well" versus the reply
-    // "I am well"; and chapter 2 gained the recap lesson it never had, so the
-    // closing exchange the hand-written chapter carried is still in the book.
-    // The three content totals below are again unchanged: the split halves, the
-    // migrated lessons and the new recap declare no new idioms, senses or culture
-    // claims, so nothing was smuggled in under cover of the migration.
-    //
-    // 304 -> 335: the clause-joining and past-tense tranche, chapters 52-61.
-    // Thirty-one lessons: four joining particles and a review; the ya- / ta-
-    // correlative; iti and the clause it makes into an object; the -tva gerund
-    // and the -tum infinitive; the imperfect; can and want; the dative-experiencer
-    // liking frame; the origin words; the danda; and rtu with the independent ऋ
-    // it finally gives a headword to. Re-measured against the tree.
-    //
-    // The three content totals below are unchanged, and that is the check worth
-    // making here: a grammar tranche should declare no new idioms, senses or
-    // culture claims, and this one declares none.
-    //
-    // 335 -> 347: the ordinal tranche, chapters 62-63. Twelve lessons -- ten
-    // ordinals one word a lesson, plus each chapter's retrieval payoff -- and
-    // thirteen atoms, because three of the twelve carry a naming atom for an
-    // ENDING beside the word that shows it. Re-measured against the tree.
-    // Idioms, senses and culture claims are again unchanged at 11 / 12 / 13, and
-    // here that is a deliberate claim rather than an accident: dvitiyah also
-    // means "a companion" in Macdonell and the lesson says so on the page, but
-    // no SENSE atom is declared for it, because the tranche teaches the numeral
-    // and does not drill the second reading.
-    //
-    // 347 -> 350: the reading rung, chapter 64. Three lessons -- six words, six
-    // lines, one passage -- and NO new atoms at all beyond the three reading
-    // skills themselves, because the rung introduces no vocabulary: every word
-    // on all three pages was paid for by an earlier chapter, and the check that
-    // says so is that no token in them is absent from a lower-sequence lesson.
-    // Idioms, senses and culture claims are unchanged at 11 / 12 / 13. The
-    // passage's closing note about शान्तिः is prose about where the word is
-    // used, not a culture claim the track asserts and drills, so none is
-    // declared. Re-measured against the tree.
-    //
-    // 350 -> 353: the pre-A1 writing ladder. Sanskrit had no writing-stage
-    // evidence at all, so three lessons were added on न -- a guided copy that
-    // follows the three sourced strokes and counts pen lifts, a delayed copy,
-    // and a dictation -- while the existing letter lesson's trace block gained
-    // the observe-trace marker it had always earned. No new atoms: all three
-    // practise SA-SCRIPT-RECOG-02, which the letter lesson already introduced.
-    //
-    // 353 -> 359: HL-C433, six `review` lessons closing the track's pre-A1
-    // reinforcement debt. Sanskrit is the first track in that programme where
-    // one review lesson per thin atom was NOT enough: 17 of its 28 thin atoms
-    // had ZERO revisits, and the criterion asks for two, so those seventeen
-    // each needed a second retrieval in a second lesson. 28 atoms cost 45
-    // retrieval slots, and 45 slots at the observed ~10-per-lesson ceiling is
-    // six lessons rather than three. None of them introduces an atom or carries
-    // a headword, so every other number in this object is unchanged.
-    // 359 -> 362: HL-C443: the letter chapter adds one letter lesson per letter the reader had read in words and never written, plus two reviews. RE-MEASURED against the tree; a letter lesson introduces one script atom and no idiom, sense or culture claim.
-    // 362 -> 486: chapters 66-89, the pre-A1 vocabulary tranche. 120 word
-    // lessons (seventeen of them verbs) and four reviews. Each word lesson
-    // introduces one lexical atom and no idiom, sense or culture claim, so the
-    // three content totals stay at 11 / 12 / 13. Re-measured against the tree.
-    // 486 -> 487: HL-C443 anchor word मौन, placed before the ौ letter lesson so
-    // the sign is taken from a word the reader already says.
-    // 487 -> 745: chapters 90-138, the A1 tranche. 245 word lessons and ten
-    // reviews, plus three chapter-6 continuation lessons (numbers-1-5-more,
-    // number-cognates-more, pancha-travels-more) split out to fit the atom
-    // budget. None introduces an idiom, sense or culture claim; the culture
-    // claim stays on pancha-travels. Re-measured against the tree.
-    // 745 -> 751: #13413's first word bridge adds six writing-only lessons.
-    // They reuse मम and मम नाम plus the already-taught म, न, and long-ā sign;
-    // no idiom, sense, culture claim, or vocabulary atom is added.
-    // 751 -> 754: #13413's visarga bridge adds three more writing-only
-    // lessons. They reuse the already-taught न, म, ः, and the *namas* "a bow"
-    // inside *namaste*. The existing visarga trace gains the observe/trace
-    // marker, and no vocabulary or content atom is added.
-    // 754 -> 757: #13413's vocalic-r bridge adds guided copy, delayed copy,
-    // and sound/function dictation for the already-taught ◌ृ. The lessons
-    // reuse SA-SCRIPT-RECOG-205 and introduce no vocabulary or content atom.
-    // 757 -> 761: #13413's first conjunct bridge waits for every component of
-    // अस्ति to be taught, then moves स्त from observe/trace through a guided
-    // whole-word copy, delayed copy, and sound/meaning dictation. The four
-    // writing lessons reuse known script and lexical atoms only.
-    // 761 -> 764: #13413's closing connected-text bridge copies, delays, and
-    // independently recalls two already-known sentences after every script
-    // component and the danda have landed. No vocabulary or content atom is
-    // introduced, and the final prompt supplies meaning but no copyable form.
-    // 764 -> 776: chapters 139-140 realize Sanskrit's last two A2 spine nodes,
-    // the future and reading practical texts. Ten word lessons and two reviews;
-    // they declare no idioms, senses or culture claims, so the three content
-    // totals below stay where they were.
-    // 776 -> 944: the first Sanskrit A2 vocabulary tranche, chapters 141-172.
-    // 160 word lessons in thirty-two chapters, plus two reviews per run of at
-    // most nine chapters. None declares an idiom, a sense or a culture claim.
-    // 944 -> 1102: the second tranche, chapters 173-202: 150 word lessons and
-    // two reviews per run, again with no idiom, sense or culture claim.
-    // 1102 -> 1255: the third tranche, chapters 203-231: 145 word lessons and
-    // two reviews per run.
-    // 1255 -> 1391: the fourth and last tranche, chapters 232-257: 130 word
-    // lessons and two reviews per run. Sanskrit attains A2 here.
-    // 1391 -> 1393: the chapter-65 A1 writing close adds one controlled
-    // meaning-only question and one genuine timed form-plus-message paper. Both
-    // reuse known atoms, so idiom, sense, and culture-claim totals do not move.
-    // 1393 -> 1394: chapter 258 adds one model-free A2 connected-composition
-    // lesson. It reuses known atoms, so no content total moves.
-    // 1394 -> 1397: chapter 259 teaches asmākam, then yuṣmākam, then the
-    // productive one-versus-several possessor contrast. It introduces no
-    // idiom, sense, or culture claim.
-    // 1397 -> 1407: chapters 260-262 add six independent first-/second-person
-    // accusatives, two number-local contrasts, one cumulative choice lesson,
-    // and a terminal retrieval. They add no idiom, sense, or culture claim.
-    lessons: 1407,
-    idioms: 11,
-    senses: 12,
-    cultureClaims: 13,
     unitPrefix: "SA",
+    units: directUnitOwners(),
   }));

@@ -14,7 +14,8 @@ romanization: "haridrā"
 concept_tag: SA-THINGS107-HARIDRA
 prerequisites: [SA-C107-gudah, SA-C107-maricam]
 sounds: []
-roots: []
+roots: [sanskrit-haridra]
+etymology_hook: "haridrā ← hari 'yellow, tawny' + -drā; MW compares hari with English yellow; Hindi haldī (CDIAL 13992)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C107-maricam]
 <!-- hl-knowledge: introduces=[SA-LEX-C107-THINGS107-03]; assesses=[] -->
 
 **हरिद्रा** — *haridrā* — "turmeric".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*haridrā* "turmeric" is built on *hari* "yellow, tawny", which MW sets beside English *yellow* and Latin *helvus*; how the *-drā* part is formed is unclear. It lives on as Hindi *haldī* "turmeric" (CDIAL 13992).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

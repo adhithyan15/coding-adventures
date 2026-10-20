@@ -14,7 +14,8 @@ romanization: "ârâm"
 concept_tag: FA-QUAL128-ARAM
 prerequisites: [FA-C128-mehraban, FA-C128-sade]
 sounds: []
-roots: []
+roots: [persian-aram]
+etymology_hook: "ârâm: inherited, usually traced to Middle Persian ārām"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C128-sade]
 <!-- hl-knowledge: introduces=[FA-LEX-C128-QUAL128-05]; assesses=[] -->
 
 **آرام** — *ârâm* — "calm, quiet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ârâm* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *ārām*, "rest, calm". EtymDB takes it back to the Indo-European root *\*h₁rem-*, "to rest, to become calm".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

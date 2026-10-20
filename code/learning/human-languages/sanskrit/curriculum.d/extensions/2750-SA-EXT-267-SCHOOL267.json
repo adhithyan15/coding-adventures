@@ -1,0 +1,10 @@
+{
+  "id": "SA-EXT-267-SCHOOL267",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can ask when an exam will be and state a short homework and study plan.",
+  "prerequisites": [
+    "SA-EXT-266-MARKET266"
+  ]
+}

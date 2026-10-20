@@ -4,7 +4,7 @@
   "chapter": 204,
   "title": "Leather, Wood, Metal, Plastic, The body",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4ea5e50a3a64b965",
+  "sourceHash": "fnv1a64:86457888dd9b0486",
   "lessons": [
     {
       "id": "GE-C204-leder",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:35fe1450bb66cc40",
+      "sourceHash": "fnv1a64:a4e23d5030c61458",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Kunststoff is the word for \"art, skill\" + Stoff, \"material\": material made by skill, not found in nature."
+              "text": "Kunststoff is the word for \"art, skill\" + Stoff, \"material\": material made by skill, not found in nature. Kunst is built on können, \"to be able\", inherited from Proto-Germanic kunnaną (EtymDB 2.1)."
             }
           ]
         },

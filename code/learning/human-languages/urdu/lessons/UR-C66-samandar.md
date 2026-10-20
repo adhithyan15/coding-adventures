@@ -14,7 +14,8 @@ romanization: "samandar"
 concept_tag: UR-NATURE66-SAMANDAR
 prerequisites: [UR-C66-suraj, UR-C66-chad]
 sounds: []
-roots: []
+roots: [sanskrit-samudra]
+etymology_hook: "samandar ← Sanskrit samudra 'sea' with an added nasal, like Old Awadhi samuṃda (CDIAL 13236)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C66-chad]
 <!-- hl-knowledge: introduces=[UR-LEX-C66-NATURE66-03]; assesses=[] -->
 
 **سمندر** — *samandar* — "the sea".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سمندر** (*samandar*) goes back to Sanskrit *samudra*, "sea", with an added nasal. CDIAL gives no Hindi or Urdu form in this entry, but it lists Old Awadhi *samuṃda*, "sea", with the same nasal (CDIAL 13236).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

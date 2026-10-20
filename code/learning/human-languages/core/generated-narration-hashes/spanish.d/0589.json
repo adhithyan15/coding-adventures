@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 589,
+  "sourceHash": "fnv1a64:ea51aab788774f37",
+  "lessonIds": [
+    "ES-C589-de-hecho",
+    "ES-C589-en-realidad",
+    "ES-C589-desde-luego",
+    "ES-C589-en-absoluto",
+    "ES-C589-en-el-fondo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch589.txt",
+  "json": "spanish/narration/ch589.json",
+  "textHash": "fnv1a64:a5d2a342acef38b0",
+  "jsonHash": "fnv1a64:685758f4d492313c",
+  "findings": []
+}

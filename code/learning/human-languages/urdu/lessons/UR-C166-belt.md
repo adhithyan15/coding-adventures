@@ -14,7 +14,8 @@ romanization: "belṭ"
 concept_tag: UR-CHIZ166-BELT
 prerequisites: [UR-C165-charjar, UR-C166-sari]
 sounds: []
-roots: []
+roots: [english-belt]
+etymology_hook: "belṭ ← English belt"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C166-sari]
 <!-- hl-knowledge: introduces=[UR-LEX-C166-CHIZ166-02]; assesses=[] -->
 
 **بیلٹ** — *belṭ* — "a belt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بیلٹ** (*belṭ*) is a loan from English *belt*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

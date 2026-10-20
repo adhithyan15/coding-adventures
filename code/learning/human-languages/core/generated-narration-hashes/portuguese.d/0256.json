@@ -1,0 +1,15 @@
+{
+  "language": "portuguese",
+  "chapter": 256,
+  "sourceHash": "fnv1a64:1392c07f6b051a24",
+  "lessonIds": [
+    "PT-W256-my-own-line"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "portuguese/narration/ch256.txt",
+  "json": "portuguese/narration/ch256.json",
+  "textHash": "fnv1a64:82bfed5992084fa6",
+  "jsonHash": "fnv1a64:4c788b2bc928a006",
+  "findings": []
+}

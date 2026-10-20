@@ -14,7 +14,8 @@ romanization: "fankār"
 concept_tag: UR-KAM238-FANKAR
 prerequisites: [UR-C237-fauj, UR-C238-mahir]
 sounds: []
-roots: []
+roots: [arabic-fann, persian-kar]
+etymology_hook: "fankār: Arabic fann 'art, skill' (Lane, root f-n-n) + Persian -kār 'one who works'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C238-mahir]
 <!-- hl-knowledge: introduces=[UR-LEX-C238-KAM238-02]; assesses=[] -->
 
 **فنکار** — *fankār* — "an artist, a performer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فنکار** (*fankār*) joins Arabic *fann*, "art, a kind of skill" (Lane, root *f-n-n*), and the Persian *-kār*, "one who works".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

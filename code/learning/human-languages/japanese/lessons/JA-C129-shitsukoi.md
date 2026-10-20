@@ -14,7 +14,8 @@ romanization: "shitsukoi"
 concept_tag: JA-QUAL129-SHITSUKOI
 prerequisites: [JA-C128-minikui, JA-C129-kawaii]
 sounds: []
-roots: []
+roots: [japanese-shitsukoi]
+etymology_hook: "shitsukoi: native; usually written in kana; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C129-kawaii]
 <!-- hl-knowledge: introduces=[JA-LEX-C129-QUAL129-02]; assesses=[] -->
 
 **しつこい** — *shitsukoi* — "persistent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**しつこい** (*shitsukoi*) is a native word, inherited rather than borrowed, and JMdict marks it as usually written in kana. Its older origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

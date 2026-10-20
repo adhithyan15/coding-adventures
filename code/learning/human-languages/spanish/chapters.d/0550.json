@@ -1,0 +1,19 @@
+{
+  "chapter": 550,
+  "title": "La separación",
+  "label": "ch:es-la-separacion",
+  "canDo": "I can say that a couple separated or divorced, and that someone lost a husband or a wife.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C550-viuda",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 550: I can say that a couple separated or divorced, and that someone lost a husband or a wife.",
+    "assesses": [
+      "ES-LEX-C550-DIVORCIO-03",
+      "ES-LEX-C550-DIVORCIO-04",
+      "ES-LEX-C550-DIVORCIO-05"
+    ]
+  }
+}

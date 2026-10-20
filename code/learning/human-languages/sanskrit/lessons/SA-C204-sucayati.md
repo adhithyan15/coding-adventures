@@ -14,7 +14,8 @@ romanization: "sūcayati"
 concept_tag: SA-VERB-SUCAYATI
 prerequisites: [SA-C203-bhasate, SA-C203-sobhate]
 sounds: []
-roots: []
+roots: [sanskrit-sucana]
+etymology_hook: "sūcayati 'points out', a verb MW makes from sūci 'needle, point' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C203-sobhate]
 <!-- hl-knowledge: introduces=[SA-LEX-C204-ACT204-01]; assesses=[] -->
 
 **सूचयति** — *sūcayati* — "points out, informs".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sūcayati* is, MW says, a verb made from *sūca* and *sūci*, "needle, pointer": a needle is a pointer. Its noun *sūcanā*, "information", went into Hindi as *sūcnā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

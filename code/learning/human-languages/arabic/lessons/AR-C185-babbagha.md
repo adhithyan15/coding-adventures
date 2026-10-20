@@ -14,7 +14,8 @@ romanization: "babbaghāʾ"
 concept_tag: AR-SHAY185-BABBAGHA
 prerequisites: [AR-C184-film, AR-C185-dulfin]
 sounds: []
-roots: []
+roots: [babbagha-parrot]
+etymology_hook: "babbaghāʾ: not in Lane; origin not settled; English popinjay comes from it"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C185-dulfin]
 <!-- hl-knowledge: introduces=[AR-LEX-C185-SHAY185-02]; assesses=[] -->
 
 **ببغاء** — *babbaghāʾ* — "a parrot".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ببغاء** (*babbaghāʾ*) has no entry in Lane, and its origin is not settled; English *popinjay* comes from it through Old French.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

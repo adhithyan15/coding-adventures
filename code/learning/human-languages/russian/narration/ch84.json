@@ -4,7 +4,7 @@
   "chapter": 84,
   "title": "In the daytime, In the evening, At night, Day after tomorrow, Day before yesterday",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:464d6d9f7490c4e8",
+  "sourceHash": "fnv1a64:a2fee33cb80290da",
   "lessons": [
     {
       "id": "RU-C84-in-the-daytime",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8cb81cae4370bf2a",
+      "sourceHash": "fnv1a64:a6a54c387adc9f8c",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "послезавтра (poslezávtra) is после, \"after\", with завтра, \"tomorrow\", itself за, \"after\", with утро, \"morning\"."
+              "text": "послезавтра (poslezávtra) is после, \"after\", with завтра, \"tomorrow\", itself за, \"after\", with утро, \"morning\". Where утро comes from is uncertain (Vasmer)."
             }
           ]
         },

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-R639-repaso-632-639",
+    "language": "spanish",
+    "chapter": 639,
+    "sequence": 21770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:923a4eb2779c59c1"
+  },
+  "findings": []
+}

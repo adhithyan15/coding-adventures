@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for sesame, then the Sanskrit for a chickpe
 You'll want to know: भोजनम्.
 भोजनम् — bhojanam — "a meal, food".
 
+The word, taken apart.
+bhojana comes from the root √bhuj "enjoy, eat" (CDIAL 9630): "eating", and so "a meal, food", already in the Rigveda. MW compares √bhuj with Latin fungor "perform, enjoy".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a chickpea, then the Sanskrit for a mea
 
 You'll want to know: व्यञ्जनम्.
 व्यञ्जनम् — vyañjanam — "a curry, a side dish".
+
+The word, taken apart.
+vyañjana comes from vi-√añj "anoint, adorn, make appear", the root √añj "anoint" (CDIAL 12160): "decoration, sign", and in grammar "a consonant". MW also gives "seasoning, sauce, condiment", the sense behind a curry or side dish.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a meal, then the Sanskrit for a curry.
 You'll want to know: आहारः.
 आहारः — āhāraḥ — "food, diet".
 
+The word, taken apart.
+āhāra comes from ā-√hṛ "bring near, fetch", the root √hṛ "carry" with ā "toward" (CDIAL 1544): first "fetching", then "taking food", and so "food, diet".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a curry, then the Sanskrit for food.
 You'll want to know: अशनम्.
 अशनम् — aśanam — "eating, a meal".
 
+The word, taken apart.
+aśana comes from the root √aś "eat, consume" (MW's second √aś; CDIAL 909): "eating, food", already in the Śatapatha Brāhmaṇa. It is not the same word as āsana "seat", from √ās "sit".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for food, then the Sanskrit for eating.
 
 You'll want to know: कलशी.
 कलशी — kalaśī — "a small pitcher".
+
+The word, taken apart.
+kalaśī is the feminine of kalaśa "a water-pot, a jar", already in the Rigveda (CDIAL 2920). MW compares Latin calix "cup", and kalaśa lives on as Hindi kalsā and kalsī "small pot" (CDIAL 2920).
 
 What you've built.
 One more word for this chapter.

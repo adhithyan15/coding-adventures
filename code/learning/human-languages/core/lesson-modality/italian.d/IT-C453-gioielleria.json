@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C453-gioielleria",
+    "language": "italian",
+    "chapter": 453,
+    "sequence": 25600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:654efa43f3025522"
+  },
+  "findings": []
+}

@@ -14,7 +14,8 @@ romanization: "chhupnā"
 concept_tag: UR-VERB-CHHUPNA
 prerequisites: [UR-C142-utarna, UR-C142-bharna]
 sounds: []
-roots: []
+roots: [indo-aryan-chupp]
+etymology_hook: "chhupnā ← *chupp 'cover, hide', a reconstructed form; a tadbhava (CDIAL 5058)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C142-bharna]
 <!-- hl-knowledge: introduces=[UR-LEX-C142-ACT142-03]; assesses=[] -->
 
 **چھپنا** — *chhupnā* — "to hide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چھپنا** (*chhupnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*chupp*, "cover, hide", a form CDIAL reconstructs from its descendants (CDIAL 5058).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

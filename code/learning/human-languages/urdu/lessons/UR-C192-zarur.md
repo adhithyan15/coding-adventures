@@ -14,7 +14,8 @@ romanization: "zarūr"
 concept_tag: UR-VAJAH192-ZARUR
 prerequisites: [UR-C192-balki, UR-C192-shayad]
 sounds: []
-roots: []
+roots: [arabic-darura]
+etymology_hook: "zarūr ← Arabic ḍarūra 'necessity', through Persian (Lane, root ḍ-r-r)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C192-shayad]
 <!-- hl-knowledge: introduces=[UR-LEX-C192-VAJAH192-03]; assesses=[] -->
 
 **ضرور** — *zarūr* — "certainly".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ضرور** (*zarūr*) is a loan from Arabic *ḍarūra*, "necessity", which reached Urdu through Persian. Its Arabic root is *ḍ-r-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

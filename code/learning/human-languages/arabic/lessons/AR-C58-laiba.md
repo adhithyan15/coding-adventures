@@ -14,7 +14,8 @@ romanization: "laʿiba"
 concept_tag: AR-VERB-LAIBA
 prerequisites: [AR-C58-masha, AR-C58-rakada]
 sounds: []
-roots: []
+roots: [l-ʿ-b]
+etymology_hook: "laʿiba: built on the root l-ʿ-b, 'to play' (Lane); laʿiba is the plain verb, 'he played'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C58-rakada]
 <!-- hl-knowledge: introduces=[AR-LEX-C58-VERBS58-04]; assesses=[] -->
 
 **لعب** — *laʿiba* — "to play (he played)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لعب** (*laʿiba*) is built on the native Arabic root *l-ʿ-b*, "to play" (Lane). *Laʿiba* is the plain verb, "he played".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

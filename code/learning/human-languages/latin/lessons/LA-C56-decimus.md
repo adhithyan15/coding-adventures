@@ -52,6 +52,7 @@ reviews_of: [LA-C56-nonus, LA-C55-quintus]
 
 *Decem* is **ten**, and the ending goes on with the same worn-down middle you met
 in *septimus*: *decem* → *decimus*. Remember that *c* is hard — *DEK-imus*.
+*Decem* is inherited, a cousin of English *ten* (EtymDB 2.1).
 
 **December** is this number in a name, and it is the last of the four the
 calendar froze.

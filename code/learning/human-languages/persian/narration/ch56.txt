@@ -12,6 +12,9 @@ Before the new one: say the Persian for a sheep, then the Persian for a bird.
 You'll want to know: موش.
 موش — mush — "a mouse".
 
+The word, taken apart.
+mush is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian mūš, "mouse". English mouse and Latin mūs are the same Indo-European word.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for a bird, then the Persian for a mouse.
 
 You'll want to know: ببر.
 ببر — bebar — "a tiger".
+
+The word, taken apart.
+bebar continues Middle Persian babr, "tiger" (EtymDB). EtymDB links it further to the Indo-European word for "beaver", but that link is not settled.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for a mouse, then the Persian for a tiger.
 You'll want to know: فیل.
 فیل — fil — "an elephant".
 
+The word, taken apart.
+fil has made a round trip. Middle Persian had pīl, "elephant" (EtymDB), usually traced to Akkadian pīru. Arabic, with no p, took it as fīl (root f-y-l, Lane), and Persian took the Arabic form back.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for a tiger, then the Persian for an elephan
 You'll want to know: میمون.
 میمون — meymun — "a monkey".
 
+The word, taken apart.
+meymun is borrowed from Arabic maymūn, "blessed, fortunate" (root y-m-n; EtymDB). The monkey sense is usually explained as a euphemism: an animal thought ill-omened was given a lucky name.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for an elephant, then the Persian for a monk
 
 You'll want to know: مار.
 مار — mâr — "a snake".
+
+The word, taken apart.
+mâr is a native Persian word, inherited rather than borrowed: it continues Middle Persian mār, "snake" (EtymDB).
 
 What you've built.
 One more word for this chapter.

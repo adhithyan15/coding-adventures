@@ -1,0 +1,11 @@
+{
+  "id": "LA-C435-ratis",
+  "pathSegment": "LA-PATH-435-NAVIGIUM",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-435-NAVIGIUM",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 394,
+  "sourceHash": "fnv1a64:b4ffbf361e7e0957",
+  "lessonIds": [
+    "LA-C394-apparo",
+    "LA-C394-dispono",
+    "LA-C394-ordino",
+    "LA-C394-molior",
+    "LA-C394-praevideo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch394.txt",
+  "json": "latin/narration/ch394.json",
+  "textHash": "fnv1a64:24ec7b0c51747b48",
+  "jsonHash": "fnv1a64:5c31664f225e976a",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 357,
+  "title": "Le premier poste",
+  "label": "ch:fr-le-premier-poste",
+  "canDo": "I can talk about a first job: an internship, an intern, an apprentice, an apprenticeship and the employer.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FR-R357-revision-350-357",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 357: I can talk about a first job: an internship, an intern, an apprentice, an apprenticeship and the employer.",
+    "assesses": [
+      "FR-LEX-C357-STAGE-03",
+      "FR-LEX-C357-STAGE-04",
+      "FR-LEX-C357-STAGE-05"
+    ]
+  }
+}

@@ -14,7 +14,8 @@ romanization: "prāpnoti"
 concept_tag: SA-VERB-PRAPNOTI
 prerequisites: [SA-C135-arohati, SA-C135-avarohati]
 sounds: []
-roots: []
+roots: [sanskrit-prapnoti]
+etymology_hook: "prāpnoti ← pra 'forward' + √āp 'reach, obtain', which MW compares with Latin apiscor, aptus"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C135-avarohati]
 <!-- hl-knowledge: introduces=[SA-LEX-C136-ACT136-01]; assesses=[] -->
 
 **प्राप्नोति** — *prāpnoti* — "reaches, obtains".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*prāpnoti* comes from *pra* "forward" and the root √āp "reach, obtain" (MW; CDIAL 8947): "reaches forward to, attains". MW compares √āp with Latin *apiscor* "reach" and *aptus*, the source of English *apt*; Gujarati kept it as *pāmvũ* "to obtain" (CDIAL 8947).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

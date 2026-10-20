@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="100" viewBox="0 0 180 100" role="img" aria-label="A person letting another pass through a doorway">
+  <title>A person letting another pass through a doorway</title>
+  <g fill="none" stroke="#202020" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M80 93V9h69v84M84 13l35 14v59L84 93"/>
+    <circle cx="36" cy="34" r="10"/>
+    <path d="M36 44v25m0-17 23-8m-23 8-15 5m15 12-12 22m12-22 12 22"/>
+    <circle cx="157" cy="42" r="8"/>
+    <path d="M157 50v20m0-12-11 7m11-7 13 6m-13 6-11 21m11-21 12 21"/>
+    <path d="M62 44h14"/>
+  </g>
+</svg>

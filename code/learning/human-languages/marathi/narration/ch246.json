@@ -4,7 +4,7 @@
   "chapter": 246,
   "title": "Rainbow, Hail, Springtime, Planet, Freedom",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:349045c10f069a8f",
+  "sourceHash": "fnv1a64:0578a3eda3be28f9",
   "lessons": [
     {
       "id": "MR-C246-indradhanusya",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:11a3d054f3329439",
+      "sourceHash": "fnv1a64:ada179a24949bb4b",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "गारा (gārā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from karaka, \"hail\" (CDIAL 2782). CDIAL lists the Marathi word here with a query."
+              "text": "गारा (gārā) may come from Sanskrit karaka, \"hail\", as a tadbhava, a word inherited and reshaped by sound change. CDIAL lists it under karaka but marks the Marathi word with a query, so the link is possible rather than certain (CDIAL 2782). Gujarati karā, \"hail\", sits in the same entry without one."
             }
           ]
         },

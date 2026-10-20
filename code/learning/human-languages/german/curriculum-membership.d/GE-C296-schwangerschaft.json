@@ -1,0 +1,11 @@
+{
+  "id": "GE-C296-schwangerschaft",
+  "pathSegment": "GE-PATH-296-GEBURT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-296-GEBURT",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C628-transferencia",
+  "pathSegment": "ES-PATH-628-BANCO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-628-BANCO",
+      "order": 1
+    }
+  ]
+}

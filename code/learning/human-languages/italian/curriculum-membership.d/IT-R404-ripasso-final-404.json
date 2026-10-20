@@ -1,0 +1,11 @@
+{
+  "id": "IT-R404-ripasso-final-404",
+  "pathSegment": "IT-PATH-404-BLOCCO",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "IT-EXT-404-BLOCCO",
+      "order": 6
+    }
+  ]
+}

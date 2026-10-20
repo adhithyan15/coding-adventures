@@ -14,7 +14,8 @@ romanization: "bâmaze"
 concept_tag: FA-SEFAT236-BAMAZE
 prerequisites: [FA-C235-bikar, FA-C236-khasis]
 sounds: []
-roots: []
+roots: [maza-persian]
+etymology_hook: "bâmaze: Persian bâ 'with' + maze 'taste'; inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C236-khasis]
 <!-- hl-knowledge: introduces=[FA-LEX-C236-SEFAT236-02]; assesses=[] -->
 
 **بامزه** — *bâmaze* — "funny, cute".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bâmaze* is built from *bâ*, "with", and *maze*, "taste, flavour": with flavour, so lively and funny. Both are native Persian words, inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "chhoṭā"
 concept_tag: UR-ADJ70-CHHOTA
 prerequisites: [UR-C69-richh, UR-C69-bara]
 sounds: []
-roots: []
+roots: [indo-aryan-chotta]
+etymology_hook: "chhoṭā ← *choṭṭa 'small', a reconstructed form; a tadbhava (CDIAL 5071)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C69-bara]
 <!-- hl-knowledge: introduces=[UR-LEX-C70-ADJ70-01]; assesses=[] -->
 
 **چھوٹا** — *chhoṭā* — "small".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چھوٹا** (*chhoṭā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*choṭṭa*, "small", a form CDIAL reconstructs from its descendants (CDIAL 5071).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

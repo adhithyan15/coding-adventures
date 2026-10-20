@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C417-embarcar",
+    "language": "portuguese",
+    "chapter": 417,
+    "sequence": 23440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4b662e39fa02fa8a"
+  },
+  "findings": []
+}

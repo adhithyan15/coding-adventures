@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C296-algemas",
+    "language": "portuguese",
+    "chapter": 296,
+    "sequence": 17180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aa076e486047d3dd"
+  },
+  "findings": []
+}

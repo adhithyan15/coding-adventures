@@ -15,6 +15,7 @@ concept_tag: FA-FOOD41-GOWJE
 prerequisites: [FA-C41-sib, FA-C41-moz]
 sounds: []
 roots: []
+etymology_hook: "gowje: short for gowje farangi 'European plum'; origin of gowje not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C41-moz]
 <!-- hl-knowledge: introduces=[FA-LEX-C41-FOOD41-04]; assesses=[] -->
 
 **گوجه** — *gowje* — "a tomato".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*gowje* is short for *gowje farangi*, "European plum": the tomato was named after the plum, *gowje*, and labelled *farangi*, "Frankish, European". Where *gowje* itself comes from is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

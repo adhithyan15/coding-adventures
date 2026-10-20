@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 479,
+  "sourceHash": "fnv1a64:d9c4f86c3eb51b35",
+  "lessonIds": [
+    "PT-C479-magoar",
+    "PT-C479-magoa",
+    "PT-C479-rancor",
+    "PT-C479-perdoar",
+    "PT-C479-perdao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch479.txt",
+  "json": "portuguese/narration/ch479.json",
+  "textHash": "fnv1a64:bfc03092472e70fd",
+  "jsonHash": "fnv1a64:93fb8423892802e7",
+  "findings": []
+}

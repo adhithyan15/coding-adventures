@@ -14,7 +14,8 @@ romanization: "shima"
 concept_tag: JA-NATURE44-SHIMA
 prerequisites: [JA-C43-kumo, JA-C43-taiyou]
 sounds: []
-roots: []
+roots: [japanese-shima]
+etymology_hook: "shima: counted native, but a link with the Korean word for island has been suggested; not settled; 島 as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C43-taiyou]
 <!-- hl-knowledge: introduces=[JA-LEX-C44-NATURE44-01]; assesses=[] -->
 
 **しま** — *shima* — "an island".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**しま** (*shima*) is counted a native Japanese word, but its origin is not settled: a link with the Korean word for an island has been suggested, and whether the two share an ancestor or one was borrowed from the other is open. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

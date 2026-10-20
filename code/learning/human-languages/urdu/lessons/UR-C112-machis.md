@@ -14,7 +14,8 @@ romanization: "māchis"
 concept_tag: UR-THINGS112-MACHIS
 prerequisites: [UR-C111-tokri, UR-C111-mombatti]
 sounds: []
-roots: []
+roots: [english-matches]
+etymology_hook: "māchis ← English matches"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C111-mombatti]
 <!-- hl-knowledge: introduces=[UR-LEX-C112-THINGS112-01]; assesses=[] -->
 
 **ماچس** — *māchis* — "matches".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ماچس** (*māchis*) is a loan from English *matches*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

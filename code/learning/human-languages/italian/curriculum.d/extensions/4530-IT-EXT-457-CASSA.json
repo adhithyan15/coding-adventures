@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-457-CASSA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can pay and try things on: the cashier, small change, the fitting room, a clearance sale and haggling.",
+  "prerequisites": []
+}

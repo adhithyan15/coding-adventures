@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-669-PLANO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can find a place on a street map, point it out and say where it is.",
+  "prerequisites": []
+}

@@ -14,7 +14,8 @@ romanization: "choṭ"
 concept_tag: UR-SEHAT185-CHOT
 prerequisites: [UR-C185-injekshan, UR-C185-zakhm]
 sounds: []
-roots: []
+roots: [sanskrit-cutati]
+etymology_hook: "choṭ ← Sanskrit cuṭati 'cuts off', a group CDIAL calls non-Aryan; a tadbhava (CDIAL 4857)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C185-zakhm]
 <!-- hl-knowledge: introduces=[UR-LEX-C185-SEHAT185-05]; assesses=[] -->
 
 **چوٹ** — *choṭ* — "an injury, a knock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چوٹ** (*choṭ*) is a tadbhava, a word inherited and reshaped by sound change. CDIAL lists Hindi *coṭ*, "wound", under Sanskrit *cuṭati*, "cuts off, strikes", in its form *\*coṭṭ-*, and calls the whole group non-Aryan in origin (CDIAL 4857).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

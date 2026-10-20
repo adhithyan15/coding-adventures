@@ -1,0 +1,11 @@
+{
+  "id": "FR-C376-semestre",
+  "pathSegment": "FR-PATH-376-FAC",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-376-FAC",
+      "order": 3
+    }
+  ]
+}

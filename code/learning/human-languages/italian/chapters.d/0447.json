@@ -1,0 +1,19 @@
+{
+  "chapter": 447,
+  "title": "Uffici pubblici",
+  "label": "ch:it-uffici-pubblici",
+  "canDo": "I can deal with public offices: the police headquarters, the prefecture, the barracks, reporting something and my identity card.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C447-carta-d-identita",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 447: I can deal with public offices: the police headquarters, the prefecture, the barracks, reporting something and my identity card.",
+    "assesses": [
+      "IT-LEX-C447-UFFICI-03",
+      "IT-LEX-C447-UFFICI-04",
+      "IT-LEX-C447-UFFICI-05"
+    ]
+  }
+}

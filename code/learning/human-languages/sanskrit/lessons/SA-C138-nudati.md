@@ -14,7 +14,8 @@ romanization: "nudati"
 concept_tag: SA-VERB-NUDATI
 prerequisites: [SA-C138-vikrinati, SA-C138-karsati]
 sounds: []
-roots: []
+roots: [sanskrit-nudati]
+etymology_hook: "nudati 'pushes, drives away' ← √nud 'push, impel' (MW), already in the Rigveda"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C138-karsati]
 <!-- hl-knowledge: introduces=[SA-LEX-C138-ACT138-03]; assesses=[] -->
 
 **नुदति** — *nudati* — "pushes".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nudati* comes from the root √nud "push, thrust, drive away" (MW), already in the Rigveda. MW gives no outside cousins for it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

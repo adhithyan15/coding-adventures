@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 149,
-  "sourceHash": "fnv1a64:56d98c4956a5b538",
+  "sourceHash": "fnv1a64:4ec0d526fdcf75cd",
   "lessonIds": [
     "ES-C31-once-quince",
     "ES-C31-dieciseis-diecinueve",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "spanish/narration/ch149.txt",
   "json": "spanish/narration/ch149.json",
-  "textHash": "fnv1a64:825d6bcb75f6e5c4",
-  "jsonHash": "fnv1a64:2be02367e216d122",
+  "textHash": "fnv1a64:ed6a30eb35b3d621",
+  "jsonHash": "fnv1a64:f9c149d4415f0c40",
   "findings": []
 }

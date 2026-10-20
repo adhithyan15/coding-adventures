@@ -1,0 +1,11 @@
+{
+  "id": "LA-C296-principium",
+  "pathSegment": "LA-PATH-296-INITIUM",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-296-INITIUM",
+      "order": 1
+    }
+  ]
+}

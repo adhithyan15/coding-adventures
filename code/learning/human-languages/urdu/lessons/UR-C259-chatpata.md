@@ -15,6 +15,7 @@ concept_tag: UR-CHIZ259-CHATPATA
 prerequisites: [UR-C259-pakvan, UR-C259-menyu]
 sounds: []
 roots: []
+etymology_hook: "chaṭpaṭā 'tangy': origin not settled; CDIAL lists only chaṭpaṭī 'restlessness' (4969)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C259-menyu]
 <!-- hl-knowledge: introduces=[UR-LEX-C259-CHIZ259-03]; assesses=[] -->
 
 **چٹپٹا** — *chaṭpaṭā* — "tangy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **چٹپٹا** (*chaṭpaṭā*) is not settled. CDIAL lists only a Hindi *chaṭpaṭī*, "restlessness", under a reconstructed *\*chaṭṭa*, "sudden movement" (CDIAL 4969), which may or may not be the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

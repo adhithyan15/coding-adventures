@@ -1,18 +1,176 @@
 {
+  "schema_version": 1,
+  "family": "venn",
   "upstream": "mermaid@11.16.1",
-  "scope": "native set subset",
-  "fixtures": [
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "source": "packages/mermaid/src/diagrams/venn/parser/venn.spec.ts and cypress/integration/rendering/venn/venn.spec.ts",
+  "level": "full",
+  "valid": [
     {
-      "name": "basic-labelled-overlap",
-      "source": "venn-beta\ntitle Team overlap\nset Frontend[\"Frontend\"]:20\nset Backend[\"Backend\"]:12\nunion Frontend,Backend[\"APIs\"]:3"
+      "id": "upstream-parser-simple",
+      "source": "venn-beta\n          title foo bar\n          set A\n          set B\n          union A,B"
     },
     {
-      "name": "quoted-identifiers-and-text",
-      "source": "venn-beta\nset \"Foo Bar\"\n  text item[\"Inside Foo\"]\nset Buz\nunion \"Foo Bar\",Buz\n  text shared[\"Shared note\"]"
+      "id": "upstream-parser-with-bracket-labels",
+      "source": "venn-beta\n          set A[\"Alpha\"]\n          set B[\"Beta\"]\n          union A,B[\"AB\"]"
     },
     {
-      "name": "three-sets-and-styles",
-      "source": "venn-beta\nset A:20\nset B:18\nset C:16\nunion A,B,C[\"All\"]:2\nstyle A fill:#ff6b6b, stroke:#991b1b\nstyle A,B color:#333"
+      "id": "upstream-parser-with-unquoted-bracket-labels",
+      "source": "venn-beta\n          set A[Alpha]\n          set B[Beta]\n          union A,B[AB]"
+    },
+    {
+      "id": "upstream-parser-with-size-suffix",
+      "source": "venn-beta\n          set A:20\n          set B:12\n          union A,B:3"
+    },
+    {
+      "id": "upstream-parser-with-bracket-label-and-size-suffix",
+      "source": "venn-beta\n          title foo bar\n          set A[\"Alpha\"]:20\n          set B[\"Beta\"]:12\n          set C[\"Gamma\"]:30\n          union A,B[\"AB\"]:5.3\n          union C,A,B:1"
+    },
+    {
+      "id": "upstream-parser-with-text-nodes-using-bracket-labels",
+      "source": "venn-beta\n          set A\n            text A1[\"foo bar\"]\n          set B\n            text B1[\"hello, world\"]\n          union A,B\n            text AB1[\"shared note\"]"
+    },
+    {
+      "id": "upstream-parser-with-indented-text-nodes-no-label",
+      "source": "venn-beta\n          set A[\"Frontend\"]\n            text A1\n            text A2\n          set B[\"Backend\"]\n            text B1\n          union A,B[\"APIs\"]"
+    },
+    {
+      "id": "upstream-parser-with-style-statement-for-single-set",
+      "source": "venn-beta\n          set A\n          set B\n          union A,B\n          style A fill:#ff6b6b"
+    },
+    {
+      "id": "upstream-parser-with-style-statement-for-intersection",
+      "source": "venn-beta\n          set A\n          set B\n          union A,B\n          style A,B color:#333"
+    },
+    {
+      "id": "upstream-parser-with-style-statement-for-text-node",
+      "source": "venn-beta\n          set A\n            text A1[\"React\"]\n          style A1 color:red"
+    },
+    {
+      "id": "upstream-parser-with-multiple-style-properties",
+      "source": "venn-beta\n          set A\n          set B\n          union A,B\n          style A fill:#ff6b6b, color:#333"
+    },
+    {
+      "id": "upstream-parser-style-with-rgb-rgba-colors",
+      "source": "venn-beta\n          set A\n          set B\n          style A fill:rgb(255, 0, 128)\n          style B fill:rgba(255, 0, 128, 0.5)"
+    },
+    {
+      "id": "upstream-parser-indent-mode-with-style-coexistence",
+      "source": "venn-beta\n          set A[\"Frontend\"]:20\n            text A1[\"React\"]\n          set B[\"Backend\"]:12\n          union A,B[\"Shared\"]:3\n            text AB1[\"OpenAPI\"]\n          style A fill:#ff6b6b\n          style A,B color:#333\n          style A1 color:red"
+    },
+    {
+      "id": "upstream-parser-quoted-identifiers",
+      "source": "venn-beta\n        set \"Foo Bar\"\n        set Buz\n        union \"Foo Bar\",Buz"
+    },
+    {
+      "id": "upstream-render-1",
+      "source": "venn-beta\n        set A\n        set B\n        union A, B"
+    },
+    {
+      "id": "upstream-render-2",
+      "source": "venn-beta\n        set A\n        set B\n        set C\n        union A, B\n        union B, C\n        union A, C\n        union A, B, C"
+    },
+    {
+      "id": "upstream-render-3",
+      "source": "venn-beta\n        title Skills Overlap\n        set Frontend\n        set Backend\n        set DevOps\n        union Frontend, Backend\n        union Backend, DevOps\n        union Frontend, DevOps\n        union Frontend, Backend, DevOps"
+    },
+    {
+      "id": "upstream-render-4",
+      "source": "venn-beta\n        set A:20\n        set B:15\n        set C:10\n        union A, B:5\n        union B, C:3\n        union A, C:2\n        union A, B, C:1"
+    },
+    {
+      "id": "upstream-render-5",
+      "source": "venn-beta\n        title Team Skills\n        set Frontend[\"Frontend\"]\n        set Backend[\"Backend\"]\n        union Frontend, Backend[\"Fullstack\"]"
+    },
+    {
+      "id": "upstream-render-6",
+      "source": "venn-beta\n        set A\n          text \"Item 1\"\n          text \"Item 2\"\n        set B\n          text \"Item 3\"\n        union A, B\n          text \"Shared\""
+    },
+    {
+      "id": "upstream-render-7",
+      "source": "venn-beta\n        set A\n        set B\n        union A, B\n        style A fill:#ff6b6b\n        style B fill:#4ecdc4\n        style A,B fill:#ffe66d"
+    },
+    {
+      "id": "upstream-render-8",
+      "source": "venn-beta\n        title Programming Languages\n        set \"JavaScript\"\n        set \"Python\"\n        set \"TypeScript\"\n        union \"JavaScript\", \"TypeScript\""
+    },
+    {
+      "id": "upstream-render-9",
+      "source": "venn-beta\n        title Dark Theme\n        set A\n        set B\n        set C\n        union A, B\n        union B, C\n        union A, C"
+    },
+    {
+      "id": "upstream-render-10",
+      "source": "venn-beta\n        title Fruits and Vegetables\n        set Fruits\n          text \"Apple\"\n          text \"Banana\"\n          text \"Orange\"\n        set Vegetables\n          text \"Carrot\"\n          text \"Broccoli\"\n        union Fruits, Vegetables\n          text \"Tomato\""
+    },
+    {
+      "id": "upstream-render-11",
+      "source": "venn-beta\n        set A\n          text A1[\"Red Text\"]\n        set B\n          text B1[\"Blue Text\"]\n        union A, B\n          text AB1[\"Green Text\"]\n        style A1 color:#ff0000\n        style B1 color:#0000ff\n        style AB1 color:#00ff00"
+    },
+    {
+      "id": "upstream-render-12",
+      "source": "venn-beta\n        set A:30\n        set B:10\n        union A, B:5"
+    },
+    {
+      "id": "upstream-render-13",
+      "source": "venn-beta\n        title Software Engineering Skills\n        set Frontend[\"Frontend\"]\n          text \"React\"\n          text \"CSS\"\n          text \"HTML\"\n        set Backend[\"Backend\"]\n          text \"Node.js\"\n          text \"SQL\"\n          text \"APIs\"\n        set DevOps[\"DevOps\"]\n          text \"Docker\"\n          text \"CI/CD\"\n        union Frontend, Backend[\"Fullstack\"]\n          text \"REST\"\n          text \"GraphQL\"\n        union Backend, DevOps\n          text \"Monitoring\"\n        union Frontend, DevOps\n          text \"Performance\"\n        union Frontend, Backend, DevOps\n          text \"Architecture\"\n        style Frontend fill:#ff6b6b\n        style Backend fill:#4ecdc4\n        style DevOps fill:#45b7d1"
+    },
+    {
+      "id": "upstream-render-14",
+      "source": "venn-beta\n        set A\n        set B\n        union A, B"
+    },
+    {
+      "id": "upstream-render-15",
+      "source": "venn-beta\n        title HandDrawn Skills\n        set Frontend\n        set Backend\n        set DevOps\n        union Frontend, Backend\n        union Backend, DevOps\n        union Frontend, DevOps\n        union Frontend, Backend, DevOps"
+    },
+    {
+      "id": "upstream-render-16",
+      "source": "venn-beta\n        title Innovation\n        set Desirable\n        set Feasible\n        set Viable\n        union Desirable,Feasible,Viable[\"Innovation\"]"
+    },
+    {
+      "id": "upstream-render-17",
+      "source": "venn-beta\n        title Partial Pairwise\n        set A\n        set B\n        set C\n        union A,B,C[\"ABC\"]\n        union A,B[\"AB\"]\n        union B,C[\"BC\"]"
+    },
+    {
+      "id": "upstream-render-18",
+      "source": "venn-beta\n        set A\n          text \"Item 1\"\n          text \"Item 2\"\n        set B\n          text \"Item 3\"\n        union A, B\n          text \"Shared\"\n        style A fill:#ff6b6b\n        style B fill:#4ecdc4\n        style A,B fill:#ffe66d"
+    },
+    {
+      "id": "configured-canvas-and-theme",
+      "source": "---\nthemeVariables:\n  fontFamily: Georgia\n  vennTitleTextColor: \"#123456\"\n  vennSetTextColor: \"#654321\"\n  venn1: \"#0f766e\"\n  venn2: \"#f97316\"\nconfig:\n  venn:\n    width: 640\n    height: 360\n    padding: 24\n    useMaxWidth: false\n    useDebugLayout: true\n---\nvenn-beta\nset A\nset B\nunion A,B"
+    },
+    {
+      "id": "cascading-styles",
+      "source": "venn-beta\nset A\nset B\nunion A,B\nstyle A fill:#ff6b6b\nstyle A stroke:#991b1b\nstyle A,B color:#333\nstyle A,B fill-opacity:0.25"
+    }
+  ],
+  "invalid": [
+    {
+      "id": "upstream-parser-set-requires-single-identifier",
+      "source": "venn-beta\n        set A,B"
+    },
+    {
+      "id": "upstream-parser-union-requires-multiple-identifiers",
+      "source": "venn-beta\n        union A"
+    },
+    {
+      "id": "upstream-parser-union-requires-known-identifiers",
+      "source": "venn-beta\n        set Foo\n        union Foo,Buz"
+    },
+    {
+      "id": "missing-header",
+      "source": "set A"
+    },
+    {
+      "id": "duplicate-set",
+      "source": "venn-beta\nset A\nset A"
+    },
+    {
+      "id": "unsafe-style-color",
+      "source": "venn-beta\nset A\nstyle A fill:url(javascript:alert(1))"
+    },
+    {
+      "id": "opacity-out-of-range",
+      "source": "venn-beta\nset A\nstyle A fill-opacity:2"
     }
   ]
 }

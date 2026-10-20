@@ -1,0 +1,11 @@
+{
+  "id": "PT-C285-telespectador",
+  "pathSegment": "PT-PATH-285-OUVINTE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-285-OUVINTE",
+      "order": 3
+    }
+  ]
+}

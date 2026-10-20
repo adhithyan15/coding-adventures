@@ -1,0 +1,20 @@
+{
+  "language": "portuguese",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:da27b69ee87407f8",
+  "lessonIds": [
+    "PT-C300-capotar",
+    "PT-C300-travagem",
+    "PT-C300-danos",
+    "PT-C300-danificar",
+    "PT-C300-estrago",
+    "PT-R300-revisao-293-300"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "portuguese/narration/ch300.txt",
+  "json": "portuguese/narration/ch300.json",
+  "textHash": "fnv1a64:8cafd0864f93c803",
+  "jsonHash": "fnv1a64:92a5d7e9a46bcb60",
+  "findings": []
+}

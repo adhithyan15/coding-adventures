@@ -1,0 +1,11 @@
+{
+  "id": "GE-C372-umplanen",
+  "pathSegment": "GE-PATH-372-VEREINBARUNG",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-372-VEREINBARUNG",
+      "order": 4
+    }
+  ]
+}

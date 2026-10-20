@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 353,
+  "sourceHash": "fnv1a64:f41d9647667746d6",
+  "lessonIds": [
+    "PT-C353-obstaculo",
+    "PT-C353-desafio",
+    "PT-C353-impedir",
+    "PT-C353-dificultar",
+    "PT-C353-favorecer"
+  ],
+  "tex": "portuguese/book/chapters/ch353-os-obstaculos.tex"
+}

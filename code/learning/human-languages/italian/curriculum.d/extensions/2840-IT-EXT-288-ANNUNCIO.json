@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-288-ANNUNCIO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that news was announced, revealed and spread, and that someone looked into it more deeply.",
+  "prerequisites": []
+}

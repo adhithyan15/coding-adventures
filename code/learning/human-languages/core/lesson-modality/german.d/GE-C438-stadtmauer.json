@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C438-stadtmauer",
+    "language": "german",
+    "chapter": 438,
+    "sequence": 23580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:484471498effddd7"
+  },
+  "findings": []
+}

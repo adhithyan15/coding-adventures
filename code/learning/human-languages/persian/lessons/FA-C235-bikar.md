@@ -14,7 +14,8 @@ romanization: "bikâr"
 concept_tag: FA-SEFAT235-BIKAR
 prerequisites: [FA-C235-kafi, FA-C235-majani]
 sounds: []
-roots: []
+roots: [persian-kar]
+etymology_hook: "bikâr: Persian bi- 'without' + kâr 'work' (EtymDB); native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C235-majani]
 <!-- hl-knowledge: introduces=[FA-LEX-C235-SEFAT235-05]; assesses=[] -->
 
 **بیکار** — *bikâr* — "unemployed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bikâr* is *bi-*, "without", with *kâr*, "work": without work. Both are native Persian; *kâr* continues Middle Persian *kār* (EtymDB). (EtymDB also lists Arabic *bikr*, "virgin", a different word.)
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

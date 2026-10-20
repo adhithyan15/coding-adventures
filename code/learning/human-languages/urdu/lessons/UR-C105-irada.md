@@ -14,7 +14,8 @@ romanization: "irādā"
 concept_tag: UR-WANT105-IRADA
 prerequisites: [UR-C104-zarurat, UR-C105-shauq]
 sounds: []
-roots: []
+roots: [arabic-irada]
+etymology_hook: "irādā ← Arabic irāda 'will, intention', through Persian (Lane, root r-w-d)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C105-shauq]
 <!-- hl-knowledge: introduces=[UR-LEX-C105-WANT105-02]; assesses=[] -->
 
 **ارادہ** — *irādā* — "an intention, a plan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ارادہ** (*irādā*) is a loan from Arabic *irāda*, "will, intention", which reached Urdu through Persian. Its Arabic root is *r-w-d* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

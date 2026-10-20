@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 114,
-  "sourceHash": "fnv1a64:02cbc2ca74d86553",
+  "sourceHash": "fnv1a64:8a357e40fe640440",
   "lessonIds": [
     "FA-C114-khatkesh",
     "FA-C114-takhte",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch114.txt",
   "json": "persian/narration/ch114.json",
-  "textHash": "fnv1a64:fa77e2637de148c2",
-  "jsonHash": "fnv1a64:0414000b4415f6a1",
+  "textHash": "fnv1a64:8bf378fd5d382c76",
+  "jsonHash": "fnv1a64:43f26d6cec19519f",
   "findings": []
 }

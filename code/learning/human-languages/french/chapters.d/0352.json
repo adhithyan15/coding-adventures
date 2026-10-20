@@ -1,0 +1,19 @@
+{
+  "chapter": 352,
+  "title": "Freins et atouts",
+  "label": "ch:fr-freins-et-atouts",
+  "canDo": "I can say what stands in the way of a plan, what prevents or hinders it, and what favours it or works as an asset.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C352-frein",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 352: I can say what stands in the way of a plan, what prevents or hinders it, and what favours it or works as an asset.",
+    "assesses": [
+      "FR-LEX-C352-FREIN-03",
+      "FR-LEX-C352-FREIN-04",
+      "FR-LEX-C352-FREIN-05"
+    ]
+  }
+}

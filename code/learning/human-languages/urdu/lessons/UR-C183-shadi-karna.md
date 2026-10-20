@@ -14,7 +14,8 @@ romanization: "shādī karnā"
 concept_tag: UR-VERB-SHADI-KARNA
 prerequisites: [UR-C182-intizar-karna, UR-C183-mulaqat-karna]
 sounds: []
-roots: []
+roots: [persian-shadi, kr-do]
+etymology_hook: "shādī 'joy; a wedding' usually traced to Persian shādī 'joy'; karnā (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C183-mulaqat-karna]
 <!-- hl-knowledge: introduces=[UR-LEX-C183-ACT183-02]; assesses=[] -->
 
 **شادی کرنا** — *shādī karnā* — "to marry".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شادی کرنا** (*shādī karnā*) joins *shādī*, "a wedding", and *karnā*, "to do". *shādī* is usually traced to Persian *shādī*, "joy"; *karnā* comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

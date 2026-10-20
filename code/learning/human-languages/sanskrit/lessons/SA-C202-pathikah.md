@@ -14,7 +14,8 @@ romanization: "pathikaḥ"
 concept_tag: SA-TRV202-PATHIKAH
 prerequisites: [SA-C201-samasya, SA-C201-samadhanam]
 sounds: []
-roots: []
+roots: [sanskrit-pathika]
+etymology_hook: "pathika ← pathin 'path' + -ika; MW compares Greek patos 'path' and Latin pons (CDIAL 7745)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C201-samadhanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C202-TRV202-01]; assesses=[] -->
 
 **पथिकः** — *pathikaḥ* — "a wayfarer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pathika* is *pathin*, "path, road", with the suffix *-ika* (MW): one who is on the road (CDIAL 7745). *Pathin* is an inherited Indo-European word: MW compares Greek *patos*, "path", and Latin *pōns*, "bridge".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

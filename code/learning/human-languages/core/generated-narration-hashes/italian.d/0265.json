@@ -1,0 +1,17 @@
+{
+  "language": "italian",
+  "chapter": 265,
+  "sourceHash": "fnv1a64:247cf5eda3500bc5",
+  "lessonIds": [
+    "IT-C265-secondo-me",
+    "IT-C265-cosi",
+    "IT-C265-ripasso-opinione"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "italian/narration/ch265.txt",
+  "json": "italian/narration/ch265.json",
+  "textHash": "fnv1a64:c5c286aa5f917109",
+  "jsonHash": "fnv1a64:a010cd65a56c253e",
+  "findings": []
+}

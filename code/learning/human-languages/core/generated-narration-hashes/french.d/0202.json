@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 202,
-  "sourceHash": "fnv1a64:a926d8e6adaf051d",
+  "sourceHash": "fnv1a64:3952c721ba91eded",
   "lessonIds": [
     "FR-C202-caoutchouc",
     "FR-C202-metal",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch202.txt",
   "json": "french/narration/ch202.json",
-  "textHash": "fnv1a64:e510f6e67022aa61",
-  "jsonHash": "fnv1a64:122b57310ac4d51f",
+  "textHash": "fnv1a64:f4a0f32ec6be1197",
+  "jsonHash": "fnv1a64:2bc3dfc319b99a9d",
   "findings": []
 }

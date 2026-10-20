@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 735,
+  "sourceHash": "fnv1a64:108c85a21b6d3024",
+  "lessonIds": [
+    "ES-C735-esqueleto",
+    "ES-C735-pulmon",
+    "ES-C735-estomago",
+    "ES-C735-cerebro",
+    "ES-C735-latir",
+    "ES-R735-repaso-728-735"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch735.txt",
+  "json": "spanish/narration/ch735.json",
+  "textHash": "fnv1a64:b83e104674719408",
+  "jsonHash": "fnv1a64:14ad220a62f13b02",
+  "findings": []
+}

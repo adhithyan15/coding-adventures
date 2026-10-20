@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-474-GAIETE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-474-GAIETE"
+  ],
+  "after": []
+}

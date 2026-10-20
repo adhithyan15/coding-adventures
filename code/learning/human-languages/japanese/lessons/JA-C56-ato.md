@@ -14,7 +14,8 @@ romanization: "ato"
 concept_tag: JA-TIME56-ATO
 prerequisites: [JA-C55-itsumo, JA-C55-mada]
 sounds: []
-roots: []
+roots: [japanese-ato]
+etymology_hook: "ato: native Japanese, inherited, not borrowed; kanji 後 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C55-mada]
 <!-- hl-knowledge: introduces=[JA-LEX-C56-TIME56-01]; assesses=[] -->
 
 **あと** — *ato* — "after, later".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**あと** (*ato*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

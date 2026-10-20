@@ -14,7 +14,8 @@ romanization: "bhūk"
 concept_tag: UR-HEALTH42-BHUK
 prerequisites: [UR-C41-dava, UR-C41-pyas]
 sounds: []
-roots: []
+roots: [sanskrit-bubhuksha]
+etymology_hook: "bhūk ← Sanskrit bubhukṣā 'desire to eat, hunger', a tadbhava (CDIAL 9286)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C41-pyas]
 <!-- hl-knowledge: introduces=[UR-LEX-C42-HEALTH42-01]; assesses=[] -->
 
 **بھوک** — *bhūk* — "hunger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بھوک** (*bhūk*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bubhukṣā*, "desire to eat, hunger" (CDIAL 9286).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

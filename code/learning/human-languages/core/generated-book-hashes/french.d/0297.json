@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 297,
+  "sourceHash": "fnv1a64:1ca6cc8e0ebf5562",
+  "lessonIds": [
+    "FR-C297-carambolage",
+    "FR-C297-chauffard",
+    "FR-C297-exces-de-vitesse",
+    "FR-C297-constat",
+    "FR-C297-derapage"
+  ],
+  "tex": "french/book/chapters/ch297-accident-de-la-route.tex"
+}

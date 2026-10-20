@@ -1,0 +1,19 @@
+{
+  "chapter": 291,
+  "title": "Prīmō, tunc, dēmum",
+  "label": "ch:la-primo-tunc-demum",
+  "canDo": "I can set the stages of a story in time: at first, at that time, before, not yet and at last.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C291-demum",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 291: I can set the stages of a story in time: at first, at that time, before, not yet and at last.",
+    "assesses": [
+      "LA-LEX-C291-PRIMO-03",
+      "LA-LEX-C291-PRIMO-04",
+      "LA-LEX-C291-PRIMO-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-363-CITTADINO",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "IT-EXT-363-CITTADINO"
+  ],
+  "after": []
+}

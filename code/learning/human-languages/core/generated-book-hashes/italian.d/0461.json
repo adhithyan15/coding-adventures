@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 461,
+  "sourceHash": "fnv1a64:f849c7440cd399d9",
+  "lessonIds": [
+    "IT-C461-quercia",
+    "IT-C461-pino",
+    "IT-C461-abete",
+    "IT-C461-potare",
+    "IT-C461-corteccia"
+  ],
+  "tex": "italian/book/chapters/ch461-gli-alberi.tex"
+}

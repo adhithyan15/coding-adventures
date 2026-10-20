@@ -1,0 +1,11 @@
+{
+  "id": "PT-C450-garrafeira",
+  "pathSegment": "PT-PATH-450-MERCEARIA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-450-MERCEARIA",
+      "order": 3
+    }
+  ]
+}

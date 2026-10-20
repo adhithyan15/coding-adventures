@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 253,
-  "sourceHash": "fnv1a64:d63a9b2c3e9c7306",
+  "sourceHash": "fnv1a64:1454f4c279873813",
   "lessonIds": [
     "AR-C253-tijara",
     "AR-C253-mistara",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "arabic/narration/ch253.txt",
   "json": "arabic/narration/ch253.json",
-  "textHash": "fnv1a64:ae91b6ca55ea898d",
-  "jsonHash": "fnv1a64:6876ecfe8386c1cc",
+  "textHash": "fnv1a64:b148659ba6fcc1d7",
+  "jsonHash": "fnv1a64:76fa3551cd9d1e7b",
   "findings": []
 }

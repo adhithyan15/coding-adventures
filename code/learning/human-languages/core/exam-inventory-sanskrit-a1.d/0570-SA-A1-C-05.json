@@ -1,0 +1,16 @@
+{
+  "id": "SA-A1-C-05",
+  "category": "Vibhakti — the case system",
+  "label": "sandhi: words change shape where they meet",
+  "probe": [
+    "SA-GRAMMAR-SANDHI-JOINS-WORDS"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [],
+  "sanskritSpecific": true,
+  "note": "Sanskrit-specific and unavoidable at any level, because it changes what a written sentence LOOKS like. Chapter 5 teaches it on the track's own first full sentence. Nothing in the proxy corresponds; Spanish's nearest relative is the contraction al/del, which is a two-item list rather than a system."
+}

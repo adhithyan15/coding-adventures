@@ -14,7 +14,8 @@ romanization: "intizār karnā"
 concept_tag: UR-VERB-INTIZAR-KARNA
 prerequisites: [UR-C182-letna, UR-C182-khara-hona]
 sounds: []
-roots: []
+roots: [arabic-intizar, kr-do]
+etymology_hook: "intizār ← Arabic intiẓār 'waiting', through Persian (Lane, root n-ẓ-r); karnā (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C182-khara-hona]
 <!-- hl-knowledge: introduces=[UR-LEX-C182-ACT182-05]; assesses=[] -->
 
 **انتظار کرنا** — *intizār karnā* — "to wait".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**انتظار کرنا** (*intizār karnā*) joins *intizār*, "waiting", and *karnā*, "to do". *intizār* is Arabic *intiẓār*, "waiting, looking out for", which reached Urdu through Persian (Lane, root *n-ẓ-r*); *karnā* comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

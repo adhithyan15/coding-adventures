@@ -1,0 +1,11 @@
+{
+  "id": "FR-C426-etage",
+  "pathSegment": "FR-PATH-426-RECEPTION",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-426-RECEPTION",
+      "order": 2
+    }
+  ]
+}

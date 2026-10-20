@@ -1,0 +1,11 @@
+{
+  "id": "PT-C350-derivar",
+  "pathSegment": "PT-PATH-350-ORIGEM",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-350-ORIGEM",
+      "order": 1
+    }
+  ]
+}

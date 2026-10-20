@@ -12,7 +12,7 @@ concept_tag: VERB-WALK
 prerequisites: [MR-C23-jhopne]
 sounds: [cha-tsaa, matra-aa, retroflex-na]
 roots: [sanskrit-cal-move, sanskrit-car-move]
-etymology_hook: "चालणे continues Sanskrit चलति calati \"moves, stirs,\" on the root चल् cal-, widely taken as a variant of चर् car- \"to move about\" — the very root already met inside विचार — and its future चालेल chālel serves as the everyday Marathi that will do"
+etymology_hook: "चालणे ← Sanskrit calati 'moves', root cal-, widely taken as a variant of car-, the root inside विचार"
 duration:
   max_seconds: 270
 requires:

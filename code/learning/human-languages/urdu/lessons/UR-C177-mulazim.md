@@ -14,7 +14,8 @@ romanization: "mulāzim"
 concept_tag: UR-KAM177-MULAZIM
 prerequisites: [UR-C176-rupaya, UR-C176-sikka]
 sounds: []
-roots: []
+roots: [arabic-mulazim]
+etymology_hook: "mulāzim ← Arabic mulāzim 'one who keeps close, an attendant', through Persian (Lane, root l-z-m)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C176-sikka]
 <!-- hl-knowledge: introduces=[UR-LEX-C177-KAM177-01]; assesses=[] -->
 
 **ملازم** — *mulāzim* — "an employee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ملازم** (*mulāzim*) is a loan from Arabic *mulāzim*, "one who keeps close, an attendant", which reached Urdu through Persian. Its Arabic root is *l-z-m* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

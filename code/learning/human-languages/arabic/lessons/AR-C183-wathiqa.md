@@ -14,7 +14,8 @@ romanization: "wathīqa"
 concept_tag: AR-SHAY183-WATHIQA
 prerequisites: [AR-C183-shik, AR-C183-istimara]
 sounds: []
-roots: []
+roots: [w-th-q]
+etymology_hook: "wathīqa: built on the root w-th-q, 'to trust' (Lane); wathīqa is a thing made firm: a document"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C183-istimara]
 <!-- hl-knowledge: introduces=[AR-LEX-C183-SHAY183-05]; assesses=[] -->
 
 **وثيقة** — *wathīqa* — "a document".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**وثيقة** (*wathīqa*) is built on the native Arabic root *w-th-q*, "to trust; to be firm" (Lane). *Wathīqa* is a thing made firm: a document.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

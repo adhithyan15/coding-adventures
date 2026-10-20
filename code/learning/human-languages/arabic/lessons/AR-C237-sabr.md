@@ -14,7 +14,8 @@ romanization: "ṣabr"
 concept_tag: AR-SABAB237-SABR
 prerequisites: [AR-C236-muwatin, AR-C236-sukkan]
 sounds: []
-roots: []
+roots: [ṣ-b-r]
+etymology_hook: "ṣabr: built on the root ṣ-b-r, 'to bind' (Lane); ṣabr is patience"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C236-sukkan]
 <!-- hl-knowledge: introduces=[AR-LEX-C237-SABAB237-01]; assesses=[] -->
 
 **صبر** — *ṣabr* — "patience".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صبر** (*ṣabr*) is built on the native Arabic root *ṣ-b-r*, "to bind; to be patient" (Lane). *Ṣabr* is patience.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

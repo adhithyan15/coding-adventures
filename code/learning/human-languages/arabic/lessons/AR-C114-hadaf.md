@@ -14,7 +14,8 @@ romanization: "hadaf"
 concept_tag: AR-WANT114-HADAF
 prerequisites: [AR-C113-hulm, AR-C113-amal]
 sounds: []
-roots: []
+roots: [h-d-f]
+etymology_hook: "hadaf: a native noun on h-d-f; Lane's brief article gives a high building and a butt, a target"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C113-amal]
 <!-- hl-knowledge: introduces=[AR-LEX-C114-WANT114-01]; assesses=[] -->
 
 **هدف** — *hadaf* — "a goal, an aim".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**هدف** (*hadaf*) is a native noun built on the root *h-d-f*. Lane's brief article gives it as a high building, and as a butt, a target shot at.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

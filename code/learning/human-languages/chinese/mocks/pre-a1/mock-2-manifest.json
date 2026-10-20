@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "level": "pre-A1",
+  "mockId": "pre-a1-mock-2",
+  "sections": [
+    { "skill": "reading", "minutes": 5, "partIds": ["prea1-reading-pinyin-signs-and-doorway-words"] },
+    { "skill": "listening", "minutes": 5, "partIds": ["prea1-listening-tones-and-doorway-turns"] },
+    { "skill": "writing", "minutes": 10, "partIds": ["prea1-writing-delayed-character-recall", "prea1-writing-dictation-and-transcription", "prea1-writing-bounded-production"] },
+    { "skill": "speaking", "minutes": 5, "partIds": ["prea1-speaking-tone-and-doorway-exchange"] }
+  ]
+}

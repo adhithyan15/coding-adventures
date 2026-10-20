@@ -12,7 +12,7 @@ concept_tag: AR-NUM-1-5
 prerequisites: [AR-C18-al-taqs]
 sounds: [arabic-hamza, arabic-teh-marbuta]
 roots: [arabic-semitic-numerals]
-etymology_hook: "واحد، اثنان، ثلاثة، أربعة، خمسة (wāḥid, ithnān, thalātha, arbaʿa, khamsa) are the Arabic WORDS for 1-5 — genuinely different from 'Arabic numerals' (the written digit shapes 0-9), which actually originated in India and reached Europe via Arabic mathematicians like al-Khwārizmī, not from these words at all"
+etymology_hook: "wāḥid to khamsa: inherited Semitic numbers on w-ḥ-d, th-n-y, th-l-th, r-b-ʿ, kh-m-s; Hebrew has shalosh, arbaʿ"
 duration:
   max_seconds: 240
 requires:

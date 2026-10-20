@@ -14,7 +14,8 @@ romanization: "mūlyam"
 concept_tag: SA-MARKET-PRICE
 prerequisites: [SA-C74-buys, SA-C74-money]
 sounds: []
-roots: []
+roots: [sanskrit-mulya, sanskrit-mula]
+etymology_hook: "mūlya 'original value, price' ← mūla 'root' (CDIAL 10257)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C74-money]
 <!-- hl-knowledge: introduces=[SA-LEX-C74-MARKET-03]; assesses=[] -->
 
 **मूल्यम्** (*mūlyam*) — "a price". **किम् मूल्यम्?** — "what is the price?"
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Mūlya* is built from *mūla*, "root": first the original value, the capital at the
+root of a sale, then a price (MW, CDIAL 10257).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

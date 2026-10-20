@@ -14,7 +14,7 @@ romanization: "ghaṛā"
 concept_tag: PA-THINGS117-GHARA
 prerequisites: [PA-C117-tokri, PA-C117-dabba]
 sounds: []
-roots: [sanskrit-ghata]
+roots: [sanskrit-ghata-pot]
 etymology_hook: "ghaṛā ← Sanskrit ghaṭa 'pot', a tadbhava (CDIAL 4406)"
 duration:
   max_seconds: 200

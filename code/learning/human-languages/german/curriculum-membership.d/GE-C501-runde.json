@@ -1,0 +1,11 @@
+{
+  "id": "GE-C501-runde",
+  "pathSegment": "GE-PATH-501-BRETTSPIEL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-501-BRETTSPIEL",
+      "order": 4
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 208,
-  "sourceHash": "fnv1a64:883fb94244335508",
+  "sourceHash": "fnv1a64:96d5fc6c32c0d25d",
   "lessonIds": [
     "FA-C208-hava",
     "FA-C208-yakh",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch208.txt",
   "json": "persian/narration/ch208.json",
-  "textHash": "fnv1a64:4d062d710ae5aef1",
-  "jsonHash": "fnv1a64:47c0f0ce7b83037d",
+  "textHash": "fnv1a64:ea06e9f928ddd58f",
+  "jsonHash": "fnv1a64:75d00d971ef1f034",
   "findings": []
 }

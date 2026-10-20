@@ -14,7 +14,8 @@ romanization: "parastâr"
 concept_tag: FA-THINGS115-PARASTAR
 prerequisites: [FA-C115-shagerd, FA-C115-doktor]
 sounds: []
-roots: []
+roots: [persian-parastar]
+etymology_hook: "parastâr ← Middle Persian parastār (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C115-doktor]
 <!-- hl-knowledge: introduces=[FA-LEX-C115-THINGS115-03]; assesses=[] -->
 
 **پرستار** — *parastâr* — "a nurse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*parastâr* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *parastār*, "servant, attendant" (EtymDB). Persian now uses it for a nurse.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

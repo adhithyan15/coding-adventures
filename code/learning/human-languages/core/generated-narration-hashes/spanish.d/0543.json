@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 543,
+  "sourceHash": "fnv1a64:fb703bc93fb8627f",
+  "lessonIds": [
+    "ES-C543-reanudar",
+    "ES-C543-retrasar",
+    "ES-C543-aplazar",
+    "ES-C543-adelantar",
+    "ES-C543-permanecer",
+    "ES-R543-repaso-536-543"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch543.txt",
+  "json": "spanish/narration/ch543.json",
+  "textHash": "fnv1a64:76a16541753e5011",
+  "jsonHash": "fnv1a64:126715d6d044d66a",
+  "findings": []
+}

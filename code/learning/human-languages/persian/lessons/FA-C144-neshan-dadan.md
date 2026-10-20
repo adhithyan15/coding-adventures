@@ -14,7 +14,8 @@ romanization: "neshân dâdan"
 concept_tag: FA-VERB-NESHAN-DADAN
 prerequisites: [FA-C143-tahvil-dadan, FA-C144-rahnamayi-kardan]
 sounds: []
-roots: []
+roots: [persian-nishan, pie-deh3]
+etymology_hook: "neshân dâdan: Persian neshân 'sign' (Middle Persian nišān) + dâdan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C144-rahnamayi-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C144-KONESH144-02]; assesses=[] -->
 
 **نشان دادن** — *neshân dâdan* — "to show".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*neshân dâdan* pairs *neshân*, "sign, mark", with *dâdan*, "to give": "to give a sign". *neshân* is native, usually traced to Middle Persian *nišān*. *dâdan*, "to give", is an inherited verb; EtymDB takes it back to the Indo-European root *\*deh₃-*, "to give".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

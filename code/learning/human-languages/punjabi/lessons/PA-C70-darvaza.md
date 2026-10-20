@@ -14,7 +14,7 @@ romanization: "darvāzā"
 concept_tag: PA-HOME70-DARVAZA
 prerequisites: [PA-C70-chaku, PA-C70-botal]
 sounds: []
-roots: [persian-dar]
+roots: [persian-dar-door]
 etymology_hook: "darvāzā: usually traced to Persian darvāza 'gate, door'"
 duration:
   max_seconds: 200

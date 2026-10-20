@@ -1,0 +1,11 @@
+{
+  "id": "PT-C308-assustar",
+  "pathSegment": "PT-PATH-308-SUSTO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-308-SUSTO",
+      "order": 1
+    }
+  ]
+}

@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "When You Are Lost",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:63dabb12ffda7bd9",
+  "sourceHash": "fnv1a64:06ee2376d557d5bf",
   "lessons": [
     {
       "id": "BN-C19-je",
@@ -158,7 +158,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:88f4ba645355367b",
+      "sourceHash": "fnv1a64:6af410ab45c075c1",
       "notice": null,
       "blocks": [
         {
@@ -315,7 +315,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:87f1fa3f8ce41e6d",
+      "sourceHash": "fnv1a64:6272d64ea7507fd4",
       "notice": null,
       "blocks": [
         {

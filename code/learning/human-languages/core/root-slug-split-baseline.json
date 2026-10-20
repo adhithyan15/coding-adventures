@@ -269,22 +269,6 @@
       ]
     },
     {
-      "key": "ne-negative|",
-      "kind": "bare-vs-tagged",
-      "slugs": [
-        "ne-negative",
-        "pie-ne-negative"
-      ]
-    },
-    {
-      "key": "ne|",
-      "kind": "bare-vs-tagged",
-      "slugs": [
-        "ne",
-        "pie-ne"
-      ]
-    },
-    {
       "key": "noctem|",
       "kind": "bare-vs-tagged",
       "slugs": [
@@ -450,14 +434,6 @@
       "slugs": [
         "rekha-line",
         "sanskrit-rekha-line"
-      ]
-    },
-    {
-      "key": "s-l-m|",
-      "kind": "bare-vs-tagged",
-      "slugs": [
-        "s-l-m",
-        "semitic-s-l-m"
       ]
     },
     {

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C518-stonare",
+  "pathSegment": "IT-PATH-518-CANTO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-518-CANTO",
+      "order": 1
+    }
+  ]
+}

@@ -14,7 +14,8 @@ romanization: "hefdah"
 concept_tag: FA-NUMBERS76-HEFDAH
 prerequisites: [FA-C75-chahardah, FA-C75-shanzdah]
 sounds: []
-roots: []
+roots: [proto-indo-european-septm, proto-indo-european-dekm]
+etymology_hook: "hefdah: Persian haft 'seven' + dah 'ten' (EtymDB); inherited"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C75-shanzdah]
 <!-- hl-knowledge: introduces=[FA-LEX-C76-NUMBERS76-01]; assesses=[] -->
 
 **هفده** — *hefdah* — "seventeen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hefdah* is *haft*, "seven", with *dah*, "ten" (EtymDB), the *a* of *haft* worn to *e*. Both numbers are inherited from Middle Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

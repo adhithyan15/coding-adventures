@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:4bee147d258982e6",
+  "lessonIds": [
+    "PT-C370-a-menos-que",
+    "PT-C370-a-nao-ser-que",
+    "PT-C370-senao",
+    "PT-C370-eventual",
+    "PT-C370-eventualmente"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch370.txt",
+  "json": "portuguese/narration/ch370.json",
+  "textHash": "fnv1a64:b40144ea4cda3db6",
+  "jsonHash": "fnv1a64:610576b3cc385818",
+  "findings": []
+}

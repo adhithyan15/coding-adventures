@@ -4,7 +4,7 @@
   "chapter": 38,
   "title": "Two at Once",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:fd6b561069f4f776",
+  "sourceHash": "fnv1a64:48e11a90da94a75a",
   "lessons": [
     {
       "id": "AR-C38-wa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:367c95c1a724d9d6",
+      "sourceHash": "fnv1a64:f90630c9bcf4844f",
       "notice": null,
       "blocks": [
         {
@@ -65,11 +65,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "و (wa-) is the same conjunction Hebrew and Aramaic write with a single letter, in the same job, and it has held that job for three thousand years. It is by a wide margin the commonest word in written Arabic: Arabic prose strings clauses with و (wa-) where English would use a full stop, so a page of Arabic has far more ands in it than a page of English ever does."
+              "text": "و (wa-) is the same conjunction Hebrew and Aramaic write with a single letter, in the same job, as far back as those languages are written. It is by a wide margin the commonest word in written Arabic: Arabic prose strings clauses with و (wa-) where English would use a full stop, so a page of Arabic has far more ands in it than a page of English ever does."
             },
             {
               "kind": "speech",
               "text": "Note that و (wa-) is also the letter wāw, the long ū inside كوب and يوم. One shape, two jobs, told apart by whether it stands alone at the head of a word."
+            },
+            {
+              "kind": "speech",
+              "text": "Wa is inherited from the Semitic parent language, a cousin of Hebrew wə-, \"and\"."
             }
           ]
         },
@@ -158,7 +162,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:776f0218df4c5abb",
+      "sourceHash": "fnv1a64:1a509053fe5a66f8",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -221,6 +225,10 @@
             {
               "kind": "speech",
               "text": "أو (aw) is Semitic ʾaw, the same word Hebrew keeps. It is the whole apparatus a host needs: two nouns, أو (aw) between them, and the question particle a later lesson in this book will add. Until this lesson the corpus could name coffee, tea, milk and sugar and could not offer any one of them against another."
+            },
+            {
+              "kind": "speech",
+              "text": "It is inherited from the Semitic parent language, a cousin of Hebrew ʾō, \"or\", and not built on a three-letter root."
             }
           ]
         },
@@ -309,7 +317,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:a278c98635058ecb",
+      "sourceHash": "fnv1a64:814cacdf0b20e248",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -384,6 +392,10 @@
             {
               "kind": "speech",
               "text": "In writing you will also meet لكنّ with a shadda, which takes a following noun in the accusative. The plain لكن (lākin) in this lesson joins clauses and asks nothing of what follows."
+            },
+            {
+              "kind": "speech",
+              "text": "Lākin is a native particle (Lane, under l-k-n); the grammarians differ over which old particle stands behind lā."
             }
           ]
         },
@@ -472,7 +484,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:09c601092244ed7e",
+      "sourceHash": "fnv1a64:1193ec2b0332b93a",
       "notice": null,
       "blocks": [
         {
@@ -547,6 +559,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حسنًا (ḥasanan) is ḥasan, \"good\", on the native root ḥ-s-n, \"to be good, beautiful\" (Lane), with the adverb ending -an: \"well\"."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -586,7 +609,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

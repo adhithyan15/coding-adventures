@@ -14,7 +14,8 @@ romanization: "jīnz"
 concept_tag: UR-CHIZ251-JINZ
 prerequisites: [UR-C251-guriya, UR-C251-phuldan]
 sounds: []
-roots: []
+roots: [english-jeans]
+etymology_hook: "jīnz ← English jeans"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C251-phuldan]
 <!-- hl-knowledge: introduces=[UR-LEX-C251-CHIZ251-03]; assesses=[] -->
 
 **جینز** — *jīnz* — "jeans".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جینز** (*jīnz*) is a loan from English *jeans*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

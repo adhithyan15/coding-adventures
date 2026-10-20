@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-394-BILANCIO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about household money: the budget, income, a bill, a fee and a mortgage.",
+  "prerequisites": []
+}

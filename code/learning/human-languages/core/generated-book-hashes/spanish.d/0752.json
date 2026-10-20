@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 752,
+  "sourceHash": "fnv1a64:c84107b44ba7e209",
+  "lessonIds": [
+    "ES-C752-ajedrez",
+    "ES-C752-rompecabezas",
+    "ES-C752-baraja",
+    "ES-C752-magia",
+    "ES-C752-apostar"
+  ],
+  "tex": "spanish/book/chapters/ch752-juegos-de-mesa.tex"
+}

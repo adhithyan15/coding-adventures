@@ -15,6 +15,7 @@ concept_tag: WORD-WELL
 prerequisites: [SA-C03-aham, SA-C03-bhavan-katham-asti]
 sounds: [inherent-a, sha, halant]
 roots: [kushala-sanskrit]
+etymology_hook: "kuśala 'right, healthy, skilful' (MW): origin not settled (CDIAL 3365); the kuśa-grass story is unsupported"
 reviews_of: [SA-C03-aham]
 duration:
   max_seconds: 210
@@ -37,8 +38,8 @@ variety: classical
 
 <!-- hl-knowledge: introduces=[]; assesses=[SA-PATTERN-HOW-ARE-YOU] -->
 
-[PAUSE 2s] The word that answers "how are you?" — one that once meant, of all
-things, "skill in cutting sacred grass."
+[PAUSE 2s] The word that answers "how are you?" — and an old word whose origin
+is still not settled.
 
 ## Sounds you'll need
 
@@ -51,11 +52,12 @@ bare *m*.
 
 <!-- hl-knowledge: introduces=[SA-ETYMON-KUSHA-GRASS]; assesses=[] -->
 
-*Kuśalam* ("well-being, welfare, all-being-well") is native Sanskrit, famously
-derived from *kuśa* (the sacred grass) + a root of "cutting" — so it first meant
-"skilled [at gathering kuśa grass properly]," hence "adept, fit, in good order,"
-hence "well." A whole idea of wellness grew from a ritual skill. Its adjective
-is *kuśalī* ("one who is well").
+*Kuśalam* ("well-being, welfare, all-being-well") is native Sanskrit, and its origin
+is not settled: CDIAL 3365 calls the one modern derivation it cites "very doubtful".
+A popular explanation takes it from *kuśa* (the sacred grass) + a root of "cutting",
+"skilled at gathering the grass", hence "well"; but no dictionary we checked (MW,
+Apte, CDIAL) supports that story. Its senses run from "right, proper" to "skilful"
+and "healthy" (MW). Its adjective is *kuśalī* ("one who is well").
 
 ## Guided Practice
 
@@ -64,11 +66,11 @@ is *kuśalī* ("one who is well").
 [PAUSE 1s]
 - [YOU SAY: well-being — *kuśalam*]
 - [YOU SAY: its adjective (*kuśalī*, "one who is well")]
-- [YOU SAY: the surprising root (*kuśa*, the sacred grass → "skilled" → "well")]
+- [YOU SAY: whether its origin is known (no; the *kuśa*-grass story is only a popular explanation)]
 
 ## Wrap-up Recall
 
 <!-- hl-knowledge: introduces=[]; assesses=[SA-ETYMON-KUSHA-GRASS] -->
 
-[PAUSE 3s] What does *kuśalam* mean, and where does it come from? ("Well-being";
-from *kuśa* grass → "skilled" → "well.")
+[PAUSE 3s] What does *kuśalam* mean, and is its origin known? ("Well-being";
+not settled, and the *kuśa*-grass story has no dictionary support.)

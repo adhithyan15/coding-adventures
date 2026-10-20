@@ -11,7 +11,7 @@ gloss: why Marathi two rhymes with three, and why Hindi preserves a different pi
 prerequisites: [MR-C06-numbers-1-5]
 sounds: [matra-aa, matra-i, inherent-a]
 roots: [sanskrit-dvi, sanskrit-panca]
-etymology_hook: "Marathi don's final n is an innovation copied from tin, while Hindi paanch preserves Sanskrit pancha's nasal; neither daughter is simply older"
+etymology_hook: "Marathi don's final n is an innovation copied from tin; Hindi paanch keeps Sanskrit pancha's nasal"
 duration:
   max_seconds: 240
 requires:

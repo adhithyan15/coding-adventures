@@ -14,7 +14,8 @@ romanization: "vyāpāraḥ"
 concept_tag: SA-THG162-VYAPARAH
 prerequisites: [SA-C162-labhah, SA-C162-hanih]
 sounds: []
-roots: []
+roots: [sanskrit-vyapara]
+etymology_hook: "vyāpāra ← vi-ā-√pṛ 'be busy' (MW; CDIAL 12205): 'occupation, business'; Marathi vāvar"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C162-hanih]
 <!-- hl-knowledge: introduces=[SA-LEX-C162-THG162-05]; assesses=[] -->
 
 **व्यापारः** — *vyāpāraḥ* — "trade, business".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vyāpāra* comes from *vi-ā-√pṛ* "be busy, be occupied", the root √pṛ with *vi* and *ā* (MW; CDIAL 12205): "occupation, business", and so "trade". It lives on as Marathi *vāvar* "business, activity" (CDIAL 12205).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

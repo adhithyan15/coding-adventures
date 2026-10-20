@@ -12,7 +12,7 @@ concept_tag: MR-PEOPLE-FRIEND
 prerequisites: [MR-C10-bhakari]
 sounds: [matra-i, conjunct-tra]
 roots: [sanskrit-mitra, pie-mey-bind]
-etymology_hook: "मित्र is a learned borrowing straight from Sanskrit मित्र mitra, from Indo-European *mey- \"to bind,\" the same root behind Avestan Mithra and Old Persian Mithra — a god whose name meant \"the bond, the covenant\" before it meant \"friend\""
+etymology_hook: "मित्र is Sanskrit mitra, a tatsama, given as PIE *mey- 'to bind', the root also behind Avestan Mithra"
 duration:
   max_seconds: 270
 requires:

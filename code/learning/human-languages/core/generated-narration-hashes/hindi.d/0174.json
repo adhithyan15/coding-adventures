@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 174,
-  "sourceHash": "fnv1a64:b31112a349c4ca2a",
+  "sourceHash": "fnv1a64:531f8a3ad6735e1f",
   "lessonIds": [
     "HI-C174-lautana",
     "HI-C174-sajana",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch174.txt",
   "json": "hindi/narration/ch174.json",
-  "textHash": "fnv1a64:c40951c35f461123",
-  "jsonHash": "fnv1a64:970073b3317c309f",
+  "textHash": "fnv1a64:0e1cb83a8b53f08c",
+  "jsonHash": "fnv1a64:d10d9b3334a32cc5",
   "findings": []
 }

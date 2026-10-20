@@ -1,0 +1,19 @@
+{
+  "chapter": 531,
+  "title": "La búsqueda",
+  "label": "ch:es-la-busqueda",
+  "canDo": "I can say that someone went missing, there was a search, and they were found.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C531-hallazgo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 531: I can say that someone went missing, there was a search, and they were found.",
+    "assesses": [
+      "ES-LEX-C531-BUSQUEDA-03",
+      "ES-LEX-C531-BUSQUEDA-04",
+      "ES-LEX-C531-BUSQUEDA-05"
+    ]
+  }
+}

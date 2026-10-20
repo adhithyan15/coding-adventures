@@ -15,7 +15,7 @@ concept_tag: HI-NOUN-KNEE
 prerequisites: [HI-C53-shoulder, HI-C51-garland, HI-C52-lentils]
 sounds: []
 roots: [sanskrit-ghuta]
-etymology_hook: "ghuṭnā ← Sanskrit ghuṭa 'ankle', which CDIAL takes from Dravidian; a tadbhava (CDIAL 4479)"
+etymology_hook: "ghuṭnā ← *ghuṭṭa, CDIAL's by-form of Sanskrit ghuṭa 'ankle', which it takes from Dravidian (4479)"
 duration:
   max_seconds: 210
 requires:
@@ -44,14 +44,14 @@ reviews_of: [HI-C53-shoulder]
 
 **घुटना** (*ghuṭnā*) — "a knee".
 
-The Sanskrit source is घुण्ट (*ghuṇṭa*), a word for the ankle or knee joint, though the details of how it arrived are not agreed on.
+Behind it stands a family of Sanskrit words for the ankle, *ghuṭa* and *ghuṇṭa*, though the details of how the knee-word grew out of them are not agreed on.
 
 Be careful with this one in a dictionary: घुटना is also a verb meaning 'to be stifled', and the two are unrelated. Hindi has a small number of these exact collisions, and the only way through is the sentence around the word.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**घुटना** (*ghuṭnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ghuṭa*, "ankle" (CDIAL 4479). CDIAL takes the Sanskrit word from Dravidian, and allows a second source in its variant *ghuṇṭa*.
+**घुटना** (*ghuṭnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. CDIAL lists it under *\*ghuṭṭa*, a form it reconstructs beside Sanskrit *ghuṭa*, "ankle", and takes the whole family from Dravidian. It also allows a second road, through a form *\*ghũṭanā* built on the variant *ghuṇṭa* (CDIAL 4479).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

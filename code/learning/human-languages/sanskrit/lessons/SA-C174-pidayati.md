@@ -14,7 +14,8 @@ romanization: "pīḍayati"
 concept_tag: SA-VERB-PIDAYATI
 prerequisites: [SA-C174-tadayati, SA-C174-palayati]
 sounds: []
-roots: []
+roots: [sanskrit-pidayati]
+etymology_hook: "pīḍayati 'presses, hurts' is inherited, cousin of Greek piezō 'press' (EtymDB); MW reads pi-√sad; pīḍā is kin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C174-palayati]
 <!-- hl-knowledge: introduces=[SA-LEX-C174-ACT174-05]; assesses=[] -->
 
 **पीडयति** — *pīḍayati* — "hurts, troubles".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pīḍayati* first meant "presses, squeezes", and then "hurts, troubles" (CDIAL 8226). It is inherited from Indo-European, cousin of Greek *piezō* "press" (EtymDB), and MW explains it as *pi-√sad* "sit upon"; *pīḍā* "pain" is its noun.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

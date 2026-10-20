@@ -14,7 +14,8 @@ romanization: "purātana"
 concept_tag: SA-ADJ-OLD
 prerequisites: [SA-C15-new]
 sounds: []
-roots: []
+roots: [sanskrit-puratana]
+etymology_hook: "purātana 'old' ← purā 'before, of old' + the time-adjective suffix -tana (MW; CDIAL 8285)"
 duration:
   max_seconds: 210
 requires:
@@ -50,6 +51,12 @@ You met **नव** *nava* a moment ago. Put them side by side and nothing about 
 
 The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Purātana* is built from the adverb *purā*, "before, of old", with the suffix
+*-tana* that turns a time word into an adjective (MW, CDIAL 8285).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C15-ADJ-05] -->

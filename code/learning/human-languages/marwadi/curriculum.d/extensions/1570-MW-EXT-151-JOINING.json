@@ -1,0 +1,10 @@
+{
+  "id": "MW-EXT-151-JOINING",
+  "stage": "A2",
+  "kind": "required",
+  "category": "function",
+  "canDo": "I can join two familiar things, offer alternatives, contrast two short statements, and give one reason with source-verified Marwadi connectors.",
+  "prerequisites": [
+    "MW-EXT-150-A2WRITING"
+  ]
+}

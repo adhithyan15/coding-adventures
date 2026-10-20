@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 87,
-  "sourceHash": "fnv1a64:82ca6626f8d6ab1a",
+  "sourceHash": "fnv1a64:4c2a4e7d7914565c",
   "lessonIds": [
     "MR-C87-mirchi",
     "MR-C87-loni",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marathi/narration/ch87.txt",
   "json": "marathi/narration/ch87.json",
-  "textHash": "fnv1a64:2c5d83b01e07dadf",
-  "jsonHash": "fnv1a64:cabfb81742568f4c",
+  "textHash": "fnv1a64:28ea9e906b0a7ad4",
+  "jsonHash": "fnv1a64:033b12f190a73b0c",
   "findings": []
 }

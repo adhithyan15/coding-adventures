@@ -6,6 +6,10 @@ and emits a `.swift` source file containing a SwiftUI `View` struct.
 
 This is **WB4** of the UI28 backend matrix.
 
+Single finite `transform: rotate(Ndeg)` values lower to centered SwiftUI visual
+rotation after surface painting and before shadows, preserving layout footprint.
+Other units, transform chains, and non-finite or malformed angles remain reported.
+
 Drag and drop bodies use vertical stacks with authored `gap` spacing. The
 degradation report recognizes that spacing only when every occurrence of the
 part consumes it; unsupported values and reuse on other primitives stay visible.
@@ -128,7 +132,7 @@ pressed or selected variant still exposes that more-specific state.
 | `HostScroll`     | `ScrollView { ... }`; `axis` selects `ScrollView(.horizontal)` / `ScrollView([.horizontal, .vertical])` (UI61) *(v0.2.0; UI29 kernel)*  |
 | `HostNavigationSplit` | `NavigationSplitView { pane } detail: { detail }`; the pane receives its title and ideal width *(UI29-6)* |
 | `Input`          | `TextEditor` when `multiline: true`; otherwise the native `TextField` path *(UI25 compatibility)* |
-| `HostInput`      | `TextField` with a dispatching `Binding` when `onChange` is wired *(UI29 kernel)* |
+| `HostInput`      | `TextField` with a dispatching `Binding` when `onChange` is wired *(UI29 kernel)*; `TextEditor` with `multiline: true` |
 | `HostButton`     | `Button(action: { dispatch(.tap) }) { Text(label) }` *(v0.2.0; UI29 kernel)* |
 | `HostSlider`     | Native `Slider` with controlled live value and movement/release events |
 | `HostSurface`    | Host-supplied `AnyView` from a `node` slot          |

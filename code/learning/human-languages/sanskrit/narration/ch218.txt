@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for equal, then the Sanskrit for uneven.
 You'll want to know: सम्मार्जनी.
 सम्मार्जनी — sammārjanī — "a broom".
 
+The word, taken apart.
+sammārjanī is built on sam-, "together, thoroughly", and the root √mṛj, "to wipe, rub clean". MW lists sammārjana, "sweeping or cleansing thoroughly", and also "a wisp or broom". MW compares √mṛj with Latin mulgēre and English milk.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for uneven, then the Sanskrit for a broom.
 
 You'll want to know: कुठारः.
 कुठारः — kuṭhāraḥ — "an axe".
+
+The word, taken apart.
+kuṭhāra is probably borrowed from Dravidian: CDIAL 3244, following Mayrhofer, connects it with kuṭṭ-, "to break, cut" (CDIAL 3236). It lives on as Hindi kulhāṛā and kulhāṛī, "axe".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a broom, then the Sanskrit for an axe.
 You'll want to know: खनित्रम्.
 खनित्रम् — khanitram — "a spade".
 
+The word, taken apart.
+khanitra is built on the root √khan, "to dig", with the instrument suffix -tra (MW), and is already in the Rigveda (CDIAL 3814). It is the tool of khanati, "digs", which you have already met.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for an axe, then the Sanskrit for a spade.
 You'll want to know: हलम्.
 हलम् — halam — "a plough".
 
+The word, taken apart.
+hala is the plough, and MW gives a root √hal, "to plough", while noting the root may have been made from the noun. Its deeper origin is uncertain. It lives on as Hindi hal, "plough" (CDIAL 14000).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a spade, then the Sanskrit for a plough
 
 You'll want to know: दात्रम्.
 दात्रम् — dātram — "a sickle".
+
+The word, taken apart.
+dātra is built on the root √do, "to cut", with the instrument suffix -tra (CDIAL 6260): "the cutter", a sickle. It is a different word from dātra, "gift", from √dā, "to give". Hindi dā, "sickle, chopper", comes from it.
 
 What you've built.
 One more word for this chapter.

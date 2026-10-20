@@ -1,0 +1,11 @@
+{
+  "id": "PT-C448-fosforo",
+  "pathSegment": "PT-PATH-448-TABACARIA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-448-TABACARIA",
+      "order": 2
+    }
+  ]
+}

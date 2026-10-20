@@ -1,0 +1,11 @@
+{
+  "id": "SA-C273-meet-one-reflexive",
+  "pathSegment": "SA-PATH-273-REFLEXIVE273",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "SA-EXT-273-REFLEXIVE273",
+      "order": 0
+    }
+  ]
+}

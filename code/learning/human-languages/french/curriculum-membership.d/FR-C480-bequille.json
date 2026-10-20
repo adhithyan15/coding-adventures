@@ -1,0 +1,11 @@
+{
+  "id": "FR-C480-bequille",
+  "pathSegment": "FR-PATH-480-PLATRE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-480-PLATRE",
+      "order": 2
+    }
+  ]
+}

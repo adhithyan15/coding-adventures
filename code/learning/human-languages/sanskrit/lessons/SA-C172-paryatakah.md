@@ -14,7 +14,8 @@ romanization: "paryaṭakaḥ"
 concept_tag: SA-TRV172-PARYATAKAH
 prerequisites: [SA-C172-bhramanam, SA-C172-paryatanam]
 sounds: []
-roots: []
+roots: [sanskrit-paryataka]
+etymology_hook: "paryaṭaka ← pari-√aṭ 'roam about' + -aka (MW, 'a tramp, vagabond'); 'tourist' is a modern use"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C172-paryatanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C172-TRV172-05]; assesses=[] -->
 
 **पर्यटकः** — *paryaṭakaḥ* — "a tourist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*paryaṭaka* comes from *pari-√aṭ* "roam about" with the agent suffix *-aka*. MW knows it only as "a tramp, a vagabond", so "a tourist" is a modern use.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

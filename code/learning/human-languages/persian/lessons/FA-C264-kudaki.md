@@ -14,7 +14,8 @@ romanization: "kudaki"
 concept_tag: FA-ZAMAN264-KUDAKI
 prerequisites: [FA-C264-salgard, FA-C264-jashnvare]
 sounds: []
-roots: []
+roots: [persian-kudak]
+etymology_hook: "kudaki: Persian kudak 'child' (Middle Persian kōdak) + -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C264-jashnvare]
 <!-- hl-knowledge: introduces=[FA-LEX-C264-ZAMAN264-03]; assesses=[] -->
 
 **کودکی** — *kudaki* — "childhood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kudaki* is *kudak*, "child", with the noun ending *-i*. *kudak* is native, usually traced to Middle Persian *kōdak*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

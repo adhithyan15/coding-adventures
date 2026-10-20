@@ -4,7 +4,7 @@
   "chapter": 212,
   "title": "Art, Music, Competition, God, Bamboo",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:68646215055ff6b7",
+  "sourceHash": "fnv1a64:a6b54c030e6bdd43",
   "lessons": [
     {
       "id": "ML-C212-kala",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:29c42141376d32bf",
+      "sourceHash": "fnv1a64:589192ed84b75acb",
       "notice": null,
       "blocks": [
         {

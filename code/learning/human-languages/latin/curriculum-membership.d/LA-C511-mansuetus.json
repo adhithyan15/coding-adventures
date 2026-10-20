@@ -1,0 +1,11 @@
+{
+  "id": "LA-C511-mansuetus",
+  "pathSegment": "LA-PATH-511-CRUD",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-511-CRUD",
+      "order": 4
+    }
+  ]
+}

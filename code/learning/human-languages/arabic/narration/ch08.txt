@@ -19,6 +19,9 @@ Arabic: الأربعاء (al-arbiʿāʾ). literally, and the number it is built 
 Arabic: الخميس (al-khamīs). literally, and the number it is built on: "the fifth", from khamsa, "five". day: Thursday.
 No moon, no war-god, no planets at all — just day one, day two, day three… This also tells you something about the week itself: counting starts from Sunday, so Sunday is "day one" — the Arabic week, like the Jewish and much of the Christian calendar tradition, begins where the European Monday-first convention doesn't.
 
+The word, taken apart.
+These weekdays are named by number. Al-aḥad is "the one" and al-ithnayn "the two"; ath-thulāthāʾ, al-arbiʿāʾ and al-khamīs are built on the roots of three, four and five, th-l-th, r-b-ʿ and kh-m-s (Lane).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "al-aḥad" — the first, Sunday]
@@ -45,7 +48,7 @@ You'll want to know — The two named days.
 السبت (as-sabt) = "the Sabbath."
 
 You'll want to know — Be honest about how السبت differs from Latin's Sabbatum.
-You may remember Latin borrowed the word Sabbatum from Hebrew to replace its own pagan diēs Saturnī — a loanword crossing from a Semitic language into an Italic one. Arabic's سبت (sabt) is a different kind of relationship entirely: Arabic is itself a Semitic language, in the same family as Hebrew. So as-sabt and Hebrew shabbāt aren't borrower-and-lender — they're cousins, both descending from the same ancient Semitic root س-ب-ت meaning "to rest, to cease." Where Latin borrowed a foreign word, Arabic simply inherited a family word.
+You may remember Latin borrowed the word Sabbatum from Hebrew to replace its own pagan diēs Saturnī — a loanword crossing from a Semitic language into an Italic one. Arabic's سبت (sabt) is a different kind of relationship entirely: Arabic is itself a Semitic language, in the same family as Hebrew. So as-sabt and Hebrew shabbāt share a root: an ancient Semitic root س-ب-ت meaning "to rest, to cease," which Arabic has in its own right (Lane gives sabt as "rest"). Whether the day's name was inherited or taken from Jewish neighbours is debated; Latin plainly borrowed a foreign word.
 
 Guided Practice.
 [pause 1 second]

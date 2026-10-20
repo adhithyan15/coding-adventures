@@ -1,0 +1,19 @@
+{
+  "chapter": 286,
+  "title": "Delitos e vítimas",
+  "label": "ch:pt-delitos-e-vitimas",
+  "canDo": "I can name offences, vandals and vandalism, victims and a homicide.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C286-homicidio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 286: I can name offences, vandals and vandalism, victims and a homicide.",
+    "assesses": [
+      "PT-LEX-C286-DELITO-03",
+      "PT-LEX-C286-DELITO-04",
+      "PT-LEX-C286-DELITO-05"
+    ]
+  }
+}

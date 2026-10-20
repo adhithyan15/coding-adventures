@@ -86,6 +86,7 @@ The word, taken apart.
 早上 (zǎoshang).
 早上 zǎoshang — morning.
 The parts add up again, though less tidily than 再见 did. 早 (zǎo) is early; 上 (shàng) on its own means up or on top. Early-up, the early part of the day. Take that as a hook rather than a definition: what you need is that the two characters you just wrote make the word for morning.
+Both halves are inherited from Middle Chinese: tsawX, "early, dawn", and dzyangH, "above" (Guangyun, in Baxter's transcription).
 
 Sounds you'll need — the syllable with no tone.
 The pinyin for this word is zǎoshang — and 上 (shàng) has lost its tone mark.
@@ -122,6 +123,7 @@ It ends in 好 — the same character, the same word, that you met in the first 
 That is the payoff, and it is worth being explicit about. 你好 was never a phrase to swallow whole. It is 你 you followed by 好 good, and the second half is reusable:
 你 + 好 becomes 你好, and 早上 + 好 becomes 早上好 (zǎoshang hǎo).
 Put a person or a time in front of 好 and you have a greeting. You have not learned two greetings; you have learned a frame and filled it twice. Every one of the other times of day works the same way, and you will be able to build those greetings the moment you have the words for those times.
+Every piece is inherited from Middle Chinese, tsawX "early", dzyangH "above" and xawX "good" (Guangyun, in Baxter's transcription), and Chinese put the greeting together from them.
 
 Sounds you'll need — why nothing moves here.
 You know a rule about two third tones meeting: the first one rises, which is why 你好 is said ní hǎo.

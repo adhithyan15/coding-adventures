@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C554-envejecer",
+    "language": "spanish",
+    "chapter": 554,
+    "sequence": 17370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c2611edd0c50093c"
+  },
+  "findings": []
+}

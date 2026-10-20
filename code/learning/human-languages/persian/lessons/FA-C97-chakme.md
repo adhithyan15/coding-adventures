@@ -14,7 +14,8 @@ romanization: "chakme"
 concept_tag: FA-THINGS97-CHAKME
 prerequisites: [FA-C97-gushvare, FA-C97-gardanband]
 sounds: []
-roots: []
+roots: [turkic-cakma]
+etymology_hook: "chakme: a loan, usually traced to Turkic čäkmä 'boot'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C97-gardanband]
 <!-- hl-knowledge: introduces=[FA-LEX-C97-THINGS97-05]; assesses=[] -->
 
 **چکمه** — *chakme* — "boots".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*chakme* is a loan, usually traced to Turkic *čäkmä*, "boot".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

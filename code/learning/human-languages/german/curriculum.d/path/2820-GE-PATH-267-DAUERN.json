@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-267-DAUERN",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GE-EXT-267-DAUERN"
+  ],
+  "after": []
+}

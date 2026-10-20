@@ -6,13 +6,13 @@ sequence: 770
 chapter: 30
 type: word
 headword: أكل
-gloss: "he ate" — no new letters, no English cousin, and a Hebrew twin close enough to hear; the sixth verb, closing the set
+gloss: '"he ate" — no new letters, no English cousin, and a Hebrew twin close enough to hear; the sixth verb, closing the set'
 concept_tag: VERB-EAT
 romanization: akala
 prerequisites: [AR-C30-arafa]
 sounds: [alif-hamza, rtl-known-letters]
 roots: [a-k-l]
-etymology_hook: "أكل (akala, 'he ate') sits on the plain root أ-ك-ل and yields أَكْل (akl, 'food'), مَأْكُولات (maʾkūlāt, 'foodstuffs') and آكِل (ākil, 'an eater', where alif and hamza fuse into the long آ); it has NO English cousin — Arabic and English are unrelated — but its Hebrew twin אָכַל (akhal, 'he ate') is the same three consonants, the family resemblance already met in salām/shalom and yad/yad"
+etymology_hook: "akala: root ʾ-k-l 'to eat' (Lane); Hebrew ʾākhal 'he ate' is its cousin; English has no relative"
 duration:
   max_seconds: 240
 requires:

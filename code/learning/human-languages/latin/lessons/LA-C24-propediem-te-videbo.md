@@ -6,7 +6,7 @@ sequence: 480
 chapter: 24
 type: phrase
 headword: propediem tē vidēbō
-gloss: "see you later/soon" — a genuine change of pace from the last few lessons: this one IS solidly attested, twice, in Cicero's own letters
+gloss: '"see you later/soon" — a genuine change of pace from the last few lessons: this one IS solidly attested, twice, in Cicero''s own letters'
 concept_tag: FAREWELL-LATER
 prerequisites: [LA-C05-dies-lunae-veneris, LA-C01-vale, LA-C01-gratias]
 sounds: [macron-long-vowel, future-tense-bo]
@@ -54,7 +54,7 @@ attested, not once but **twice**, in **Cicero**'s own letters:
 ## The word, taken apart: propediem — "near the day," built from a word you already know
 <!-- hl-knowledge: introduces=[LA-ETYMON-PROPEDIEM-TE-VIDEBO-02]; assesses=[] -->
 
-**Propediem** breaks down as **prope** ("**near**") + **diem** (accusative
+**Propediem** is built from **prope** ("**near**") + **diem** (accusative
 of **diēs**, "**day**") — literally "**near the day**," meaning "very soon,
 shortly." That's the **same diēs** from your days-of-week lessons
 (*diēs Lūnae*, *diēs Veneris*) — a familiar root showing up in a brand-new

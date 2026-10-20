@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:ffde6931cc04d115",
+  "lessonIds": [
+    "IT-C382-ripassare",
+    "IT-C382-interrogazione",
+    "IT-C382-memorizzare",
+    "IT-C382-appunti",
+    "IT-C382-manuale"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch382.txt",
+  "json": "italian/narration/ch382.json",
+  "textHash": "fnv1a64:e64681f119a60d85",
+  "jsonHash": "fnv1a64:d377de6fc91ecd29",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 424,
+  "title": "Arrivare in porto",
+  "label": "ch:it-arrivare-in-porto",
+  "canDo": "I can talk about reaching land: the buoy, coming ashore, mooring, the life jacket and feeling sick.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C424-nausea",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 424: I can talk about reaching land: the buoy, coming ashore, mooring, the life jacket and feeling sick.",
+    "assesses": [
+      "IT-LEX-C424-APPRODO-03",
+      "IT-LEX-C424-APPRODO-04",
+      "IT-LEX-C424-APPRODO-05"
+    ]
+  }
+}

@@ -14,7 +14,8 @@ romanization: "nūnam"
 concept_tag: SA-WHY185-NUNAM
 prerequisites: [SA-C185-kidrsah, SA-C185-hi]
 sounds: []
-roots: []
+roots: [sanskrit-nunam]
+etymology_hook: "nūnam 'now, surely' ← nu 'now'; MW compares Greek nyn, Latin nunc and English now (CDIAL 7576)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C185-hi]
 <!-- hl-knowledge: introduces=[SA-LEX-C185-WHY185-04]; assesses=[] -->
 
 **नूनम्** — *nūnam* — "surely".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nūnam* is built on *nu*, "now" (CDIAL 7576): in the Rigveda it means "now", and later "surely" (MW). The base is inherited from Indo-European; MW compares Greek *nyn*, Latin *nunc* and English *now*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

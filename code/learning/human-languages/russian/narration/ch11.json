@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Parting Words",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:086110501fb07560",
+  "sourceHash": "fnv1a64:c585a9b6b809419c",
   "lessons": [
     {
       "id": "RU-C11-do-svidaniya",
@@ -296,7 +296,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5aaeaa1b8edb9fa8",
+      "sourceHash": "fnv1a64:3693d5b156f7873f",
       "notice": null,
       "blocks": [
         {
@@ -558,7 +558,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ed2cdb3b8a974a0e",
+      "sourceHash": "fnv1a64:8d53eabc2dda8452",
       "notice": null,
       "blocks": [
         {
@@ -600,7 +600,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "встреча takes apart by its pieces rather than by a single ancient root: в-, \"into,\" plus с-, \"with, together,\" on an old Slavic base meaning roughly \"to come upon.\" Put together, it is close to what English meet does when it means \"to come together\" — but that closeness is a match of idea, not of ancestry: there is no secure shared root behind the two words, the same honest gap this chapter already met in skórava."
+              "text": "встреча takes apart by its pieces rather than by a single ancient root: в-, \"into,\" plus с-, \"with, together,\" on an old Slavic base (Vasmer compares Lithuanian surėsti, \"to catch\") meaning roughly \"to come upon.\" Put together, it is close to what English meet does when it means \"to come together\" — but that closeness is a match of idea, not of ancestry: there is no secure shared root behind the two words, the same honest gap this chapter already met in skórava."
             },
             {
               "kind": "speech",

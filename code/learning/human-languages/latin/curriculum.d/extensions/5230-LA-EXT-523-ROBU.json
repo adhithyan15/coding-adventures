@@ -1,0 +1,8 @@
+{
+  "id": "LA-EXT-523-ROBU",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe someone's build and health.",
+  "prerequisites": []
+}

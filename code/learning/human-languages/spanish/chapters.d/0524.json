@@ -1,0 +1,19 @@
+{
+  "chapter": 524,
+  "title": "El incendio",
+  "label": "ch:es-el-incendio",
+  "canDo": "I can report a fire: what burned, the alarm, and the people who were evacuated.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C524-evacuar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 524: I can report a fire: what burned, the alarm, and the people who were evacuated.",
+    "assesses": [
+      "ES-LEX-C524-FUEGO-03",
+      "ES-LEX-C524-FUEGO-04",
+      "ES-LEX-C524-FUEGO-05"
+    ]
+  }
+}

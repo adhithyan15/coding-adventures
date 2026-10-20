@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-687-EXCURSION",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "ES-EXT-687-EXCURSION"
+  ],
+  "after": []
+}

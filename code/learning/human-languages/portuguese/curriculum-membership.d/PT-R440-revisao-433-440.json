@@ -1,0 +1,11 @@
+{
+  "id": "PT-R440-revisao-433-440",
+  "pathSegment": "PT-PATH-440-MORADA",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PT-EXT-440-MORADA",
+      "order": 5
+    }
+  ]
+}

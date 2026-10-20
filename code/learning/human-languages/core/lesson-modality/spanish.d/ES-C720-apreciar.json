@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C720-apreciar",
+    "language": "spanish",
+    "chapter": 720,
+    "sequence": 25960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:95d32f58b1b538b6"
+  },
+  "findings": []
+}

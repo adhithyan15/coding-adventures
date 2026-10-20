@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C671-atajo",
+    "language": "spanish",
+    "chapter": 671,
+    "sequence": 23400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4855b30646acfbff"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C570-protesta",
+    "language": "spanish",
+    "chapter": 570,
+    "sequence": 18160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ecad96cfd1f413fe"
+  },
+  "findings": []
+}

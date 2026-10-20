@@ -1,0 +1,11 @@
+{
+  "id": "IT-R494-ripasso-487-494",
+  "pathSegment": "IT-PATH-494-SEPARARSI",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "IT-EXT-494-SEPARARSI",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:e5d1f8cab5685965",
+  "lessonIds": [
+    "PT-C302-sismo",
+    "PT-C302-terramoto",
+    "PT-C302-tremor",
+    "PT-C302-ruir",
+    "PT-C302-escombros"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch302.txt",
+  "json": "portuguese/narration/ch302.json",
+  "textHash": "fnv1a64:a31e5a6d3e6a8d1c",
+  "jsonHash": "fnv1a64:4a1c25d8623b6ed3",
+  "findings": []
+}

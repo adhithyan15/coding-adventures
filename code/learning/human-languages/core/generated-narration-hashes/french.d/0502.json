@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:b129f27ce2708054",
+  "lessonIds": [
+    "FR-C502-flou",
+    "FR-C502-net",
+    "FR-C502-cliche",
+    "FR-C502-cadrer",
+    "FR-C502-trepied"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch502.txt",
+  "json": "french/narration/ch502.json",
+  "textHash": "fnv1a64:9647fe04a78f1fe1",
+  "jsonHash": "fnv1a64:f0a9919771b39a20",
+  "findings": []
+}

@@ -4,7 +4,7 @@
   "chapter": 246,
   "title": "Puffed rice, Grain, Barley flour, Wild honey, Sweet dish",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d50c873fb51c89ec",
+  "sourceHash": "fnv1a64:1eb55e09ab4a3465",
   "lessons": [
     {
       "id": "SA-C246-lajah",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c01ac385ed16fb8",
+      "sourceHash": "fnv1a64:fa70e44e2cb7aefa",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lājāḥ is the plural of lāja, \"fried or parched grain\", used in the plural for the grains (MW). MW files it under a root √lāj, \"to fry\", and it is already in the Vājasaneyi Saṃhitā (CDIAL 11011). It lives on as Hindi lāī, \"parched grain\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dc69d01797137347",
+      "sourceHash": "fnv1a64:8c4af1b0078d0a85",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dhānya means \"of grain\", and then \"grain, corn\" itself; it is built on dhānā, \"grain\" (CDIAL 6778). It lives on as Hindi dhān, \"growing or unhusked rice\". It is a different word from dhanya, \"fortunate\", in dhanyavādaḥ."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e15195c5c76edc81",
+      "sourceHash": "fnv1a64:29193663a8859370",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "saktu is coarsely ground meal, especially of barley, already in the Rigveda (CDIAL 13070). MW gives no derivation, so its origin is uncertain. It lives on as Hindi sattū, the flour of parched grain."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4ad428dca30b594b",
+      "sourceHash": "fnv1a64:af280589f4bec39d",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kṣaudra is built on kṣudrā, \"a kind of bee\", from kṣudra, \"tiny\" (MW): the honey of small wild bees. MW glosses kṣaudra \"honey, a species of honey\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d55ab5fc40b8df78",
+      "sourceHash": "fnv1a64:abb79c7c5d6fe4ec",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "miṣṭānna is a compound of miṣṭa, \"dainty, sweet\", and anna, \"food\" (MW), which you have already met. CDIAL 10299 lists miṣṭa beside mṛṣṭa, \"rubbed, prepared\", and Hindi mīṭhā, \"sweet\", comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -12,7 +12,7 @@ A single `Card` component:
 ```text
 Card
 ├─ title   (text)
-├─ body    (text)
+├─ body-text (text)
 └─ footer  (text)
 ```
 

@@ -12,6 +12,9 @@ Before the new one: say the Urdu for to laugh, then the Urdu for to cry.
 You'll want to know: گانا.
 گانا — gānā — "to sing; a song".
 
+The word, taken apart.
+گانا (gānā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. CDIAL lists it under gāpayati, the second form it gives beside gāyati, "sings" (CDIAL 4135). The noun "a song" is the same word, used for what is sung.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for to cry, then the Urdu for to sing; a song.
 
 You'll want to know: ناچنا.
 ناچنا — nāchnā — "to dance".
+
+The word, taken apart.
+ناچنا (nāchnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nṛtyati, "dances" (CDIAL 7583).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for to sing; a song, then the Urdu for to dance
 You'll want to know: ملنا.
 ملنا — milnā — "to meet".
 
+The word, taken apart.
+ملنا (milnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from milati, "meets" (CDIAL 10133).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for to dance, then the Urdu for to meet.
 You'll want to know: رہنا.
 رہنا — rahnā — "to live, to stay".
 
+The word, taken apart.
+رہنا (rahnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from rahati, "remains", a form CDIAL reconstructs from its descendants (CDIAL 10666).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for to meet, then the Urdu for to live.
 
 You'll want to know: سیکھنا.
 سیکھنا — sīkhnā — "to learn".
+
+The word, taken apart.
+سیکھنا (sīkhnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from śikṣate, "learns" (CDIAL 12430).
 
 What you've built.
 One more word for this chapter.

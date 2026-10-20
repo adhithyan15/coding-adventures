@@ -6,7 +6,7 @@ sequence: 660
 chapter: 37
 type: word
 headword: eō, īre
-gloss: "I go" — the shortest verb in Latin, whose bare stem is a single vowel
+gloss: '"I go" — the shortest verb in Latin, whose bare stem is a single vowel'
 concept_tag: VERB-GO
 prerequisites: [LA-C37-habeo]
 sounds: [macron-long-vowel, macron-none-short-vowel]

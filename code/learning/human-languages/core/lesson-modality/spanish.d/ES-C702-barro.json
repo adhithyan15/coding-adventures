@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C702-barro",
+    "language": "spanish",
+    "chapter": 702,
+    "sequence": 25000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2cafeb2ecf61cb67"
+  },
+  "findings": []
+}

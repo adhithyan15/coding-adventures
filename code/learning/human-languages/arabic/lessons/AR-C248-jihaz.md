@@ -14,7 +14,8 @@ romanization: "jihāz"
 concept_tag: AR-SHAY248-JIHAZ
 prerequisites: [AR-C248-mawqi, AR-C248-tatbiq]
 sounds: []
-roots: []
+roots: [j-h-z]
+etymology_hook: "jihāz: built on the root j-h-z, 'to equip, to make ready' (Lane); jihāz is equipment, an apparatus"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C248-tatbiq]
 <!-- hl-knowledge: introduces=[AR-LEX-C248-SHAY248-04]; assesses=[] -->
 
 **جهاز** — *jihāz* — "a device".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جهاز** (*jihāz*) is built on the native Arabic root *j-h-z*, "to equip, to make ready" (Lane). *Jihāz* is equipment, an apparatus.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

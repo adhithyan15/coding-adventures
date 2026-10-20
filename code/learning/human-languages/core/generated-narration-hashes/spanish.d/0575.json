@@ -1,0 +1,21 @@
+{
+  "language": "spanish",
+  "chapter": 575,
+  "sourceHash": "fnv1a64:aac0d6191317d968",
+  "lessonIds": [
+    "ES-C575-antiguedad",
+    "ES-C575-presente",
+    "ES-C575-porvenir",
+    "ES-C575-antiguo",
+    "ES-C575-antiguamente",
+    "ES-R575-repaso-568-575",
+    "ES-R575-repaso-final-575"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "spanish/narration/ch575.txt",
+  "json": "spanish/narration/ch575.json",
+  "textHash": "fnv1a64:8fe51ff39369e380",
+  "jsonHash": "fnv1a64:4fe0a97ee844a611",
+  "findings": []
+}

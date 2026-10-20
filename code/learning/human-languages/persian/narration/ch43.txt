@@ -12,6 +12,9 @@ Before the new one: say the Persian for grapes, then the Persian for an orange.
 You'll want to know: لیمو.
 لیمو — limu — "a lemon".
 
+The word, taken apart.
+limu is usually traced to an Indian word, Sanskrit nimbū, "lime" (CDIAL 7247; EtymDB sets the two side by side). Arabic laymūn took the word from Persian (EtymDB), and English lemon comes from it by way of Arabic.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for an orange, then the Persian for a lemon.
 
 You'll want to know: ماست.
 ماست — mâst — "yoghurt".
+
+The word, taken apart.
+mâst is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian mast, "yoghurt".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for a lemon, then the Persian for yoghurt.
 You'll want to know: پیاز.
 پیاز — piyâz — "an onion".
 
+The word, taken apart.
+piyâz is a native Persian word, inherited rather than borrowed: it continues Middle Persian pyāz, "onion" (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for yoghurt, then the Persian for an onion.
 You'll want to know: صبحانه.
 صبحانه — sobhâne — "breakfast".
 
+The word, taken apart.
+sobhâne is sobh, "morning", with the Persian ending -âne, "belonging to": the morning meal. sobh is borrowed from Arabic ṣubḥ, "morning" (root ṣ-b-ḥ, Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for an onion, then the Persian for breakfast
 
 You'll want to know: ناهار.
 ناهار — nâhâr — "lunch".
+
+The word, taken apart.
+nâhâr is built from nâ-, "not", and âhâr, "food" (EtymDB): the word first meant "fasting, not having eaten", and came to name the meal that ends the fast. Both parts are native Persian.
 
 What you've built.
 One more word for this chapter.

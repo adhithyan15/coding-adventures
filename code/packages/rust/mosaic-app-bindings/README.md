@@ -200,3 +200,15 @@ are diagnostic measurements, not wall-clock durations of automation commands.
 Capture an isolated warm workload and compare the same app/build configuration
 before and after optimization; do not infer a production percentile from a few
 clicks. Hard termination may lose buffered samples.
+
+Persistence samples further split adapter snapshot serialization
+(`persist-snapshot-ffi`), UTF-8 encoding (`persist-encode`), temporary file write
+(`persist-write`) and replacement (`persist-replace`). These nested scopes keep
+the existing synchronous save behavior and never record paths or workbook data.
+
+Apply-props attribution now includes `apply-props-convert` per converted property,
+`apply-props-set` per assigned property, and `apply-props-notify` around batch
+completion. These fixed names omit property names and values. Sum repeated
+conversion/setter samples within an apply-props interval; each consumes one slot
+in the shared 4096-sample cap. Notification time includes synchronous bindings,
+not subsequent layout or compositor presentation.

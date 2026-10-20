@@ -149,7 +149,7 @@ describe("generated chapter hash shard loader", () => {
     rmSync(join(base, "notes.txt"));
 
     const outside = fixture();
-    symlinkSync(outside, join(base, "linked.d"));
+    symlinkSync(outside, join(base, "linked.d"), process.platform === "win32" ? "junction" : "dir");
     expect(() => listGeneratedBookHashOwnerLanguages(root)).toThrow(
       /symbolic link/,
     );
@@ -205,7 +205,7 @@ describe("generated chapter hash shard loader", () => {
     ).toThrow(/malformed name/);
   });
 
-  it("rejects symlinked, non-regular, extra, and resurrected owners", () => {
+  it("rejects non-regular, extra, and resurrected owners", () => {
     const root = fixture();
     writeOwners(root, generatedBookHashOwnerContents("test", bookManifest()));
     const directory = join(root, "core", "generated-book-hashes", "test.d");
@@ -216,14 +216,6 @@ describe("generated chapter hash shard loader", () => {
       ),
     ).toThrow(/regular file/);
     rmSync(join(directory, "0003.json"), { recursive: true });
-
-    symlinkSync(join(directory, "0002.json"), join(directory, "0003.json"));
-    expect(() =>
-      readGeneratedBookHashManifest(
-        join(root, "core", "generated-book-hashes", "test.json"),
-      ),
-    ).toThrow(/regular file/);
-    rmSync(join(directory, "0003.json"));
 
     writeFileSync(join(directory, "notes.json"), "{}\n");
     expect(() =>
@@ -242,6 +234,24 @@ describe("generated chapter hash shard loader", () => {
         join(root, "core", "generated-book-hashes", "test.json"),
       ),
     ).toThrow(/resurrected monolith/);
+  });
+
+  it("rejects a symlinked chapter owner file", (ctx) => {
+    const root = fixture();
+    writeOwners(root, generatedBookHashOwnerContents("test", bookManifest()));
+    const directory = join(root, "core", "generated-book-hashes", "test.d");
+    try {
+      symlinkSync(join(directory, "0002.json"), join(directory, "0003.json"), "file");
+    } catch (error) {
+      if (process.platform !== "win32" || (error as NodeJS.ErrnoException).code !== "EPERM") throw error;
+      ctx.skip();
+      return;
+    }
+    expect(() =>
+      readGeneratedBookHashManifest(
+        join(root, "core", "generated-book-hashes", "test.json"),
+      ),
+    ).toThrow(/regular file/);
   });
 
   it("rejects dangerous JSON keys and traversal-shaped payload paths", () => {
@@ -353,7 +363,7 @@ describe("generated chapter hash shard loader", () => {
     const root = fixture();
     const outside = fixture();
     rmSync(join(root, "core"), { recursive: true });
-    symlinkSync(join(outside, "core"), join(root, "core"));
+    symlinkSync(join(outside, "core"), join(root, "core"), process.platform === "win32" ? "junction" : "dir");
     expect(() =>
       readGeneratedBookHashManifest(
         join(root, "core", "generated-book-hashes", "test.json"),
@@ -367,7 +377,7 @@ describe("generated chapter hash shard loader", () => {
       "generated-book-hashes",
       "test.d",
     );
-    symlinkSync(join(outside, "core", "generated-book-hashes"), ownerDirectory);
+    symlinkSync(join(outside, "core", "generated-book-hashes"), ownerDirectory, process.platform === "win32" ? "junction" : "dir");
     expect(() =>
       prepareGeneratedHashOwnerWrite(
         clean,
@@ -589,17 +599,9 @@ describe("generated chapter hash shard loader", () => {
     symlinkSync(
       join(outside, GENERATED_NARRATION_HASH_DIR),
       join(linkedRoot, GENERATED_NARRATION_HASH_DIR, "linked.d"),
+      process.platform === "win32" ? "junction" : "dir",
     );
     expect(() => narrationLessonIdentityIndex(linkedRoot, [])).toThrow(
-      /symbolic link/,
-    );
-
-    const linkedReadmeRoot = fixture();
-    symlinkSync(
-      join(outside, GENERATED_NARRATION_HASH_DIR, "README.md"),
-      join(linkedReadmeRoot, GENERATED_NARRATION_HASH_DIR, "README.md"),
-    );
-    expect(() => narrationLessonIdentityIndex(linkedReadmeRoot, [])).toThrow(
       /symbolic link/,
     );
 
@@ -608,5 +610,22 @@ describe("generated chapter hash shard loader", () => {
     expect(() => narrationLessonIdentityIndex(nestedReadmeRoot, [])).toThrow(
       /regular file/,
     );
+  });
+
+  it("rejects a symlinked narration README", (ctx) => {
+    const root = fixture();
+    const outside = fixture();
+    try {
+      symlinkSync(
+        join(outside, GENERATED_NARRATION_HASH_DIR, "README.md"),
+        join(root, GENERATED_NARRATION_HASH_DIR, "README.md"),
+        "file",
+      );
+    } catch (error) {
+      if (process.platform !== "win32" || (error as NodeJS.ErrnoException).code !== "EPERM") throw error;
+      ctx.skip();
+      return;
+    }
+    expect(() => narrationLessonIdentityIndex(root, [])).toThrow(/symbolic link/);
   });
 });

@@ -14,7 +14,8 @@ romanization: "sūpaḥ"
 concept_tag: SA-THINGS106-SUPAH
 prerequisites: [SA-C106-tandulah, SA-C106-mudgah]
 sounds: []
-roots: []
+roots: [sanskrit-supa]
+etymology_hook: "sūpa 'soup, broth' is of doubtful derivation (MW); Pali kept it as sūpa (CDIAL 13571)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C106-mudgah]
 <!-- hl-knowledge: introduces=[SA-LEX-C106-THINGS106-05]; assesses=[] -->
 
 **सूपः** — *sūpaḥ* — "dal, soup".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW calls *sūpa* "sauce, soup, broth" of doubtful derivation; the grammarians tie it to √su "distil", so its origin is uncertain. Pali kept it as *sūpa* "broth, curry" (CDIAL 13571).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

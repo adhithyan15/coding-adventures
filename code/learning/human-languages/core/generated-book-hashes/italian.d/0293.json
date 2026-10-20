@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 293,
+  "sourceHash": "fnv1a64:9e0af31402ffc5ef",
+  "lessonIds": [
+    "IT-C293-scasso",
+    "IT-C293-scassinare",
+    "IT-C293-antifurto",
+    "IT-C293-allarme",
+    "IT-C293-vandalo"
+  ],
+  "tex": "italian/book/chapters/ch293-ladri-in-casa.tex"
+}

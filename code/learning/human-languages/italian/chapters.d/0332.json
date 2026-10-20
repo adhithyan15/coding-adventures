@@ -1,0 +1,19 @@
+{
+  "chapter": 332,
+  "title": "Sul tagliere",
+  "label": "ch:it-sul-tagliere",
+  "canDo": "I can say how I prepared the vegetables: slicing, chopping, peeling and grating on the board.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C332-grattugiare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 332: I can say how I prepared the vegetables: slicing, chopping, peeling and grating on the board.",
+    "assesses": [
+      "IT-LEX-C332-TAGLIERE-03",
+      "IT-LEX-C332-TAGLIERE-04",
+      "IT-LEX-C332-TAGLIERE-05"
+    ]
+  }
+}

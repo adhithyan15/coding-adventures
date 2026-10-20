@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-488-OSPEDALE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about going to hospital: the emergency room, being admitted and surgery.",
+  "prerequisites": []
+}

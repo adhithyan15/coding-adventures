@@ -1,0 +1,21 @@
+{
+  "language": "portuguese",
+  "chapter": 466,
+  "sourceHash": "fnv1a64:9024c975c1154b49",
+  "lessonIds": [
+    "PT-C466-chuviscar",
+    "PT-C466-desanuviar",
+    "PT-C466-poca",
+    "PT-C466-encharcado",
+    "PT-C466-gabardina",
+    "PT-R466-revisao-465-466",
+    "PT-R466-revisao-final-466"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "portuguese/narration/ch466.txt",
+  "json": "portuguese/narration/ch466.json",
+  "textHash": "fnv1a64:1f6dcb206a691309",
+  "jsonHash": "fnv1a64:8c6a5e08eb3eee9e",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C397-dispositivo",
+    "language": "portuguese",
+    "chapter": 397,
+    "sequence": 22370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:842fdb4bfe5a8f7a"
+  },
+  "findings": []
+}

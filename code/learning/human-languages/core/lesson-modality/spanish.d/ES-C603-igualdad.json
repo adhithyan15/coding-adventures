@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C603-igualdad",
+    "language": "spanish",
+    "chapter": 603,
+    "sequence": 19890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:880ab5647313d20e"
+  },
+  "findings": []
+}

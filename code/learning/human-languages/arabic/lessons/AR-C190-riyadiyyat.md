@@ -14,7 +14,8 @@ romanization: "riyāḍiyyāt"
 concept_tag: AR-AMAL190-RIYADIYYAT
 prerequisites: [AR-C190-laib, AR-C190-mudarrib]
 sounds: []
-roots: []
+roots: [r-w-ḍ]
+etymology_hook: "riyāḍiyyāt: built on the root r-w-ḍ, 'to train, to tame' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C190-mudarrib]
 <!-- hl-knowledge: introduces=[AR-LEX-C190-AMAL190-04]; assesses=[] -->
 
 **رياضيات** — *riyāḍiyyāt* — "mathematics".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رياضيات** (*riyāḍiyyāt*) is built on the native Arabic root *r-w-ḍ*, "to train, to tame" (Lane). *Riyāḍiyyāt* is built on *riyāḍa*, "training, exercise", with the plural abstract ending *-iyyāt*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

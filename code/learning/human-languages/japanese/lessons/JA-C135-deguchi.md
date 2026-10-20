@@ -14,7 +14,8 @@ romanization: "deguchi"
 concept_tag: JA-THING135-DEGUCHI
 prerequisites: [JA-W135-gu, JA-W01-chi, JA-C135-byouin, JA-C133-heya, JA-C124-omoshiroi]
 sounds: [mora]
-roots: []
+roots: [japanese-deru, japanese-kuchi]
+etymology_hook: "deguchi: native de 'going out' (deru) + kuchi 'mouth', voiced"
 duration:
   max_seconds: 200
 requires:
@@ -52,6 +53,11 @@ The new sign is spent at once, beside one from the last chapter: **で**, then
 **ぐ** and **ち**, three beats, *de–gu–chi*. The *guchi* is the same voiced
 "mouth" as in **いりぐち**. On a sign, the two words face each other: the way
 in, and the way out. You write every sign in both now.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**でぐち** (*deguchi*) is a native compound, inherited rather than borrowed: *de*, "going out", from *deru*, "to go out", and *kuchi*, "mouth", voiced to *guchi* (JMdict, KANJIDIC2).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C135-DEGUCHI, JA-SCRIPT-GU-01, JA-SCRIPT-DE-01, JA-LEX-ANCHOR-IRIGUCHI, JA-SCRIPT-CHI-01] -->

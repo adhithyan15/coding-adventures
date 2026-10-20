@@ -14,7 +14,8 @@ romanization: "darvâze"
 concept_tag: FA-MAKAN268-DARVAZE
 prerequisites: [FA-C267-sakhre, FA-C267-oqyanus]
 sounds: []
-roots: []
+roots: [persian-dar-door]
+etymology_hook: "darvâze: native Persian, built on dar 'door'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C267-oqyanus]
 <!-- hl-knowledge: introduces=[FA-LEX-C268-MAKAN268-01]; assesses=[] -->
 
 **دروازه** — *darvâze* — "a gate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*darvâze* is a native Persian word, built on *dar*, "door".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

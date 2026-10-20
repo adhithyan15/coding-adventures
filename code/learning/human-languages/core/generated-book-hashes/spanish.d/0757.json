@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 757,
+  "sourceHash": "fnv1a64:faa1b01f1f99de36",
+  "lessonIds": [
+    "ES-C757-campeon",
+    "ES-C757-torneo",
+    "ES-C757-victoria",
+    "ES-C757-derrota",
+    "ES-C757-medalla"
+  ],
+  "tex": "spanish/book/chapters/ch757-campeones-y-medallas.tex"
+}

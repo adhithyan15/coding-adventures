@@ -4,7 +4,7 @@
   "chapter": 101,
   "title": "Two Words Where English Has One",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:d9cb26f68768b6e6",
+  "sourceHash": "fnv1a64:4934859e125531bb",
   "lessons": [
     {
       "id": "HI-C93-ke-saath",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9d9431ca009b07bc",
+      "sourceHash": "fnv1a64:73ddf0d53343cd00",
       "notice": null,
       "blocks": [
         {
@@ -61,7 +61,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "sāth, \"with\", comes from Sanskrit sārtha, \"caravan, company\", whose form sārthena meant \"in company with\" (CDIAL 13364)."
+              "text": "sāth, \"with\", comes from Sanskrit sārthena, \"in company with\", the instrumental case of sārtha, \"caravan, company\"; CDIAL lists the Hindi word under that case form (CDIAL 13364)."
             }
           ]
         },
@@ -1109,7 +1109,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:e92ab51a27586196",
+      "sourceHash": "fnv1a64:32d9ec07794484cc",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1187,7 +1187,7 @@
             },
             {
               "kind": "speech",
-              "text": "लिए is usually explained as a form of लेना, \"to take\"."
+              "text": "करना goes back to Sanskrit karoti, \"does\" (CDIAL 2814). लिए is usually explained as a form of लेना, \"to take\"."
             }
           ]
         },

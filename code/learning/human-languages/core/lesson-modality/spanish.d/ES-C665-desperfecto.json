@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C665-desperfecto",
+    "language": "spanish",
+    "chapter": 665,
+    "sequence": 23090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7ed751cb87e70529"
+  },
+  "findings": []
+}

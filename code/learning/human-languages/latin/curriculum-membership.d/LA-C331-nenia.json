@@ -1,0 +1,11 @@
+{
+  "id": "LA-C331-nenia",
+  "pathSegment": "LA-PATH-331-LUCTUS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-331-LUCTUS",
+      "order": 1
+    }
+  ]
+}

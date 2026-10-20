@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-278-NOTICIARIO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-278-NOTICIARIO"
+  ],
+  "after": []
+}

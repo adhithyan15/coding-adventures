@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-370-SENAO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "PT-EXT-370-SENAO"
+  ],
+  "after": []
+}

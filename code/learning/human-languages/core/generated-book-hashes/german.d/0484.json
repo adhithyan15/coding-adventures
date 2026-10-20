@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 484,
+  "sourceHash": "fnv1a64:9f26d31d048caa0f",
+  "lessonIds": [
+    "GE-C484-stirn",
+    "GE-C484-wange",
+    "GE-C484-kinn",
+    "GE-C484-augenbraue",
+    "GE-C484-wimper"
+  ],
+  "tex": "german/book/chapters/ch484-stirn-wange-und-kinn.tex"
+}

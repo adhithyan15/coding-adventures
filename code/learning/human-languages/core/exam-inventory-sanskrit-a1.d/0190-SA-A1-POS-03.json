@@ -1,0 +1,17 @@
+{
+  "id": "SA-A1-POS-03",
+  "category": "Ṣaṣṭhī — possession",
+  "label": "distribution: the genitive stands alone and needs no noun after it",
+  "probe": [
+    "SA-GRAMMAR-C16-NOUN-FAMILIES"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-POS-03"
+  ],
+  "note": "The Spanish point is about an unstressed form that CANNOT stand alone. Sanskrit's genitive can, being a full case form; the noun-families lesson is where case forms are shown as self-standing words."
+}

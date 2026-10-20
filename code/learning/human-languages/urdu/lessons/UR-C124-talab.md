@@ -14,7 +14,8 @@ romanization: "tālāb"
 concept_tag: UR-THINGS124-TALAB
 prerequisites: [UR-C124-chattan, UR-C124-jharna]
 sounds: []
-roots: []
+roots: [sanskrit-talla, aab-persian]
+etymology_hook: "tālāb: usually explained as tāl 'pond' (CDIAL 5742) + Persian āb 'water'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C124-jharna]
 <!-- hl-knowledge: introduces=[UR-LEX-C124-THINGS124-04]; assesses=[] -->
 
 **تالاب** — *tālāb* — "a pond, a pool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تالاب** (*tālāb*) is usually explained as *tāl*, "pond", which CDIAL lists under Sanskrit *talla*, "pond", a village word that may come from Munda (CDIAL 5742), with Persian *āb*, "water".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

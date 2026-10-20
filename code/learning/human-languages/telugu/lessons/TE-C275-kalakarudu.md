@@ -14,7 +14,7 @@ romanization: "kaḷākāruḍu"
 concept_tag: TE-PANI275-KALAKARUDU
 prerequisites: [TE-C274-ganitam, TE-C275-pujari]
 sounds: []
-roots: [sanskrit-kala]
+roots: [sanskrit-kala-art]
 etymology_hook: "kaḷākāruḍu: Sanskrit kalā 'art' (CDIAL 2927) + kāra 'maker' + -uḍu"
 duration:
   max_seconds: 200

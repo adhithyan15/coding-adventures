@@ -14,7 +14,8 @@ romanization: "bhramaṇam"
 concept_tag: SA-TRV172-BHRAMANAM
 prerequisites: [SA-C172-yatri, SA-C172-yanapatram]
 sounds: []
-roots: []
+roots: [sanskrit-bhramati]
+etymology_hook: "bhramaṇa 'wandering, roaming' ← √bhram 'wander, whirl' (CDIAL 9647); bhramati is its verb"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C172-yanapatram]
 <!-- hl-knowledge: introduces=[SA-LEX-C172-TRV172-03]; assesses=[] -->
 
 **भ्रमणम्** — *bhramaṇam* — "a tour, travel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bhramaṇa* comes from the root √bhram "wander, whirl" (CDIAL 9647): "wandering, roaming about", so "a tour, travel". *bhramati* "wanders" is the verb of the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

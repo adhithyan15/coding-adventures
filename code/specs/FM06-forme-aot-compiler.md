@@ -1,10 +1,11 @@
 # FM06 — Forme AOT Compiler
 
-> **Status:** Implementation-reconciliation specification.
+> **Status:** Implemented through the completed Forme v1 release contract.
 > **Scope:** Deterministic per-page dependency selection, incremental AOT
 > caching, and static artifact emission after rendering.
-> **Delivery owner:** Existing `forme-aot-*` packages; remaining release gaps
-> are tracked in the [Forme completion roadmap](FM00-forme-completion-roadmap.md).
+> **Delivery owner:** The shipped `forme-aot-*` packages and their product
+> compositions recorded in the
+> [Forme completion roadmap](FM00-forme-completion-roadmap.md).
 
 ## Implementation status
 
@@ -14,7 +15,7 @@
 | Incremental slice cache | Implemented | `forme-aot-incremental-cache` plus `forme-aot-fs-cache`. |
 | Page/style/script emission | Implemented | Page, HTML document, style-tag, script-tag, and bundle emitters exist. |
 | Site metadata emission | Implemented | Sitemap, robots, discovery links, and deploy-manifest emitters exist. |
-| Interactivity tree shaking | Active | FM05 is implemented; FM-B060 composes exact renderer, script-asset, and deploy-route usage. |
+| Interactivity tree shaking | Implemented | FM-B060 composes exact renderer, script-asset, and deploy-route usage, while pages without selected islands remain zero-JavaScript. |
 | Multi-backend release proof | Implemented | FM-B017 adds terminal buffers and a capability-free terminal artifact packager to the live blog fan-out. |
 
 ## 1. Purpose
@@ -51,6 +52,11 @@ every authored element reference against the rendered body, and preserves
 declaration order in `usedIslands`. An explicitly authorized, reviewed-content
 allowlist maps each selected `(packageName, export)` pair to one script `Asset`
 identity and exact SHA-256 bytes; this stage does not claim FM02 authentication.
+Element-reference resolution MUST retain HTML5 tree-construction semantics for
+ignored start tags, foreign content, raw-text elements, and detached HTML
+`template` contents. It MUST also handle at least 10,000 nested elements within
+the ordinary test deadline; implementations may optimize parser bookkeeping
+only when they can prove that the resulting element tree is unchanged.
 Neither the renderer nor the AOT layer imports executable code while deciding.
 
 `RenderedPage` carries the exact `IslandId` to script-asset and digest bindings.

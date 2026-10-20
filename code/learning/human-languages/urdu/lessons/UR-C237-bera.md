@@ -14,7 +14,8 @@ romanization: "berā"
 concept_tag: UR-KAM237-BERA
 prerequisites: [UR-C236-karobar, UR-C237-mistri]
 sounds: []
-roots: []
+roots: [english-bearer]
+etymology_hook: "berā: usually traced to English bearer"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C237-mistri]
 <!-- hl-knowledge: introduces=[UR-LEX-C237-KAM237-02]; assesses=[] -->
 
 **بیرا** — *berā* — "a waiter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بیرا** (*berā*) is usually traced to English *bearer*, a word the British in India used for a household servant.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

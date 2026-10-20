@@ -68,20 +68,21 @@ Say the last four out loud, then add the month-name ending *-ber* to each (where
 *decem* + *-ber* → **December**
 
 The first literally means "the seventh," yet it sits in **ninth** place, and
-the other three are each two places off as well. The old Roman year **began in
+the other three are two places off as well. The old Roman year **began in
 March** — so month one was March, and the seventh month was the one your
 calendar now counts ninth. When January and February were later pushed to the
-front, the names never moved. Every year you write four Latin numbers, each two
-places off, because Rome renumbered the calendar and forgot to rename the months.
+front, the names never moved. Rome renumbered the calendar and forgot to rename the months.
 
 ## The word, taken apart: They seed English too
 <!-- hl-knowledge: introduces=[LA-ETYMON-NUMBERS-6-10-03]; assesses=[] -->
 
 - *sex* → **sextet**, **sextant** (and *sex-* "six" in *sexagesimal*, base-60)
 - *octō* → **octave**, **October** — while its Greek twin *oktṓ* gives
-  **octagon** and **octopus** (eight arms)
+  **octagon** and **octopus**
 - *decem* → **decimal**, and — via *duodecim* "twelve" — **dozen** (its Greek
   cousin *dekás* "group of ten" adds **decade**)
+
+All five numbers are cousins of English *six* to *ten* (EtymDB 2.1).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-NUMBERS-1-5-01, LA-ETYMON-NUMBERS-1-5-02, LA-GRAMMAR-NUMBERS-1-5-03, LA-LEX-NUMBERS-6-10-01, LA-LEX-NUMBERS-6-10-02, LA-ETYMON-NUMBERS-6-10-03] -->

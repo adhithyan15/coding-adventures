@@ -14,7 +14,8 @@ romanization: "gēnd"
 concept_tag: UR-THINGS112-GEND
 prerequisites: [UR-C112-machis, UR-C112-khilauna]
 sounds: []
-roots: []
+roots: [sanskrit-genduka]
+etymology_hook: "gēnd ← Sanskrit genduka 'ball for play', a tadbhava (CDIAL 4248)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C112-khilauna]
 <!-- hl-knowledge: introduces=[UR-LEX-C112-THINGS112-03]; assesses=[] -->
 
 **گیند** — *gēnd* — "a ball".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**گیند** (*gēnd*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *genduka*, "ball for play" (CDIAL 4248). CDIAL notes that the related *kanduka* has been traced to Dravidian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

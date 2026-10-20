@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-518-ROBO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-518-ROBO"
+  ],
+  "after": []
+}

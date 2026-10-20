@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 483,
+  "sourceHash": "fnv1a64:d5408d209f775424",
+  "lessonIds": [
+    "GE-C483-gips",
+    "GE-C483-kruecke",
+    "GE-C483-humpeln",
+    "GE-C483-rollstuhl",
+    "GE-C483-heilen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch483.txt",
+  "json": "german/narration/ch483.json",
+  "textHash": "fnv1a64:aeb305119833d4f2",
+  "jsonHash": "fnv1a64:45d61584245b597e",
+  "findings": []
+}

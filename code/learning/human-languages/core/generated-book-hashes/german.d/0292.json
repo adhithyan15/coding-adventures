@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 292,
+  "sourceHash": "fnv1a64:64054183b1360378",
+  "lessonIds": [
+    "GE-C292-warnen",
+    "GE-C292-rettung",
+    "GE-C292-bergen",
+    "GE-C292-evakuieren",
+    "GE-C292-ueberleben"
+  ],
+  "tex": "german/book/chapters/ch292-die-rettung.tex"
+}

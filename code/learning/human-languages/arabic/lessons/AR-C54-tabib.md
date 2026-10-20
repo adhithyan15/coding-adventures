@@ -14,7 +14,8 @@ romanization: "ṭabīb"
 concept_tag: AR-HEALTH54-TABIB
 prerequisites: [AR-C54-said, AR-C54-hazin]
 sounds: []
-roots: []
+roots: [ṭ-b-b]
+etymology_hook: "ṭabīb: built on the root ṭ-b-b, 'to treat with medicine' (Lane); ṭabīb is the one who treats, 'a physician'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C54-hazin]
 <!-- hl-knowledge: introduces=[AR-LEX-C54-HEALTH54-04]; assesses=[] -->
 
 **طبيب** — *ṭabīb* — "a doctor".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**طبيب** (*ṭabīb*) is built on the native Arabic root *ṭ-b-b*, "to treat with medicine" (Lane). *Ṭabīb* is the one who treats, "a physician".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

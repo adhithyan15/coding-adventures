@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 287,
+  "sourceHash": "fnv1a64:fda5d1d18642b252",
+  "lessonIds": [
+    "FR-C287-cambrioler",
+    "FR-C287-cambrioleur",
+    "FR-C287-cambriolage",
+    "FR-C287-effraction",
+    "FR-C287-butin"
+  ],
+  "tex": "french/book/chapters/ch287-le-cambriolage.tex"
+}

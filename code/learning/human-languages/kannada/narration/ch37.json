@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Four Words on the Face",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:5668aa6f3e7d1e07",
+  "sourceHash": "fnv1a64:c83a58c9d6eb2fc2",
   "lessons": [
     {
       "id": "KA-C37-kannu",
@@ -409,7 +409,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7596e9c0a5a1e662",
+      "sourceHash": "fnv1a64:a22ac89cb174c96e",
       "notice": null,
       "blocks": [
         {
@@ -455,7 +455,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಬಾಯಿ (bāyi) answers Tamil வாய் (vāy), \"mouth,\" through the exact law Chapter 32 gave you: word-initial Tamil v- becomes Kannada b-. You have already seen this pair once, sitting quietly inside Chapter 32's etymology note for ಬಾ, and again inside Chapter 33's for ಬರೆ — both times as a worked example, neither time explained. Here is what it means:"
+              "text": "ಬಾಯಿ (bāyi) answers Tamil வாய் (vāy), \"mouth\" (native Dravidian, DEDR 5352), through the exact law Chapter 32 gave you: word-initial Tamil v- becomes Kannada b-. You have already seen this pair once, sitting quietly inside Chapter 32's etymology note for ಬಾ, and again inside Chapter 33's for ಬರೆ — both times as a worked example, neither time explained. Here is what it means:"
             },
             {
               "kind": "table",

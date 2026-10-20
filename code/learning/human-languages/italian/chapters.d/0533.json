@@ -1,0 +1,19 @@
+{
+  "chapter": 533,
+  "title": "A tavola",
+  "label": "ch:it-a-tavola",
+  "canDo": "I can talk about laying and clearing a table for a meal.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-C533-vassoio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 533: I can talk about laying and clearing a table for a meal.",
+    "assesses": [
+      "IT-LEX-C533-TAVOLA-03",
+      "IT-LEX-C533-TAVOLA-04",
+      "IT-LEX-C533-TAVOLA-05"
+    ]
+  }
+}

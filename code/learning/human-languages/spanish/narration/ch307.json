@@ -4,7 +4,7 @@
   "chapter": 307,
   "title": "The Wider Circle --- Wife, Uncle, Aunt, Cousin",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f244a3f0cd810270",
+  "sourceHash": "fnv1a64:2986b724f36ac5b7",
   "lessons": [
     {
       "id": "ES-C307-esposa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:468a2d723c025a75",
+      "sourceHash": "fnv1a64:37e430419a894d5b",
       "notice": null,
       "blocks": [
         {
@@ -61,7 +61,7 @@
             },
             {
               "kind": "speech",
-              "text": "The same pledge, the same ending switch. English spouse does not bother to mark who it means; Spanish always does."
+              "text": "The same pledge, the same ending switch: esposa from Latin spōnsa, \"a woman promised\" (EtymDB 2.1). English spouse does not bother to mark who it means; Spanish always does."
             },
             {
               "kind": "speech",

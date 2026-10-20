@@ -1,0 +1,19 @@
+{
+  "chapter": 611,
+  "title": "Con una condición",
+  "label": "ch:es-con-una-condicion",
+  "canDo": "I can set a condition with as long as, unless and provided that.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ES-C611-en-caso-de-que",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 611: I can set a condition with as long as, unless and provided that.",
+    "assesses": [
+      "ES-LEX-C611-CONDIC-03",
+      "ES-LEX-C611-CONDIC-04",
+      "ES-LEX-C611-CONDIC-05"
+    ]
+  }
+}

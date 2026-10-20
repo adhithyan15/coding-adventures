@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C518-ritornello",
+    "language": "italian",
+    "chapter": 518,
+    "sequence": 29020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eeb35e4e24ecf832"
+  },
+  "findings": []
+}

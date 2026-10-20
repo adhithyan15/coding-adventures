@@ -1,0 +1,11 @@
+{
+  "id": "PT-C370-a-nao-ser-que",
+  "pathSegment": "PT-PATH-370-SENAO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-370-SENAO",
+      "order": 1
+    }
+  ]
+}

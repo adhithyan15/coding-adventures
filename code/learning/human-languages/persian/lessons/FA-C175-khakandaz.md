@@ -14,7 +14,8 @@ romanization: "khâkandâz"
 concept_tag: FA-CHIZ175-KHAKANDAZ
 prerequisites: [FA-C174-namakdan, FA-C175-fandak]
 sounds: []
-roots: []
+roots: [persian-khak]
+etymology_hook: "khâkandâz: Persian khâk 'dust' (EtymDB) + andâz 'throwing'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C175-fandak]
 <!-- hl-knowledge: introduces=[FA-LEX-C175-CHIZ175-02]; assesses=[] -->
 
 **خاک انداز** — *khâkandâz* — "a dustpan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khâkandâz* is *khâk*, "dust, earth" (Middle Persian *xāk*, EtymDB), with *andâz*, "throwing" (from *andâkhtan*, "to throw"): the dust-thrower. Both are native.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

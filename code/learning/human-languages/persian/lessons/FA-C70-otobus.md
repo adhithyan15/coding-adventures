@@ -14,7 +14,8 @@ romanization: "otobus"
 concept_tag: FA-TOWN70-OTOBUS
 prerequisites: [FA-C70-istgah, FA-C70-mashin]
 sounds: []
-roots: []
+roots: [french-autobus]
+etymology_hook: "otobus ← French autobus 'bus'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C70-mashin]
 <!-- hl-knowledge: introduces=[FA-LEX-C70-TOWN70-04]; assesses=[] -->
 
 **اتوبوس** — *otobus* — "a bus".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*otobus* is borrowed from French *autobus*, "bus" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "gyārah"
 concept_tag: UR-CLOTHES83-GYARAH
 prerequisites: [UR-C83-anguthi, UR-C83-ghari]
 sounds: []
-roots: []
+roots: [sanskrit-ekadasha]
+etymology_hook: "gyārah ← Sanskrit ekādaśa 'eleven', a tadbhava (CDIAL 2485)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C83-ghari]
 <!-- hl-knowledge: introduces=[UR-LEX-C83-CLOTHES83-03]; assesses=[] -->
 
 **گیارہ** — *gyārah* — "eleven".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**گیارہ** (*gyārah*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *ekādaśa*, "eleven" (CDIAL 2485).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

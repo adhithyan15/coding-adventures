@@ -1,0 +1,11 @@
+{
+  "id": "IT-C503-barare",
+  "pathSegment": "IT-PATH-503-GIOCHI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-503-GIOCHI",
+      "order": 4
+    }
+  ]
+}

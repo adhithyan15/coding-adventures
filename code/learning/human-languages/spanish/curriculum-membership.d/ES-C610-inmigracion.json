@@ -1,0 +1,11 @@
+{
+  "id": "ES-C610-inmigracion",
+  "pathSegment": "ES-PATH-610-CONVIVIR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-610-CONVIVIR",
+      "order": 3
+    }
+  ]
+}

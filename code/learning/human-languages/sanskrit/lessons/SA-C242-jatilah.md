@@ -14,7 +14,8 @@ romanization: "jaṭilaḥ"
 concept_tag: SA-QUAL242-JATILAH
 prerequisites: [SA-C242-sulabhah, SA-C242-durlabhah]
 sounds: []
-roots: []
+roots: [sanskrit-jatila, sanskrit-jata]
+etymology_hook: "jaṭila 'with matted hair' ← jaṭā 'twisted hair' (CDIAL 5087); 'tangled', so 'complicated'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C242-durlabhah]
 <!-- hl-knowledge: introduces=[SA-LEX-C242-QUAL242-03]; assesses=[] -->
 
 **जटिलः** — *jaṭilaḥ* — "complicated".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*jaṭila* is built on *jaṭā*, "hair twisted together", as worn by ascetics (MW): "having matted hair" (CDIAL 5087). Matted hair is tangled, and so the word came to mean "complicated".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

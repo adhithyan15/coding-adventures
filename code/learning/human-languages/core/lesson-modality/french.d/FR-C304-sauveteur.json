@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C304-sauveteur",
+    "language": "french",
+    "chapter": 304,
+    "sequence": 17360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a6c63b9c59b04009"
+  },
+  "findings": []
+}

@@ -4,7 +4,7 @@
   "chapter": 220,
   "title": "A flag, Childhood, Youth, Old age, Life",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7e142b6bf81a971c",
+  "sourceHash": "fnv1a64:e380060adfb97041",
   "lessons": [
     {
       "id": "HI-C220-jhanda",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a46e32fee1a1b2c5",
+      "sourceHash": "fnv1a64:0ed9a8bd37d0f196",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "जवानी (javānī) is a loan, usually traced to Persian javānī, \"youth\". It is built on javān, \"young\"."
+              "text": "जवानी (javānī) is usually traced to Persian javānī, \"youth\". It is built on javān, \"young\", and that word may have reached Hindi by two roads: CDIAL lists a Hindi juwān, \"a youth\", under the inherited yuvāna, \"young\" (CDIAL 10510)."
             }
           ]
         },

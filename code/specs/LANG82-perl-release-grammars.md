@@ -3,6 +3,13 @@
 **Status:** Draft, 2026-10-07. This is a separate syntax-coverage track from
 LANG81's executable Perl 5.38 arithmetic pilot.
 
+LANG84 (`LANG84-grammar-driven-versioned-frontends.md`) generalizes this
+spec's rules to every language. Those rules are a materialized pair per tagged
+release, no aliases, explicitly partial pairs, and source evidence per release.
+LANG84 also extends the `releases.csv` schema: this file's columns stay, and
+`perlhist_line` becomes a Perl-specific extra column. It adds release
+selection for the Perl IIR frontend and measured G/P/I/B status stages.
+
 ## Version range and evidence
 
 Cover every public, numbered Perl release from 1.000 (18 December 1987)

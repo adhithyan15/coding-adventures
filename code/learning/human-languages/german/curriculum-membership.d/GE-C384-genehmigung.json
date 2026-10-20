@@ -1,0 +1,11 @@
+{
+  "id": "GE-C384-genehmigung",
+  "pathSegment": "GE-PATH-384-GENEHMIGUNG",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-384-GENEHMIGUNG",
+      "order": 0
+    }
+  ]
+}

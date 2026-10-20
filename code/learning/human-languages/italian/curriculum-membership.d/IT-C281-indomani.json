@@ -1,0 +1,11 @@
+{
+  "id": "IT-C281-indomani",
+  "pathSegment": "IT-PATH-281-VIGILIA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-281-VIGILIA",
+      "order": 1
+    }
+  ]
+}

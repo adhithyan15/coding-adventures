@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:1da96b6a080e9803",
+  "sourceHash": "fnv1a64:d2d28362907b96ab",
   "lessons": [
     {
       "id": "FR-C02-je",
@@ -863,7 +863,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1aa5f6c2dfae69e7",
+      "sourceHash": "fnv1a64:0b24c3f4e5bfb5b3",
       "notice": null,
       "blocks": [
         {
@@ -895,6 +895,10 @@
             {
               "kind": "speech",
               "text": "comment vous appelez-vous? = literally \"how do you call yourself?\" = the polite \"what's your name?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Comment from Latin quōmodo, \"in what manner\", vous from Latin vōs, and appeler from Latin appellāre, \"to call\" (EtymDB 2.1)."
             }
           ]
         },

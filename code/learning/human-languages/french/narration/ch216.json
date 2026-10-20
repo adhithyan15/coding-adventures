@@ -4,7 +4,7 @@
   "chapter": 216,
   "title": "Around, Everywhere, Elsewhere, Up there, Suburbs",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b7252aa159b69b7a",
+  "sourceHash": "fnv1a64:c79d3d28f0b5f772",
   "lessons": [
     {
       "id": "FR-C216-autour",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d3c85da62e4686ea",
+      "sourceHash": "fnv1a64:2459037deec74c1c",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "là-haut — là, \"there\", and haut, \"high\"."
+              "text": "là-haut — là, \"there\", and haut, \"high\". Haut from Latin altus, \"high\", with an h from Frankish (EtymDB 2.1 records the Frankish hauh); là from Latin illāc, \"there\"."
             }
           ]
         },

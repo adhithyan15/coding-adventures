@@ -14,7 +14,8 @@ romanization: "phal"
 concept_tag: UR-FOOD54-PHAL
 prerequisites: [UR-C54-chaval, UR-C54-dal]
 sounds: []
-roots: []
+roots: [sanskrit-phala]
+etymology_hook: "phal ← Sanskrit phala 'fruit' (CDIAL 9051), which CDIAL compares with Dravidian words for ripe fruit"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C54-dal]
 <!-- hl-knowledge: introduces=[UR-LEX-C54-FOOD54-03]; assesses=[] -->
 
 **پھل** — *phal* — "fruit".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پھل** (*phal*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *phala*, "fruit" (CDIAL 9051). CDIAL compares Dravidian words for ripe fruit, such as Tamil *paẓam*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

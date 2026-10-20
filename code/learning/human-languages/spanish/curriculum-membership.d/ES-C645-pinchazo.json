@@ -1,0 +1,11 @@
+{
+  "id": "ES-C645-pinchazo",
+  "pathSegment": "ES-PATH-645-AVERIA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-645-AVERIA",
+      "order": 0
+    }
+  ]
+}

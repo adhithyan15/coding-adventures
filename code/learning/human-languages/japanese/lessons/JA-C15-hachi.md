@@ -11,8 +11,8 @@ gloss: eight — one reading, no native word beside it, and the plain case the p
 concept_tag: JA-NUMBER-EIGHT
 prerequisites: [JA-C15-nana, JA-W01-ha, JA-W01-chi, JA-C13-ani, JA-C09-sumimasen]
 sounds: [mora]
-roots: []
-etymology_hook: A number with only one everyday reading, which is what makes the two-reading numbers visible as a group.
+roots: [middle-chinese-peat]
+etymology_hook: "hachi: Sino-Japanese, the on'yomi of 八 'eight', from Middle Chinese peat; native ya is the kun'yomi"
 duration:
   max_seconds: 170
 requires:
@@ -53,6 +53,11 @@ three or five. The pattern you were shown twice is not everywhere — it sits at
 two numbers out of the seven you now hold.
 
 A rule you cannot see the edge of is not a rule you can use. This is the edge.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**はち** (*hachi*) is Sino-Japanese: the on'yomi of the character for "eight", borrowed from Chinese (Middle Chinese *peat*). The native word, *ya*, lives on in *yattsu* (KANJIDIC2).
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-HACHI, JA-LEX-NANA, JA-LEX-ICHI, JA-LEX-NI, JA-LEX-SAN, JA-LEX-GO] -->

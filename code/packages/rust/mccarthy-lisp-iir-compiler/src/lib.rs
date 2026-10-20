@@ -2,10 +2,110 @@
 //!
 //! This is **L2a** of the McCarthy Lisp implementation (see
 //! [`MCCARTHY-LISP-PLAN.md`](../../../specs/MCCARTHY-LISP-PLAN.md)).  It
-//! lowers the [`LispExpr`] AST produced by `mccarthy-lisp-parser` into
+//! lowers the **parse tree** (the generic [`GrammarASTNode`] CST) that the
+//! shared grammar-driven parser builds from `mccarthy_lisp.grammar` into
 //! an [`IIRModule`] — the architecture-independent intermediate
 //! representation that every backend in the chain (the McCarthy VM,
 //! the JIT, wasm/jvm/clr/beam, the historical-arch encoders) consumes.
+//!
+//! ## Input: the parse tree, not a typed AST (LANG84)
+//!
+//! LANG84's rule is *"the IIR compiler walks the parse tree"*: no
+//! hand-written code may convert the CST into an owned, typed AST before
+//! IIR compilation.  Up to v0.8 this crate broke that rule — it called
+//! `mccarthy_lisp_parser`'s typed-AST entry point, which lowered the CST
+//! to a `Vec` of owned S-expression values, and then compiled *those*.
+//! From v0.9 the only thing the compiler ever looks at is the
+//! [`GrammarASTNode`] returned by [`mccarthy_lisp_parser::parse_to_cst`].
+//! (The parser crate's typed AST still exists for other consumers; it is
+//! simply no longer on the IIR path.)
+//!
+//! The grammar is six rules.  Tokens are the leaves; everything else is a
+//! node whose `rule_name` is the rule that built it:
+//!
+//! | rule        | definition                              | children (in order)                                   |
+//! |-------------|-----------------------------------------|-------------------------------------------------------|
+//! | `program`   | `{ sexpr }`                             | zero or more `sexpr` **nodes**                        |
+//! | `sexpr`     | `atom \| list \| quoted`                | exactly one **node**: `atom`, `list` or `quoted`      |
+//! | `atom`      | `SYMBOL \| INTEGER`                     | exactly one **token** (`SYMBOL` or `INTEGER`)         |
+//! | `list`      | `LPAREN list_body RPAREN`               | token `(`, a `list_body` **node**, token `)`          |
+//! | `list_body` | `[ sexpr { sexpr } [ DOT sexpr ] ]`     | `sexpr` **nodes**, optionally a `DOT` **token** + one more `sexpr`; empty for `()` |
+//! | `quoted`    | `QUOTE sexpr`                           | token `'`, then one `sexpr` **node**                  |
+//!
+//! For `()` the `list_body` node is present but has no children.  Written
+//! out in full, the tree for the small program `'(A . B)` is (nodes in
+//! lower case, tokens as `TYPE "text"`):
+//!
+//! ```text
+//! program
+//! └─ sexpr
+//!    └─ quoted
+//!       ├─ QUOTE "'"
+//!       └─ sexpr
+//!          └─ list
+//!             ├─ LPAREN "("
+//!             ├─ list_body
+//!             │  ├─ sexpr ─ atom ─ SYMBOL "A"
+//!             │  ├─ DOT "."
+//!             │  └─ sexpr ─ atom ─ SYMBOL "B"
+//!             └─ RPAREN ")"
+//! ```
+//!
+//! A bigger one — `((LABEL F (LAMBDA (X) (CONS X '(A B)))) 'C)` —
+//! abbreviated: `sexpr→atom→SYMBOL "X"` is drawn as just `X`, and every
+//! `sexpr→list→( list_body )` as `list[ … ]`.
+//!
+//! ```text
+//! program
+//! └─ sexpr
+//!    └─ list[                                   ← the whole application
+//!         sexpr list[                           ← head: (LABEL F …)
+//!           LABEL  F
+//!           sexpr list[ LAMBDA                  ← (LAMBDA (X) body)
+//!                       sexpr list[ X ]         ← parameter list
+//!                       sexpr list[ CONS  X     ← body: (CONS X '(A B))
+//!                                   sexpr
+//!                                   └─ quoted
+//!                                      ├─ QUOTE "'"      (token)
+//!                                      └─ sexpr list[ A  B ]
+//!                                 ] ] ]
+//!         sexpr
+//!         └─ quoted                             ← the argument 'C
+//!            ├─ QUOTE "'"                       (token)
+//!            └─ sexpr → atom → SYMBOL "C"       (token)
+//!       ]
+//! ```
+//!
+//! ### Reading the CST the way McCarthy reads S-expressions
+//!
+//! McCarthy's semantics are defined over **cons cells**, and two pieces of
+//! surface syntax are only abbreviations of cons structure:
+//!
+//! * `(A B C)` *is* `(A . (B . (C . NIL)))` — so `(CAR '(A B))` and
+//!   `(CAR . ('(A B)))` are the same program;
+//! * `'X` *is* `(QUOTE X)` — a two-element list whose head is the symbol
+//!   `QUOTE`.
+//!
+//! The compiler honours both without building anything.  [`Sx`] is a
+//! borrowed handle on one S-expression position (a `sexpr` node, or the
+//! implicit `QUOTE` symbol a `quoted` node stands for), and [`Sx::shape`]
+//! answers the only question lowering ever asks — *is this nil, a symbol,
+//! an integer, or a pair?*  A pair is a [`Cell`] cursor that points
+//! **into** the CST (a child index inside a `list_body`, or one of the two
+//! cells of a `quoted` node); [`Cell::car`] and [`Cell::cdr`] step through
+//! the tree on demand.  Nothing is copied, no tree is allocated, and every
+//! step looks at one node's children only.  A `quoted` node is therefore
+//! handled *by the compiler itself*: its shape is the pair
+//! `QUOTE · (datum · NIL)`, which reaches the `QUOTE` arm of the
+//! application lowering exactly as a spelled-out `(QUOTE X)` does.
+//!
+//! The parser crate's DoS guards (paren/quote nesting cap, recursion cap)
+//! still run inside `parse_to_cst`.  Before lowering, [`check_cst`] makes
+//! one validation pass over the tree that rejects exactly what the old
+//! typed-AST extraction rejected — an `INTEGER` that does not fit in
+//! `i64`, nesting deeper than [`MAX_AST_DEPTH`], or a tree whose shape
+//! does not match the grammar — with the same `ParseError` messages, so
+//! callers see the same errors as before.
 //!
 //! ## What "compile" means here
 //!
@@ -112,19 +212,27 @@
 //! ## Quick start
 //!
 //! ```
-//! use mccarthy_lisp_iir_compiler::compile_source;
+//! use mccarthy_lisp_iir_compiler::{compile_ast, compile_source};
 //!
+//! // Source text in one step …
 //! let module = compile_source("(CAR '(A B C))", "demo").expect("compile");
 //! assert_eq!(module.entry_point.as_deref(), Some("main"));
 //! assert!(module.validate().is_empty());
+//!
+//! // … or from a parse tree you already hold.
+//! let cst = mccarthy_lisp_parser::parse_to_cst("(CAR '(A B C))").expect("parse");
+//! let again = compile_ast(&cst, "demo").expect("compile");
+//! assert_eq!(format!("{again:?}"), format!("{module:?}"));
 //! ```
 
 #![warn(missing_docs)]
 
 use std::collections::{BTreeSet, HashMap, HashSet};
+use std::str::FromStr;
 
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
-use mccarthy_lisp_parser::{parse, LispExpr};
+use mccarthy_lisp_parser::{parse_to_cst, ParseError, MAX_AST_DEPTH};
+use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 
 // ===========================================================================
 // Errors
@@ -155,8 +263,8 @@ impl std::fmt::Display for CompileError {
 
 impl std::error::Error for CompileError {}
 
-impl From<mccarthy_lisp_parser::ParseError> for CompileError {
-    fn from(e: mccarthy_lisp_parser::ParseError) -> Self {
+impl From<ParseError> for CompileError {
+    fn from(e: ParseError) -> Self {
         CompileError::new(format!("parse: {e}"))
     }
 }
@@ -167,26 +275,39 @@ impl From<mccarthy_lisp_parser::ParseError> for CompileError {
 
 /// Compile McCarthy Lisp source text into an [`IIRModule`].
 ///
-/// Tokenises + parses via `mccarthy-lisp-parser`, then lowers the form
-/// sequence into a `main` function.
+/// Tokenises and parses via [`mccarthy_lisp_parser::parse_to_cst`] (the
+/// grammar-driven lexer + parser, with their DoS guards), then hands the
+/// resulting parse tree to [`compile_ast`].
 ///
 /// # Errors
 ///
 /// Returns a [`CompileError`] for a lex/parse failure or an
 /// unsupported / unbound form (see the crate docs for L2a scope).
 pub fn compile_source(source: &str, module_name: &str) -> Result<IIRModule, CompileError> {
-    let forms = parse(source)?;
-    compile_forms(&forms, module_name)
+    let cst = parse_to_cst(source)?;
+    compile_ast(&cst, module_name)
 }
 
-/// Lower an already-parsed form sequence into an [`IIRModule`].
+/// Lower a McCarthy Lisp parse tree into an [`IIRModule`].
+///
+/// `ast` must be the `program` root that
+/// [`mccarthy_lisp_parser::parse_to_cst`] returns.  The tree is first
+/// validated by [`check_cst`] (integer range, nesting depth, rule shapes),
+/// then walked directly — see the crate docs for how a CST node is read as
+/// an S-expression.
 ///
 /// # Errors
 ///
-/// Returns a [`CompileError`] for an unsupported / unbound form.
-pub fn compile_forms(forms: &[LispExpr], module_name: &str) -> Result<IIRModule, CompileError> {
+/// Returns a [`CompileError`] for a tree that is not a well-formed
+/// McCarthy `program` (reported as `parse: …`, exactly as a malformed
+/// source would be) or for an unsupported / unbound form.
+pub fn compile_ast(ast: &GrammarASTNode, module_name: &str) -> Result<IIRModule, CompileError> {
+    check_cst(ast)?;
+    // After `check_cst`, every node child of `program` is a `sexpr`.
+    let forms: Vec<Sx<'_>> = node_children(ast).map(Sx::Node).collect();
+
     let mut c = Compiler::new();
-    c.lower_program(forms)?;
+    c.lower_program(&forms)?;
 
     let mut main = IIRFunction::new(
         "main",
@@ -210,6 +331,385 @@ pub fn compile_forms(forms: &[LispExpr], module_name: &str) -> Result<IIRModule,
         )));
     }
     Ok(module)
+}
+
+// ===========================================================================
+// Reading the CST
+// ===========================================================================
+//
+// Two tiny iterators over one node's children, then the three borrowed
+// handle types (`Sx`, `Shape`, `Cell`) the lowering is written against.
+// None of them owns or builds anything; each method inspects the children
+// of a single node.
+
+/// The nested-node children of `node`, skipping bare tokens (`(`, `)`,
+/// `'`, `.`).
+fn node_children(node: &GrammarASTNode) -> impl Iterator<Item = &GrammarASTNode> {
+    node.children.iter().filter_map(|c| match c {
+        ASTNodeOrToken::Node(n) => Some(n),
+        ASTNodeOrToken::Token(_) => None,
+    })
+}
+
+/// The first nested-node child of `node`, if any.
+fn first_node(node: &GrammarASTNode) -> Option<&GrammarASTNode> {
+    node_children(node).next()
+}
+
+/// A borrowed handle on one S-expression *position* in the parse tree.
+///
+/// Almost always this is a `sexpr` node.  The one exception is the
+/// `QUOTE` symbol that the `'` sugar abbreviates: `'X` means
+/// `(QUOTE X)`, but the CST has no `SYMBOL "QUOTE"` token to point at —
+/// only the `'` punctuation — so that first element is represented by
+/// [`Sx::QuoteSymbol`].
+#[derive(Clone, Copy)]
+enum Sx<'a> {
+    /// A `sexpr` node (whose single child is an `atom`, `list` or
+    /// `quoted` node).
+    Node(&'a GrammarASTNode),
+    /// The implicit symbol `QUOTE` at the head of a `quoted` node's
+    /// two-cell list.
+    QuoteSymbol,
+}
+
+/// What an S-expression *is*, in McCarthy's four-way reading — the one
+/// question the lowering ever asks of a node.
+///
+/// ```text
+///   CST                                   Shape
+///   ────────────────────────────────────  ──────────────────────────────
+///   sexpr → atom → SYMBOL "FOO"           Symbol("FOO")
+///   sexpr → atom → INTEGER "-7"           Int("-7")      (decoded on use)
+///   sexpr → list → ( list_body )  [empty] Nil
+///   sexpr → list → ( list_body )  [a …]   Pair(Cell::Body { at: a })
+///   sexpr → quoted → ' sexpr              Pair(Cell::Quote { second: false })
+/// ```
+#[derive(Clone, Copy)]
+enum Shape<'a> {
+    /// `()` — the empty list.
+    Nil,
+    /// A `SYMBOL` token's text (or the implicit `QUOTE`).
+    Symbol(&'a str),
+    /// An `INTEGER` token's text.  [`check_cst`] has already proved it
+    /// fits in `i64`; [`decode_int`] turns it into the value.
+    Int(&'a str),
+    /// A cons cell, as a cursor into the tree.
+    Pair(Cell<'a>),
+}
+
+/// A cons cell, located *inside* the parse tree.
+///
+/// McCarthy's `(A B C)` is the cons chain `(A . (B . (C . NIL)))`.  The
+/// CST stores it flat — one `list_body` node with three `sexpr` children
+/// — so a cell is simply "the `list_body`, starting at child `at`":
+///
+/// ```text
+///   list_body children:   [ sexpr A ][ sexpr B ][ DOT ][ sexpr C ]
+///   Body { at: 0 }          car = A,  cdr = Body { at: 1 }
+///   Body { at: 1 }          car = B,  cdr = (DOT seen) → shape of C
+/// ```
+///
+/// That is `(A B . C)`.  Without a `DOT` the chain simply ends in `Nil`.
+///
+/// A `quoted` node `'X` stands for the two-cell list `(QUOTE X)`:
+///
+/// ```text
+///   Quote { second: false }   car = QUOTE (implicit), cdr = Quote { second: true }
+///   Quote { second: true  }   car = X (the quoted sexpr), cdr = Nil
+/// ```
+#[derive(Clone, Copy)]
+enum Cell<'a> {
+    /// The cell whose `car` is child `at` (a `sexpr` node) of `body`.
+    Body {
+        /// The `list_body` node.
+        body: &'a GrammarASTNode,
+        /// Index into `body.children` of this cell's `car`.
+        at: usize,
+    },
+    /// One of the two cells of a `quoted` node, whose quoted `sexpr` is
+    /// `datum`.
+    Quote {
+        /// The `sexpr` after the `'`.
+        datum: &'a GrammarASTNode,
+        /// `false` = the `(QUOTE …)` cell, `true` = the `(X)` cell.
+        second: bool,
+    },
+}
+
+impl<'a> Sx<'a> {
+    /// Classify this position.  Looks at the `sexpr` node's single child
+    /// (and, for an atom, at its token's *type*, never its spelling —
+    /// LANG84 C1.5).
+    ///
+    /// Every tree reaching here has passed [`check_cst`], so the trailing
+    /// fallbacks (`Nil` for a missing child) are unreachable; they exist
+    /// only so classification is total and never panics.
+    fn shape(self) -> Shape<'a> {
+        let sexpr = match self {
+            Sx::QuoteSymbol => return Shape::Symbol("QUOTE"),
+            Sx::Node(n) => n,
+        };
+        let Some(inner) = first_node(sexpr) else { return Shape::Nil };
+        match inner.rule_name.as_str() {
+            // atom = SYMBOL | INTEGER — one bare token.
+            "atom" => {
+                let tok = inner.children.iter().find_map(|c| match c {
+                    ASTNodeOrToken::Token(t) => Some(t),
+                    ASTNodeOrToken::Node(_) => None,
+                });
+                match tok {
+                    Some(t) if t.effective_type_name() == "SYMBOL" => Shape::Symbol(&t.value),
+                    Some(t) if t.effective_type_name() == "INTEGER" => Shape::Int(&t.value),
+                    _ => Shape::Nil,
+                }
+            }
+            // list = LPAREN list_body RPAREN — the parens are tokens, the
+            // body is the one nested node.  `()` may have no body node at
+            // all, or an empty one; both read as Nil.
+            "list" => match first_node(inner) {
+                Some(body) => spine_at(body, 0),
+                None => Shape::Nil,
+            },
+            // quoted = QUOTE sexpr — the two-cell list (QUOTE datum).
+            "quoted" => match first_node(inner) {
+                Some(datum) => Shape::Pair(Cell::Quote { datum, second: false }),
+                None => Shape::Nil,
+            },
+            _ => Shape::Nil,
+        }
+    }
+}
+
+/// The shape of the list that starts at child `from` of a `list_body`.
+///
+/// Scans forward to the next interesting child:
+/// * a `sexpr` node → a cell whose `car` is that node;
+/// * a `DOT` token  → the explicit tail: the shape of the `sexpr` after
+///   the dot (the extractor kept the *last* one; the grammar allows only
+///   one);
+/// * the end        → `Nil`, the implicit terminator.
+fn spine_at(body: &GrammarASTNode, from: usize) -> Shape<'_> {
+    for (i, child) in body.children.iter().enumerate().skip(from) {
+        match child {
+            ASTNodeOrToken::Token(t) if t.effective_type_name() == "DOT" => {
+                return match body.children[i + 1..].iter().rev().find_map(|c| match c {
+                    ASTNodeOrToken::Node(n) if n.rule_name == "sexpr" => Some(n),
+                    _ => None,
+                }) {
+                    Some(tail) => Sx::Node(tail).shape(),
+                    None => Shape::Nil,
+                };
+            }
+            ASTNodeOrToken::Node(n) if n.rule_name == "sexpr" => {
+                return Shape::Pair(Cell::Body { body, at: i });
+            }
+            _ => {}
+        }
+    }
+    Shape::Nil
+}
+
+impl<'a> Cell<'a> {
+    /// The first half of the cell.
+    fn car(self) -> Sx<'a> {
+        match self {
+            Cell::Body { body, at } => match &body.children[at] {
+                ASTNodeOrToken::Node(n) => Sx::Node(n),
+                // `at` always indexes a `sexpr` node (see `spine_at`).
+                ASTNodeOrToken::Token(_) => Sx::QuoteSymbol,
+            },
+            Cell::Quote { second: false, .. } => Sx::QuoteSymbol,
+            Cell::Quote { datum, second: true } => Sx::Node(datum),
+        }
+    }
+
+    /// The rest of the list after this cell.
+    fn cdr(self) -> Shape<'a> {
+        match self {
+            Cell::Body { body, at } => spine_at(body, at + 1),
+            Cell::Quote { datum, second: false } => {
+                Shape::Pair(Cell::Quote { datum, second: true })
+            }
+            Cell::Quote { second: true, .. } => Shape::Nil,
+        }
+    }
+}
+
+/// Decode an `INTEGER` token's text (LANG84 C1.4: the compiler may decode
+/// a single token's value).  [`check_cst`] has already rejected anything
+/// that does not fit, so the error arm is defensive only.
+fn decode_int(text: &str) -> Result<i64, CompileError> {
+    i64::from_str(text).map_err(|_| {
+        CompileError::new(format!("integer literal {text:?} does not fit in i64"))
+    })
+}
+
+// ===========================================================================
+// CST validation (one pass, before lowering)
+// ===========================================================================
+
+/// Check that `root` is a well-formed McCarthy `program` tree.
+///
+/// This is the *validation half* of what the parser crate's typed-AST
+/// extraction used to do on the way to the old compiler input, kept so
+/// the compiler rejects exactly the same programs with exactly the same
+/// messages — and in the same order (a left-to-right, depth-first walk,
+/// so the first problem in the source is the one reported):
+///
+/// * the root must be a `program` node;
+/// * every expression node must be a `sexpr` with an `atom`/`list`/
+///   `quoted` child, and every `atom` must hold a `SYMBOL` or `INTEGER`;
+/// * every `INTEGER` must fit in `i64` (the parse tree keeps literals as
+///   text, so `99999999999999999999` parses fine and is rejected here);
+/// * nesting may not exceed [`MAX_AST_DEPTH`].  `parse_to_cst`'s own
+///   guards stop far shallower trees, so this only fires for a
+///   hand-built tree passed straight to [`compile_ast`].
+///
+/// It returns nothing on success — no tree is built.
+fn check_cst(root: &GrammarASTNode) -> Result<(), ParseError> {
+    if root.rule_name != "program" {
+        let (line, column) = pos(root);
+        return Err(ParseError {
+            message: format!("expected 'program' root, got {:?}", root.rule_name),
+            line,
+            column,
+        });
+    }
+    for form in node_children(root) {
+        check_sexpr(form, 0)?;
+    }
+    Ok(())
+}
+
+/// Best-effort source position of a CST node (falls back to 1:1).
+fn pos(node: &GrammarASTNode) -> (usize, usize) {
+    (node.start_line.unwrap_or(1), node.start_column.unwrap_or(1))
+}
+
+/// Refuse to go deeper than [`MAX_AST_DEPTH`].
+fn check_depth(depth: usize, node: &GrammarASTNode) -> Result<(), ParseError> {
+    if depth > MAX_AST_DEPTH {
+        let (line, column) = pos(node);
+        Err(ParseError {
+            message: format!(
+                "AST nesting exceeds MAX_AST_DEPTH ({MAX_AST_DEPTH}) — \
+                 refusing to recurse further to avoid stack overflow"
+            ),
+            line,
+            column,
+        })
+    } else {
+        Ok(())
+    }
+}
+
+/// `sexpr = atom | list | quoted`.
+fn check_sexpr(node: &GrammarASTNode, depth: usize) -> Result<(), ParseError> {
+    check_depth(depth, node)?;
+    let (line, column) = pos(node);
+    if node.rule_name != "sexpr" {
+        return Err(ParseError {
+            message: format!("expected 'sexpr', got {:?}", node.rule_name),
+            line,
+            column,
+        });
+    }
+    let inner = first_node(node).ok_or_else(|| ParseError {
+        message: "empty sexpr node".into(),
+        line,
+        column,
+    })?;
+    match inner.rule_name.as_str() {
+        "atom" => check_atom(inner),
+        "list" => check_list(inner, depth + 1),
+        "quoted" => check_quoted(inner, depth + 1),
+        other => Err(ParseError {
+            message: format!("unexpected sexpr child: {other:?}"),
+            line,
+            column,
+        }),
+    }
+}
+
+/// `atom = SYMBOL | INTEGER`; an `INTEGER` must fit in `i64`.
+fn check_atom(node: &GrammarASTNode) -> Result<(), ParseError> {
+    let (line, column) = pos(node);
+    let tok = node
+        .children
+        .iter()
+        .find_map(|c| match c {
+            ASTNodeOrToken::Token(t) => Some(t),
+            ASTNodeOrToken::Node(_) => None,
+        })
+        .ok_or_else(|| ParseError { message: "empty atom node".into(), line, column })?;
+    match tok.effective_type_name() {
+        // Re-check the lexer's `SYMBOL = /[A-Z][A-Z0-9-]*/` shape.  Source
+        // text can never break it, but `compile_ast` is public and a
+        // hand-built tree could carry any text in a SYMBOL token — e.g.
+        // `*CLOSURE*`, which would let a `QUOTE` forge a closure value.
+        // Holding every caller to the lexer's alphabet keeps the closure
+        // tag un-forgeable for CST callers too.
+        "SYMBOL" if is_lexer_symbol(&tok.value) => Ok(()),
+        "SYMBOL" => Err(ParseError {
+            message: format!("symbol {:?} is not a McCarthy Lisp symbol", tok.value),
+            line: tok.line,
+            column: tok.column,
+        }),
+        "INTEGER" => match i64::from_str(&tok.value) {
+            Ok(_) => Ok(()),
+            Err(_) => Err(ParseError {
+                message: format!("integer literal {:?} does not fit in i64", tok.value),
+                line: tok.line,
+                column: tok.column,
+            }),
+        },
+        other => Err(ParseError {
+            message: format!("unexpected atom token: type={other:?} value={:?}", tok.value),
+            line: tok.line,
+            column: tok.column,
+        }),
+    }
+}
+
+/// Does `text` match `mccarthy_lisp.tokens`' `SYMBOL = /[A-Z][A-Z0-9-]*/`?
+///
+/// | text        | match? | why                          |
+/// |-------------|--------|------------------------------|
+/// | `CAR`       | yes    | letters only                 |
+/// | `X1-Y`      | yes    | digits, `-` after a letter   |
+/// | `1X`        | no     | must start with `A`–`Z`      |
+/// | `*CLOSURE*` | no     | `*` is outside the alphabet  |
+/// | (empty)     | no     | needs at least one letter    |
+fn is_lexer_symbol(text: &str) -> bool {
+    let mut bytes = text.bytes();
+    matches!(bytes.next(), Some(b'A'..=b'Z'))
+        && bytes.all(|b| matches!(b, b'A'..=b'Z' | b'0'..=b'9' | b'-'))
+}
+
+/// `list = LPAREN list_body RPAREN` — check every `sexpr` in the body.
+/// Like [`spine_at`], only `sexpr` nodes and the `DOT` token matter.
+fn check_list(node: &GrammarASTNode, depth: usize) -> Result<(), ParseError> {
+    check_depth(depth, node)?;
+    let Some(body) = first_node(node) else { return Ok(()) };
+    for child in node_children(body) {
+        if child.rule_name == "sexpr" {
+            check_sexpr(child, depth + 1)?;
+        }
+    }
+    Ok(())
+}
+
+/// `quoted = QUOTE sexpr` — the `'` must be followed by an expression.
+fn check_quoted(node: &GrammarASTNode, depth: usize) -> Result<(), ParseError> {
+    check_depth(depth, node)?;
+    let (line, column) = pos(node);
+    let inner = first_node(node).ok_or_else(|| ParseError {
+        message: "expected an expression after '".into(),
+        line,
+        column,
+    })?;
+    check_sexpr(inner, depth + 1)
 }
 
 // ===========================================================================
@@ -294,12 +794,13 @@ impl Compiler {
         self.instrs.push(instr);
     }
 
-    /// Lower the whole program: each top-level form in order, then a
-    /// `ret` of the last form's value (or of `nil` for an empty program).
-    fn lower_program(&mut self, forms: &[LispExpr]) -> Result<(), CompileError> {
+    /// Lower the whole program: each top-level form (a `sexpr` child of
+    /// the `program` node) in order, then a `ret` of the last form's value
+    /// (or of `nil` for an empty program).
+    fn lower_program(&mut self, forms: &[Sx<'_>]) -> Result<(), CompileError> {
         let mut last: Option<String> = None;
         for form in forms {
-            last = Some(self.lower_expr(form)?);
+            last = Some(self.lower_expr(*form)?);
         }
         let result = match last {
             Some(v) => v,
@@ -315,16 +816,19 @@ impl Compiler {
 
     /// Lower an expression in *value* position, returning the name of the
     /// register holding its runtime value.
-    fn lower_expr(&mut self, expr: &LispExpr) -> Result<String, CompileError> {
-        match expr {
-            LispExpr::Int(n) => Ok(self.emit_int(*n)),
-            LispExpr::Nil => Ok(self.emit_nil()),
+    fn lower_expr(&mut self, expr: Sx<'_>) -> Result<String, CompileError> {
+        match expr.shape() {
+            Shape::Int(text) => {
+                let n = decode_int(text)?;
+                Ok(self.emit_int(n))
+            }
+            Shape::Nil => Ok(self.emit_nil()),
             // A bare symbol is a variable reference.  It resolves to a
             // register read *only* if it is a parameter of the function
             // currently being lowered; the VM binds each parameter to a
             // register named after it, so the register name *is* the
             // parameter name.
-            LispExpr::Symbol(name) if self.params.contains(name) => Ok(name.clone()),
+            Shape::Symbol(name) if self.params.contains(name) => Ok(name.to_string()),
             // A labelled function name used in *value* position (not
             // called) — e.g. returning `F` from inside `(LABEL F …)` — is a
             // first-class **recursive closure value** (L2c-3c): materialise
@@ -332,23 +836,27 @@ impl Compiler {
             // values (which are in scope here, bound as registers).  Calls
             // `(F …)` are still handled as static `call`s in
             // `lower_application`, which consults the same scope.
-            LispExpr::Symbol(name) if self.functions_in_scope.contains_key(name) => {
+            Shape::Symbol(name) if self.functions_in_scope.contains_key(name) => {
                 let (internal, _arity, captured) =
                     self.functions_in_scope.get(name).cloned().unwrap();
                 Ok(self.emit_closure(&internal, &captured))
             }
-            LispExpr::Symbol(name) => Err(CompileError::new(format!(
+            Shape::Symbol(name) => Err(CompileError::new(format!(
                 "unbound variable `{name}`: it is not a parameter in scope. \
                  (Lambdas don't capture free variables yet — closures are a later phase.) \
                  Did you mean to quote it as `'{name}`?"
             ))),
-            LispExpr::Cons(..) => self.lower_application(expr),
+            // A pair in value position is an application.  This includes a
+            // `quoted` node: its shape is the pair `QUOTE · (datum · NIL)`,
+            // so `'X` arrives at the `"QUOTE"` arm below just as a
+            // spelled-out `(QUOTE X)` does.
+            form @ Shape::Pair(_) => self.lower_application(form),
         }
     }
 
     /// Lower a `(head arg …)` application.  In L2a `head` must be one of
     /// the built-in primitives; user-defined calls arrive in L2c.
-    fn lower_application(&mut self, expr: &LispExpr) -> Result<String, CompileError> {
+    fn lower_application(&mut self, expr: Shape<'_>) -> Result<String, CompileError> {
         let items = proper_list(expr).ok_or_else(|| {
             CompileError::new(
                 "improper list in call position (a dotted form like (A . B) is data, \
@@ -358,26 +866,25 @@ impl Compiler {
         let (head, args) = items.split_first().ok_or_else(|| {
             CompileError::new("empty application `()` cannot be evaluated (quote it as `'()` for nil)")
         })?;
+        let head = *head;
 
         // A `LAMBDA` form in head position is a *direct application*:
         // `((LAMBDA (p …) body) a …)`.  (A bare, unapplied `LAMBDA` is
-        // handled as a `Symbol("LAMBDA")` head below — it's an error,
-        // since lambda-as-a-value needs closures.)
+        // handled as a `"LAMBDA"` symbol head below — it becomes a
+        // closure value.)
         if is_lambda_form(head) {
             return self.lower_lambda_application(head, args);
         }
         // A `LABEL` form in head position is a *direct application* of a
         // named (recursive) lambda: `((LABEL F (LAMBDA (p …) body)) a …)`.
         // (A bare, unapplied `LABEL` falls through to the `"LABEL"` arm
-        // below — also an error, for the same closures reason.)
+        // below — a recursive closure value.)
         if is_label_form(head) {
             return self.lower_label_application(head, args);
         }
 
-        match head {
-            LispExpr::Symbol(name) => {
-                let name = name.as_str();
-
+        match head.shape() {
+            Shape::Symbol(name) => {
                 // A call whose head is a `LABEL`-bound name in scope is a
                 // (possibly recursive) user-function call — lower it to a
                 // `call`, forwarding the labelled function's captured
@@ -469,7 +976,7 @@ impl Compiler {
             // `LABEL` form — those were intercepted above).  Evaluate it; if
             // it yields a closure, `apply` runs it, otherwise the VM raises a
             // clean `NotAClosure` at runtime.  e.g. `((CAR FNS) 'A)`.
-            LispExpr::Cons(..) => self.lower_dynamic_apply(head, args),
+            Shape::Pair(_) => self.lower_dynamic_apply(head, args),
             // Integers and the empty list are not callable.
             other => Err(CompileError::new(format!(
                 "cannot apply a {} as a function (only a primitive, a LAMBDA/LABEL form, a \
@@ -498,10 +1005,10 @@ impl Compiler {
     /// [`lift_lambda`]: Self::lift_lambda
     fn lower_lambda_application(
         &mut self,
-        lambda: &LispExpr,
-        args: &[&LispExpr],
+        lambda: Sx<'_>,
+        args: &[Sx<'_>],
     ) -> Result<String, CompileError> {
-        let (params, body) = lambda_parts(lambda)?;
+        let (params, body) = lambda_parts(lambda.shape())?;
         if args.len() != params.len() {
             return Err(CompileError::new(format!(
                 "lambda expects {} argument(s), got {}",
@@ -548,7 +1055,7 @@ impl Compiler {
     fn lift_lambda(
         &mut self,
         params: &[&str],
-        body: &LispExpr,
+        body: Sx<'_>,
     ) -> Result<(String, Vec<String>), CompileError> {
         let own: HashSet<String> = params.iter().map(|p| p.to_string()).collect();
         // Precise capture: the body's free symbols (respecting own params +
@@ -556,7 +1063,7 @@ impl Compiler {
         // labelled function it calls) that are actually in the enclosing
         // scope.  `BTreeSet` keeps `free` — and hence `captured` — sorted.
         let mut free: BTreeSet<String> = BTreeSet::new();
-        collect_free_symbols(body, &own, &self.functions_in_scope, &mut free);
+        collect_free_symbols(body.shape(), &own, &self.functions_in_scope, &mut free);
         let captured: Vec<String> =
             free.into_iter().filter(|s| self.params.contains(s)).collect();
 
@@ -598,11 +1105,11 @@ impl Compiler {
         &mut self,
         fn_name: &str,
         captured: &[String],
-        args: &[&LispExpr],
+        args: &[Sx<'_>],
     ) -> Result<String, CompileError> {
         let mut arg_regs = Vec::with_capacity(args.len());
         for a in args {
-            arg_regs.push(self.lower_expr(a)?);
+            arg_regs.push(self.lower_expr(*a)?);
         }
         let dest = self.fresh();
         let mut srcs = Vec::with_capacity(captured.len() + arg_regs.len() + 1);
@@ -619,7 +1126,7 @@ impl Compiler {
     /// application; instead of a `call` we materialise a tagged cons the
     /// VM's `apply` opcode dispatches on, with the captured values packed
     /// into `env` so they're restored when the closure is later applied.
-    fn lower_lambda_value(&mut self, lambda: &LispExpr) -> Result<String, CompileError> {
+    fn lower_lambda_value(&mut self, lambda: Shape<'_>) -> Result<String, CompileError> {
         let (params, body) = lambda_parts(lambda)?;
         let (fn_name, captured) = self.lift_lambda(&params, body)?;
         Ok(self.emit_closure(&fn_name, &captured))
@@ -658,13 +1165,13 @@ impl Compiler {
     /// when it runs the callee.
     fn lower_dynamic_apply(
         &mut self,
-        head: &LispExpr,
-        args: &[&LispExpr],
+        head: Sx<'_>,
+        args: &[Sx<'_>],
     ) -> Result<String, CompileError> {
         let fn_reg = self.lower_expr(head)?;
         let mut arg_regs = Vec::with_capacity(args.len());
         for a in args {
-            arg_regs.push(self.lower_expr(a)?);
+            arg_regs.push(self.lower_expr(*a)?);
         }
         let dest = self.fresh();
         let mut srcs = Vec::with_capacity(arg_regs.len() + 1);
@@ -706,7 +1213,7 @@ impl Compiler {
         &mut self,
         name: &str,
         params: &[&str],
-        body: &LispExpr,
+        body: Sx<'_>,
     ) -> Result<(String, Vec<String>), CompileError> {
         // Precise capture, excluding own params AND the label name itself.
         // (`name` is not yet in `functions_in_scope` here, so a self-call
@@ -716,7 +1223,7 @@ impl Compiler {
         let mut bound: HashSet<String> = params.iter().map(|p| p.to_string()).collect();
         bound.insert(name.to_string());
         let mut free: BTreeSet<String> = BTreeSet::new();
-        collect_free_symbols(body, &bound, &self.functions_in_scope, &mut free);
+        collect_free_symbols(body.shape(), &bound, &self.functions_in_scope, &mut free);
         let captured: Vec<String> =
             free.into_iter().filter(|s| self.params.contains(s)).collect();
 
@@ -769,11 +1276,11 @@ impl Compiler {
     /// `call` forwarding the captured registers as leading args.
     fn lower_label_application(
         &mut self,
-        label: &LispExpr,
-        args: &[&LispExpr],
+        label: Sx<'_>,
+        args: &[Sx<'_>],
     ) -> Result<String, CompileError> {
-        let (name, lambda) = label_parts(label)?;
-        let (params, body) = lambda_parts(lambda)?;
+        let (name, lambda) = label_parts(label.shape())?;
+        let (params, body) = lambda_parts(lambda.shape())?;
         if args.len() != params.len() {
             return Err(CompileError::new(format!(
                 "labelled function `{name}` expects {} argument(s), got {}",
@@ -792,9 +1299,9 @@ impl Compiler {
     /// function.
     ///
     /// [`lower_lambda_value`]: Self::lower_lambda_value
-    fn lower_label_value(&mut self, label: &LispExpr) -> Result<String, CompileError> {
+    fn lower_label_value(&mut self, label: Shape<'_>) -> Result<String, CompileError> {
         let (name, lambda) = label_parts(label)?;
-        let (params, body) = lambda_parts(lambda)?;
+        let (params, body) = lambda_parts(lambda.shape())?;
         let (fn_name, captured) = self.lift_label(name, &params, body)?;
         Ok(self.emit_closure(&fn_name, &captured))
     }
@@ -834,13 +1341,13 @@ impl Compiler {
     /// The catch-all clause is written with a truthy predicate — e.g.
     /// `('T …)`.  A bare `T` would be an unbound variable (bindings arrive
     /// with `LAMBDA`/`LABEL` in L2c), so quote it.
-    fn lower_cond(&mut self, clauses: &[&LispExpr]) -> Result<String, CompileError> {
+    fn lower_cond(&mut self, clauses: &[Sx<'_>]) -> Result<String, CompileError> {
         let result = self.fresh();
         let end_label = self.fresh_label("cond_end");
 
         for clause in clauses {
             // Each clause is a proper list `(predicate expression)`.
-            let parts = proper_list(clause).ok_or_else(|| {
+            let parts = proper_list(clause.shape()).ok_or_else(|| {
                 CompileError::new("a COND clause must be a list `(predicate expression)`")
             })?;
             if parts.len() != 2 {
@@ -872,8 +1379,10 @@ impl Compiler {
     // -----------------------------------------------------------------------
 
     /// Materialise a quoted datum as runtime values.  Unlike
-    /// [`lower_expr`], a `Symbol` here is *data* (a symbol literal), not
-    /// a variable reference, and a `Cons` is a literal pair, not a call.
+    /// [`lower_expr`], a symbol here is *data* (a symbol literal), not
+    /// a variable reference, and a pair is a literal cons, not a call.
+    /// A nested `quoted` node (`''A`) is data too: its shape is the pair
+    /// `(QUOTE A)`, so it materialises as that two-element list.
     ///
     /// The **cdr-spine is walked iteratively**, not recursively: a flat
     /// quoted list `'(A A … A)` of N elements has paren-depth 1, so it
@@ -881,22 +1390,25 @@ impl Compiler {
     /// list *length*) — a recursive `cdr` walk would then recurse N
     /// native frames deep and overflow the stack on large N (a cheap
     /// single-line DoS).  We instead collect the spine's `car`s in a
-    /// loop, lower the final tail, then fold the `cons` cells from the
-    /// tail back.  `car` positions still recurse, but each nested list
-    /// there requires a paren and so is bounded by the parser's
+    /// loop (stepping a [`Cell`] cursor along the `list_body` children),
+    /// lower the final tail, then fold the `cons` cells from the tail
+    /// back.  `car` positions still recurse, but each nested list there
+    /// requires a paren and so is bounded by the parser's
     /// `MAX_PAREN_DEPTH`.
-    fn lower_quote(&mut self, datum: &LispExpr) -> Result<String, CompileError> {
+    ///
+    /// [`lower_expr`]: Self::lower_expr
+    fn lower_quote(&mut self, datum: Sx<'_>) -> Result<String, CompileError> {
         let mut cars: Vec<String> = Vec::new();
-        let mut cur = datum;
+        let mut cur = datum.shape();
         let tail = loop {
             match cur {
-                LispExpr::Cons(car, cdr) => {
-                    cars.push(self.lower_quote(car)?); // car-nesting bounded by paren depth
-                    cur = cdr.as_ref();
+                Shape::Pair(cell) => {
+                    cars.push(self.lower_quote(cell.car())?); // car-nesting bounded by paren depth
+                    cur = cell.cdr();
                 }
-                LispExpr::Int(n) => break self.emit_int(*n),
-                LispExpr::Nil => break self.emit_nil(),
-                LispExpr::Symbol(s) => break self.emit_symbol(s),
+                Shape::Int(text) => break self.emit_int(decode_int(text)?),
+                Shape::Nil => break self.emit_nil(),
+                Shape::Symbol(s) => break self.emit_symbol(s),
             }
         };
         // Fold: cons(car_0, cons(car_1, … cons(car_{k-1}, tail))).
@@ -991,29 +1503,34 @@ impl Compiler {
 }
 
 // ===========================================================================
-// AST helpers
+// Form helpers (all over borrowed CST positions)
 // ===========================================================================
 
 /// A short, allocation-free description of an expression's *kind*, for
-/// error messages — never recurses into the structure (unlike `Display`).
-fn kind_of(expr: &LispExpr) -> &'static str {
-    match expr {
-        LispExpr::Nil => "empty list",
-        LispExpr::Symbol(_) => "symbol",
-        LispExpr::Int(_) => "integer",
-        LispExpr::Cons(..) => "list",
+/// error messages — never recurses into the structure.
+fn kind_of(shape: Shape<'_>) -> &'static str {
+    match shape {
+        Shape::Nil => "empty list",
+        Shape::Symbol(_) => "symbol",
+        Shape::Int(_) => "integer",
+        Shape::Pair(_) => "list",
     }
 }
 
-/// True iff `expr` is a `(LAMBDA …)` form (a list whose head is the
+/// True iff `sx` is a list whose first element is the symbol `head`.
+fn is_form_headed_by(sx: Sx<'_>, head: &str) -> bool {
+    matches!(sx.shape(), Shape::Pair(cell) if matches!(cell.car().shape(), Shape::Symbol(s) if s == head))
+}
+
+/// True iff `sx` is a `(LAMBDA …)` form (a list whose head is the
 /// symbol `LAMBDA`).
-fn is_lambda_form(expr: &LispExpr) -> bool {
-    matches!(expr, LispExpr::Cons(car, _) if matches!(car.as_ref(), LispExpr::Symbol(s) if s == "LAMBDA"))
+fn is_lambda_form(sx: Sx<'_>) -> bool {
+    is_form_headed_by(sx, "LAMBDA")
 }
 
 /// Destructure a `(LAMBDA (p1 … pn) body)` form into its parameter names
-/// and body.  The caller guarantees `is_lambda_form(lambda)`.
-fn lambda_parts(lambda: &LispExpr) -> Result<(Vec<&str>, &LispExpr), CompileError> {
+/// and body.  The caller guarantees the form is headed by `LAMBDA`.
+fn lambda_parts(lambda: Shape<'_>) -> Result<(Vec<&str>, Sx<'_>), CompileError> {
     let items = proper_list(lambda)
         .ok_or_else(|| CompileError::new("malformed LAMBDA (improper list)"))?;
     if items.len() != 3 {
@@ -1022,13 +1539,13 @@ fn lambda_parts(lambda: &LispExpr) -> Result<(Vec<&str>, &LispExpr), CompileErro
             items.len()
         )));
     }
-    let param_list = proper_list(items[1]).ok_or_else(|| {
+    let param_list = proper_list(items[1].shape()).ok_or_else(|| {
         CompileError::new("a LAMBDA parameter list must be a proper list `(p1 p2 …)`")
     })?;
     let mut params: Vec<&str> = Vec::with_capacity(param_list.len());
     for p in &param_list {
-        match p {
-            LispExpr::Symbol(s) => params.push(s.as_str()),
+        match p.shape() {
+            Shape::Symbol(s) => params.push(s),
             other => {
                 return Err(CompileError::new(format!(
                     "a LAMBDA parameter must be a symbol, got a {}",
@@ -1046,17 +1563,17 @@ fn lambda_parts(lambda: &LispExpr) -> Result<(Vec<&str>, &LispExpr), CompileErro
     Ok((params, items[2]))
 }
 
-/// True iff `expr` is a `(LABEL …)` form (a list whose head is the symbol
+/// True iff `sx` is a `(LABEL …)` form (a list whose head is the symbol
 /// `LABEL`).
-fn is_label_form(expr: &LispExpr) -> bool {
-    matches!(expr, LispExpr::Cons(car, _) if matches!(car.as_ref(), LispExpr::Symbol(s) if s == "LABEL"))
+fn is_label_form(sx: Sx<'_>) -> bool {
+    is_form_headed_by(sx, "LABEL")
 }
 
 /// Destructure a `(LABEL name (LAMBDA (params) body))` form into the
-/// labelled name and the inner `LAMBDA` form.  The caller guarantees
-/// `is_label_form(label)`; the `LAMBDA` is destructured separately by
+/// labelled name and the inner `LAMBDA` form.  The caller guarantees the
+/// form is headed by `LABEL`; the `LAMBDA` is destructured separately by
 /// [`lambda_parts`].
-fn label_parts(label: &LispExpr) -> Result<(&str, &LispExpr), CompileError> {
+fn label_parts(label: Shape<'_>) -> Result<(&str, Sx<'_>), CompileError> {
     let items = proper_list(label)
         .ok_or_else(|| CompileError::new("malformed LABEL (improper list)"))?;
     if items.len() != 3 {
@@ -1065,8 +1582,8 @@ fn label_parts(label: &LispExpr) -> Result<(&str, &LispExpr), CompileError> {
             items.len()
         )));
     }
-    let name = match items[1] {
-        LispExpr::Symbol(s) => s.as_str(),
+    let name = match items[1].shape() {
+        Shape::Symbol(s) => s,
         other => {
             return Err(CompileError::new(format!(
                 "a LABEL name must be a symbol, got a {}",
@@ -1082,19 +1599,25 @@ fn label_parts(label: &LispExpr) -> Result<(&str, &LispExpr), CompileError> {
     Ok((name, items[2]))
 }
 
-/// Flatten a proper list (`Cons` chain terminated by `Nil`) into its
-/// elements.  Returns `None` if the chain is improper (ends in a dotted
-/// tail) — those are data, never callable forms.
-fn proper_list(expr: &LispExpr) -> Option<Vec<&LispExpr>> {
+/// The elements of a proper list (a cell chain that ends in `Nil`), as
+/// borrowed positions in the tree.  Returns `None` if the chain is
+/// improper (ends in a dotted tail) — those are data, never callable
+/// forms.
+///
+/// Because a [`Cell`] reads cons structure, `(A B C)`, `(A . (B C))` and
+/// `(A B . (C))` all yield the same three elements, and `'X` yields
+/// `[QUOTE, X]`.  The result is a vector of *references* into the CST —
+/// one per element — not a copy of any subtree.
+fn proper_list(shape: Shape<'_>) -> Option<Vec<Sx<'_>>> {
     let mut items = Vec::new();
-    let mut cur = expr;
+    let mut cur = shape;
     loop {
         match cur {
-            LispExpr::Cons(car, cdr) => {
-                items.push(car.as_ref());
-                cur = cdr.as_ref();
+            Shape::Pair(cell) => {
+                items.push(cell.car());
+                cur = cell.cdr();
             }
-            LispExpr::Nil => return Some(items),
+            Shape::Nil => return Some(items),
             _ => return None, // improper / dotted tail
         }
     }
@@ -1109,14 +1632,17 @@ type FnScope = HashMap<String, (String, usize, Vec<String>)>;
 /// Collect the **free symbols** of `expr` — every symbol referenced in a
 /// variable position that is not in `bound` — into `out`.  Used to compute
 /// a lambda's / labelled function's captured free variables (see
-/// [`Compiler::lift_lambda`] / [`Compiler::lift_label`]).
+/// [`Compiler::lift_lambda`] / [`Compiler::lift_label`]).  Like lowering, it
+/// runs over the CST directly (LANG84 C1.7: analysis passes walk the parse
+/// tree too).
 ///
 /// Binders are respected: a nested `(LAMBDA (p…) body)` adds `p…` to the
 /// bound set for `body`; a `(LABEL F (LAMBDA …))` adds `F`; a `QUOTE`
-/// subtree contributes nothing (quoted data has no variable references).
-/// Primitive heads like `CONS` are collected as "free" too, but the caller
-/// intersects with the enclosing scope, so a primitive (never an enclosing
-/// variable) is naturally filtered out.
+/// subtree — spelled out or as a `quoted` node, whose shape is the same
+/// `(QUOTE …)` pair — contributes nothing (quoted data has no variable
+/// references).  Primitive heads like `CONS` are collected as "free" too,
+/// but the caller intersects with the enclosing scope, so a primitive
+/// (never an enclosing variable) is naturally filtered out.
 ///
 /// **Transitive captures.** A call `(F …)` to a `LABEL`-bound function `F`
 /// in `fns` lowers to a `call` that *forwards `F`'s captured registers* as
@@ -1127,62 +1653,62 @@ type FnScope = HashMap<String, (String, usize, Vec<String>)>;
 /// caller — is lowered, so a single pass suffices for arbitrarily nested
 /// `LABEL`s.)
 ///
-/// Traversal depth follows the AST nesting, which the parser caps
+/// Traversal depth follows the tree nesting, which the parser caps
 /// (`MAX_PAREN_DEPTH`); the cdr-spine of an improper list is walked
 /// **iteratively** so a long dotted tail cannot recurse the native stack.
 fn collect_free_symbols(
-    expr: &LispExpr,
+    expr: Shape<'_>,
     bound: &HashSet<String>,
     fns: &FnScope,
     out: &mut BTreeSet<String>,
 ) {
     match expr {
-        LispExpr::Int(_) | LispExpr::Nil => {}
-        LispExpr::Symbol(s) => {
+        Shape::Int(_) | Shape::Nil => {}
+        Shape::Symbol(s) => {
             if !bound.contains(s) {
-                out.insert(s.clone());
+                out.insert(s.to_string());
             }
         }
-        LispExpr::Cons(..) => {
+        Shape::Pair(_) => {
             let Some(items) = proper_list(expr) else {
                 // Improper/dotted list: walk the car-spine iteratively; each
                 // `car` is paren-bounded, the spine itself is the loop.
                 let mut cur = expr;
-                while let LispExpr::Cons(car, cdr) = cur {
-                    collect_free_symbols(car, bound, fns, out);
-                    cur = cdr;
+                while let Shape::Pair(cell) = cur {
+                    collect_free_symbols(cell.car().shape(), bound, fns, out);
+                    cur = cell.cdr();
                 }
                 collect_free_symbols(cur, bound, fns, out);
                 return;
             };
             // Recognise the binding / quoting forms by their head symbol.
-            if let LispExpr::Symbol(head) = items[0] {
-                match head.as_str() {
+            if let Shape::Symbol(head) = items[0].shape() {
+                match head {
                     "QUOTE" => return, // quoted data: no variable references
                     "LAMBDA" if items.len() == 3 => {
                         let mut inner = bound.clone();
-                        if let Some(ps) = proper_list(items[1]) {
+                        if let Some(ps) = proper_list(items[1].shape()) {
                             for p in ps {
-                                if let LispExpr::Symbol(pn) = p {
-                                    inner.insert(pn.clone());
+                                if let Shape::Symbol(pn) = p.shape() {
+                                    inner.insert(pn.to_string());
                                 }
                             }
                         }
-                        collect_free_symbols(items[2], &inner, fns, out);
+                        collect_free_symbols(items[2].shape(), &inner, fns, out);
                         return;
                     }
                     "LABEL" if items.len() == 3 => {
                         let mut inner = bound.clone();
-                        if let LispExpr::Symbol(n) = items[1] {
-                            inner.insert(n.clone());
+                        if let Shape::Symbol(n) = items[1].shape() {
+                            inner.insert(n.to_string());
                         }
-                        collect_free_symbols(items[2], &inner, fns, out);
+                        collect_free_symbols(items[2].shape(), &inner, fns, out);
                         return;
                     }
                     // Calling a labelled function forwards its captures, so
                     // those names are free here too.
                     _ => {
-                        if let Some((_, _, captured)) = fns.get(head.as_str()) {
+                        if let Some((_, _, captured)) = fns.get(head) {
                             for c in captured {
                                 if !bound.contains(c) {
                                     out.insert(c.clone());
@@ -1195,19 +1721,18 @@ fn collect_free_symbols(
             // Generic form (application, COND, primitive call, clause list):
             // every element is a subexpression to scan.
             for it in items {
-                collect_free_symbols(it, bound, fns, out);
+                collect_free_symbols(it.shape(), bound, fns, out);
             }
         }
     }
 }
 
-/// Check that `args` has exactly `n` elements, returning them as a slice
-/// of references.
-fn expect_arity<'a>(
+/// Check that `args` has exactly `n` elements, returning them unchanged.
+fn expect_arity<'s, 'a>(
     form: &str,
-    args: &'a [&'a LispExpr],
+    args: &'s [Sx<'a>],
     n: usize,
-) -> Result<&'a [&'a LispExpr], CompileError> {
+) -> Result<&'s [Sx<'a>], CompileError> {
     if args.len() == n {
         Ok(args)
     } else {

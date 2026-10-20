@@ -1,0 +1,19 @@
+{
+  "chapter": 458,
+  "title": "Tiere im Wald",
+  "label": "ch:ge-tiere-im-wald",
+  "canDo": "I can name animals of the woods and their sounds: the squirrel, the hedgehog, the wild boar, the stag and birds chirping.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C458-zwitschern",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 458: I can name animals of the woods and their sounds: the squirrel, the hedgehog, the wild boar, the stag and birds chirping.",
+    "assesses": [
+      "GE-LEX-C458-WILDTIERE-03",
+      "GE-LEX-C458-WILDTIERE-04",
+      "GE-LEX-C458-WILDTIERE-05"
+    ]
+  }
+}

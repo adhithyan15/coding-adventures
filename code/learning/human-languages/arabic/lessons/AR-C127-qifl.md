@@ -10,11 +10,12 @@ chapter: 127
 type: word
 headword: "قفل"
 gloss: "a lock"
-romanization: "qifl"
+romanization: "qufl"
 concept_tag: AR-THINGS127-QIFL
 prerequisites: [AR-C126-thallaja, AR-C127-sitara, AR-C29-qala]
 sounds: []
-roots: []
+roots: [q-f-l]
+etymology_hook: "qufl: on the root q-f-l, where Lane gives aqfala l-bāba 'he locked the door'; Lane does not list qufl"
 duration:
   max_seconds: 200
 requires:
@@ -31,7 +32,7 @@ variety: modern-standard-arabic
 reviews_of: [AR-C127-sitara]
 ---
 
-# قفل (qifl) — a lock
+# قفل (qufl) — a lock
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C126-THINGS126-05, AR-LEX-C127-THINGS127-01, AR-CONCEPT-C29-QALA-01] -->
@@ -45,7 +46,12 @@ Which letter is the deep *q*? (**ق**, *qāf*, two dots above.)
 ## You'll want to know: قفل
 <!-- hl-knowledge: introduces=[AR-LEX-C127-THINGS127-02]; assesses=[] -->
 
-**قفل** — *qifl* — "a lock".
+**قفل** — *qufl* — "a lock".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قفل** (*qufl*) is built on the native Arabic root *q-f-l*. Lane does not list *qufl* itself, but under *q-f-l* he gives *aqfala l-bāba*, "he locked the door", and *qāfila*, "a company returning from a journey", that is, "a caravan".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -56,10 +62,10 @@ One more word for this chapter.
 <!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C127-THINGS127-02, AR-LEX-C126-THINGS126-05, AR-LEX-C127-THINGS127-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: *qifl*]
-- [YOU SAY: *qifl*, once more]
-- [YOU SAY: say *qifl*]
-- [YOU RECALL: say the Arabic for a fridge, then the Arabic for a curtain, then say *qifl* again]
+- [YOU SAY: *qufl*]
+- [YOU SAY: *qufl*, once more]
+- [YOU SAY: say *qufl*]
+- [YOU RECALL: say the Arabic for a fridge, then the Arabic for a curtain, then say *qufl* again]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C127-THINGS127-02, AR-LEX-C126-THINGS126-05, AR-LEX-C127-THINGS127-01] -->

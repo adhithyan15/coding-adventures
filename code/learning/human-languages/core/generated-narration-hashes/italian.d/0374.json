@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 374,
+  "sourceHash": "fnv1a64:82adab5a1963ef50",
+  "lessonIds": [
+    "IT-C374-imprevisto",
+    "IT-C374-prevedibile",
+    "IT-C374-imprevedibile",
+    "IT-C374-alternativa",
+    "IT-C374-adattarsi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch374.txt",
+  "json": "italian/narration/ch374.json",
+  "textHash": "fnv1a64:aee12cdb4f1919d9",
+  "jsonHash": "fnv1a64:fabc65253c518e87",
+  "findings": []
+}

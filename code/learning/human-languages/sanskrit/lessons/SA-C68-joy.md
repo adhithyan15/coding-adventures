@@ -14,7 +14,8 @@ romanization: "harṣaḥ"
 concept_tag: SA-FEEL-JOY
 prerequisites: [SA-C68-anger, SA-C68-shyness]
 sounds: []
-roots: []
+roots: [sanskrit-harsha]
+etymology_hook: "harṣa 'bristling, thrill, joy' ← the root √hṛṣ 'bristle'; MW compares Latin horreō (CDIAL 13999)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C68-shyness]
 <!-- hl-knowledge: introduces=[SA-LEX-C68-FEELINGS-05]; assesses=[] -->
 
 **हर्षः** (*harṣaḥ*) — "joy", bright and sudden, where **आनन्दः** is deep and lasting.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Harṣa* is built on the root √hṛṣ, "to bristle, thrill": joy is the hair standing
+on end (MW, CDIAL 13999). MW compares Latin *horreō*, "I bristle", the source of
+English **horror**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

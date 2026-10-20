@@ -14,7 +14,8 @@ romanization: "sikkīn"
 concept_tag: AR-HOME71-SIKKIN
 prerequisites: [AR-C71-miftah, AR-C71-sahn]
 sounds: []
-roots: []
+roots: [aramaic-sakkina]
+etymology_hook: "sikkīn: usually traced to Aramaic sakkīnā 'knife'; Lane's link to s-k-n 'to still' is a folk explanation"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C71-sahn]
 <!-- hl-knowledge: introduces=[AR-LEX-C71-HOME71-05]; assesses=[] -->
 
 **سكين** — *sikkīn* — "a knife".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سكين** (*sikkīn*) is usually traced to Aramaic *sakkīnā*, "knife" (EtymDB), with Hebrew *sakkin* as a cousin. Lane lists it under *s-k-n*, "to be still", and quotes the old explanation that a knife stills the animal it slaughters; that is a guess of the Arabic grammarians, a folk etymology.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

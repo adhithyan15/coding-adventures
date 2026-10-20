@@ -14,7 +14,8 @@ romanization: "śramikaḥ"
 concept_tag: SA-PPL149-SRAMIKAH
 prerequisites: [SA-C148-gopalah, SA-C149-karmakarah]
 sounds: []
-roots: []
+roots: [sanskrit-shrama]
+etymology_hook: "śramika ← śrama 'toil, labour' (√śram) + -ika 'concerned with'; a modern formation not in MW"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C149-karmakarah]
 <!-- hl-knowledge: introduces=[SA-LEX-C149-PPL149-02]; assesses=[] -->
 
 **श्रमिकः** — *śramikaḥ* — "a labourer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śramika* is built from *śrama* "toil, labour", from the root √śram "toil, grow tired" (CDIAL 12682), with the suffix *-ika* "concerned with": "a labourer". MW does not list it, so it is a modern formation.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

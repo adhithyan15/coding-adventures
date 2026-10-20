@@ -1,0 +1,19 @@
+{
+  "chapter": 579,
+  "title": "Críticas",
+  "label": "ch:es-criticas",
+  "canDo": "I can criticise something, contradict someone or admit that they are right.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C579-absurdo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 579: I can criticise something, contradict someone or admit that they are right.",
+    "assesses": [
+      "ES-LEX-C579-CRITICA-03",
+      "ES-LEX-C579-CRITICA-04",
+      "ES-LEX-C579-CRITICA-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C458-coquillage",
+  "pathSegment": "FR-PATH-458-LITTORAL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-458-LITTORAL",
+      "order": 4
+    }
+  ]
+}

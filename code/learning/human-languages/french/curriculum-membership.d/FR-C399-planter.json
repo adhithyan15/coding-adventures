@@ -1,0 +1,11 @@
+{
+  "id": "FR-C399-planter",
+  "pathSegment": "FR-PATH-399-PANNE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-399-PANNE",
+      "order": 1
+    }
+  ]
+}

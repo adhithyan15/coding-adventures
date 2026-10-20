@@ -1,0 +1,19 @@
+{
+  "chapter": 531,
+  "title": "Aufwärmen und abwaschen",
+  "label": "ch:ge-aufwarmen-und-abwaschen",
+  "canDo": "I can talk about jobs in the kitchen.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C531-abtrocknen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 531: I can talk about jobs in the kitchen.",
+    "assesses": [
+      "GE-LEX-C531-KUECHE-03",
+      "GE-LEX-C531-KUECHE-04",
+      "GE-LEX-C531-KUECHE-05"
+    ]
+  }
+}

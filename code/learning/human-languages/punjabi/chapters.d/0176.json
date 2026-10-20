@@ -1,0 +1,24 @@
+{
+  "chapter": 176,
+  "title": "This, Here, and In a Place",
+  "label": "ch:pa-pointing-place-a1",
+  "canDo": "I can point to this or that, ask where a familiar thing is, and answer that it is here, there, or in a familiar place.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "PA-C176-location-frame",
+    "kind": "production",
+    "summary": "Ask where a familiar book or shop is, then answer with here, there, or a familiar place plus vich and hai.",
+    "assesses": [
+      "PA-DEM-EH-01",
+      "PA-PRON-OH-01",
+      "PA-LEX-C89-PLACE89-03",
+      "PA-LEX-C89-PLACE89-04",
+      "PA-POSTPOSITION-VICH-01",
+      "PA-LEX-HAI-02",
+      "PA-GRAMMAR-EXISTENTIAL-LOCATION-01"
+    ],
+    "note": "This closes five named points in a partial project-defined A1 inventory. It is a gentle curriculum exchange, not an A1 mock, readiness decision, attainment claim, or human validation."
+  }
+}

@@ -14,7 +14,8 @@ romanization: "sedâ zadan"
 concept_tag: FA-VERB-SEDA-ZADAN
 prerequisites: [FA-C145-hamrahi-kardan, FA-C145-bavar-kardan]
 sounds: []
-roots: []
+roots: [arabic-sada, persian-zadan]
+etymology_hook: "sedâ ← Arabic ṣadā 'echo' (EtymDB; root ṣ-d-y, Lane), + Persian zadan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C145-bavar-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C145-KONESH145-05]; assesses=[] -->
 
 **صدا زدن** — *sedâ zadan* — "to call (someone)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sedâ zadan* pairs *sedâ*, "voice, sound", with *zadan*, "to strike". *sedâ* is borrowed from Arabic *ṣadā*, "echo" (EtymDB; root *ṣ-d-y*, Lane). *zadan*, "to strike", is an inherited verb; it is usually traced to Middle Persian *zadan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

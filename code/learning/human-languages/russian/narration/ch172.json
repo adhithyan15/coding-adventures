@@ -4,7 +4,7 @@
   "chapter": 172,
   "title": "CV, Career, Pension, Business trip, Contract",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:da0f1df1bb5c9ccc",
+  "sourceHash": "fnv1a64:fa152d22754c697a",
   "lessons": [
     {
       "id": "RU-C172-rezyume",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:52c8bfff456b7502",
+      "sourceHash": "fnv1a64:e3bf39238191523c",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "договор (dogovór) is до-, \"up to, through\", with говор, \"talk\": an agreement reached by talking a matter through."
+              "text": "договор (dogovór) is до-, \"up to, through\", with говор, \"talk\": an agreement reached by talking a matter through. Говор is inherited; Vasmer relates it to Latvian gaura, \"chatter\"."
             }
           ]
         },

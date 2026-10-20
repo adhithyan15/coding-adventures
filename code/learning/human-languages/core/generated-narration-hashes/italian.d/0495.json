@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 495,
+  "sourceHash": "fnv1a64:061e53414745e4ea",
+  "lessonIds": [
+    "IT-C495-adottare",
+    "IT-C495-adozione",
+    "IT-C495-patrigno",
+    "IT-C495-matrigna",
+    "IT-C495-fratellastro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch495.txt",
+  "json": "italian/narration/ch495.json",
+  "textHash": "fnv1a64:98b1e91d60b71a86",
+  "jsonHash": "fnv1a64:250b31249d065fab",
+  "findings": []
+}

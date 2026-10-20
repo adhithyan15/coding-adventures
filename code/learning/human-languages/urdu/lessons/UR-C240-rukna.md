@@ -14,7 +14,8 @@ romanization: "ruknā"
 concept_tag: UR-VERB-RUKNA
 prerequisites: [UR-C240-bujhana, UR-C240-chalana]
 sounds: []
-roots: []
+roots: [indo-aryan-rokk]
+etymology_hook: "ruknā: listed by CDIAL beside roknā 'to stop' under a reconstructed *rokk 'stop' (CDIAL 10827)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C240-chalana]
 <!-- hl-knowledge: introduces=[UR-LEX-C240-ACT240-04]; assesses=[] -->
 
 **رکنا** — *ruknā* — "to halt, to come to a stop".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رکنا** (*ruknā*) is listed by CDIAL beside *roknā*, "to stop", under a reconstructed *\*rokk*, "stop", whose link with Sanskrit *rudh-*, "to obstruct", CDIAL calls not clear (CDIAL 10827).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

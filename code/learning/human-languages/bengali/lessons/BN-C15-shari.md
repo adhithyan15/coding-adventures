@@ -11,8 +11,8 @@ gloss: sari — a Sanskrit word for a strip of cloth that walked, almost unchang
 concept_tag: BN-CLOTHING-SARI
 prerequisites: [BN-C15-jama, BN-C14-shada, BN-C14-shobuj]
 sounds: [talobyo-sha-new]
-roots: [shati-strip-of-cloth]
-etymology_hook: "shARi traces to Sanskrit shATI shATI, 'a strip of cloth, a garment', worn down through Middle Indic sADI into Bengali and Hindi's shared shARi/sARi -- and unlike every other word this book has traced into English by deep sound change or a shared PIE root, this one entered English directly, in the modern era, as a straightforward loanword: 'sari'"
+roots: [sanskrit-shati]
+etymology_hook: "shāṛi ← Sanskrit śāṭī 'strip of cloth' (CDIAL 12381), through Prakrit sāḍī; English sari is a modern loan"
 duration:
   max_seconds: 260
 requires:

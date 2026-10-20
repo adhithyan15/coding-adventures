@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 263,
+  "sourceHash": "fnv1a64:c8042a557213a556",
+  "lessonIds": [
+    "GE-C263-nachdem",
+    "GE-C263-bevor",
+    "GE-C263-sobald",
+    "GE-C263-solange",
+    "GE-C263-seitdem"
+  ],
+  "tex": "german/book/chapters/ch263-nachdem-und-bevor.tex"
+}

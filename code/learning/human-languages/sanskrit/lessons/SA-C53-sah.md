@@ -14,7 +14,8 @@ romanization: "saḥ"
 concept_tag: SA-REL-SAH
 prerequisites: [SA-C53-yah, SA-C14-that]
 sounds: []
-roots: []
+roots: [sanskrit-ta]
+etymology_hook: "saḥ 'he, that' is the inherited pointing pronoun: MW compares Avestan hō and the Greek article ho"
 duration:
   max_seconds: 240
 requires:
@@ -56,6 +57,13 @@ with *ho* and *hē* beside a *t-* everywhere else.
 
 So the rule to hold is small and strange: **the word is a t- word that starts
 with स- only when it is the subject.**
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Saḥ* is the inherited pointing pronoun whose other forms run on *ta-*: MW
+compares Avestan *hō* and the Greek article *ho*, which keep the same *s-* or *h-*
+in the same two forms.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

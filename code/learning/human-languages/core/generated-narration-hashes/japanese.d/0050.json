@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 50,
-  "sourceHash": "fnv1a64:26557b2c856982c5",
+  "sourceHash": "fnv1a64:0c5ce054a758f2b4",
   "lessonIds": [
     "JA-C50-amai",
     "JA-C50-nigai",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch50.txt",
   "json": "japanese/narration/ch50.json",
-  "textHash": "fnv1a64:c358dff360712145",
-  "jsonHash": "fnv1a64:8625fb11eee843ba",
+  "textHash": "fnv1a64:bf5b08afea33bd23",
+  "jsonHash": "fnv1a64:72bce09bf1a929d4",
   "findings": []
 }

@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-417-PORTO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can get around a harbour: the breakwater, the pontoon, boarding, going ashore and setting sail.",
+  "prerequisites": []
+}

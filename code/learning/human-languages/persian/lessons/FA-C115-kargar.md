@@ -14,7 +14,8 @@ romanization: "kârgar"
 concept_tag: FA-THINGS115-KARGAR
 prerequisites: [FA-C115-parastar, FA-C115-ashpaz, FA-C08-dust-dashtan, FA-C08-dust-dashtan, FA-C08-dust-dashtan, FA-C08-komak-kardan]
 sounds: []
-roots: []
+roots: [persian-kar]
+etymology_hook: "kârgar ← Middle Persian kārgar (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [FA-C115-ashpaz]
 <!-- hl-knowledge: introduces=[FA-LEX-C115-THINGS115-05]; assesses=[] -->
 
 **کارگر** — *kârgar* — "a worker".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kârgar* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *kārgar*, "worker" (EtymDB). It is *kâr*, "work", with *-gar*, "doer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -24,7 +24,9 @@ supervisor ── Bootstrap, Request, CallbackResult ──►  broker (fds 3..3
 2. It reads `Bootstrap` from stdin: the resolved pipeline binding, and
    which key each inherited descriptor holds.
 3. It checks that descriptors 3 to 3+n are open and 3+n+1 is not: exactly
-   the keys, nothing else.
+   the keys, nothing else. On Windows (D18S P2.8b-1) the keys are handles
+   on the applier's handle list instead, named in `CHIEF_OF_STAFF_HANDLES`:
+   it takes exactly one per slot, in order, and refuses (66) anything else.
 4. It reads each key, re-checking the owner-only policy on the descriptor
    itself, and closes the descriptor.
 5. It reports `Ready` with each key's public half, so the supervisor can

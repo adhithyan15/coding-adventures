@@ -1,0 +1,11 @@
+{
+  "id": "FR-C328-raper",
+  "pathSegment": "FR-PATH-328-COUPER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-328-COUPER",
+      "order": 4
+    }
+  ]
+}

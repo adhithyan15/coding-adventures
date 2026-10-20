@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-555-VEJEZ",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-555-VEJEZ"
+  ],
+  "after": []
+}

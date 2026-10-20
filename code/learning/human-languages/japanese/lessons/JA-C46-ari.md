@@ -14,7 +14,8 @@ romanization: "ari"
 concept_tag: JA-ANIMALS46-ARI
 prerequisites: [JA-C45-kuma, JA-C46-mushi]
 sounds: []
-roots: []
+roots: [japanese-ari]
+etymology_hook: "ari: native Japanese, inherited, not borrowed; usually kana, kanji 蟻 as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C46-mushi]
 <!-- hl-knowledge: introduces=[JA-LEX-C46-ANIMALS46-02]; assesses=[] -->
 
 **あり** — *ari* — "an ant".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**あり** (*ari*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

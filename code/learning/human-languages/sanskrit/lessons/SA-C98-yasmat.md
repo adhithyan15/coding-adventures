@@ -14,7 +14,8 @@ romanization: "yasmāt"
 concept_tag: SA-WHY98-YASMAT
 prerequisites: [SA-C98-hetuh, SA-C98-tadartham]
 sounds: []
-roots: []
+roots: [sanskrit-yad]
+etymology_hook: "yasmāt, ablative of relative ya- 'which': 'from which', so 'because' (MW; MW compares Greek hos)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C98-tadartham]
 <!-- hl-knowledge: introduces=[SA-LEX-C98-WHY98-05]; assesses=[] -->
 
 **यस्मात्** — *yasmāt* — "because".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*yasmāt* is the ablative, "from which", of the relative pronoun *ya-* "which" (MW), so "for which reason, because". It answers *tasmāt* "therefore", and MW compares the relative *ya-* with Greek *hos* "who".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

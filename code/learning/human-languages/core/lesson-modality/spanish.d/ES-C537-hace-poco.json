@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C537-hace-poco",
+    "language": "spanish",
+    "chapter": 537,
+    "sequence": 16490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:99a61aa35f8b0ace"
+  },
+  "findings": []
+}

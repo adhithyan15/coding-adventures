@@ -14,7 +14,8 @@ romanization: "uttarā"
 concept_tag: SA-TRV202-UTTARA
 prerequisites: [SA-C202-purva, SA-C202-pascima]
 sounds: []
-roots: []
+roots: [sanskrit-uttara]
+etymology_hook: "uttara 'upper', so 'northern', the comparative of ud 'up' (MW; CDIAL 1767)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C202-pascima]
 <!-- hl-knowledge: introduces=[SA-LEX-C202-TRV202-05]; assesses=[] -->
 
 **उत्तरा** — *uttarā* — "the north".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*uttara* is the comparative of *ud*, "up": "higher, upper" (MW; CDIAL 1767). MW explains "northern" as the higher part of India, and also as the left hand when you face the sunrise. The same word also means "answer".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

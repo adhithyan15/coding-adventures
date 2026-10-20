@@ -14,7 +14,8 @@ romanization: "pāṭhaḥ"
 concept_tag: SA-SCHOOL-LESSON
 prerequisites: [SA-C83-student, SA-C83-teacher]
 sounds: []
-roots: []
+roots: [sanskrit-patha-reading]
+etymology_hook: "pāṭha 'recitation, reading, lesson' ← the root √paṭh 'read aloud' (MW; CDIAL 8035)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C83-teacher]
 <!-- hl-knowledge: introduces=[SA-LEX-C83-SCHOOL-04]; assesses=[] -->
 
 **पाठः** (*pāṭhaḥ*) — "a lesson", what is read: it is the noun of **पठति**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Pāṭha* is built on the root √paṭh, "to read or recite aloud" (MW, CDIAL 8035): a
+lesson is what is recited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

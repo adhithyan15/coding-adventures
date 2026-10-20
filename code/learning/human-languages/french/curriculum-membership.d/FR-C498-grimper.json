@@ -1,0 +1,11 @@
+{
+  "id": "FR-C498-grimper",
+  "pathSegment": "FR-PATH-498-PLEIN-AIR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-498-PLEIN-AIR",
+      "order": 1
+    }
+  ]
+}

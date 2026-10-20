@@ -1,0 +1,19 @@
+{
+  "chapter": 590,
+  "title": "Buscar trabajo",
+  "label": "ch:es-buscar-trabajo",
+  "canDo": "I can read a job offer that names the vacancy, the profile and the training needed, and how people are selected.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C590-perfil",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 590: I can read a job offer that names the vacancy, the profile and the training needed, and how people are selected.",
+    "assesses": [
+      "ES-LEX-C590-VACANTE-03",
+      "ES-LEX-C590-VACANTE-04",
+      "ES-LEX-C590-VACANTE-05"
+    ]
+  }
+}

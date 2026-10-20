@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C345-affidabile",
+    "language": "italian",
+    "chapter": 345,
+    "sequence": 19940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7be6d19799c49885"
+  },
+  "findings": []
+}

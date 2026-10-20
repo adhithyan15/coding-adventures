@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-472-COLUS",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "LA-EXT-472-COLUS"
+  ],
+  "after": []
+}

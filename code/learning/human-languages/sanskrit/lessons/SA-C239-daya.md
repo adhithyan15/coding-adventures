@@ -14,7 +14,8 @@ romanization: "dayā"
 concept_tag: SA-WEL239-DAYA
 prerequisites: [SA-C239-prema, SA-C239-snehah]
 sounds: []
-roots: []
+roots: [sanskrit-daya]
+etymology_hook: "dayā 'sympathy' ← root √day 'share, have pity' (MW; CDIAL 6185)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C239-snehah]
 <!-- hl-knowledge: introduces=[SA-LEX-C239-WEL239-04]; assesses=[] -->
 
 **दया** — *dayā* — "compassion".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dayā* is built on the root √day, which MW glosses "to divide, impart" and "to have pity on" (CDIAL 6185). It is the base of *dayālu*, "kind", which you have already met.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

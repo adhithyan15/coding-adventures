@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for she calls, then the Sanskrit for he bow
 You'll want to know: क्रीणाति.
 क्रीणाति (krīṇāti) — "(he, she) buys". फलं क्रीणाति — "buys fruit".
 
+The word, taken apart.
+Krīṇāti is the present of the root √krī, "to buy", already in the Rigveda (CDIAL 3594). MW compares Old Irish crenaim, "I buy". It lives on as Bengali kinā, "to buy".
+
 What you've built.
 The verb of the market.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for he bows, then the Sanskrit for he buys.
 
 You'll want to know: धनम्.
 धनम् (dhanam) — "money", "wealth".
+
+The word, taken apart.
+Dhana first meant the prize of a contest, then booty, then wealth; MW files it under a root √dhan, "to run" (CDIAL 6717). It lives on as Hindi dhan, "wealth".
 
 What you've built.
 What buying needs.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for he buys, then the Sanskrit for money.
 You'll want to know: मूल्यम्.
 मूल्यम् (mūlyam) — "a price". किम् मूल्यम्? — "what is the price?"
 
+The word, taken apart.
+Mūlya is built from mūla, "root": first the original value, the capital at the root of a sale, then a price (MW, CDIAL 10257).
+
 What you've built.
 The first question at a stall.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for money, then the Sanskrit for a price.
 You'll want to know: आपणः.
 आपणः (āpaṇaḥ) — "a shop". आपणः कुत्र? — "where is the shop?"
 
+The word, taken apart.
+Āpaṇa is built from ā and the root √paṇ, "to barter, buy" (MW, CDIAL 1191): the place where bargains are struck.
+
 What you've built.
 Where you buy.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a price, then the Sanskrit for a shop.
 
 You'll want to know: विपणिः.
 विपणिः (vipaṇiḥ) — "a market", many आपणः (āpaṇaḥ) together in a नगरम्.
+
+The word, taken apart.
+Vipaṇi is built from vi and the root √paṇ, "to barter, buy", the root of āpaṇa (MW): first a sale, then a market-place.
 
 What you've built.
 Many shops in one place.

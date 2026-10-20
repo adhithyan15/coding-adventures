@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C544-recien-nacido",
+    "language": "spanish",
+    "chapter": 544,
+    "sequence": 16860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bbb203b3e5660ef3"
+  },
+  "findings": []
+}

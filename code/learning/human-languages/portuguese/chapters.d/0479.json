@@ -1,0 +1,19 @@
+{
+  "chapter": 479,
+  "title": "Mágoas e perdão",
+  "label": "ch:pt-magoas-e-perdao",
+  "canDo": "I can talk about hurt, grudges and forgiveness.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C479-perdao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 479: I can talk about hurt, grudges and forgiveness.",
+    "assesses": [
+      "PT-LEX-C479-PERDAO-03",
+      "PT-LEX-C479-PERDAO-04",
+      "PT-LEX-C479-PERDAO-05"
+    ]
+  }
+}

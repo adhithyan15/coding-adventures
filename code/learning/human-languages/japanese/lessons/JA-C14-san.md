@@ -11,8 +11,8 @@ gloss: three — and the moraic ん you have been closing words with since こ�
 concept_tag: JA-NUMBER-THREE
 prerequisites: [JA-C14-ni, JA-W03-sa, JA-W01-n, JA-C13-family-reception, JA-W13-tsu, JA-W08-na]
 sounds: [mora, moraic-n]
-roots: []
-etymology_hook: Two signs, both old, and the second of them is the one sign in hiragana that is not a full syllable.
+roots: [middle-chinese-sam]
+etymology_hook: "san: Sino-Japanese, the on'yomi of 三 'three', from Middle Chinese sam; native mi is the kun'yomi"
 duration:
   max_seconds: 170
 requires:
@@ -52,6 +52,11 @@ syllable. It still is not. **さん** is **two beats**: *sa*, then a beat of the
 nasal on its own.
 
 Say *ichi — ni — san*. Four numbers, four lessons, no new signs.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**さん** (*san*) is Sino-Japanese: the on'yomi of the character for "three", borrowed from Chinese (Middle Chinese *sam*); the final *m* of the Chinese became the moraic *n*. The native word for three is *mi* (KANJIDIC2).
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-SAN, JA-LEX-NI, JA-LEX-ICHI, JA-SCRIPT-N-01] -->

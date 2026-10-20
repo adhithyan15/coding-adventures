@@ -1,0 +1,19 @@
+{
+  "chapter": 531,
+  "title": "Jobs in a great house",
+  "label": "ch:la-jobs-in-a-great-house",
+  "canDo": "I can name the jobs of slaves in a large household.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C531-vilica",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 531: I can name the jobs of slaves in a large household.",
+    "assesses": [
+      "LA-LEX-C531-IANI-03",
+      "LA-LEX-C531-IANI-04",
+      "LA-LEX-C531-IANI-05"
+    ]
+  }
+}

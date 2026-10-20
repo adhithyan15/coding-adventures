@@ -14,7 +14,8 @@ romanization: "pārsal"
 concept_tag: UR-CHIZ225-PARSAL
 prerequisites: [UR-C224-katori, UR-C225-lifafa]
 sounds: []
-roots: []
+roots: [english-parcel]
+etymology_hook: "pārsal ← English parcel"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C225-lifafa]
 <!-- hl-knowledge: introduces=[UR-LEX-C225-CHIZ225-02]; assesses=[] -->
 
 **پارسل** — *pārsal* — "a parcel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پارسل** (*pārsal*) is a loan from English *parcel*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

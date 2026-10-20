@@ -14,7 +14,8 @@ romanization: "kharch karnā"
 concept_tag: UR-VERB-KHARCH-KARNA
 prerequisites: [UR-C180-milana, UR-C180-jorna]
 sounds: []
-roots: []
+roots: [arabic-kharj, kr-do]
+etymology_hook: "kharch ← Arabic kharj 'expenditure', through Persian (Lane, root kh-r-j); karnā (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C180-jorna]
 <!-- hl-knowledge: introduces=[UR-LEX-C181-ACT181-01]; assesses=[] -->
 
 **خرچ کرنا** — *kharch karnā* — "to spend".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خرچ کرنا** (*kharch karnā*) joins *kharch*, "spending", and *karnā*, "to do". *kharch* is Arabic *kharj*, "a going out; expenditure", which reached Urdu through Persian (Lane, root *kh-r-j*); *karnā* comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

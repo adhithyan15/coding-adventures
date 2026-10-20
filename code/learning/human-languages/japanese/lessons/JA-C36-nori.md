@@ -14,7 +14,8 @@ romanization: "nori"
 concept_tag: JA-FOOD36-NORI
 prerequisites: [JA-C35-asagohan, JA-C35-okashi]
 sounds: []
-roots: []
+roots: [japanese-nori]
+etymology_hook: "nori: native; written 海苔 'sea moss', read as a whole for meaning; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C35-okashi]
 <!-- hl-knowledge: introduces=[JA-LEX-C36-FOOD36-01]; assesses=[] -->
 
 **のり** — *nori* — "seaweed".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**のり** (*nori*) is a native word, inherited rather than borrowed. JMdict writes it with the characters for "sea" and "moss", read as a whole for their meaning, and marks it as usually written in kana. Its older origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

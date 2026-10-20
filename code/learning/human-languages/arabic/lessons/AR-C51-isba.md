@@ -14,7 +14,8 @@ romanization: "iṣbaʿ"
 concept_tag: AR-BODY51-ISBA
 prerequisites: [AR-C51-shar, AR-C51-qadam]
 sounds: []
-roots: []
+roots: [ṣ-b-ʿ]
+etymology_hook: "iṣbaʿ: built on the root ṣ-b-ʿ, 'a finger' (Lane); Hebrew etsbaʿ, 'finger', is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C51-qadam]
 <!-- hl-knowledge: introduces=[AR-LEX-C51-BODY51-03]; assesses=[] -->
 
 **إصبع** — *iṣbaʿ* — "a finger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**إصبع** (*iṣbaʿ*) is built on the native Arabic root *ṣ-b-ʿ*, "a finger" (Lane). Hebrew *etsbaʿ*, "finger", is its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

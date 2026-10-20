@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-362-ORDENADO",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "PT-EXT-362-ORDENADO"
+  ],
+  "after": []
+}

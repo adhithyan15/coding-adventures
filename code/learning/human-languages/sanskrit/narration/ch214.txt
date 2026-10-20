@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for afterwards, then the Sanskrit for as lo
 You'll want to know: एव.
 एव — eva — "exactly, only".
 
+The word, taken apart.
+eva is an old particle, already in the Rigveda as "so, indeed" (CDIAL 2524). MW derives it from a pronoun stem and compares Avestan aēva and Gothic aiw, "ever", so it is inherited from Indo-European.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for as long as, then the Sanskrit for exact
 
 You'll want to know: खलु.
 खलु — khalu — "indeed".
+
+The word, taken apart.
+khalu is a particle of assurance, already in the Rigveda (CDIAL 3846). MW gives no derivation for it, so its origin is unknown. Pali has it as khalu and kho.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for exactly, then the Sanskrit for indeed.
 You'll want to know: इव.
 इव — iva — "like, as if".
 
+The word, taken apart.
+iva is built on the pronoun stem i-, "this" (MW), and means "like, as it were". It follows the word it compares, as in patheva, "as if on a path".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for indeed, then the Sanskrit for like.
 You'll want to know: विना.
 विना — vinā — "without".
 
+The word, taken apart.
+vinā is probably an old case form of vi, "apart, away" (MW). It lives on as Hindi bin, "without" (CDIAL 11772), and Hindi binā is the same word.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for like, then the Sanskrit for without.
 
 You'll want to know: प्रति.
 प्रति — prati — "towards".
+
+The word, taken apart.
+prati is an old preposition, "towards, against, back" (CDIAL 8540). It is inherited from Indo-European: MW compares Avestan paiti and Greek proti and pros, "towards".
 
 What you've built.
 One more word for this chapter.

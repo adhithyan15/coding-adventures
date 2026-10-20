@@ -14,7 +14,8 @@ romanization: "lipikaḥ"
 concept_tag: SA-PPL149-LIPIKAH
 prerequisites: [SA-C149-sramikah, SA-C149-adhikari]
 sounds: []
-roots: []
+roots: [sanskrit-lipika]
+etymology_hook: "lipika 'scribe' ← lipi 'writing', borrowed from Old Persian dipi (CDIAL 11058) + -ka"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C149-adhikari]
 <!-- hl-knowledge: introduces=[SA-LEX-C149-PPL149-04]; assesses=[] -->
 
 **लिपिकः** — *lipikaḥ* — "a clerk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*lipika* "a scribe, a clerk" is built on *lipi* "writing, script" (MW). CDIAL 11058 takes *lipi* as borrowed from Old Persian *dipi* "inscription", reshaped by the Sanskrit verbs for writing and smearing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

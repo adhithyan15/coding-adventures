@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for happy, then the Sanskrit for unhappy.
 You'll want to know: उचितः.
 उचितः — ucitaḥ — "proper, fitting".
 
+The word, taken apart.
+ucita comes from the root √uc as its past participle; MW glosses the root "to take pleasure in, be accustomed, be suitable". What one is accustomed to is customary, and what is customary is proper.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for unhappy, then the Sanskrit for proper.
 
 You'll want to know: अनुचितः.
 अनुचितः — anucitaḥ — "improper".
+
+The word, taken apart.
+anucita is an-, "not", with ucita, "proper, fitting", from the root √uc (MW): "improper, wrong". MW keeps it apart from a different anucita, "set in rows", from anu- and √ci.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for proper, then the Sanskrit for improper.
 You'll want to know: आवश्यकः.
 आवश्यकः — āvaśyakaḥ — "necessary".
 
+The word, taken apart.
+āvaśyaka is built on avaśya, "inevitable", the stem of avaśyam, "certainly", which you have already met, with the suffix -ka and a lengthened first vowel (MW). What no will can avoid is necessary.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for improper, then the Sanskrit for necessa
 You'll want to know: अन्यः.
 अन्यः — anyaḥ — "other".
 
+The word, taken apart.
+anya is an inherited word for "other" (CDIAL 399), and EtymDB sets it beside Avestan anya, "other". Hindi and Gujarati ān, "other", come from it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for necessary, then the Sanskrit for other.
 
 You'll want to know: एकाकी.
 एकाकी — ekākī — "alone".
+
+The word, taken apart.
+ekākī is the nominative of ekākin, built on eka, "one" (MW): "being one", alone. MW compares eka with Greek oios, "alone", and Gothic ains, "one", and eka lives on as Hindi ek (CDIAL 2462).
 
 What you've built.
 One more word for this chapter.

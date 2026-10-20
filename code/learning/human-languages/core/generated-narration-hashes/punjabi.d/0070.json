@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 70,
-  "sourceHash": "fnv1a64:b545b846549143b5",
+  "sourceHash": "fnv1a64:adbbbc858f77eea4",
   "lessonIds": [
     "PA-C70-chamcha",
     "PA-C70-chaku",
@@ -14,6 +14,6 @@
   "text": "punjabi/narration/ch70.txt",
   "json": "punjabi/narration/ch70.json",
   "textHash": "fnv1a64:7177791bb4247dd5",
-  "jsonHash": "fnv1a64:ff6e74586f89cc8b",
+  "jsonHash": "fnv1a64:63f9338a0c521527",
   "findings": []
 }

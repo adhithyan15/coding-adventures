@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "suite": "nested-dc-sweep-v1",
+  "cases": [
+    {
+      "id": "two-source-outer-loop-order",
+      "deck": "V1 in 0 0\nV2 bias 0 0\nR1 in out 1k\nR2 bias out 1k\nR3 out 0 1k\n.print dc V(out)\n.dc V1 0 1 1 V2 0 2 2\n.end\n",
+      "expected": {
+        "primarySource": "V1",
+        "secondarySource": "V2",
+        "points": [[0.0, 0.0], [1.0, 0.0], [0.0, 2.0], [1.0, 2.0]],
+        "finalOut": 1.0
+      }
+    }
+  ]
+}

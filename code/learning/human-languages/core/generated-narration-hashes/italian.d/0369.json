@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 369,
+  "sourceHash": "fnv1a64:84fd7dc06bfd8aff",
+  "lessonIds": [
+    "IT-C369-partito",
+    "IT-C369-parlamento",
+    "IT-C369-ministro",
+    "IT-C369-eleggere",
+    "IT-C369-elettore"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch369.txt",
+  "json": "italian/narration/ch369.json",
+  "textHash": "fnv1a64:c9a68d5650298204",
+  "jsonHash": "fnv1a64:c0127b195e99982f",
+  "findings": []
+}

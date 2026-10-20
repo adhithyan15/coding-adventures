@@ -1,0 +1,19 @@
+{
+  "chapter": 536,
+  "title": "Mientras tanto",
+  "label": "ch:es-mientras-tanto",
+  "canDo": "I can say that two things happened at the same time, and that one thing happened as soon as another did.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C536-tan-pronto-como",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 536: I can say that two things happened at the same time, and that one thing happened as soon as another did.",
+    "assesses": [
+      "ES-LEX-C536-MIENTRAS-03",
+      "ES-LEX-C536-MIENTRAS-04",
+      "ES-LEX-C536-MIENTRAS-05"
+    ]
+  }
+}

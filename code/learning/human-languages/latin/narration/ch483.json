@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 483,
+  "title": "Pool, Whirlpool, Chasm, To trickle, To flood",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:da7f2c575046d3f7",
+  "lessons": [
+    {
+      "id": "LA-C483-stagnum",
+      "sequence": 25670,
+      "title": "stagnum, stagnī — a pool, a pond; standing water",
+      "headword": "stagnum, stagnī",
+      "romanization": "stagnum, stagnī",
+      "gloss": "a pool, a pond; standing water",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7f739b40124f6421",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to flow, then the Latin for to swim across."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: stagnum, stagnī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "stagnum, stagnī — \"a pool, a pond; standing water\"."
+            },
+            {
+              "kind": "speech",
+              "text": "In silvā stagnum quiētum est, et rānae cantant. In the wood there is a quiet pool, and frogs sing."
+            },
+            {
+              "kind": "speech",
+              "text": "Second declension, neuter: stagnum, stagnī n. Still water, not running. English stagnant comes from the verb stagnāre."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of stagnum is not settled: Lewis & Short compare Greek tenagos 'shallow water', but EtymDB gives no parent. English stagnant comes from stagnāre, built on it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stagnum, stagnī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *stagnum, stagnī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stagnum, stagnī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *stagnum, stagnī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with stagnum, stagnī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *stagnum, stagnī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to flow, then the Latin for to swim across, then say stagnum, stagnī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to flow, then the Latin for to swim across, then say *stagnum, stagnī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does stagnum, stagnī mean? (\"A pool, a pond; standing water\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C483-gurges",
+      "sequence": 25680,
+      "title": "gurges, gurgitis — a whirlpool, an abyss of water; a flood",
+      "headword": "gurges, gurgitis",
+      "romanization": "gurges, gurgitis",
+      "gloss": "a whirlpool, an abyss of water; a flood",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6dc8d664e7679b92",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to swim across, then the Latin for a pool."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: gurges, gurgitis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gurges, gurgitis — \"a whirlpool, an abyss of water; a flood\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Nauta in gurgitem cadit, sed amīcī eum servant. A sailor falls into a whirlpool, but his friends save him."
+            },
+            {
+              "kind": "speech",
+              "text": "Third declension, masculine: gurges, gurgitis m. Also a glutton, one who swallows everything. English regurgitate comes from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gurges is inherited and Lewis & Short link it with gula 'throat'; EtymDB lists Greek gorgyra 'underground drain' as a cousin. English regurgitate comes from a word built on it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gurges, gurgitis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gurges, gurgitis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gurges, gurgitis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gurges, gurgitis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with gurges, gurgitis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *gurges, gurgitis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to swim across, then the Latin for a pool, then say gurges, gurgitis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to swim across, then the Latin for a pool, then say *gurges, gurgitis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does gurges, gurgitis mean? (\"A whirlpool, an abyss of water; a flood\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C483-vorago",
+      "sequence": 25690,
+      "title": "vorāgō, vorāginis — a chasm, an abyss; a whirlpool",
+      "headword": "vorāgō, vorāginis",
+      "romanization": "vorāgō, vorāginis",
+      "gloss": "a chasm, an abyss; a whirlpool",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:27949110cb447432",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a pool, then the Latin for a whirlpool."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: vorāgō, vorāginis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vorāgō, vorāginis — \"a chasm, an abyss; a whirlpool\"."
+            },
+            {
+              "kind": "speech",
+              "text": "In mediō forō terra sē aperit, et vorāgō magna fit. In the middle of the forum the ground opens, and a great chasm forms."
+            },
+            {
+              "kind": "speech",
+              "text": "Third declension, feminine: vorāgō, vorāginis f., from vorō 'to swallow'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vorāgō is built on vorō 'to swallow, to devour' (Lewis & Short): a hole that swallows things up. English voracious comes from vorō."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vorāgō, vorāginis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vorāgō, vorāginis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vorāgō, vorāginis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vorāgō, vorāginis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with vorāgō, vorāginis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *vorāgō, vorāginis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a pool, then the Latin for a whirlpool, then say vorāgō, vorāginis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a pool, then the Latin for a whirlpool, then say *vorāgō, vorāginis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does vorāgō, vorāginis mean? (\"A chasm, an abyss; a whirlpool\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C483-mano",
+      "sequence": 25700,
+      "title": "mānō, mānāre — to trickle, to flow, to drip",
+      "headword": "mānō, mānāre",
+      "romanization": "mānō, mānāre",
+      "gloss": "to trickle, to flow, to drip",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:73e7eb70314c4b44",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a whirlpool, then the Latin for a chasm."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: mānō, mānāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mānō, mānāre — \"to trickle, to flow, to drip\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Aqua frīgida ē saxō mānat. Cold water trickles out of the rock."
+            },
+            {
+              "kind": "speech",
+              "text": "mānō, mānāre, mānāvī, mānātum. Also of news: to spread. English emanate comes from ēmānāre."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of mānō is not settled: Lewis & Short connect it, as probable, with madeō 'to be wet', but EtymDB gives no parent. English emanate comes from the compound ēmānāre."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mānō, mānāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mānō, mānāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mānō, mānāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mānō, mānāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with mānō, mānāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *mānō, mānāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a whirlpool, then the Latin for a chasm, then say mānō, mānāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a whirlpool, then the Latin for a chasm, then say *mānō, mānāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does mānō, mānāre mean? (\"To trickle, to flow, to drip\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C483-inundo",
+      "sequence": 25710,
+      "title": "inundō, inundāre — to flood, to overflow",
+      "headword": "inundō, inundāre",
+      "romanization": "inundō, inundāre",
+      "gloss": "to flood, to overflow",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1d46bb8ff4c8e297",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a chasm, then the Latin for to trickle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: inundō, inundāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "inundō, inundāre — \"to flood, to overflow\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Vēre flūmen agrōs inundat. In spring the river floods the fields."
+            },
+            {
+              "kind": "speech",
+              "text": "inundō, inundāre, inundāvī, inundātum, from in- and unda 'wave'. English inundate comes from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "inundō is built from in- and undō 'to rise in waves', from unda 'wave' (EtymDB; Lewis & Short). English inundate comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inundō, inundāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inundō, inundāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inundō, inundāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inundō, inundāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with inundō, inundāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *inundō, inundāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a chasm, then the Latin for to trickle, then say inundō, inundāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a chasm, then the Latin for to trickle, then say *inundō, inundāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does inundō, inundāre mean? (\"To flood, to overflow\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

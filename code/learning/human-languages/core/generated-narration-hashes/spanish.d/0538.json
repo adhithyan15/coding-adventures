@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 538,
+  "sourceHash": "fnv1a64:18c1badc32b6fe92",
+  "lessonIds": [
+    "ES-C538-anteriormente",
+    "ES-C538-posteriormente",
+    "ES-C538-previamente",
+    "ES-C538-recientemente",
+    "ES-C538-ultimamente"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch538.txt",
+  "json": "spanish/narration/ch538.json",
+  "textHash": "fnv1a64:dfac543ffd264f17",
+  "jsonHash": "fnv1a64:8bef7381db47581b",
+  "findings": []
+}

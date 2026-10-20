@@ -1,0 +1,19 @@
+{
+  "chapter": 493,
+  "title": "Zuneigung und Geborgenheit",
+  "label": "ch:ge-zuneigung-und-geborgenheit",
+  "canDo": "I can talk about affection and feeling safe.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C493-zusammenhalt",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 493: I can talk about affection and feeling safe.",
+    "assesses": [
+      "GE-LEX-C493-ZUNEIGUNG-03",
+      "GE-LEX-C493-ZUNEIGUNG-04",
+      "GE-LEX-C493-ZUNEIGUNG-05"
+    ]
+  }
+}

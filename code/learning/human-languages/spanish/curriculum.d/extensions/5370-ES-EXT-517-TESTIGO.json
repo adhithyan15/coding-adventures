@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-517-TESTIGO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that a witness saw something happen, observed it, noticed a detail and told the police.",
+  "prerequisites": []
+}

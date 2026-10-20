@@ -14,7 +14,8 @@ romanization: "uthlā"
 concept_tag: UR-SIFAT194-UTHLA
 prerequisites: [UR-C194-chaukor, UR-C194-terha]
 sounds: []
-roots: []
+roots: [indo-aryan-ut-sthala]
+etymology_hook: "uthlā ← *ut-sthala 'shallow', a reconstructed form; a tadbhava (CDIAL 1899)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C194-terha]
 <!-- hl-knowledge: introduces=[UR-LEX-C194-SIFAT194-03]; assesses=[] -->
 
 **اتھلا** — *uthlā* — "shallow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اتھلا** (*uthlā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*ut-sthala*, "shallow", a form CDIAL reconstructs from its descendants (CDIAL 1899). It is built on *sthala*, "dry land".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

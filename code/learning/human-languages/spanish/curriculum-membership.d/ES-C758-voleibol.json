@@ -1,0 +1,11 @@
+{
+  "id": "ES-C758-voleibol",
+  "pathSegment": "ES-PATH-758-DEPORTES",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-758-DEPORTES",
+      "order": 0
+    }
+  ]
+}

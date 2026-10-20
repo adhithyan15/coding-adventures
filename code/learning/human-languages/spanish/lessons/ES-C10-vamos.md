@@ -6,7 +6,7 @@ sequence: 1050
 chapter: 68
 type: grammar
 headword: vamos · vais
-gloss: "we go," "you all go" — from a verb that is not ir at all
+gloss: '"we go," "you all go" — from a verb that is not ir at all'
 concept_tag: ES-GRAMMAR-GO-PRESENT-PLURAL
 prerequisites: [ES-C08-tienen, ES-C10-ir]
 sounds: []

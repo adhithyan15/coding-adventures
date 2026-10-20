@@ -14,7 +14,8 @@ romanization: "be har hâl"
 concept_tag: FA-CHERA159-BE-HAR-HAL
 prerequisites: [FA-C158-natije, FA-C158-moshkel]
 sounds: []
-roots: []
+roots: [arabic-hal]
+etymology_hook: "be har hâl: Persian be 'in' + har 'every' + hâl ← Arabic ḥāl 'state' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C158-moshkel]
 <!-- hl-knowledge: introduces=[FA-LEX-C159-CHERA159-01]; assesses=[] -->
 
 **به هر حال** — *be har hâl* — "anyway".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*be har hâl* is "in every state": *be*, "in", and *har*, "every", are native; *hâl*, "state", is borrowed from Arabic *ḥāl* (root *ḥ-w-l*, Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

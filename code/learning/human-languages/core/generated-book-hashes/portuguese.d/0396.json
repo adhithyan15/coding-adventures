@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 396,
+  "sourceHash": "fnv1a64:de26c158c1f218e7",
+  "lessonIds": [
+    "PT-C396-aplicacao",
+    "PT-C396-utilizador",
+    "PT-C396-aceder",
+    "PT-C396-senha",
+    "PT-C396-perfil"
+  ],
+  "tex": "portuguese/book/chapters/ch396-a-minha-conta.tex"
+}

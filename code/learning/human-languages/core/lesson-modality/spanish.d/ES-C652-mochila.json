@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C652-mochila",
+    "language": "spanish",
+    "chapter": 652,
+    "sequence": 22450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf41bbacafeb5e6c"
+  },
+  "findings": []
+}

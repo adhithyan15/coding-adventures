@@ -1,0 +1,11 @@
+{
+  "id": "IT-W260-my-own-line",
+  "pathSegment": "IT-PATH-260-WRITING",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-260-WRITING",
+      "order": 0
+    }
+  ]
+}

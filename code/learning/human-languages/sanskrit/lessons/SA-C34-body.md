@@ -14,7 +14,8 @@ romanization: "dehaḥ"
 concept_tag: SA-LIMB-DEHA
 prerequisites: [SA-C34-blood, SA-C32-wood, SA-C33-sea]
 sounds: []
-roots: []
+roots: [sanskrit-deha]
+etymology_hook: "deha 'body' ← the root √dih 'smear, mould'; MW compares Latin fingō and English dough (CDIAL 6557)"
 duration:
   max_seconds: 210
 requires:
@@ -45,7 +46,7 @@ reviews_of: [SA-C34-blood]
 
 **देहः** is the whole of it — the thing the other four belong to. Its root means "to knead, to shape, to plaster", so a body is a moulded thing, formed the way clay is formed.
 
-English *dough* is the plain cousin. Latin *fingere*, "to shape", gives *figure*, *fiction* and *effigy*. And an Old Persian relative, a wall of kneaded clay, sits inside *paradise*: *pairi-daēza*, a walled garden.
+English *dough* is the plain cousin. Latin *fingere*, "to shape", gives *figure*, *fiction* and *effigy*. And an old Iranian relative, a wall of kneaded clay, sits inside *paradise*: Avestan *pairi-daēza*, a walled enclosure.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ḥayawān"
 concept_tag: AR-SHAY276-HAYAWAN
 prerequisites: [AR-C275-hafla, AR-C275-zifaf]
 sounds: []
-roots: []
+roots: [ḥ-y-y]
+etymology_hook: "ḥayawān: built on the root ḥ-y-y, 'to live' (Lane); ḥayawān is a living thing"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C275-zifaf]
 <!-- hl-knowledge: introduces=[AR-LEX-C276-SHAY276-01]; assesses=[] -->
 
 **حيوان** — *ḥayawān* — "an animal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حيوان** (*ḥayawān*) is built on the native Arabic root *ḥ-y-y*, "to live" (Lane). *Ḥayawān* is a living thing.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

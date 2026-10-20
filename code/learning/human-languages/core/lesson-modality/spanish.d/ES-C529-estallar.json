@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C529-estallar",
+    "language": "spanish",
+    "chapter": 529,
+    "sequence": 16070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0dc6b116340d520"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C293-prouver",
+  "pathSegment": "FR-PATH-293-MYSTERE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-293-MYSTERE",
+      "order": 2
+    }
+  ]
+}

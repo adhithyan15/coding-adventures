@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-710-NERVIOS",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that I am nervous or stressed and that I need to calm down.",
+  "prerequisites": []
+}

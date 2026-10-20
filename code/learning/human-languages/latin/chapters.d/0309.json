@@ -1,0 +1,19 @@
+{
+  "chapter": 309,
+  "title": "Accūsātor et patrōnus",
+  "label": "ch:la-accusator-et-patronus",
+  "canDo": "I can describe the sides in a trial: to accuse, the prosecutor, the supporter in court, the counsel and the evidence.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C309-testimonium",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 309: I can describe the sides in a trial: to accuse, the prosecutor, the supporter in court, the counsel and the evidence.",
+    "assesses": [
+      "LA-LEX-C309-ACCUSO-03",
+      "LA-LEX-C309-ACCUSO-04",
+      "LA-LEX-C309-ACCUSO-05"
+    ]
+  }
+}

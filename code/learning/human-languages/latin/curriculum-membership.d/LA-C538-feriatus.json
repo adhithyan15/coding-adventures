@@ -1,0 +1,11 @@
+{
+  "id": "LA-C538-feriatus",
+  "pathSegment": "LA-PATH-538-OTIU",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-538-OTIU",
+      "order": 2
+    }
+  ]
+}

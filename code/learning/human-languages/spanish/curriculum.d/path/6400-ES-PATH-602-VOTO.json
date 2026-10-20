@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-602-VOTO",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "ES-EXT-602-VOTO"
+  ],
+  "after": []
+}

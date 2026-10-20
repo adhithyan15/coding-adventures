@@ -1,0 +1,11 @@
+{
+  "id": "GE-C260-wenn-es-regnet",
+  "pathSegment": "GE-PATH-260-WENN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-260-WENN",
+      "order": 1
+    }
+  ]
+}

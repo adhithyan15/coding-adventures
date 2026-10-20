@@ -14,7 +14,8 @@ romanization: "hunāka"
 concept_tag: AR-PLACE90-HUNAKA
 prerequisites: [AR-C89-waraa, AR-C90-huna]
 sounds: []
-roots: []
+roots: [huna-here]
+etymology_hook: "hunāka: built from hunā 'here' + the distance ending -ka, as in dhālika 'that'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C90-huna]
 <!-- hl-knowledge: introduces=[AR-LEX-C90-PLACE90-02]; assesses=[] -->
 
 **هناك** — *hunāka* — "there".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**هناك** (*hunāka*) is built from *hunā*, "here", with the distance ending *-ka*, the same ending heard in *dhālika*, "that".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

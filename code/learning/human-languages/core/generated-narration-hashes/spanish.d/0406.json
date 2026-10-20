@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 406,
-  "sourceHash": "fnv1a64:1a58f27f32acebea",
+  "sourceHash": "fnv1a64:1e714d4dbbacef35",
   "lessonIds": [
     "ES-C406-cliente",
     "ES-C406-documento",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "spanish/narration/ch406.txt",
   "json": "spanish/narration/ch406.json",
-  "textHash": "fnv1a64:73c3442d28f6002b",
-  "jsonHash": "fnv1a64:dffdb8bdd509ff05",
+  "textHash": "fnv1a64:af501b5abe9cf93f",
+  "jsonHash": "fnv1a64:a420e7c74e5ed81f",
   "findings": []
 }

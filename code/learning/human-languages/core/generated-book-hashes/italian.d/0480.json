@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 480,
+  "sourceHash": "fnv1a64:3f0a7b60ce7caa6b",
+  "lessonIds": [
+    "IT-C480-offendersi",
+    "IT-C480-rancore",
+    "IT-C480-perdono",
+    "IT-C480-pentirsi",
+    "IT-C480-sfogarsi"
+  ],
+  "tex": "italian/book/chapters/ch480-perdonare.tex"
+}

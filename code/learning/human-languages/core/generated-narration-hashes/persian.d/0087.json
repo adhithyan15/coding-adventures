@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 87,
-  "sourceHash": "fnv1a64:54c9c47b72075081",
+  "sourceHash": "fnv1a64:ba4181ba29e2b426",
   "lessonIds": [
     "FA-C87-kuche",
     "FA-C87-meydan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch87.txt",
   "json": "persian/narration/ch87.json",
-  "textHash": "fnv1a64:7291585038b00559",
-  "jsonHash": "fnv1a64:ec25b6ab51a8f42d",
+  "textHash": "fnv1a64:fd440d1a5482e5aa",
+  "jsonHash": "fnv1a64:a8fe61326f241ea3",
   "findings": []
 }

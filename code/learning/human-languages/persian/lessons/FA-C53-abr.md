@@ -14,7 +14,8 @@ romanization: "abr"
 concept_tag: FA-NATURE53-ABR
 prerequisites: [FA-C52-sang, FA-C53-mase]
 sounds: []
-roots: []
+roots: [persian-abr]
+etymology_hook: "abr ← Middle Persian abr (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C53-mase]
 <!-- hl-knowledge: introduces=[FA-LEX-C53-NATURE53-02]; assesses=[] -->
 
 **ابر** — *abr* — "a cloud".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*abr* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *abr*, "cloud" (EtymDB). EtymDB takes it back to an Indo-European word for "cloud", the same word as Sanskrit *abhra*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

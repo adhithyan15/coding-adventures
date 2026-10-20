@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C489-iucunditas",
+    "language": "latin",
+    "chapter": 489,
+    "sequence": 26040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d41bf3b9f34f5c78"
+  },
+  "findings": []
+}

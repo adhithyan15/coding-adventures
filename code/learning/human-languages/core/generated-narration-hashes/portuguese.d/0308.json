@@ -1,0 +1,20 @@
+{
+  "language": "portuguese",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:de65ca82d4558b3f",
+  "lessonIds": [
+    "PT-C308-susto",
+    "PT-C308-assustar",
+    "PT-C308-panico",
+    "PT-C308-desmaiar",
+    "PT-C308-torcer",
+    "PT-R308-revisao-301-308"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "portuguese/narration/ch308.txt",
+  "json": "portuguese/narration/ch308.json",
+  "textHash": "fnv1a64:6ebf3e060200ee8a",
+  "jsonHash": "fnv1a64:2cee17dcd895d0d0",
+  "findings": []
+}

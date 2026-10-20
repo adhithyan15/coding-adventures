@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:fbe0fd958cedb606",
+  "lessonIds": [
+    "PT-C313-lua-de-mel",
+    "PT-C313-bodas",
+    "PT-C313-divorcio",
+    "PT-C313-separacao",
+    "PT-C313-mudanca"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch313.txt",
+  "json": "portuguese/narration/ch313.json",
+  "textHash": "fnv1a64:9c894e5dea90b05d",
+  "jsonHash": "fnv1a64:576d499797444532",
+  "findings": []
+}

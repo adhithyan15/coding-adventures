@@ -14,7 +14,8 @@ romanization: "phir"
 concept_tag: UR-TIME76-PHIR
 prerequisites: [UR-C76-kal, UR-C76-abhi]
 sounds: []
-roots: []
+roots: [indo-aryan-phirati]
+etymology_hook: "phir ← *phirati 'turns': its absolutive, 'having turned', used as an adverb (CDIAL 9078)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C76-abhi]
 <!-- hl-knowledge: introduces=[UR-LEX-C76-TIME76-05]; assesses=[] -->
 
 **پھر** — *phir* — "then, again".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پھر** (*phir*) is inherited: it is the "having turned" form of a reconstructed *\*phirati*, "turns", used as an adverb (CDIAL 9078).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

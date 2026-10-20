@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C543-cantio",
+    "language": "latin",
+    "chapter": 543,
+    "sequence": 28770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:524f20043a465604"
+  },
+  "findings": []
+}

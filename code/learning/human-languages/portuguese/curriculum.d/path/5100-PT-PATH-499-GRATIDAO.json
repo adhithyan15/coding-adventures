@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-499-GRATIDAO",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "PT-EXT-499-GRATIDAO"
+  ],
+  "after": []
+}

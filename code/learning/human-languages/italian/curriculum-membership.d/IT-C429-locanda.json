@@ -1,0 +1,11 @@
+{
+  "id": "IT-C429-locanda",
+  "pathSegment": "IT-PATH-429-DORMIRE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-429-DORMIRE",
+      "order": 2
+    }
+  ]
+}

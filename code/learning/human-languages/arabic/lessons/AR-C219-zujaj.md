@@ -14,7 +14,8 @@ romanization: "zujāj"
 concept_tag: AR-SHAY219-ZUJAJ
 prerequisites: [AR-C219-khartum, AR-C219-khashab]
 sounds: []
-roots: []
+roots: [z-j-j]
+etymology_hook: "zujāj: an old noun for glass, listed by Lane under the native Arabic root z-j-j"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C219-khashab]
 <!-- hl-knowledge: introduces=[AR-LEX-C219-SHAY219-03]; assesses=[] -->
 
 **زجاج** — *zujāj* — "glass (the material)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**زجاج** (*zujāj*), "glass", is an old native noun, filed under the root *z-j-j* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

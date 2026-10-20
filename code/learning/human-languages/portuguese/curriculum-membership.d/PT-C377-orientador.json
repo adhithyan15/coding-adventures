@@ -1,0 +1,11 @@
+{
+  "id": "PT-C377-orientador",
+  "pathSegment": "PT-PATH-377-DOCENTE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-377-DOCENTE",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:21f90fe4dd60be05",
+  "lessonIds": [
+    "IT-C305-alluvione",
+    "IT-C305-allagare",
+    "IT-C305-frana",
+    "IT-C305-valanga",
+    "IT-C305-annegare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch305.txt",
+  "json": "italian/narration/ch305.json",
+  "textHash": "fnv1a64:85cebd33a29eba15",
+  "jsonHash": "fnv1a64:f1f8c66c11ce52e1",
+  "findings": []
+}

@@ -46,7 +46,7 @@ reviews_of: [FR-C124-boulanger]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**étudiant** is the present participle of *étudier*, "to study", used as a noun: one who is studying.
+**étudiant** is the present participle of *étudier*, "to study", used as a noun: one who is studying. *Étudier* ← Old French *estudier*, from the Latin family of *studium*, "eagerness, study" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

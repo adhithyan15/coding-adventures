@@ -12,7 +12,7 @@ concept_tag: UR-WORK
 prerequisites: [UR-C17-yih, UR-C13-kala, UR-C13-nila, UR-C14-qamiz]
 sounds: [rtl, short-vowels-unwritten]
 roots: [sanskrit-karman, pie-kwer]
-etymology_hook: kām comes down from Sanskrit karman "act, deed, work" through Prakrit kamma, worn short by ordinary use; the very same Sanskrit word was later borrowed into English untouched as karma, so the everyday Urdu word for a day's work and the English word for cosmic consequence are one word that took two roads -- the inherited one that shortened it and the scholarly one that kept it whole.
+etymology_hook: "kām ← Sanskrit karman 'act, work' (CDIAL 2892); English borrowed the same word whole as karma"
 duration:
   max_seconds: 250
 requires:
@@ -60,8 +60,7 @@ letters were for.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[UR-ETYMON-KAAM-KARMA]; assesses=[UR-LEX-KAAM, UR-REGISTER-TWO-ROADS-ONE-ROOT] -->
 
-**کام** is **inherited**, not borrowed: Sanskrit *karman* "act, deed, work"
-became Prakrit *kamma* and then Urdu *kām*, losing a syllable to a few thousand
+**کام** is **inherited**, not borrowed: Sanskrit *karman* "act, deed, work" (CDIAL 2892) became Prakrit *kamma* and then Urdu *kām*, losing a syllable to a few thousand
 years of being said out loud.
 
 Then look at what English did with the same word. English did not inherit it —

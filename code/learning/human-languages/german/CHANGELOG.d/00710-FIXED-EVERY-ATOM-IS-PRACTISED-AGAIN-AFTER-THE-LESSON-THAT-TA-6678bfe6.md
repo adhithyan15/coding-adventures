@@ -1,0 +1,7 @@
+## Fixed — every atom is practised again after the lesson that taught it
+
+Every atom a lesson introduces is now practised again by a later lesson, either in its `practises.knowledge` or in a block's `assesses` (human-language-data: `atomsNeverRevisited` 134 → 1 across the corpus). Eleven were already practised and not declared. Twelve got one short spoken question each.
+
+- **Declared:** GE-C06-zahlen-1-5's table already gives the *zwei*/*vier*/*fünf* cognate stories, and GE-C06-zahlen-6-10's gives *sechs*/*sieben*/*neun* (GE-ETYMON-ZWEI…NEUN). GE-C06-grimm has "*machen* is *make*" (GE-ETYMON-MACHEN-MAKE-02). GE-C18-nein-more's table has "**nein** (*ni*-ein)" (GE-ETYMON-NEIN-04). GE-C19-bitte-requests has "bitten, bitte, bid, bead" (GE-ETYMON-BITTE-BITTEN-02). GE-R20's "*un-guilting*" covers GE-ETYMON-ENTSCHULDIGUNG-03, and GE-C21-das-wetter-more's "Just like *Wetter*/'weather'" covers GE-ETYMON-WETTER-03.
+- **Recalls:** *Abend*/*eve* and *Nacht*/*night* in GE-C01-practice. *bitte*/*bitten* and *sehr*/*sore* in GE-C03-practice. *Ihnen* as "to them" in GE-C03-formal-practice. *wieder* and *withdraw* in GE-C04-auf-wiedersehen. *tschüss* and *adieu* in GE-C04-bis. The umlaut's ghost *e* in GE-C06-zahlen-1-5. *ja*/*yea* in GE-C18-ja-more. The *n-* of no and *bitte* as asking in GE-R20 (which now names GE-C18-nein-more as a prerequisite). *regnet*/*rain* and *gelb*/*yellow* in GE-R31 (which now names GE-C23-gruen-gelb-more).
+

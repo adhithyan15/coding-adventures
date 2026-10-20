@@ -1,0 +1,11 @@
+{
+  "id": "LA-C371-recito",
+  "pathSegment": "LA-PATH-371-ROSTRA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-371-ROSTRA",
+      "order": 3
+    }
+  ]
+}

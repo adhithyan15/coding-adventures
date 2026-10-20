@@ -14,7 +14,8 @@ romanization: "pūrvam"
 concept_tag: SA-TIME92-PURVAM
 prerequisites: [SA-C91-sarad, SA-C92-nimesah]
 sounds: []
-roots: []
+roots: [sanskrit-purva]
+etymology_hook: "pūrvam 'before', from pūrva 'fore, earlier', connected with purā and pra (MW; CDIAL 8343)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C92-nimesah]
 <!-- hl-knowledge: introduces=[SA-LEX-C92-TIME92-02]; assesses=[] -->
 
 **पूर्वम्** — *pūrvam* — "before, earlier".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Pūrvam* is the adverb of *pūrva*, "fore, earlier, eastern", which MW connects
+with *purā*, "before", and the prefix *pra* (CDIAL 8343).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

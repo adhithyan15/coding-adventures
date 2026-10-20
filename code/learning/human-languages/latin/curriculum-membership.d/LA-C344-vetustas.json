@@ -1,0 +1,11 @@
+{
+  "id": "LA-C344-vetustas",
+  "pathSegment": "LA-PATH-344-MAIORES",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-344-MAIORES",
+      "order": 4
+    }
+  ]
+}

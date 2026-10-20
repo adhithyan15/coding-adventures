@@ -14,7 +14,8 @@ romanization: "mūsīqā"
 concept_tag: AR-WORLD99-MUSIQA
 prerequisites: [AR-C98-utla, AR-C98-hubb]
 sounds: []
-roots: []
+roots: [greek-mousike]
+etymology_hook: "mūsīqā: from Greek mousikē 'the art of the Muses, music' (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C98-hubb]
 <!-- hl-knowledge: introduces=[AR-LEX-C99-WORLD99-01]; assesses=[] -->
 
 **موسيقى** — *mūsīqā* — "music".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**موسيقى** (*mūsīqā*) is a loan from Greek *mousikē*, "the art of the Muses, music" (EtymDB), taken in with Greek learning. It has no Arabic root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

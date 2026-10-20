@@ -1,0 +1,11 @@
+{
+  "id": "GE-C314-fluch",
+  "pathSegment": "GE-PATH-314-ZAUBERN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-314-ZAUBERN",
+      "order": 3
+    }
+  ]
+}

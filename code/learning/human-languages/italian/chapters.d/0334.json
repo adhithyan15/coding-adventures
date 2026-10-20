@@ -1,0 +1,19 @@
+{
+  "chapter": 334,
+  "title": "In padella",
+  "label": "ch:it-in-padella",
+  "canDo": "I can describe frying: the gentle fry of the onion, browning, frying and cooking off the wine.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C334-soffritto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 334: I can describe frying: the gentle fry of the onion, browning, frying and cooking off the wine.",
+    "assesses": [
+      "IT-LEX-C334-SOFFRITTO-03",
+      "IT-LEX-C334-SOFFRITTO-04",
+      "IT-LEX-C334-SOFFRITTO-05"
+    ]
+  }
+}

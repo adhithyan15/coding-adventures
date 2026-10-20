@@ -14,7 +14,8 @@ romanization: "shāraka"
 concept_tag: AR-VERB-SHARAKA
 prerequisites: [AR-C258-samaha2, AR-C258-kadhaba]
 sounds: []
-roots: []
+roots: [sh-r-k]
+etymology_hook: "shāraka: built on the root sh-r-k, 'to share, to be a partner' (Lane); shāraka is Form III, 'to share with'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C258-kadhaba]
 <!-- hl-knowledge: introduces=[AR-LEX-C258-ACT258-04]; assesses=[] -->
 
 **شارك** — *shāraka* — "to take part, to share".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شارك** (*shāraka*) is built on the native Arabic root *sh-r-k*, "to share, to be a partner" (Lane). *Shāraka* is Form III, "to share with".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

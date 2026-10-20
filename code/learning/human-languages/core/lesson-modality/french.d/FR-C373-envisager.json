@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C373-envisager",
+    "language": "french",
+    "chapter": 373,
+    "sequence": 20930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cffdf410632510a1"
+  },
+  "findings": []
+}

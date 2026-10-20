@@ -14,7 +14,8 @@ romanization: "bāvarchīkhānā"
 concept_tag: UR-LOC102-BAVARCHIKHANA
 prerequisites: [UR-C101-maidan, UR-C101-darvaza]
 sounds: []
-roots: []
+roots: [persian-bawarchi, persian-khana]
+etymology_hook: "bāvarchīkhānā: bāvarchī 'cook', usually traced to Persian bāwarchī (from Turkic), + Persian khāna 'house, room'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C101-darvaza]
 <!-- hl-knowledge: introduces=[UR-LEX-C102-LOC102-01]; assesses=[] -->
 
 **باورچی خانہ** — *bāvarchīkhānā* — "a kitchen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**باورچی خانہ** (*bāvarchīkhānā*) is "cook's room": *bāvarchī*, "a cook", usually traced to Persian *bāwarchī*, which Persian took from Turkic, and Persian *khāna*, "house, room".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

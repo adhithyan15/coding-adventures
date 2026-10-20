@@ -14,7 +14,8 @@ romanization: "kharch"
 concept_tag: UR-KAM209-KHARCH
 prerequisites: [UR-C209-taiks, UR-C209-bil]
 sounds: []
-roots: []
+roots: [arabic-kharj]
+etymology_hook: "kharch ← Arabic kharj 'expenditure; tribute', through Persian (Lane, root kh-r-j)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C209-bil]
 <!-- hl-knowledge: introduces=[UR-LEX-C209-KAM209-05]; assesses=[] -->
 
 **خرچ** — *kharch* — "an expense".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خرچ** (*kharch*) is a loan from Arabic *kharj*, "expenditure; tribute", which reached Urdu through Persian. Its Arabic root is *kh-r-j* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

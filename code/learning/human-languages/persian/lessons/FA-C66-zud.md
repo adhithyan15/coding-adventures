@@ -14,7 +14,8 @@ romanization: "zud"
 concept_tag: FA-TIME66-ZUD
 prerequisites: [FA-C66-hamishe, FA-C66-gahi]
 sounds: []
-roots: []
+roots: [persian-zud]
+etymology_hook: "zud: inherited, usually traced to Middle Persian zūd"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C66-gahi]
 <!-- hl-knowledge: introduces=[FA-LEX-C66-TIME66-03]; assesses=[] -->
 
 **زود** — *zud* — "early".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*zud* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *zūd*, "quick".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

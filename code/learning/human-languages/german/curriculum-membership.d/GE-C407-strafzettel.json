@@ -1,0 +1,11 @@
+{
+  "id": "GE-C407-strafzettel",
+  "pathSegment": "GE-PATH-407-BLITZER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-407-BLITZER",
+      "order": 4
+    }
+  ]
+}

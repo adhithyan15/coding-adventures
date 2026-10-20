@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-420-RITARDO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can deal with delays: the departures board, running late, putting things back, a refund and refunding.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C339-concordar",
+  "pathSegment": "PT-PATH-339-ACORDO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-339-ACORDO",
+      "order": 1
+    }
+  ]
+}

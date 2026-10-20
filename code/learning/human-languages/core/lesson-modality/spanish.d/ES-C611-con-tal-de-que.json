@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C611-con-tal-de-que",
+    "language": "spanish",
+    "chapter": 611,
+    "sequence": 20320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:26052a4320892af4"
+  },
+  "findings": []
+}

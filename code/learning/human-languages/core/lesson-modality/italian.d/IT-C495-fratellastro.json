@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C495-fratellastro",
+    "language": "italian",
+    "chapter": 495,
+    "sequence": 27870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2fd1c2e5015f6f81"
+  },
+  "findings": []
+}

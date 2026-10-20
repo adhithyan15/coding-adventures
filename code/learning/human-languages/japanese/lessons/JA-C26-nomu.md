@@ -14,7 +14,8 @@ romanization: "nomu"
 concept_tag: JA-VERB-NOMU
 prerequisites: [JA-C26-iku, JA-C26-kau]
 sounds: []
-roots: []
+roots: [japanese-nomu]
+etymology_hook: "nomu: native Japanese, inherited, not borrowed; kanji 飲む attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C26-kau]
 <!-- hl-knowledge: introduces=[JA-LEX-C26-FAMILY26-05]; assesses=[] -->
 
 **のむ** — *nomu* — "to drink".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**のむ** (*nomu*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

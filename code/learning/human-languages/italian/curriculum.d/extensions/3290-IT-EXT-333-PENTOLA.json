@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-333-PENTOLA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say how I boiled and drained food, with the lid on the pan.",
+  "prerequisites": []
+}

@@ -14,7 +14,8 @@ romanization: "ca"
 concept_tag: SA-JOIN-CA
 prerequisites: [SA-C51-uncle, SA-C51-grandmother, SA-C10-annam, SA-C10-paniyam]
 sounds: []
-roots: []
+roots: [sanskrit-ca]
+etymology_hook: "ca 'and' is inherited: MW compares Latin -que and Greek te, also enclitics after their word (CDIAL 4533)"
 duration:
   max_seconds: 240
 requires:
@@ -59,6 +60,12 @@ were a pair.
 
 **च** can never begin a sentence. A word that must lean on the word before it is
 called an **enclitic**, and this is Sanskrit's commonest one.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Ca* is inherited: MW compares Latin *-que* and Greek *te*, which also stand after
+the word they join (CDIAL 4533).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

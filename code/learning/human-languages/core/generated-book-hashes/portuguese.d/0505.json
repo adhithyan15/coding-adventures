@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 505,
+  "sourceHash": "fnv1a64:b70a72ead0960973",
+  "lessonIds": [
+    "PT-C505-pincel",
+    "PT-C505-aguarela",
+    "PT-C505-tela",
+    "PT-C505-cavalete",
+    "PT-C505-moldura"
+  ],
+  "tex": "portuguese/book/chapters/ch505-pinceis-e-telas.tex"
+}

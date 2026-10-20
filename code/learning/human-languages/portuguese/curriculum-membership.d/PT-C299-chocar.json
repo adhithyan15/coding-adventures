@@ -1,0 +1,11 @@
+{
+  "id": "PT-C299-chocar",
+  "pathSegment": "PT-PATH-299-ACIDENTE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-299-ACIDENTE",
+      "order": 2
+    }
+  ]
+}

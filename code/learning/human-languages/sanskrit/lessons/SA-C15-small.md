@@ -14,7 +14,8 @@ romanization: "alpa"
 concept_tag: SA-ADJ-SMALL
 prerequisites: [SA-C15-big]
 sounds: []
-roots: []
+roots: [sanskrit-alpa]
+etymology_hook: "alpa 'small' is in the Atharvaveda (MW), but its origin is not settled (CDIAL 722)"
 duration:
   max_seconds: 210
 requires:
@@ -50,6 +51,13 @@ You met **महत्** *mahat* a moment ago. Put them side by side and nothing
 
 The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Alpa* is an old word, already in the Atharvaveda (MW), but its origin is not
+settled: MW gives no root for it. It lives on in a handful of modern
+words, such as Marathi *aprā*, "short" (CDIAL 722).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C15-ADJ-02] -->

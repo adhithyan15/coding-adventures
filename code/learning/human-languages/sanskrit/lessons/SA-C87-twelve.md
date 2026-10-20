@@ -14,7 +14,8 @@ romanization: "dvādaśa"
 concept_tag: SA-NUMBER-TWELVE
 prerequisites: [SA-C86-moment, SA-C87-eleven]
 sounds: []
-roots: []
+roots: [sanskrit-dvadasha]
+etymology_hook: "dvādaśa 'twelve' ← dvā 'two' + daśa 'ten' (MW); it lives on as Hindi bārah (CDIAL 6658)"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,12 @@ reviews_of: [SA-C87-eleven]
 
 **द्वादश** (*dvādaśa*) — "twelve": **द्वा-**, "two", with **दश**. The twelve months of
 a **संवत्सरः**.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Dvādaśa* is built from *dvā*, the old form of "two", and *daśa*, "ten" (MW). It
+lives on as Hindi *bārah*, "twelve" (CDIAL 6658).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

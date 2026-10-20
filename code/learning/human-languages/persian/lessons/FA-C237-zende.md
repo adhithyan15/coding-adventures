@@ -14,7 +14,8 @@ romanization: "zende"
 concept_tag: FA-SEFAT237-ZENDE
 prerequisites: [FA-C237-vahshi, FA-C237-ahli]
 sounds: []
-roots: []
+roots: [persian-zinda]
+etymology_hook: "zende ← Middle Persian zīndag (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C237-ahli]
 <!-- hl-knowledge: introduces=[FA-LEX-C237-SEFAT237-04]; assesses=[] -->
 
 **زنده** — *zende* — "alive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*zende* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *zīndag*, "alive" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

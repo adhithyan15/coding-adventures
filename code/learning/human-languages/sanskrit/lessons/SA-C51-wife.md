@@ -14,7 +14,8 @@ romanization: "patnī"
 concept_tag: SA-KIN-PATNI
 prerequisites: [SA-C51-husband, SA-C49-as, SA-C50-question]
 sounds: []
-roots: []
+roots: [sanskrit-patni, sanskrit-pati]
+etymology_hook: "patnī 'mistress, wife', the feminine of pati; MW compares Greek potnia 'lady' (CDIAL 7742)"
 duration:
   max_seconds: 210
 requires:

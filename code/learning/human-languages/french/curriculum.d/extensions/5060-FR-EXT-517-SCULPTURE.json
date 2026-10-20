@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-517-SCULPTURE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about sculpture.",
+  "prerequisites": []
+}

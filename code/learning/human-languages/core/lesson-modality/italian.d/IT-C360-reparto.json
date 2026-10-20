@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C360-reparto",
+    "language": "italian",
+    "chapter": 360,
+    "sequence": 20680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce80176a4e0c0e27"
+  },
+  "findings": []
+}

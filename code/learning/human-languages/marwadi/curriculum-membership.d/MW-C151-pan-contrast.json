@@ -1,0 +1,11 @@
+{
+  "id": "MW-C151-pan-contrast",
+  "pathSegment": "MW-PATH-151-JOINING",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-151-JOINING",
+      "order": 2
+    }
+  ]
+}

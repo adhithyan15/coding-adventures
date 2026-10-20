@@ -1,0 +1,20 @@
+{
+  "language": "latin",
+  "chapter": 528,
+  "sourceHash": "fnv1a64:9b88bed9d3c2f13d",
+  "lessonIds": [
+    "LA-C528-gens",
+    "LA-C528-propinquus",
+    "LA-C528-affinis",
+    "LA-C528-consobrinus",
+    "LA-C528-gemellus",
+    "LA-R528-review-521-528"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "latin/narration/ch528.txt",
+  "json": "latin/narration/ch528.json",
+  "textHash": "fnv1a64:ce457a55267fd2ae",
+  "jsonHash": "fnv1a64:81f27d81a7b319cc",
+  "findings": []
+}

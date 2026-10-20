@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C305-frana",
+    "language": "italian",
+    "chapter": 305,
+    "sequence": 17760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f7cc2afdd522ae1a"
+  },
+  "findings": []
+}

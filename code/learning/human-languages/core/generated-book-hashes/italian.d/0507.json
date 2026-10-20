@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 507,
+  "sourceHash": "fnv1a64:979c8920145df4c9",
+  "lessonIds": [
+    "IT-C507-giardinaggio",
+    "IT-C507-seminare",
+    "IT-C507-annaffiare",
+    "IT-C507-rastrello",
+    "IT-C507-zappare"
+  ],
+  "tex": "italian/book/chapters/ch507-il-giardinaggio.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C283-intervistare",
+  "pathSegment": "IT-PATH-283-REDAZIONE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-283-REDAZIONE",
+      "order": 4
+    }
+  ]
+}

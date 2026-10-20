@@ -69,6 +69,9 @@ every Romance language. Your very first lesson taught you that Latin's endings
 carry what other languages carry in extra words; here is the reverse motion, a
 demonstrative flattening into an extra word.
 
+*Ille* goes back to Old Latin *olle* (Lewis & Short, EtymDB 2.1); beyond that its
+origin is uncertain.
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C50-POINT-01, LA-LEX-C50-POINT-02, LA-LEX-C50-POINT-03] -->
 

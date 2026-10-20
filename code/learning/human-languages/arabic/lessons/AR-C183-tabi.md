@@ -14,7 +14,8 @@ romanization: "ṭābiʿ"
 concept_tag: AR-SHAY183-TABI
 prerequisites: [AR-C182-wajba, AR-C182-tannura]
 sounds: []
-roots: []
+roots: [ṭ-b-ʿ]
+etymology_hook: "ṭābiʿ: built on the root ṭ-b-ʿ, 'to seal, to stamp' (Lane); ṭābiʿ is the active participle, 'a stamp'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C182-tannura]
 <!-- hl-knowledge: introduces=[AR-LEX-C183-SHAY183-01]; assesses=[] -->
 
 **طابع** — *ṭābiʿ* — "a postage stamp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**طابع** (*ṭābiʿ*) is built on the native Arabic root *ṭ-b-ʿ*, "to seal, to stamp" (Lane). *Ṭābiʿ* is the active participle, "a stamp"; the postage stamp is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

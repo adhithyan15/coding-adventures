@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-373-PURCHE",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "IT-EXT-373-PURCHE"
+  ],
+  "after": []
+}

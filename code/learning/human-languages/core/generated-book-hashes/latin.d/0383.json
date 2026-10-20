@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 383,
+  "sourceHash": "fnv1a64:6920e9d8239fce16",
+  "lessonIds": [
+    "LA-C383-magistratus",
+    "LA-C383-praetor",
+    "LA-C383-aedilis",
+    "LA-C383-quaestor",
+    "LA-C383-censor"
+  ],
+  "tex": "latin/book/chapters/ch383-the-magistrates.tex"
+}

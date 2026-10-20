@@ -1,0 +1,21 @@
+{
+  "id": "SA-A1-PRON-04",
+  "category": "Sarvanāma — the pronoun",
+  "label": "the dative-experiencer frame Spanish gustar needs",
+  "probe": [
+    "SA-PRON-DATIVE-ME-01",
+    "SA-FRAME-ROCATE-01"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-PRON-03",
+    "A1-SV-01",
+    "A1-F3-01",
+    "A1-NG6-08"
+  ],
+  "note": "Closed by SA-C58-mahyam and SA-C58-rocate. `mahyam` is taught first as the dative of `aham`, hooked to the dative-of-purpose the track already taught in `punardarshanaya`; `rocate` then makes the thing liked the subject and agrees with it, which is the whole of the gustar shape."
+}

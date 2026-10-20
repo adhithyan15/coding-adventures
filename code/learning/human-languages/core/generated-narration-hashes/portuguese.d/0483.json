@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 483,
+  "sourceHash": "fnv1a64:d143e048388e490f",
+  "lessonIds": [
+    "PT-C483-espirrar",
+    "PT-C483-espirro",
+    "PT-C483-alergico",
+    "PT-C483-comichao",
+    "PT-C483-cocar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch483.txt",
+  "json": "portuguese/narration/ch483.json",
+  "textHash": "fnv1a64:4426aaaf01ca6a2e",
+  "jsonHash": "fnv1a64:01e5a49be2dab7ce",
+  "findings": []
+}

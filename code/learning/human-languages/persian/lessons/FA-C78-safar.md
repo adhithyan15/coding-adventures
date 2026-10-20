@@ -14,7 +14,8 @@ romanization: "safar"
 concept_tag: FA-WORLD78-SAFAR
 prerequisites: [FA-C77-rang, FA-C77-ahang]
 sounds: []
-roots: []
+roots: [arabic-safar]
+etymology_hook: "safar ← Arabic safar 'journey', root s-f-r (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C77-ahang]
 <!-- hl-knowledge: introduces=[FA-LEX-C78-WORLD78-01]; assesses=[] -->
 
 **سفر** — *safar* — "a journey".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*safar* is borrowed from Arabic *safar*, "journey". Its Arabic root is *s-f-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

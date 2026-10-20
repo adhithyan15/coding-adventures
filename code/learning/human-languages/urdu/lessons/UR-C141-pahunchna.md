@@ -14,7 +14,8 @@ romanization: "pahuṅchnā"
 concept_tag: UR-VERB-PAHUNCHNA
 prerequisites: [UR-C141-thaharna, UR-C141-lautna]
 sounds: []
-roots: []
+roots: [sanskrit-prabhuta]
+etymology_hook: "pahuṅchnā ← Sanskrit prabhūta 'much, great', a tadbhava (CDIAL 8716)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C141-lautna]
 <!-- hl-knowledge: introduces=[UR-LEX-C141-ACT141-03]; assesses=[] -->
 
 **پہنچنا** — *pahuṅchnā* — "to arrive".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پہنچنا** (*pahuṅchnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *prabhūta*, "much, great" (CDIAL 8716). Prakrit made a verb of it, "is strong, reaches", and Urdu kept "to reach".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

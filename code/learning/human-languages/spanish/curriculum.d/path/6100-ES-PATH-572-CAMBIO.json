@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-572-CAMBIO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-572-CAMBIO"
+  ],
+  "after": []
+}

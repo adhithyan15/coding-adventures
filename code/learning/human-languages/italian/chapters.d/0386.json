@@ -1,0 +1,19 @@
+{
+  "chapter": 386,
+  "title": "Infrangere le regole",
+  "label": "ch:it-infrangere-le-regole",
+  "canDo": "I can say that someone broke a rule: a violation, an offence, crossing the line and an exception to the rule.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "IT-R386-ripasso-379-386",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 386: I can say that someone broke a rule: a violation, an offence, crossing the line and an exception to the rule.",
+    "assesses": [
+      "IT-LEX-C386-VIOLAZIONE-03",
+      "IT-LEX-C386-VIOLAZIONE-04",
+      "IT-LEX-C386-VIOLAZIONE-05"
+    ]
+  }
+}

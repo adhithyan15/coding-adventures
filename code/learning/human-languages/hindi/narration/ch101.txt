@@ -14,7 +14,7 @@ You'll want to know: के साथ.
 English spends one word on this. Hindi spends two, and only the second one is new.
 
 The phrase, taken apart.
-sāth, "with", comes from Sanskrit sārtha, "caravan, company", whose form sārthena meant "in company with" (CDIAL 13364).
+sāth, "with", comes from Sanskrit sārthena, "in company with", the instrumental case of sārtha, "caravan, company"; CDIAL lists the Hindi word under that case form (CDIAL 13364).
 
 The two words.
 Take the phrase apart and something familiar falls out:
@@ -288,7 +288,7 @@ kind of word: noun. plain: बच्चा. before a postposition: बच्च�
 kind of word: infinitive. plain: करना. before a postposition: करने.
 Five kinds of word, one ending, one trigger. The infinitive is the last of the five, and it needs no new rule at all: -ना ends in -आ, so it bends exactly as बच्चा does.
 The reason it can bend like a noun is that in Hindi it is one. करना is both to do and the doing, which is why it could already sit where a noun sits. A word that behaves like a noun bends like a noun.
-लिए is usually explained as a form of लेना, "to take".
+करना goes back to Sanskrit karoti, "does" (CDIAL 2814). लिए is usually explained as a form of लेना, "to take".
 
 Grammar Lens: where the purpose goes.
 [a table of 3 rows, read aloud]

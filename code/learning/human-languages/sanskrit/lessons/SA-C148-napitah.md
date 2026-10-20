@@ -14,7 +14,8 @@ romanization: "nāpitaḥ"
 concept_tag: SA-PPL148-NAPITAH
 prerequisites: [SA-C147-mantri, SA-C147-senapatih]
 sounds: []
-roots: []
+roots: [sanskrit-napita]
+etymology_hook: "nāpita 'barber' (ŚBr), linked with √snā 'bathe' (CDIAL 13792, after EWA); Hindi nāū, nāī 'barber'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C147-senapatih]
 <!-- hl-knowledge: introduces=[SA-LEX-C148-PPL148-01]; assesses=[] -->
 
 **नापितः** — *nāpitaḥ* — "a barber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nāpita* "a barber" is old, in the Śatapatha Brāhmaṇa. CDIAL 13792, after EWA, links it with the root √snā "bathe", through a form *snāpitṛ* "one who bathes others", which MW also queries. It lives on as Hindi *nāū* and *nāī* "barber" (CDIAL 13792).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

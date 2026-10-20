@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:70f824852156fb9e",
+  "lessonIds": [
+    "IT-C324-eroe",
+    "IT-C324-leggenda",
+    "IT-C324-mito",
+    "IT-C324-finale",
+    "IT-C324-morale"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch324.txt",
+  "json": "italian/narration/ch324.json",
+  "textHash": "fnv1a64:30bd757d54000d7c",
+  "jsonHash": "fnv1a64:b4a385cf699f6cdc",
+  "findings": []
+}

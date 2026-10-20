@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 623,
+  "sourceHash": "fnv1a64:3d111e96e8d9dca6",
+  "lessonIds": [
+    "ES-C623-castigo",
+    "ES-C623-castigar",
+    "ES-C623-sancion",
+    "ES-C623-sancionar",
+    "ES-C623-multar",
+    "ES-R623-repaso-616-623"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch623.txt",
+  "json": "spanish/narration/ch623.json",
+  "textHash": "fnv1a64:76f4aced2bc7d4e2",
+  "jsonHash": "fnv1a64:536b9bd0c78f27a4",
+  "findings": []
+}

@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Heart",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:5087d2a7f57be397",
+  "sourceHash": "fnv1a64:1dc193c9e8ffe1d0",
   "lessons": [
     {
       "id": "MR-C13-hrudaya",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:69abf2a36a402c7b",
+      "sourceHash": "fnv1a64:4a8c0561d436278b",
       "notice": {
         "modality": "sight",
         "needs": [

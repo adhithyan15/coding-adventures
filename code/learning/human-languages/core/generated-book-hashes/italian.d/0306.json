@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 306,
+  "sourceHash": "fnv1a64:0d13c476a252d1dd",
+  "lessonIds": [
+    "IT-C306-salvataggio",
+    "IT-C306-bagnino",
+    "IT-C306-naufragio",
+    "IT-C306-disperso",
+    "IT-C306-sopravvivere"
+  ],
+  "tex": "italian/book/chapters/ch306-salvati-in-mare.tex"
+}

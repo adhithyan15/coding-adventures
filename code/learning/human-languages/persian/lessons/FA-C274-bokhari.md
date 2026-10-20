@@ -14,7 +14,8 @@ romanization: "bokhâri"
 concept_tag: FA-CHIZ274-BOKHARI
 prerequisites: [FA-C273-monaseb, FA-C273-momken]
 sounds: []
-roots: []
+roots: [arabic-bukhar]
+etymology_hook: "bokhâri: bokhâr ← Arabic buḫār 'vapour' (Lane) + Persian -i"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C273-momken]
 <!-- hl-knowledge: introduces=[FA-LEX-C274-CHIZ274-01]; assesses=[] -->
 
 **بخاری** — *bokhâri* — "a heater".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bokhâri* is *bokhâr*, "steam, vapour", with the ending *-i*. *bokhâr* is borrowed from Arabic *buḫār*, "vapour" (root *b-ḫ-r*, Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 281,
+  "sourceHash": "fnv1a64:1acd1d043576617e",
+  "lessonIds": [
+    "FR-C281-reportage",
+    "FR-C281-envoye-special",
+    "FR-C281-correspondant",
+    "FR-C281-depeche",
+    "FR-C281-agence-de-presse"
+  ],
+  "tex": "french/book/chapters/ch281-le-reportage.tex"
+}

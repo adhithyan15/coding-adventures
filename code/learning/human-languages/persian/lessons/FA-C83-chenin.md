@@ -14,7 +14,8 @@ romanization: "chenin"
 concept_tag: FA-DEF83-CHENIN
 prerequisites: [FA-C83-hamin, FA-C83-haman]
 sounds: []
-roots: []
+roots: [persian-chon, persian-in]
+etymology_hook: "chenin: Persian chon 'like' (Middle Persian čiyōn, EtymDB) + in 'this'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C83-haman]
 <!-- hl-knowledge: introduces=[FA-LEX-C83-DEF83-04]; assesses=[] -->
 
 **چنین** — *chenin* — "such".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*chenin* is *chon*, "like, as", with *in*, "this": "like this". Both are native; *chon* continues Middle Persian *čiyōn* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

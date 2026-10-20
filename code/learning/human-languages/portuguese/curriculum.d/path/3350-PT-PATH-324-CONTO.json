@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-324-CONTO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-324-CONTO"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C259-seit",
+  "pathSegment": "GE-PATH-259-VERGLEICH",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-259-VERGLEICH",
+      "order": 1
+    }
+  ]
+}

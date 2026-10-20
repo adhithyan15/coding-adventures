@@ -14,7 +14,8 @@ romanization: "kotoshi"
 concept_tag: JA-TIME75-KOTOSHI
 prerequisites: [JA-C74-han, JA-C75-maitoshi]
 sounds: []
-roots: []
+roots: [japanese-ko-this, japanese-toshi-year]
+etymology_hook: "kotoshi: native; usually ko 'this' + toshi 'year'; 今年 read as a whole"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C75-maitoshi]
 <!-- hl-knowledge: introduces=[JA-LEX-C75-TIME75-02]; assesses=[] -->
 
 **ことし** — *kotoshi* — "this year".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ことし** (*kotoshi*) is a native word, usually taken apart as *ko*, "this", and *toshi*, "year". JMdict writes it with characters for "now" and "year", read as a whole for their meaning. It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

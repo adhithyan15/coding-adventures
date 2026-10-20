@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-462-NUNDINOR",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "LA-EXT-462-NUNDINOR"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C530-despensa",
+    "language": "portuguese",
+    "chapter": 530,
+    "sequence": 29250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eb1bd10e9aabf16a"
+  },
+  "findings": []
+}

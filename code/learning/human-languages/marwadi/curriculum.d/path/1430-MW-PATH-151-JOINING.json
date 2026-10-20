@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-151-JOINING",
+  "spine_node": "SPINE-SAY-WHY",
+  "before": [],
+  "inline": [
+    "MW-EXT-151-JOINING"
+  ],
+  "after": []
+}

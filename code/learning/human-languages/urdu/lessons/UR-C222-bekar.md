@@ -14,7 +14,8 @@ romanization: "bekār"
 concept_tag: UR-SIFAT222-BEKAR
 prerequisites: [UR-C221-shandar, UR-C222-mazedar]
 sounds: []
-roots: []
+roots: [persian-bekar]
+etymology_hook: "bekār: usually traced to Persian bēkār 'idle, useless'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C222-mazedar]
 <!-- hl-knowledge: introduces=[UR-LEX-C222-SIFAT222-02]; assesses=[] -->
 
 **بیکار** — *bekār* — "useless".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بیکار** (*bekār*) is a loan, usually traced to Persian *bēkār*, "idle, useless". It is built from *bē-*, "without", and *kār*, "work".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

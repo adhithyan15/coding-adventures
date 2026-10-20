@@ -1,0 +1,11 @@
+{
+  "id": "IT-C367-comunita",
+  "pathSegment": "IT-PATH-367-VOLONTARIO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-367-VOLONTARIO",
+      "order": 4
+    }
+  ]
+}

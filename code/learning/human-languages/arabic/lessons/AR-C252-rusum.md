@@ -14,7 +14,8 @@ romanization: "rusūm"
 concept_tag: AR-AMAL252-RUSUM
 prerequisites: [AR-C252-muhadara, AR-C252-madda]
 sounds: []
-roots: []
+roots: [r-s-m]
+etymology_hook: "rusūm: built on the root r-s-m, 'a trace, a mark' (Lane); rusūm is the plural of rasm, 'a set charge'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C252-madda]
 <!-- hl-knowledge: introduces=[AR-LEX-C252-AMAL252-04]; assesses=[] -->
 
 **رسوم** — *rusūm* — "fees".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رسوم** (*rusūm*) is built on the native Arabic root *r-s-m*, "a trace, a mark" (Lane). *Rusūm* is the plural of *rasm*, "a set charge".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

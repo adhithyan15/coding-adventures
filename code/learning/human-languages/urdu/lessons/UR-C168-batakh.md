@@ -14,7 +14,8 @@ romanization: "batakh"
 concept_tag: UR-CHIZ168-BATAKH
 prerequisites: [UR-C167-keik, UR-C167-mithai]
 sounds: []
-roots: []
+roots: [arabic-batt]
+etymology_hook: "batakh: usually traced to Persian baṭ 'duck'; Lane calls Arabic baṭṭ a Persian word, or imitative"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C167-mithai]
 <!-- hl-knowledge: introduces=[UR-LEX-C168-CHIZ168-01]; assesses=[] -->
 
 **بطخ** — *batakh* — "a duck".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بطخ** (*batakh*) is usually traced to Persian *baṭ*, "duck". Lane's dictionary records Arabic *baṭṭ*, "ducks", and calls it a word taken from Persian, or one imitating the bird's call (Lane, root *b-ṭ-ṭ*).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

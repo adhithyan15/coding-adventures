@@ -1,0 +1,19 @@
+{
+  "chapter": 281,
+  "title": "Der Einbruch",
+  "label": "ch:ge-der-einbruch",
+  "canDo": "I can report a break-in: to break in, a burglary, a burglar, to pinch and the loot.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C281-beute",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 281: I can report a break-in: to break in, a burglary, a burglar, to pinch and the loot.",
+    "assesses": [
+      "GE-LEX-C281-EINBRUCH-03",
+      "GE-LEX-C281-EINBRUCH-04",
+      "GE-LEX-C281-EINBRUCH-05"
+    ]
+  }
+}

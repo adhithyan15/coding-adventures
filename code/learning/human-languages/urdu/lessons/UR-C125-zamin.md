@@ -14,7 +14,8 @@ romanization: "zamīn"
 concept_tag: UR-THINGS125-ZAMIN
 prerequisites: [UR-C124-kuan, UR-C125-andhi]
 sounds: []
-roots: []
+roots: [persian-zamin]
+etymology_hook: "zamīn: usually traced to Persian zamīn 'earth, ground'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C125-andhi]
 <!-- hl-knowledge: introduces=[UR-LEX-C125-THINGS125-02]; assesses=[] -->
 
 **زمین** — *zamīn* — "the ground, land".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**زمین** (*zamīn*) is a loan, usually traced to Persian *zamīn*, "earth, ground".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

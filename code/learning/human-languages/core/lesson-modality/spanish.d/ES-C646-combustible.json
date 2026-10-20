@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C646-combustible",
+    "language": "spanish",
+    "chapter": 646,
+    "sequence": 22130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3cd7e0f3858088f3"
+  },
+  "findings": []
+}

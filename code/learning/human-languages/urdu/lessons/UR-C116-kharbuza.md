@@ -14,7 +14,8 @@ romanization: "kharbūzā"
 concept_tag: UR-THINGS116-KHARBUZA
 prerequisites: [UR-C115-khira, UR-C115-tarbuz]
 sounds: []
-roots: []
+roots: [persian-kharbuza]
+etymology_hook: "kharbūzā: usually traced to Persian kharbuza 'melon'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C115-tarbuz]
 <!-- hl-knowledge: introduces=[UR-LEX-C116-THINGS116-01]; assesses=[] -->
 
 **خربوزہ** — *kharbūzā* — "a melon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خربوزہ** (*kharbūzā*) is a loan, usually traced to Persian *kharbuza*, "melon".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

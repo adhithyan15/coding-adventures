@@ -4,7 +4,7 @@
   "chapter": 262,
   "title": "Note, Example, Artist, Temple priest, Singer",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7e1cf6eb4462e1f6",
+  "sourceHash": "fnv1a64:9d646dbf105d29de",
   "lessons": [
     {
       "id": "ML-C262-kurippu",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:640d669c054d8932",
+      "sourceHash": "fnv1a64:c0bd1d6eb77f818a",
       "notice": null,
       "blocks": [
         {

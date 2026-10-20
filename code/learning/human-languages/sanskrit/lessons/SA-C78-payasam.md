@@ -14,7 +14,8 @@ romanization: "pāyasam"
 concept_tag: SA-FOOD-PAYASAM
 prerequisites: [SA-C78-oil, SA-C78-bread]
 sounds: []
-roots: []
+roots: [sanskrit-payasa]
+etymology_hook: "pāyasa 'made with milk; rice boiled in milk' ← payas 'milk, juice' (MW; CDIAL 8099)"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,12 @@ reviews_of: [SA-C78-bread]
 
 **पायसम्** (*pāyasam*) — rice cooked in **क्षीरम्** with **शर्करा**: the sweet of every
 festival.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Pāyasa* is built from *payas*, "milk, juice": first "made with milk", then rice
+boiled in milk (MW, CDIAL 8099).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

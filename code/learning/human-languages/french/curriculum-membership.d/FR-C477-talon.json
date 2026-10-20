@@ -1,0 +1,11 @@
+{
+  "id": "FR-C477-talon",
+  "pathSegment": "FR-PATH-477-JAMBE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-477-JAMBE",
+      "order": 2
+    }
+  ]
+}

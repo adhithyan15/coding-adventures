@@ -1,0 +1,11 @@
+{
+  "id": "FR-C445-droguerie",
+  "pathSegment": "FR-PATH-445-BOUTIQUES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-445-BOUTIQUES",
+      "order": 1
+    }
+  ]
+}

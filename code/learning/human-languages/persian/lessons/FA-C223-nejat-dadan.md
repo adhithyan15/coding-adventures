@@ -14,7 +14,8 @@ romanization: "nejât dâdan"
 concept_tag: FA-VERB-NEJAT-DADAN
 prerequisites: [FA-C222-shak-kardan, FA-C222-tul-keshidan]
 sounds: []
-roots: []
+roots: [arabic-najat]
+etymology_hook: "nejât ← Arabic najāt 'rescue, deliverance', root n-j-w (Lane), + Persian dâdan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C222-tul-keshidan]
 <!-- hl-knowledge: introduces=[FA-LEX-C223-KONESH223-01]; assesses=[] -->
 
 **نجات دادن** — *nejât dâdan* — "to rescue, to save".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nejât dâdan* pairs *nejât*, borrowed from Arabic *najāt*, "rescue, deliverance" (root *n-j-w*, Lane), with the Persian verb *dâdan*, "to give". *dâdan*, "to give", is an inherited verb; EtymDB takes it back to the Indo-European root *\*deh₃-*, "to give".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

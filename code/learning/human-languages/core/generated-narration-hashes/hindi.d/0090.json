@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 90,
-  "sourceHash": "fnv1a64:c12ffedc15ffe810",
+  "sourceHash": "fnv1a64:7abbd3001de5c60c",
   "lessonIds": [
     "HI-C82-lambaa",
     "HI-C82-patlaa",
@@ -15,6 +15,6 @@
   "text": "hindi/narration/ch90.txt",
   "json": "hindi/narration/ch90.json",
   "textHash": "fnv1a64:71a1faa40e296ef4",
-  "jsonHash": "fnv1a64:7ee150d9d3863a2b",
+  "jsonHash": "fnv1a64:a2a337772a025def",
   "findings": []
 }

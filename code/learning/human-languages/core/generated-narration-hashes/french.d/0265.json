@@ -1,0 +1,17 @@
+{
+  "language": "french",
+  "chapter": 265,
+  "sourceHash": "fnv1a64:d928dd26d16567dc",
+  "lessonIds": [
+    "FR-C265-plus-que",
+    "FR-C265-depuis-pendant",
+    "FR-C265-revision-experience"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "french/narration/ch265.txt",
+  "json": "french/narration/ch265.json",
+  "textHash": "fnv1a64:d81905b2758c3e43",
+  "jsonHash": "fnv1a64:ad64895afb04a11e",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C516-asegurar",
+  "pathSegment": "ES-PATH-516-VERSION",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-516-VERSION",
+      "order": 0
+    }
+  ]
+}

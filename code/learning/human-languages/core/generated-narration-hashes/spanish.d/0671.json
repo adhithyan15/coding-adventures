@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 671,
+  "sourceHash": "fnv1a64:8b1b6a1778edf8c4",
+  "lessonIds": [
+    "ES-C671-cercano",
+    "ES-C671-lejano",
+    "ES-C671-atajo",
+    "ES-C671-adelante",
+    "ES-C671-rodeo",
+    "ES-R671-repaso-664-671"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch671.txt",
+  "json": "spanish/narration/ch671.json",
+  "textHash": "fnv1a64:a2b3c8ec08112732",
+  "jsonHash": "fnv1a64:85149a5e4214da89",
+  "findings": []
+}

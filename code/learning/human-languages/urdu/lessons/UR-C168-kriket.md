@@ -14,7 +14,8 @@ romanization: "krikeṭ"
 concept_tag: UR-CHIZ168-KRIKET
 prerequisites: [UR-C168-ullu, UR-C168-vhel]
 sounds: []
-roots: []
+roots: [english-cricket]
+etymology_hook: "krikeṭ ← English cricket"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C168-vhel]
 <!-- hl-knowledge: introduces=[UR-LEX-C168-CHIZ168-04]; assesses=[] -->
 
 **کرکٹ** — *krikeṭ* — "cricket (the game)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کرکٹ** (*krikeṭ*) is a loan from English *cricket*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

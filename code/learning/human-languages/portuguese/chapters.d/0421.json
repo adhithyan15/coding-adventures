@@ -1,0 +1,19 @@
+{
+  "chapter": 421,
+  "title": "No aeroporto",
+  "label": "ch:pt-no-aeroporto",
+  "canDo": "I can find my way through an airport: the stopover, boarding, the shuttle, the runway and the time zone.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C421-fuso",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 421: I can find my way through an airport: the stopover, boarding, the shuttle, the runway and the time zone.",
+    "assesses": [
+      "PT-LEX-C421-AEROPORTO-03",
+      "PT-LEX-C421-AEROPORTO-04",
+      "PT-LEX-C421-AEROPORTO-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 700,
+  "sourceHash": "fnv1a64:bd8799cdc7139ddd",
+  "lessonIds": [
+    "ES-C700-nevar",
+    "ES-C700-helar",
+    "ES-C700-ventisca",
+    "ES-C700-nevada",
+    "ES-C700-escarcha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch700.txt",
+  "json": "spanish/narration/ch700.json",
+  "textHash": "fnv1a64:17a80dd072529fe8",
+  "jsonHash": "fnv1a64:0213462e0bc7062b",
+  "findings": []
+}

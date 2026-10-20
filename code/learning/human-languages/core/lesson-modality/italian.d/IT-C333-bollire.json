@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C333-bollire",
+    "language": "italian",
+    "chapter": 333,
+    "sequence": 19170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:80e7e6b2a60d827a"
+  },
+  "findings": []
+}

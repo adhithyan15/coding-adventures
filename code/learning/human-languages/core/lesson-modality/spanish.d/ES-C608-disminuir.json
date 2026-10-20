@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C608-disminuir",
+    "language": "spanish",
+    "chapter": 608,
+    "sequence": 20150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee8a6573074dddc4"
+  },
+  "findings": []
+}

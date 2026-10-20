@@ -14,7 +14,8 @@ romanization: "taqrīban"
 concept_tag: AR-SABAB238-TAQRIBAN
 prerequisites: [AR-C238-tamaman, AR-C238-taban]
 sounds: []
-roots: []
+roots: [q-r-b]
+etymology_hook: "taqrīban: built on the root q-r-b, 'to be near' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C238-taban]
 <!-- hl-knowledge: introduces=[AR-LEX-C238-SABAB238-04]; assesses=[] -->
 
 **تقريبا** — *taqrīban* — "almost, approximately".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تقريبا** (*taqrīban*) is built on the native Arabic root *q-r-b*, "to be near" (Lane). *Taqrīban* is the verbal noun of Form II, "bringing near", with the adverb ending *-an*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

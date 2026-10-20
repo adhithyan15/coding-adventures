@@ -14,7 +14,8 @@ romanization: "barsātī"
 concept_tag: UR-CHIZ251-BARSATI
 prerequisites: [UR-C251-jinz, UR-C251-nekar]
 sounds: []
-roots: []
+roots: [sanskrit-varsharatri]
+etymology_hook: "barsātī: barsāt 'the rainy season' ← Sanskrit varṣārātri (CDIAL 11398) + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C251-nekar]
 <!-- hl-knowledge: introduces=[UR-LEX-C251-CHIZ251-05]; assesses=[] -->
 
 **برساتی** — *barsātī* — "a raincoat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**برساتی** (*barsātī*) is "of the rains": *barsāt*, "the rainy season", from Sanskrit *varṣārātri* (CDIAL 11398), with the ending *-ī*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

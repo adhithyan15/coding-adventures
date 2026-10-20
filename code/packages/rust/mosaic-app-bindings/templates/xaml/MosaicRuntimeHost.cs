@@ -1255,7 +1255,11 @@ public static class MosaicRuntimeHost
                     {
                         if (!values.TryGetValue(normalized, out var value))
                             continue;
-                        var converted = ConvertValue(value, property.PropertyType);
+                        // Fixed phase names avoid leaking property names or values.
+                        // Repeated scopes separate conversion from synchronous setters.
+                        (bool converted, object? value) converted;
+                        using (BeginProfile("apply-props-convert"))
+                            converted = ConvertValue(value, property.PropertyType);
                         if (!converted.converted)
                         {
                             if (strict)
@@ -1263,10 +1267,17 @@ public static class MosaicRuntimeHost
                                     $"Mosaic runtime prop '{property.Name}' is not valid for {property.PropertyType.Name}");
                             continue;
                         }
-                        property.SetValue(component, converted.value);
+                        using (BeginProfile("apply-props-set"))
+                            property.SetValue(component, converted.value);
                     }
                 }
-                finally { initialization?.EndInit(); }
+                finally
+                {
+                    // EndInit releases deferred notifications and binding work even
+                    // when conversion or a setter throws. Keep it inside the scope.
+                    using (BeginProfile("apply-props-notify"))
+                        initialization?.EndInit();
+                }
                 appliedRevision = Revision(latestUpdate);
             }
         }
@@ -1339,7 +1350,11 @@ public static class MosaicRuntimeHost
             if (app == IntPtr.Zero || library == IntPtr.Zero) return;
             try
             {
-                var value = Invoke(delegate(out MosaicBuffer output)
+                // Separate adapter serialization from disk latency without
+                // changing the synchronous durability boundary or logging data.
+                JsonElement value;
+                using (BeginProfile("persist-snapshot-ffi"))
+                value = Invoke(delegate(out MosaicBuffer output)
                 {
                     return snapshot(app, out output);
                 });
@@ -1352,8 +1367,13 @@ public static class MosaicRuntimeHost
                 var directory = Path.GetDirectoryName(path)!;
                 Directory.CreateDirectory(directory);
                 var temporary = path + ".tmp";
-                File.WriteAllBytes(temporary, Encoding.UTF8.GetBytes(value.GetRawText()));
-                File.Move(temporary, path, true);
+                byte[] encoded;
+                using (BeginProfile("persist-encode"))
+                    encoded = Encoding.UTF8.GetBytes(value.GetRawText());
+                using (BeginProfile("persist-write"))
+                    File.WriteAllBytes(temporary, encoded);
+                using (BeginProfile("persist-replace"))
+                    File.Move(temporary, path, true);
                 persistenceWarning = null;
             }
             catch (Exception error)

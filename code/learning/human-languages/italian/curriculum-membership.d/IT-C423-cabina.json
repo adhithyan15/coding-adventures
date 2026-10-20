@@ -1,0 +1,11 @@
+{
+  "id": "IT-C423-cabina",
+  "pathSegment": "IT-PATH-423-TRAGHETTO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-423-TRAGHETTO",
+      "order": 1
+    }
+  ]
+}

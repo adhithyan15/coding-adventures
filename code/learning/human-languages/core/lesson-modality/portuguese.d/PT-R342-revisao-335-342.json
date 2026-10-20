@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-R342-revisao-335-342",
+    "language": "portuguese",
+    "chapter": 342,
+    "sequence": 19600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:01a79eab02b1298b"
+  },
+  "findings": []
+}

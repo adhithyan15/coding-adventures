@@ -14,7 +14,8 @@ romanization: "bluz"
 concept_tag: FA-CHIZ166-BLUZ
 prerequisites: [FA-C166-andaze, FA-C166-naqd]
 sounds: []
-roots: []
+roots: [french-blouse]
+etymology_hook: "bluz ← French blouse 'blouse'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C166-naqd]
 <!-- hl-knowledge: introduces=[FA-LEX-C166-CHIZ166-05]; assesses=[] -->
 
 **بلوز** — *bluz* — "a blouse".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bluz* is borrowed from French *blouse*, "blouse" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

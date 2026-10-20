@@ -1,0 +1,11 @@
+{
+  "id": "LA-C344-origo",
+  "pathSegment": "LA-PATH-344-MAIORES",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-344-MAIORES",
+      "order": 3
+    }
+  ]
+}

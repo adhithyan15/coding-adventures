@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 373,
+  "sourceHash": "fnv1a64:619b19f8ee4f4781",
+  "lessonIds": [
+    "PT-C373-risco",
+    "PT-C373-arriscado",
+    "PT-C373-provavel",
+    "PT-C373-improvavel",
+    "PT-C373-probabilidade"
+  ],
+  "tex": "portuguese/book/chapters/ch373-correr-riscos.tex"
+}

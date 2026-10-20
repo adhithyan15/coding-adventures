@@ -1,0 +1,11 @@
+{
+  "id": "PT-C473-antipatico",
+  "pathSegment": "PT-PATH-473-MANEIRAS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-473-MANEIRAS",
+      "order": 3
+    }
+  ]
+}

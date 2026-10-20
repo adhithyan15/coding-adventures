@@ -14,7 +14,8 @@ romanization: "mikh"
 concept_tag: FA-WHY93-MIKH
 prerequisites: [FA-C93-patu, FA-C93-parde]
 sounds: []
-roots: []
+roots: [persian-mikh]
+etymology_hook: "mikh: inherited, usually traced to Middle Persian mēx"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C93-parde]
 <!-- hl-knowledge: introduces=[FA-LEX-C93-WHY93-05]; assesses=[] -->
 
 **میخ** — *mikh* — "a nail (to hammer)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mikh* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *mēx*, "nail, peg".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

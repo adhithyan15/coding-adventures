@@ -1,0 +1,11 @@
+{
+  "id": "IT-C340-convincente",
+  "pathSegment": "IT-PATH-340-DIBATTITO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-340-DIBATTITO",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C663-reembolso",
+  "pathSegment": "ES-PATH-663-TEMPORADA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-663-TEMPORADA",
+      "order": 3
+    }
+  ]
+}

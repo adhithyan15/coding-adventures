@@ -1,0 +1,11 @@
+{
+  "id": "IT-C372-presupposto",
+  "pathSegment": "IT-PATH-372-IPOTESI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-372-IPOTESI",
+      "order": 4
+    }
+  ]
+}

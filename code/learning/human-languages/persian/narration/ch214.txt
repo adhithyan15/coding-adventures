@@ -12,6 +12,9 @@ Before the new one: say the Persian for a circle, then the Persian for a dot.
 You'll want to know: تجربه.
 تجربه — tajrobe — "experience".
 
+The word, taken apart.
+tajrobe is borrowed from Arabic tajriba, "trial, experience". Its Arabic root is j-r-b (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for a dot, then the Persian for experience.
 
 You'll want to know: کارفرما.
 کارفرما — kârfarmâ — "an employer".
+
+The word, taken apart.
+kârfarmâ is built from kâr, "work", and -farmâ, "commanding" (from farmudan, "to command"): the one who orders the work. kâr is inherited, from Middle Persian kār (EtymDB).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for experience, then the Persian for an empl
 You'll want to know: کارمند.
 کارمند — kârmand — "an employee, a clerk".
 
+The word, taken apart.
+kârmand is built from kâr, "work", and the ending -mand, "having": one who has work. kâr is inherited, from Middle Persian kār (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for an employer, then the Persian for an emp
 You'll want to know: همکار.
 همکار — hamkâr — "a colleague".
 
+The word, taken apart.
+hamkâr is built from ham-, "same, together", and kâr, "work": one who works with you. Both are inherited: EtymDB traces ham to Old Persian hama- and kâr to Middle Persian kār.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for an employee, then the Persian for a coll
 
 You'll want to know: مدیر.
 مدیر — modir — "a manager; a head teacher".
+
+The word, taken apart.
+modir is borrowed from Arabic mudīr, "director, one who manages". Its Arabic root is d-w-r (Lane).
 
 What you've built.
 One more word for this chapter.

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C328-imperatore",
+  "pathSegment": "IT-PATH-328-IMPERO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-328-IMPERO",
+      "order": 1
+    }
+  ]
+}

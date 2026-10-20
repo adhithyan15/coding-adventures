@@ -14,7 +14,8 @@ romanization: "corayati"
 concept_tag: SA-VERB-CORAYATI
 prerequisites: [SA-C173-sevate, SA-C173-ramate]
 sounds: []
-roots: []
+roots: [sanskrit-corayati, sanskrit-cora]
+etymology_hook: "corayati 'steals' is built on cora 'thief' (CDIAL 4933); Hindi cornā 'to steal', cor 'thief'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C173-ramate]
 <!-- hl-knowledge: introduces=[SA-LEX-C174-ACT174-01]; assesses=[] -->
 
 **चोरयति** — *corayati* — "steals".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*corayati* "steals" is built on *cora* "a thief" (CDIAL 4933), with the verb-making ending *-aya-*. It lives on as Hindi *cornā* "to steal" (CDIAL 4933), and *cora* as Hindi *cor* "thief" (CDIAL 4931).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

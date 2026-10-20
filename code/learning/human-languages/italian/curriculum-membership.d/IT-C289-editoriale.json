@@ -1,0 +1,11 @@
+{
+  "id": "IT-C289-editoriale",
+  "pathSegment": "IT-PATH-289-PUBBLICO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-289-PUBBLICO",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 539,
+  "sourceHash": "fnv1a64:7bc5534740f1b727",
+  "lessonIds": [
+    "LA-C539-alea",
+    "LA-C539-fritillus",
+    "LA-C539-latrunculus",
+    "LA-C539-lusus",
+    "LA-C539-luctor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch539.txt",
+  "json": "latin/narration/ch539.json",
+  "textHash": "fnv1a64:b3705adede5cba8f",
+  "jsonHash": "fnv1a64:40bc397c10238f69",
+  "findings": []
+}

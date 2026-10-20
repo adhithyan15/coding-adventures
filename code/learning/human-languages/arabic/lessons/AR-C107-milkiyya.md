@@ -14,7 +14,8 @@ romanization: "milkiyya"
 concept_tag: AR-CAN107-MILKIYYA
 prerequisites: [AR-C107-kafaa, AR-C107-shahada, AR-C08-al-ahad-al-khamis, AR-C08-al-ahad-al-khamis]
 sounds: []
-roots: []
+roots: [m-l-k]
+etymology_hook: "milkiyya: built on the root m-l-k, 'to own, to possess' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [AR-C107-shahada]
 <!-- hl-knowledge: introduces=[AR-LEX-C107-CAN107-03]; assesses=[] -->
 
 **ملكية** — *milkiyya* — "ownership".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ملكية** (*milkiyya*) is built on the native Arabic root *m-l-k*, "to own, to possess" (Lane). *Milkiyya* is a modern abstract noun from *milk*, "ownership".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

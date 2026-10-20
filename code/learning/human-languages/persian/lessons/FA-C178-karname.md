@@ -14,7 +14,8 @@ romanization: "kârnâme"
 concept_tag: FA-KAR178-KARNAME
 prerequisites: [FA-C178-pakkon, FA-C178-jamedadi]
 sounds: []
-roots: []
+roots: [persian-kar, persian-nama]
+etymology_hook: "kârnâme: Persian kâr 'deed' + nâme 'writing'; inherited (Middle Persian kārnāmag)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C178-jamedadi]
 <!-- hl-knowledge: introduces=[FA-LEX-C178-KAR178-05]; assesses=[] -->
 
 **کارنامه** — *kârnâme* — "a school report".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kârnâme* is built from *kâr*, "work, deed", and *nâme*, "writing": a record of work. Middle Persian already had *kārnāmag*, "book of deeds"; both parts are inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

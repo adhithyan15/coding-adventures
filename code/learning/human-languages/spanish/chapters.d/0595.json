@@ -1,0 +1,19 @@
+{
+  "chapter": 595,
+  "title": "Mi carrera",
+  "label": "ch:es-mi-carrera",
+  "canDo": "I can talk about a career, ambition, being promoted, merit and success.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C595-triunfar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 595: I can talk about a career, ambition, being promoted, merit and success.",
+    "assesses": [
+      "ES-LEX-C595-CARRERA-03",
+      "ES-LEX-C595-CARRERA-04",
+      "ES-LEX-C595-CARRERA-05"
+    ]
+  }
+}

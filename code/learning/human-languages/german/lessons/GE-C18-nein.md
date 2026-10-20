@@ -6,7 +6,7 @@ sequence: 700
 chapter: 31
 type: word
 headword: nein
-gloss: no
+gloss: 'no'
 concept_tag: RESPONSE-NO
 prerequisites: [GE-C18-ja, GE-C18-ja-more]
 sounds: [diphthong-ei, n-consonant]

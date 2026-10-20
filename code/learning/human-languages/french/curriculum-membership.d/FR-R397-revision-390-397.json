@@ -1,0 +1,11 @@
+{
+  "id": "FR-R397-revision-390-397",
+  "pathSegment": "FR-PATH-397-FICHIER",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FR-EXT-397-FICHIER",
+      "order": 5
+    }
+  ]
+}

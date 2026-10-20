@@ -14,7 +14,8 @@ romanization: "panchar shodan"
 concept_tag: FA-VERB-PANCHAR-SHODAN
 prerequisites: [FA-C148-chort-zadan, FA-C148-tormoz-gereftan]
 sounds: []
-roots: []
+roots: [english-puncture, persian-shudan]
+etymology_hook: "panchar: usually traced to English puncture, + Persian shodan 'to become'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C148-tormoz-gereftan]
 <!-- hl-knowledge: introduces=[FA-LEX-C148-KONESH148-04]; assesses=[] -->
 
 **پنچر شدن** — *panchar shodan* — "to get a flat tyre".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*panchar shodan* pairs *panchar*, "flat tyre", usually traced to English *puncture*, with *shodan*, "to become". *shodan*, "to become", is an inherited verb; it is usually traced to Middle Persian *šudan*, "to go".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

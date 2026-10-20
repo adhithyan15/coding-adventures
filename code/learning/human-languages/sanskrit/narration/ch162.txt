@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for an anklet, then the Sanskrit for an ear
 You'll want to know: वेतनम्.
 वेतनम् — vetanam — "wages, salary".
 
+The word, taken apart.
+vetana "wages, hire, salary" appears from Manu on. The grammarians derive it from √vī, while MW thinks it rather belongs with √vṛt "turn" and vartana "livelihood", so its origin is uncertain.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for an earring, then the Sanskrit for wages
 
 You'll want to know: ऋणम्.
 ऋणम् — ṛṇam — "a debt".
+
+The word, taken apart.
+ṛṇa "a debt" is old, in the Rigveda, and is inherited from Indo-Iranian, with an Avestan cousin (EtymDB); MW compares Latin reus "liable". It lives on as Hindi and Punjabi rin "debt" (CDIAL 2451).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for wages, then the Sanskrit for a debt.
 You'll want to know: लाभः.
 लाभः — lābhaḥ — "profit, gain".
 
+The word, taken apart.
+lābha comes from the root √labh "take, obtain" (CDIAL 11018): "finding, getting", and so "profit". MW compares √labh with Greek lambanō "take", and labhate "gets" is its present.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a debt, then the Sanskrit for profit.
 You'll want to know: हानिः.
 हानिः — hāniḥ — "loss".
 
+The word, taken apart.
+hāni "abandonment, decrease, loss" is filed by MW under the root √hā "leave, abandon", noting that some derive it from √han "strike", so the root is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for profit, then the Sanskrit for loss.
 
 You'll want to know: व्यापारः.
 व्यापारः — vyāpāraḥ — "trade, business".
+
+The word, taken apart.
+vyāpāra comes from vi-ā-√pṛ "be busy, be occupied", the root √pṛ with vi and ā (MW; CDIAL 12205): "occupation, business", and so "trade". It lives on as Marathi vāvar "business, activity" (CDIAL 12205).
 
 What you've built.
 One more word for this chapter.

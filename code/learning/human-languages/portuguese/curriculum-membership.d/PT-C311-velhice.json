@@ -1,0 +1,11 @@
+{
+  "id": "PT-C311-velhice",
+  "pathSegment": "PT-PATH-311-IDADES",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-311-IDADES",
+      "order": 3
+    }
+  ]
+}

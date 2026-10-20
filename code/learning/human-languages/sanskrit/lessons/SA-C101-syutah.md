@@ -14,7 +14,8 @@ romanization: "syūtaḥ"
 concept_tag: SA-THINGS101-SYUTAH
 prerequisites: [SA-C101-pronchanam, SA-C101-upanetram]
 sounds: []
-roots: []
+roots: [sanskrit-syuta]
+etymology_hook: "syūta 'sewn', so 'a sack' (MW) ← √siv 'sew', an inherited Indo-European root (EtymDB), cf. English sew"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C101-upanetram]
 <!-- hl-knowledge: introduces=[SA-LEX-C101-THINGS101-05]; assesses=[] -->
 
 **स्यूतः** — *syūtaḥ* — "a bag".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*syūta* is the past participle of √siv "sew": "something sewn", and MW records it as "a sack, a coarse canvas bag". The root is inherited from Indo-European (EtymDB) and is the same root as English *sew*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

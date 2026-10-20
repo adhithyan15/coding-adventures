@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C670-doblar",
+    "language": "spanish",
+    "chapter": 670,
+    "sequence": 23350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:12b8bc32bed96b4b"
+  },
+  "findings": []
+}

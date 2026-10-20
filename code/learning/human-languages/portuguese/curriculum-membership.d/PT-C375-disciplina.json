@@ -1,0 +1,11 @@
+{
+  "id": "PT-C375-disciplina",
+  "pathSegment": "PT-PATH-375-ESCOLA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-375-ESCOLA",
+      "order": 4
+    }
+  ]
+}

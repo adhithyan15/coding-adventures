@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C467-tuonare",
+    "language": "italian",
+    "chapter": 467,
+    "sequence": 26280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2165e9915f92814f"
+  },
+  "findings": []
+}

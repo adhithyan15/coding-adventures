@@ -14,7 +14,8 @@ romanization: "makaī"
 concept_tag: UR-CHIZ174-MAKAI
 prerequisites: [UR-C173-tana, UR-C173-kichar]
 sounds: []
-roots: []
+roots: [sanskrit-markaka]
+etymology_hook: "makaī: CDIAL lists it under the lexical Sanskrit markaka, a bird-name, without explaining the link (CDIAL 9879)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C173-kichar]
 <!-- hl-knowledge: introduces=[UR-LEX-C174-CHIZ174-01]; assesses=[] -->
 
 **مکئی** — *makaī* — "maize".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL lists **مکئی** (*makaī*), as Hindi *makāī*, "maize", under Sanskrit *markaka*, a bird-name known only from the old word-lists, without explaining the link (CDIAL 9879).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

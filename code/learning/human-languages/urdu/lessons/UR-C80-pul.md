@@ -14,7 +14,8 @@ romanization: "pul"
 concept_tag: UR-TOWN80-PUL
 prerequisites: [UR-C80-gari, UR-C80-bas]
 sounds: []
-roots: []
+roots: [persian-pul]
+etymology_hook: "pul: usually traced to Persian pul 'bridge'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C80-bas]
 <!-- hl-knowledge: introduces=[UR-LEX-C80-TOWN80-04]; assesses=[] -->
 
 **پل** — *pul* — "a bridge".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پل** (*pul*) is a loan, usually traced to Persian *pul*, "bridge".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

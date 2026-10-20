@@ -14,7 +14,8 @@ romanization: "khandidan"
 concept_tag: FA-VERB-KHANDIDAN
 prerequisites: [FA-C37-pokhtan, FA-C37-shostan]
 sounds: []
-roots: []
+roots: [persian-khandidan]
+etymology_hook: "khandidan: inherited, usually traced to Middle Persian xandīdan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C37-shostan]
 <!-- hl-knowledge: introduces=[FA-LEX-C37-VERBS37-05]; assesses=[] -->
 
 **خندیدن** — *khandidan* — "to laugh".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khandidan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *xandīdan*, "to laugh".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

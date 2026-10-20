@@ -14,7 +14,8 @@ romanization: "hariṇaḥ"
 concept_tag: SA-THG198-HARINAH
 prerequisites: [SA-C197-avasyayah, SA-C197-jyotsna]
 sounds: []
-roots: []
+roots: [sanskrit-harina]
+etymology_hook: "hariṇa 'deer' ← hari 'tawny, yellowish': the fawn-coloured one; Hindi hiran (CDIAL 13982)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C197-jyotsna]
 <!-- hl-knowledge: introduces=[SA-LEX-C198-THG198-01]; assesses=[] -->
 
 **हरिणः** — *hariṇaḥ* — "a deer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hariṇa* is built on *hari*, "tawny, yellowish", so the deer is "the fawn-coloured one" (MW). MW compares *hari* with English *yellow*. The word lives on as Hindi *hiran* (CDIAL 13982).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

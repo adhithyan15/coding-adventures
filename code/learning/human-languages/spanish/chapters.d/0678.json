@@ -1,0 +1,19 @@
+{
+  "chapter": 678,
+  "title": "De visita",
+  "label": "ch:es-de-visita",
+  "canDo": "I can plan a visit to a town: statues, towers, galleries and a country chapel.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C678-galeria",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 678: I can plan a visit to a town: statues, towers, galleries and a country chapel.",
+    "assesses": [
+      "ES-LEX-C678-VISITA-03",
+      "ES-LEX-C678-VISITA-04",
+      "ES-LEX-C678-VISITA-05"
+    ]
+  }
+}

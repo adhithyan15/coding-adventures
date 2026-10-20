@@ -1,0 +1,20 @@
+{
+  "id": "SA-A1-MN-01",
+  "category": "Mental notions",
+  "label": "thinking, knowing, remembering",
+  "probe": [
+    "SA-LEX-CINTAYATI-THINK",
+    "SA-LEX-JANATI-KNOW",
+    "SA-LEX-REMEMBER",
+    "SA-LEX-AVAGACCHATI-UNDERSTAND"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-NG7-01"
+  ],
+  "note": "cintayati, jānāti, smarati, avagacchati — a strong set, all in the third person."
+}

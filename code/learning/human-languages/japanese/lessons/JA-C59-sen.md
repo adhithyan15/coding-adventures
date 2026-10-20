@@ -14,7 +14,8 @@ romanization: "sen"
 concept_tag: JA-CLOTHES59-SEN
 prerequisites: [JA-C59-megane, JA-C59-sanjuu]
 sounds: []
-roots: []
+roots: [middle-chinese-tshen]
+etymology_hook: "sen: Sino-Japanese, the on'yomi of 千 'thousand', from Middle Chinese tshen"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C59-sanjuu]
 <!-- hl-knowledge: introduces=[JA-LEX-C59-CLOTHES59-05]; assesses=[] -->
 
 **せん** — *sen* — "a thousand".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**せん** (*sen*) is Sino-Japanese (kango): the on'yomi of a character meaning "thousand", a reading borrowed from Chinese (Middle Chinese *tshen* in Baxter's transcription; Unihan, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

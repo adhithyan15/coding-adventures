@@ -52,7 +52,7 @@ reviews_of: [ES-C274-mas-vale-pajaro]
 **ser un quijote** — to be idealistic to the point of impracticality; to fight
 for a lost cause because it is right.
 
-It is Don Quixote, from Cervantes' novel of 1605 — and the word has stopped being
+It comes from Don Quixote, Cervantes' novel of 1605 — and the word has stopped being
 a name. Written lowercase, *quijote* is an ordinary Spanish noun in the
 dictionary, and so is the adjective *quijotesco*. English took the same journey
 to **quixotic**.

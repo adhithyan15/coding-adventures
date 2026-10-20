@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-366-BENEVOLAT",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "FR-EXT-366-BENEVOLAT"
+  ],
+  "after": []
+}

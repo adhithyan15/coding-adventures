@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 356,
+  "sourceHash": "fnv1a64:c03fc3fade444fbf",
+  "lessonIds": [
+    "PT-C356-despedir",
+    "PT-C356-demissao",
+    "PT-C356-despedimento",
+    "PT-C356-desempregado",
+    "PT-C356-desemprego"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch356.txt",
+  "json": "portuguese/narration/ch356.json",
+  "textHash": "fnv1a64:33833b8e8e34c0b1",
+  "jsonHash": "fnv1a64:4b3525803a82c0d0",
+  "findings": []
+}

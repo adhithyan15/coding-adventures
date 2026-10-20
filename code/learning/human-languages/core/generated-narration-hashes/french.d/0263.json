@@ -1,0 +1,17 @@
+{
+  "language": "french",
+  "chapter": 263,
+  "sourceHash": "fnv1a64:1bca2a1b59c75459",
+  "lessonIds": [
+    "FR-C263-aller-retour",
+    "FR-C263-rate-le-train",
+    "FR-C263-revision-voyage"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "french/narration/ch263.txt",
+  "json": "french/narration/ch263.json",
+  "textHash": "fnv1a64:af9ec5ba4309e53d",
+  "jsonHash": "fnv1a64:74c16680a42c6d29",
+  "findings": []
+}

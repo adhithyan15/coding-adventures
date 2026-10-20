@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C267-homework-plan",
+    "language": "sanskrit",
+    "chapter": 267,
+    "sequence": 15840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ef185c4d8a825440"
+  },
+  "findings": []
+}

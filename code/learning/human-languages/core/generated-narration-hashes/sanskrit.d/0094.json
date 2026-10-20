@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 94,
-  "sourceHash": "fnv1a64:351414bb56b4af39",
+  "sourceHash": "fnv1a64:4c45abaf202cec3f",
   "lessonIds": [
     "SA-C94-bahih",
     "SA-C94-upari",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch94.txt",
   "json": "sanskrit/narration/ch94.json",
-  "textHash": "fnv1a64:b97066a39f234eb2",
-  "jsonHash": "fnv1a64:b547342d406b701a",
+  "textHash": "fnv1a64:97a4eb60694606ab",
+  "jsonHash": "fnv1a64:a23ee9bede0b3a52",
   "findings": []
 }

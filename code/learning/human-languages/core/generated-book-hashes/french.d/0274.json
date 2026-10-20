@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 274,
+  "sourceHash": "fnv1a64:e0495a32ef3896c0",
+  "lessonIds": [
+    "FR-C274-survenir",
+    "FR-C274-derouler",
+    "FR-C274-avoir-lieu",
+    "FR-C274-preceder",
+    "FR-C274-durer"
+  ],
+  "tex": "french/book/chapters/ch274-ce-qui-est-arrive.tex"
+}

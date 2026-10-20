@@ -4,7 +4,7 @@
   "chapter": 305,
   "title": "Naming, Properly --- Name, Surname, Sir, Madam, Delighted",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:94ed80c6fd9c72dc",
+  "sourceHash": "fnv1a64:7a2f199ed3dc91a9",
   "lessons": [
     {
       "id": "ES-C305-nombre",
@@ -430,7 +430,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4110187d0153ef32",
+      "sourceHash": "fnv1a64:cdd7362c242f50de",
       "notice": null,
       "blocks": [
         {
@@ -472,7 +472,7 @@
             },
             {
               "kind": "speech",
-              "text": "The same senior, turned by the -o/-a switch you have now met three times: bueno/buena, tranquilo/tranquila, and here."
+              "text": "The same Latin senior, turned by the -o/-a switch you have now met three times: bueno/buena, tranquilo/tranquila, and here."
             },
             {
               "kind": "speech",

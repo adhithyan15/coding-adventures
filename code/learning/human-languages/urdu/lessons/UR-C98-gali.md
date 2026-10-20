@@ -14,7 +14,8 @@ romanization: "galī"
 concept_tag: UR-LOC98-GALI
 prerequisites: [UR-C98-taraf, UR-C98-rasta]
 sounds: []
-roots: []
+roots: [indo-aryan-gali]
+etymology_hook: "galī ← *galī 'defile, lane', a reconstructed form; a tadbhava (CDIAL 4085)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C98-rasta]
 <!-- hl-knowledge: introduces=[UR-LEX-C98-LOC98-04]; assesses=[] -->
 
 **گلی** — *galī* — "a lane, a narrow street".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**گلی** (*galī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*galī*, "defile, lane", a form CDIAL reconstructs from its descendants (CDIAL 4085).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

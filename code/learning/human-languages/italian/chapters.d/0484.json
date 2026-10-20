@@ -1,0 +1,19 @@
+{
+  "chapter": 484,
+  "title": "Una gamba ingessata",
+  "label": "ch:it-una-gamba-ingessata",
+  "canDo": "I can describe a fracture: the X-ray, the cast and the crutches.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-C484-zoppicare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 484: I can describe a fracture: the X-ray, the cast and the crutches.",
+    "assesses": [
+      "IT-LEX-C484-GESSO-03",
+      "IT-LEX-C484-GESSO-04",
+      "IT-LEX-C484-GESSO-05"
+    ]
+  }
+}

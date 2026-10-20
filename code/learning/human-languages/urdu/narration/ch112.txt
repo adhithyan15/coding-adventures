@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a basket, then the Urdu for a candle.
 You'll want to know: ماچس.
 ماچس — māchis — "matches".
 
+The word, taken apart.
+ماچس (māchis) is a loan from English matches.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a candle, then the Urdu for matches.
 
 You'll want to know: کھلونا.
 کھلونا — khilaunā — "a toy".
+
+The word, taken apart.
+کھلونا (khilaunā) is built on khel-, "play", with the ending -aunā: a thing to play with. CDIAL lists the verb under a reconstructed khel-, "play" (CDIAL 3918).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for matches, then the Urdu for a toy.
 You'll want to know: گیند.
 گیند — gēnd — "a ball".
 
+The word, taken apart.
+گیند (gēnd) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from genduka, "ball for play" (CDIAL 4248). CDIAL notes that the related kanduka has been traced to Dravidian.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a toy, then the Urdu for a ball.
 You'll want to know: پتنگ.
 پتنگ — patang — "a kite".
 
+The word, taken apart.
+پتنگ (patang) is usually traced to Sanskrit pataṅga, "bird; winged insect". CDIAL lists that word, with Hindi patiṅgā, "grasshopper", as its inherited form (CDIAL 7721), but not patang, "kite".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for a ball, then the Urdu for a kite.
 
 You'll want to know: پلنگ.
 پلنگ — palang — "a bed frame, a bed".
+
+The word, taken apart.
+پلنگ (palang) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from palyaṅka, "bed" (CDIAL 7964). CDIAL notes that this form, with -ṅg, spread from the north-west.
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "dhvajaḥ"
 concept_tag: SA-THG247-DHVAJAH
 prerequisites: [SA-C247-khadgah, SA-C247-kavacam]
 sounds: []
-roots: []
+roots: [sanskrit-dhvaja]
+etymology_hook: "dhvaja 'banner, flag', a Rigvedic word (CDIAL 6897); MW's derivation is hedged, so origin uncertain"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C247-kavacam]
 <!-- hl-knowledge: introduces=[SA-LEX-C247-THG247-04]; assesses=[] -->
 
 **ध्वजः** — *dhvajaḥ* — "a flag".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dhvaja* is a banner or flag, and also a flag-staff, already in the Rigveda (CDIAL 6897). MW takes it from a short form *dhvaj*, "banner", which it derives, with a question mark, from √dhū, "to shake", and √aj, "to drive", so its origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

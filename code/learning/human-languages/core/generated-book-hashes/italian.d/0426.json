@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:618b8ec25da86844",
+  "lessonIds": [
+    "IT-C426-trolley",
+    "IT-C426-stiva",
+    "IT-C426-nastro",
+    "IT-C426-bilancia",
+    "IT-C426-imballare"
+  ],
+  "tex": "italian/book/chapters/ch426-i-bagagli.tex"
+}

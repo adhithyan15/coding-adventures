@@ -1,0 +1,11 @@
+{
+  "id": "IT-C482-palpebra",
+  "pathSegment": "IT-PATH-482-VISO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-482-VISO",
+      "order": 2
+    }
+  ]
+}

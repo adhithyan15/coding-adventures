@@ -47,7 +47,7 @@ reviews_of: [RU-C74-never]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**сейчас** is *сей*, an old word for "this", with *час*, "hour": "this hour".
+**сейчас** is *сей*, an old word for "this", with *час*, "hour": "this hour". Vasmer traces *сей* to an Indo-European pointing word kept in Lithuanian *šìs*, "this", and *час* to Proto-Slavic *\*časŭ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

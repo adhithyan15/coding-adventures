@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C496-tricoter",
+    "language": "french",
+    "chapter": 496,
+    "sequence": 27240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1df4480f05657b13"
+  },
+  "findings": []
+}

@@ -14,7 +14,8 @@ romanization: "catuṣpathaḥ"
 concept_tag: SA-LOC96-CATUSPATHAH
 prerequisites: [SA-C95-vithi, SA-C96-rajamargah]
 sounds: []
-roots: []
+roots: [sanskrit-catushpatha]
+etymology_hook: "catuṣpatha ← catur 'four' + patha 'road', 'where four roads meet' (MW); Hindi caupath (CDIAL 4642)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C96-rajamargah]
 <!-- hl-knowledge: introduces=[SA-LEX-C96-LOC96-02]; assesses=[] -->
 
 **चतुष्पथः** — *catuṣpathaḥ* — "a crossroads".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*catuṣpatha* is a compound of *catur* "four" and *patha* "road": "where four roads meet", already in the Brāhmaṇas (MW). *catur* is the inherited number behind Latin *quattuor* (MW) and English *four*. Hindi *caupath* "crossroads" comes from the same pair (CDIAL 4642).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -12,6 +12,9 @@ Before the new one: say the Persian for a cook, then the Persian for a worker.
 You'll want to know: کشاورز.
 کشاورز — keshâvarz — "a farmer".
 
+The word, taken apart.
+keshâvarz is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian kišāwarz, "farmer". It is usually explained as built on keš-, "to plough".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for a worker, then the Persian for a farmer.
 
 You'll want to know: راننده.
 راننده — rânande — "a driver".
+
+The word, taken apart.
+rânande is the "-ing" form of rândan, "to drive": "the one driving". The verb is inherited, usually traced to Middle Persian rāndan.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for a farmer, then the Persian for a driver.
 You'll want to know: فروشنده.
 فروشنده — furushande — "a shopkeeper".
 
+The word, taken apart.
+furushande is furush-, the present stem of forukhtan, "to sell", with -ande, "-ing": "the one selling". The verb is inherited, usually traced to Middle Persian frōxtan.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for a driver, then the Persian for a shopkee
 You'll want to know: نانوا.
 نانوا — nânvâ — "a baker".
 
+The word, taken apart.
+nânvâ is built on nân, "bread", an inherited word: EtymDB traces it to Middle Persian nān. The ending -vâ marks the one who deals in it.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for a shopkeeper, then the Persian for a bak
 
 You'll want to know: کودک.
 کودک — kudak — "a small child".
+
+The word, taken apart.
+kudak is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian kōdak, "small child".
 
 What you've built.
 One more word for this chapter.

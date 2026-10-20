@@ -14,7 +14,8 @@ romanization: "chīz"
 concept_tag: UR-CHIZ164-CHIZ
 prerequisites: [UR-C163-sharminda, UR-C164-saman]
 sounds: []
-roots: []
+roots: [persian-chiz]
+etymology_hook: "chīz: usually traced to Persian chīz 'thing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C164-saman]
 <!-- hl-knowledge: introduces=[UR-LEX-C164-CHIZ164-02]; assesses=[] -->
 
 **چیز** — *chīz* — "a thing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چیز** (*chīz*) is a loan, usually traced to Persian *chīz*, "thing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,11 @@
+{
+  "id": "IT-R412-ripasso-405-412",
+  "pathSegment": "IT-PATH-412-VIGILE",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "IT-EXT-412-VIGILE",
+      "order": 5
+    }
+  ]
+}

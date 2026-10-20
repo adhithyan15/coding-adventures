@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-524-FUEGO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-524-FUEGO"
+  ],
+  "after": []
+}

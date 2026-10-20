@@ -1,0 +1,11 @@
+{
+  "id": "ES-C757-victoria",
+  "pathSegment": "ES-PATH-757-CAMPEON",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-757-CAMPEON",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C643-derrapar",
+    "language": "spanish",
+    "chapter": 643,
+    "sequence": 21950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38b11149076bcb9a"
+  },
+  "findings": []
+}

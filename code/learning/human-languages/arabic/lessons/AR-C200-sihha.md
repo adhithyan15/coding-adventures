@@ -14,7 +14,8 @@ romanization: "ṣiḥḥa"
 concept_tag: AR-SIHHA200-SIHHA
 prerequisites: [AR-C200-hassasiyya, AR-C200-jurh]
 sounds: []
-roots: []
+roots: [ṣ-ḥ-ḥ]
+etymology_hook: "ṣiḥḥa: built on the root ṣ-ḥ-ḥ, 'to be sound, healthy' (Lane); ṣiḥḥa is soundness, health"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C200-jurh]
 <!-- hl-knowledge: introduces=[AR-LEX-C200-SIHHA200-05]; assesses=[] -->
 
 **صحة** — *ṣiḥḥa* — "health".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صحة** (*ṣiḥḥa*) is built on the native Arabic root *ṣ-ḥ-ḥ*, "to be sound, healthy" (Lane). *Ṣiḥḥa* is soundness, health.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

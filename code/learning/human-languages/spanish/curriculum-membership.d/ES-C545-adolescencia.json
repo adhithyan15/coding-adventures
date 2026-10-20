@@ -1,0 +1,11 @@
+{
+  "id": "ES-C545-adolescencia",
+  "pathSegment": "ES-PATH-545-NINEZ",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-545-NINEZ",
+      "order": 3
+    }
+  ]
+}

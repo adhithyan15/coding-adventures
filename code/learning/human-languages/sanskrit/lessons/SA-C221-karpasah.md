@@ -14,7 +14,8 @@ romanization: "kārpāsaḥ"
 concept_tag: SA-THG221-KARPASAH
 prerequisites: [SA-C220-yastih, SA-C220-dhanuh]
 sounds: []
-roots: []
+roots: [sanskrit-karpasa]
+etymology_hook: "kārpāsa ← karpāsa 'cotton', probably Austroasiatic (CDIAL 2877); MW compares Greek karpasos"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C220-dhanuh]
 <!-- hl-knowledge: introduces=[SA-LEX-C221-THG221-01]; assesses=[] -->
 
 **कार्पासः** — *kārpāsaḥ* — "cotton".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kārpāsa* is the adjective of *karpāsa*, "the cotton plant", used for cotton itself (MW). CDIAL 2877 takes *karpāsa* from Austroasiatic, and MW compares Greek *karpasos* and Latin *carbasus*, "fine flax". Punjabi *kapāh*, "cotton", comes from it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

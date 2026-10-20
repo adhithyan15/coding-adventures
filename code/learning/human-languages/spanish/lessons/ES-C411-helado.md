@@ -39,7 +39,7 @@ ice cream.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ES-LEX-HELADO]; assesses=[] -->
 
-**Helado** is the participle of **helar**, to freeze: its first sense is
+**Helado** is the participle of **helar** (← Latin *gelāre*), to freeze: its first sense is
 “frozen.” Used as a noun with **el**, it names ice cream. **Hielo**, **helar**
 and **helado** all continue the Latin cold-family already met in the ice
 lesson. The silent **h** links their modern spelling even though it makes no

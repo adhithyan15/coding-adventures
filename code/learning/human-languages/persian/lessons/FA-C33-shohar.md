@@ -14,7 +14,8 @@ romanization: "shohar"
 concept_tag: FA-FAMILY33-SHOHAR
 prerequisites: [FA-C32-dayi, FA-C33-khale]
 sounds: []
-roots: []
+roots: [persian-shohar]
+etymology_hook: "shohar: inherited, usually traced to Middle Persian šōy"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C33-khale]
 <!-- hl-knowledge: introduces=[FA-LEX-C33-FAMILY33-02]; assesses=[] -->
 
 **شوهر** — *shohar* — "a husband".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shohar* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *šōy*, "husband".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C464-penso",
+    "language": "latin",
+    "chapter": 464,
+    "sequence": 24740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:99f0afc7eedeb465"
+  },
+  "findings": []
+}

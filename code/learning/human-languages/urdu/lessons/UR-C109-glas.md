@@ -14,7 +14,8 @@ romanization: "glās"
 concept_tag: UR-THINGS109-GLAS
 prerequisites: [UR-C109-bartan, UR-C109-thali]
 sounds: []
-roots: []
+roots: [english-glass]
+etymology_hook: "glās ← English glass"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C109-thali]
 <!-- hl-knowledge: introduces=[UR-LEX-C109-THINGS109-04]; assesses=[] -->
 
 **گلاس** — *glās* — "a drinking glass".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**گلاس** (*glās*) is a loan from English *glass*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

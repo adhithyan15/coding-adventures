@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 489,
-  "sourceHash": "fnv1a64:3429483b10dd02f1",
+  "sourceHash": "fnv1a64:64c42ad4c1f59187",
   "lessonIds": [
     "ES-C489-aparcar",
     "ES-C489-atasco",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch489.txt",
   "json": "spanish/narration/ch489.json",
-  "textHash": "fnv1a64:6f0dc5e8a4ff1c45",
-  "jsonHash": "fnv1a64:5b01e69743d4dc27",
+  "textHash": "fnv1a64:22b3bbc4333a10f9",
+  "jsonHash": "fnv1a64:5a9d25310e4e7674",
   "findings": []
 }

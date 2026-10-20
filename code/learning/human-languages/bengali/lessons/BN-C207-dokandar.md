@@ -14,7 +14,7 @@ romanization: "dokāndār"
 concept_tag: BN-KAJ207-DOKANDAR
 prerequisites: [BN-C206-chhakni, BN-C207-dam]
 sounds: []
-roots: [arabic-dukkan, persian-dar]
+roots: [arabic-dukkan, persian-dar-holder]
 etymology_hook: "dokāndār: dokān 'shop' ← Arabic dukkān, through Persian, + Persian -dār 'holder'"
 duration:
   max_seconds: 200

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C284-inchiesta",
+    "language": "italian",
+    "chapter": 284,
+    "sequence": 16660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea8a9c1d98a65c27"
+  },
+  "findings": []
+}

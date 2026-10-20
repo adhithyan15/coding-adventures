@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C525-lippitudo",
+    "language": "latin",
+    "chapter": 525,
+    "sequence": 27880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1e0c56d20db41fa8"
+  },
+  "findings": []
+}

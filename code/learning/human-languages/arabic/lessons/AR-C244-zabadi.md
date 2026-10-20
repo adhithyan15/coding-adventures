@@ -14,7 +14,8 @@ romanization: "zabādī"
 concept_tag: AR-SHAY244-ZABADI
 prerequisites: [AR-C243-mustamal, AR-C243-muzayyaf]
 sounds: []
-roots: []
+roots: [z-b-d]
+etymology_hook: "zabādī: modern; perhaps linked with z-b-d, zubd 'fresh butter', zubād 'thin milk' (Lane); not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C243-muzayyaf]
 <!-- hl-knowledge: introduces=[AR-LEX-C244-SHAY244-01]; assesses=[] -->
 
 **زبادي** — *zabādī* — "yoghurt".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**زبادي** (*zabādī*) is a modern word for yoghurt. It may be linked with the root *z-b-d*, which gives *zubd*, "fresh butter", and *zubād*, "thin milk" (Lane), but its formation is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

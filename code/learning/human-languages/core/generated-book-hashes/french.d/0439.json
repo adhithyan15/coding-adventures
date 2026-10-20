@@ -1,0 +1,14 @@
+{
+  "language": "french",
+  "chapter": 439,
+  "sourceHash": "fnv1a64:13ace86fd24271f0",
+  "lessonIds": [
+    "FR-C439-cathedrale",
+    "FR-C439-basilique",
+    "FR-C439-clocher",
+    "FR-C439-beffroi",
+    "FR-C439-remparts",
+    "FR-R439-revision-432-439"
+  ],
+  "tex": "french/book/chapters/ch439-clochers-et-remparts.tex"
+}

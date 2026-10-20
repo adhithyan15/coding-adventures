@@ -12,18 +12,18 @@ concept_tag: VERB-THINK
 prerequisites: [MR-C07-mahit-asne, MR-C06-numbers-1-5]
 sounds: [matra-i, matra-aa, retroflex-na]
 roots: [sanskrit-vicara-deliberation, sanskrit-carati-move, pie-kwelh-turn]
-etymology_hook: "विचार is वि- plus the Sanskrit root चर् car- 'to move, to range about', and चर् goes back to Indo-European \\*kʷelh₁- 'to turn' — the root that also became wheel and cycle, so a Marathi thought is literally something turned over"
+etymology_hook: "विचार is vi- + Sanskrit car- 'to move, range about', from PIE *kʷelh₁- 'to turn', the root of wheel"
 duration:
   max_seconds: 270
 requires:
-  knowledge: [MR-LEX-PAHNE, MR-ETYMON-PASH-SPEK, MR-GRAMMAR-PRESENT-GENDER, MR-GRAMMAR-NE-NEUTER-NOUN, MR-SOUND-CHA-TSAA]
+  knowledge: [MR-LEX-PAHNE, MR-ETYMON-PAHNE-PRACAH, MR-GRAMMAR-PRESENT-GENDER, MR-GRAMMAR-NE-NEUTER-NOUN, MR-SOUND-CHA-TSAA]
 introduces:
   knowledge: [MR-LEX-VICHAR-KARNE, MR-ETYMON-VICHAR-TURN]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-LEX-PAHNE, MR-ETYMON-PASH-SPEK, MR-GRAMMAR-PRESENT-GENDER, MR-GRAMMAR-NE-NEUTER-NOUN, MR-SOUND-CHA-TSAA, MR-LEX-VICHAR-KARNE, MR-ETYMON-VICHAR-TURN]
+  knowledge: [MR-LEX-PAHNE, MR-ETYMON-PAHNE-PRACAH, MR-GRAMMAR-PRESENT-GENDER, MR-GRAMMAR-NE-NEUTER-NOUN, MR-SOUND-CHA-TSAA, MR-LEX-VICHAR-KARNE, MR-ETYMON-VICHAR-TURN]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -35,11 +35,10 @@ reviews_of: [MR-C07-pahne, MR-C07-khane, MR-C06-numbers-1-5]
 # विचार करणे (vichār karṇe) — "to think," which is a turning
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-PAHNE, MR-GRAMMAR-PRESENT-GENDER, MR-ETYMON-PASH-SPEK] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-PAHNE, MR-GRAMMAR-PRESENT-GENDER, MR-ETYMON-PAHNE-PRACAH] -->
 
-[PAUSE 2s] Say "I see" in your own gender — *mī pāhto* or *mī pāhte* — and name
-one English word from that verb's root. (*Spectacle*, *inspect*, *spy*: any of
-them.) Now the verb for what happens behind the eyes.
+[PAUSE 2s] Say "I see" in your own gender — *mī pāhto* or *mī pāhte* — and say
+what the form CDIAL traces it to meant. (*Look for*.) Now the verb for what happens behind the eyes.
 
 ## You'll want to know: विचार करणे
 <!-- hl-knowledge: introduces=[MR-LEX-VICHAR-KARNE]; assesses=[MR-GRAMMAR-PRESENT-GENDER] -->

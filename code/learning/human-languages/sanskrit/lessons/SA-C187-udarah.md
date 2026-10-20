@@ -14,7 +14,8 @@ romanization: "udāraḥ"
 concept_tag: SA-QUAL187-UDARAH
 prerequisites: [SA-C186-sthirah, SA-C187-dayaluh]
 sounds: []
-roots: []
+roots: [sanskrit-udara]
+etymology_hook: "udāra 'noble, generous' ← ud 'up' + the root √ṛ 'rise, move' (MW; CDIAL 1935)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C187-dayaluh]
 <!-- hl-knowledge: introduces=[SA-LEX-C187-QUAL187-02]; assesses=[] -->
 
 **उदारः** — *udāraḥ* — "generous".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*udāra* is built on *ud*, "up", and the root √ṛ, "to rise, move" (MW): "raised, lofty". In the Rigveda it means "exciting", and later "lofty, noble" (CDIAL 1935), and from noble comes generous.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "panir"
 concept_tag: FA-FOOD44-PANIR
 prerequisites: [FA-C44-abmive, FA-C44-keyk]
 sounds: []
-roots: []
+roots: [persian-panir]
+etymology_hook: "panir: inherited, usually traced to Middle Persian panīr"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C44-keyk]
 <!-- hl-knowledge: introduces=[FA-LEX-C44-FOOD44-04]; assesses=[] -->
 
 **پنیر** — *panir* — "cheese".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*panir* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *panīr*, "cheese".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "javâb"
 concept_tag: FA-SCHOOL50-JAVAB
 prerequisites: [FA-C50-naghshe, FA-C50-dars]
 sounds: []
-roots: []
+roots: [arabic-jawab]
+etymology_hook: "javâb ← Arabic jawāb 'answer, reply', root j-w-b (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C50-dars]
 <!-- hl-knowledge: introduces=[FA-LEX-C50-SCHOOL50-03]; assesses=[] -->
 
 **جواب** — *javâb* — "an answer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*javâb* is borrowed from Arabic *jawāb*, "answer, reply". Its Arabic root is *j-w-b* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

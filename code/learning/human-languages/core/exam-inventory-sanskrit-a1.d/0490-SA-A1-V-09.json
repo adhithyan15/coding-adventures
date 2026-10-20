@@ -1,0 +1,23 @@
+{
+  "id": "SA-A1-V-09",
+  "category": "Dhātu and kriyāpada — the verb",
+  "label": "verbs of doing, going, coming, eating, seeing, knowing",
+  "probe": [
+    "SA-LEX-GACCHATI-GO",
+    "SA-LEX-AGACCHATI-COME",
+    "SA-LEX-KHADATI-EAT",
+    "SA-LEX-PASHYATI-SEE",
+    "SA-LEX-JANATI-KNOW",
+    "SA-LEX-KAROMI"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-NG7-01",
+    "A1-NG5-01"
+  ],
+  "note": "The chapter-7 verb set, and it is the spine of everything after it."
+}

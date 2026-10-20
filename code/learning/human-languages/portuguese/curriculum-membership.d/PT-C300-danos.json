@@ -1,0 +1,11 @@
+{
+  "id": "PT-C300-danos",
+  "pathSegment": "PT-PATH-300-CAPOTAR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-300-CAPOTAR",
+      "order": 2
+    }
+  ]
+}

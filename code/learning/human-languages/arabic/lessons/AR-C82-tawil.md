@@ -14,7 +14,8 @@ romanization: "ṭawīl"
 concept_tag: AR-ADJ82-TAWIL
 prerequisites: [AR-C82-qadim, AR-C82-jayyid]
 sounds: []
-roots: []
+roots: [ṭ-w-l]
+etymology_hook: "ṭawīl: built on the root ṭ-w-l, 'to be long' (Lane); ṭawīl is the faʿīl adjective, 'long, tall'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C82-jayyid]
 <!-- hl-knowledge: introduces=[AR-LEX-C82-ADJ82-04]; assesses=[] -->
 
 **طويل** — *ṭawīl* — "long, tall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**طويل** (*ṭawīl*) is built on the native Arabic root *ṭ-w-l*, "to be long" (Lane). *Ṭawīl* is the *faʿīl* adjective, "long, tall".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

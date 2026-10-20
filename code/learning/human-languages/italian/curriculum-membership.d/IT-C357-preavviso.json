@@ -1,0 +1,11 @@
+{
+  "id": "IT-C357-preavviso",
+  "pathSegment": "IT-PATH-357-DIMISSIONI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-357-DIMISSIONI",
+      "order": 4
+    }
+  ]
+}

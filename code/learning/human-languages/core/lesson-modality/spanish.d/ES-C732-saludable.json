@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C732-saludable",
+    "language": "spanish",
+    "chapter": 732,
+    "sequence": 26530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:552b2d57cdc29a68"
+  },
+  "findings": []
+}

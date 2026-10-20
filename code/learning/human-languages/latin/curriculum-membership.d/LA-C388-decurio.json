@@ -1,0 +1,11 @@
+{
+  "id": "LA-C388-decurio",
+  "pathSegment": "LA-PATH-388-MUNICEPS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-388-MUNICEPS",
+      "order": 1
+    }
+  ]
+}

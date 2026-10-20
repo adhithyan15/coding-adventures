@@ -1,0 +1,19 @@
+{
+  "chapter": 319,
+  "title": "Le réveillon",
+  "label": "ch:fr-le-reveillon",
+  "canDo": "I can describe the winter holidays: the late-night feast, celebrating it, the Christmas tree, the yule log and the king cake.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C319-galette",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 319: I can describe the winter holidays: the late-night feast, celebrating it, the Christmas tree, the yule log and the king cake.",
+    "assesses": [
+      "FR-LEX-C319-REVEILLON-03",
+      "FR-LEX-C319-REVEILLON-04",
+      "FR-LEX-C319-REVEILLON-05"
+    ]
+  }
+}

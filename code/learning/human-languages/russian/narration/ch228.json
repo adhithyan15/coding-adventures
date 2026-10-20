@@ -4,7 +4,7 @@
   "chapter": 228,
   "title": "Mistake, Rule, Example, Meaning, First name",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:52d3f29e5541629a",
+  "sourceHash": "fnv1a64:ac4d6b2367f5c071",
   "lessons": [
     {
       "id": "RU-C228-oshibka",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9727e0788eb7d40f",
+      "sourceHash": "fnv1a64:8c1f308ba6663a57",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "правило (právilo) is править, \"to set straight, to rule\", with -ло, a suffix for a tool: \"what sets things straight\". правый is \"straight, right\"."
+              "text": "правило (právilo) is править, \"to set straight, to rule\", with -ло, a suffix for a tool: \"what sets things straight\". правый is \"straight, right\". Vasmer thinks правый probably kin to Latin probus, \"upright\"."
             }
           ]
         },

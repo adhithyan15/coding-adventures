@@ -14,7 +14,8 @@ romanization: "sâlâne"
 concept_tag: FA-ZAMAN192-SALANE
 prerequisites: [FA-C191-nowruz, FA-C191-yalda]
 sounds: []
-roots: []
+roots: [persian-sal]
+etymology_hook: "sâlâne: Persian sâl 'year' (EtymDB) + -âne"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C191-yalda]
 <!-- hl-knowledge: introduces=[FA-LEX-C192-ZAMAN192-01]; assesses=[] -->
 
 **سالانه** — *sâlâne* — "yearly, annual".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sâlâne* is *sâl*, "year", with the ending *-âne*, "every, belonging to": yearly. *sâl* continues Middle Persian *sāl* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

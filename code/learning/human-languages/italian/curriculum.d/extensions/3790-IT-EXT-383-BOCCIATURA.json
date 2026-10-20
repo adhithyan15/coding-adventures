@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-383-BOCCIATURA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about passing or failing a year, an assessment and a score.",
+  "prerequisites": []
+}

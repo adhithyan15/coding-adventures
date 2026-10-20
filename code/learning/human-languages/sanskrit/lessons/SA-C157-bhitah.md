@@ -14,7 +14,8 @@ romanization: "bhītaḥ"
 concept_tag: SA-QUAL157-BHITAH
 prerequisites: [SA-C156-krurah, SA-C157-kupitah]
 sounds: []
-roots: []
+roots: [sanskrit-bhita, sanskrit-bhaya]
+etymology_hook: "bhīta 'afraid' is the past participle of √bhī 'fear' (CDIAL 9511); bibheti and bhaya are kin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C157-kupitah]
 <!-- hl-knowledge: introduces=[SA-LEX-C157-QUAL157-02]; assesses=[] -->
 
 **भीतः** — *bhītaḥ* — "afraid".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bhīta* is the past participle of the root √bhī "fear" (CDIAL 9511): "frightened, afraid". *bibheti* "is afraid" and *bhaya* "fear" come from the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

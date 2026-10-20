@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 533,
+  "sourceHash": "fnv1a64:bcb12731ec1ff1ec",
+  "lessonIds": [
+    "IT-C533-apparecchiare",
+    "IT-C533-sparecchiare",
+    "IT-C533-tovaglia",
+    "IT-C533-tovagliolo",
+    "IT-C533-vassoio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch533.txt",
+  "json": "italian/narration/ch533.json",
+  "textHash": "fnv1a64:362debe0925ee004",
+  "jsonHash": "fnv1a64:f9a34e02cc4422c1",
+  "findings": []
+}

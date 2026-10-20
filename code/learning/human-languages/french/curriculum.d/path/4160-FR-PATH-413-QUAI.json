@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-413-QUAI",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-413-QUAI"
+  ],
+  "after": []
+}

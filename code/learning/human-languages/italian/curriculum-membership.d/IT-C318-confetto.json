@@ -1,0 +1,11 @@
+{
+  "id": "IT-C318-confetto",
+  "pathSegment": "IT-PATH-318-RICEVIMENTO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-318-RICEVIMENTO",
+      "order": 4
+    }
+  ]
+}

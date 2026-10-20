@@ -1,0 +1,11 @@
+{
+  "id": "PT-C372-definitivo",
+  "pathSegment": "PT-PATH-372-PLANOS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-372-PLANOS",
+      "order": 3
+    }
+  ]
+}

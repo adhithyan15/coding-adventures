@@ -14,7 +14,8 @@ romanization: "khīrā"
 concept_tag: UR-THINGS115-KHIRA
 prerequisites: [UR-C115-gobhi, UR-C115-matar]
 sounds: []
-roots: []
+roots: [sanskrit-kshiraka]
+etymology_hook: "khīrā ← Sanskrit kṣīraka 'a fragrant plant', a tadbhava (CDIAL 3697)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C115-matar]
 <!-- hl-knowledge: introduces=[UR-LEX-C115-THINGS115-04]; assesses=[] -->
 
 **کھیرا** — *khīrā* — "a cucumber".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کھیرا** (*khīrā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *kṣīraka*, "a fragrant plant" (CDIAL 3697). It is built on *kṣīra*, "milk"; the Sanskrit word is known only from the old word-lists.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

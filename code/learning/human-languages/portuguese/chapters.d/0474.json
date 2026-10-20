@@ -1,0 +1,19 @@
+{
+  "chapter": 474,
+  "title": "Rabugentos e birras",
+  "label": "ch:pt-rabugentos-e-birras",
+  "canDo": "I can describe grumpy moods, sulking and tantrums.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-R474-revisao-467-474",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 474: I can describe grumpy moods, sulking and tantrums.",
+    "assesses": [
+      "PT-LEX-C474-RABUGENTO-03",
+      "PT-LEX-C474-RABUGENTO-04",
+      "PT-LEX-C474-RABUGENTO-05"
+    ]
+  }
+}

@@ -14,7 +14,8 @@ romanization: "pāip"
 concept_tag: UR-CHIZ258-PAIP
 prerequisites: [UR-C258-pechkas, UR-C258-auzar]
 sounds: []
-roots: []
+roots: [english-pipe]
+etymology_hook: "pāip ← English pipe"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C258-auzar]
 <!-- hl-knowledge: introduces=[UR-LEX-C258-CHIZ258-03]; assesses=[] -->
 
 **پائپ** — *pāip* — "a pipe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پائپ** (*pāip*) is a loan from English *pipe*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

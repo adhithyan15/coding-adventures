@@ -1,0 +1,19 @@
+{
+  "chapter": 487,
+  "title": "Beim Hausarzt",
+  "label": "ch:ge-beim-hausarzt",
+  "canDo": "I can talk about seeing a doctor.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C487-verschreiben",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 487: I can talk about seeing a doctor.",
+    "assesses": [
+      "GE-LEX-C487-HAUSARZT-03",
+      "GE-LEX-C487-HAUSARZT-04",
+      "GE-LEX-C487-HAUSARZT-05"
+    ]
+  }
+}

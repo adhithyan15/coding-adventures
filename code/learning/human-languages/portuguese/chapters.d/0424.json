@@ -1,0 +1,19 @@
+{
+  "chapter": 424,
+  "title": "Em voo",
+  "label": "ch:pt-em-voo",
+  "canDo": "I can talk about a flight: taking off, landing, turbulence, the flight attendant and the crew.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-R424-revisao-417-424",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 424: I can talk about a flight: taking off, landing, turbulence, the flight attendant and the crew.",
+    "assesses": [
+      "PT-LEX-C424-VOO-03",
+      "PT-LEX-C424-VOO-04",
+      "PT-LEX-C424-VOO-05"
+    ]
+  }
+}

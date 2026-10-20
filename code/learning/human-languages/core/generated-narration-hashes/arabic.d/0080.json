@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 80,
-  "sourceHash": "fnv1a64:048e6c1caafe2255",
+  "sourceHash": "fnv1a64:ce03a3061c0602ca",
   "lessonIds": [
     "AR-C80-namir",
     "AR-C80-fil",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch80.txt",
   "json": "arabic/narration/ch80.json",
-  "textHash": "fnv1a64:2f1ec6d99877f476",
-  "jsonHash": "fnv1a64:2e3a484a043fdf74",
+  "textHash": "fnv1a64:13be3f76511d682f",
+  "jsonHash": "fnv1a64:76cc59f14190bdef",
   "findings": []
 }

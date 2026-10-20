@@ -1,0 +1,11 @@
+{
+  "id": "PT-C363-direito",
+  "pathSegment": "PT-PATH-363-CIDADAO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-363-CIDADAO",
+      "order": 2
+    }
+  ]
+}

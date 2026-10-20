@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 307,
+  "sourceHash": "fnv1a64:39d5cd4f4e9d5ccc",
+  "lessonIds": [
+    "GE-C307-gastgeber",
+    "GE-C307-bewirten",
+    "GE-C307-ehrengast",
+    "GE-C307-ansprache",
+    "GE-C307-trinkspruch"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch307.txt",
+  "json": "german/narration/ch307.json",
+  "textHash": "fnv1a64:cf563dce658bbb31",
+  "jsonHash": "fnv1a64:346249d688cdc91a",
+  "findings": []
+}

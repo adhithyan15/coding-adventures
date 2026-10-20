@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-476-DESILUSAO",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "PT-EXT-476-DESILUSAO"
+  ],
+  "after": []
+}

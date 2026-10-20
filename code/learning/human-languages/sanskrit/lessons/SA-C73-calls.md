@@ -14,7 +14,8 @@ romanization: "āhvayati"
 concept_tag: SA-VERB-CALL
 prerequisites: [SA-C73-tells, SA-C73-cries]
 sounds: []
-roots: []
+roots: [sanskrit-ahvayati]
+etymology_hook: "āhvayati 'calls' ← ā 'toward' + the root √hve 'call' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -43,6 +44,12 @@ reviews_of: [SA-C73-cries]
 
 **आह्वयति** (*āhvayati*) — "(he, she) calls (someone)". **माता आह्वयति** — "mother is
 calling".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Āhvayati* is built from *ā*, "toward", and the root √hve, "to call" (MW), the
+root of *āhvāna*, "an invitation".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

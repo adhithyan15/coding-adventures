@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 102,
-  "sourceHash": "fnv1a64:bad289dab27d1d93",
+  "sourceHash": "fnv1a64:326ec1fbae1a20bd",
   "lessonIds": [
     "JA-C102-sentakumono",
     "JA-C102-senzai",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch102.txt",
   "json": "japanese/narration/ch102.json",
-  "textHash": "fnv1a64:d0adc3a4e2ea3aa9",
-  "jsonHash": "fnv1a64:06abb4fa441930e3",
+  "textHash": "fnv1a64:3ff665d543376ecf",
+  "jsonHash": "fnv1a64:f510aed51c4a849d",
   "findings": []
 }

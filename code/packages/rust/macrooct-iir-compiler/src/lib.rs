@@ -10,7 +10,7 @@
 //!         ▼  macrooct-lexer          ← macrooct.tokens = oct.tokens + @directives
 //!     [Token]  with AT_INCLUDE / AT_IF / AT_ELSE / AT_END / AT_DEFINE
 //!         │
-//!         ▼  source_preprocessor::preprocess(…, &MacroOctDialect, …)
+//!         ▼  source_preprocessor::preprocess(…, &BudgetedMacroOct, …)
 //!     [Token]  pure Oct — every directive token consumed
 //!         │
 //!         ▼  Oct's parser grammar          UNCHANGED
@@ -89,10 +89,13 @@
 #![warn(missing_docs)]
 #![warn(rust_2018_idioms)]
 
+mod budget;
 pub mod dialect;
 
-
+pub use budget::BudgetedMacroOct;
 pub use dialect::MacroOctDialect;
+
+use budget::PrelexBudget;
 
 use coding_adventures_macrooct_lexer::try_tokenize_macrooct;
 use coding_adventures_source_preprocessor::{
@@ -189,6 +192,13 @@ pub fn preprocess_source(
     fs: &mut dyn coding_adventures_source_preprocessor::SourceFs,
     bounds: Bounds,
 ) -> Result<PreprocessedUnit, MacroOctError> {
+    // The engine receives an already-lexed primary file, so neither its file
+    // nor its token guard can bound the work of lexing that file. Reserve the
+    // primary's bytes in the same per-unit budget every include draws from
+    // (see `budget.rs`) before the lexer runs.
+    let bounds = bounds.tighten(Bounds::default());
+    let dialect = BudgetedMacroOct::new(bounds);
+    dialect.reserve_primary(source).map_err(MacroOctError::Preprocess)?;
     let mut tokens = try_tokenize_macrooct(source).map_err(MacroOctError::Lex)?;
 
     // Keep a copy of the sentinel rather than synthesising one, so its line and
@@ -196,7 +206,7 @@ pub fn preprocess_source(
     let sentinel = tokens.last().cloned();
     dialect::strip_eof(&mut tokens);
 
-    let result = preprocess(tokens, file, &MacroOctDialect, fs, bounds)
+    let result = preprocess(tokens, file, &dialect, fs, bounds)
         .map_err(MacroOctError::Preprocess)?;
 
     let mut tokens = result.tokens;
@@ -266,6 +276,7 @@ pub fn compile_source_with_includes(
     module_name: &str,
     includes: &[(&str, &str)],
 ) -> Result<IIRModule, MacroOctError> {
+    check_in_memory_bundle(source, includes)?;
     let mut fs = MemoryFs::new();
     for (name, text) in includes {
         fs.insert(*name, *text);
@@ -284,6 +295,43 @@ pub fn compile_source_with_includes(
 
     let unit = preprocess_source(source, file, &mut fs, Bounds::default())?;
     compile_tokens(unit.tokens, module_name)
+}
+
+/// Bound the caller's whole in-memory bundle before any of it is copied.
+///
+/// `MemoryFs::insert` clones every entry, including files the source never
+/// includes, and `MemoryFs` reads are not charged against `bytes_per_file`.
+/// So the primary, each include's name and text, the number of includes, and
+/// their sum are all checked here, against the same defaults the engine and
+/// [`PrelexBudget`] use, before the filesystem is built.
+fn check_in_memory_bundle(source: &str, includes: &[(&str, &str)]) -> Result<(), MacroOctError> {
+    let bounds = Bounds::default();
+    let budget = PrelexBudget::new(bounds);
+    let too_big = |what: &str| MacroOctError::Preprocess(PpError::new(what.to_string()));
+    let bytes = |text: &str| u64::try_from(text.len()).unwrap_or(u64::MAX);
+
+    budget.check_file(source).map_err(MacroOctError::Preprocess)?;
+    let mut total = bytes(source);
+    if total > bounds.bytes_per_file || total > bounds.total_source_bytes {
+        return Err(too_big("primary MacroOct source exceeds the preprocessing byte budget"));
+    }
+    if includes.len() > bounds.total_inclusions as usize {
+        return Err(too_big("MacroOct include set exceeds the preprocessing file budget"));
+    }
+    for (name, text) in includes {
+        budget.check_file(text).map_err(MacroOctError::Preprocess)?;
+        if bytes(name) > bounds.token_spelling_bytes || bytes(text) > bounds.bytes_per_file {
+            return Err(too_big("MacroOct include exceeds the preprocessing byte budget"));
+        }
+        total = total
+            .checked_add(bytes(name))
+            .and_then(|n| n.checked_add(bytes(text)))
+            .unwrap_or(u64::MAX);
+        if total > bounds.total_source_bytes {
+            return Err(too_big("MacroOct include set exceeds the preprocessing byte budget"));
+        }
+    }
+    Ok(())
 }
 
 /// Parse, type-check and lower an already-preprocessed Oct token stream.

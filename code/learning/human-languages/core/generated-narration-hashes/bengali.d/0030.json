@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 30,
-  "sourceHash": "fnv1a64:63dabb12ffda7bd9",
+  "sourceHash": "fnv1a64:06ee2376d557d5bf",
   "lessonIds": [
     "BN-C19-je",
     "BN-C19-jokhon",
@@ -15,6 +15,6 @@
   "text": "bengali/narration/ch30.txt",
   "json": "bengali/narration/ch30.json",
   "textHash": "fnv1a64:92d63f5bbb504409",
-  "jsonHash": "fnv1a64:4a899f7e1f534a44",
+  "jsonHash": "fnv1a64:a26a54cac63654e2",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "qāmūs"
 concept_tag: AR-SHAY274-QAMUS
 prerequisites: [AR-C274-hibr, AR-C274-sabbura]
 sounds: []
-roots: []
+roots: [greek-okeanos]
+etymology_hook: "qāmūs: usually traced to Greek ōkeanos 'ocean' (EtymDB); 'dictionary' from al-Qāmūs al-Muḥīṭ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C274-sabbura]
 <!-- hl-knowledge: introduces=[AR-LEX-C274-SHAY274-04]; assesses=[] -->
 
 **قاموس** — *qāmūs* — "a dictionary".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قاموس** (*qāmūs*) is usually traced to Greek *ōkeanos*, "ocean" (EtymDB). The dictionary sense comes from al-Fīrūzābādī's *al-Qāmūs al-Muḥīṭ*, "the surrounding ocean".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

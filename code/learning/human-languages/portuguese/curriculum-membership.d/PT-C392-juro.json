@@ -1,0 +1,11 @@
+{
+  "id": "PT-C392-juro",
+  "pathSegment": "PT-PATH-392-INVESTIR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-392-INVESTIR",
+      "order": 2
+    }
+  ]
+}

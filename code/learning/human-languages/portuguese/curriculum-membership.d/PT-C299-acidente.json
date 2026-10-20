@@ -1,0 +1,11 @@
+{
+  "id": "PT-C299-acidente",
+  "pathSegment": "PT-PATH-299-ACIDENTE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-299-ACIDENTE",
+      "order": 0
+    }
+  ]
+}

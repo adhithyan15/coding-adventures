@@ -1,0 +1,11 @@
+{
+  "id": "GE-C406-ausparken",
+  "pathSegment": "GE-PATH-406-PARKEN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-406-PARKEN",
+      "order": 1
+    }
+  ]
+}

@@ -12,6 +12,9 @@ Before the new one: say the Persian for broken, then the Persian for different.
 You'll want to know: بهتر.
 بهتر — behtar — "better".
 
+The word, taken apart.
+behtar is beh, "good", with the comparative ending -tar. beh is native, usually traced to Middle Persian weh. English better only looks alike: it is a Germanic word, and no source links it to beh.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for different, then the Persian for better.
 
 You'll want to know: موفق.
 موفق — movaffaq — "successful".
+
+The word, taken apart.
+movaffaq is borrowed from Arabic muwaffaq, "successful, favoured". Its Arabic root is w-f-q (Lane).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for better, then the Persian for successful.
 You'll want to know: کند.
 کند — kond — "blunt; slow".
 
+The word, taken apart.
+kond is a native Persian word, inherited rather than borrowed: EtymDB takes it back to an Indo-Iranian word for "blunt, dull". (It also lists qand, "sugar candy", a different word.)
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for successful, then the Persian for blunt.
 You'll want to know: زبر.
 زبر — zebr — "rough".
 
+The word, taken apart.
+zebr is a native Persian word, but no source used here gives its older form, and its origin is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for blunt, then the Persian for rough.
 
 You'll want to know: خلوت.
 خلوت — khalvat — "uncrowded".
+
+The word, taken apart.
+khalvat is borrowed from Arabic ḫalwa, "solitude, privacy". Its Arabic root is ḫ-l-w (Lane). Persian uses it for an uncrowded place.
 
 What you've built.
 One more word for this chapter.

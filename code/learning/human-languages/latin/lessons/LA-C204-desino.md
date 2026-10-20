@@ -46,7 +46,7 @@ reviews_of: [LA-C204-conicio]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**dēsinō** is *dē*, "off, away", with *sinō*, "to let, to leave": to leave off.
+**dēsinō** is *dē*, "off, away", with *sinō*, "to let, to leave": to leave off. *Sinō* is inherited, but its deeper origin is uncertain: EtymDB 2.1 records two different roots.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

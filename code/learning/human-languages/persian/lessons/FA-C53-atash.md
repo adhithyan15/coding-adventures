@@ -14,7 +14,8 @@ romanization: "âtash"
 concept_tag: FA-NATURE53-ATASH
 prerequisites: [FA-C53-abr, FA-C53-darya]
 sounds: []
-roots: []
+roots: [persian-atash]
+etymology_hook: "âtash ← Middle Persian ātaxš (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C53-darya]
 <!-- hl-knowledge: introduces=[FA-LEX-C53-NATURE53-04]; assesses=[] -->
 
 **آتش** — *âtash* — "fire".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âtash* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *ātaxš*, "fire" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

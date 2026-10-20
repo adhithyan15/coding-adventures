@@ -1,0 +1,11 @@
+{
+  "id": "PT-C283-rumor",
+  "pathSegment": "PT-PATH-283-BOATO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-283-BOATO",
+      "order": 1
+    }
+  ]
+}

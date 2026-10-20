@@ -1,0 +1,19 @@
+{
+  "chapter": 375,
+  "title": "Na escola",
+  "label": "ch:pt-na-escola",
+  "canDo": "I can talk about secondary school: attending classes, absences, marks and subjects.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "PT-C375-disciplina",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 375: I can talk about secondary school: attending classes, absences, marks and subjects.",
+    "assesses": [
+      "PT-LEX-C375-ESCOLA-03",
+      "PT-LEX-C375-ESCOLA-04",
+      "PT-LEX-C375-ESCOLA-05"
+    ]
+  }
+}

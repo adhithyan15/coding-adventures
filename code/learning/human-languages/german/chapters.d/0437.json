@@ -1,0 +1,19 @@
+{
+  "chapter": 437,
+  "title": "Durch die Stadt",
+  "label": "ch:ge-durch-die-stadt",
+  "canDo": "I can wander round a town and ask the way: strolling, sauntering, asking about something, information and knowing my way round.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-R437-review-430-437",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 437: I can wander round a town and ask the way: strolling, sauntering, asking about something, information and knowing my way round.",
+    "assesses": [
+      "GE-LEX-C437-BUMMELN-03",
+      "GE-LEX-C437-BUMMELN-04",
+      "GE-LEX-C437-BUMMELN-05"
+    ]
+  }
+}

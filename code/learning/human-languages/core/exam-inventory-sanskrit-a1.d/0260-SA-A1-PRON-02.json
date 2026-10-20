@@ -1,0 +1,18 @@
+{
+  "id": "SA-A1-PRON-02",
+  "category": "Sarvanāma — the pronoun",
+  "label": "the pronoun may be dropped, because the verb already says who",
+  "probe": [
+    "SA-GRAMMAR-PRONOUN-DROPPING"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-PRON-01",
+    "A1-V-01"
+  ],
+  "note": "Chapter 3. The same fact Spanish has, taught explicitly here rather than assumed."
+}

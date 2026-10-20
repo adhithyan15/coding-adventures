@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C653-embarque",
+    "language": "spanish",
+    "chapter": 653,
+    "sequence": 22470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:271106efb1f44994"
+  },
+  "findings": []
+}

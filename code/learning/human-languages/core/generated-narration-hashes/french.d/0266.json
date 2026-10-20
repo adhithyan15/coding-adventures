@@ -1,0 +1,18 @@
+{
+  "language": "french",
+  "chapter": 266,
+  "sourceHash": "fnv1a64:df740f701fe9dd42",
+  "lessonIds": [
+    "FR-C266-si",
+    "FR-C266-sil-pleut",
+    "FR-C266-ca-depend",
+    "FR-C266-revision-conditions"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "french/narration/ch266.txt",
+  "json": "french/narration/ch266.json",
+  "textHash": "fnv1a64:b942b79f395f668c",
+  "jsonHash": "fnv1a64:dd74da9910189ca5",
+  "findings": []
+}

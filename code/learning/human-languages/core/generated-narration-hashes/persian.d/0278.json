@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 278,
-  "sourceHash": "fnv1a64:04c3aa0af479d0f1",
+  "sourceHash": "fnv1a64:d68eed2f3267c3dc",
   "lessonIds": [
     "FA-C278-sofre",
     "FA-C278-raz",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch278.txt",
   "json": "persian/narration/ch278.json",
-  "textHash": "fnv1a64:b255a7093b7103ac",
-  "jsonHash": "fnv1a64:e7ff6d4736b7f81b",
+  "textHash": "fnv1a64:0346a2f07ab1de4f",
+  "jsonHash": "fnv1a64:bae6d00fc13ef9b7",
   "findings": []
 }

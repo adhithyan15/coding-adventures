@@ -1,0 +1,11 @@
+{
+  "id": "IT-C336-teglia",
+  "pathSegment": "IT-PATH-336-FORNO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-336-FORNO",
+      "order": 3
+    }
+  ]
+}

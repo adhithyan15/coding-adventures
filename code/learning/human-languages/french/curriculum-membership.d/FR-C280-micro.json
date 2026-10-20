@@ -1,0 +1,11 @@
+{
+  "id": "FR-C280-micro",
+  "pathSegment": "FR-PATH-280-TELE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-280-TELE",
+      "order": 4
+    }
+  ]
+}

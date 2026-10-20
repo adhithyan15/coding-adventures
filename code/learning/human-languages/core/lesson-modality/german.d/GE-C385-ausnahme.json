@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C385-ausnahme",
+    "language": "german",
+    "chapter": 385,
+    "sequence": 20810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cc2481da1011a411"
+  },
+  "findings": []
+}

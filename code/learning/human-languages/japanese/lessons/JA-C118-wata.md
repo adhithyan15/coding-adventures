@@ -14,7 +14,8 @@ romanization: "wata"
 concept_tag: JA-THINGS118-WATA
 prerequisites: [JA-C118-hashigo, JA-C118-kusari]
 sounds: []
-roots: []
+roots: [japanese-wata]
+etymology_hook: "wata: native Japanese, inherited, not borrowed; usually kana, kanji 綿 as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C118-kusari]
 <!-- hl-knowledge: introduces=[JA-LEX-C118-THINGS118-04]; assesses=[] -->
 
 **わた** — *wata* — "cotton wool".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**わた** (*wata*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

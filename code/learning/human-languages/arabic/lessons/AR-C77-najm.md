@@ -14,7 +14,8 @@ romanization: "najm"
 concept_tag: AR-NATURE77-NAJM
 prerequisites: [AR-C76-raml, AR-C76-haql]
 sounds: []
-roots: []
+roots: [n-j-m]
+etymology_hook: "najm: built on the root n-j-m, 'a star' (Lane); Lane gives najm as a star, and also the Pleiades"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C76-haql]
 <!-- hl-knowledge: introduces=[AR-LEX-C77-NATURE77-01]; assesses=[] -->
 
 **نجم** — *najm* — "a star".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نجم** (*najm*) is built on the native Arabic root *n-j-m*, "a star; to rise, to appear" (Lane). Lane gives *najm* as a star, and also the Pleiades.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

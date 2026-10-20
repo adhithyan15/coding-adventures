@@ -14,7 +14,8 @@ romanization: "khabbaʾa"
 concept_tag: AR-VERB-KHABBAA
 prerequisites: [AR-C166-hadama, AR-C166-dahana]
 sounds: []
-roots: []
+roots: [kh-b-ʾ]
+etymology_hook: "khabbaʾa: built on the root kh-b-ʾ, 'to hide' (Lane); khabbaʾa is Form II, 'to hide away'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C166-dahana]
 <!-- hl-knowledge: introduces=[AR-LEX-C166-ACT166-05]; assesses=[] -->
 
 **خبأ** — *khabbaʾa* — "to hide (something)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خبأ** (*khabbaʾa*) is built on the native Arabic root *kh-b-ʾ*, "to hide" (Lane). *Khabbaʾa* is Form II, "to hide away".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

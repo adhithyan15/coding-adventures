@@ -1,0 +1,19 @@
+{
+  "chapter": 768,
+  "title": "Lo que cociné",
+  "label": "ch:es-lo-que-cocine",
+  "canDo": "I can tell someone how I cooked a dish: what I boiled, fried, peeled and beat, and which ingredients I used.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C768-ingrediente",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 768: I can tell someone how I cooked a dish: what I boiled, fried, peeled and beat, and which ingredients I used.",
+    "assesses": [
+      "ES-LEX-C768-COCINAR-03",
+      "ES-LEX-C768-COCINAR-04",
+      "ES-LEX-C768-COCINAR-05"
+    ]
+  }
+}

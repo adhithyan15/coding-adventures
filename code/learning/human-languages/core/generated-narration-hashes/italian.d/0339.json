@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 339,
+  "sourceHash": "fnv1a64:7babb274314e6ce7",
+  "lessonIds": [
+    "IT-C339-opinione",
+    "IT-C339-parere",
+    "IT-C339-convinto",
+    "IT-C339-sostenere",
+    "IT-C339-punto-di-vista"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch339.txt",
+  "json": "italian/narration/ch339.json",
+  "textHash": "fnv1a64:61c2e0712fced058",
+  "jsonHash": "fnv1a64:4e7626d5e208f83b",
+  "findings": []
+}

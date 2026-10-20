@@ -14,7 +14,8 @@ romanization: "khashin"
 concept_tag: AR-SIFA212-KHASHIN
 prerequisites: [AR-C211-nadir, AR-C211-adi]
 sounds: []
-roots: []
+roots: [kh-sh-n]
+etymology_hook: "khashin: built on the root kh-sh-n, 'to be rough' (Lane); khashin is the adjective, 'rough'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C211-adi]
 <!-- hl-knowledge: introduces=[AR-LEX-C212-SIFA212-01]; assesses=[] -->
 
 **خشن** — *khashin* — "rough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خشن** (*khashin*) is built on the native Arabic root *kh-sh-n*, "to be rough" (Lane). *Khashin* is the adjective, "rough".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "shaimpū"
 concept_tag: UR-CHIZ197-SHAIMPU
 prerequisites: [UR-C196-jadid, UR-C197-chatai]
 sounds: []
-roots: []
+roots: [english-shampoo]
+etymology_hook: "shaimpū ← English shampoo, itself from Hindi chāmpo 'press!'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C197-chatai]
 <!-- hl-knowledge: introduces=[UR-LEX-C197-CHIZ197-02]; assesses=[] -->
 
 **شیمپو** — *shaimpū* — "shampoo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شیمپو** (*shaimpū*) is borrowed from English *shampoo*. English took that word from Hindi *chāmpo*, "press, massage!", the command form of *chāmpnā*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ʿabara"
 concept_tag: AR-VERB-ABARA
 prerequisites: [AR-C159-wasala, AR-C159-safara]
 sounds: []
-roots: []
+roots: [ʿ-b-r]
+etymology_hook: "ʿabara: built on the root ʿ-b-r, 'to cross' (Lane); ʿabara is the plain verb, 'he crossed'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C159-safara]
 <!-- hl-knowledge: introduces=[AR-LEX-C159-ACT159-05]; assesses=[] -->
 
 **عبر** — *ʿabara* — "to cross".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عبر** (*ʿabara*) is built on the native Arabic root *ʿ-b-r*, "to cross" (Lane). *ʿAbara* is the plain verb, "he crossed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

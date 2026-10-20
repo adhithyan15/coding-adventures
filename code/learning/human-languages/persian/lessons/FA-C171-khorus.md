@@ -14,7 +14,8 @@ romanization: "khorus"
 concept_tag: FA-CHIZ171-KHORUS
 prerequisites: [FA-C171-goldan, FA-C171-heyvan]
 sounds: []
-roots: []
+roots: [persian-khorus]
+etymology_hook: "khorus: inherited, usually traced to Middle Persian xrōs"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C171-heyvan]
 <!-- hl-knowledge: introduces=[FA-LEX-C171-CHIZ171-04]; assesses=[] -->
 
 **خروس** — *khorus* — "a rooster".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khorus* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *xrōs*, "rooster".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

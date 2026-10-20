@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C660-albergue",
+    "language": "spanish",
+    "chapter": 660,
+    "sequence": 22860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:01c2cff66b8cc202"
+  },
+  "findings": []
+}

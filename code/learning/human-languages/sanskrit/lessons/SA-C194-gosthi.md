@@ -14,7 +14,8 @@ romanization: "goṣṭhī"
 concept_tag: SA-THG194-GOSTHI
 prerequisites: [SA-C194-nimantranam, SA-C194-sabha]
 sounds: []
-roots: []
+roots: [sanskrit-goshthi, sanskrit-goshtha]
+etymology_hook: "goṣṭhī ← goṣṭha 'cow-pen, meeting place' = go 'cow' + stha 'standing' (MW; CDIAL 4339)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C194-sabha]
 <!-- hl-knowledge: introduces=[SA-LEX-C194-THG194-04]; assesses=[] -->
 
 **गोष्ठी** — *goṣṭhī* — "a discussion group".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*goṣṭhī* comes from *goṣṭha*, a cow-pen, built on *go*, "cow", and *stha*, "standing" (MW). The cow-pen became a meeting place, then an assembly, then a talk (CDIAL 4339). Marathi *goṭh* now means "a tale".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

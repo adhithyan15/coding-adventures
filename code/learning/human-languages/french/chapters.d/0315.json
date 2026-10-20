@@ -1,0 +1,19 @@
+{
+  "chapter": 315,
+  "title": "Le deuil",
+  "label": "ch:fr-le-deuil",
+  "canDo": "I can talk about mourning and what people leave behind: the grave, mourning, the will, inheriting and an inheritance.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-R315-revision-308-315",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 315: I can talk about mourning and what people leave behind: the grave, mourning, the will, inheriting and an inheritance.",
+    "assesses": [
+      "FR-LEX-C315-DEUIL-03",
+      "FR-LEX-C315-DEUIL-04",
+      "FR-LEX-C315-DEUIL-05"
+    ]
+  }
+}

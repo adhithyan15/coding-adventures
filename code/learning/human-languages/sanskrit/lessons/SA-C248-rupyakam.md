@@ -14,7 +14,8 @@ romanization: "rūpyakam"
 concept_tag: SA-THG248-RUPYAKAM
 prerequisites: [SA-C248-kosah, SA-C248-nidhih]
 sounds: []
-roots: []
+roots: [sanskrit-rupya]
+etymology_hook: "rūpyaka ← rūpya 'stamped; silver' (CDIAL 10805), from rūpa 'form'; EtymDB: the source of rupayā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C248-nidhih]
 <!-- hl-knowledge: introduces=[SA-LEX-C248-THG248-03]; assesses=[] -->
 
 **रूप्यकम्** — *rūpyakam* — "a rupee".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*rūpyaka* is built on *rūpya*, "beautiful, bearing a stamp", and then "silver" (CDIAL 10805), from *rūpa*, "form" (MW). Stamped silver became the coin, and EtymDB traces Hindi *rupayā*, the rupee, to *rūpyaka*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

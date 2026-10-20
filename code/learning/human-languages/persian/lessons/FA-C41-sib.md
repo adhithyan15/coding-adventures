@@ -14,7 +14,8 @@ romanization: "sib"
 concept_tag: FA-FOOD41-SIB
 prerequisites: [FA-C40-gusht, FA-C41-miveh]
 sounds: []
-roots: []
+roots: [persian-sib]
+etymology_hook: "sib: inherited, usually traced to Middle Persian sēb"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C41-miveh]
 <!-- hl-knowledge: introduces=[FA-LEX-C41-FOOD41-02]; assesses=[] -->
 
 **سیب** — *sib* — "an apple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sib* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *sēb*, "apple".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

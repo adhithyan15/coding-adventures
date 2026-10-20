@@ -14,7 +14,8 @@ romanization: "noṭ"
 concept_tag: UR-KAM209-NOT
 prerequisites: [UR-C208-chamgadar, UR-C208-bichchhu]
 sounds: []
-roots: []
+roots: [english-note]
+etymology_hook: "noṭ ← English note"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C208-bichchhu]
 <!-- hl-knowledge: introduces=[UR-LEX-C209-KAM209-01]; assesses=[] -->
 
 **نوٹ** — *noṭ* — "a banknote".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نوٹ** (*noṭ*) is a loan from English *note*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

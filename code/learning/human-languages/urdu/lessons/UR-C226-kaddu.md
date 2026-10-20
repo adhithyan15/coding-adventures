@@ -14,7 +14,8 @@ romanization: "kaddū"
 concept_tag: UR-CHIZ226-KADDU
 prerequisites: [UR-C226-pudina, UR-C226-baingan]
 sounds: []
-roots: []
+roots: [persian-kadu]
+etymology_hook: "kaddū: usually traced to Persian kadū 'gourd'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C226-baingan]
 <!-- hl-knowledge: introduces=[UR-LEX-C226-CHIZ226-04]; assesses=[] -->
 
 **کدو** — *kaddū* — "a pumpkin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کدو** (*kaddū*) is a loan, usually traced to Persian *kadū*, "gourd".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

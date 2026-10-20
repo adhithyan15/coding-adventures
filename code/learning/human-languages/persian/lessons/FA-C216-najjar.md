@@ -14,7 +14,8 @@ romanization: "najjâr"
 concept_tag: FA-KAR216-NAJJAR
 prerequisites: [FA-C215-khanande, FA-C216-kargah]
 sounds: []
-roots: []
+roots: [arabic-najjar]
+etymology_hook: "najjâr ← Arabic najjār 'carpenter', root n-j-r (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C216-kargah]
 <!-- hl-knowledge: introduces=[FA-LEX-C216-KAR216-02]; assesses=[] -->
 
 **نجار** — *najjâr* — "a carpenter".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*najjâr* is borrowed from Arabic *najjār*, "carpenter". Its Arabic root is *n-j-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

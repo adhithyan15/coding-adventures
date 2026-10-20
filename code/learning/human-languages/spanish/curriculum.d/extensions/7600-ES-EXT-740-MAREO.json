@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-740-MAREO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that I feel sick or faint and what relieves it.",
+  "prerequisites": []
+}

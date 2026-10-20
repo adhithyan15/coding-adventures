@@ -14,7 +14,8 @@ romanization: "farâr kardan"
 concept_tag: FA-VERB-FARAR-KARDAN
 prerequisites: [FA-C259-chane-zadan, FA-C259-dozdidan]
 sounds: []
-roots: []
+roots: [arabic-firar]
+etymology_hook: "farâr ← Arabic firār 'flight, running away', root f-r-r (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C259-dozdidan]
 <!-- hl-knowledge: introduces=[FA-LEX-C259-KONESH259-04]; assesses=[] -->
 
 **فرار کردن** — *farâr kardan* — "to escape, to run away".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*farâr kardan* pairs *farâr*, borrowed from Arabic *firār*, "flight, running away" (root *f-r-r*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

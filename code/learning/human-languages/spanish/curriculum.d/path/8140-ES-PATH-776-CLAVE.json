@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-776-CLAVE",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "ES-EXT-776-CLAVE"
+  ],
+  "after": []
+}

@@ -14,7 +14,8 @@ romanization: "tako"
 concept_tag: JA-ANIMALS47-TAKO
 prerequisites: [JA-C46-shika, JA-C47-kani]
 sounds: []
-roots: []
+roots: [japanese-tako]
+etymology_hook: "tako: native Japanese, inherited, not borrowed; usually kana, kanji 蛸 as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C47-kani]
 <!-- hl-knowledge: introduces=[JA-LEX-C47-ANIMALS47-02]; assesses=[] -->
 
 **たこ** — *tako* — "an octopus".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**たこ** (*tako*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

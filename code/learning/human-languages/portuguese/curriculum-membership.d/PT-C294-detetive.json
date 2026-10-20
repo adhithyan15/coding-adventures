@@ -1,0 +1,11 @@
+{
+  "id": "PT-C294-detetive",
+  "pathSegment": "PT-PATH-294-INVESTIGAR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-294-INVESTIGAR",
+      "order": 3
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 237,
-  "sourceHash": "fnv1a64:42f958cb94b4eebc",
+  "sourceHash": "fnv1a64:f26e23fd865931ae",
   "lessonIds": [
     "SA-C237-kumbhakarah",
     "SA-C237-svarnakarah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch237.txt",
   "json": "sanskrit/narration/ch237.json",
-  "textHash": "fnv1a64:fe4846efacae3301",
-  "jsonHash": "fnv1a64:984a4c0c21e0387b",
+  "textHash": "fnv1a64:d7c77914d14e22e3",
+  "jsonHash": "fnv1a64:f98682b3f0919561",
   "findings": []
 }

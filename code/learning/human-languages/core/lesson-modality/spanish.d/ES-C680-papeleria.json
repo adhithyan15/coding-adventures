@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C680-papeleria",
+    "language": "spanish",
+    "chapter": 680,
+    "sequence": 23860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:92afdf3765655444"
+  },
+  "findings": []
+}

@@ -14,7 +14,8 @@ romanization: "pahāṛī"
 concept_tag: UR-THINGS122-PAHARI
 prerequisites: [UR-C122-tai, UR-C122-dastane]
 sounds: []
-roots: []
+roots: [indo-aryan-pahada]
+etymology_hook: "pahāṛī: pahāṛ 'mountain' ← *pāhāḍa 'rock, hill' (CDIAL 8141) + -ī"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C122-dastane]
 <!-- hl-knowledge: introduces=[UR-LEX-C122-THINGS122-05]; assesses=[] -->
 
 **پہاڑی** — *pahāṛī* — "a hill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پہاڑی** (*pahāṛī*) is *pahāṛ*, "a mountain", with the ending *-ī* that makes a smaller one. *pahāṛ* comes from a reconstructed *\*pāhāḍa*, "rock, hill", which CDIAL connects, probably, with Sanskrit *pāṣāṇa*, "stone" (CDIAL 8141).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

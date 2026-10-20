@@ -14,7 +14,8 @@ romanization: "lahsan"
 concept_tag: UR-THINGS114-LAHSAN
 prerequisites: [UR-C114-sabzi, UR-C114-piyaz]
 sounds: []
-roots: []
+roots: [sanskrit-lashuna]
+etymology_hook: "lahsan ← Sanskrit laśuna 'garlic', a tadbhava (CDIAL 10990)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C114-piyaz]
 <!-- hl-knowledge: introduces=[UR-LEX-C114-THINGS114-05]; assesses=[] -->
 
 **لہسن** — *lahsan* — "garlic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لہسن** (*lahsan*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *laśuna*, "garlic" (CDIAL 10990).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 193,
-  "sourceHash": "fnv1a64:f199afe390ab0d9d",
+  "sourceHash": "fnv1a64:f431dad0a1d1b0c5",
   "lessonIds": [
     "SA-C193-krayah",
     "SA-C193-vikrayah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch193.txt",
   "json": "sanskrit/narration/ch193.json",
-  "textHash": "fnv1a64:9e99506da97cee1d",
-  "jsonHash": "fnv1a64:8867ec2d1dde2318",
+  "textHash": "fnv1a64:28714797a11b547e",
+  "jsonHash": "fnv1a64:16b243d1bb6a79a3",
   "findings": []
 }

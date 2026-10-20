@@ -14,7 +14,8 @@ romanization: "rathaḥ"
 concept_tag: SA-TRAVEL-CHARIOT
 prerequisites: [SA-C74-market, SA-C75-vehicle]
 sounds: []
-roots: []
+roots: [sanskrit-ratha]
+etymology_hook: "ratha 'chariot': MW says 'goer' from √ṛ; EtymDB links it to Latin rota 'wheel' (CDIAL 10602)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,13 @@ reviews_of: [SA-C75-vehicle]
 <!-- hl-knowledge: introduces=[SA-LEX-C75-TRAVEL-02]; assesses=[] -->
 
 **रथः** (*rathaḥ*) — "a chariot", the vehicle of the old stories.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW explains *ratha* as "the goer", from the root √ṛ, "to go", but EtymDB links it
+to Latin *rota* and Lithuanian *ratas*, "wheel", which makes the chariot first the
+wheeled thing. Either way it is inherited, and Rigvedic (CDIAL 10602).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

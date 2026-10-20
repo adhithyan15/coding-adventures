@@ -1,0 +1,11 @@
+{
+  "id": "FR-C290-meurtre",
+  "pathSegment": "FR-PATH-290-CRIME",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-290-CRIME",
+      "order": 2
+    }
+  ]
+}

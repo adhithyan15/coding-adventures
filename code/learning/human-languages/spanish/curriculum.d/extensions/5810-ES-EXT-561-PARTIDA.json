@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-561-PARTIDA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that someone left, a ship set sail, someone was away and came back.",
+  "prerequisites": []
+}

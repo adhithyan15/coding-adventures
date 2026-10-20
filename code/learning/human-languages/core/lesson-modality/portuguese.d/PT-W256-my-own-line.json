@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "PT-W256-my-own-line",
+    "language": "portuguese",
+    "chapter": 256,
+    "sequence": 15370,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:79c04cfb4f1e9f45",
+    "detachableSegments": [
+      "Writing — controlled composition"
+    ]
+  },
+  "findings": []
+}

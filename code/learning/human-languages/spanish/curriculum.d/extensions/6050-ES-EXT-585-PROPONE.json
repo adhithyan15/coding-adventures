@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-585-PROPONE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can make a proposal, give a suggestion and warn of a problem.",
+  "prerequisites": []
+}

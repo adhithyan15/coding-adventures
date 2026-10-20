@@ -1,0 +1,11 @@
+{
+  "id": "IT-C380-matricola",
+  "pathSegment": "IT-PATH-380-UNIVERSITA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-380-UNIVERSITA",
+      "order": 1
+    }
+  ]
+}

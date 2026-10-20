@@ -14,7 +14,8 @@ romanization: "upāyaḥ"
 concept_tag: SA-WRK201-UPAYAH
 prerequisites: [SA-C201-yojana, SA-C201-laksyam]
 sounds: []
-roots: []
+roots: [sanskrit-upaya]
+etymology_hook: "upāya ← upa 'near' + √i 'go': 'coming near', then 'means' (MW; CDIAL 2308)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C201-laksyam]
 <!-- hl-knowledge: introduces=[SA-LEX-C201-WRK201-03]; assesses=[] -->
 
 **उपायः** — *upāyaḥ* — "a way, a means".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*upāya* is built on *upa-*, "near", and the root √i, "to go" (MW): first "approach, coming near", then the way by which you reach your aim (CDIAL 2308).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

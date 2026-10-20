@@ -1,0 +1,19 @@
+{
+  "id": "SA-A1-C-04",
+  "category": "Vibhakti — the case system",
+  "label": "the direct object",
+  "probe": [
+    "SA-PATTERN-I-SPEAK-SANSKRIT",
+    "SA-LEX-VADAMI"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-SV-04",
+    "A1-OS-06"
+  ],
+  "note": "aham saṁskṛtam vadāmi puts the object in the accusative. Spanish's rule that a human object takes the preposition a has no Sanskrit counterpart: the case does the work for both."
+}

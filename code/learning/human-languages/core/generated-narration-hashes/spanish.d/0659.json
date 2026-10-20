@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 659,
+  "sourceHash": "fnv1a64:f597252a0ba99f2d",
+  "lessonIds": [
+    "ES-C659-lancha",
+    "ES-C659-velero",
+    "ES-C659-remar",
+    "ES-C659-marinero",
+    "ES-C659-capitan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch659.txt",
+  "json": "spanish/narration/ch659.json",
+  "textHash": "fnv1a64:70141c674f9a4212",
+  "jsonHash": "fnv1a64:ffd9295a5bf620dd",
+  "findings": []
+}

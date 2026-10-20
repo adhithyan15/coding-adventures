@@ -14,7 +14,8 @@ romanization: "māhir"
 concept_tag: UR-KAM238-MAHIR
 prerequisites: [UR-C237-sipahi, UR-C237-fauj]
 sounds: []
-roots: []
+roots: [arabic-mahir]
+etymology_hook: "māhir ← Arabic māhir 'skilful', through Persian (Lane, root m-h-r)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C237-fauj]
 <!-- hl-knowledge: introduces=[UR-LEX-C238-KAM238-01]; assesses=[] -->
 
 **ماہر** — *māhir* — "an expert".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ماہر** (*māhir*) is a loan from Arabic *māhir*, "skilful", which reached Urdu through Persian. Its Arabic root is *m-h-r* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

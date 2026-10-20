@@ -12,7 +12,7 @@ concept_tag: JA-WORD-NIHONGO
 prerequisites: [JA-W05-go-kanji]
 sounds: [mora, moraic-n]
 roots: [middle-chinese-nyit, middle-chinese-pwonx, middle-chinese-ngjoX]
-etymology_hook: 日 is nichi, jitsu, hi, bi, or ka — a kanji carries a set of readings, and the word picks one.
+etymology_hook: "nihongo: Sino-Japanese 日 'sun' + 本 'origin' + 語 'language', on'yomi from Middle Chinese nyit, pwonX, ngjoX"
 duration:
   max_seconds: 220
 requires:
@@ -64,7 +64,7 @@ so it remains postponed rather than becoming an unexplained decoding test.
 ## The word, taken apart — the real family
 <!-- hl-knowledge: introduces=[JA-LEX-NIHONGO, JA-BRIDGE-SINO-JAPANESE]; assesses=[] -->
 
-Here the cousin web finally works — just not toward English. The on-readings
+Here the cousin web finally works — though not toward English. The on-readings
 *nichi*, *hon*, *go* are borrowings of Middle Chinese, so 日本語 has genuine
 relatives: Mandarin writes the same three characters and says *Rìběnyǔ*; Korean
 borrowed the same compound as *ilbon-eo*. Same characters, related imported

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C382-senator",
+    "language": "latin",
+    "chapter": 382,
+    "sequence": 20480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3daf9b4c4fd563e7"
+  },
+  "findings": []
+}

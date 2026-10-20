@@ -1,0 +1,11 @@
+{
+  "id": "ES-C530-amenaza",
+  "pathSegment": "ES-PATH-530-PELIGRO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-530-PELIGRO",
+      "order": 2
+    }
+  ]
+}

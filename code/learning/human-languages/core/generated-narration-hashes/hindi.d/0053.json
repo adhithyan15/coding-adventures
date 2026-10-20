@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 53,
-  "sourceHash": "fnv1a64:e66c993b9dd17f86",
+  "sourceHash": "fnv1a64:eff9222f247d4ec1",
   "lessonIds": [
     "HI-C53-shoulder",
     "HI-C53-knee",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch53.txt",
   "json": "hindi/narration/ch53.json",
-  "textHash": "fnv1a64:68bb0148effcf272",
-  "jsonHash": "fnv1a64:c5e21aa8682b9b62",
+  "textHash": "fnv1a64:26260471b40a5a00",
+  "jsonHash": "fnv1a64:febdc4d545d2431b",
   "findings": []
 }

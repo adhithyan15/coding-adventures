@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a father, then the Urdu for dad.
 You'll want to know: امی.
 امی — ammī — "mum".
 
+The word, taken apart.
+امی (ammī) is the fond form of ammā, "mother", which CDIAL lists under Sanskrit ambā, "mother" (CDIAL 574). CDIAL lists ammā, not ammī.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for dad, then the Urdu for mum.
 
 You'll want to know: بیٹا.
 بیٹا — beṭā — "a son".
+
+The word, taken apart.
+بیٹا (beṭā) is a tadbhava, a word inherited and reshaped by sound change. It comes from beṭṭa, "boy", a form CDIAL reconstructs from its descendants (CDIAL 9238). CDIAL lists it in an entry headed biḍḍa, "defective", beside Prakrit biṭṭa, "boy"; no Sanskrit source is agreed.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for mum, then the Urdu for a son.
 You'll want to know: بیٹی.
 بیٹی — beṭī — "a daughter".
 
+The word, taken apart.
+بیٹی (beṭī) is the feminine of beṭā, "son". CDIAL lists both under a reconstructed beṭṭa, in an entry headed biḍḍa, "defective", beside Prakrit biṭṭa, "boy" (CDIAL 9238). No Sanskrit source is agreed.
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a son, then the Urdu for a daughter.
 You'll want to know: دادا.
 دادا — dādā — "a grandfather (father's father)".
 
+The word, taken apart.
+دادا (dādā) is a tadbhava, a word inherited and reshaped by sound change. It comes from dādda, "father or other elderly relative", a form CDIAL reconstructs from its descendants (CDIAL 6261).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for a daughter, then the Urdu for a grandfather
 
 You'll want to know: دادی.
 دادی — dādī — "a grandmother (father's mother)".
+
+The word, taken apart.
+دادی (dādī) is a tadbhava, a word inherited and reshaped by sound change. It comes from dādda, "father or other elderly relative", a form CDIAL reconstructs from its descendants (CDIAL 6261). dādī is the feminine of dādā, "grandfather".
 
 What you've built.
 One more word for this chapter.

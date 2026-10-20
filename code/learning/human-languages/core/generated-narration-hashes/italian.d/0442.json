@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 442,
+  "sourceHash": "fnv1a64:a2d2610515f6c43d",
+  "lessonIds": [
+    "IT-C442-salita",
+    "IT-C442-discesa",
+    "IT-C442-costeggiare",
+    "IT-C442-sbucare",
+    "IT-C442-aggirare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch442.txt",
+  "json": "italian/narration/ch442.json",
+  "textHash": "fnv1a64:7ed67078017163cd",
+  "jsonHash": "fnv1a64:589dade58d1d5d26",
+  "findings": []
+}

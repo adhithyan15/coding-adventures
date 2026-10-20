@@ -1,0 +1,11 @@
+{
+  "id": "LA-R454-review-447-454",
+  "pathSegment": "LA-PATH-454-DEXTRORSUM",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "LA-EXT-454-DEXTRORSUM",
+      "order": 5
+    }
+  ]
+}

@@ -4,7 +4,7 @@
   "chapter": 93,
   "title": "Ever, Delay, Left, Right, Inside",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5409c7a23d0e3f9a",
+  "sourceHash": "fnv1a64:64e934c6b44c31d1",
   "lessons": [
     {
       "id": "SA-C93-kadapi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b46a493ac6d05e5",
+      "sourceHash": "fnv1a64:4e09b82f2a026808",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kadāpi is built from kadā \"when\", which MW derives from the question stem ka-, and the particle api \"even, also\": \"at any time at all\". After na it turns into \"never\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:19c23f80d19e78c6",
+      "sourceHash": "fnv1a64:398e99233463b680",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vilamba comes from the verb vi-√lamb, the root √lamb \"hang\" with vi- \"apart, away\": to hang back, linger, delay (MW). It lives on as Punjabi vilamb, bilamb \"delay\" (CDIAL 11890)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:25f8704bc02c59af",
+      "sourceHash": "fnv1a64:10400cb18ea207ca",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "MW thinks vāma \"left\" was perhaps once the same word as vāma \"lovely, pleasant\", from the root √van \"love, desire\", which would make \"the lovely side\" a polite name for the left; CDIAL keeps the two apart (11533, 11534), so the link is not settled. vāma lives on as Hindi bāyāṁ \"left\" (CDIAL 11533)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:04ea27c42d3dca67",
+      "sourceHash": "fnv1a64:22ca45d9f8a907d1",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dakṣiṇa is inherited from an Indo-European word for \"right\" that also gave Latin dexter (English dexterous) and Greek dexios (EtymDB). It means \"south\" because someone facing east has the south on the right hand (MW). It lives on as Hindi dakkhin \"the south\" (CDIAL 6119)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3f967932a97c824c",
+      "sourceHash": "fnv1a64:8abc4a0646c239d0",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "antaḥ is antar \"within, between\", with the final r said as ḥ at the end of a phrase (MW). MW sets it beside Latin inter \"between\", the inter- of English international, so it is inherited from Indo-European. It lives on as Marathi āt \"inside\" (CDIAL 356)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 295,
+  "sourceHash": "fnv1a64:0daa996511da7738",
+  "lessonIds": [
+    "IT-C295-indagare",
+    "IT-C295-indagine",
+    "IT-C295-ispettore",
+    "IT-C295-indizio",
+    "IT-C295-impronta"
+  ],
+  "tex": "italian/book/chapters/ch295-le-indagini.tex"
+}

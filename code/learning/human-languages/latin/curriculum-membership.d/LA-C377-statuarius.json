@@ -1,0 +1,11 @@
+{
+  "id": "LA-C377-statuarius",
+  "pathSegment": "LA-PATH-377-FULLO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-377-FULLO",
+      "order": 4
+    }
+  ]
+}

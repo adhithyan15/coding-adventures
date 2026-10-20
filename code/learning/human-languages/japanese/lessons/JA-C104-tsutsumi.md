@@ -14,7 +14,8 @@ romanization: "tsutsumi"
 concept_tag: JA-THINGS104-TSUTSUMI
 prerequisites: [JA-C103-obon, JA-C103-kan]
 sounds: []
-roots: []
+roots: [japanese-tsutsumu]
+etymology_hook: "tsutsumi: native, the noun from tsutsumu 'to wrap'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C103-kan]
 <!-- hl-knowledge: introduces=[JA-LEX-C104-THINGS104-01]; assesses=[] -->
 
 **つつみ** — *tsutsumi* — "a parcel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**つつみ** (*tsutsumi*) is native: the noun made from *tsutsumu*, "to wrap", by its stem (JMdict). It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

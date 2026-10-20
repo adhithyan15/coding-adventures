@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 339,
+  "sourceHash": "fnv1a64:bae81e0d1318e199",
+  "lessonIds": [
+    "PT-C339-acordo",
+    "PT-C339-concordar",
+    "PT-C339-admitir",
+    "PT-C339-consenso",
+    "PT-C339-ceder"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch339.txt",
+  "json": "portuguese/narration/ch339.json",
+  "textHash": "fnv1a64:386fd9f1619fe6a2",
+  "jsonHash": "fnv1a64:a0285c1490dc4180",
+  "findings": []
+}

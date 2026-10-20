@@ -4,7 +4,7 @@
   "chapter": 57,
   "title": "Ante et Post",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:ab7073f40c70b41e",
+  "sourceHash": "fnv1a64:4f980119fcb67061",
   "lessons": [
     {
       "id": "LA-C57-ante",
@@ -197,7 +197,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:946594c15789ba3d",
+      "sourceHash": "fnv1a64:b24563967c0366cd",
       "notice": null,
       "blocks": [
         {
@@ -282,7 +282,7 @@
             },
             {
               "kind": "speech",
-              "text": "The mirror of ante, and the same double life. In space it is \"behind\": post mūrum, \"behind the wall\". In time it is \"after\"."
+              "text": "The mirror of ante, and the same double life. In space it is \"behind\": post mūrum, \"behind the wall\". In time it is \"after\". Post is inherited, and Lewis & Short compares a Sanskrit word for \"behind\"."
             },
             {
               "kind": "speech",

@@ -14,7 +14,8 @@ romanization: "hantaigawa"
 concept_tag: JA-LOC82-HANTAIGAWA
 prerequisites: [JA-C82-shinai, JA-C82-kougai]
 sounds: []
-roots: []
+roots: [middle-chinese-pjonx, middle-chinese-twojh, japanese-kawa-side]
+etymology_hook: "hantaigawa: Sino-Japanese hantai 反対 'opposite' + native kawa 'side' (voiced)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C82-kougai]
 <!-- hl-knowledge: introduces=[JA-LEX-C82-LOC82-04]; assesses=[] -->
 
 **はんたいがわ** — *hantaigawa* — "the opposite side".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**はんたいがわ** (*hantaigawa*) mixes the two layers: *hantai*, "opposite", borrowed from Chinese, *han*, "reverse, opposite" (Middle Chinese *pjonX*), and *tai*, "facing" (Middle Chinese *twojH*), with native *kawa*, "side", voiced to *gawa* (JMdict; Unihan, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

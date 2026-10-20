@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:4d4d5d3d48bf0871",
+  "lessonIds": [
+    "IT-C426-trolley",
+    "IT-C426-stiva",
+    "IT-C426-nastro",
+    "IT-C426-bilancia",
+    "IT-C426-imballare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch426.txt",
+  "json": "italian/narration/ch426.json",
+  "textHash": "fnv1a64:35c8b7211930a0a8",
+  "jsonHash": "fnv1a64:3e7caae158d859bb",
+  "findings": []
+}

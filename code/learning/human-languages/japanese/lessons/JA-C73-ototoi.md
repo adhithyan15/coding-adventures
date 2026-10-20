@@ -14,7 +14,8 @@ romanization: "ototoi"
 concept_tag: JA-TIME73-OTOTOI
 prerequisites: [JA-C73-konya, JA-C73-asatte]
 sounds: []
-roots: []
+roots: [japanese-ototoi]
+etymology_hook: "ototoi: native; written 一昨日, read as a whole; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C73-asatte]
 <!-- hl-knowledge: introduces=[JA-LEX-C73-TIME73-04]; assesses=[] -->
 
 **おととい** — *ototoi* — "the day before yesterday".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**おととい** (*ototoi*) is a native word, inherited rather than borrowed. JMdict writes it with characters for "one", "past" and "day", read as a whole for their meaning. Its older origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

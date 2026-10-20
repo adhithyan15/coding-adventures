@@ -1,0 +1,11 @@
+{
+  "id": "ES-C692-cosechar",
+  "pathSegment": "ES-PATH-692-SEMBRAR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-692-SEMBRAR",
+      "order": 2
+    }
+  ]
+}

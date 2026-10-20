@@ -14,7 +14,8 @@ romanization: "vafâdâr"
 concept_tag: FA-SEFAT236-VAFADAR
 prerequisites: [FA-C236-jaleb, FA-C236-divane]
 sounds: []
-roots: []
+roots: [arabic-wafa, persian-dar-holder]
+etymology_hook: "vafâdâr: vafâ ← Arabic wafāʾ 'loyalty' (Lane) + Persian -dâr 'holding' (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C236-divane]
 <!-- hl-knowledge: introduces=[FA-LEX-C236-SEFAT236-05]; assesses=[] -->
 
 **وفادار** — *vafâdâr* — "loyal".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vafâdâr* is *vafâ*, "loyalty", with *-dâr*, "holding" (EtymDB). *vafâ* is borrowed from Arabic *wafāʾ*, "keeping faith" (root *w-f-y*, Lane); *-dâr* is native Persian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

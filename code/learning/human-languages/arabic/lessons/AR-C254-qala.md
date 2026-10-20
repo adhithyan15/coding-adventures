@@ -14,7 +14,8 @@ romanization: "qalā"
 concept_tag: AR-VERB-QALA
 prerequisites: [AR-C253-tabashir, AR-C253-dabbasa]
 sounds: []
-roots: []
+roots: [q-l-y]
+etymology_hook: "qalā: built on the root q-l-y, 'to fry' (Lane); qalā is the plain verb, 'he fried'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C253-dabbasa]
 <!-- hl-knowledge: introduces=[AR-LEX-C254-ACT254-01]; assesses=[] -->
 
 **قلى** — *qalā* — "to fry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قلى** (*qalā*) is built on the native Arabic root *q-l-y*, "to fry" (Lane). *Qalā* is the plain verb, "he fried".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C687-refugio",
+  "pathSegment": "ES-PATH-687-EXCURSION",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-687-EXCURSION",
+      "order": 0
+    }
+  ]
+}

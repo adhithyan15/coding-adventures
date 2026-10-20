@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-336-DESACCORD",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can disagree politely: say we disagree, raise an objection, retort and contradict what someone said.",
+  "prerequisites": []
+}

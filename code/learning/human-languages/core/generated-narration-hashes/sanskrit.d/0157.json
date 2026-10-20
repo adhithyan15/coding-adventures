@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 157,
-  "sourceHash": "fnv1a64:bdf03cac832d3f16",
+  "sourceHash": "fnv1a64:27821f22e8418a0f",
   "lessonIds": [
     "SA-C157-kupitah",
     "SA-C157-bhitah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch157.txt",
   "json": "sanskrit/narration/ch157.json",
-  "textHash": "fnv1a64:1e9113dfe831af7c",
-  "jsonHash": "fnv1a64:dd77d441dc924066",
+  "textHash": "fnv1a64:79f27f30df5b4cba",
+  "jsonHash": "fnv1a64:1d4d79b8a018e698",
   "findings": []
 }

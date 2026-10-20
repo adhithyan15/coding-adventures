@@ -14,7 +14,8 @@ romanization: "viśālaḥ"
 concept_tag: SA-QUAL186-VISALAH
 prerequisites: [SA-C186-komalah, SA-C186-vamanah]
 sounds: []
-roots: []
+roots: [sanskrit-vishala]
+etymology_hook: "viśāla 'vast' ← probably √viś 'enter, settle'; others take it from vi- + √śṛ (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C186-vamanah]
 <!-- hl-knowledge: introduces=[SA-LEX-C186-QUAL186-03]; assesses=[] -->
 
 **विशालः** — *viśālaḥ* — "vast, broad".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*viśāla* probably comes from the root √viś, "to enter, settle", MW says, though others derive it from *vi-* with √śṛ. The derivation is not settled. Bengali keeps it as *bishāl*, "huge".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

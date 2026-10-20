@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-297-TRIBUNAL",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-297-TRIBUNAL"
+  ],
+  "after": []
+}

@@ -14,7 +14,8 @@ romanization: "dubb"
 concept_tag: AR-ANIMALS80-DUBB
 prerequisites: [AR-C80-qird, AR-C80-thuban]
 sounds: []
-roots: []
+roots: [d-b-b]
+etymology_hook: "dubb: built on the root d-b-b, 'to creep, to crawl' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C80-thuban]
 <!-- hl-knowledge: introduces=[AR-LEX-C80-ANIMALS80-05]; assesses=[] -->
 
 **دب** — *dubb* — "a bear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دب** (*dubb*) is built on the native Arabic root *d-b-b*, "to creep, to crawl" (Lane). Lane lists *dubb*, "a bear", under this root and quotes a source calling it a genuine Arabic word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

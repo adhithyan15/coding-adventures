@@ -1,0 +1,854 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 751,
+  "title": "Mis aficiones",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:6e2caf679dae112a",
+  "lessons": [
+    {
+      "id": "ES-C751-aficion",
+      "sequence": 27500,
+      "title": "la afición — the hobby; liking; fans",
+      "headword": "la afición",
+      "romanization": "la afición",
+      "gloss": "the hobby; liking; fans",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0e26e1c481f3aa87",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the colleague, then the Spanish for support."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la afición",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la afición — \"the hobby; liking; fans\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mi afición es la fotografía. My hobby is photography."
+            },
+            {
+              "kind": "speech",
+              "text": "Tener afición a — to be keen on. La afición is also a team's fans."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "afición comes from Latin affectiō \"disposition, affection\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la afición",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la afición*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la afición, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la afición*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la afición",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la afición*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the colleague, then the Spanish for support, then say la afición again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the colleague, then the Spanish for support, then say *la afición* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la afición mean? (\"The hobby; liking; fans\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C751-pasatiempo",
+      "sequence": 27510,
+      "title": "el pasatiempo — the pastime",
+      "headword": "el pasatiempo",
+      "romanization": "el pasatiempo",
+      "gloss": "the pastime",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f2ae1c700aa6ff3c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for support, then the Spanish for the hobby."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el pasatiempo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el pasatiempo — \"the pastime\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Leer es mi pasatiempo favorito. Reading is my favourite pastime."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural los pasatiempos — also puzzles in a newspaper."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pasatiempo is built on pasar \"to pass\" and tiempo \"time\". Pasar is usually traced to a spoken Latin verb built on passus \"step\", and tiempo comes from Latin tempus \"time\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el pasatiempo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el pasatiempo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el pasatiempo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el pasatiempo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with el pasatiempo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *el pasatiempo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for support, then the Spanish for the hobby, then say el pasatiempo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for support, then the Spanish for the hobby, then say *el pasatiempo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does el pasatiempo mean? (\"The pastime\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C751-coleccionar",
+      "sequence": 27520,
+      "title": "coleccionar — to collect",
+      "headword": "coleccionar",
+      "romanization": "coleccionar",
+      "gloss": "to collect",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:135b2d83a0c15a1a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the hobby, then the Spanish for the pastime."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: coleccionar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "coleccionar — \"to collect\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Colecciono sellos desde niño. I have collected stamps since I was a boy."
+            },
+            {
+              "kind": "speech",
+              "text": "For hobbies; to pick someone up is recoger."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "coleccionar is built on colección, a learned borrowing from Latin collēctiō \"a gathering together\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "coleccionar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *coleccionar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "coleccionar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *coleccionar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with coleccionar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *coleccionar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the hobby, then the Spanish for the pastime, then say coleccionar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the hobby, then the Spanish for the pastime, then say *coleccionar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does coleccionar mean? (\"To collect\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C751-coleccion",
+      "sequence": 27530,
+      "title": "la colección — the collection",
+      "headword": "la colección",
+      "romanization": "la colección",
+      "gloss": "the collection",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f58c60eac8d14c18",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the pastime, then the Spanish for to collect."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la colección",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la colección — \"the collection\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Tiene una colección de monedas antiguas. He has a collection of old coins."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "colección was borrowed from Latin collēctiō \"a gathering together\" (EtymDB), from colligere, built on legere \"to gather\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la colección",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la colección*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la colección, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la colección*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la colección",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la colección*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the pastime, then the Spanish for to collect, then say la colección again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the pastime, then the Spanish for to collect, then say *la colección* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la colección mean? (\"The collection\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C751-acuarela",
+      "sequence": 27540,
+      "title": "la acuarela — watercolour",
+      "headword": "la acuarela",
+      "romanization": "la acuarela",
+      "gloss": "watercolour",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:85be87c587fa7c01",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for to collect, then the Spanish for the collection."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la acuarela",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la acuarela — \"watercolour\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Pinto acuarelas los fines de semana. I paint watercolours at weekends."
+            },
+            {
+              "kind": "speech",
+              "text": "Both the paint and the picture."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "acuarela was borrowed from Italian acquerello (EtymDB), built on acqua \"water\", from Latin aqua."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la acuarela",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la acuarela*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la acuarela, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la acuarela*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la acuarela",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la acuarela*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for to collect, then the Spanish for the collection, then say la acuarela again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for to collect, then the Spanish for the collection, then say *la acuarela* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la acuarela mean? (\"Watercolour\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R751-repaso-744-751",
+      "sequence": 27550,
+      "title": "Repaso de los capítulos 744–751",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 744-751",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e193d52042bb25cb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Spanish for love at first sight and the compliment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "love at first sight, the compliment, the courtship, the suitor, closeness",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: love at first sight, the compliment, the courtship, the suitor, closeness]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the relationship, the break-up, unfaithful, to betray, betrayal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the relationship, the break-up, unfaithful, to betray, betrayal]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to stroke, the deception, to chat up, to flirt, the lover",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to stroke, the deception, to chat up, to flirt, the lover]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the brother-in-law, the father-in-law, the mother-in-law, the son-in-law, the daughter-in-law",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the brother-in-law, the father-in-law, the mother-in-law, the son-in-law, the daughter-in-law]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to adopt, to take in, adoption, the stepmother, the stepfather",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to adopt, to take in, adoption, the stepmother, the stepfather]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the twin, the stepbrother, the teenager, the great-grandfather, the orphan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the twin, the stepbrother, the teenager, the great-grandfather, the orphan]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the bond, to spoil, to live together, the colleague, support",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the bond, to spoil, to live together, the colleague, support]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the hobby, the pastime, to collect, the collection, watercolour",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the hobby, the pastime, to collect, the collection, watercolour]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Love at first sight? (el flechazo.) The compliment? (el piropo.) The courtship? (el noviazgo.) The suitor? (el pretendiente.) Closeness? (la complicidad.) The relationship? (la relación.) The break-up? (la ruptura.) Unfaithful? (infiel.) To betray? (traicionar.) Betrayal? (la traición.) To stroke? (acariciar.) The deception? (el engaño.) To chat up? (ligar.) To flirt? (coquetear.) The lover? (el amante.) The brother-in-law? (el cuñado.) The father-in-law? (el suegro.) The mother-in-law? (la suegra.) The son-in-law? (el yerno.) The daughter-in-law? (la nuera.) To adopt? (adoptar.) To take in? (acoger.) Adoption? (la adopción.) The stepmother? (la madrastra.) The stepfather? (el padrastro.) The twin? (el gemelo.) The stepbrother? (el hermanastro.) The teenager? (el adolescente.) The great-grandfather? (el bisabuelo.) The orphan? (el huérfano.) The bond? (el vínculo.) To spoil? (mimar.) To live together? (convivir.) The colleague? (el colega.) Support? (el apoyo.) The hobby? (la afición.) The pastime? (el pasatiempo.) To collect? (coleccionar.) The collection? (la colección.) Watercolour? (la acuarela.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

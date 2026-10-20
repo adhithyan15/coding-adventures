@@ -1,0 +1,19 @@
+{
+  "chapter": 364,
+  "title": "Na rua",
+  "label": "ch:pt-na-rua",
+  "canDo": "I can talk about protests: what people demand, demonstrations and how they show their anger.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C364-exigir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 364: I can talk about protests: what people demand, demonstrations and how they show their anger.",
+    "assesses": [
+      "PT-LEX-C364-PROTESTO-03",
+      "PT-LEX-C364-PROTESTO-04",
+      "PT-LEX-C364-PROTESTO-05"
+    ]
+  }
+}

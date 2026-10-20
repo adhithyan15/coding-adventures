@@ -14,7 +14,8 @@ romanization: "lohakāraḥ"
 concept_tag: SA-PPL237-LOHAKARAH
 prerequisites: [SA-C237-kumbhakarah, SA-C237-svarnakarah]
 sounds: []
-roots: []
+roots: [sanskrit-lohakara, sanskrit-loha]
+etymology_hook: "lohakāra = loha 'iron, red metal' + kāra 'maker' (MW); Hindi lohār (CDIAL 11159)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C237-svarnakarah]
 <!-- hl-knowledge: introduces=[SA-LEX-C237-PPL237-03]; assesses=[] -->
 
 **लोहकारः** — *lohakāraḥ* — "a blacksmith".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*lohakāra* is a compound of *loha*, first "red, copper", later "iron" (CDIAL 11158), and *kāra*, "maker" (MW). MW derives *loha* from a root meaning "to be red". It lives on as Hindi *lohār*, "blacksmith" (CDIAL 11159).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

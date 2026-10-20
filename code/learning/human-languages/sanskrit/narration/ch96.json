@@ -4,7 +4,7 @@
   "chapter": 96,
   "title": "Main road, Crossroads, Corner, Library, University",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:70a5a31877a24023",
+  "sourceHash": "fnv1a64:8a6a71bfb3982d30",
   "lessons": [
     {
       "id": "SA-C96-rajamargah",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a73a193519d695d3",
+      "sourceHash": "fnv1a64:a131285cbb18377d",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rājamārga is a compound of rājan \"king\" and mārga \"road\": \"the king's highway\", a main street wide enough for horses and elephants (MW). mārga comes from mṛga \"deer, game\" (MW), and one of its senses is the track of a wild animal."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a8df8990d81f489b",
+      "sourceHash": "fnv1a64:1812fd35d7a607c4",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "catuṣpatha is a compound of catur \"four\" and patha \"road\": \"where four roads meet\", already in the Brāhmaṇas (MW). catur is the inherited number behind Latin quattuor (MW) and English four. Hindi caupath \"crossroads\" comes from the same pair (CDIAL 4642)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1e1aa17fc8a576c1",
+      "sourceHash": "fnv1a64:d4c8c23f4172bd5f",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "koṇa \"corner\" is often taken to be borrowed from Dravidian: CDIAL 3504 follows Burrow in deriving it from a Dravidian word, and DEDR 2209 sets it beside a Dravidian family of words for corners. It lives on as Hindi konā \"corner\" (CDIAL 3504)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c685d4e488d4a8f0",
+      "sourceHash": "fnv1a64:a9777fb2079a65bb",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pustakālaya is a compound of pustaka \"book\" and ālaya \"dwelling, house\" (MW); the pairing for a library is modern. pustaka was borrowed from Iranian: CDIAL 8413 compares Sogdian pwstk \"book\" and Persian pōst \"skin\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3d77c942cb2fb98e",
+      "sourceHash": "fnv1a64:bf6245ddd5f42786",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "viśvavidyālaya is a compound of viśva \"all, whole\" and vidyālaya \"seat of learning\" (MW), itself vidyā \"knowledge\" + ālaya \"dwelling\"; using it for a university is modern. vidyā comes from the root √vid \"know\", which MW sets beside Latin videre \"see\" (English video) and English wot \"know\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

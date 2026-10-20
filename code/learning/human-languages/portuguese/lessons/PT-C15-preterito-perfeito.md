@@ -11,7 +11,7 @@ concept_tag: PT-PAST-SIMPLE
 prerequisites: [PT-C14-ter, PT-C05-falar]
 sounds: [final-stress-ei, nasal-aram]
 roots: [latin-perfect]
-etymology_hook: "falei ← Vulgar Latin perfect **\*fabulāvī**, the direct inheritance — the SAME tense French exiled to literature (il parla), German pushed aside (sagte) and northern Italy dropped (parlò); Portuguese and Spanish, at the western edge, simply kept using it"
+etymology_hook: 'falei ← Vulgar Latin perfect **\*fabulāvī**, the direct inheritance — the SAME tense French exiled to literature (il parla), German pushed aside (sagte) and northern Italy dropped (parlò); Portuguese and Spanish, at the western edge, simply kept using it'
 duration:
   max_seconds: 252
 requires:

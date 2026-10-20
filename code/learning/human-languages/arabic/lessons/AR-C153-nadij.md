@@ -14,7 +14,8 @@ romanization: "nāḍij"
 concept_tag: AR-QUAL153-NADIJ
 prerequisites: [AR-C153-atshan, AR-C153-tazaj]
 sounds: []
-roots: []
+roots: [n-ḍ-j]
+etymology_hook: "nāḍij: built on the root n-ḍ-j, 'to ripen, to be well cooked' (Lane); nāḍij is the active participle, 'ripe'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C153-tazaj]
 <!-- hl-knowledge: introduces=[AR-LEX-C153-QUAL153-05]; assesses=[] -->
 
 **ناضج** — *nāḍij* — "ripe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ناضج** (*nāḍij*) is built on the native Arabic root *n-ḍ-j*, "to ripen, to be well cooked" (Lane). *Nāḍij* is the active participle, "ripe".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

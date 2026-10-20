@@ -21,6 +21,28 @@ prints the current registry-ordered table on demand without rewriting tracked
 documentation; CI runs `npm run check:progress` so the 23 retired progress-card
 rollups cannot return.
 
+Full assessment mocks name a learner-facing `paper` separately from their
+rubric and answer key. `npm run check:assessment-artifacts` verifies every
+declared file, rejects path and symlink escapes, and keeps legacy paper
+omissions visible in exact per-track pins under
+`core/assessment-paper-omission-ceiling/`. These pins cannot grow; an omitted
+paper is unfinished evidence, not exam readiness. See the
+[full-mock paper contract](docs/feature-contracts/full-mock-paper-artifacts.md).
+Each level mock can additionally declare a JSON `manifest` naming its four
+skill timings and task-shape part IDs. A declared manifest must be a real file
+in its track and must match one complete published form per skill, with
+visible per-part spans in the learner paper, rubric, and answer key. The plan's
+`mock-assessment/<language>/<level>` family counts mocks still missing a
+distinct paper, rubric, key, or valid manifest; undeclared legacy manifests
+remain visible debt rather than becoming a parse error.
+For present full-mock evidence, the validator uses the repository's Python 3
+handle-relative reader so a concurrent symlink or Windows junction swap cannot
+redirect the manifest, paper, rubric, or key outside the audited track. Python 3
+must be available as `python3` on Unix or `python` on Windows for this check;
+an unavailable reader fails the gate rather than counting evidence as missing.
+See the [structure-manifest contract](docs/feature-contracts/full-mock-structure-manifests.md)
+for the JSON shape and migration rule.
+
 ```
 lessons/*.md frontmatter    ─┐
 <track>/curriculum.d/**/*   ─┤
@@ -222,6 +244,21 @@ field shapes, script-glyph coverage (where script data exists), and core-concept
 coverage (enforced only for tracks that declare `parity: complete`). The
 integration test runs it against the real curriculum, so drift breaks CI.
 
+The direct etymology-gap owner tests reject linked roots and children on every
+platform. Windows uses a directory junction when native symlink privilege is
+unavailable; Linux CI still exercises the real file-symlink case. The test
+asserts that each fixture is actually a link before checking the loader's
+refusal, so a missing link capability cannot silently turn this guard green.
+Other package link-rejection fixtures likewise use junctions for directory
+links on Windows. File-link checks are separate: they run when Windows grants
+that capability and remain mandatory on Linux CI.
+
+`tests/root-homonym-regressions.test.ts` pins the corrected real-corpus root
+slugs for cross-track homonyms and checks the cousin join on representative
+positive and negative pairs (nine/new, garland/dirt, black/art, free/book).
+It reads only the named lessons, so the regression stays fast as the full
+curriculum grows.
+
 Exact script-inventory evidence is partitioned by ownership under
 `tests/script-inventories/`. A stable glob in `tests/integration.test.ts`
 discovers those evidence modules while loading the corpus once. Japanese, Urdu,
@@ -252,6 +289,28 @@ schema-v2 lesson must be mapped; mapped prerequisite closure must be complete
 and topologically earlier; and every non-shared support lesson in the path must
 belong to exactly one typed extension. Repeated visits to the same shared node
 remain legal through distinct ordered path segments.
+
+## Completion-plan assessment readiness
+
+The completion plan keeps a missing seven-rung `assessment.json` visible as
+debt, but does not put it in the actionable head while its task shapes or timed
+mock source papers, answer keys, and rubrics are absent. Its `blocked` output
+names those prerequisites per track and level; the projection still counts the
+contract. This is a conservative planning screen, not permission to publish a
+contract: the assessment-contract and artifact gates remain authoritative, and
+new contracts must never name missing evidence. See
+[`HL15`](../../../specs/HL15-the-completion-plan.md).
+The separate `mock-assessment` item is blocked on an absent task-shape
+inventory; it cannot infer a complete timed paper from `timed: true` alone.
+
+For a human review of Spanish mock question vocabulary, run
+`npm run report:mock-stem-coverage -- --level A2` (or `pre-A1`/`A1`). The
+report lists unaccounted and plausibly derivable stem/option forms; it is not
+a pass/fail gate. Unknown levels are rejected before corpus reads. Valid
+reports read Spanish lessons, curriculum membership, and the shared spine,
+not every other language track. The taught-form conversion remains shared
+with the Spanish mock audit, so narrowing the read does not narrow what the
+report credits or hides.
 
 ## Scope note
 

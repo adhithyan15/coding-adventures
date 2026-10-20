@@ -1,0 +1,11 @@
+{
+  "id": "ES-C577-objecion",
+  "pathSegment": "ES-PATH-577-DEFIENDE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-577-DEFIENDE",
+      "order": 1
+    }
+  ]
+}

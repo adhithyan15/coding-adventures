@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 453,
+  "sourceHash": "fnv1a64:650d5ad3e986c5c9",
+  "lessonIds": [
+    "IT-C453-ferramenta",
+    "IT-C453-merceria",
+    "IT-C453-profumeria",
+    "IT-C453-erboristeria",
+    "IT-C453-gioielleria"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch453.txt",
+  "json": "italian/narration/ch453.json",
+  "textHash": "fnv1a64:f5d84494abc01550",
+  "jsonHash": "fnv1a64:09ba240b1d41b5ba",
+  "findings": []
+}

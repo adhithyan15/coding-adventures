@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-401-AUTOESTRADA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about a motorway trip: the lanes, the hard shoulder, the central reservation, the junction and speeding up.",
+  "prerequisites": []
+}

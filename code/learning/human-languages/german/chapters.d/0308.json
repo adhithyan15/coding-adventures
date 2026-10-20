@@ -1,0 +1,19 @@
+{
+  "chapter": 308,
+  "title": "Prost!",
+  "label": "ch:ge-prost",
+  "canDo": "I can describe a happy moment: to clink glasses, sparkling wine, to cheer, applause and to applaud.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C308-applaudieren",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 308: I can describe a happy moment: to clink glasses, sparkling wine, to cheer, applause and to applaud.",
+    "assesses": [
+      "GE-LEX-C308-ANSTOSSEN-03",
+      "GE-LEX-C308-ANSTOSSEN-04",
+      "GE-LEX-C308-ANSTOSSEN-05"
+    ]
+  }
+}

@@ -4,7 +4,7 @@
   "chapter": 136,
   "title": "Zero, Sixty, Seventy, Ninety, Thousand",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7b82ba43aebf1e64",
+  "sourceHash": "fnv1a64:dfca38cba51ee682",
   "lessons": [
     {
       "id": "FR-C136-zero",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d2841e7639612179",
+      "sourceHash": "fnv1a64:1079ec6653a1aef7",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "soixante-dix — \"sixty-ten\": soixante, \"sixty\", and dix, \"ten\". France counts the seventies on from sixty."
+              "text": "soixante-dix — \"sixty-ten\": soixante, \"sixty\", and dix, \"ten\". France counts the seventies on from sixty. Soixante from Latin sexāgintā and dix from decem, both inherited (EtymDB 2.1)."
             }
           ]
         },
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d2e150fcf93cac99",
+      "sourceHash": "fnv1a64:a6036acab43a526f",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "quatre-vingt-dix — \"four-twenties-ten\": quatre, vingt and dix. Old French often counted in twenties."
+              "text": "quatre-vingt-dix — \"four-twenties-ten\": quatre, vingt and dix. Old French often counted in twenties. Quatre from Latin quattuor, vingt from vīgintī, dix from decem, all inherited (EtymDB 2.1)."
             }
           ]
         },

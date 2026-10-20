@@ -14,7 +14,8 @@ romanization: "dâru"
 concept_tag: FA-HEALTH31-DARU
 prerequisites: [FA-C30-bimar, FA-C31-dard]
 sounds: []
-roots: []
+roots: [persian-daru]
+etymology_hook: "dâru ← Middle Persian dārūg (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C31-dard]
 <!-- hl-knowledge: introduces=[FA-LEX-C31-HEALTH31-02]; assesses=[] -->
 
 **دارو** — *dâru* — "medicine".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dâru* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *dārūg*, "drug, medicine" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

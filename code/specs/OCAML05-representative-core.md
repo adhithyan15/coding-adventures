@@ -189,10 +189,18 @@ for subsequent BUILD commands. Local repository dependency pins must use
 opam's `--working-dir` mode and scope `--no-checksums` to the pin ingestion
 command. This keeps their source bound to the reviewed checkout while the
 subsequent dependency install continues to require checksums for registry
-archives. Because the generic executor does not yet own a global opam-switch
-mutation lock, an OCaml-active invocation must use one build worker. The later
-`ocaml-build-substrate` owner replaces that conservative serialization with the
-reviewed execution-coupled resource contract.
+archives. The generic Go executor owns a `global:opam-switch` resource lock:
+every OCaml package, and every BUILD that runs `opam`, holds it for its whole
+build, so OCaml packages never run concurrently with one another while other
+languages keep every worker. Generic CI therefore passes no worker override.
+
+This replaced an interim rule that an OCaml-active invocation use one build
+worker. That rule serialized every package on the runner, not just the OCaml
+ones: on main's sharded full build the six OCaml packages landed on five
+shards, which then ran ~1,000 packages on one worker each and hit the
+150-minute step ceiling (#17631). `code/scripts/ocaml_toolchain_lock.py` pins
+both halves -- the executor must declare and take the lock for every OCaml
+package, and neither generic build step may override the worker count.
 
 The separate `ocaml-representative-package-ci-execution` owner retains durable
 ownership of a package-specific, exact Ubuntu/macOS/Windows chain that records

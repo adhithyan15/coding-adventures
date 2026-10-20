@@ -14,7 +14,8 @@ romanization: "dhāgā"
 concept_tag: UR-THINGS106-DHAGA
 prerequisites: [UR-C105-qainchi, UR-C105-sui]
 sounds: []
-roots: []
+roots: [indo-aryan-dhagga]
+etymology_hook: "dhāgā ← *dhāgga 'thread', a reconstructed form; a tadbhava (CDIAL 6770)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C105-sui]
 <!-- hl-knowledge: introduces=[UR-LEX-C106-THINGS106-01]; assesses=[] -->
 
 **دھاگا** — *dhāgā* — "thread".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دھاگا** (*dhāgā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dhāgga*, "thread", a form CDIAL reconstructs from its descendants (CDIAL 6770). CDIAL suggests, with a "possibly", that it crossed with *dhara*, "a flock of raw cotton".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

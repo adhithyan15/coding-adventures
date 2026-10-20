@@ -14,7 +14,8 @@ romanization: "baʿīd"
 concept_tag: AR-TIME88-BAID
 prerequisites: [AR-C88-bada, AR-C88-waqt]
 sounds: []
-roots: []
+roots: [b-ʿ-d]
+etymology_hook: "baʿīd: built on the root b-ʿ-d, 'to be far' (Lane); baʿīd is the faʿīl adjective, 'far'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C88-waqt]
 <!-- hl-knowledge: introduces=[AR-LEX-C88-TIME88-03]; assesses=[] -->
 
 **بعيد** — *baʿīd* — "far".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بعيد** (*baʿīd*) is built on the native Arabic root *b-ʿ-d*, "to be far" (Lane). *Baʿīd* is the *faʿīl* adjective, "far".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

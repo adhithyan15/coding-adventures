@@ -1,0 +1,11 @@
+{
+  "id": "IT-C265-cosi",
+  "pathSegment": "IT-PATH-265-OPINIONE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-265-OPINIONE",
+      "order": 1
+    }
+  ]
+}

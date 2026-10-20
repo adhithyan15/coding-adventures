@@ -14,7 +14,8 @@ romanization: "kono"
 concept_tag: JA-DEF83-KONO
 prerequisites: [JA-C82-hantaigawa, JA-C82-kawakami]
 sounds: []
-roots: []
+roots: [japanese-ko-this, japanese-no]
+etymology_hook: "kono: native ko- 'near me' + no 'of'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C82-kawakami]
 <!-- hl-knowledge: introduces=[JA-LEX-C83-DEF83-01]; assesses=[] -->
 
 **この** — *kono* — "this (next to me)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**この** (*kono*) is native: *ko-*, the root that points near the speaker, with *no*, "of" (JMdict). It is inherited rather than borrowed, and is usually written in kana.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

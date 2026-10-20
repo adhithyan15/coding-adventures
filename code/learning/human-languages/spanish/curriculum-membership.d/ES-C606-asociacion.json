@@ -1,0 +1,11 @@
+{
+  "id": "ES-C606-asociacion",
+  "pathSegment": "ES-PATH-606-SOLIDAR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-606-SOLIDAR",
+      "order": 2
+    }
+  ]
+}

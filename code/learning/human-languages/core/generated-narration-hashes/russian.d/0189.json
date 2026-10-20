@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 189,
-  "sourceHash": "fnv1a64:382bff2b5d7a73af",
+  "sourceHash": "fnv1a64:152819b1bfc88caa",
   "lessonIds": [
     "RU-C189-chuzhoy",
     "RU-C189-rodnoy",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch189.txt",
   "json": "russian/narration/ch189.json",
-  "textHash": "fnv1a64:c88bfedc0e13ed5d",
-  "jsonHash": "fnv1a64:1ced515daf172a9b",
+  "textHash": "fnv1a64:8b056d462e4b5f38",
+  "jsonHash": "fnv1a64:71dc6e30684ce153",
   "findings": []
 }

@@ -1,0 +1,20 @@
+{
+  "language": "portuguese",
+  "chapter": 316,
+  "sourceHash": "fnv1a64:ac64f7502ce463df",
+  "lessonIds": [
+    "PT-C316-heranca",
+    "PT-C316-herdar",
+    "PT-C316-herdeiro",
+    "PT-C316-testamento",
+    "PT-C316-pensao",
+    "PT-R316-revisao-309-316"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "portuguese/narration/ch316.txt",
+  "json": "portuguese/narration/ch316.json",
+  "textHash": "fnv1a64:7d44ccc75c14bbb7",
+  "jsonHash": "fnv1a64:5fea05f0213a5662",
+  "findings": []
+}

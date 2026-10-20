@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 287,
+  "sourceHash": "fnv1a64:8a0a45589862ce2b",
+  "lessonIds": [
+    "PT-C287-roubo",
+    "PT-C287-furto",
+    "PT-C287-furtar",
+    "PT-C287-carteirista",
+    "PT-C287-desaparecimento"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch287.txt",
+  "json": "portuguese/narration/ch287.json",
+  "textHash": "fnv1a64:6012b59db7ba29b8",
+  "jsonHash": "fnv1a64:267d86432c69fab4",
+  "findings": []
+}

@@ -14,7 +14,8 @@ romanization: "achār"
 concept_tag: UR-CHIZ200-ACHAR
 prerequisites: [UR-C200-pakora, UR-C200-qorma]
 sounds: []
-roots: []
+roots: [persian-achar]
+etymology_hook: "achār: usually traced to Persian āchār 'pickle'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C200-qorma]
 <!-- hl-knowledge: introduces=[UR-LEX-C200-CHIZ200-03]; assesses=[] -->
 
 **اچار** — *achār* — "pickle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اچار** (*achār*) is a loan, usually traced to Persian *āchār*, "pickle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

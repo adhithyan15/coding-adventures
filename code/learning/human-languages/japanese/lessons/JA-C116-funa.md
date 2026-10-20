@@ -14,7 +14,8 @@ romanization: "funa"
 concept_tag: JA-THINGS116-FUNA
 prerequisites: [JA-C115-ayu, JA-C116-masu]
 sounds: []
-roots: []
+roots: [japanese-funa]
+etymology_hook: "funa: native Japanese, inherited, not borrowed; usually kana, kanji 鮒 as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C116-masu]
 <!-- hl-knowledge: introduces=[JA-LEX-C116-THINGS116-02]; assesses=[] -->
 
 **ふな** — *funa* — "a crucian carp".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ふな** (*funa*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

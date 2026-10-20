@@ -11,7 +11,7 @@ concept_tag: FAREWELL-SOON
 romanization: da skórava
 prerequisites: [RU-C11-poka]
 sounds: []
-roots: [pie-uncertain]
+roots: [slavic-skoru]
 etymology_hook: "до скорого is до plus the genitive of скорый ('quick, soon'), a native Slavic word from a PIE root meaning 'to hurry, to jump' — with no secure English cousin at all"
 duration:
   max_seconds: 250

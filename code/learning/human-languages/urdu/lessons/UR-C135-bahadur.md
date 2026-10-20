@@ -14,7 +14,8 @@ romanization: "bahādur"
 concept_tag: UR-QUAL135-BAHADUR
 prerequisites: [UR-C134-gahra, UR-C135-mashhur]
 sounds: []
-roots: []
+roots: [turkish-bahadur]
+etymology_hook: "bahādur: usually traced, through Persian, to a Turkic or Mongol word for 'hero'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C135-mashhur]
 <!-- hl-knowledge: introduces=[UR-LEX-C135-QUAL135-02]; assesses=[] -->
 
 **بہادر** — *bahādur* — "brave".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بہادر** (*bahādur*) is usually traced, through Persian, to a Turkic or Mongol word for "hero".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

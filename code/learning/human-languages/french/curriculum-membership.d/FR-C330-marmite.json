@@ -1,0 +1,11 @@
+{
+  "id": "FR-C330-marmite",
+  "pathSegment": "FR-PATH-330-MIJOTER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-330-MIJOTER",
+      "order": 2
+    }
+  ]
+}

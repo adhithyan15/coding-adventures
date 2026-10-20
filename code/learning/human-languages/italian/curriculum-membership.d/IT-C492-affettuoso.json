@@ -1,0 +1,11 @@
+{
+  "id": "IT-C492-affettuoso",
+  "pathSegment": "IT-PATH-492-ABBRACCI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-492-ABBRACCI",
+      "order": 4
+    }
+  ]
+}

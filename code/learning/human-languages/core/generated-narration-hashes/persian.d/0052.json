@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 52,
-  "sourceHash": "fnv1a64:c0fea665cba55bd0",
+  "sourceHash": "fnv1a64:ab1f24f81f48d59f",
   "lessonIds": [
     "FA-C52-kuh",
     "FA-C52-jangal",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch52.txt",
   "json": "persian/narration/ch52.json",
-  "textHash": "fnv1a64:ed39eeceadb00eca",
-  "jsonHash": "fnv1a64:2f8a72e4bc9ccc34",
+  "textHash": "fnv1a64:b061d0d6d540c045",
+  "jsonHash": "fnv1a64:748c0f25a43235e0",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "plavaḥ"
 concept_tag: SA-CRAFT-PLAVA
 prerequisites: [SA-C41-pot, SA-C39-fish, SA-C40-butter]
 sounds: []
-roots: []
+roots: [sanskrit-plava]
+etymology_hook: "plava 'float, raft' ← the root √plu 'float, swim'; MW compares Greek pleō 'I sail' (CDIAL 9023)"
 duration:
   max_seconds: 210
 requires:

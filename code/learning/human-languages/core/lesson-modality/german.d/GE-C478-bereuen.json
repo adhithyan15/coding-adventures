@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C478-bereuen",
+    "language": "german",
+    "chapter": 478,
+    "sequence": 25620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5f91c41ddb0aced5"
+  },
+  "findings": []
+}

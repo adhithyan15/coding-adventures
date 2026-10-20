@@ -1,0 +1,14 @@
+{
+  "language": "french",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:06144c8b2a1d0e27",
+  "lessonIds": [
+    "FR-C381-autoriser",
+    "FR-C381-autorisation",
+    "FR-C381-tolerer",
+    "FR-C381-tolerance",
+    "FR-C381-exiger",
+    "FR-R381-revision-374-381"
+  ],
+  "tex": "french/book/chapters/ch381-permis-ou-non.tex"
+}

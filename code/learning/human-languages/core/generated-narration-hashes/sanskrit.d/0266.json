@@ -1,0 +1,20 @@
+{
+  "language": "sanskrit",
+  "chapter": 266,
+  "sourceHash": "fnv1a64:0040c334a926b3e8",
+  "lessonIds": [
+    "SA-C266-market-recall",
+    "SA-C266-krinami",
+    "SA-C266-ask-and-hear-price",
+    "SA-C266-complete-transaction",
+    "SA-C266-mixed-market-practice",
+    "SA-C266-market-transaction-retrieval"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "sanskrit/narration/ch266.txt",
+  "json": "sanskrit/narration/ch266.json",
+  "textHash": "fnv1a64:16c0c3d61ca986a7",
+  "jsonHash": "fnv1a64:8678d2f29283c99f",
+  "findings": []
+}

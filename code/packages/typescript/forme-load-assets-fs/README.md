@@ -19,6 +19,7 @@ in-root symlink is allowed; a symlink that resolves outside the storage root
 fails closed. Missing paths, directories, malformed source locators, identity
 collisions, and role collisions are actionable errors.
 
-The package declares `storage:read` because it reads asset bytes directly while
-the FM02 capability-backed storage adapter is still pending. It has no write,
-network, environment, or process capability.
+The package declares `storage:read` because this first-party filesystem stage
+reads asset bytes directly. FM02's capability-backed product adapter is
+implemented separately in `forme-cli`; this stage retains no write, network,
+environment, or process capability.

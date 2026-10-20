@@ -1,13 +1,23 @@
 {
   "schema_version": 1,
   "upstream": "mermaid@11.16.1",
-  "family": "mindmap",
-  "supported_subset": "Indented trees with comments, icon and class metadata, plus plain, quoted delimiter-rich, line-break, and multiline Markdown labels across square, rounded, circular, hexagonal, cloud, and bang nodes",
-  "fixtures": [
-    { "id": "basic", "source": "mindmap\n  root((mindmap))\n    Origins\n      Long history\n    Research" },
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "source": "packages/mermaid/src/diagrams/mindmap/mindmap.spec.ts",
+  "valid": [
+    { "id": "simple-root", "source": "mindmap\n  root" },
+    { "id": "hierarchy", "source": "mindmap\n  root\n    child1\n      leaf1\n    child2" },
     { "id": "shapes", "source": "mindmap\n  root[Native renderer]\n    parser(Grammar first)\n    paint((Backend neutral))\n    output{{Paint polygon}}\n    cloud)Portable cloud(\n    alert))Backend bang((" },
-    { "id": "quoted-labels", "source": "mindmap\n  root[\"String containing [] and ()\"] %% root comment\n    child[\"100%% complete\"] %% child comment\n    escaped[\"First\\nSecond\"]" },
+    { "id": "explicit-identifiers", "source": "mindmap\n  root[The root]\n    theId(child1)" },
     { "id": "decorations", "source": "mindmap\n  root[Root]\n    child[Child]\n    :::urgent large\n    ::icon(fa fa-book)\n      leaf[Leaf]" },
-    { "id": "markdown-labels", "source": "mindmap\n  root[\"`**Root** with\n    a *second line*\n    Unicode works too: 🤓`\"]\n    child[Plain]" }
+    { "id": "quoted-labels", "source": "mindmap\n  root[\"String containing [] and ()\"] %% root comment\n    child[\"100%% complete\"] %% child comment\n    escaped[\"First\\nSecond\"]" },
+    { "id": "child-after-decoration", "source": "mindmap\n  root(Root)\n    Child(Child)\n    :::hot\n      a(a)\n      b[New Stuff]" },
+    { "id": "blank-lines-and-comments", "source": "\n \nmindmap\n  root(Root)\n    Child(Child)\n      a(a)\n\n      %% This is a comment\n      b[New Stuff]" },
+    { "id": "markdown-labels", "source": "mindmap\n  root[\"`**Root** with\n    a *second line*\n    Unicode works too: 🤓`\"]\n    child[Plain]" },
+    { "id": "front-matter", "source": "---\ntitle: Native\n---\n%%{init: {\"theme\": \"neutral\"}}%%\nmindmap\n  root((mindmap))\n    Topic" }
+  ],
+  "invalid": [
+    { "id": "multiple-roots", "source": "mindmap\n  root\n  fakeRoot" },
+    { "id": "outdented-second-root", "source": "mindmap\n      root\n    fakeRoot\nrealRootWrongPlace" },
+    { "id": "unterminated-markdown", "source": "mindmap\n  root[\"`unterminated" }
   ]
 }

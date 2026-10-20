@@ -1,0 +1,11 @@
+{
+  "id": "IT-C420-ritardare",
+  "pathSegment": "IT-PATH-420-RITARDO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-420-RITARDO",
+      "order": 1
+    }
+  ]
+}

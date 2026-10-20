@@ -14,7 +14,8 @@ romanization: "tsukamu"
 concept_tag: JA-VERB-TSUKAMU
 prerequisites: [JA-C89-wakasu, JA-C89-mawasu]
 sounds: []
-roots: []
+roots: [japanese-tsukamu]
+etymology_hook: "tsukamu: native Japanese, inherited, not borrowed; usually kana, kanji 掴む as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C89-mawasu]
 <!-- hl-knowledge: introduces=[JA-LEX-C89-ACT89-04]; assesses=[] -->
 
 **つかむ** — *tsukamu* — "to grab".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**つかむ** (*tsukamu*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

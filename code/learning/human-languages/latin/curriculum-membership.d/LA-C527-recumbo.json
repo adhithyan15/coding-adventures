@@ -1,0 +1,11 @@
+{
+  "id": "LA-C527-recumbo",
+  "pathSegment": "LA-PATH-527-REQU",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-527-REQU",
+      "order": 4
+    }
+  ]
+}

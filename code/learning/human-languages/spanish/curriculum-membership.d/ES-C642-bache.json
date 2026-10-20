@@ -1,0 +1,11 @@
+{
+  "id": "ES-C642-bache",
+  "pathSegment": "ES-PATH-642-CARRETERA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-642-CARRETERA",
+      "order": 3
+    }
+  ]
+}

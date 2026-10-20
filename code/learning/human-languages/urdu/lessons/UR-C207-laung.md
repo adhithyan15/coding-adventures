@@ -14,7 +14,8 @@ romanization: "laung"
 concept_tag: UR-CHIZ207-LAUNG
 prerequisites: [UR-C206-chandni, UR-C206-tufan]
 sounds: []
-roots: []
+roots: [sanskrit-lavanga]
+etymology_hook: "laung ← Sanskrit lavaṅga 'clove', a tadbhava (CDIAL 10977)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C206-tufan]
 <!-- hl-knowledge: introduces=[UR-LEX-C207-CHIZ207-01]; assesses=[] -->
 
 **لونگ** — *laung* — "a clove".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لونگ** (*laung*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *lavaṅga*, "clove" (CDIAL 10977).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

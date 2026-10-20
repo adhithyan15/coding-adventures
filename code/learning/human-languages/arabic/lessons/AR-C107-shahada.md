@@ -14,7 +14,8 @@ romanization: "shahāda"
 concept_tag: AR-CAN107-SHAHADA
 prerequisites: [AR-C106-qudra, AR-C107-kafaa]
 sounds: []
-roots: []
+roots: [sh-h-d]
+etymology_hook: "shahāda: built on the root sh-h-d, 'to witness, to be present' (Lane); Lane's shahāda is testimony"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C107-kafaa]
 <!-- hl-knowledge: introduces=[AR-LEX-C107-CAN107-02]; assesses=[] -->
 
 **شهادة** — *shahāda* — "a certificate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شهادة** (*shahāda*) is built on the native Arabic root *sh-h-d*, "to witness, to be present" (Lane). Lane's *shahāda* is testimony; the certificate is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

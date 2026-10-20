@@ -1,0 +1,11 @@
+{
+  "id": "IT-C409-foratura",
+  "pathSegment": "IT-PATH-409-GOMMA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-409-GOMMA",
+      "order": 1
+    }
+  ]
+}

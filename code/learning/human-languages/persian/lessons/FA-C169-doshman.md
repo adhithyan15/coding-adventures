@@ -14,7 +14,8 @@ romanization: "doshman"
 concept_tag: FA-CHIZ169-DOSHMAN
 prerequisites: [FA-C169-hamkelasi, FA-C169-mizban]
 sounds: []
-roots: []
+roots: [persian-dushman]
+etymology_hook: "doshman ← Middle Persian dušman (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C169-mizban]
 <!-- hl-knowledge: introduces=[FA-LEX-C169-CHIZ169-04]; assesses=[] -->
 
 **دشمن** — *doshman* — "an enemy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*doshman* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *dušman*, "enemy" (EtymDB). It is usually explained as *duš-*, "bad", with *man*, "mind": "ill-minded".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

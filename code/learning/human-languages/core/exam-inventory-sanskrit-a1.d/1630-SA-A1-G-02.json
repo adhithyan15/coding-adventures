@@ -1,0 +1,19 @@
+{
+  "id": "SA-A1-G-02",
+  "category": "Specific notions — the lexical fields",
+  "label": "geography: the country, the capital, and where you are from",
+  "probe": [
+    "SA-LEX-C16-PLACE-02",
+    "SA-LEX-C16-PLACE-05",
+    "SA-LEX-C33-LAND-04"
+  ],
+  "anchorIds": [
+    "ES-A1-PROXY",
+    "SA-CORPUS",
+    "ED-SANSKRIT"
+  ],
+  "derivedFrom": [
+    "A1-NE20-02"
+  ],
+  "note": "grāmaḥ, nagaram and puram give village, city and walled town. THERE IS NO WORD FOR A COUNTRY (deśaḥ) AND NO PROPER PLACE NAME ANYWHERE IN THE TRACK, not even bhāratam. Counted covered on the settlement half; the country half is what makes SA-A1-SP-04 and SA-A1-ADJ-02 uncovered."
+}

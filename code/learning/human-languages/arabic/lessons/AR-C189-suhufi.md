@@ -14,7 +14,8 @@ romanization: "ṣuḥufī"
 concept_tag: AR-AMAL189-SUHUFI
 prerequisites: [AR-C188-sarraf, AR-C189-muhasib]
 sounds: []
-roots: []
+roots: [ṣ-ḥ-f]
+etymology_hook: "ṣuḥufī: from ṣuḥuf, plural of ṣaḥīfa 'a sheet, a page', which Lane files under ṣ-ḥ-f; a modern word"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C189-muhasib]
 <!-- hl-knowledge: introduces=[AR-LEX-C189-AMAL189-02]; assesses=[] -->
 
 **صحفي** — *ṣuḥufī* — "a journalist".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صحفي** (*ṣuḥufī*) is built on *ṣaḥīfa*, "a sheet, a page", a native noun, filed under the root *ṣ-ḥ-f* (Lane). *Ṣuḥufī* is *ṣuḥuf*, "sheets, papers", with the adjective ending *-ī*; it is a modern word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

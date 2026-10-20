@@ -1,0 +1,1 @@
+| W3 | writing-runway | connected Telugu day message | eight-box plan → one untimed model-free 70–90-word message for Sita; taught links, contrast, question, and Telugu-script review; no A2-readiness claim |

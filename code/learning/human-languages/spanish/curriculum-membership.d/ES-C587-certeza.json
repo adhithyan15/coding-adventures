@@ -1,0 +1,11 @@
+{
+  "id": "ES-C587-certeza",
+  "pathSegment": "ES-PATH-587-EVIDENTE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-587-EVIDENTE",
+      "order": 3
+    }
+  ]
+}

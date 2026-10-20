@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 224,
-  "sourceHash": "fnv1a64:152c5631b458b1ce",
+  "sourceHash": "fnv1a64:1aebba2fed84e8b8",
   "lessonIds": [
     "FR-C224-employe",
     "FR-C224-pilote",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "french/narration/ch224.txt",
   "json": "french/narration/ch224.json",
-  "textHash": "fnv1a64:13e4cb5c37332361",
-  "jsonHash": "fnv1a64:00c6e9ba413b170c",
+  "textHash": "fnv1a64:29e43b75a415dfb7",
+  "jsonHash": "fnv1a64:59b9fdf2f1983dca",
   "findings": []
 }

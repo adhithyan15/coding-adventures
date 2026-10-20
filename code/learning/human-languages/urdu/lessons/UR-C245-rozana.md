@@ -14,7 +14,8 @@ romanization: "rozānā"
 concept_tag: UR-VAQT245-ROZANA
 prerequisites: [UR-C244-dava-khana, UR-C245-barsat]
 sounds: []
-roots: []
+roots: [persian-rozana]
+etymology_hook: "rozānā: usually traced to Persian rōzāna 'daily'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C245-barsat]
 <!-- hl-knowledge: introduces=[UR-LEX-C245-VAQT245-02]; assesses=[] -->
 
 **روزانہ** — *rozānā* — "daily".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**روزانہ** (*rozānā*) is a loan, usually traced to Persian *rōzāna*, "daily". It is built on *rōz*, "day".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

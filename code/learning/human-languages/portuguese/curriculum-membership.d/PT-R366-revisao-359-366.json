@@ -1,0 +1,11 @@
+{
+  "id": "PT-R366-revisao-359-366",
+  "pathSegment": "PT-PATH-366-SOCIEDADE",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PT-EXT-366-SOCIEDADE",
+      "order": 5
+    }
+  ]
+}

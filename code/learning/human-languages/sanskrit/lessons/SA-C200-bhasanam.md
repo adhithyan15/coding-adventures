@@ -14,7 +14,8 @@ romanization: "bhāṣaṇam"
 concept_tag: SA-SCH200-BHASANAM
 prerequisites: [SA-C200-pathanam, SA-C200-sravanam]
 sounds: []
-roots: []
+roots: [sanskrit-bhashana]
+etymology_hook: "bhāṣaṇa 'speaking, a speech' ← root √bhāṣ 'speak' + action suffix -ana (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C200-sravanam]
 <!-- hl-knowledge: introduces=[SA-LEX-C200-SCH200-03]; assesses=[] -->
 
 **भाषणम्** — *bhāṣaṇam* — "a speech".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*bhāṣaṇa* is built on the root √bhāṣ, "to speak", with the action suffix *-ana* (MW): "the act of speaking", and so a speech. It shares its root with *bhāṣā*, "language", and Hindi took the word over as *bhāṣaṇ*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

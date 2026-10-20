@@ -1,0 +1,11 @@
+{
+  "id": "FR-C483-vomir",
+  "pathSegment": "FR-PATH-483-NAUSEE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-483-NAUSEE",
+      "order": 1
+    }
+  ]
+}

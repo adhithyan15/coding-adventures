@@ -14,7 +14,8 @@ romanization: "viṣamaḥ"
 concept_tag: SA-QUAL217-VISAMAH
 prerequisites: [SA-C217-kapilah, SA-C217-samah]
 sounds: []
-roots: []
+roots: [sanskrit-vishama, sanskrit-sama]
+etymology_hook: "viṣama ← vi 'apart' + sama 'even': 'uneven, unequal' (MW; CDIAL 11972)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C217-samah]
 <!-- hl-knowledge: introduces=[SA-LEX-C217-QUAL217-05]; assesses=[] -->
 
 **विषमः** — *viṣamaḥ* — "uneven, odd".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*viṣama* is built on *vi-*, "apart", and *sama*, "even, equal" (MW): "uneven, unequal", and so "odd", "difficult" (CDIAL 11972). The *s* of *sama* turns to *ṣ* after *vi-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "târik"
 concept_tag: FA-SEFAT272-TARIK
 prerequisites: [FA-C272-hasas, FA-C272-surati]
 sounds: []
-roots: []
+roots: [persian-tarik]
+etymology_hook: "târik: inherited, usually traced to Middle Persian tārīk"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C272-surati]
 <!-- hl-knowledge: introduces=[FA-LEX-C272-SEFAT272-05]; assesses=[] -->
 
 **تاریک** — *târik* — "dark".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*târik* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *tārīk*, "dark".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

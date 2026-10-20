@@ -14,7 +14,8 @@ romanization: "sulaḥfāh"
 concept_tag: AR-THINGS135-SULAHFAH
 prerequisites: [AR-C135-hamama, AR-C135-batta]
 sounds: []
-roots: []
+roots: [s-l-ḥ-f]
+etymology_hook: "sulaḥfāh: built on the root s-l-ḥ-f, 'a tortoise' (Lane); Lane lists this four-letter word with many dialect forms"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C135-batta]
 <!-- hl-knowledge: introduces=[AR-LEX-C135-THINGS135-05]; assesses=[] -->
 
 **سلحفاة** — *sulaḥfāh* — "a turtle".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سلحفاة** (*sulaḥfāh*) is built on the native Arabic root *s-l-ḥ-f*, "a tortoise" (Lane). Lane lists this four-letter word with many dialect forms.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,11 @@
+{
+  "id": "IT-R370-ripasso-363-370",
+  "pathSegment": "IT-PATH-370-MAGGIORANZA",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "IT-EXT-370-MAGGIORANZA",
+      "order": 5
+    }
+  ]
+}

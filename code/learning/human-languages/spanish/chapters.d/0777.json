@@ -1,0 +1,19 @@
+{
+  "chapter": 777,
+  "title": "Si se va la luz",
+  "label": "ch:es-si-se-va-la-luz",
+  "canDo": "I can say what to do if the power goes or food goes off: freeze it, let it cool, iron later, plug in and restart.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ES-R777-repaso-final-777",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 777: I can say what to do if the power goes or food goes off: freeze it, let it cool, iron later, plug in and restart.",
+    "assesses": [
+      "ES-LEX-C777-ENCHUFAR-03",
+      "ES-LEX-C777-ENCHUFAR-04",
+      "ES-LEX-C777-ENCHUFAR-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C637-rentable",
+  "pathSegment": "ES-PATH-637-FAVOR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-637-FAVOR",
+      "order": 2
+    }
+  ]
+}

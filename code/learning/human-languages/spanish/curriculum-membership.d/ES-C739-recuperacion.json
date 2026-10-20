@@ -1,0 +1,11 @@
+{
+  "id": "ES-C739-recuperacion",
+  "pathSegment": "ES-PATH-739-CURAR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-739-CURAR",
+      "order": 2
+    }
+  ]
+}

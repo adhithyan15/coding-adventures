@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a year, then the Urdu for an hour.
 You'll want to know: منٹ.
 منٹ — minaṭ — "a minute".
 
+The word, taken apart.
+منٹ (minaṭ) is a loan from English minute.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for an hour, then the Urdu for a minute.
 
 You'll want to know: آج.
 آج — āj — "today".
+
+The word, taken apart.
+آج (āj) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from adya, "today" (CDIAL 242).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a minute, then the Urdu for today.
 You'll want to know: کل.
 کل — kal — "yesterday; tomorrow".
 
+The word, taken apart.
+کل (kal) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from kalya, "dawn; at dawn, tomorrow" (CDIAL 3104). It is built on kāla, "time"; one word serves for both "yesterday" and "tomorrow".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for today, then the Urdu for yesterday; tomorro
 You'll want to know: ابھی.
 ابھی — abhī — "right now".
 
+The word, taken apart.
+ابھی (abhī) is ab, "now", with the emphatic -hī. CDIAL lists ab and abhī under Sanskrit evam eva, "exactly so", crossed with a pointing a- (CDIAL 2528).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for yesterday; tomorrow, then the Urdu for righ
 
 You'll want to know: پھر.
 پھر — phir — "then, again".
+
+The word, taken apart.
+پھر (phir) is inherited: it is the "having turned" form of a reconstructed phirati, "turns", used as an adverb (CDIAL 9078).
 
 What you've built.
 One more word for this chapter.

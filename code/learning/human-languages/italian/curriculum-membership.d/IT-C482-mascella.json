@@ -1,0 +1,11 @@
+{
+  "id": "IT-C482-mascella",
+  "pathSegment": "IT-PATH-482-VISO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-482-VISO",
+      "order": 4
+    }
+  ]
+}

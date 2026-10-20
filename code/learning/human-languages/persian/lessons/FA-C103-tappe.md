@@ -14,7 +14,8 @@ romanization: "tappe"
 concept_tag: FA-THINGS103-TAPPE
 prerequisites: [FA-C102-sharbat, FA-C102-dasht]
 sounds: []
-roots: []
+roots: [turkic-tepe]
+etymology_hook: "tappe ← Turkic (Turkish tepe 'hill', EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C102-dasht]
 <!-- hl-knowledge: introduces=[FA-LEX-C103-THINGS103-01]; assesses=[] -->
 
 **تپه** — *tappe* — "a hill".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tappe* is borrowed from Turkic: EtymDB gives Turkish *tepe*, "hill", and an Old Turkic word for "height".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

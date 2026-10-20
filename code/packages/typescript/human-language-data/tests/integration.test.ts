@@ -247,7 +247,9 @@ describe("real curriculum", () => {
       // headwords, fifty of them verbs, which brings Persian to A2.
       // 252 -> 286: the fourth A2 vocabulary tranche, chapters 253-286: 170
       // headwords, fifty of them verbs, beyond the A2 floor.
-    ).toEqual(Array.from({ length: 286 }, (_, i) => i + 1));
+      // 286 -> 289: chapters 287-289, the three A1 writing stages Persian had
+      // not proved (my own line, a three-minute timed form, four lines).
+    ).toEqual(Array.from({ length: 289 }, (_, i) => i + 1));
     expect(
       books.books
         .find((book) => book.language === "urdu")
@@ -382,7 +384,9 @@ describe("real curriculum", () => {
       // 203 -> 231: the third A2 vocabulary tranche, 140 headwords.
       // 231 -> 257: the last A2 vocabulary tranche, 130 headwords; Russian
       // attains A2.
-    ).toEqual(Array.from({ length: 257 }, (_, index) => index + 1));
+      // 257 -> 260: chapters 258-260, the three A1 writing stages Russian had
+      // not proved (my own line, a three-minute timed task, four lines).
+    ).toEqual(Array.from({ length: 260 }, (_, index) => index + 1));
     expect(
       books.books.every((book) =>
         book.chapters.every((chapter) => chapter.tex.length > 100),

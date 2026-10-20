@@ -14,7 +14,8 @@ romanization: "zamin"
 concept_tag: FA-HOME46-ZAMIN
 prerequisites: [FA-C46-takht, FA-C46-komod]
 sounds: []
-roots: []
+roots: [persian-zamin]
+etymology_hook: "zamin: inherited, usually traced to Middle Persian zamīg"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C46-komod]
 <!-- hl-knowledge: introduces=[FA-LEX-C46-HOME46-04]; assesses=[] -->
 
 **زمین** — *zamin* — "the ground; the earth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*zamin* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *zamīg*, "earth, ground".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

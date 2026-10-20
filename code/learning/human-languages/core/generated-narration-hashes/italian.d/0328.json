@@ -1,0 +1,20 @@
+{
+  "language": "italian",
+  "chapter": 328,
+  "sourceHash": "fnv1a64:6905b23eb48627e0",
+  "lessonIds": [
+    "IT-C328-impero",
+    "IT-C328-imperatore",
+    "IT-C328-sovrano",
+    "IT-C328-governare",
+    "IT-C328-fondare",
+    "IT-R328-ripasso-321-328"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "italian/narration/ch328.txt",
+  "json": "italian/narration/ch328.json",
+  "textHash": "fnv1a64:23292d6dd8bdf144",
+  "jsonHash": "fnv1a64:30ca3ae9c7fcdf74",
+  "findings": []
+}

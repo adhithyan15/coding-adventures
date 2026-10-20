@@ -12,6 +12,9 @@ Before the new one: say the Japanese for on the way, then the Japanese for half 
 You'll want to know: まいとし.
 まいとし — maitoshi — "every year".
 
+The word, taken apart.
+まいとし (maitoshi) mixes the two layers: mai, "every", borrowed from Chinese (Middle Chinese mwojX), and native toshi, "year", read as a kun'yomi; mainen, with the Sino-Japanese nen, means the same (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for half past, then the Japanese for every 
 
 You'll want to know: ことし.
 ことし — kotoshi — "this year".
+
+The word, taken apart.
+ことし (kotoshi) is a native word, usually taken apart as ko, "this", and toshi, "year". JMdict writes it with characters for "now" and "year", read as a whole for their meaning. It is inherited rather than borrowed.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for every year, then the Japanese for this 
 You'll want to know: こんしゅう.
 こんしゅう — konshuu — "this week".
 
+The word, taken apart.
+こんしゅう (konshuu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kon, "now, this" (Middle Chinese kim) and shū, "week" (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for this year, then the Japanese for this w
 You'll want to know: おととし.
 おととし — ototoshi — "the year before last".
 
+The word, taken apart.
+おととし (ototoshi) is a native word, inherited rather than borrowed, built like ototoi with toshi, "year", in place of the day. JMdict writes it with characters for "one", "past" and "year", read as a whole; its older origin is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for this week, then the Japanese for the ye
 
 You'll want to know: あさねぼう.
 あさねぼう — asanebou — "oversleeping".
+
+The word, taken apart.
+あさねぼう (asanebou) mixes the two layers: native asa, "morning", and ne, "sleep", from neru, "to sleep", with bō, "monk's lodging; boy", the on'yomi of its last character, borrowed from Chinese (Middle Chinese bjang): a morning sleeper (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.

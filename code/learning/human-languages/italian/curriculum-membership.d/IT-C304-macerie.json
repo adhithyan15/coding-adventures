@@ -1,0 +1,11 @@
+{
+  "id": "IT-C304-macerie",
+  "pathSegment": "IT-PATH-304-TERREMOTO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-304-TERREMOTO",
+      "order": 2
+    }
+  ]
+}

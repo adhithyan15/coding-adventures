@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "But, Twice Over",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:ad3e5de8f50d5276",
+  "sourceHash": "fnv1a64:39f477c698348f39",
   "lessons": [
     {
       "id": "RU-C17-no",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4f7edc9d68a3b27c",
+      "sourceHash": "fnv1a64:e8fd84d492daa665",
       "notice": null,
       "blocks": [
         {
@@ -96,11 +96,11 @@
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart — the one with no cousin",
+          "title": "The word, taken apart — a probable cousin of now",
           "segments": [
             {
               "kind": "speech",
-              "text": "Almost every word this book has taken apart has handed you an English relative. но (no) does not. It goes back to a bare Slavic particle, written in the oldest manuscripts with a short vowel Russian has since dropped altogether, and the etymologists disagree about where even that came from."
+              "text": "но (no) goes back to Old Russian nŭ, a bare Slavic particle. Vasmer finds it probably related to an ancient word for \"now\": Lithuanian, Sanskrit and Gothic nu. So English now is a likely cousin. Vasmer also reports a less likely account, so the link is probable, not proven."
             },
             {
               "kind": "speech",
@@ -161,7 +161,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"but.\" (That is но (no).) Does a comma go in front of it? (Yes — always.) Did и want one? (No.) Does но (no) have a secure English cousin? (No — the histories disagree.) And one look back: how do you say \"me neither\"? (я тоже не plus the verb.)"
+              "text": "Say \"but.\" (That is но (no).) Does a comma go in front of it? (Yes — always.) Did и want one? (No.) Does но (no) have an English cousin? (Probably — now, on Vasmer's preferred account.) And one look back: how do you say \"me neither\"? (я тоже не plus the verb.)"
             }
           ]
         }
@@ -180,7 +180,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:abd93698ceaa29d9",
+      "sourceHash": "fnv1a64:187fecaff1041d5b",
       "notice": null,
       "blocks": [
         {

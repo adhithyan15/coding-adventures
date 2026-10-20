@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 250,
-  "sourceHash": "fnv1a64:ff529a4eb7e7191f",
+  "sourceHash": "fnv1a64:e7f2918d9c68bde7",
   "lessonIds": [
     "UR-C250-degchi",
     "UR-C250-tava",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch250.txt",
   "json": "urdu/narration/ch250.json",
-  "textHash": "fnv1a64:b05032685a71534a",
-  "jsonHash": "fnv1a64:03367d8d276d40af",
+  "textHash": "fnv1a64:7fccc9939b92447d",
+  "jsonHash": "fnv1a64:e59dffb4cea19411",
   "findings": []
 }

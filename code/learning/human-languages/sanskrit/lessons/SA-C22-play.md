@@ -14,7 +14,8 @@ romanization: "krīḍati"
 concept_tag: SA-VERB-PLAY
 prerequisites: [SA-C22-lead, SA-C20-old-person, SA-C05-karomi]
 sounds: []
-roots: []
+roots: [sanskrit-krida]
+etymology_hook: "krīḍati ← the root √krīḍ 'play', Rigvedic krīḷati (MW; CDIAL 3592)"
 duration:
   max_seconds: 210
 requires:
@@ -46,6 +47,12 @@ reviews_of: [SA-C22-lead]
 **क्रीडति** (*krīḍati*) — "he, she or it plays".
 
 From **√क्रीड्** (*krīḍ*). The noun *krīḍā* covers a child's game, a sport, and divine play — *līlā*'s plainer cousin — so the word does not separate the trivial from the cosmic.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Krīḍati* is the present of the root √krīḍ, "to play"; the Rigveda has it as
+*krīḷati* (MW, CDIAL 3592). The noun *krīḍā* is built from the same root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

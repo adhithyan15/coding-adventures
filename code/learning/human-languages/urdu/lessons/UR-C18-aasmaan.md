@@ -12,7 +12,7 @@ concept_tag: UR-SKY
 prerequisites: [UR-C18-aam]
 sounds: [rtl, short-vowels-unwritten]
 roots: [middle-persian-asman, pie-hekmon]
-etymology_hook: āsmān is borrowed from Persian āsmān, inherited within Iranian from Avestan asman- and Proto-Indo-Iranian *aćman-, from Proto-Indo-European *h₂éḱmōn "stone" -- the same root as Sanskrit aśman "stone", Greek ákmōn "anvil", Lithuanian akmuo "stone", and, through Germanic, English hammer, which named a stone tool before it named a metal one; the sky was called the stone because it was pictured as a stone vault overhead.
+etymology_hook: "āsmān: usually traced to Persian āsmān 'sky', from an old root meaning 'stone'"
 duration:
   max_seconds: 295
 requires:

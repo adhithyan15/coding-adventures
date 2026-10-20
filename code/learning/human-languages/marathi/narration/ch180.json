@@ -4,7 +4,7 @@
   "chapter": 180,
   "title": "Writer, Painter, Photographer, Journalist, Architect",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e8a0443805da4a91",
+  "sourceHash": "fnv1a64:69fdd452a0da82ef",
   "lessons": [
     {
       "id": "MR-C180-lekhak",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:959eff99dc5a8cc8",
+      "sourceHash": "fnv1a64:56b87806e60f2a2a",
       "notice": null,
       "blocks": [
         {

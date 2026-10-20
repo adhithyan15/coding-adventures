@@ -1,0 +1,19 @@
+{
+  "chapter": 576,
+  "title": "Lo que pienso",
+  "label": "ch:es-lo-que-pienso",
+  "canDo": "I can say what I think about something, what I believe and how firmly.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ES-C576-postura",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 576: I can say what I think about something, what I believe and how firmly.",
+    "assesses": [
+      "ES-LEX-C576-OPINA-03",
+      "ES-LEX-C576-OPINA-04",
+      "ES-LEX-C576-OPINA-05"
+    ]
+  }
+}

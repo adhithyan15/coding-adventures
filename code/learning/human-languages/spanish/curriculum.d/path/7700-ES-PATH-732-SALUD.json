@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-732-SALUD",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ES-EXT-732-SALUD"
+  ],
+  "after": []
+}

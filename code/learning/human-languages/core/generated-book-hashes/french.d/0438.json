@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 438,
+  "sourceHash": "fnv1a64:dca41f5fcdb659c7",
+  "lessonIds": [
+    "FR-C438-flaner",
+    "FR-C438-balader",
+    "FR-C438-deambuler",
+    "FR-C438-errer",
+    "FR-C438-arpenter"
+  ],
+  "tex": "french/book/chapters/ch438-flaner-en-ville.tex"
+}

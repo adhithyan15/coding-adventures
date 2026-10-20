@@ -14,7 +14,8 @@ romanization: "gāe"
 concept_tag: UR-NATURE67-GAE
 prerequisites: [UR-C67-billi, UR-C67-ghora]
 sounds: []
-roots: []
+roots: [sanskrit-go]
+etymology_hook: "gāe ← Sanskrit gāvī 'cow', a form of go (CDIAL 4147)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C67-ghora]
 <!-- hl-knowledge: introduces=[UR-LEX-C67-NATURE67-05]; assesses=[] -->
 
 **گائے** — *gāe* — "a cow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**گائے** (*gāe*) is inherited from Sanskrit *gāvī*, "cow", a form of *go*, "cow, ox" (CDIAL 4147).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

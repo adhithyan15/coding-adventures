@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C497-traicao",
+    "language": "portuguese",
+    "chapter": 497,
+    "sequence": 27560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:62ac29a9a5aa4e27"
+  },
+  "findings": []
+}

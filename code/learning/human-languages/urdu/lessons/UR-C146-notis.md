@@ -14,7 +14,8 @@ romanization: "noṭis"
 concept_tag: UR-PARH146-NOTIS
 prerequisites: [UR-C145-tai-karna, UR-C146-taim-tebal]
 sounds: []
-roots: []
+roots: [english-notice]
+etymology_hook: "noṭis ← English notice"
 duration:
   max_seconds: 200
 requires:
@@ -49,6 +50,11 @@ The notice says **دکان ہر اتوار کو بند رہتی ہے۔** — *du
 rahtī hai*.
 
 — The shop is closed on Sundays, so come on another day.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**نوٹس** (*noṭis*) is a loan from English *notice*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

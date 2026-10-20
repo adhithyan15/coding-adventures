@@ -46,7 +46,7 @@ reviews_of: [LA-C199-comparo]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**persuādeō** is *per*, "thoroughly", with *suādeō*, "to advise, to urge": to urge someone all the way. *suādeō* belongs with *suāvis*, "sweet".
+**persuādeō** is *per*, "thoroughly", with *suādeō*, "to advise, to urge": to urge someone all the way. *suādeō* belongs with *suāvis*, "sweet", and is inherited from Proto-Italic *\*swādēō*, "to advise" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

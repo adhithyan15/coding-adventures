@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C766-ambicion",
+    "language": "spanish",
+    "chapter": 766,
+    "sequence": 28280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ab24073b0cf76c8a"
+  },
+  "findings": []
+}

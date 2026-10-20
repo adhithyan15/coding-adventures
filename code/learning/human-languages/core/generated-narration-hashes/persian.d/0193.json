@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 193,
-  "sourceHash": "fnv1a64:27f241e738c61a51",
+  "sourceHash": "fnv1a64:3e6d95a6bbd39db1",
   "lessonIds": [
     "FA-C193-darmangah",
     "FA-C193-bashgah",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch193.txt",
   "json": "persian/narration/ch193.json",
-  "textHash": "fnv1a64:a85fd1acbd31d59d",
-  "jsonHash": "fnv1a64:7de0a3fb077a6f4e",
+  "textHash": "fnv1a64:4cf16d3344ad0404",
+  "jsonHash": "fnv1a64:56ef029cebe44148",
   "findings": []
 }

@@ -46,7 +46,7 @@ reviews_of: [GE-C251-uebrigens]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**sowieso** is *so* + *wie* + *so*: "so, however so" — whatever happens, anyway.
+**sowieso** is *so* + *wie* + *so*: "so, however so" — whatever happens, anyway. *So* ← Proto-Germanic *\*swa* and *wie* ← Old High German *wio* (EtymDB 2.1), both inherited.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

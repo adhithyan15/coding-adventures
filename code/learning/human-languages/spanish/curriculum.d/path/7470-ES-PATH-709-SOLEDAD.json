@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-709-SOLEDAD",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ES-EXT-709-SOLEDAD"
+  ],
+  "after": []
+}

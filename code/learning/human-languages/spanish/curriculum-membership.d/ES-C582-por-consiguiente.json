@@ -1,0 +1,11 @@
+{
+  "id": "ES-C582-por-consiguiente",
+  "pathSegment": "ES-PATH-582-CONSEC",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-582-CONSEC",
+      "order": 3
+    }
+  ]
+}

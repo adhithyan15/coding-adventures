@@ -46,7 +46,7 @@ reviews_of: [FR-C136-soixante-dix]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**quatre-vingt-dix** — "four-twenties-ten": *quatre*, *vingt* and *dix*. Old French often counted in twenties.
+**quatre-vingt-dix** — "four-twenties-ten": *quatre*, *vingt* and *dix*. Old French often counted in twenties. *Quatre* ← Latin *quattuor*, *vingt* ← *vīgintī*, *dix* ← *decem*, all inherited (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

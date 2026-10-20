@@ -14,7 +14,8 @@ romanization: "sajānā"
 concept_tag: UR-VERB-SAJANA
 prerequisites: [UR-C150-fon-karna, UR-C151-tayyar-karna]
 sounds: []
-roots: []
+roots: [sanskrit-sajjayati]
+etymology_hook: "sajānā ← Sanskrit sajjayati 'equips, prepares', a tadbhava (CDIAL 13091)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C151-tayyar-karna]
 <!-- hl-knowledge: introduces=[UR-LEX-C151-ACT151-02]; assesses=[] -->
 
 **سجانا** — *sajānā* — "to decorate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سجانا** (*sajānā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *sajjayati*, "equips, prepares" (CDIAL 13091).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

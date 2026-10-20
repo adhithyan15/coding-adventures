@@ -14,7 +14,8 @@ romanization: "kachchā"
 concept_tag: UR-QUAL136-KACHCHA
 prerequisites: [UR-C136-pyasa, UR-C136-taza]
 sounds: []
-roots: []
+roots: [indo-aryan-kacca]
+etymology_hook: "kachchā ← *kacca 'raw, unripe'; CDIAL marks this form as taken from Punjabi (CDIAL 2613)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C136-taza]
 <!-- hl-knowledge: introduces=[UR-LEX-C136-QUAL136-03]; assesses=[] -->
 
 **کچا** — *kachchā* — "raw, unripe".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**کچا** (*kachchā*) goes back to a reconstructed *\*kacca*, "raw, unripe" (CDIAL 2613). CDIAL lists Hindi *kācā* and marks *kaccā* as taken over from Punjabi.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

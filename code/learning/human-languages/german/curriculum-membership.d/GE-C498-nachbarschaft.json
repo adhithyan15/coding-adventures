@@ -1,0 +1,11 @@
+{
+  "id": "GE-C498-nachbarschaft",
+  "pathSegment": "GE-PATH-498-FREUNDE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-498-FREUNDE",
+      "order": 3
+    }
+  ]
+}

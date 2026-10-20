@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 415,
+  "sourceHash": "fnv1a64:9fd1869503919d58",
+  "lessonIds": [
+    "IT-C415-noleggiare",
+    "IT-C415-noleggio",
+    "IT-C415-targa",
+    "IT-C415-libretto",
+    "IT-C415-assicurazione"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch415.txt",
+  "json": "italian/narration/ch415.json",
+  "textHash": "fnv1a64:0d38424341f570fc",
+  "jsonHash": "fnv1a64:04eaf5ed4996e25c",
+  "findings": []
+}

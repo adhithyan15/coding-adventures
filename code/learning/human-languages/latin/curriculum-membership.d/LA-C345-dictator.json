@@ -1,0 +1,11 @@
+{
+  "id": "LA-C345-dictator",
+  "pathSegment": "LA-PATH-345-REX",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-345-REX",
+      "order": 4
+    }
+  ]
+}

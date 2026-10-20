@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C764-revivir",
+    "language": "spanish",
+    "chapter": 764,
+    "sequence": 28200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e78b6cad7d3e8073"
+  },
+  "findings": []
+}

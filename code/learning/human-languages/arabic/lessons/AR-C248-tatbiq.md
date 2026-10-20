@@ -14,7 +14,8 @@ romanization: "taṭbīq"
 concept_tag: AR-SHAY248-TATBIQ
 prerequisites: [AR-C248-intarnit, AR-C248-mawqi]
 sounds: []
-roots: []
+roots: [t-b-q]
+etymology_hook: "taṭbīq: built on the root ṭ-b-q, 'to cover, to fit one on another' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C248-mawqi]
 <!-- hl-knowledge: introduces=[AR-LEX-C248-SHAY248-03]; assesses=[] -->
 
 **تطبيق** — *taṭbīq* — "an app, an application".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تطبيق** (*taṭbīq*) is built on the native Arabic root *ṭ-b-q*, "to cover, to fit one on another" (Lane). *Taṭbīq* is the verbal noun of Form II, "applying"; the app is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

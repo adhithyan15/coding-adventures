@@ -14,7 +14,8 @@ romanization: "garāj"
 concept_tag: UR-JAGAH246-GARAJ
 prerequisites: [UR-C245-akhir, UR-C245-salgirah]
 sounds: []
-roots: []
+roots: [english-garage]
+etymology_hook: "garāj ← English garage"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C245-salgirah]
 <!-- hl-knowledge: introduces=[UR-LEX-C246-JAGAH246-01]; assesses=[] -->
 
 **گیراج** — *garāj* — "a garage".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**گیراج** (*garāj*) is a loan from English *garage*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -6,7 +6,7 @@ sequence: 3490
 chapter: 43
 type: review
 headword: (one letter)
-gloss: second pass: the same one letter, from the word back to the letter
+gloss: 'second pass: the same one letter, from the word back to the letter'
 romanization: "ek akhar"
 concept_tag: MW-LETTERS-FROM-WORDS
 prerequisites: [MW-W43-ma]

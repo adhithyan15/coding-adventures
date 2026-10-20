@@ -14,7 +14,8 @@ romanization: "kim"
 concept_tag: QUESTION-WHAT
 prerequisites: [SA-C02-nama]
 sounds: [sihari-i, halant]
-roots: [ka-interrogative]
+roots: [ka-interrogative, kim]
+etymology_hook: "kim 'what' ← the question stem ka- (MW), cousin of Latin quid; it lives on as Hindi kyā (CDIAL 3164)"
 reviews_of: [SA-C02-tvam]
 duration:
   max_seconds: 180
@@ -37,8 +38,8 @@ variety: classical
 
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-NAMA] -->
 
-[PAUSE 2s] The question-word — and the fountainhead of a whole family of "wh-"
-words, east and west.
+[PAUSE 2s] The question-word — and a cousin of a whole family of "wh-"
+words in the west.
 
 ## Sounds you'll need
 
@@ -54,8 +55,8 @@ words, east and west.
 Proto-Indo-European **\*kʷo-** — the ancestor of the whole question-family:
 English **what**, **who**, **which**, Latin *quis* / *quid*, Greek *tis*, and
 Hindi *kyā* / *kaun*. Sanskrit's own questions all grow from this *ka-*: *kim*
-(what), *kaḥ* (who), *kadā* (when), *kutra* (where), *katham* (how). It is the
-single seed from which both Europe's *qu-/wh-* words and India's *k-* words grew.
+(what), *kaḥ* (who), *kadā* (when), *kutra* (where), *katham* (how). Its PIE
+ancestor is the single seed from which both Europe's *qu-/wh-* words and India's *k-* words grew.
 
 ## Guided Practice
 
@@ -64,7 +65,7 @@ single seed from which both Europe's *qu-/wh-* words and India's *k-* words grew
 [PAUSE 1s]
 - [YOU SAY: "kim"]
 - [YOU SAY: the ka- family — *kim, kaḥ, kadā, kutra, katham*]
-- [YOU SAY: its western children (English *what*, Latin *quis*)]
+- [YOU SAY: its western cousins (English *what*, Latin *quis*)]
 
 ## Wrap-up Recall
 

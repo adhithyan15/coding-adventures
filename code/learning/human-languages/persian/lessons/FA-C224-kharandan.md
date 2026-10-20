@@ -14,7 +14,8 @@ romanization: "khârândan"
 concept_tag: FA-VERB-KHARANDAN
 prerequisites: [FA-C223-haml-kardan, FA-C223-harakat-kardan]
 sounds: []
-roots: []
+roots: [persian-kharidan-itch]
+etymology_hook: "khârândan: causative built from Persian khâridan 'to itch'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C223-harakat-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C224-KONESH224-01]; assesses=[] -->
 
 **خاراندن** — *khârândan* — "to scratch (an itch)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khârândan* is built from *khâr-*, the stem of *khâridan*, "to itch", as its causative: to make the itch go. The verb is native Persian, inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

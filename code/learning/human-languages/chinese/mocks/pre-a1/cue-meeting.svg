@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="100" viewBox="0 0 180 100" role="img" aria-label="Two people meeting and waving">
+  <title>Two people meeting and waving</title>
+  <g fill="none" stroke="#202020" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="48" cy="25" r="11"/>
+    <path d="M48 36v34m0-22L30 34m18 14 20-13M48 70 35 91m13-21 13 21"/>
+    <circle cx="132" cy="25" r="11"/>
+    <path d="M132 36v34m0-22-20-13m20 13 18-14m-18 36-13 21m13-21 13 21"/>
+    <path d="M76 34q14-9 28 0"/>
+  </g>
+</svg>

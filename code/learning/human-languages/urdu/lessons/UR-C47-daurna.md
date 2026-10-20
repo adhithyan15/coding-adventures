@@ -14,7 +14,8 @@ romanization: "dauṛnā"
 concept_tag: UR-VERB-DAURNA
 prerequisites: [UR-C47-uthna, UR-C47-chalna]
 sounds: []
-roots: []
+roots: [sanskrit-dravati]
+etymology_hook: "dauṛnā ← Sanskrit dravati 'runs', a tadbhava (CDIAL 6624)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C47-chalna]
 <!-- hl-knowledge: introduces=[UR-LEX-C47-VERBS47-05]; assesses=[] -->
 
 **دوڑنا** — *dauṛnā* — "to run".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دوڑنا** (*dauṛnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *dravati*, "runs" (CDIAL 6624). CDIAL notes an added *-ḍ-*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

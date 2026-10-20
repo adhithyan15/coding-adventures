@@ -14,7 +14,8 @@ romanization: "jītnā"
 concept_tag: UR-VERB-JITNA
 prerequisites: [UR-C139-bhagna, UR-C139-bulana]
 sounds: []
-roots: []
+roots: [sanskrit-jita]
+etymology_hook: "jītnā ← Sanskrit jita 'won, conquered', a tadbhava (CDIAL 5224)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C139-bulana]
 <!-- hl-knowledge: introduces=[UR-LEX-C140-ACT140-01]; assesses=[] -->
 
 **جیتنا** — *jītnā* — "to win".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جیتنا** (*jītnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *jita*, "won, conquered" (CDIAL 5224).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

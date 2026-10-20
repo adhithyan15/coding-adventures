@@ -69,7 +69,7 @@ give a reason yourself.
 
 So the question family you opened in the last chapter has produced its third
 member: **как**, **что**, and now **почему**. All three are the same ancient
-stem wearing different endings, and there are more still to come.
+stem wearing different endings, and there are more still to come. Vasmer traces **что** to Proto-Slavic *\*čĭ*, "what", with a pointing *to* on the end.
 
 English does exactly the same trick and then forgets it did: *wherefore* is
 *for-what*, and *therefore* is *for-that*. Asking *why* by asking *after what* is

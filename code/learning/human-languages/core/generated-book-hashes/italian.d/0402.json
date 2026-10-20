@@ -1,0 +1,14 @@
+{
+  "language": "italian",
+  "chapter": 402,
+  "sourceHash": "fnv1a64:a8513d0115574a8f",
+  "lessonIds": [
+    "IT-C402-rete",
+    "IT-C402-connessione",
+    "IT-C402-connettersi",
+    "IT-C402-navigare",
+    "IT-C402-link",
+    "IT-R402-ripasso-395-402"
+  ],
+  "tex": "italian/book/chapters/ch402-in-rete.tex"
+}

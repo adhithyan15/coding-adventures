@@ -14,7 +14,8 @@ romanization: "pāritoṣikam"
 concept_tag: SA-THG194-PARITOSIKAM
 prerequisites: [SA-C193-padarthah, SA-C193-upakaranam]
 sounds: []
-roots: []
+roots: [sanskrit-paritoshika]
+etymology_hook: "pāritoṣika ← paritoṣa 'delight', from pari- + √tuṣ 'be pleased' (MW): 'what pleases', a reward"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C193-upakaranam]
 <!-- hl-knowledge: introduces=[SA-LEX-C194-THG194-01]; assesses=[] -->
 
 **पारितोषिकम्** — *pāritoṣikam* — "a prize".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pāritoṣika* comes from *paritoṣa*, "delight, satisfaction", built on *pari-* and the root √tuṣ, "to be pleased" (MW). It first meant "gratifying", and then "a reward", the thing that pleases.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

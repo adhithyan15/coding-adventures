@@ -14,7 +14,8 @@ romanization: "vikasati"
 concept_tag: SA-VERB-VIKASATI
 prerequisites: [SA-C205-prasamsati, SA-C205-svikaroti]
 sounds: []
-roots: []
+roots: [sanskrit-vikasati]
+etymology_hook: "vikasati ← vi- 'apart' + √kas 'open, shine': 'bursts open, blossoms' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C205-svikaroti]
 <!-- hl-knowledge: introduces=[SA-LEX-C205-ACT205-05]; assesses=[] -->
 
 **विकसति** — *vikasati* — "blossoms, opens".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vikasati* is built on *vi-*, "apart", and the root √kas (MW), which MW glosses "to go" and "to beam, shine". MW gives the compound as "to burst, open, expand, blossom", and its noun *vikāsa*, "expansion", is the modern word for development.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

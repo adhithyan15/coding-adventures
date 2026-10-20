@@ -6,7 +6,7 @@ sequence: 600
 chapter: 31
 type: phrase
 headword: ಶುಭ ಮಧ್ಯಾಹ್ನ
-gloss: "good afternoon" (śubha madhyāhna) — reuses ಮಧ್ಯಾಹ್ನ, KA-C17's "noon" word, not the more precise ಅಪರಾಹ್ನ from KA-C28; one directly-fetched source describes it leaning formal/workplace, though this wasn't cross-corroborated the way ನಮಸ್ಕಾರ's universal, any-time-of-day status was
+gloss: '"good afternoon" (śubha madhyāhna) — reuses ಮಧ್ಯಾಹ್ನ, KA-C17''s "noon" word, not the more precise ಅಪರಾಹ್ನ from KA-C28; one directly-fetched source describes it leaning formal/workplace, though this wasn''t cross-corroborated the way ನಮಸ್ಕಾರ''s universal, any-time-of-day status was'
 romanization: "śubha madhyāhna"
 concept_tag: GREETING-AFTERNOON
 prerequisites: [KA-C17-madhyaahna-madhyaraatri, KA-C28-aparahna, KA-C30-shubha-sanje]
@@ -42,11 +42,11 @@ data point.
 <!-- hl-knowledge: introduces=[KA-ETYMON-C31-SHUBHA-MADHYAHNA-01]; assesses=[] -->
 
 **ಶುಭ ಮಧ್ಯಾಹ್ನ** (**śubha madhyāhna**) — "**good afternoon**" — is the
-standard greeting for this concept. Notice which noun it actually
+standard greeting, and both words are Sanskrit tatsamas (CDIAL 12532, 9818). Notice which noun it actually
 reuses: **ಮಧ್ಯಾಹ್ನ** (*madhyāhna*, "noon," Chapter 17) — **not**
 **ಅಪರಾಹ್ನ** (*aparāhna*, the word Chapter 28 established as the more
-precisely "afternoon"-specific term). This is exactly the kind of
-concrete usage evidence that bears on Chapter 28's own hedge: if the
+precisely "afternoon"-specific term). This is
+concrete evidence on Chapter 28's own hedge: if the
 standard **greeting** for "good afternoon" reaches for *madhyāhna*
 rather than *aparāhna*, that's a real (if still not fully conclusive)
 sign that *madhyāhna*'s job has genuinely stretched to cover the

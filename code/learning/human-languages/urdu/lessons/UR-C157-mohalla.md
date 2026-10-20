@@ -14,7 +14,8 @@ romanization: "mohallā"
 concept_tag: UR-JAGAH157-MOHALLA
 prerequisites: [UR-C156-har-sal, UR-C157-jagah]
 sounds: []
-roots: []
+roots: [arabic-mahalla]
+etymology_hook: "mohallā ← Arabic maḥalla 'a quarter where people alight', through Persian (Lane, root ḥ-l-l)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C157-jagah]
 <!-- hl-knowledge: introduces=[UR-LEX-C157-JAGAH157-02]; assesses=[] -->
 
 **محلہ** — *mohallā* — "a neighbourhood".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**محلہ** (*mohallā*) is a loan from Arabic *maḥalla*, "a quarter where people alight", which reached Urdu through Persian. Its Arabic root is *ḥ-l-l* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

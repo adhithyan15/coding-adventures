@@ -1,0 +1,19 @@
+{
+  "chapter": 323,
+  "title": "A consoada",
+  "label": "ch:pt-a-consoada",
+  "canDo": "I can describe family feasts of the year: Christmas Eve dinner, the nativity scene, New Year’s Eve and Easter treats.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C323-amendoas",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 323: I can describe family feasts of the year: Christmas Eve dinner, the nativity scene, New Year’s Eve and Easter treats.",
+    "assesses": [
+      "PT-LEX-C323-CONSOADA-03",
+      "PT-LEX-C323-CONSOADA-04",
+      "PT-LEX-C323-CONSOADA-05"
+    ]
+  }
+}

@@ -14,7 +14,8 @@ romanization: "sinemā"
 concept_tag: UR-LOC101-SINEMA
 prerequisites: [UR-C101-mahal, UR-C101-park]
 sounds: []
-roots: []
+roots: [english-cinema]
+etymology_hook: "sinemā ← English cinema"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C101-park]
 <!-- hl-knowledge: introduces=[UR-LEX-C101-LOC101-03]; assesses=[] -->
 
 **سینما** — *sinemā* — "a cinema".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سینما** (*sinemā*) is a loan from English *cinema*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

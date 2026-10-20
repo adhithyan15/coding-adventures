@@ -1,0 +1,11 @@
+{
+  "id": "PT-C297-testemunho",
+  "pathSegment": "PT-PATH-297-TRIBUNAL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-297-TRIBUNAL",
+      "order": 2
+    }
+  ]
+}

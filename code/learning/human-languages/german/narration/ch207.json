@@ -4,7 +4,7 @@
   "chapter": 207,
   "title": "An ambulance, The fire brigade, A thief, A theft, A court",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:03de398409be3ee9",
+  "sourceHash": "fnv1a64:3b4597ad947c1456",
   "lessons": [
     {
       "id": "GE-C207-krankenwagen",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:21d11a962ea53e39",
+      "sourceHash": "fnv1a64:557f4e8f2f5861d1",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Diebstahl is Dieb, \"thief\", + an old noun from stehlen, \"to steal\": a thief's stealing."
+              "text": "Diebstahl is Dieb, \"thief\", + an old noun from stehlen, \"to steal\": a thief's stealing. Dieb from Proto-Germanic þeubaz (EtymDB 2.1), the same word as English thief."
             }
           ]
         },

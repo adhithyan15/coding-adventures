@@ -14,7 +14,8 @@ romanization: "dhakī"
 concept_tag: AR-QUAL152-DHAKI
 prerequisites: [AR-C152-naim, AR-C152-sulb]
 sounds: []
-roots: []
+roots: [dh-k-w]
+etymology_hook: "dhakī: built on the root dh-k-w, 'to be quick of mind' (Lane); dhakī is 'sharp-witted'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C152-sulb]
 <!-- hl-knowledge: introduces=[AR-LEX-C152-QUAL152-05]; assesses=[] -->
 
 **ذكي** — *dhakī* — "clever".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ذكي** (*dhakī*) is built on the native Arabic root *dh-k-w*, "to be quick of mind; to blaze" (Lane). *Dhakī* is "sharp-witted".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

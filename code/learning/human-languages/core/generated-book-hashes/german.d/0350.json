@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:51d424a51cded0d3",
+  "lessonIds": [
+    "GE-C350-arbeitgeber",
+    "GE-C350-arbeitnehmer",
+    "GE-C350-einstellen",
+    "GE-C350-beschaeftigen",
+    "GE-C350-befristet"
+  ],
+  "tex": "german/book/chapters/ch350-arbeitgeber-und-arbeitnehmer.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C443-gemuesehaendler",
+  "pathSegment": "GE-PATH-443-FEINKOST",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-443-FEINKOST",
+      "order": 2
+    }
+  ]
+}

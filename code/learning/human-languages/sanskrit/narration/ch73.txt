@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for he brings, then the Sanskrit for she gi
 You'll want to know: गायति.
 गायति (gāyati) — "(he, she) sings". What is sung is a गीतम्.
 
+The word, taken apart.
+Gāyati is the present of the root √gai, "to sing" (MW). CDIAL 4135 lists Hindi gānā, "to sing", with it.
+
 What you've built.
 The verb of a song.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for she gives, then the Sanskrit for she si
 
 You'll want to know: कथयति.
 कथयति (kathayati) — "(he, she) tells". A कथा, "a story", is what is told.
+
+The word, taken apart.
+Kathayati is a verb made from kathā, "a telling, a story" (CDIAL 2703), which MW traces to katham, "how": to tell is to tell how. It lives on as Hindi kahnā, "to say".
 
 What you've built.
 The verb of a story.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for she sings, then the Sanskrit for he tel
 You'll want to know: रोदिति.
 रोदिति (roditi) — "(he, she) cries", the verb of दुःखम्.
 
+The word, taken apart.
+Roditi is the present of the root √rud, "to weep, howl". MW compares Latin rudere, "to roar". It lives on as Hindi ronā, "to weep" (CDIAL 10840).
+
 What you've built.
 Sorrow, as a verb.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for he tells, then the Sanskrit for the chi
 You'll want to know: आह्वयति.
 आह्वयति (āhvayati) — "(he, she) calls (someone)". माता आह्वयति — "mother is calling".
 
+The word, taken apart.
+Āhvayati is built from ā, "toward", and the root √hve, "to call" (MW), the root of āhvāna, "an invitation".
+
 What you've built.
 What you do across the courtyard.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for the child cries, then the Sanskrit for 
 
 You'll want to know: नमति.
 नमति (namati) — "(he, she) bows". It is the verb inside नमस्ते and प्रणामः.
+
+The word, taken apart.
+Namati is the present of the root √nam, "to bend, bow" (MW, CDIAL 6956): the root inside namas and namaste.
 
 What you've built.
 The verb inside the greeting.

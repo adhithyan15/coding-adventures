@@ -14,7 +14,8 @@ romanization: "sachchā"
 concept_tag: UR-SIFAT222-SACHCHA
 prerequisites: [UR-C222-anokha, UR-C222-naqli]
 sounds: []
-roots: []
+roots: [satya]
+etymology_hook: "sachchā ← Sanskrit satya 'true', a tadbhava (CDIAL 13112)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C222-naqli]
 <!-- hl-knowledge: introduces=[UR-LEX-C222-SIFAT222-05]; assesses=[] -->
 
 **سچا** — *sachchā* — "truthful".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سچا** (*sachchā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *satya*, "true" (CDIAL 13112).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

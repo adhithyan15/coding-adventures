@@ -14,7 +14,8 @@ romanization: "mon"
 concept_tag: JA-THINGS106-MON
 prerequisites: [JA-C105-akari, JA-C105-hikari]
 sounds: []
-roots: []
+roots: [middle-chinese-mwon]
+etymology_hook: "mon: Sino-Japanese, the on'yomi of 門 'gate', from Middle Chinese mwon"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C105-hikari]
 <!-- hl-knowledge: introduces=[JA-LEX-C106-THINGS106-01]; assesses=[] -->
 
 **もん** — *mon* — "a gate".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**もん** (*mon*) is Sino-Japanese (kango): the on'yomi of a character meaning "gate", a reading borrowed from Chinese (Middle Chinese *mwon* in Baxter's transcription; Unihan, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

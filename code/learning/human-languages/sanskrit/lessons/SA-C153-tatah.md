@@ -14,7 +14,8 @@ romanization: "tataḥ"
 concept_tag: SA-LOC153-TATAH
 prerequisites: [SA-C152-satabdi, SA-C153-itah]
 sounds: []
-roots: []
+roots: [sanskrit-tad]
+etymology_hook: "tataḥ ← pronoun base ta- 'that' + -tas 'from': 'from there, then' (MW; CDIAL 5639); ta- ← PIE (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C153-itah]
 <!-- hl-knowledge: introduces=[SA-LEX-C153-LOC153-02]; assesses=[] -->
 
 **ततः** — *tataḥ* — "from there, then".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tataḥ* is built from the pronoun base *ta-* "that" and the ending *-tas* "from" (MW; CDIAL 5639): "from there", and so "then, after that". It answers *yataḥ* "from where", and the base *ta-* is inherited from Indo-European, the same word as English *that* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

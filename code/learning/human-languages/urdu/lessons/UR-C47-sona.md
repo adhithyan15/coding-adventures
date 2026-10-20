@@ -14,7 +14,8 @@ romanization: "sonā"
 concept_tag: UR-VERB-SONA
 prerequisites: [UR-C46-sunna, UR-C47-baithna]
 sounds: []
-roots: []
+roots: [sanskrit-svapati]
+etymology_hook: "sonā ← Sanskrit svapati 'sleeps', a tadbhava (CDIAL 13902)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C47-baithna]
 <!-- hl-knowledge: introduces=[UR-LEX-C47-VERBS47-02]; assesses=[] -->
 
 **سونا** — *sonā* — "to sleep".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سونا** (*sonā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *svapati*, "sleeps" (CDIAL 13902).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

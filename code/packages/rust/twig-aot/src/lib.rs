@@ -399,6 +399,21 @@ pub enum AotError {
     /// In `Lenient` mode this fires only for `ProvenUnsafe` outcomes.
     /// In `Strict` mode it also fires for `Unknown` outcomes.
     RefinementViolations(Vec<iir_refinement_pass::RefinementError>),
+    /// A direct `call` passes a different number of arguments than the
+    /// callee declares. Native code takes parameters from fixed registers and
+    /// stack slots, so a short call would make the callee read whatever the
+    /// caller left there — including its saved frame pointer and return
+    /// address once parameters spill to the stack.
+    CallArityMismatch {
+        /// Function containing the call.
+        caller: String,
+        /// Function being called.
+        callee: String,
+        /// Parameters the callee declares.
+        expected: usize,
+        /// Arguments the call passes.
+        got: usize,
+    },
 }
 
 impl std::fmt::Display for AotError {
@@ -412,6 +427,10 @@ impl std::fmt::Display for AotError {
             AotError::Io(e)                 => write!(f, "io: {e}"),
             AotError::Linker { status, stderr } =>
                 write!(f, "linker (ld) failed: status={status:?}: {stderr}"),
+            AotError::CallArityMismatch { caller, callee, expected, got } => write!(
+                f,
+                "'{caller}' calls '{callee}' with {got} argument(s); it declares {expected}"
+            ),
             AotError::RefinementViolations(errs) => {
                 write!(f, "{} refinement violation(s):", errs.len())?;
                 for e in errs {
@@ -1316,11 +1335,50 @@ fn build_gc_init_stackmaps_x86_64_msx64(
     Ok((a.finish().map_err(gc_asm_err_x86)?, relocs, faddr))
 }
 
+/// Refuse any direct `call` whose argument count differs from the callee's
+/// declared parameter count, before any native code is generated.
+///
+/// The native backends read parameter `k` from a fixed register or, past the
+/// ABI's registers, from the caller's outgoing stack area. They trust the
+/// caller to have filled exactly those locations. Only calls to functions
+/// defined in this module are checked; anything else is a runtime or linker
+/// symbol with its own ABI contract.
+fn check_direct_call_arities(module: &IIRModule) -> Result<(), AotError> {
+    let arity: HashMap<&str, usize> = module
+        .functions
+        .iter()
+        .map(|f| (f.name.as_str(), f.params.len()))
+        .collect();
+    for caller in &module.functions {
+        for instr in &caller.instructions {
+            if instr.op != "call" {
+                continue;
+            }
+            let Some(Operand::Var(callee)) = instr.srcs.first() else {
+                continue;
+            };
+            if let Some(&expected) = arity.get(callee.as_str()) {
+                let got = instr.srcs.len() - 1;
+                if got != expected {
+                    return Err(AotError::CallArityMismatch {
+                        caller: caller.name.clone(),
+                        callee: callee.clone(),
+                        expected,
+                        got,
+                    });
+                }
+            }
+        }
+    }
+    Ok(())
+}
+
 #[allow(clippy::type_complexity)]
 fn compile_module_x86_64_to_text(
     module: &IIRModule,
     abi: X86_64Abi,
 ) -> Result<(Vec<u8>, HashMap<String, usize>, usize, Vec<X86RelocRecord>), AotError> {
+    check_direct_call_arities(module)?;
     let global_slots = collect_global_slots(module);
 
     // Pass 1: compile each function with the x86_64 backend.
@@ -3356,6 +3414,7 @@ fn collect_global_slots(module: &IIRModule) -> HashMap<String, usize> {
 fn compile_module_to_text_raw(
     module: &IIRModule,
 ) -> Result<(Vec<u8>, HashMap<String, usize>, usize, Vec<GlobalByteReloc>, Vec<ExternBranchReloc>), AotError> {
+    check_direct_call_arities(module)?;
     // ── Collect global names (LANG39) ─────────────────────────────────────────
     let global_slots = collect_global_slots(module);
     let n_global_slots = global_slots.len();
@@ -3671,6 +3730,65 @@ mod tests {
         );
     }
 
+    // ── LANG83 PR1b: the native runtime's trap-kind table ─────────────────────
+
+    /// `__twig_trap(kind_id)` maps a stable id back to a kind name with a C
+    /// array. The ids come from `interpreter_ir::exception_kind`, so this pins
+    /// the C table to the Rust one: same names, same order, nothing missing.
+    #[test]
+    fn runtime_trap_kind_table_matches_exception_kind() {
+        let src = include_str!("../runtime/twig_runtime.c");
+        let start = src.find("TWIG_TRAP_KINDS[] = {").expect("runtime declares TWIG_TRAP_KINDS");
+        let body = &src[start..];
+        let body = &body[..body.find("};").expect("TWIG_TRAP_KINDS is terminated")];
+        let names: Vec<&str> = body.split('"').skip(1).step_by(2).collect();
+        assert_eq!(names, interpreter_ir::exception_kind::ALL_TRAP_KINDS);
+        for (i, name) in names.iter().enumerate() {
+            assert_eq!(interpreter_ir::exception_kind::trap_kind_id(name), Some(i as u32 + 1));
+        }
+        assert!(
+            interpreter_ir::exception_kind::LANGUAGE_TRAP_KINDS.is_empty(),
+            "a language trap kind was registered: extend __twig_trap's table for ids >= 1000"
+        );
+    }
+
+    /// LANG83 PR1b end to end on the host: `write_i64` shares stdout with
+    /// `putchar`, the floor ops round toward −∞, and a trap flushes the
+    /// buffered output *before* naming its kind on stderr and aborting.
+    #[cfg(target_os = "linux")]
+    #[test]
+    fn lang83_floor_ops_write_i64_and_trap_run_natively() {
+        use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
+        let v = |n: &str| Operand::Var(n.into());
+        let int = |d: &str, n: i64| IIRInstr::new("const", Some(d.into()), vec![Operand::Int(n)], "i64");
+        let call = |b: &str, a: &str| IIRInstr::new("call_builtin", None, vec![v(b), v(a)], "void");
+        let body = vec![
+            int("a", -7),
+            int("b", 2),
+            int("sp", 32),
+            int("z", 0),
+            IIRInstr::new("i64_div_floor", Some("q".into()), vec![v("a"), v("b")], "i64"),
+            IIRInstr::new("i64_mod_floor", Some("r".into()), vec![v("a"), v("b")], "i64"),
+            call("write_i64", "q"),
+            call("putchar", "sp"),
+            call("write_i64", "r"),
+            // 1 // 0 traps Trap.DivZero; the unused quotient must not be dropped.
+            IIRInstr::new("i64_div_floor", Some("dead".into()), vec![v("b"), v("z")], "i64"),
+            IIRInstr::new("ret", None, vec![v("z")], "i64"),
+        ];
+        let mut module = IIRModule::new("lang83", "iir");
+        module.entry_point = Some("main".into());
+        module.add_or_replace(IIRFunction::new("main", vec![], "i64", body));
+        let dir = tempfile::tempdir().expect("tempdir");
+        let exe = dir.path().join("lang83");
+        compile_module_to_linux_executable(&module, &exe).expect("compiles and links");
+        let out = std::process::Command::new(&exe).output().expect("runs");
+        assert_eq!(String::from_utf8_lossy(&out.stdout), "-4 1", "stdout flushed before the trap");
+        assert!(!out.status.success(), "a trap exits non-zero");
+        let stderr = String::from_utf8_lossy(&out.stderr);
+        assert!(stderr.contains("trap: Trap.DivZero"), "stderr names the kind: {stderr:?}");
+    }
+
     // ── AOT00-T1 x86_64 PR-x2: GC entry wrapper + no-op init ──────────────────
 
     /// The x86_64 wrapper is well-formed: `push rbp` … `ret`, with two intra-module
@@ -3807,6 +3925,45 @@ mod tests {
             rsp_stores >= 4,
             "MsX64 places stack args with rsp-relative stores (SIB 24); found {rsp_stores}",
         );
+    }
+
+    /// A direct call that passes fewer arguments than a seven-parameter callee
+    /// declares is refused before codegen: the callee's seventh parameter would
+    /// otherwise be read from the caller's frame on x86_64 SysV.
+    #[test]
+    fn short_direct_call_is_refused_before_native_codegen() {
+        let params: Vec<(String, String)> =
+            (0..7).map(|i| (format!("p{i}"), "u64".to_string())).collect();
+        let wide = IIRFunction::new(
+            "wide", params, "u64",
+            vec![IIRInstr::new("ret", None, vec![Operand::Var("p6".into())], "u64")],
+        );
+        let main = IIRFunction::new(
+            "main", vec![], "u64",
+            vec![
+                IIRInstr::new("call", Some("r".into()),
+                    vec![Operand::Var("wide".into()), Operand::Int(1)], "u64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "u64"),
+            ],
+        );
+        let mut m = IIRModule::new("m", "twig");
+        m.add_or_replace(wide);
+        m.add_or_replace(main);
+        m.entry_point = Some("main".into());
+        for abi in [X86_64Abi::SysV, X86_64Abi::MsX64] {
+            let Err(err) = compile_module_x86_64_to_text(&m, abi) else {
+                panic!("a 1-argument call to a 7-parameter function must be refused");
+            };
+            assert!(
+                matches!(&err, AotError::CallArityMismatch { caller, callee, expected: 7, got: 1 }
+                    if caller == "main" && callee == "wide"),
+                "{err:?}"
+            );
+        }
+        assert!(matches!(
+            compile_module_to_text_raw(&m),
+            Err(AotError::CallArityMismatch { .. })
+        ));
     }
 
     /// PR-x3 (UAF-critical): after linking a module whose `main` calls a helper, the

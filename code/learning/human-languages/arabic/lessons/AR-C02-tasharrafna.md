@@ -12,6 +12,7 @@ concept_tag: INTRO-NICE-TO-MEET-YOU
 prerequisites: [AR-C02-ismii]
 sounds: [taa, faa]
 roots: [sh-r-f]
+etymology_hook: "tasharrafnā: Form V of the root sh-r-f 'to be high, honoured' (Lane): 'we have been honoured'"
 duration:
   max_seconds: 180
 requires:
@@ -48,10 +49,11 @@ reviews_of: [AR-C02-ismii, AR-C02-maa-ismuka]
 <!-- hl-knowledge: introduces=[AR-CONCEPT-C02-TASHARRAFNA-02]; assesses=[] -->
 
 **تشرفنا** (*tasharrafnā*), root **sh–r–f** (*honour, nobility*): *sharaf*
-("honour"), *sharīf* ("noble" — the *Sharif* of Mecca, and distantly the title
-behind English *sheriff*). *tasharrafnā* means literally "**we have been
+("honour"), *sharīf* ("noble" — the *Sharif* of Mecca). *tasharrafnā* means literally "**we have been
 honoured**" — to meet you is presented as an honour received. A more literal
 option is *furṣa saʿīda* ("a happy occasion").
+
+English *sheriff* only looks like *sharīf*: it comes from Old English *scīrgerēfa*, "shire-reeve", so that link is a folk etymology. *Tasharrafnā* is Form V of the native root, built on *sharaf* (Lane).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C02-TASHARRAFNA-01, AR-CONCEPT-C02-TASHARRAFNA-02] -->

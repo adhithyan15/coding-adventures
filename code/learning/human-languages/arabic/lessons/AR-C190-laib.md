@@ -14,7 +14,8 @@ romanization: "lāʿib"
 concept_tag: AR-AMAL190-LAIB
 prerequisites: [AR-C189-muqabala, AR-C190-mughanni]
 sounds: []
-roots: []
+roots: [l-ʿ-b]
+etymology_hook: "lāʿib: built on the root l-ʿ-b, 'to play' (Lane); lāʿib is the active participle, 'one who plays'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C190-mughanni]
 <!-- hl-knowledge: introduces=[AR-LEX-C190-AMAL190-02]; assesses=[] -->
 
 **لاعب** — *lāʿib* — "a player".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**لاعب** (*lāʿib*) is built on the native Arabic root *l-ʿ-b*, "to play" (Lane). *Lāʿib* is the active participle, "one who plays".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "qiṭṭa"
 concept_tag: AR-THINGS137-QITTA
 prerequisites: [AR-C137-ankabut, AR-C137-dik]
 sounds: []
-roots: []
+roots: [qitt-cat]
+etymology_hook: "qiṭṭa: feminine of qiṭṭ 'cat'; compared with Late Latin cattus, direction disputed, not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C137-dik]
 <!-- hl-knowledge: introduces=[AR-LEX-C137-THINGS137-03]; assesses=[] -->
 
 **قطة** — *qiṭṭa* — "a cat".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**قطة** (*qiṭṭa*) is the feminine of *qiṭṭ*, "cat"; Lane quotes Ibn Durayd doubting that it is genuine Arabic. It is widely compared with Late Latin *cattus* and other Mediterranean cat words, but the direction of borrowing is disputed and the origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

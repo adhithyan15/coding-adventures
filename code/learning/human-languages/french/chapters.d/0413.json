@@ -1,0 +1,19 @@
+{
+  "chapter": 413,
+  "title": "Sur le quai",
+  "label": "ch:fr-sur-le-quai",
+  "canDo": "I can find my train: the track, stamping a ticket, the ticket inspector, the carriage and the places a train serves.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C413-desservir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 413: I can find my train: the track, stamping a ticket, the ticket inspector, the carriage and the places a train serves.",
+    "assesses": [
+      "FR-LEX-C413-QUAI-03",
+      "FR-LEX-C413-QUAI-04",
+      "FR-LEX-C413-QUAI-05"
+    ]
+  }
+}

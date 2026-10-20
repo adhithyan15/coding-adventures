@@ -1,0 +1,19 @@
+{
+  "chapter": 507,
+  "title": "Rodas e montanhas",
+  "label": "ch:pt-rodas-e-montanhas",
+  "canDo": "I can talk about skating, hiking and climbing.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C507-alpinismo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 507: I can talk about skating, hiking and climbing.",
+    "assesses": [
+      "PT-LEX-C507-RODAS-03",
+      "PT-LEX-C507-RODAS-04",
+      "PT-LEX-C507-RODAS-05"
+    ]
+  }
+}

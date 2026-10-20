@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 585,
+  "sourceHash": "fnv1a64:4fa94a4b8e88b6a8",
+  "lessonIds": [
+    "ES-C585-proponer",
+    "ES-C585-propuesta",
+    "ES-C585-sugerencia",
+    "ES-C585-advertir",
+    "ES-C585-advertencia"
+  ],
+  "tex": "spanish/book/chapters/ch585-propuestas.tex"
+}

@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a servant, then the Urdu for a passer-by.
 You'll want to know: استری کرنا.
 استری کرنا — istrī karnā — "to iron".
 
+The phrase, taken apart.
+استری کرنا (istrī karnā) joins istrī, "an iron", usually traced to Portuguese estirar, "to stretch out", and karnā, "to do", from Sanskrit karoti, "does" (CDIAL 2814).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a passer-by, then the Urdu for to iron.
 
 You'll want to know: پیسنا.
 پیسنا — pīsnā — "to grind".
+
+The word, taken apart.
+پیسنا (pīsnā) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from piṃṣati, "grinds" (CDIAL 8142).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for to iron, then the Urdu for to grind.
 You'll want to know: تلنا.
 تلنا — talnā — "to fry".
 
+The word, taken apart.
+تلنا (talnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from talati, "fries", a form CDIAL reconstructs from its descendants (CDIAL 5736).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for to grind, then the Urdu for to fry.
 You'll want to know: ابالنا.
 ابالنا — ubālnā — "to boil".
 
+The word, taken apart.
+ابالنا (ubālnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from ubbāl, "make boil", a form CDIAL reconstructs from its descendants (CDIAL 2339). Morgenstierne traced it to ud-, "up", and an Indo-European root "to boil"; CDIAL finds the forms hard to fit and notes other possible sources.
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for to fry, then the Urdu for to boil.
 
 You'll want to know: چکھنا.
 چکھنا — chakhnā — "to taste".
+
+The word, taken apart.
+چکھنا (chakhnā) is a tadbhava, a word inherited and reshaped by sound change. It comes from cakṣati, "tastes", a form CDIAL reconstructs from its descendants (CDIAL 4557).
 
 What you've built.
 One more word for this chapter.

@@ -1,0 +1,24 @@
+{
+  "chapter": 258,
+  "title": "Writing --- My Own Line",
+  "label": "ch:ru-own-line",
+  "canDo": "I can write one line about myself by hand from a closed supply of known words, with nothing to copy, and check л, м, т and я before anything else.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "RU-W258-own-line",
+    "kind": "task",
+    "summary": "Complete RU-W258-own-line: я, a verb with its I-ending and the rest, chosen rather than copied, with the handwritten shapes checked first.",
+    "assesses": [
+      "RU-LEX-YA",
+      "RU-GRAMMAR-PRESENT-FIRST-PERSON-U",
+      "RU-SCRIPT-L-01",
+      "RU-SCRIPT-M-01",
+      "RU-SCRIPT-T-01",
+      "RU-SCRIPT-YA-NOT-R",
+      "RU-PUNCT-TOCHKA-01"
+    ],
+    "note": "The first writing step with nothing to reach for. The Cyrillic-specific check arrives with it: copying always supplied the right shapes, so choosing your own words means choosing the shapes too -- л's point against м's dip, the bar over a handwritten т, and я facing away from Latin R."
+  }
+}

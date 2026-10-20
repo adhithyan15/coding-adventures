@@ -14,7 +14,8 @@ romanization: "jharnā"
 concept_tag: UR-THINGS124-JHARNA
 prerequisites: [UR-C124-shakh, UR-C124-chattan]
 sounds: []
-roots: []
+roots: [indo-aryan-jharati]
+etymology_hook: "jharnā ← *jharati 'flowing down', a reconstructed form; a tadbhava (CDIAL 5346)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C124-chattan]
 <!-- hl-knowledge: introduces=[UR-LEX-C124-THINGS124-03]; assesses=[] -->
 
 **جھرنا** — *jharnā* — "a waterfall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**جھرنا** (*jharnā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*jharati*, "flowing down", a form CDIAL reconstructs from its descendants (CDIAL 5346).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

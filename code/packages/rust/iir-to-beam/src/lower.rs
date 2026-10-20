@@ -187,6 +187,7 @@ fn array_substrate_map(
 
 /// `{label, {u,N}}` — defines label N at this position in the code stream.
 const OP_LABEL: u8 = 1;
+
 /// `{func_info, {a,Mod}, {a,Fun}, {u,Arity}}` — function entry metadata.
 /// The BEAM loader uses this to build the function-info table for stack traces.
 const OP_FUNC_INFO: u8 = 2;
@@ -675,6 +676,10 @@ pub fn lower_iir_to_beam(
     let import_put     = imports.intern(erlang_atom, atom_put,     2); // erlang:put/2
     let import_get     = imports.intern(erlang_atom, atom_get,     1); // erlang:get/1
     let import_put_chars = imports.intern(io_atom, atom_put_chars, 1); // io:put_chars/1
+    // LANG83 ordered output: `print_i64` goes through the same `io` server as
+    // `putchar`/`print_str` (see the `print_i64` arm for why not erlang:display).
+    let atom_format = atoms.intern("format");
+    let import_format = imports.intern(io_atom, atom_format, 2); // io:format/2
 
     // ── BEAM07: host-input atoms and imports (`INPUT`/READ-ITEM EOF) ──────
     //
@@ -1058,6 +1063,13 @@ pub fn lower_iir_to_beam(
         live_across: HashMap<usize, Vec<String>>,
         n_yregs: u8,
         transient_call_slot: Option<u8>,
+        // LANG83 PR1b: the x-register holding the truncating remainder inside
+        // an `i64_div_floor` / `i64_mod_floor` expansion, or `None` when the
+        // function uses neither. It is an *anonymous* register: allocated
+        // below `next_reg` but never entered in `reg_map`, so no IIR variable
+        // name — not even one spelled like a compiler temporary — can map to
+        // it and be clobbered by the expansion.
+        floor_tmp: Option<u8>,
     }
 
     let mut fn_metas: Vec<FnMeta> = Vec::with_capacity(module.functions.len());
@@ -1140,6 +1152,35 @@ pub fn lower_iir_to_beam(
                 }
             }
         }
+
+        // LANG83 PR1b: `i64_div_floor` / `i64_mod_floor` need one register for
+        // the truncating remainder. It is allocated like a variable (below
+        // `next_reg`), so it is covered by every `gc_bif`'s `live` count and
+        // initialised to `[]` by the prologue — a scratch register *above*
+        // `live` would not survive a GC, and `div`/`rem` of an i64 near
+        // `MIN`/`MAX` allocate a bignum, which can collect.
+        //
+        // The register is anonymous — it is *not* inserted into `reg_map`.
+        // (An earlier version keyed it by a reserved-looking name,
+        // `__lang83_floor_tmp`, and reused a user variable of that name if one
+        // existed — so `__lang83_floor_tmp = 42; q = i64_div_floor(7, 2)`
+        // silently overwrote the user's variable. A register no name can reach
+        // cannot collide.)
+        let floor_tmp = if func.instructions.iter()
+            .any(|i| matches!(i.op.as_str(), "i64_div_floor" | "i64_mod_floor"))
+        {
+            if next_reg >= 255 {
+                return Err(IIRBeamError::UnsupportedOp {
+                    function: func.name.clone(),
+                    op: "too many distinct variables (>255); BEAM x-registers are 0..254".to_string(),
+                });
+            }
+            let r = next_reg as u8;
+            next_reg += 1;
+            Some(r)
+        } else {
+            None
+        };
 
         // Build the label map: scan for `label` instructions and assign
         // globally-unique BEAM label numbers.
@@ -1357,6 +1398,11 @@ pub fn lower_iir_to_beam(
                     // any OTHER live variable must be Y-spilled across it
                     // exactly like every other imported call here.
                     | "global_store"
+                    // `str_const` emits no call, but it now emits a
+                    // `test_heap` before its `put_list` chain (see its arm
+                    // below), and a `test_heap` that collects is the same
+                    // hazard as a call for every X register above `live`.
+                    | "str_const"
             ) && !(instr.op == "call_builtin" && matches!(instr.srcs.first(),
                 // BEAM07: `input_more`/`input_i64`/`input_str` each emit a
                 // real `call_ext` (`io:get_line/1`, and `input_i64`/
@@ -1364,8 +1410,10 @@ pub fn lower_iir_to_beam(
                 // `string:trim/3`) somewhere in their expansion — the same
                 // "every call_ext-emitting op must be listed" rule `putchar`
                 // already follows just above.
+                // LANG83: `print_i64` now emits `call_ext io:format/2`.
                 Some(Operand::Var(name)) if matches!(
-                    name.as_str(), "putchar" | "getchar" | "input_more" | "input_i64" | "input_str"
+                    name.as_str(), "putchar" | "print_i64" | "write_i64" | "getchar" | "input_more"
+                        | "input_i64" | "input_str"
                 ))) {
                 continue;
             }
@@ -1448,6 +1496,7 @@ pub fn lower_iir_to_beam(
             live_across,
             n_yregs,
             transient_call_slot,
+            floor_tmp,
         });
     }
 
@@ -1828,6 +1877,23 @@ pub fn lower_iir_to_beam(
                 // text to `[byte, ...]` with `put_list`, building right to
                 // left from BEAM nil (`{a,0}`). This is the representation
                 // consumed by `erlang:'++'/2` and `io:put_chars/1` below.
+                //
+                // Each cons cell is two heap words, and `put_list` writes
+                // them WITHOUT checking for room -- the reservation is the
+                // compiler's job, via `test_heap`. This arm reserved nothing,
+                // so every string literal wrote 2 x len words past whatever
+                // the previous `test_heap` had left. Whether that ran into
+                // the stack depended on how full the heap happened to be, so
+                // it surfaced as an intermittent erl abort, "erl_gc.c, line
+                // 775: Overrun stack and heap": deterministic on one main CI
+                // shard (lang-aot beam_array_len `b11_str_3d`, Linux OTP
+                // 27.3.4.11), never on macOS. The same omission `alloc_array`
+                // and `array_set` were fixed for (see their arms).
+                //
+                // `test_heap` may collect, and only x0..x(live-1) survive a
+                // collection, so the live variables are parked in their Y
+                // slots around it (`str_const` is listed with the other GC
+                // points in `live_across`) and `live` is 0.
                 "str_const" => {
                     let rd = match &instr.dest {
                         Some(name) => var_reg!(name),
@@ -1843,6 +1909,15 @@ pub fn lower_iir_to_beam(
                             detail: "str_const must have one string literal source".into(),
                         }),
                     };
+                    if !text.is_empty() {
+                        let words = 2 * text.len() as u64;
+                        let cur_idx = instr_idx - 1;
+                        save_live_across_imported_call!(cur_idx);
+                        instrs.push(BEAMInstruction::new(OP_TEST_HEAP, vec![
+                            BEAMOperand::u(words), BEAMOperand::u(0),
+                        ]));
+                        restore_live_across_imported_call!(cur_idx);
+                    }
                     instrs.push(BEAMInstruction::new(OP_MOVE, vec![
                         BEAMOperand::a(0),
                         BEAMOperand::x(rd),
@@ -2428,6 +2503,160 @@ pub fn lower_iir_to_beam(
                 //                 (The old A-tag encoding produces "bad tag" on load.)
                 // {x,r1},{x,r2} = source registers.
                 // {x,rd}        = destination register.
+                // ── LANG83 PR1b: `trap "<kind>"` → erlang:error('<kind>') ─────
+                //
+                //   move      {atom,'Trap.User'} -> x0
+                //   call_ext  1, erlang:error/1          (never returns)
+                //
+                // The reason is the kind atom itself. Uncaught, the emulator
+                // reports it on stderr and the node halts non-zero; the `io`
+                // server is synchronous, so every earlier `io:format` /
+                // `io:put_chars` has already reached it.
+                "trap" => {
+                    let kind = match instr.srcs.as_slice() {
+                        [Operand::Str(k)] if interpreter_ir::exception_kind::is_registered_trap_kind(k) => k.clone(),
+                        other => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: format!("trap requires srcs = [Operand::Str(registered trap kind)], got {other:?}"),
+                        }),
+                    };
+                    let kind_atom = atoms.intern(&kind);
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::a(kind_atom), BEAMOperand::x(0),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
+                        BEAMOperand::u(1), BEAMOperand::u(import_error as u64),
+                    ]));
+                }
+
+                // ── LANG83 PR1b: `i64_div_floor` / `i64_mod_floor` ──────────
+                //
+                // Erlang's `div`/`rem` truncate, raise `badarith` (no kind) on a
+                // zero divisor, and never overflow — `MIN div -1` is the bignum
+                // 2^63. So both edges are tested explicitly, then the floor
+                // fix-up is done with branches (`tmp` is the function's
+                // anonymous `floor_tmp` register, a GC root):
+                //
+                //   is_eq_exact {f,NZ} b 0        ; b == 0 → trap Trap.DivZero
+                // NZ:
+                //   is_eq_exact {f,OK} b -1
+                //     div: is_eq_exact {f,OK} a MIN ; trap Trap.Overflow
+                //     mod: move 0 -> rd ; jump DONE   (MIN mod -1 = 0)
+                // OK:
+                //   tmp = a rem b
+                //   is_eq_exact {f,NZR} tmp 0     ; exact → no adjustment
+                //   jump NOADJ
+                // NZR:
+                //   is_lt {f,RPOS} tmp 0          ; r < 0 …
+                //   is_lt {f,ADJ} b 0             ; … and b > 0 → adjust
+                //   jump NOADJ
+                // RPOS:
+                //   is_lt {f,NOADJ} b 0           ; r > 0 and b < 0 → adjust
+                // ADJ:   div: rd = (a div b) - 1   mod: rd = tmp + b   ; jump DONE
+                // NOADJ: div: rd = a div b         mod: rd = tmp
+                // DONE:
+                //
+                // `a div b` is computed after the last read of `tmp`, so a dest
+                // that aliases an operand (`x = x // 2`) is still correct.
+                "i64_div_floor" | "i64_mod_floor" => {
+                    use interpreter_ir::exception_kind::{TRAP_DIV_ZERO, TRAP_OVERFLOW};
+                    let want_mod = instr.op == "i64_mod_floor";
+                    let rd = match &instr.dest {
+                        Some(name) => var_reg!(name),
+                        None => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: format!("{} must have a dest", instr.op),
+                        }),
+                    };
+                    let a = integer_operand!(get_src!(instr, 0));
+                    let b = integer_operand!(get_src!(instr, 1));
+                    // Allocated in the first pass whenever the function
+                    // contains this op, so `None` is an internal invariant
+                    // violation — reported, never panicked on.
+                    let tmp = meta.floor_tmp.ok_or_else(|| IIRBeamError::InvalidOperand {
+                        function: fn_name.clone(),
+                        detail: format!("{}: floor scratch register was not allocated", instr.op),
+                    })?;
+                    let l_nz = alloc_synth_label!("floor division labels");
+                    let l_ok = alloc_synth_label!("floor division labels");
+                    let l_nzr = alloc_synth_label!("floor division labels");
+                    let l_rpos = alloc_synth_label!("floor division labels");
+                    let l_adj = alloc_synth_label!("floor division labels");
+                    let l_noadj = alloc_synth_label!("floor division labels");
+                    let l_done = alloc_synth_label!("floor division labels");
+                    let label = |l: u32| BEAMInstruction::new(OP_LABEL, vec![BEAMOperand::u(l as u64)]);
+                    let trap_atom_div_zero = atoms.intern(TRAP_DIV_ZERO);
+                    let trap_atom_overflow = atoms.intern(TRAP_OVERFLOW);
+                    let raise = |atom: u32| [
+                        BEAMInstruction::new(OP_MOVE, vec![BEAMOperand::a(atom), BEAMOperand::x(0)]),
+                        BEAMInstruction::new(OP_CALL_EXT, vec![
+                            BEAMOperand::u(1), BEAMOperand::u(import_error as u64),
+                        ]),
+                    ];
+                    let bif2 = |import: u32, x: BEAMOperand, y: BEAMOperand, d: u8| {
+                        BEAMInstruction::new(OP_GC_BIF2, vec![
+                            BEAMOperand::f(0), BEAMOperand::u(live), BEAMOperand::u(import as u64),
+                            x, y, BEAMOperand::x(d),
+                        ])
+                    };
+                    // b == 0
+                    instrs.push(BEAMInstruction::new(OP_IS_EQ_EXACT, vec![
+                        BEAMOperand::f(l_nz), b.clone(), BEAMOperand::i(0),
+                    ]));
+                    instrs.extend(raise(trap_atom_div_zero));
+                    instrs.push(label(l_nz));
+                    // b == -1
+                    instrs.push(BEAMInstruction::new(OP_IS_EQ_EXACT, vec![
+                        BEAMOperand::f(l_ok), b.clone(), BEAMOperand::i(-1i64 as u64),
+                    ]));
+                    if want_mod {
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::i(0), BEAMOperand::x(rd),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_JUMP, vec![BEAMOperand::f(l_done)]));
+                    } else {
+                        instrs.push(BEAMInstruction::new(OP_IS_EQ_EXACT, vec![
+                            BEAMOperand::f(l_ok), a.clone(), BEAMOperand::i(i64::MIN as u64),
+                        ]));
+                        instrs.extend(raise(trap_atom_overflow));
+                    }
+                    instrs.push(label(l_ok));
+                    instrs.push(bif2(import_rem, a.clone(), b.clone(), tmp));
+                    instrs.push(BEAMInstruction::new(OP_IS_EQ_EXACT, vec![
+                        BEAMOperand::f(l_nzr), BEAMOperand::x(tmp), BEAMOperand::i(0),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_JUMP, vec![BEAMOperand::f(l_noadj)]));
+                    instrs.push(label(l_nzr));
+                    instrs.push(BEAMInstruction::new(OP_IS_LT, vec![
+                        BEAMOperand::f(l_rpos), BEAMOperand::x(tmp), BEAMOperand::i(0),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_IS_LT, vec![
+                        BEAMOperand::f(l_adj), b.clone(), BEAMOperand::i(0),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_JUMP, vec![BEAMOperand::f(l_noadj)]));
+                    instrs.push(label(l_rpos));
+                    instrs.push(BEAMInstruction::new(OP_IS_LT, vec![
+                        BEAMOperand::f(l_noadj), b.clone(), BEAMOperand::i(0),
+                    ]));
+                    instrs.push(label(l_adj));
+                    if want_mod {
+                        instrs.push(bif2(import_add, BEAMOperand::x(tmp), b.clone(), rd));
+                    } else {
+                        instrs.push(bif2(import_div, a.clone(), b.clone(), rd));
+                        instrs.push(bif2(import_sub, BEAMOperand::x(rd), BEAMOperand::i(1), rd));
+                    }
+                    instrs.push(BEAMInstruction::new(OP_JUMP, vec![BEAMOperand::f(l_done)]));
+                    instrs.push(label(l_noadj));
+                    if want_mod {
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(tmp), BEAMOperand::x(rd),
+                        ]));
+                    } else {
+                        instrs.push(bif2(import_div, a.clone(), b.clone(), rd));
+                    }
+                    instrs.push(label(l_done));
+                }
+
                 "add" | "sub" | "mul" | "div" | "mod" => {
                     // VM-D034 (BEAM03): `div` needs a DIFFERENT BIF for f64
                     // than for i64 — `erlang:div/2` requires integer
@@ -2879,17 +3108,98 @@ pub fn lower_iir_to_beam(
                     restore_live_across_imported_call!(cur_idx);
                 }
                 "call_builtin" if matches!(instr.srcs.first(),
-                    Some(Operand::Var(name)) if name == "print_i64") => {
-                    // Portable Oct output uses the same integer display BIF as
-                    // io_out, with the builtin name occupying the first source.
-                    let rx = operand_reg!(get_src!(instr, 1));
-                    instrs.push(BEAMInstruction::new(OP_GC_BIF1, vec![
-                        BEAMOperand::f(0),
-                        BEAMOperand::u(meta.next_reg as u64),
-                        BEAMOperand::u(import_display as u64),
-                        BEAMOperand::x(rx),
-                        BEAMOperand::x(meta.next_reg),
+                    Some(Operand::Var(name)) if name == "write_i64") => {
+                    // LANG83 PR1b `write_i64`: `io:format("~w", [X])` — exactly
+                    // the `print_i64` sequence below without the `~n`, through
+                    // the same `io` server, so the stream stays ordered.
+                    //
+                    //   move       X      -> x0
+                    //   test_heap  6, 1                   [X] + "~w" = 3 cells
+                    //   put_list   x0, [] -> x1
+                    //   move       []     -> x0
+                    //   put_list   $w, x0 -> x0
+                    //   put_list   $~, x0 -> x0
+                    //   call_ext   2, io:format/2
+                    let source = operand_reg!(get_src!(instr, 1));
+                    let cur_idx = instr_idx - 1;
+                    save_live_across_imported_call!(cur_idx);
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::x(source), BEAMOperand::x(0),
                     ]));
+                    instrs.push(BEAMInstruction::new(OP_TEST_HEAP, vec![
+                        BEAMOperand::u(6), BEAMOperand::u(1),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_PUT_LIST, vec![
+                        BEAMOperand::x(0), BEAMOperand::a(0), BEAMOperand::x(1),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::a(0), BEAMOperand::x(0),
+                    ]));
+                    for byte in b"~w".iter().rev() {
+                        instrs.push(BEAMInstruction::new(OP_PUT_LIST, vec![
+                            BEAMOperand::i(u64::from(*byte)),
+                            BEAMOperand::x(0),
+                            BEAMOperand::x(0),
+                        ]));
+                    }
+                    instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
+                        BEAMOperand::u(2), BEAMOperand::u(import_format as u64),
+                    ]));
+                    restore_live_across_imported_call!(cur_idx);
+                }
+                "call_builtin" if matches!(instr.srcs.first(),
+                    Some(Operand::Var(name)) if name == "print_i64") => {
+                    // LANG83 ordered output: `io:format("~w~n", [X])`.
+                    //
+                    // This used to be `erlang:display/1` (the `io_out` BIF).
+                    // For an integer the bytes are identical — `42\n` either
+                    // way — but `erlang:display` writes straight from the
+                    // emulator to fd 1, bypassing the `io` server that
+                    // `putchar`/`print_str` (`io:put_chars/1`) go through. Two
+                    // writers with two buffers means a program mixing them can
+                    // see its output reordered. Routing every output builtin
+                    // through the one `io` server gives the single ordered
+                    // stream LANG83 requires.
+                    //
+                    //   move       X      -> x0          value is the only root
+                    //   test_heap  10, 1                  [X] + "~w~n" = 5 cells
+                    //   put_list   x0, [] -> x1          x1 = [X]
+                    //   move       []     -> x0
+                    //   put_list   $n, x0 -> x0          x0 = "\n" … "~w~n"
+                    //   put_list   $~, x0 -> x0
+                    //   put_list   $w, x0 -> x0
+                    //   put_list   $~, x0 -> x0
+                    //   call_ext   2, io:format/2
+                    //
+                    // `call_ext` clobbers every X register, so the op is listed
+                    // with the other call-emitting builtins in the live-across
+                    // analysis and brackets itself with save/restore.
+                    let source = operand_reg!(get_src!(instr, 1));
+                    let cur_idx = instr_idx - 1;
+                    save_live_across_imported_call!(cur_idx);
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::x(source), BEAMOperand::x(0),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_TEST_HEAP, vec![
+                        BEAMOperand::u(10), BEAMOperand::u(1),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_PUT_LIST, vec![
+                        BEAMOperand::x(0), BEAMOperand::a(0), BEAMOperand::x(1),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::a(0), BEAMOperand::x(0),
+                    ]));
+                    for byte in b"~w~n".iter().rev() {
+                        instrs.push(BEAMInstruction::new(OP_PUT_LIST, vec![
+                            BEAMOperand::i(u64::from(*byte)),
+                            BEAMOperand::x(0),
+                            BEAMOperand::x(0),
+                        ]));
+                    }
+                    instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
+                        BEAMOperand::u(2), BEAMOperand::u(import_format as u64),
+                    ]));
+                    restore_live_across_imported_call!(cur_idx);
                 }
                 // A byte-oriented host configures standard_io as latin1.
                 // get_chars reads exactly one element, including NUL/newline;

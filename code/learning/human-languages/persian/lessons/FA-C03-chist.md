@@ -12,7 +12,7 @@ concept_tag: QUESTION-WHAT
 prerequisites: [FA-C03-shoma-to]
 sounds: [rtl, long-i, persian-che, short-vowels-unwritten]
 roots: [indo-iranian-question-chi, indo-european-copula-ast]
-etymology_hook: Chist compresses chi what plus ast is; Persian drops the opening vowel of ast and keeps the useful question as one written word.
+etymology_hook: "chist = chi 'what' + ast 'is', both inherited: Middle Persian čē, Old Persian astiy (EtymDB)"
 duration:
   max_seconds: 210
 requires:
@@ -61,6 +61,11 @@ vowel of *ast* disappears when the pieces join:
 
 You already know full **ast** from *esm-e man ... ast*. This lesson changes no
 copula rule; it gives one high-frequency fused question form.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*chist* joins two inherited words. *chi*, "what", continues Middle Persian *čē* (EtymDB); *ast*, "is", goes back to Old Persian *astiy* and the Indo-European *\*h₁ésti*, the same word as English *is* (EtymDB).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-CHIST, FA-SCRIPT-CHE-AND-YE, FA-GRAMMAR-CHI-AST-FUSION] -->

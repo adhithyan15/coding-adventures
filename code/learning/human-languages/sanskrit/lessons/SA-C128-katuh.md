@@ -14,7 +14,8 @@ romanization: "kaṭuḥ"
 concept_tag: SA-QUAL128-KATUH
 prerequisites: [SA-C128-bhayankarah, SA-C128-mithya]
 sounds: []
-roots: []
+roots: [sanskrit-katu]
+etymology_hook: "kaṭu 'pungent, bitter' (RV); MW tentatively links √kṛt 'cut'; origin uncertain; Marathi kaḍū (CDIAL 2641)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C128-mithya]
 <!-- hl-knowledge: introduces=[SA-LEX-C128-QUAL128-03]; assesses=[] -->
 
 **कटुः** — *kaṭuḥ* — "pungent".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kaṭu* "pungent, sharp, bitter" is old, in the Rigveda; MW tentatively links it with √kṛt "cut", but its origin is uncertain, and DEDR 1135 compares a Dravidian word. It lives on as Marathi *kaḍū* and Hindi *kaṛuā* "bitter, pungent" (CDIAL 2641).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

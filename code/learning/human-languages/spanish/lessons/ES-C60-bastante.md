@@ -47,7 +47,7 @@ There is a verb ***bastar***, *to be enough*. Put your ending on it:
 
 [PAUSE 2s] So *bastante* does not mean *a lot*. It means **enough** — and from
 there, *quite*, *fairly*. It is the amount that suffices, not the amount that
-impresses.
+impresses. *Bastar* itself is of uncertain origin; EtymDB 2.1 records none.
 
 > *Estoy* ***bastante*** *cansado.* — I'm quite tired.
 

@@ -14,7 +14,8 @@ romanization: "nartakaḥ"
 concept_tag: SA-PPL209-NARTAKAH
 prerequisites: [SA-C209-kavih, SA-C209-gayakah]
 sounds: []
-roots: []
+roots: [sanskrit-nrtyati]
+etymology_hook: "nartaka ← the causative of √nṛt 'dance' (MW); nṛtyati gives Hindi nācnā (CDIAL 7583)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C209-gayakah]
 <!-- hl-knowledge: introduces=[SA-LEX-C209-PPL209-03]; assesses=[] -->
 
 **नर्तकः** — *nartakaḥ* — "a dancer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nartaka* is built on the causative of the root √nṛt, "to dance" (MW), the root of *nṛtya*, "dance", which you have already met. The verb *nṛtyati* lives on as Hindi *nācnā*, "to dance" (CDIAL 7583).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

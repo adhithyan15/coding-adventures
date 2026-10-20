@@ -2450,6 +2450,97 @@ through S-I3 before two weeks are spent on Windows.
    reported to point it in any case, and which is removed before the agent
    runs; Windows may point `TEMP` and `TMP` there as well.
 
+   **Direct grants (P2.8c).** Only a `Direct` `fs:read` of one exact file
+   is expressed. Each is an allow ACE on that file for the agent's
+   AppContainer SID. Every other `Direct` rule refuses the launch
+   (`Unsupported`), never runs without it:
+   - *Create, delete and list* would need rights over a whole directory,
+     as on Linux and macOS.
+   - *Write* is refused on Windows for a reason of its own. An
+     AppContainer token is Low integrity, and the default no-write-up
+     policy refuses a write to an ordinary (Medium) file whatever its
+     list says. Expressing the grant would mean lowering the file's
+     label to Low for the agent's life. Every Low-integrity process of
+     the user whose list entries already admit it could then write the
+     file too. If the supervisor died, the label would stay lowered. So
+     a write stays brokered on Windows (step 6). Lowering the label would
+     be a decision of its own, recorded if ever taken.
+
+   Each grant is checked when the confinement is prepared. The file is
+   opened, and that handle is held from then until the agent has exited:
+   - It is opened for reading, sharing read and write but **not delete**,
+     with the last component's reparse point not followed. While it is
+     held, the file cannot be renamed or deleted, and no directory above
+     it can be renamed, so the path names this file for the agent's whole
+     life. Its owner may still write it, as on macOS.
+   - It must be a regular file and not a reparse point. A directory, a
+     junction, a symbolic link, a device or a reserved name (`NUL`,
+     `COM1.txt`) is refused. A device has no final path, which the next
+     check needs.
+   - The path must be exactly the handle's final path, case included, as
+     the image's must.
+   - The executable's owner and access-list rule applies:
+     - the owner must be the user, Administrators, SYSTEM or
+       TrustedInstaller;
+     - no one else may hold any write-class right.
+
+     This is macOS's "owned by root or this user and writable by no one
+     else". Who can change the file matters, because the grant lasts as
+     long as the agent does.
+   - It must not be the agent's own image. Identity is compared by volume
+     serial number and file index, so a hard link to the image is the
+     image.
+   - The rest of S-I6's never-grantable set (the vault, the audit log,
+     the shim, the broker, the plan files) is the supervisor's to check
+     at step 9, as on Linux. Only it knows those paths.
+
+   *The ACE.* One per grant:
+   - it names the agent's SID, with read rights (`FILE_GENERIC_READ`),
+     never execute, and is not inheritable;
+   - it is added before `CreateProcessW`, by the image's
+     read-modify-write, through a handle reopened from the held one and
+     under the same lock;
+   - it is merged into the SID's allow entry if one is there already
+     (`GRANT_ACCESS`), so granting twice leaves one entry;
+   - the list is written back with its protection as it was. A protected
+     list, such as an owner-only file's, must not start inheriting its
+     directory's entries;
+   - a list that cannot be changed refuses the launch, for example a
+     file whose owner is SYSTEM;
+   - after it is written, the owner and access-list rule is checked
+     again on the held handle. Writing a list back re-applies its
+     directory's inheritable entries, which the check at preparation
+     never saw. A file someone else may now write refuses the launch,
+     and the grant is taken back.
+
+   *Removal.* Once the agent has exited, every explicit ACE naming its
+   SID is removed from each granted file, under the same lock. "Exited"
+   means the child's drop has ended its job and seen the exit, or a
+   spawn failed after the ACEs were added. If the process has not exited
+   within the drop's ten seconds, the ACEs are removed anyway: removing
+   access early only denies more. The image keeps its ACE (above).
+
+   *Residuals.*
+   - A supervisor that dies while the agent runs leaves the ACE, and so
+     does a removal that fails. The entry admits only that agent's SID,
+     which only that agent's own later runs hold, one at a time. But any
+     such run can read the file, even one whose plan no longer grants
+     it, until a run that does grant it ends and removes the entry. A
+     record of applied grants, swept at the next preparation, would
+     close this; it is not built.
+   - The list is serialized only within this process. A second
+     supervisor, or someone editing the list at the same moment, could
+     restore an entry just removed, or drop one. The daemon is the only
+     supervisor.
+   - A deny entry naming the agent's SID is not a supported control.
+     Granting merges with it, and removal does not restore it. What an
+     agent may read is its plan's.
+   - At step 9 the supervisor checks S-I6's never-grantable set. It must
+     compare by file identity, as the image check here does, not by
+     path: a hard link to the vault is the vault.
+   - The file's owner can change its contents while the agent reads it,
+     as on macOS. Linux pins the inode, but not the bytes.
+
    **Residuals, recorded.**
    - *A concurrent std spawn.* A handle on the list must be inheritable.
      std's `Command` spawns with `bInheritHandles=TRUE` and no list, so a
@@ -2459,13 +2550,24 @@ through S-I3 before two weeks are spent on Windows.
      the handles immediately before its `CreateProcessW` and closes its
      copies right after. **Before 8b passes a broker's keys this way, every
      Windows spawn in the supervisor takes one spawn lock** (std's and this
-     applier's), so the window holds no other spawn. It ends entirely when
-     every agent spawn goes through this applier (step 9).
+     applier's; P2.8b-1), so the window holds no other spawn. It ends
+     entirely when every agent spawn goes through this applier (step 9).
+     Every std spawn in the daemon process takes it: the host, the
+     broker launcher's, the approval helpers' (notification, biometric,
+     hardware key), and the host runtime's verified Deno run (P2.8b-2).
+     A new spawn site must too.
    - *One agent, two instances.* Two launches of one `agent_id` would share
      a SID, and processes of one AppContainer can open each other; either
      could also write into the profile the other's spawn registers. So a
      supervisor runs one instance of an agent at a time (above). Before 8b
-     a broker runs under a SID of its own (the agent's, plus a suffix).
+     a broker runs under a SID of its own (P2.8b-1: a `chief-of-staff-broker.`
+     container over the agent's digest). The claim is per agent id, but
+     the supervisor's busy check is per pipeline and agent. So a second
+     pipeline's broker for the same agent, while the first runs, is
+     refused (`BrokerLaunch`), never run beside it. A broker that does
+     not exit within ten seconds of being ended keeps its agent's claim
+     until the daemon restarts. Both fail closed, at the cost of
+     availability.
    - *One supervisor per user.* The profile span and the one-instance rule
      hold within one supervisor process. A second supervisor, or any tool
      of the same user, managing the same agent's profile could make a
@@ -2476,8 +2578,9 @@ through S-I3 before two weeks are spent on Windows.
      supervisor.
    - *Old image ACEs.* An agent's image keeps the ACE for its SID after
      the agent is gone; reinstalling the agent reuses it.
-   - *Grants.* No `Direct` grant exists until 8c; a plan with one is
-     refused (`Unsupported`), never run without it.
+   - *Grants.* Until 8c no `Direct` grant could run, and a plan with one
+     was refused (`Unsupported`). From 8c a read grant runs (above), and
+     every other `Direct` rule is still refused.
 
    Sub-steps:
    1. **P2.8a:** `VerifiedExecutable` on Windows, and
@@ -2491,9 +2594,91 @@ through S-I3 before two weeks are spent on Windows.
       list, and their values reach it in one environment variable. The
       supervisor-wide spawn lock and the broker's own SID come first (see
       the residuals). The daemon accepts `[hosts.broker]` on Windows, and
-      the broker end-to-end tests run on `windows-2025`.
+      the broker end-to-end tests run on `windows-2025`. In two parts, so
+      that each piece is proven natively before anything depends on it:
+      - **P2.8b-1, the pieces.**
+        - *Owner-only key files on Windows.* `open_owner_only_secret`,
+          `read_owner_only_secret_from` and `check_owner_only_directory`
+          gain Windows forms (today they refuse there). A key file passes
+          the same policy `read_owner_only_secret` already enforces: the
+          user owns it, and a protected DACL holds exactly one allow ACE,
+          the user's. It is opened through held, delete-locked ancestors,
+          sharing read only, never through a reparse point, and the
+          policy is checked on the open handle; that handle is what the
+          broker inherits, and the broker checks it again before reading
+          exactly the key's length from it. A secret directory passes if
+          the user, SYSTEM or Administrators own it and every allow ACE
+          names one of those three, or CREATOR OWNER on an inherit-only
+          entry (it becomes a child's creator, and only those three can
+          create here); a user profile's own directories pass as created,
+          and nothing else may list or change it.
+        - *One spawn lock.* `chief_of_staff_spawn_isolation::spawn_lock()`
+          is a process-wide lock. Every process creation in the
+          supervisor holds it: the applier's whole inheritable span (from
+          marking the listed handles to closing its copies), and every
+          std `Command::spawn` in the daemon process makes (the host, the
+          launcher's, the approval helpers'), through
+          `chief_of_staff_spawn_isolation::spawn`. So no std child, which
+          inherits every inheritable handle, can be created while a
+          broker's key handles are inheritable. The applier's listed
+          handles and the lock are one value, so the handles are closed
+          before the lock is released on every path, a panic's included.
+        - *The broker's own container.* `WindowsConfinement` gains a
+          broker role. Its container is named
+          `chief-of-staff-broker.<32 hex>` over the same digest of the
+          agent's id, a namespace no agent's `chief-of-staff.<32 hex>`
+          can reach. So a broker and its agent have different SIDs (they
+          cannot open each other as one AppContainer may its own), and
+          the one-instance rule holds for each independently.
+        - *The broker adopts its keys.* On Windows the broker reads
+          `CHIEF_OF_STAFF_HANDLES` (the applier's variable), adopts
+          exactly as many handles as the bootstrap names slots, in order,
+          and refuses (exit 66) a count that differs, a repeat, or a value
+          that is not a multiple of 4 below 2^32 (Windows ignores a handle
+          value's low two bits; larger values are pseudo-handles). This
+          replaces the
+          Unix descriptor walk; `serve_process` is unchanged.
+        - Each is tested on `windows-2025`: the key-file policy and its
+          refusals, the lock's exclusion, two containers for one agent,
+          and the broker binary, confined by the applier, loading keys
+          from handles and answering `Ready`.
+      - **P2.8b-2, the wiring.**
+        - *The launch.* The launcher gains a Windows `BrokerProgram`: the
+          broker alone, with no shim. It launches through the applier with
+          the plan for `OsFamily::Windows`, in the order Linux and macOS
+          use:
+          1. secret directories;
+          2. slots;
+          3. `prepare_verified_broker` over the agent's id, which
+             re-verifies the binary;
+          4. the key files, opened owner-only;
+          5. the spawn, with the files as the handle list;
+          6. Bootstrap and the `Ready` check.
+
+          Bootstrapping a started broker and checking its `Ready` is one
+          function, shared by every platform.
+        - *One broker child.* The broker child is one type,
+          `BrokerChild`: std's `Child` on Unix, the applier's
+          `ConfinedChild` on Windows. It offers its id, whether it has
+          exited (seen without reaping) and its end. On Unix the end kills
+          the session, then reaps. On Windows it ends the job and waits up
+          to ten seconds; a broker that outlives that keeps its
+          container's claim for good. So `LaunchedBroker`, the relay and
+          `OwnedBroker` are the same code on every OS. (An earlier draft
+          planned a trait here. One cfg'd type does the same with less.)
+        - *The daemon* verifies `[hosts.broker]` on Windows as on Linux.
+        - *The end-to-end tests.* `broker-e2e`'s supervised tests run on
+          `windows-2025`, with an agent per test, because a container
+          runs one instance at a time.
    3. **P2.8c:** `Direct` file grants, as per-object ACEs for the agent's
-      SID, checked as on macOS and removed when the agent ends.
+      SID, checked as on macOS and removed when the agent ends. Read only:
+      a write grant is refused (see "Direct grants" above). Tested on
+      `windows-2025`:
+      - the probe agent reads a granted file and is denied its neighbour;
+      - after the agent ends, the file names no ACE for its SID;
+      - a write grant, a directory, a junction, a file someone else may
+        write, a non-canonical spelling and the agent's own image are
+        each refused.
 9. **Wire into `spawn_verified`.** Deno becomes one supported runtime rather
    than the enforcement mechanism — its flags are retained beneath the OS plan
    as the S-I8 inner layer, not deleted.

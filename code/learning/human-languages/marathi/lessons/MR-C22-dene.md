@@ -12,7 +12,7 @@ concept_tag: VERB-GIVE
 prerequisites: [MR-A1F13-six-field-independent]
 sounds: [dental-d, long-e, retroflex-na]
 roots: [sanskrit-daa-give, pie-deh3-give]
-etymology_hook: "देणे continues Sanskrit ददाति dadāti, on the root दा dā- \"to give,\" from Indo-European *deh3- — the root behind Latin dare and so behind English donate, data and dative, and behind Greek didōmi in antidote"
+etymology_hook: "देणे ← Sanskrit dadāti, root dā- 'to give', PIE *deh₃-: Latin dare, English donate, data, dative"
 duration:
   max_seconds: 240
 requires:

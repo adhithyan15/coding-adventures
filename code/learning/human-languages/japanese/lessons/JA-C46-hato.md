@@ -14,7 +14,8 @@ romanization: "hato"
 concept_tag: JA-ANIMALS46-HATO
 prerequisites: [JA-C46-mushi, JA-C46-ari]
 sounds: []
-roots: []
+roots: [japanese-hato]
+etymology_hook: "hato: native Japanese, inherited, not borrowed; kanji 鳩 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C46-ari]
 <!-- hl-knowledge: introduces=[JA-LEX-C46-ANIMALS46-03]; assesses=[] -->
 
 **はと** — *hato* — "a pigeon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**はと** (*hato*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -5,7 +5,7 @@ spine_node: SPINE-RESPOND-BASIC
 sequence: 1040
 chapter: 29
 type: word
-headword: no
+headword: 'no'
 gloss: "no — the standalone refusal, and the stressed half of a Latin word Italian split in two"
 concept_tag: RESPONSE-NO
 prerequisites: [IT-C29-si, IT-C28-undicesimo, IT-C19-chiedere, IT-C19-aiutare, IT-C04-a-domani]

@@ -1,0 +1,19 @@
+{
+  "chapter": 571,
+  "title": "Un gran descubrimiento",
+  "label": "ch:es-un-gran-descubrimiento",
+  "canDo": "I can talk about how things began: an inventor, a discovery, an invention, its origin and how it developed.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C571-desarrollo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 571: I can talk about how things began: an inventor, a discovery, an invention, its origin and how it developed.",
+    "assesses": [
+      "ES-LEX-C571-DESCUBRIR-03",
+      "ES-LEX-C571-DESCUBRIR-04",
+      "ES-LEX-C571-DESCUBRIR-05"
+    ]
+  }
+}

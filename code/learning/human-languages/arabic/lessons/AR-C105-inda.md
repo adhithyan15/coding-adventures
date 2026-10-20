@@ -14,7 +14,8 @@ romanization: "ʿinda"
 concept_tag: AR-LOC105-INDA
 prerequisites: [AR-C105-mustaqim, AR-C105-hawla]
 sounds: []
-roots: []
+roots: [ʿ-n-d]
+etymology_hook: "ʿinda: an old preposition of place that Lane files under ʿ-n-d, beside ʿand 'vicinity'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C105-hawla]
 <!-- hl-knowledge: introduces=[AR-LEX-C105-LOC105-05]; assesses=[] -->
 
 **عند** — *ʿinda* — "at, by".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**عند** (*ʿinda*), "at, near, by", is an old preposition, filed under the root *ʿ-n-d* (Lane), beside *ʿand*, "vicinity".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -204,6 +204,33 @@ logs are read far more widely than the repo. Both the message **and the `cause`
 chain** are scrubbed — the cause is what Node's default handler and Vitest
 actually print.
 
+The Python compatibility reader has the same boundary even when another
+process changes a shard directory during a read. On Windows, enumeration of
+JSON shards and book-generation owner entries must use the already-validated
+directory handle, not `os.scandir` on its former pathname. Every returned name
+and kind is checked through that handle without following a reparse point;
+enumeration errors fail closed. A directory moved after opening remains the
+directory being enumerated, so a junction substituted at the old name cannot
+contribute outside owner names. Tests must perform that swap for both reader
+entry points without requiring symlink privilege. On Unix, the Python reader
+must likewise enumerate through a descriptor opened from the trusted root,
+opening each descendant directory relative to its pinned parent with no-follow
+checks. A selected JSON shard is opened relative to that pinned directory and
+checked as a regular file before parsing. Static symlink rejection is not
+enough: deterministic ancestor-swap fixtures must show that both enumerators
+and a shard read cannot consume an outside replacement. Concurrent changes
+within the pinned tree need not form a snapshot; errors must fail closed.
+
+The Unix compatibility writer and remover have the same ancestor-swap boundary.
+After pathname prevalidation, each directory component must be opened relative
+to the already-pinned parent descriptor with `O_DIRECTORY` and `O_NOFOLLOW`.
+The selected shard must be checked relative to that final descriptor; temporary
+creation, atomic replacement, and deletion must also use it. A replaced track
+ancestor must neither redirect a write nor remove an outside shard. Tests must
+swap that ancestor immediately after prevalidation for both operations and
+preserve outside sentinels. Existing mode preservation and static symlink
+rejection remain required; no pathname recheck can substitute for anchoring.
+
 ---
 
 ## 3. Generated artifacts are regenerated, never hand-merged

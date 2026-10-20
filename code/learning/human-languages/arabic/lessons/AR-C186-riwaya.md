@@ -14,7 +14,8 @@ romanization: "riwāya"
 concept_tag: AR-SHAY186-RIWAYA
 prerequisites: [AR-C186-hiwaya, AR-C186-shitranj]
 sounds: []
-roots: []
+roots: [r-w-y]
+etymology_hook: "riwāya: built on the root r-w-y, 'to transmit, to relate' (Lane); riwāya is a relating, a narrative"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C186-shitranj]
 <!-- hl-knowledge: introduces=[AR-LEX-C186-SHAY186-03]; assesses=[] -->
 
 **رواية** — *riwāya* — "a novel".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رواية** (*riwāya*) is built on the native Arabic root *r-w-y*, "to transmit, to relate" (Lane). *Riwāya* is a relating, a narrative; the novel is a modern sense.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

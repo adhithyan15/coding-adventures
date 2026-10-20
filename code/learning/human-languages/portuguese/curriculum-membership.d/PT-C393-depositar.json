@@ -1,0 +1,11 @@
+{
+  "id": "PT-C393-depositar",
+  "pathSegment": "PT-PATH-393-BANCO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-393-BANCO",
+      "order": 2
+    }
+  ]
+}

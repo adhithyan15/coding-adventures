@@ -14,7 +14,8 @@ romanization: "kakṣaḥ"
 concept_tag: SA-THINGS118-KAKSAH
 prerequisites: [SA-C118-gulphah, SA-C118-angulih]
 sounds: []
-roots: []
+roots: [sanskrit-kaksha]
+etymology_hook: "kakṣa 'hiding place, armpit', and as kakṣā 'an enclosed room' (MW); inherited, cf. Latin coxa 'hip'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C118-angulih]
 <!-- hl-knowledge: introduces=[SA-LEX-C118-THINGS118-03]; assesses=[] -->
 
 **कक्षः** — *kakṣaḥ* — "a room".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kakṣa* first meant "a hiding place" and "the armpit", which MW calls the most concealed part of the body; its feminine *kakṣā* also names a walled enclosure or a private room. MW compares Latin *coxa* "hip", and EtymDB counts it as inherited from Indo-European.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

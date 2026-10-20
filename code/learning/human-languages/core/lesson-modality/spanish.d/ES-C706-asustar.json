@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C706-asustar",
+    "language": "spanish",
+    "chapter": 706,
+    "sequence": 25200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9273a77f63a7d92c"
+  },
+  "findings": []
+}

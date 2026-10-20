@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-643-VOLANTE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what a car does: start, skid, get stuck, speed up and move with the traffic.",
+  "prerequisites": []
+}

@@ -91,6 +91,39 @@ evidence file and every declared file exists. A malformed or unsafe declared
 path is an invalid contract, and a safe path to no file is caught by the strict
 assessment-artifact gate.
 
+### Full-mock structure evidence
+
+The contract's `timed: true` flag and its paper, rubric, and answer-key paths
+do not establish that the paper reproduces the declared task inventory. Each
+level mock therefore also needs a safe-relative `manifest` reference to a
+versioned JSON file. The manifest identifies its language, level, and mock ID,
+then lists each of the four skills with its sitting time and task-shape part
+IDs. A skill with one implicit form must cover every part in that skill's
+`task-shapes/<level>.json` section exactly once. When that section publishes
+alternative variants, the manifest must name one variant and cover exactly
+its part IDs. Duplicate, invented, cross-skill, or omitted parts are invalid;
+the manifest cannot turn a partial practice paper into a full mock.
+
+Manifest paths are optional in the assessment parser only while existing
+contracts migrate. An absent manifest is incomplete mock evidence, never a
+passing mock. A declared manifest is audited for a regular file inside its
+own track, parsed strictly, and checked against the task-shape inventory.
+Neither a manifest nor a rubric can substitute for the learner-facing paper.
+The generated `mock-assessment/<language>/<level>` item counts the shortfall
+between the policy's minimum two complete mocks and the mocks whose paper,
+rubric, key, and structure evidence all pass. Missing task-shape inventories
+remain an explicit prerequisite rather than an invented zero-deficit result.
+
+The Spanish mock-stem coverage reporter is a review aid, not a pass/fail
+assessment gate. It must reject an unknown level before reading any corpus
+data, including when called from JavaScript without TypeScript's level type.
+For a supported level, it must derive taught forms from the same Spanish
+curriculum, lesson, and spine evidence as the mock audit, without loading
+unrelated language tracks. A narrow read must still reject a linked Spanish
+track before following any curriculum or lesson path. It must preserve the reporter's
+complete stem-and-option buckets and the audit's existing output; performance
+work must not suppress words or relax test timeouts.
+
 An external exam may require a separately passed component that is not itself
 one of the four universal skills—for example, TORFL's `Lexis. Grammar`
 subtest. Declare each such part in the level's optional `additionalComponents`

@@ -14,7 +14,8 @@ romanization: "mangane"
 concept_tag: FA-KAR178-MANGANE
 prerequisites: [FA-C177-reshte, FA-C177-dowre]
 sounds: []
-roots: []
+roots: [greek-manganon]
+etymology_hook: "mangane ← Ottoman Turkish mengene ← Greek manganon 'device' (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C177-dowre]
 <!-- hl-knowledge: introduces=[FA-LEX-C178-KAR178-01]; assesses=[] -->
 
 **منگنه** — *mangane* — "a stapler".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mangane* came through Ottoman Turkish *mengene*, "press, vice", from Greek *manganon*, "device, engine" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

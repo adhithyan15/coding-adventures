@@ -14,7 +14,8 @@ romanization: "oftâdan"
 concept_tag: FA-VERB-OFTADAN
 prerequisites: [FA-C131-amukhtan, FA-C131-paridan]
 sounds: []
-roots: []
+roots: [persian-oftadan]
+etymology_hook: "oftâdan: inherited, usually traced to Middle Persian ōftādan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C131-paridan]
 <!-- hl-knowledge: introduces=[FA-LEX-C131-QUAL131-05]; assesses=[] -->
 
 **افتادن** — *oftâdan* — "to fall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*oftâdan* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *ōftādan*, "to fall".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

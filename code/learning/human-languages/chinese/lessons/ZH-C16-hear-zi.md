@@ -11,8 +11,8 @@ gloss: a written Chinese character
 concept_tag: ZH-LANGUAGE-IDENTITY-CHARACTER
 prerequisites: [ZH-C15-practice]
 sounds: [tone-4]
-roots: []
-etymology_hook: A familiar syllable from míngzi now stands alone and names the written unit itself.
+roots: [middle-chinese-dzih]
+etymology_hook: "zì 'character': inherited, from Middle Chinese dziH; 'to bear, nurse' is an older sense"
 duration:
   max_seconds: 115
 requires:
@@ -43,6 +43,9 @@ reviews_of: [ZH-C15-practice, ZH-C08-mingzi]
 
 You heard a light *zi* at the end of *míngzi*. Standing alone, this word has a
 sharp falling tone: *zì*. Stay with sound and meaning for this tiny step.
+
+*Zì* is inherited from Middle Chinese *dziH*; an older sense of the word was "to
+bear and nurse children".
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ZI-02] -->

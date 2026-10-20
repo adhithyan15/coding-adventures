@@ -14,7 +14,8 @@ romanization: "khalfa"
 concept_tag: AR-LOC102-KHALFA
 prerequisites: [AR-C102-daraj, AR-C102-saqf]
 sounds: []
-roots: []
+roots: [kh-l-f]
+etymology_hook: "khalfa: built on the root kh-l-f, 'to come after, to succeed' (Lane); khalfa is 'behind'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C102-saqf]
 <!-- hl-knowledge: introduces=[AR-LEX-C102-LOC102-04]; assesses=[] -->
 
 **خلف** — *khalfa* — "behind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**خلف** (*khalfa*) is built on the native Arabic root *kh-l-f*, "to come after, to succeed" (Lane). *Khalfa* is "behind"; the same root gives *khalīfa*, "successor", the source of English *caliph*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

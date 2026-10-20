@@ -1,0 +1,11 @@
+{
+  "id": "GE-C488-genesen",
+  "pathSegment": "GE-PATH-488-GENESEN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-488-GENESEN",
+      "order": 4
+    }
+  ]
+}

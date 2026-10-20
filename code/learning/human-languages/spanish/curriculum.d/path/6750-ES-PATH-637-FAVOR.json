@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-637-FAVOR",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "ES-EXT-637-FAVOR"
+  ],
+  "after": []
+}

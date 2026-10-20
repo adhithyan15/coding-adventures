@@ -14,7 +14,8 @@ romanization: "kṣaṇaḥ"
 concept_tag: SA-WEEK-MOMENT
 prerequisites: [SA-C86-sunday, SA-C86-time]
 sounds: []
-roots: []
+roots: [sanskrit-kshana]
+etymology_hook: "kṣaṇa 'twinkling of an eye, moment', connected with akṣi 'eye' (CDIAL 3642); Hindi khan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C86-time]
 <!-- hl-knowledge: introduces=[SA-LEX-C86-WEEKEND-05]; assesses=[] -->
 
 **क्षणः** (*kṣaṇaḥ*) — "a moment". **एकः क्षणः** — "one moment", said with a raised hand.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+CDIAL 3642 connects *kṣaṇa*, "the twinkling of an eye", with *akṣi*, "eye": a
+moment is as long as a blink. It lives on as Hindi *khan*, "moment".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

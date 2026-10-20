@@ -14,7 +14,8 @@ romanization: "bhaũ"
 concept_tag: UR-SEHAT153-BHAU
 prerequisites: [UR-C153-ambulans, UR-C153-palak]
 sounds: []
-roots: []
+roots: [sanskrit-bhru]
+etymology_hook: "bhaũ ← Sanskrit bhrū 'eyebrow', a tadbhava (CDIAL 9688)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C153-palak]
 <!-- hl-knowledge: introduces=[UR-LEX-C153-SEHAT153-05]; assesses=[] -->
 
 **بھوں** — *bhaũ* — "an eyebrow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بھوں** (*bhaũ*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *bhrū*, "eyebrow" (CDIAL 9688).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

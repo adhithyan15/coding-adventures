@@ -14,7 +14,8 @@ romanization: "sinn"
 concept_tag: AR-BODY50-SINN
 prerequisites: [AR-C50-anf, AR-C50-fam]
 sounds: []
-roots: []
+roots: [s-n-n]
+etymology_hook: "sinn: built on the root s-n-n, 'a tooth' (Lane); Hebrew shen, 'tooth', is its cousin"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C50-fam]
 <!-- hl-knowledge: introduces=[AR-LEX-C50-BODY50-05]; assesses=[] -->
 
 **سن** — *sinn* — "a tooth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سن** (*sinn*) is built on the native Arabic root *s-n-n*, "a tooth" (Lane). Hebrew *shen*, "tooth", is its cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

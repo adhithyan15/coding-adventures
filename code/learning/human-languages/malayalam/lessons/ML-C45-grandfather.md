@@ -11,7 +11,7 @@ romanization: "muttacchan"
 concept_tag: ML-NOUN-GRANDFATHER
 prerequisites: [ML-C44-write, ML-C42-old]
 sounds: []
-roots: [dravidian-mutu-old, dravidian-accan-father]
+roots: [dravidian-mutu-old, prakrit-ajja]
 etymology_hook: "muttacchan: native mutt- 'old' (DEDR 4954) + accan 'father', probably Prakrit ajja (DEDR 50, CDIAL 1347)"
 duration:
   max_seconds: 210

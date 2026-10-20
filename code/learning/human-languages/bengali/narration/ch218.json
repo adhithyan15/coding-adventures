@@ -4,7 +4,7 @@
   "chapter": 218,
   "title": "Although, Such as, So that, Then, That is",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e03ebb43f4a5385c",
+  "sourceHash": "fnv1a64:9e3e28ceb6596733",
   "lessons": [
     {
       "id": "BN-C218-jodio",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:41b2f715e72957b3",
+      "sourceHash": "fnv1a64:d11cc91ac0acd9aa",
       "notice": null,
       "blocks": [
         {
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b4ad77640155989b",
+      "sourceHash": "fnv1a64:9c8dc656af83988c",
       "notice": null,
       "blocks": [
         {

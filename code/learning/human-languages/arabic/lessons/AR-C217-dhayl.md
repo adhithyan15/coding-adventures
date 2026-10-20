@@ -14,7 +14,8 @@ romanization: "dhayl"
 concept_tag: AR-SHAY217-DHAYL
 prerequisites: [AR-C216-wad, AR-C216-dabab]
 sounds: []
-roots: []
+roots: [dh-y-l]
+etymology_hook: "dhayl: built on the root dh-y-l, 'a tail, a train' (Lane); an old noun with its own root in Lane"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C216-dabab]
 <!-- hl-knowledge: introduces=[AR-LEX-C217-SHAY217-01]; assesses=[] -->
 
 **ذيل** — *dhayl* — "a tail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ذيل** (*dhayl*) is built on the native Arabic root *dh-y-l*, "a tail, a train" (Lane). An old noun with its own root in Lane.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

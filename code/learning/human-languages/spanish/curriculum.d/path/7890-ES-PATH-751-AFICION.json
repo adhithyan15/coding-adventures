@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-751-AFICION",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ES-EXT-751-AFICION"
+  ],
+  "after": []
+}

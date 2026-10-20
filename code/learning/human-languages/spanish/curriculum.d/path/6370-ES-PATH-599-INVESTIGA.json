@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-599-INVESTIGA",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "ES-EXT-599-INVESTIGA"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:7830375a7b9cb72b",
+  "lessonIds": [
+    "IT-C330-epoca",
+    "IT-C330-medioevo",
+    "IT-C330-rovine",
+    "IT-C330-scavi",
+    "IT-C330-archeologo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch330.txt",
+  "json": "italian/narration/ch330.json",
+  "textHash": "fnv1a64:0eff5f2a8666b2ac",
+  "jsonHash": "fnv1a64:683b256867acf651",
+  "findings": []
+}

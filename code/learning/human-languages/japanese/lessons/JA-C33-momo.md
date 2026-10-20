@@ -14,7 +14,8 @@ romanization: "momo"
 concept_tag: JA-FOOD33-MOMO
 prerequisites: [JA-C33-mikan, JA-C33-ichigo]
 sounds: []
-roots: []
+roots: [japanese-momo]
+etymology_hook: "momo: native Japanese, inherited, not borrowed; kanji 桃 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C33-ichigo]
 <!-- hl-knowledge: introduces=[JA-LEX-C33-FOOD33-04]; assesses=[] -->
 
 **もも** — *momo* — "a peach".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**もも** (*momo*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,19 @@
+{
+  "chapter": 327,
+  "title": "La battaglia",
+  "label": "ch:it-la-battaglia",
+  "canDo": "I can tell of a battle: the knight, the sword, the shield and conquering.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C327-conquistare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 327: I can tell of a battle: the knight, the sword, the shield and conquering.",
+    "assesses": [
+      "IT-LEX-C327-BATTAGLIA-03",
+      "IT-LEX-C327-BATTAGLIA-04",
+      "IT-LEX-C327-BATTAGLIA-05"
+    ]
+  }
+}

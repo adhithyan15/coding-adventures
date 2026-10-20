@@ -1,0 +1,11 @@
+{
+  "id": "FR-C501-assembler",
+  "pathSegment": "FR-PATH-501-COLLECTIONS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-501-COLLECTIONS",
+      "order": 4
+    }
+  ]
+}

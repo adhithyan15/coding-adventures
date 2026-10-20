@@ -1,0 +1,11 @@
+{
+  "id": "GE-C502-knipsen",
+  "pathSegment": "GE-PATH-502-ANGELN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-502-ANGELN",
+      "order": 4
+    }
+  ]
+}

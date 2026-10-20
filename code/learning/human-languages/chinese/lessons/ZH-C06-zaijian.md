@@ -11,8 +11,8 @@ gloss: goodbye — two characters whose meanings genuinely add up
 concept_tag: FAREWELL
 prerequisites: [ZH-W06-jian]
 sounds: [tone-4]
-roots: []
-etymology_hook: 再见 is "again" beside "see", and unlike every hook so far this one is not a memory aid — it is what the word actually says.
+roots: [middle-chinese-tsojh, middle-chinese-kenh]
+etymology_hook: "zàijiàn: 'a second time' + 'see', both inherited, from Middle Chinese tsojH and kenH"
 duration:
   max_seconds: 260
 requires:
@@ -49,13 +49,15 @@ Now the meanings, which have been held back until you had the shapes:
 - **再** *zài* means **again**
 - **见** *jiàn* means **see**
 
-So the word is **"see again."** That is not a hook, not a mnemonic, not a
-traditional gloss offered with a warning attached. It is what the two characters
-say, and it is what the word means.
+So the word is **"see again."** That is no mnemonic: it is what the two
+characters say, and what the word means.
 
 Every earlier component gave you a *hook* — 亻 at the left of 你, 女 beside 子 in
 好 — labelled a memory aid rather than history. **Here the parts add up.**
 Chinese does this often. Start expecting it.
+
+Both are inherited from Middle Chinese: *tsojH*, "a second time", and *kenH*,
+"see" (Guangyun).
 
 ## Sounds you'll need — two falls, not one
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ZAIJIAN] -->

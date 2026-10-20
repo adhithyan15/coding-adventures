@@ -51,7 +51,8 @@ reviews_of: [LA-C56-septimus, LA-C55-tertius]
 **octāvus, octāva, octāvum** — "**eighth**."
 
 *Octō* is **eight**. By now you would expect *octus*, and it is not that. This
-one takes **-āvus**, and it is the only ordinal in the ten that does.
+one takes **-āvus**, and it is the only ordinal in the ten that does. EtymDB 2.1
+traces *octāvus* straight to a Proto-Indo-European ordinal built on "eight".
 
 Worth stopping on, because it shows what a pattern in a language actually is.
 Four ordinals in a row behaved alike, so the shape looked settled; the eighth

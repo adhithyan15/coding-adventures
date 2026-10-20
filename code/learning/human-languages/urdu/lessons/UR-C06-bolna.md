@@ -11,8 +11,8 @@ gloss: to speak — the plain Indo-Aryan verb under Urdu's Persian and Arabic fi
 concept_tag: VERB-SPEAK
 prerequisites: [UR-C06-ana]
 sounds: [rtl, long-u, be-vs-pe-dots]
-roots: [indo-aryan-bolla, persian-guftan]
-etymology_hook: bolnā traces only as far back as Prakrit bollaï; the Sanskrit link is proposed, not settled — an honest dead end in an otherwise deep family.
+roots: [persian-guftan, bol-speak]
+etymology_hook: "bolnā ← *boll- 'speak', reconstructed behind Prakrit bollaï (CDIAL 9321); its source beyond is not settled"
 duration:
   max_seconds: 275
 requires:
@@ -72,8 +72,7 @@ is already built, and each verb walks into it.
 <!-- hl-knowledge: introduces=[UR-REGISTER-INDO-ARYAN-CORE]; assesses=[] -->
 
 **bolnā** goes back to Prakrit *bollaï*, “speaks” — and then the trail stops.
-A link onward to Sanskrit *brūte* “speaks” has been proposed, but it is not
-settled, so treat it as a maybe rather than a fact.
+CDIAL reconstructs it as *\*boll-*, “speak” (CDIAL 9321), and reports proposals that tie it to Sanskrit *vadati* or *bravīti*, both “speaks”; none is settled, so treat them as maybes rather than facts.
 
 That plainness is the lesson. Urdu's everyday verbs are inherited Indo-Aryan
 and often short-rooted like this, while its formal and literary vocabulary

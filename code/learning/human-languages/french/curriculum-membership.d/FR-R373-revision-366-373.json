@@ -1,0 +1,11 @@
+{
+  "id": "FR-R373-revision-366-373",
+  "pathSegment": "FR-PATH-373-DISPONIBLE",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FR-EXT-373-DISPONIBLE",
+      "order": 5
+    }
+  ]
+}

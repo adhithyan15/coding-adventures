@@ -4895,6 +4895,432 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 - one exact additive unit offset keeps a sign-rooted name
+    // actual within a small finite range before the outer entier.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) + 1)) else relay(entier(entier(sign(right)) + 1)); output(result) end",
+        expect: Expect::Stdout("2"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the unit-offset cap is path-sensitive: each runtime-selected
+    // branch may carry one offset without adding the two mutually exclusive paths.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 1) else (entier(sign(right)) + 1))); output(result) end",
+        expect: Expect::Stdout("2"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts two units on each
+    // runtime-selected path, represented either as one exact 2 or nested units.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 2) else ((entier(sign(right)) + 1) + 1))); output(result) end",
+        expect: Expect::Stdout("3"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts three units on each
+    // runtime-selected path as one exact 3 or a nested exact 1+2 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 3) else ((entier(sign(right)) + 1) + 2))); output(result) end",
+        expect: Expect::Stdout("4"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts four units on each
+    // runtime-selected path as one exact 4 or a nested exact 1+3 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 4) else ((entier(sign(right)) + 1) + 3))); output(result) end",
+        expect: Expect::Stdout("5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts five units on each
+    // runtime-selected path as one exact 5 or a nested exact 2+3 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 5) else ((entier(sign(right)) + 2) + 3))); output(result) end",
+        expect: Expect::Stdout("6"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts six units on each
+    // runtime-selected path as one exact 6 or a nested exact 1+5 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 6) else ((entier(sign(right)) + 1) + 5))); output(result) end",
+        expect: Expect::Stdout("7"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts seven units on each
+    // runtime-selected path as one exact 7 or a nested exact 2+5 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 7) else ((entier(sign(right)) + 2) + 5))); output(result) end",
+        expect: Expect::Stdout("8"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts eight units on each
+    // runtime-selected path as one exact 8 or a nested exact 3+5 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 8) else ((entier(sign(right)) + 3) + 5))); output(result) end",
+        expect: Expect::Stdout("9"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts nine units on each
+    // runtime-selected path as one exact 9 or a nested exact 4+5 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 9) else ((entier(sign(right)) + 4) + 5))); output(result) end",
+        expect: Expect::Stdout("10"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts ten units on each
+    // runtime-selected path as one exact 10 or a nested exact 4+6 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 10) else ((entier(sign(right)) + 4) + 6))); output(result) end",
+        expect: Expect::Stdout("11"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts eleven units on each
+    // runtime-selected path as one exact 11 or a nested exact 5+6 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 11) else ((entier(sign(right)) + 5) + 6))); output(result) end",
+        expect: Expect::Stdout("12"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts twelve units on each
+    // runtime-selected path as one exact 12 or a nested exact 5+7 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 12) else ((entier(sign(right)) + 5) + 7))); output(result) end",
+        expect: Expect::Stdout("13"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts thirteen units on each
+    // runtime-selected path as one exact 13 or a nested exact 6+7 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 13) else ((entier(sign(right)) + 6) + 7))); output(result) end",
+        expect: Expect::Stdout("14"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts fourteen units on each
+    // runtime-selected path as one exact 14 or a nested exact 7+7 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 14) else ((entier(sign(right)) + 7) + 7))); output(result) end",
+        expect: Expect::Stdout("15"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts fifteen units on each
+    // runtime-selected path as one exact 15 or a nested exact 7+8 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 15) else ((entier(sign(right)) + 7) + 8))); output(result) end",
+        expect: Expect::Stdout("16"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts sixteen units on each
+    // runtime-selected path as one exact 16 or a nested exact 8+8 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 16) else ((entier(sign(right)) + 8) + 8))); output(result) end",
+        expect: Expect::Stdout("17"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts seventeen units on each
+    // runtime-selected path as one exact 17 or a nested exact 8+9 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 17) else ((entier(sign(right)) + 8) + 9))); output(result) end",
+        expect: Expect::Stdout("18"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts eighteen units on each
+    // runtime-selected path as one exact 18 or a nested exact 9+9 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 18) else ((entier(sign(right)) + 9) + 9))); output(result) end",
+        expect: Expect::Stdout("19"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts nineteen units on each
+    // runtime-selected path as one exact 19 or a nested exact 9+10 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 19) else ((entier(sign(right)) + 9) + 10))); output(result) end",
+        expect: Expect::Stdout("20"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts twenty units on each
+    // runtime-selected path as one exact 20 or a nested exact 10+10 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 20) else ((entier(sign(right)) + 10) + 10))); output(result) end",
+        expect: Expect::Stdout("21"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts twenty-one units on each
+    // runtime-selected path as one exact 21 or a nested exact 10+11 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 21) else ((entier(sign(right)) + 10) + 11))); output(result) end",
+        expect: Expect::Stdout("22"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts twenty-two units on each
+    // runtime-selected path as one exact 22 or a nested exact 11+11 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 22) else ((entier(sign(right)) + 11) + 11))); output(result) end",
+        expect: Expect::Stdout("23"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts twenty-three units on each
+    // runtime-selected path as one exact 23 or a nested exact 11+12 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 23) else ((entier(sign(right)) + 11) + 12))); output(result) end",
+        expect: Expect::Stdout("24"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts twenty-four units on each
+    // runtime-selected path as one exact 24 or a nested exact 12+12 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 24) else ((entier(sign(right)) + 12) + 12))); output(result) end",
+        expect: Expect::Stdout("25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts twenty-five units on each
+    // runtime-selected path as one exact 25 or a nested exact 12+13 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 25) else ((entier(sign(right)) + 12) + 13))); output(result) end",
+        expect: Expect::Stdout("26"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts twenty-six units on each
+    // runtime-selected path as one exact 26 or a nested exact 13+13 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 26) else ((entier(sign(right)) + 13) + 13))); output(result) end",
+        expect: Expect::Stdout("27"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts twenty-seven units on each
+    // runtime-selected path as one exact 27 or a nested exact 13+14 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 27) else ((entier(sign(right)) + 13) + 14))); output(result) end",
+        expect: Expect::Stdout("28"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts twenty-eight units on each
+    // runtime-selected path as one exact 28 or a nested exact 14+14 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 28) else ((entier(sign(right)) + 14) + 14))); output(result) end",
+        expect: Expect::Stdout("29"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts twenty-nine units on each
+    // runtime-selected path as one exact 29 or a nested exact 14+15 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 29) else ((entier(sign(right)) + 14) + 15))); output(result) end",
+        expect: Expect::Stdout("30"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts thirty units on each
+    // runtime-selected path as one exact 30 or a nested exact 15+15 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 30) else ((entier(sign(right)) + 15) + 15))); output(result) end",
+        expect: Expect::Stdout("31"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts thirty-one units on each
+    // runtime-selected path as one exact 31 or a nested exact 15+16 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 31) else ((entier(sign(right)) + 15) + 16))); output(result) end",
+        expect: Expect::Stdout("32"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts thirty-two units on each
+    // runtime-selected path as one exact 32 or a nested exact 16+16 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 32) else ((entier(sign(right)) + 16) + 16))); output(result) end",
+        expect: Expect::Stdout("33"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts thirty-three units on each
+    // runtime-selected path as one exact 33 or a nested exact 16+17 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 33) else ((entier(sign(right)) + 16) + 17))); output(result) end",
+        expect: Expect::Stdout("34"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts thirty-four units on each
+    // runtime-selected path as one exact 34 or a nested exact 17+17 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 34) else ((entier(sign(right)) + 17) + 17))); output(result) end",
+        expect: Expect::Stdout("35"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts thirty-five units on each
+    // runtime-selected path as one exact 35 or a nested exact 17+18 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 35) else ((entier(sign(right)) + 17) + 18))); output(result) end",
+        expect: Expect::Stdout("36"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts thirty-six units on each
+    // runtime-selected path as one exact 36 or a nested exact 18+18 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 36) else ((entier(sign(right)) + 18) + 18))); output(result) end",
+        expect: Expect::Stdout("37"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts thirty-seven units on each
+    // runtime-selected path as one exact 37 or a nested exact 18+19 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 37) else ((entier(sign(right)) + 18) + 19))); output(result) end",
+        expect: Expect::Stdout("38"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts thirty-eight units on each
+    // runtime-selected path as one exact 38 or a nested exact 19+19 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 38) else ((entier(sign(right)) + 19) + 19))); output(result) end",
+        expect: Expect::Stdout("39"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts thirty-nine units on each
+    // runtime-selected path as one exact 39 or a nested exact 19+20 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 39) else ((entier(sign(right)) + 19) + 20))); output(result) end",
+        expect: Expect::Stdout("40"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts forty units on each
+    // runtime-selected path as one exact 40 or a nested exact 20+20 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 40) else ((entier(sign(right)) + 20) + 20))); output(result) end",
+        expect: Expect::Stdout("41"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts forty-one units on each
+    // runtime-selected path as one exact 41 or a nested exact 20+21 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 41) else ((entier(sign(right)) + 20) + 21))); output(result) end",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts forty-two units on each
+    // runtime-selected path as one exact 42 or a nested exact 21+21 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 42) else ((entier(sign(right)) + 21) + 21))); output(result) end",
+        expect: Expect::Stdout("43"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts forty-three units on each
+    // runtime-selected path as one exact 43 or a nested exact 21+22 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 43) else ((entier(sign(right)) + 21) + 22))); output(result) end",
+        expect: Expect::Stdout("44"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget accepts forty-four units on each
+    // runtime-selected path as one exact 44 or a nested exact 22+22 sum.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 44) else ((entier(sign(right)) + 22) + 22))); output(result) end",
+        expect: Expect::Stdout("45"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the additive offset budget is the exact binary64 integer
+    // range, not a hand-picked count: 1000 units (one term or 600+400) stays
+    // exact on each runtime-selected path.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) + 1000) else ((entier(sign(right)) + 600) + 400))); output(result) end",
+        expect: Expect::Stdout("1001"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - the largest accepted budget, 2^53 - 1 units, keeps
+    // sign(left) - (2^53 - 1) = -2^53 exact through entier; the shared
+    // portable real formatter then renders that magnitude in its six-digit
+    // scientific form identically on every backend.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) - 9007199254740991) else ((entier(sign(right)) + 4503599627370496) + 4503599627370495))); output(result) end",
+        expect: Expect::Stdout("-9.0072E+15"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
     Prog {
@@ -9140,12 +9566,16 @@ fn run_llvm(p: &Prog) -> Option<RunResult> {
 /// `BasicRuntime.println(J)V`, and the CLR's `Console.WriteLine(int64)`. It is *not*
 /// language-specific: any IIR that prints an integer routes through this import.
 ///
-/// `PrintFunc` is the host implementation of that import. Each call appends its single
-/// `i64` argument to a shared capture buffer (`Arc<Mutex<Vec<i64>>>`) so the test can
-/// read back exactly what the program printed. The function does no work proportional
-/// to untrusted input — it pushes one integer and returns — so there is no DoS vector.
+/// `PrintFunc` is the host implementation of that import. Each call appends the decimal
+/// text of its single `i64` argument **plus `\n`** (the `print_i64` contract) to the
+/// program's ONE shared output byte buffer — the same buffer `putchar` and `__print_str`
+/// append to — so the captured stdout is in program order (LANG83 "ordered output
+/// stream"). Before LANG83 this pushed into a separate integer list that the runner
+/// dropped whenever any byte output existed, so a program mixing `print_i64` with
+/// `putchar`/`print_str` silently lost every integer on this column. One integer's text
+/// per call (≤ 21 bytes) — no DoS vector.
 struct PrintFunc {
-    captured: std::sync::Arc<std::sync::Mutex<Vec<i64>>>,
+    bytes: std::sync::Arc<std::sync::Mutex<Vec<u8>>>,
 }
 
 impl wasm_execution::HostFunction for PrintFunc {
@@ -9170,10 +9600,10 @@ impl wasm_execution::HostFunction for PrintFunc {
             .ok_or_else(|| wasm_execution::TrapError::new("__print_i64: missing argument"))?
             .as_i64()
             .map_err(|e| wasm_execution::TrapError::new(e.message))?;
-        self.captured
+        self.bytes
             .lock()
-            .expect("lang-matrix print buffer poisoned")
-            .push(value);
+            .expect("lang-matrix output buffer poisoned")
+            .extend_from_slice(format!("{value}\n").as_bytes());
         Ok(vec![])
     }
 }
@@ -9610,14 +10040,14 @@ impl wasm_execution::HostFunction for TanFunc {
 }
 
 /// The host interface the matrix runs wasm under: it resolves the generic
-/// `env.__print_i64` import to a `PrintFunc` (integer capture, for BASIC),
+/// `env.__print_i64` import to a `PrintFunc` (decimal text + newline),
 /// `env.__print_str` to a memory-reading byte capture, and the Brainfuck I/O
 /// imports `env.putchar`/`env.getchar` to a `PutcharFunc` (byte capture) /
 /// `GetcharFunc` (EOF). Everything else resolves to nothing (the expression languages
 /// import no host functions, so the host is never consulted for them and behaviour is
 /// identical to `WasmRuntime::new`).
 struct PrintHost {
-    captured: std::sync::Arc<std::sync::Mutex<Vec<i64>>>,
+    /// The program's single ordered output stream: every output import appends here.
     bytes: std::sync::Arc<std::sync::Mutex<Vec<u8>>>,
     input: std::sync::Arc<std::sync::Mutex<std::collections::VecDeque<u8>>>,
 }
@@ -9630,7 +10060,7 @@ impl wasm_execution::HostInterface for PrintHost {
     ) -> Option<Box<dyn wasm_execution::HostFunction>> {
         match (module_name, name) {
             ("env", "__print_i64") => Some(Box::new(PrintFunc {
-                captured: std::sync::Arc::clone(&self.captured),
+                bytes: std::sync::Arc::clone(&self.bytes),
             })),
             ("env", "__print_str") => Some(Box::new(PrintStrFunc {
                 bytes: std::sync::Arc::clone(&self.bytes),
@@ -9706,14 +10136,12 @@ fn run_wasm(p: &Prog) -> Option<RunResult> {
         Ok(w) => w,
         Err(e) => cell_failed("Wasm", p, "source → wasm bytes", format!("{e:?}")),
     };
-    let captured = std::sync::Arc::new(std::sync::Mutex::new(Vec::new()));
     let byte_buf = std::sync::Arc::new(std::sync::Mutex::new(Vec::new()));
     // The program's stdin, drained by `env.getchar` (Brainfuck `,`); empty otherwise.
     let input = std::sync::Arc::new(std::sync::Mutex::new(
         program_stdin(p).iter().copied().collect::<std::collections::VecDeque<u8>>(),
     ));
     let host = PrintHost {
-        captured: std::sync::Arc::clone(&captured),
         bytes: std::sync::Arc::clone(&byte_buf),
         input: std::sync::Arc::clone(&input),
     };
@@ -9726,28 +10154,15 @@ fn run_wasm(p: &Prog) -> Option<RunResult> {
     // `main`'s single i64 result is the program's value (`& 0xFF` matches the exit
     // convention the native/LLVM columns use for the same programs).
     let code = result.first().copied().map(|v| (v as i32) & 0xFF);
-    // stdout has two shapes: Brainfuck writes raw bytes via `env.putchar` (so `.` of 65
-    // is the byte `A`); BASIC writes integers via `env.__print_i64` (one per call, joined
-    // by newlines). A program uses one or the other, so prefer the byte stream when the
-    // program wrote any. Expression languages print nothing → empty stdout.
-    let printed_bytes = byte_buf.lock().expect("lang-matrix putchar buffer poisoned");
-    let stdout = if printed_bytes.is_empty() {
-        captured
-            .lock()
-            .expect("lang-matrix print buffer poisoned")
-            .iter()
-            .map(|v| v.to_string())
-            .collect::<Vec<_>>()
-            .join("\n")
-    } else {
-        // `.trim()` to match the six sibling `run_*` functions (native/LLVM/CLR/
-        // JVM/VM/JIT all trim): BASIC's BA2 `PRINT` ends each line with a
-        // `putchar('\n')`, so the raw byte stream for `PRINT 42` is `"42\n"`.
-        // Without trimming, the Wasm column alone disagreed with the others on
-        // every BASIC `Stdout` cell (a latent inconsistency the putchar print
-        // model surfaced). Inner newlines (multi-line output) are preserved.
-        String::from_utf8_lossy(&printed_bytes).trim().to_string()
-    };
+    // stdout is the ONE ordered byte stream every output import appended to (LANG83):
+    // Brainfuck's `env.putchar` bytes, `__print_str` text and `__print_i64`'s
+    // "<value>\n" interleave in program order. Expression languages print nothing.
+    //
+    // `.trim()` to match the sibling `run_*` functions (native/LLVM/CLR/JVM/VM/JIT
+    // all trim): `print_i64` and BASIC's BA2 `PRINT` both end a line with `\n`, so
+    // the raw stream for `PRINT 42` is `"42\n"`. Inner newlines are preserved.
+    let printed_bytes = byte_buf.lock().expect("lang-matrix output buffer poisoned");
+    let stdout = String::from_utf8_lossy(&printed_bytes).trim().to_string();
     Some(RunResult::Completed { code, stdout })
 }
 
@@ -10482,17 +10897,20 @@ fn run_vm(p: &Prog) -> Option<RunResult> {
 
     let mut vm = VMCore::new();
 
-    // Capture buffer for the I/O languages. `print_i64` (BASIC) appends one integer per
-    // call, joined by newlines; `putchar` (Brainfuck) appends one byte. A program uses at
-    // most one, so a single buffer + a byte buffer suffice; expression languages print
-    // nothing. The closures push a bounded amount per call — no DoS vector.
-    let printed_ints: Arc<Mutex<Vec<i64>>> = Arc::new(Mutex::new(Vec::new()));
+    // The program's ONE ordered output stream (LANG83): `print_i64` appends its decimal
+    // text + "\n", `putchar` one byte, `print_str` the string's bytes — all into the same
+    // buffer, in call order. (Before LANG83 integers went to a separate list that was
+    // dropped whenever any byte output existed.) Expression languages print nothing.
+    // The closures push a bounded amount per call — no DoS vector.
     let printed_bytes: Arc<Mutex<Vec<u8>>> = Arc::new(Mutex::new(Vec::new()));
 
-    let ints = Arc::clone(&printed_ints);
+    let bytes = Arc::clone(&printed_bytes);
     vm.builtins_mut().register("print_i64", move |args: &[Value]| {
         let n = args.first().and_then(|v| v.as_i64()).unwrap_or(0);
-        ints.lock().expect("lang-matrix VM print buffer poisoned").push(n);
+        bytes
+            .lock()
+            .expect("lang-matrix VM output buffer poisoned")
+            .extend_from_slice(format!("{n}\n").as_bytes());
         Ok(Value::Null)
     });
     let bytes = Arc::clone(&printed_bytes);
@@ -10557,22 +10975,10 @@ fn run_vm(p: &Prog) -> Option<RunResult> {
 
     // The exit code: an expression language's `main` returns an `Int`.
     let code = result.and_then(|v| v.as_i64()).map(|n| (n as i32) & 0xFF);
-    // stdout: prefer the byte stream (Brainfuck `putchar`) when present, else the integer
-    // stream (BASIC `print_i64`) joined by newlines; empty for the expression languages.
-    let byte_buf = printed_bytes.lock().expect("lang-matrix VM putchar buffer poisoned");
-    let stdout = if byte_buf.is_empty() {
-        printed_ints
-            .lock()
-            .expect("lang-matrix VM print buffer poisoned")
-            .iter()
-            .map(|v| v.to_string())
-            .collect::<Vec<_>>()
-            .join("\n")
-    } else {
-        // `.trim()` to match the subprocess columns: BA2 BASIC `PRINT` ends
-        // each line with `putchar('\n')`, so the byte stream is e.g. `"42\n"`.
-        String::from_utf8_lossy(&byte_buf).trim().to_string()
-    };
+    // stdout: the one ordered stream, `.trim()`med to match the subprocess columns
+    // (`print_i64` and BA2 BASIC `PRINT` both end a line with `\n`).
+    let byte_buf = printed_bytes.lock().expect("lang-matrix VM output buffer poisoned");
+    let stdout = String::from_utf8_lossy(&byte_buf).trim().to_string();
     Some(RunResult::Completed { code, stdout })
 }
 
@@ -10607,15 +11013,20 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
     lower_dynamic_for_generic_engine(&mut module);
     let entry = module.entry_point.clone().unwrap_or_else(|| "main".to_string());
 
-    let printed_ints: Arc<Mutex<Vec<i64>>> = Arc::new(Mutex::new(Vec::new()));
+    // ONE ordered output stream shared by both tiers (LANG83): whichever tier a
+    // function lands on, its `print_i64`/`putchar`/`print_str` append to this buffer
+    // in call order.
     let printed_bytes: Arc<Mutex<Vec<u8>>> = Arc::new(Mutex::new(Vec::new()));
 
     // --- interpreter-fallback path: builtins on the VM (closures return Result) ---
     let mut vm = VMCore::new();
-    let ints = Arc::clone(&printed_ints);
+    let bytes = Arc::clone(&printed_bytes);
     vm.builtins_mut().register("print_i64", move |args: &[Value]| {
         let n = args.first().and_then(|v| v.as_i64()).unwrap_or(0);
-        ints.lock().expect("lang-matrix JIT print buffer poisoned").push(n);
+        bytes
+            .lock()
+            .expect("lang-matrix JIT output buffer poisoned")
+            .extend_from_slice(format!("{n}\n").as_bytes());
         Ok(Value::Null)
     });
     let bytes = Arc::clone(&printed_bytes);
@@ -10668,10 +11079,13 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
 
     // --- compiled path: the same builtins on the JIT backend (closures return Value) ---
     let backend = GenericCirJit::new();
-    let ints = Arc::clone(&printed_ints);
+    let bytes = Arc::clone(&printed_bytes);
     backend.register_builtin("print_i64", move |args: &[Value]| {
         let n = args.first().and_then(|v| v.as_i64()).unwrap_or(0);
-        ints.lock().expect("lang-matrix JIT print buffer poisoned").push(n);
+        bytes
+            .lock()
+            .expect("lang-matrix JIT output buffer poisoned")
+            .extend_from_slice(format!("{n}\n").as_bytes());
         Value::Null
     });
     let bytes = Arc::clone(&printed_bytes);
@@ -10727,20 +11141,8 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
     // Exit code / stdout extraction is identical to `run_vm` — the JIT is observably
     // equivalent to the interpreter, which is the whole point of a JIT.
     let code = result.and_then(|v| v.as_i64()).map(|n| (n as i32) & 0xFF);
-    let byte_buf = printed_bytes.lock().expect("lang-matrix JIT putchar buffer poisoned");
-    let stdout = if byte_buf.is_empty() {
-        printed_ints
-            .lock()
-            .expect("lang-matrix JIT print buffer poisoned")
-            .iter()
-            .map(|v| v.to_string())
-            .collect::<Vec<_>>()
-            .join("\n")
-    } else {
-        // `.trim()` to match the subprocess columns: BA2 BASIC `PRINT` ends
-        // each line with `putchar('\n')`, so the byte stream is e.g. `"42\n"`.
-        String::from_utf8_lossy(&byte_buf).trim().to_string()
-    };
+    let byte_buf = printed_bytes.lock().expect("lang-matrix JIT output buffer poisoned");
+    let stdout = String::from_utf8_lossy(&byte_buf).trim().to_string();
     Some(RunResult::Completed { code, stdout })
 }
 
@@ -11766,6 +12168,50 @@ fn algol_integer_output_runs_on_every_available_standard_backend() {
         };
         assert_cell(backend, program, result);
     }
+}
+
+/// LANG83 "ordered output stream": a program's `print_i64` and `print_str` output
+/// is ONE byte stream in program order, on every column.
+///
+/// ALGOL is the existing frontend that emits both in one program — integer
+/// `output(…)` lowers to `call_builtin "print_i64"` (value + newline) and a string
+/// `print(…)` to `print_str` (no newline). (No current frontend emits both
+/// `print_i64` and `putchar`; that pairing is proven at the IIR level by
+/// `op_conformance.rs::print_i64_and_putchar_share_one_ordered_stream`.)
+///
+/// Before LANG83 this program printed `ABC` on the WASM, VM and JIT columns: their
+/// harnesses kept integers in a separate list and dropped it whenever any byte
+/// output existed. It is a standalone row (not in `PROGRAMS`) so the pinned
+/// corpus counts in LANG-VM-FEATURE-COVERAGE.md are unchanged.
+const ORDERED_OUTPUT_PROGRAM: Prog = Prog {
+    lang: Language::Algol60,
+    ext: "alg",
+    // `n` is a variable on purpose: ALGOL folds `output(<integer literal>)` into a
+    // string literal (no newline), which would not exercise `print_i64` at all.
+    src: "begin integer n; n := 1; print('A'); output(n); print('B'); output(n - 3); \
+          print('C') end",
+    expect: Expect::Stdout("A1\nB-2\nC"),
+    backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+};
+
+#[test]
+fn mixed_print_i64_and_print_str_output_is_one_ordered_stream_on_every_available_backend() {
+    let program = &ORDERED_OUTPUT_PROGRAM;
+    let mut ran = Vec::new();
+    for &backend in program.backends {
+        let available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(!available, "{backend:?} toolchain is present but the ordered-output row did not run");
+            continue;
+        };
+        assert_cell(backend, program, result);
+        ran.push(backend);
+    }
+    // The in-process columns have no toolchain to be absent: they never skip.
+    for backend in [Wasm, Vm, Jit] {
+        assert!(ran.contains(&backend), "{backend:?} must run the ordered-output row");
+    }
+    eprintln!("LANG83 ordered output proven on {ran:?}");
 }
 
 #[test]
@@ -21505,6 +21951,1228 @@ fn algol_call_selected_entier_wrapped_bounded_local_name_actual_runtime_real_out
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the entier-wrapped bounded local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_call_selected_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "then relay(entier(entier(sign(left)) + 1)) else relay(entier(entier(sign(right)) + 1))",
+                )
+        })
+        .expect("the unit-offset bounded ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the unit-offset bounded local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 1) else (entier(sign(right)) + 1)))",
+                )
+        })
+        .expect("the pathwise unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_two_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 2) else ((entier(sign(right)) + 1) + 1)))",
+                )
+        })
+        .expect("the pathwise two-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise two-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_three_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 3) else ((entier(sign(right)) + 1) + 2)))",
+                )
+        })
+        .expect("the pathwise three-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise three-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_four_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 4) else ((entier(sign(right)) + 1) + 3)))",
+                )
+        })
+        .expect("the pathwise four-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise four-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_five_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 5) else ((entier(sign(right)) + 2) + 3)))",
+                )
+        })
+        .expect("the pathwise five-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise five-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_six_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 6) else ((entier(sign(right)) + 1) + 5)))",
+                )
+        })
+        .expect("the pathwise six-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise six-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_seven_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 7) else ((entier(sign(right)) + 2) + 5)))",
+                )
+        })
+        .expect("the pathwise seven-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise seven-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_eight_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 8) else ((entier(sign(right)) + 3) + 5)))",
+                )
+        })
+        .expect("the pathwise eight-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise eight-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_nine_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 9) else ((entier(sign(right)) + 4) + 5)))",
+                )
+        })
+        .expect("the pathwise nine-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise nine-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_ten_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 10) else ((entier(sign(right)) + 4) + 6)))",
+                )
+        })
+        .expect("the pathwise ten-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise ten-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_eleven_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 11) else ((entier(sign(right)) + 5) + 6)))",
+                )
+        })
+        .expect("the pathwise eleven-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise eleven-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_twelve_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 12) else ((entier(sign(right)) + 5) + 7)))",
+                )
+        })
+        .expect("the pathwise twelve-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise twelve-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_thirteen_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 13) else ((entier(sign(right)) + 6) + 7)))",
+                )
+        })
+        .expect("the pathwise thirteen-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise thirteen-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_fourteen_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 14) else ((entier(sign(right)) + 7) + 7)))",
+                )
+        })
+        .expect("the pathwise fourteen-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise fourteen-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_fifteen_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 15) else ((entier(sign(right)) + 7) + 8)))",
+                )
+        })
+        .expect("the pathwise fifteen-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise fifteen-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_sixteen_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 16) else ((entier(sign(right)) + 8) + 8)))",
+                )
+        })
+        .expect("the pathwise sixteen-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise sixteen-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_seventeen_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 17) else ((entier(sign(right)) + 8) + 9)))",
+                )
+        })
+        .expect("the pathwise seventeen-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise seventeen-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_eighteen_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 18) else ((entier(sign(right)) + 9) + 9)))",
+                )
+        })
+        .expect("the pathwise eighteen-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise eighteen-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_nineteen_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 19) else ((entier(sign(right)) + 9) + 10)))",
+                )
+        })
+        .expect("the pathwise nineteen-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise nineteen-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_twenty_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 20) else ((entier(sign(right)) + 10) + 10)))",
+                )
+        })
+        .expect("the pathwise twenty-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise twenty-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_twenty_one_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 21) else ((entier(sign(right)) + 10) + 11)))",
+                )
+        })
+        .expect("the pathwise twenty-one-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise twenty-one-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_twenty_two_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 22) else ((entier(sign(right)) + 11) + 11)))",
+                )
+        })
+        .expect("the pathwise twenty-two-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise twenty-two-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_twenty_three_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 23) else ((entier(sign(right)) + 11) + 12)))",
+                )
+        })
+        .expect("the pathwise twenty-three-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise twenty-three-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_twenty_four_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 24) else ((entier(sign(right)) + 12) + 12)))",
+                )
+        })
+        .expect("the pathwise twenty-four-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise twenty-four-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_twenty_five_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 25) else ((entier(sign(right)) + 12) + 13)))",
+                )
+        })
+        .expect("the pathwise twenty-five-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise twenty-five-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_twenty_six_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 26) else ((entier(sign(right)) + 13) + 13)))",
+                )
+        })
+        .expect("the pathwise twenty-six-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise twenty-six-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_twenty_seven_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 27) else ((entier(sign(right)) + 13) + 14)))",
+                )
+        })
+        .expect("the pathwise twenty-seven-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise twenty-seven-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_twenty_eight_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 28) else ((entier(sign(right)) + 14) + 14)))",
+                )
+        })
+        .expect("the pathwise twenty-eight-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise twenty-eight-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_twenty_nine_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 29) else ((entier(sign(right)) + 14) + 15)))",
+                )
+        })
+        .expect("the pathwise twenty-nine-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise twenty-nine-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_thirty_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 30) else ((entier(sign(right)) + 15) + 15)))",
+                )
+        })
+        .expect("the pathwise thirty-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise thirty-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_thirty_one_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 31) else ((entier(sign(right)) + 15) + 16)))",
+                )
+        })
+        .expect("the pathwise thirty-one-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise thirty-one-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_thirty_two_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 32) else ((entier(sign(right)) + 16) + 16)))",
+                )
+        })
+        .expect("the pathwise thirty-two-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise thirty-two-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_thirty_three_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 33) else ((entier(sign(right)) + 16) + 17)))",
+                )
+        })
+        .expect("the pathwise thirty-three-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise thirty-three-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_thirty_four_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 34) else ((entier(sign(right)) + 17) + 17)))",
+                )
+        })
+        .expect("the pathwise thirty-four-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise thirty-four-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_thirty_five_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 35) else ((entier(sign(right)) + 17) + 18)))",
+                )
+        })
+        .expect("the pathwise thirty-five-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise thirty-five-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_thirty_six_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 36) else ((entier(sign(right)) + 18) + 18)))",
+                )
+        })
+        .expect("the pathwise thirty-six-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise thirty-six-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_thirty_seven_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 37) else ((entier(sign(right)) + 18) + 19)))",
+                )
+        })
+        .expect("the pathwise thirty-seven-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise thirty-seven-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_thirty_eight_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 38) else ((entier(sign(right)) + 19) + 19)))",
+                )
+        })
+        .expect("the pathwise thirty-eight-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise thirty-eight-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_thirty_nine_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 39) else ((entier(sign(right)) + 19) + 20)))",
+                )
+        })
+        .expect("the pathwise thirty-nine-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise thirty-nine-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_forty_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 40) else ((entier(sign(right)) + 20) + 20)))",
+                )
+        })
+        .expect("the pathwise forty-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise forty-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_forty_one_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 41) else ((entier(sign(right)) + 20) + 21)))",
+                )
+        })
+        .expect("the pathwise forty-one-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise forty-one-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_forty_two_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 42) else ((entier(sign(right)) + 21) + 21)))",
+                )
+        })
+        .expect("the pathwise forty-two-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise forty-two-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_forty_three_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 43) else ((entier(sign(right)) + 21) + 22)))",
+                )
+        })
+        .expect("the pathwise forty-three-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise forty-three-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_forty_four_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 44) else ((entier(sign(right)) + 22) + 22)))",
+                )
+        })
+        .expect("the pathwise forty-four-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise forty-four-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_thousand_unit_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) + 1000) else ((entier(sign(right)) + 600) + 400)))",
+                )
+        })
+        .expect("the pathwise thousand-unit-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise thousand-unit-offset local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_maximum_exact_offset_bounded_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then (entier(sign(left)) - 9007199254740991) else ((entier(sign(right)) + 4503599627370496) + 4503599627370495)))",
+                )
+        })
+        .expect("the pathwise maximum-exact-offset ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise maximum-exact-offset local name actual did not run"
             );
             continue;
         };

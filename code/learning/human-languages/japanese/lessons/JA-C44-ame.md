@@ -14,7 +14,8 @@ romanization: "ame"
 concept_tag: JA-NATURE44-AME
 prerequisites: [JA-C44-tsuchi, JA-C44-tane]
 sounds: []
-roots: []
+roots: [japanese-ame-rain, japanese-ame-candy]
+etymology_hook: "ame: two native words, 'rain' (雨) and 'candy' (飴), with their own kanji"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C44-tane]
 <!-- hl-knowledge: introduces=[JA-LEX-C44-NATURE44-05]; assesses=[] -->
 
 **あめ** — *ame* — "rain; candy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**あめ** (*ame*) is two native words that sound alike: *ame*, "rain", and *ame*, "candy", each with its own kanji (JMdict). Both are inherited rather than borrowed, and are told apart by their pitch.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

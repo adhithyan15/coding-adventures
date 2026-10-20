@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C752-rompecabezas",
+    "language": "spanish",
+    "chapter": 752,
+    "sequence": 27570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8d32e3a2131b4bfc"
+  },
+  "findings": []
+}

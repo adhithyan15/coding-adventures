@@ -1,0 +1,19 @@
+{
+  "chapter": 280,
+  "title": "Nos jornais",
+  "label": "ch:pt-nos-jornais",
+  "canDo": "I can talk about printing a paper, publications, editions and articles, and making news public.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C280-artigo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 280: I can talk about printing a paper, publications, editions and articles, and making news public.",
+    "assesses": [
+      "PT-LEX-C280-PUBLICAR-03",
+      "PT-LEX-C280-PUBLICAR-04",
+      "PT-LEX-C280-PUBLICAR-05"
+    ]
+  }
+}

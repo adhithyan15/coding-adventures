@@ -1,0 +1,11 @@
+{
+  "id": "FR-C520-rayon",
+  "pathSegment": "FR-PATH-520-LIBRAIRE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-520-LIBRAIRE",
+      "order": 1
+    }
+  ]
+}

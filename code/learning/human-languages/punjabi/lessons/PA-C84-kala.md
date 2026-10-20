@@ -14,7 +14,7 @@ romanization: "kālā"
 concept_tag: PA-ADJ84-KALA
 prerequisites: [PA-C84-lal, PA-C84-nila]
 sounds: []
-roots: [sanskrit-kala]
+roots: [sanskrit-kala-black]
 etymology_hook: "kālā ← Sanskrit kāla 'black, dark-blue', which CDIAL derives from Dravidian (CDIAL 3083)"
 duration:
   max_seconds: 200

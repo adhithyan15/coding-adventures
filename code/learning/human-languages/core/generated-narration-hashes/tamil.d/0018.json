@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 18,
-  "sourceHash": "fnv1a64:71525a25a462744d",
+  "sourceHash": "fnv1a64:4c1ba15c7b89209a",
   "lessonIds": [
     "TA-C18-mani",
     "TA-S08-pulli",
@@ -13,7 +13,7 @@
   "drivablePrefix": 1,
   "text": "tamil/narration/ch18.txt",
   "json": "tamil/narration/ch18.json",
-  "textHash": "fnv1a64:f0ad805b90d12c69",
-  "jsonHash": "fnv1a64:dce69b8664af0a1e",
+  "textHash": "fnv1a64:760984155e286ef1",
+  "jsonHash": "fnv1a64:4611f6198e309097",
   "findings": []
 }

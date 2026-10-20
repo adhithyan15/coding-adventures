@@ -4,7 +4,7 @@
   "chapter": 113,
   "title": "Rabbit, Donkey, Boar, Bull, Buffalo",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6d8cb9f76f0a172a",
+  "sourceHash": "fnv1a64:22fc4cc3707773a1",
   "lessons": [
     {
       "id": "SA-C113-sasakah",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6d381af1a7b3859a",
+      "sourceHash": "fnv1a64:796f8a721673d9c6",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "śaśaka is śaśa \"hare\" with the suffix -ka (CDIAL 12357). śaśa is inherited from Indo-European: MW records the view that it is the same word as German Hase and English hare, and EtymDB agrees. It lives on as Marathi sasā \"hare\" (CDIAL 12357)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0fe6f112468ada34",
+      "sourceHash": "fnv1a64:ce0daabfef7c23fb",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gardabha comes from the root √gard \"shout, make a noise\" (CDIAL 4054): MW explains it as \"the crier, the brayer\", with a query mark. It lives on as Hindi gadahā and Marathi gāḍhav \"donkey\" (CDIAL 4054)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b96eb0068b3760fb",
+      "sourceHash": "fnv1a64:88b8cdb413eed7df",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "MW calls the derivation of varāha \"a boar\" doubtful, but EtymDB traces it to an Indo-Iranian word for the boar, inherited also by Avestan varāza and Persian gorāz \"boar\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b0146f8fd92937d9",
+      "sourceHash": "fnv1a64:2a02a794fbfb51b4",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vṛṣabha is built on vṛṣan \"male, mighty\" (CDIAL 12085): in the Rigveda it first means \"manly, mighty\", then \"the bull\", and then \"the chief, the best\" (MW). Pali wore it down to vasabha \"bull\" (CDIAL 12085)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:31144cee25b3a8c8",
+      "sourceHash": "fnv1a64:6645cdc64fbbeaa2",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mahiṣa first meant \"great, mighty\", from the root of mah- \"great\", which MW compares with Latin magnus and English much. CDIAL 9964 explains \"buffalo\" from mahiṣo mṛgāṇām, \"the great one of the beasts\". It lives on as Hindi bhaĩs and Marathi mhais \"buffalo\" (CDIAL 9964)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

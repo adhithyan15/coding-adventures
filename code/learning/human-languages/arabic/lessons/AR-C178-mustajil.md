@@ -14,7 +14,8 @@ romanization: "mustaʿjil"
 concept_tag: AR-SIFA178-MUSTAJIL
 prerequisites: [AR-C178-rasmi, AR-C178-khass]
 sounds: []
-roots: []
+roots: [ʿ-j-l]
+etymology_hook: "mustaʿjil: built on the root ʿ-j-l, 'to hasten' (Lane); mustaʿjil is the Form X participle, 'seeking haste'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C178-khass]
 <!-- hl-knowledge: introduces=[AR-LEX-C178-SIFA178-03]; assesses=[] -->
 
 **مستعجل** — *mustaʿjil* — "in a hurry".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مستعجل** (*mustaʿjil*) is built on the native Arabic root *ʿ-j-l*, "to hasten" (Lane). *Mustaʿjil* is the Form X participle, "seeking haste".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

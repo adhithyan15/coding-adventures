@@ -1,0 +1,19 @@
+{
+  "chapter": 398,
+  "title": "Guadagni e perdite",
+  "label": "ch:it-guadagni-e-perdite",
+  "canDo": "I can talk about earning and losing money: profit, a loss and a business that goes bust.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "IT-C398-fallire",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 398: I can talk about earning and losing money: profit, a loss and a business that goes bust.",
+    "assesses": [
+      "IT-LEX-C398-GUADAGNO-03",
+      "IT-LEX-C398-GUADAGNO-04",
+      "IT-LEX-C398-GUADAGNO-05"
+    ]
+  }
+}

@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 272,
-  "sourceHash": "fnv1a64:23346335f3f09908",
+  "sourceHash": "fnv1a64:709cbddb3e6b562f",
   "lessonIds": [
     "AR-C272-mudhish",
     "AR-C272-mutaakkid",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch272.txt",
   "json": "arabic/narration/ch272.json",
-  "textHash": "fnv1a64:daa1d8a70ae302cb",
-  "jsonHash": "fnv1a64:f94e930e8d5262d3",
+  "textHash": "fnv1a64:99a3d67d8225df47",
+  "jsonHash": "fnv1a64:b9a8b1d0ae65dcd5",
   "findings": []
 }

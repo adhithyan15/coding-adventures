@@ -1,0 +1,11 @@
+{
+  "id": "FR-C504-sueur",
+  "pathSegment": "FR-PATH-504-GYM",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-504-GYM",
+      "order": 3
+    }
+  ]
+}

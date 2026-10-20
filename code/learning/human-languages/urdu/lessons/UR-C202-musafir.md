@@ -14,7 +14,8 @@ romanization: "musāfir"
 concept_tag: UR-CHIZ202-MUSAFIR
 prerequisites: [UR-C202-parti, UR-C202-tohfa]
 sounds: []
-roots: []
+roots: [arabic-musafir]
+etymology_hook: "musāfir ← Arabic musāfir 'a traveller', through Persian (Lane, root s-f-r)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C202-tohfa]
 <!-- hl-knowledge: introduces=[UR-LEX-C202-CHIZ202-03]; assesses=[] -->
 
 **مسافر** — *musāfir* — "a traveller, a passenger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مسافر** (*musāfir*) is a loan from Arabic *musāfir*, "a traveller", which reached Urdu through Persian. Its Arabic root is *s-f-r* (Lane). It is built on the same root as *safar*, "a journey".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 92,
-  "sourceHash": "fnv1a64:9648b7a10e154023",
+  "sourceHash": "fnv1a64:3eac6d5b4505de03",
   "lessonIds": [
     "SA-C92-nimesah",
     "SA-C92-purvam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch92.txt",
   "json": "sanskrit/narration/ch92.json",
-  "textHash": "fnv1a64:afc9148789d17302",
-  "jsonHash": "fnv1a64:caa4f8e5b80e7d46",
+  "textHash": "fnv1a64:a0ba9209e21a0bdb",
+  "jsonHash": "fnv1a64:dd68217fd4837f37",
   "findings": []
 }

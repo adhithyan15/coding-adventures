@@ -14,7 +14,8 @@ romanization: "chihou"
 concept_tag: JA-LOC81-CHIHOU
 prerequisites: [JA-C81-tokai, JA-C81-aida]
 sounds: []
-roots: []
+roots: [middle-chinese-dijh, middle-chinese-pjang]
+etymology_hook: "chihou: Sino-Japanese 地 'earth' + 方 'region', on'yomi borrowed from Chinese"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C81-aida]
 <!-- hl-knowledge: introduces=[JA-LEX-C81-LOC81-05]; assesses=[] -->
 
 **ちほう** — *chihou* — "a region".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ちほう** (*chihou*) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are *chi*, "earth, land" (Middle Chinese *dijH*) and *hō*, "region, direction" (*pjang*) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

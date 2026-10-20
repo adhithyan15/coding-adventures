@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for spotless, then the Sanskrit for bright.
 You'll want to know: मञ्जूषा.
 मञ्जूषा — mañjūṣā — "a trunk, a chest".
 
+The word, taken apart.
+mañjūṣā may be borrowed from Dravidian: CDIAL 9721 says "possibly", and DEDR 4640 compares Tamil mañcikai, "chest, box", with a question mark. Pali has it as mañjūsā, "casket".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for bright, then the Sanskrit for a trunk.
 
 You'll want to know: शिक्यम्.
 शिक्यम् — śikyam — "a hanging basket".
+
+The word, taken apart.
+śikya is a rope loop hung from a pole or yoke to carry a load (MW), and so a hanging basket. Neither MW nor CDIAL 12427 gives a derivation, so its origin is uncertain; CDIAL compares śic, "sling, net". It lives on as Hindi chīkā, "hanging net".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a trunk, then the Sanskrit for a hangin
 You'll want to know: पिटकम्.
 पिटकम् — piṭakam — "a basket".
 
+The word, taken apart.
+piṭaka is probably borrowed from a non-Indo-Aryan language: CDIAL 8164 calls it "non-Aryan", while MW derives it from a root √piṭ, "to gather". The Buddhist canon is the Tipiṭaka, "three baskets".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a hanging basket, then the Sanskrit for
 You'll want to know: कटः.
 कटः — kaṭaḥ — "a mat".
 
+The word, taken apart.
+kaṭa is a twist of straw and so a straw mat. MW thinks it may stand for karta from √kṛt, "to spin, twist", and CDIAL 2629 supports a derivation of that kind. In Hindi the word became kaṛā, "ring, bracelet".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a basket, then the Sanskrit for a mat.
 
 You'll want to know: आस्तरणम्.
 आस्तरणम् — āstaraṇam — "a carpet, a spread".
+
+The word, taken apart.
+āstaraṇa is built on ā- and the root √stṛ, "to spread, strew" (MW): a carpet is what is spread out. In the Atharvaveda it is a layer of sacred grass (CDIAL 1506), and Marathi keeps it as ãthrūṇ, "bedspread".
 
 What you've built.
 One more word for this chapter.

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C767-voluntad",
+  "pathSegment": "ES-PATH-767-PORVENIR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-767-PORVENIR",
+      "order": 2
+    }
+  ]
+}

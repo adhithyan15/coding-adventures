@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 357,
+  "sourceHash": "fnv1a64:635babf6bc6921c4",
+  "lessonIds": [
+    "IT-C357-licenziamento",
+    "IT-C357-dimettersi",
+    "IT-C357-dimissioni",
+    "IT-C357-disoccupato",
+    "IT-C357-preavviso"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch357.txt",
+  "json": "italian/narration/ch357.json",
+  "textHash": "fnv1a64:f978becaf912f992",
+  "jsonHash": "fnv1a64:f5d97514300ec2a2",
+  "findings": []
+}

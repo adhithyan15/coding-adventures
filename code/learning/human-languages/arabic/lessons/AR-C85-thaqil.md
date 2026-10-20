@@ -14,7 +14,8 @@ romanization: "thaqīl"
 concept_tag: AR-ADJ85-THAQIL
 prerequisites: [AR-C84-wasikh, AR-C85-khafif]
 sounds: []
-roots: []
+roots: [th-q-l]
+etymology_hook: "thaqīl: built on the root th-q-l, 'to be heavy' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C85-khafif]
 <!-- hl-knowledge: introduces=[AR-LEX-C85-ADJ85-02]; assesses=[] -->
 
 **ثقيل** — *thaqīl* — "heavy".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ثقيل** (*thaqīl*) is built on the native Arabic root *th-q-l*, "to be heavy" (Lane). Hebrew *shaqal*, "to weigh", the source of English *shekel*, is usually counted a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

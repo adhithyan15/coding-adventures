@@ -1,0 +1,19 @@
+{
+  "chapter": 527,
+  "title": "Che cosa leggi?",
+  "label": "ch:it-che-cosa-leggi",
+  "canDo": "I can talk about the kinds of books I like.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "IT-C527-poeta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 527: I can talk about the kinds of books I like.",
+    "assesses": [
+      "IT-LEX-C527-GENERI-03",
+      "IT-LEX-C527-GENERI-04",
+      "IT-LEX-C527-GENERI-05"
+    ]
+  }
+}

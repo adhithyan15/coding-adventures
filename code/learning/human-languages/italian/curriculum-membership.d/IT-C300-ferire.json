@@ -1,0 +1,11 @@
+{
+  "id": "IT-C300-ferire",
+  "pathSegment": "IT-PATH-300-FERITI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-300-FERITI",
+      "order": 2
+    }
+  ]
+}

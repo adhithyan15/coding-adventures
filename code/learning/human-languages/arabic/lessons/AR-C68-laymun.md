@@ -14,7 +14,8 @@ romanization: "laymūn"
 concept_tag: AR-FOOD68-LAYMUN
 prerequisites: [AR-C67-inab, AR-C68-burtuqal]
 sounds: []
-roots: []
+roots: [persian-limun]
+etymology_hook: "laymūn: from Persian līmūn 'lemon' (EtymDB), usually traced further east to an Indic source"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C68-burtuqal]
 <!-- hl-knowledge: introduces=[AR-LEX-C68-FOOD68-02]; assesses=[] -->
 
 **ليمون** — *laymūn* — "lemons".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ليمون** (*laymūn*) is a loan from Persian *līmūn*, *līmū*, "lemon" (EtymDB), a word usually traced further east to an Indic source. It has no Arabic root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

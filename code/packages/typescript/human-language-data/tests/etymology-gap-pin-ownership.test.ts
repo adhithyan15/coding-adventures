@@ -97,7 +97,10 @@ describe("etymology-gap direct-owner loader", () => {
       ).toThrow(/ENOENT/);
 
       const linkedRoot = resolve(root, "linked-root");
-      symlinkSync(target, linkedRoot);
+      // A Windows directory junction is still a link to lstatSync, but unlike
+      // a native symlink it does not require Developer Mode or elevation.
+      symlinkSync(target, linkedRoot, process.platform === "win32" ? "junction" : "dir");
+      expect(lstatSync(linkedRoot).isSymbolicLink()).toBe(true);
       expect(() => loadEtymologyGapPinOwners(linkedRoot, modules, ["arabic"])).toThrow(
         /must not be a symbolic link/,
       );
@@ -116,7 +119,27 @@ describe("etymology-gap direct-owner loader", () => {
       );
       rmSync(resolve(childRoot, "arabic.owner.ts"), { recursive: true });
 
-      symlinkSync(resolve(target, "arabic.owner.ts"), resolve(childRoot, "arabic.owner.ts"));
+      const linkedChild = resolve(childRoot, "arabic.owner.ts");
+      try {
+        // Linux CI must exercise a real file link. Windows does too when the
+        // account has symlink privilege; otherwise a junction still proves
+        // that the loader rejects a linked child before following it.
+        symlinkSync(resolve(target, "arabic.owner.ts"), linkedChild, "file");
+      } catch (error) {
+        if (
+          process.platform !== "win32" ||
+          typeof error !== "object" ||
+          error === null ||
+          !("code" in error) ||
+          (error.code !== "EPERM" && error.code !== "EACCES")
+        ) {
+          throw error;
+        }
+        const junctionTarget = resolve(root, "junction-child-target");
+        mkdirSync(junctionTarget);
+        symlinkSync(junctionTarget, linkedChild, "junction");
+      }
+      expect(lstatSync(linkedChild).isSymbolicLink()).toBe(true);
       expect(() => loadEtymologyGapPinOwners(childRoot, modules, ["arabic"])).toThrow(
         /must not be a symbolic link/,
       );

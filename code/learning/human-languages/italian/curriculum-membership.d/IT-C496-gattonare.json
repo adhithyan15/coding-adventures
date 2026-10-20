@@ -1,0 +1,11 @@
+{
+  "id": "IT-C496-gattonare",
+  "pathSegment": "IT-PATH-496-NEONATO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-496-NEONATO",
+      "order": 4
+    }
+  ]
+}

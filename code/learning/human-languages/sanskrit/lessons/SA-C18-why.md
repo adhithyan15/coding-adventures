@@ -14,7 +14,8 @@ romanization: "kimartham"
 concept_tag: SA-Q-WHY
 prerequisites: [SA-C18-when]
 sounds: []
-roots: []
+roots: [ka-interrogative, sanskrit-artha]
+etymology_hook: "kimartham 'why' ← kim 'what' + artha 'aim, purpose': 'for what aim' (MW; CDIAL 3165)"
 duration:
   max_seconds: 210
 requires:
@@ -47,13 +48,19 @@ It is transparently two pieces:
 
 *किम्* ("what") + *अर्थम्* ("for the purpose of, for the sake of")
 
-— literally **"for what purpose?"** Sanskrit does not have a single opaque word
-for *why*; it asks what the aim was, and lets the shape of the question show.
+— literally **"for what purpose?"** A bare *kim* can also ask *why*; this
+fuller word asks what the aim was, and lets the shape of the question show.
 
 *अर्थ* (*artha*) is worth keeping on its own. It means purpose, aim, meaning,
 and wealth all at once, and it is one of the four goals of life in the classical
 scheme. A word for "why" built on it is asking, quite seriously, *what is this
 for?*
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Kimartham* is a compound of *kim* "what" and *artha* "aim, purpose", already
+in the Śatapatha Brāhmaṇa (MW, CDIAL 3165).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

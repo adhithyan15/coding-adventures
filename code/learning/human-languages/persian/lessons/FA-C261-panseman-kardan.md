@@ -14,7 +14,8 @@ romanization: "pânsemân kardan"
 concept_tag: FA-VERB-PANSEMAN-KARDAN
 prerequisites: [FA-C260-dar-zadan, FA-C260-sut-zadan]
 sounds: []
-roots: []
+roots: [french-pansement, pie-kwer]
+etymology_hook: "pânsemân ← French pansement 'dressing' (EtymDB), + kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C260-sut-zadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C261-KONESH261-01]; assesses=[] -->
 
 **پانسمان کردن** — *pânsemân kardan* — "to dress (a wound)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pânsemân kardan* pairs *pânsemân*, borrowed from French *pansement*, "dressing" (EtymDB), with the Persian verb *kardan*. *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

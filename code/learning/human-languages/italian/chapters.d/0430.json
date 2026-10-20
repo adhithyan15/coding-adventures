@@ -1,0 +1,19 @@
+{
+  "chapter": 430,
+  "title": "In campeggio",
+  "label": "ch:it-in-campeggio",
+  "canDo": "I can talk about camping: pitching a tent, the sleeping bag, the caravan, the camper van and the mosquito net.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C430-zanzariera",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 430: I can talk about camping: pitching a tent, the sleeping bag, the caravan, the camper van and the mosquito net.",
+    "assesses": [
+      "IT-LEX-C430-TENDA-03",
+      "IT-LEX-C430-TENDA-04",
+      "IT-LEX-C430-TENDA-05"
+    ]
+  }
+}

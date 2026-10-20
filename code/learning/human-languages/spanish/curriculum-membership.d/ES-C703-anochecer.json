@@ -1,0 +1,11 @@
+{
+  "id": "ES-C703-anochecer",
+  "pathSegment": "ES-PATH-703-ANOCHECER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-703-ANOCHECER",
+      "order": 1
+    }
+  ]
+}

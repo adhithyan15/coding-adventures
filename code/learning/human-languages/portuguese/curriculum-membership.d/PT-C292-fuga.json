@@ -1,0 +1,11 @@
+{
+  "id": "PT-C292-fuga",
+  "pathSegment": "PT-PATH-292-FUGA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-292-FUGA",
+      "order": 2
+    }
+  ]
+}

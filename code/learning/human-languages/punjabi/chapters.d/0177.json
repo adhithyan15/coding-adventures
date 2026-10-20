@@ -1,0 +1,22 @@
+{
+  "chapter": 177,
+  "title": "A Good Boy and a Very Good Girl",
+  "label": "ch:pa-noun-phrase-agreement-a1",
+  "canDo": "I can build one masculine and one feminine adjective-noun phrase, intensify the quality, and keep the resulting noun phrase before the verb.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "PA-C177-noun-phrase",
+    "kind": "production",
+    "summary": "Retrieve eh bahut changi kuri hai through listening, speaking, reading, and bounded Gurmukhi writing after building noun gender, adjective position, agreement, and degree one joint at a time.",
+    "assesses": [
+      "PA-GRAMMAR-NOUN-GENDER-01",
+      "PA-GRAMMAR-ADJ-PRENOMINAL-01",
+      "PA-GRAMMAR-ADJ-GENDER-AGREEMENT-01",
+      "PA-ADV-BAHUT-DEGREE-01",
+      "PA-GRAMMAR-MULTIWORD-NP-01"
+    ],
+    "note": "This closes five named points in a partial project-defined A1 inventory. It is a gentle curriculum sequence, not an A1 mock, readiness decision, attainment claim, external equivalence, or human validation."
+  }
+}

@@ -14,7 +14,8 @@ romanization: "menyū"
 concept_tag: UR-CHIZ259-MENYU
 prerequisites: [UR-C258-shavar, UR-C259-pakvan]
 sounds: []
-roots: []
+roots: [english-menu]
+etymology_hook: "menyū ← English menu"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C259-pakvan]
 <!-- hl-knowledge: introduces=[UR-LEX-C259-CHIZ259-02]; assesses=[] -->
 
 **مینیو** — *menyū* — "a menu".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مینیو** (*menyū*) is a loan from English *menu*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

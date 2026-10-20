@@ -14,7 +14,8 @@ romanization: "edâme dâdan"
 concept_tag: FA-VERB-EDAME-DADAN
 prerequisites: [FA-C144-neshan-dadan, FA-C144-bazdid-kardan]
 sounds: []
-roots: []
+roots: [arabic-idama]
+etymology_hook: "edâme ← Arabic idāma 'making something last', root d-w-m (Lane), + Persian dâdan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C144-bazdid-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C144-KONESH144-04]; assesses=[] -->
 
 **ادامه دادن** — *edâme dâdan* — "to continue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*edâme dâdan* pairs *edâme*, borrowed from Arabic *idāma*, "making something last" (root *d-w-m*, Lane), with the Persian verb *dâdan*, "to give". *dâdan*, "to give", is an inherited verb; EtymDB takes it back to the Indo-European root *\*deh₃-*, "to give".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

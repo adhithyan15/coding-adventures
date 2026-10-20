@@ -14,7 +14,8 @@ romanization: "kani"
 concept_tag: JA-ANIMALS47-KANI
 prerequisites: [JA-C46-hitsuji, JA-C46-shika]
 sounds: []
-roots: []
+roots: [japanese-kani]
+etymology_hook: "kani: native Japanese, inherited, not borrowed; usually kana, kanji 蟹 as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C46-shika]
 <!-- hl-knowledge: introduces=[JA-LEX-C47-ANIMALS47-01]; assesses=[] -->
 
 **かに** — *kani* — "a crab".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**かに** (*kani*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

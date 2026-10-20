@@ -1,0 +1,19 @@
+{
+  "chapter": 412,
+  "title": "Au guichet",
+  "label": "ch:fr-au-guichet",
+  "canDo": "I can buy a ticket at the counter: the ticket office, the price list, the journey, the flat-rate pass and validating the ticket.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C412-valider",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 412: I can buy a ticket at the counter: the ticket office, the price list, the journey, the flat-rate pass and validating the ticket.",
+    "assesses": [
+      "FR-LEX-C412-GUICHET-03",
+      "FR-LEX-C412-GUICHET-04",
+      "FR-LEX-C412-GUICHET-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C592-industria",
+    "language": "spanish",
+    "chapter": 592,
+    "sequence": 19340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:97315362e733066a"
+  },
+  "findings": []
+}

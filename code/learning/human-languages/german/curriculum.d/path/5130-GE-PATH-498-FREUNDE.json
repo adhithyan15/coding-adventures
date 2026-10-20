@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-498-FREUNDE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GE-EXT-498-FREUNDE"
+  ],
+  "after": []
+}

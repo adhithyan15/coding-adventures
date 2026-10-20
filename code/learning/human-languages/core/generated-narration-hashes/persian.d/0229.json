@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 229,
-  "sourceHash": "fnv1a64:0b996c22d252080e",
+  "sourceHash": "fnv1a64:02e83e0ab33536cd",
   "lessonIds": [
     "FA-C229-moddat",
     "FA-C229-taqvim",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch229.txt",
   "json": "persian/narration/ch229.json",
-  "textHash": "fnv1a64:769ef9584522a2da",
-  "jsonHash": "fnv1a64:6ddd4e8d6b6ca119",
+  "textHash": "fnv1a64:c93117ce7d0ab057",
+  "jsonHash": "fnv1a64:4c5bb0651185f93e",
   "findings": []
 }

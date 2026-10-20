@@ -1,0 +1,854 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 519,
+  "title": "La policía actúa",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:3e2fc39eb942b59d",
+  "lessons": [
+    {
+      "id": "ES-C519-detener",
+      "sequence": 15530,
+      "title": "detener — to detain, to arrest; to stop",
+      "headword": "detener",
+      "romanization": "detener",
+      "gloss": "to detain, to arrest; to stop",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:88c2b848d325a023",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for to hold up, then the Spanish for to flee."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: detener",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "detener — \"to detain, to arrest; to stop\"."
+            },
+            {
+              "kind": "speech",
+              "text": "La policía detuvo al ladrón en la estación. The police arrested the thief at the station."
+            },
+            {
+              "kind": "speech",
+              "text": "It changes like tener: detuve, detuvo. Detenerse is to stop: El coche se detuvo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "detener is inherited from Latin dētinēre 'to hold back' (EtymDB), built on dē- and tenēre 'to hold'. English detain is the same Latin verb through French."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "detener",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *detener*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "detener, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *detener*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with detener",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *detener*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for to hold up, then the Spanish for to flee, then say detener again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for to hold up, then the Spanish for to flee, then say *detener* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does detener mean? (\"To detain, to arrest; to stop\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C519-arrestar",
+      "sequence": 15540,
+      "title": "arrestar — to arrest",
+      "headword": "arrestar",
+      "romanization": "arrestar",
+      "gloss": "to arrest",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4df747df073036e4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for to flee, then the Spanish for to detain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: arrestar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "arrestar — \"to arrest\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Arrestaron a tres personas. They arrested three people."
+            },
+            {
+              "kind": "speech",
+              "text": "Detener is the more common word in the news; arrestar is also used."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "arrestar comes from spoken Latin arrestāre 'to make stop', built on ad and restāre 'to stay back, to remain' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arrestar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arrestar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arrestar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arrestar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with arrestar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *arrestar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for to flee, then the Spanish for to detain, then say arrestar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for to flee, then the Spanish for to detain, then say *arrestar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does arrestar mean? (\"To arrest\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C519-detencion",
+      "sequence": 15550,
+      "title": "la detención — the arrest",
+      "headword": "la detención",
+      "romanization": "la detención",
+      "gloss": "the arrest",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f9ec0021914bf303",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for to detain, then the Spanish for to arrest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la detención",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la detención — \"the arrest\"."
+            },
+            {
+              "kind": "speech",
+              "text": "La detención fue rápida. The arrest was quick."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "detención is a learned borrowing from Latin dētentiō 'a holding back' (EtymDB), from dētinēre, built on tenēre 'to hold'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la detención",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la detención*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la detención, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la detención*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la detención",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la detención*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for to detain, then the Spanish for to arrest, then say la detención again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for to detain, then the Spanish for to arrest, then say *la detención* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la detención mean? (\"The arrest\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C519-patrulla",
+      "sequence": 15560,
+      "title": "la patrulla — the patrol; the patrol car",
+      "headword": "la patrulla",
+      "romanization": "la patrulla",
+      "gloss": "the patrol; the patrol car",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f56b5846978afb1e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for to arrest, then the Spanish for the arrest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la patrulla",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la patrulla — \"the patrol; the patrol car\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Una patrulla llegó en cinco minutos. A patrol car arrived in five minutes."
+            },
+            {
+              "kind": "speech",
+              "text": "Estar de patrulla — to be on patrol. Patrullar is to patrol."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "patrulla is built on patrullar 'to patrol', which was borrowed from French patrouiller (EtymDB). In Old French that verb meant 'to paddle, to paw about', and EtymDB builds it on patte 'a paw'. The patrol tramped round on foot."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la patrulla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la patrulla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la patrulla, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la patrulla*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la patrulla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la patrulla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for to arrest, then the Spanish for the arrest, then say la patrulla again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for to arrest, then the Spanish for the arrest, then say *la patrulla* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la patrulla mean? (\"The patrol; the patrol car\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C519-perseguir",
+      "sequence": 15570,
+      "title": "perseguir — to chase, to pursue",
+      "headword": "perseguir",
+      "romanization": "perseguir",
+      "gloss": "to chase, to pursue",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2c4355d72e431649",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Spanish for the arrest, then the Spanish for the patrol."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: perseguir",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "perseguir — \"to chase, to pursue\"."
+            },
+            {
+              "kind": "speech",
+              "text": "El perro persiguió al gato por la calle. The dog chased the cat down the street."
+            },
+            {
+              "kind": "speech",
+              "text": "It changes like seguir: persigo, persiguió."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "perseguir is inherited from Latin persequī 'to follow up, to pursue' (EtymDB), built on per 'through' and sequī 'to follow'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "perseguir",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *perseguir*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "perseguir, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *perseguir*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with perseguir",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *perseguir*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Spanish for the arrest, then the Spanish for the patrol, then say perseguir again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Spanish for the arrest, then the Spanish for the patrol, then say *perseguir* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does perseguir mean? (\"To chase, to pursue\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R519-repaso-512-519",
+      "sequence": 15580,
+      "title": "Sucesos y relatos",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 512-519",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e53a275ef006dede",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Spanish for to occur and the happening."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to occur, the happening, the event, to come about, to take place",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to occur, the happening, the event, to come about, to take place]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the newsroom, the headline, the press, the correspondent, to publish",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the newsroom, the headline, the press, the correspondent, to publish]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the report, the reporter, to interview, to spread, to announce",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the report, the reporter, to interview, to spread, to announce]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the rumour, the official statement, the statement, to declare, to confirm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the rumour, the official statement, the statement, to declare, to confirm]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to assure, to correct, to reveal, to refute, the version",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to assure, to correct, to reveal, to refute, the version]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the witness, to witness, to observe, to notice, the detail",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the witness, to witness, to observe, to notice, the detail]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to steal, the robbery, the suspect, to hold up, to flee",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to steal, the robbery, the suspect, to hold up, to flee]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to detain, to arrest, the arrest, the patrol, to chase",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to detain, to arrest, the arrest, the patrol, to chase]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To occur? (producirse.) The happening? (el suceso.) The event? (el acontecimiento.) To come about? (acontecer.) To take place? (tener lugar.) The newsroom? (la redacción.) The headline? (el titular.) The press? (la prensa.) The correspondent? (el corresponsal.) To publish? (publicar.) The report? (el reportaje.) The reporter? (el reportero.) To interview? (entrevistar.) To spread? (difundir.) To announce? (anunciar.) The rumour? (el rumor.) The official statement? (el comunicado.) The statement? (la declaración.) To declare? (declarar.) To confirm? (confirmar.) To assure? (asegurar.) To correct? (rectificar.) To reveal? (revelar.) To refute? (desmentir.) The version? (la versión.) The witness? (el testigo.) To witness? (presenciar.) To observe? (observar.) To notice? (percatarse.) The detail? (el detalle.) To steal? (robar.) The robbery? (el robo.) The suspect? (el sospechoso.) To hold up? (atracar.) To flee? (huir.) To detain? (detener.) To arrest? (arrestar.) The arrest? (la detención.) The patrol? (la patrulla.) To chase? (perseguir.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

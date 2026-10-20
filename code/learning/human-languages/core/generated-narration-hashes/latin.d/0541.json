@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 541,
+  "sourceHash": "fnv1a64:c6418631c25b16c9",
+  "lessonIds": [
+    "LA-C541-balneator",
+    "LA-C541-caldarium",
+    "LA-C541-tepidarium",
+    "LA-C541-frigidarium",
+    "LA-C541-piscina"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch541.txt",
+  "json": "latin/narration/ch541.json",
+  "textHash": "fnv1a64:24afa0eb56865d75",
+  "jsonHash": "fnv1a64:31d6b37b52110cbb",
+  "findings": []
+}

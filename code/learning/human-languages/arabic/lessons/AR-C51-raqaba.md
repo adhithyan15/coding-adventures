@@ -14,7 +14,8 @@ romanization: "raqaba"
 concept_tag: AR-BODY51-RAQABA
 prerequisites: [AR-C51-isba, AR-C51-katif]
 sounds: []
-roots: []
+roots: [r-q-b]
+etymology_hook: "raqaba: built on the root r-q-b, 'the neck' (Lane); the verb raqaba, 'to watch', sits under the same root in Lane"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C51-katif]
 <!-- hl-knowledge: introduces=[AR-LEX-C51-BODY51-05]; assesses=[] -->
 
 **رقبة** — *raqaba* — "the neck".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**رقبة** (*raqaba*) is built on the native Arabic root *r-q-b*, "the neck; to watch over" (Lane). The verb *raqaba*, "to watch", sits under the same root in Lane.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

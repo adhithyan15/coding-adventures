@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 590,
+  "sourceHash": "fnv1a64:1f21d8ea2511a377",
+  "lessonIds": [
+    "ES-C590-vacante",
+    "ES-C590-seleccionar",
+    "ES-C590-empleado",
+    "ES-C590-formacion",
+    "ES-C590-perfil"
+  ],
+  "tex": "spanish/book/chapters/ch590-buscar-trabajo.tex"
+}

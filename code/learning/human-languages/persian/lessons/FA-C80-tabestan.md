@@ -14,7 +14,8 @@ romanization: "tâbestân"
 concept_tag: FA-TIME80-TABESTAN
 prerequisites: [FA-C79-zaman, FA-C80-bahar]
 sounds: []
-roots: []
+roots: [persian-tabestan]
+etymology_hook: "tâbestân ← Middle Persian tābistān (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C80-bahar]
 <!-- hl-knowledge: introduces=[FA-LEX-C80-TIME80-02]; assesses=[] -->
 
 **تابستان** — *tâbestân* — "summer".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*tâbestân* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *tābistān*, "summer" (EtymDB). It is usually explained as built on *tāb-*, "to shine, to burn": the hot season.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

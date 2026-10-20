@@ -1,0 +1,11 @@
+{
+  "id": "LA-C534-suavium",
+  "pathSegment": "LA-PATH-534-OSCU",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-534-OSCU",
+      "order": 3
+    }
+  ]
+}

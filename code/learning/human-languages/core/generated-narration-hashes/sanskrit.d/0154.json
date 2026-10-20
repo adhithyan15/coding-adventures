@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 154,
-  "sourceHash": "fnv1a64:717075e1850f6d98",
+  "sourceHash": "fnv1a64:565bb96a71d320f1",
   "lessonIds": [
     "SA-C154-yadi",
     "SA-C154-cet",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch154.txt",
   "json": "sanskrit/narration/ch154.json",
-  "textHash": "fnv1a64:4707ada793d7c244",
-  "jsonHash": "fnv1a64:f8956d388ad828f9",
+  "textHash": "fnv1a64:2729f1a03bf2c24f",
+  "jsonHash": "fnv1a64:57924b26284f141d",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "chalnā"
 concept_tag: UR-VERB-CHALNA
 prerequisites: [UR-C47-sona, UR-C47-uthna]
 sounds: []
-roots: []
+roots: [sanskrit-calati]
+etymology_hook: "chalnā ← Sanskrit calati 'goes away', a tadbhava (CDIAL 4715)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C47-uthna]
 <!-- hl-knowledge: introduces=[UR-LEX-C47-VERBS47-04]; assesses=[] -->
 
 **چلنا** — *chalnā* — "to walk".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چلنا** (*chalnā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *calati*, "goes away" (CDIAL 4715).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

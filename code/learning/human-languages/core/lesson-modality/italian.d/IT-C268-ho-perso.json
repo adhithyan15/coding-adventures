@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C268-ho-perso",
+    "language": "italian",
+    "chapter": 268,
+    "sequence": 15890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:271070c82dbf85c0"
+  },
+  "findings": []
+}

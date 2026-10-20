@@ -1,0 +1,11 @@
+{
+  "id": "PT-C285-entrevistado",
+  "pathSegment": "PT-PATH-285-OUVINTE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-285-OUVINTE",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C675-soportal",
+    "language": "spanish",
+    "chapter": 675,
+    "sequence": 23620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:66fe6bca053cad2c"
+  },
+  "findings": []
+}

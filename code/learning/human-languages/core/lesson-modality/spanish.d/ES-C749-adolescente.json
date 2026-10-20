@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C749-adolescente",
+    "language": "spanish",
+    "chapter": 749,
+    "sequence": 27420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:646963fae48578a9"
+  },
+  "findings": []
+}

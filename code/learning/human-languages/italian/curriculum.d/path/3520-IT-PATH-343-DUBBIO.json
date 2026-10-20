@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-343-DUBBIO",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "IT-EXT-343-DUBBIO"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 531,
+  "title": "Pequenos arranjos",
+  "label": "ch:pt-pequenos-arranjos",
+  "canDo": "I can talk about small repairs at home.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C531-alicate",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 531: I can talk about small repairs at home.",
+    "assesses": [
+      "PT-LEX-C531-BRICOLAGE-03",
+      "PT-LEX-C531-BRICOLAGE-04",
+      "PT-LEX-C531-BRICOLAGE-05"
+    ]
+  }
+}

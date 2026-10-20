@@ -1,0 +1,11 @@
+{
+  "id": "PA-C180-kamre",
+  "pathSegment": "PA-PATH-180-A2-PLACE-REFERENCE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-180-A2-PLACE-REFERENCE",
+      "order": 3
+    }
+  ]
+}

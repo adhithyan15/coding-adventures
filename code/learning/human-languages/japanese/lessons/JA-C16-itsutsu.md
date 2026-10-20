@@ -11,8 +11,8 @@ gloss: five things — three signs, two of them the same, and none of them new
 concept_tag: JA-NATIVE-FIVE
 prerequisites: [JA-C16-yottsu, JA-W01-ha, JA-C14-ichi, JA-W10-o]
 sounds: [mora]
-roots: []
-etymology_hook: The only word in the native count whose first beat is also the first beat of a borrowed number, and the resemblance means nothing.
+roots: [japanese-itsu-five, japanese-tsu-counter]
+etymology_hook: "itsutsu: native itsu 'five' + native counter -tsu"
 duration:
   max_seconds: 180
 requires:
@@ -50,6 +50,11 @@ Three signs, and two of them are the same one. **い**, **つ**, **つ**.
 A warning worth one sentence: **いつつ** opens on the same beat as **いち**, and
 the two have nothing to do with each other. **ご** is *five*; **いつつ** is *five
 things*; **いち** is *one*. The ear will try to pair the wrong two.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**いつつ** (*itsutsu*) is native: *itsu*, the inherited word for "five", with the counter *-tsu* (KANJIDIC2).
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ITSUTSU, JA-LEX-GO, JA-LEX-ICHI, JA-LEX-YOTTSU] -->

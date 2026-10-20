@@ -14,7 +14,8 @@ romanization: "aisā"
 concept_tag: UR-DEF88-AISA
 prerequisites: [UR-C88-yihi, UR-C88-vahi]
 sounds: []
-roots: []
+roots: [sanskrit-idrsha]
+etymology_hook: "aisā ← Sanskrit īdṛśa 'such, like this', a tadbhava (CDIAL 1611)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C88-vahi]
 <!-- hl-knowledge: introduces=[UR-LEX-C88-DEF88-03]; assesses=[] -->
 
 **ایسا** — *aisā* — "like this, such".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ایسا** (*aisā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *īdṛśa*, "such, like this" (CDIAL 1611).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

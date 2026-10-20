@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 287,
+  "sourceHash": "fnv1a64:2a0c0f484b4274df",
+  "lessonIds": [
+    "IT-C287-diretta",
+    "IT-C287-trasmissione",
+    "IT-C287-trasmettere",
+    "IT-C287-canale",
+    "IT-C287-emittente"
+  ],
+  "tex": "italian/book/chapters/ch287-in-onda.tex"
+}

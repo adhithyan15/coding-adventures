@@ -1,0 +1,19 @@
+{
+  "chapter": 448,
+  "title": "Jornais e tabaco",
+  "label": "ch:pt-jornais-e-tabaco",
+  "canDo": "I can use small everyday shops: the tobacconist, a lighter, a match, a scratch card and leafing through a magazine.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-R448-revisao-441-448",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 448: I can use small everyday shops: the tobacconist, a lighter, a match, a scratch card and leafing through a magazine.",
+    "assesses": [
+      "PT-LEX-C448-TABACARIA-03",
+      "PT-LEX-C448-TABACARIA-04",
+      "PT-LEX-C448-TABACARIA-05"
+    ]
+  }
+}

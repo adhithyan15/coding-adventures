@@ -1,0 +1,19 @@
+{
+  "chapter": 391,
+  "title": "As contas da casa",
+  "label": "ch:pt-as-contas-da-casa",
+  "canDo": "I can talk about household money: income, the budget, expenses, instalments and savings.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "PT-C391-poupanca",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 391: I can talk about household money: income, the budget, expenses, instalments and savings.",
+    "assesses": [
+      "PT-LEX-C391-ORCAMENTO-03",
+      "PT-LEX-C391-ORCAMENTO-04",
+      "PT-LEX-C391-ORCAMENTO-05"
+    ]
+  }
+}

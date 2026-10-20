@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 459,
+  "sourceHash": "fnv1a64:9a8a0eda70779a41",
+  "lessonIds": [
+    "LA-C459-porticus",
+    "LA-C459-aedes",
+    "LA-C459-aedicula",
+    "LA-C459-pomerium",
+    "LA-C459-exstruo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch459.txt",
+  "json": "latin/narration/ch459.json",
+  "textHash": "fnv1a64:ac4f5c0ccd0769e6",
+  "jsonHash": "fnv1a64:86c1cecee3efece9",
+  "findings": []
+}

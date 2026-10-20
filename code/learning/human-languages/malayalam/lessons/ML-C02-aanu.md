@@ -70,7 +70,7 @@ in fast speech, but the full form keeps it.)
 - [YOU SAY: "āṇŭ"]
 - [YOU SAY: the contrast — Tamil *eṉ peyar Arun* (no verb) vs. Malayalam *enṟe
   pēr Arun āṇŭ*]
-- [YOU RECALL: say *athe*, then say *illa*]
+- [YOU RECALL: say *ate*, then say *illa*]
 - [YOU READ: **ശരി**]
 
 ## Wrap-up Recall

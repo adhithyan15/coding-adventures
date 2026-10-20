@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a grandfather, then the Urdu for a grandmot
 You'll want to know: نانا.
 نانا — nānā — "a grandfather (mother's father)".
 
+The word, taken apart.
+نانا (nānā) is a tadbhava, a word inherited and reshaped by sound change. It comes from nānna, "a term of respect for an older relative", a form CDIAL reconstructs from its descendants (CDIAL 7059). CDIAL compares Sanskrit nanā, "mother".
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a grandmother, then the Urdu for a grandfat
 
 You'll want to know: نانی.
 نانی — nānī — "a grandmother (mother's mother)".
+
+The word, taken apart.
+نانی (nānī) is a tadbhava, a word inherited and reshaped by sound change. It comes from nānna, "a term of respect for an older relative", a form CDIAL reconstructs from its descendants (CDIAL 7059). nānī is the feminine of nānā, "grandfather". CDIAL compares Sanskrit nanā, "mother".
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a grandfather, then the Urdu for a grandmot
 You'll want to know: شوہر.
 شوہر — shauhar — "a husband".
 
+The word, taken apart.
+شوہر (shauhar) is a loan, usually traced to Persian shauhar, "husband".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a grandmother, then the Urdu for a husband.
 You'll want to know: بیوی.
 بیوی — bīvī — "a wife".
 
+The word, taken apart.
+بیوی (bīvī) is a loan, usually traced to Persian bībī, "lady, wife".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for a husband, then the Urdu for a wife.
 
 You'll want to know: بچہ.
 بچہ — bachchā — "a child".
+
+The word, taken apart.
+بچہ (bachchā) is usually traced to Persian bachcha, "child". CDIAL lists close Punjabi and Sindhi words, such as Punjabi baccā, "child", under Sanskrit apatya, "offspring", and its addenda set them beside Persian bača (CDIAL 424, 14226); it gives no Hindi or Urdu form there, so which road the Urdu word took is not settled.
 
 What you've built.
 One more word for this chapter.

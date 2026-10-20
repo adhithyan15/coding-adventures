@@ -15,6 +15,7 @@ concept_tag: FA-CHIZ244-KAJ2
 prerequisites: [FA-C244-bute, FA-C244-shakhe]
 sounds: []
 roots: []
+etymology_hook: "kâj: origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C244-shakhe]
 <!-- hl-knowledge: introduces=[FA-LEX-C244-CHIZ244-05]; assesses=[] -->
 
 **کاج** — *kâj* — "a pine tree".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kâj* is the word for a pine tree, but no source used here gives its origin, which is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

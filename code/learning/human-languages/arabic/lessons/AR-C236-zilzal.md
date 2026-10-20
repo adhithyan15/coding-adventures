@@ -14,7 +14,8 @@ romanization: "zilzāl"
 concept_tag: AR-MAKAN236-ZILZAL
 prerequisites: [AR-C235-taqatu, AR-C235-sifara]
 sounds: []
-roots: []
+roots: [z-l-z-l]
+etymology_hook: "zilzāl: built on the doubled root z-l-z-l 'to shake violently', listed by Lane under z-l-l"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C235-sifara]
 <!-- hl-knowledge: introduces=[AR-LEX-C236-MAKAN236-01]; assesses=[] -->
 
 **زلزال** — *zilzāl* — "an earthquake".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**زلزال** (*zilzāl*) is built on the doubled root *z-l-z-l*, "to shake violently", which Lane lists under *z-l-l*: a violent shaking, an earthquake.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

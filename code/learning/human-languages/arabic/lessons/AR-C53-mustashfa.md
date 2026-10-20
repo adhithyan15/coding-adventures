@@ -14,7 +14,8 @@ romanization: "mustashfā"
 concept_tag: AR-HEALTH53-MUSTASHFA
 prerequisites: [AR-C52-qalb, AR-C53-humma]
 sounds: []
-roots: []
+roots: [sh-f-y]
+etymology_hook: "mustashfā: built on the root sh-f-y, 'to heal, to cure' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C53-humma]
 <!-- hl-knowledge: introduces=[AR-LEX-C53-HEALTH53-02]; assesses=[] -->
 
 **مستشفى** — *mustashfā* — "a hospital".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مستشفى** (*mustashfā*) is built on the native Arabic root *sh-f-y*, "to heal, to cure" (Lane). *Mustashfā* is the Form X place noun, "a place where a cure is sought"; as the word for a hospital it is modern.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 220,
-  "sourceHash": "fnv1a64:2097819eab3447e0",
+  "sourceHash": "fnv1a64:3b41d3258a3ae3c2",
   "lessonIds": [
     "FA-C220-ejaze-dadan",
     "FA-C220-tamam-kardan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch220.txt",
   "json": "persian/narration/ch220.json",
-  "textHash": "fnv1a64:b9993da1cf84c644",
-  "jsonHash": "fnv1a64:abee09cc1d022afe",
+  "textHash": "fnv1a64:74b55a1b63c749ba",
+  "jsonHash": "fnv1a64:daf2836ace0482b8",
   "findings": []
 }

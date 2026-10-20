@@ -1,0 +1,19 @@
+{
+  "chapter": 698,
+  "title": "Nubes y sol",
+  "label": "ch:es-nubes-y-sol",
+  "canDo": "I can say whether the sky is cloudy, clear or sunny, and whether it is clearing up.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C698-despejar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 698: I can say whether the sky is cloudy, clear or sunny, and whether it is clearing up.",
+    "assesses": [
+      "ES-LEX-C698-CIELO-03",
+      "ES-LEX-C698-CIELO-04",
+      "ES-LEX-C698-CIELO-05"
+    ]
+  }
+}

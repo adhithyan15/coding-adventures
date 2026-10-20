@@ -14,7 +14,8 @@ romanization: "injekshan"
 concept_tag: UR-SEHAT185-INJEKSHAN
 prerequisites: [UR-C185-goli, UR-C185-nuskha]
 sounds: []
-roots: []
+roots: [english-injection]
+etymology_hook: "injekshan ← English injection"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C185-nuskha]
 <!-- hl-knowledge: introduces=[UR-LEX-C185-SEHAT185-03]; assesses=[] -->
 
 **انجکشن** — *injekshan* — "an injection".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**انجکشن** (*injekshan*) is a loan from English *injection*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

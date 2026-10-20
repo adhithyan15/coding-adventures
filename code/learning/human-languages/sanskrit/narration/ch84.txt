@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a lesson, then the Sanskrit for an exam
 You'll want to know: मन्दिरम्.
 मन्दिरम् (mandiram) — "a temple". मन्दिरम् कुत्र? — "where is the temple?"
 
+The word, taken apart.
+Mandira first meant any place where one stays, a dwelling or a palace, and only then a temple. MW and CDIAL 9852 file it under the root √mand, "to tarry, stay".
+
 What you've built.
 A place of worship.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for an exam, then the Sanskrit for a temple
 
 You'll want to know: चिकित्सालयः.
 चिकित्सालयः (cikitsālayaḥ) — "a hospital": चिकित्सा, "treatment", with the same आलयः, "home", as विद्यालयः.
+
+The word, taken apart.
+Cikitsālaya is built from cikitsā, "medical treatment", a noun MW files under the root √cit, "to perceive, attend to", and ālaya, "a dwelling". MW does not list the compound: pairing them for a hospital is modern.
 
 What you've built.
 Treatment plus home.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a temple, then the Sanskrit for a hospi
 You'll want to know: क्षेत्रम्.
 क्षेत्रम् (kṣetram) — "a field" of a ग्रामः.
 
+The word, taken apart.
+Kṣetra is built on the root √kṣi, "to dwell, possess": land held and lived on (MW). It is Rigvedic, and lives on as Hindi khet, "field" (CDIAL 3735).
+
 What you've built.
 Where the rice grows.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a hospital, then the Sanskrit for a fie
 You'll want to know: कृषकः.
 कृषकः (kṛṣakaḥ) — "a farmer", who works the क्षेत्रम् (kṣetram).
 
+The word, taken apart.
+Kṛṣaka is built on the root √kṛṣ, "to draw, plough": the farmer is the ploughman (MW, CDIAL 3444). Kṛṣi, "farming", comes from the same root.
+
 What you've built.
 Who works the field.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a field, then the Sanskrit for a farmer
 
 You'll want to know: वणिक्.
 वणिक् (vaṇik) — "a merchant", who keeps the आपणः.
+
+The word, taken apart.
+Vaṇij is already in the Rigveda, but its origin is unclear: MW gives no root (CDIAL 11230). Its abstract vaṇijyā, "trade", lives on as Hindi banij.
 
 What you've built.
 Who keeps the shop.

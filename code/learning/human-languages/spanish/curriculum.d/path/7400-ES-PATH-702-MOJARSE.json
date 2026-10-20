@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-702-MOJARSE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "ES-EXT-702-MOJARSE"
+  ],
+  "after": []
+}

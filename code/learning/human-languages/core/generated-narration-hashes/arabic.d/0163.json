@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 163,
-  "sourceHash": "fnv1a64:901ea237690c3c50",
+  "sourceHash": "fnv1a64:d2ac9aacee8828a2",
   "lessonIds": [
     "AR-C163-ihtafala",
     "AR-C163-daa",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch163.txt",
   "json": "arabic/narration/ch163.json",
-  "textHash": "fnv1a64:02b46a33783e56f5",
-  "jsonHash": "fnv1a64:95abbd17e00082a2",
+  "textHash": "fnv1a64:23c2a0e879b9f0a4",
+  "jsonHash": "fnv1a64:1b4d8e7841ffbfb4",
   "findings": []
 }

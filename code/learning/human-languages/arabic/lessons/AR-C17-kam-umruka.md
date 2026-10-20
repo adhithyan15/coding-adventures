@@ -12,7 +12,7 @@ concept_tag: AR-AGE
 prerequisites: [AR-C16-al-saa]
 sounds: [arabic-ain, possessive-suffix-ka-ki]
 roots: [arabic-umr-life]
-etymology_hook: "كم عمرك؟ (kam ʿumruka?, 'how old are you?') is literally 'how much [is] your ʿumr' — ʿumr (life, lifetime, age) from root ع-م-ر, the same root behind the name ʿUmar; Arabic asks age with a NOUN + possessive suffix, no verb at all — a FOURTH shape, after Romance's 'have', Germanic's 'be', and Latin's 'born + accusative of duration'"
+etymology_hook: "kam ʿumruka: kam 'how much' + ʿumr 'life', root ʿ-m-r 'to live long' (Lane), + -ka 'your'"
 duration:
   max_seconds: 240
 requires:
@@ -66,6 +66,11 @@ forms ordinary present-tense sentences without *is/are*. So this is a genuinely
 Germanic's "I **am** twenty years [old]," not Latin's "**born** twenty years
 [so far]," but "**my age** [is] twenty years" — age as a possessed
 noun-quantity, stated without any verb at all.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Kam*, "how much", is an inherited question word; *ʿumr*, "life", is built on the native root *ʿ-m-r*, "to live long" (Lane).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C17-KAM-UMRUKA-01, AR-CONCEPT-C17-KAM-UMRUKA-02] -->

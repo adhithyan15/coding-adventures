@@ -14,7 +14,8 @@ romanization: "dudkesh"
 concept_tag: FA-MAKAN157-DUDKESH
 prerequisites: [FA-C157-zendan, FA-C157-bandar]
 sounds: []
-roots: []
+roots: [persian-kashidan]
+etymology_hook: "dudkesh: Persian dud 'smoke' + kesh 'drawing' (keshidan); native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C157-bandar]
 <!-- hl-knowledge: introduces=[FA-LEX-C157-MAKAN157-05]; assesses=[] -->
 
 **دودکش** — *dudkesh* — "a chimney".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dudkesh* is *dud*, "smoke", with *-kesh*, "drawing" (from *keshidan*, "to draw"): what draws the smoke. Both are native; *dud* is usually traced to Middle Persian *dūd*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

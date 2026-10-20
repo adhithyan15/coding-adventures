@@ -14,7 +14,8 @@ romanization: "kintu"
 concept_tag: SA-JOIN-KINTU
 prerequisites: [SA-C52-va, SA-C02-kim, SA-C07-gacchati, SA-C20-child, SA-C26-teacher, SA-C01-na]
 sounds: []
-roots: []
+roots: [ka-interrogative]
+etymology_hook: "kintu 'but, however' ← kim 'what' + the particle tu 'but' (MW)"
 duration:
   max_seconds: 250
 requires:
@@ -60,6 +61,12 @@ the clause it contradicts.
 
 Three joining words, two different habits. Say the rule to yourself once: **च**
 and **वा** go last, **किन्तु** goes first.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Kintu* is built from *kim*, "what", and the particle *tu*, "but"; MW lists
+*kiṃ-tu* under *kim* as "but, however, nevertheless".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

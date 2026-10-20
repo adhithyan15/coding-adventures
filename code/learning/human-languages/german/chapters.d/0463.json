@@ -1,0 +1,19 @@
+{
+  "chapter": 463,
+  "title": "Eisige Kälte",
+  "label": "ch:ge-eisige-kalte",
+  "canDo": "I can talk about frost and thaw: hoarfrost, freezing, thawing, the thaw and shivering.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C463-bibbern",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 463: I can talk about frost and thaw: hoarfrost, freezing, thawing, the thaw and shivering.",
+    "assesses": [
+      "GE-LEX-C463-RAUREIF-03",
+      "GE-LEX-C463-RAUREIF-04",
+      "GE-LEX-C463-RAUREIF-05"
+    ]
+  }
+}

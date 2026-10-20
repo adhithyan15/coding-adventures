@@ -14,7 +14,8 @@ romanization: "yumkin"
 concept_tag: AR-CAN108-YUMKIN
 prerequisites: [AR-C107-istataa, AR-C107-qadara]
 sounds: []
-roots: []
+roots: [m-k-n]
+etymology_hook: "yumkin: built on the root m-k-n, 'to have power, to be firm in place' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C107-qadara]
 <!-- hl-knowledge: introduces=[AR-LEX-C108-CAN108-01]; assesses=[] -->
 
 **يمكن** — *yumkin* — "it is possible".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**يمكن** (*yumkin*) is built on the native Arabic root *m-k-n*, "to have power, to be firm in place" (Lane). *Yumkin* is the Form IV verb *amkana*, "to be possible", in the present tense: "it is possible".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

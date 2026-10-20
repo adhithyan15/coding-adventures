@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 546,
+  "sourceHash": "fnv1a64:43a2be03e46636cc",
+  "lessonIds": [
+    "ES-C546-bautizo",
+    "ES-C546-padrino",
+    "ES-C546-madrina",
+    "ES-C546-nieto",
+    "ES-C546-panal"
+  ],
+  "tex": "spanish/book/chapters/ch546-el-bautizo.tex"
+}

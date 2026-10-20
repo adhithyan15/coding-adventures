@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C559-multitud",
+    "language": "spanish",
+    "chapter": 559,
+    "sequence": 17620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8eec91781f565653"
+  },
+  "findings": []
+}

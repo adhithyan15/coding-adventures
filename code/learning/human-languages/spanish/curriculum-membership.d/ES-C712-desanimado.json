@@ -1,0 +1,11 @@
+{
+  "id": "ES-C712-desanimado",
+  "pathSegment": "ES-PATH-712-ANIMO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-712-ANIMO",
+      "order": 2
+    }
+  ]
+}

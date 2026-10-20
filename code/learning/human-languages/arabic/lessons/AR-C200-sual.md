@@ -14,7 +14,8 @@ romanization: "suʿāl"
 concept_tag: AR-SIHHA200-SUAL
 prerequisites: [AR-C199-hasada, AR-C200-zukam]
 sounds: []
-roots: []
+roots: [s-ʿ-l]
+etymology_hook: "suʿāl: built on the root s-ʿ-l, 'to cough' (Lane); suʿāl has the fuʿāl shape of illness words, like zukām, 'a cold'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C200-zukam]
 <!-- hl-knowledge: introduces=[AR-LEX-C200-SIHHA200-02]; assesses=[] -->
 
 **سعال** — *suʿāl* — "a cough".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سعال** (*suʿāl*) is built on the native Arabic root *s-ʿ-l*, "to cough" (Lane). *Suʿāl* has the *fuʿāl* shape of illness words, like *zukām*, "a cold".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

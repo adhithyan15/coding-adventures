@@ -1,0 +1,11 @@
+{
+  "id": "GE-C460-bedeckt",
+  "pathSegment": "GE-PATH-460-WETTERBERICHT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-460-WETTERBERICHT",
+      "order": 3
+    }
+  ]
+}

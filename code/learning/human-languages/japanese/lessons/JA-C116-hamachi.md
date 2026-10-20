@@ -14,7 +14,8 @@ romanization: "hamachi"
 concept_tag: JA-THINGS116-HAMACHI
 prerequisites: [JA-C116-masu, JA-C116-funa]
 sounds: []
-roots: []
+roots: [japanese-hamachi]
+etymology_hook: "hamachi: native; usually written in kana; origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C116-funa]
 <!-- hl-knowledge: introduces=[JA-LEX-C116-THINGS116-03]; assesses=[] -->
 
 **はまち** — *hamachi* — "a young yellowtail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**はまち** (*hamachi*) is a native word, inherited rather than borrowed, and JMdict marks it as usually written in kana. Its older origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

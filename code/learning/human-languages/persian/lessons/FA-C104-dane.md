@@ -14,7 +14,8 @@ romanization: "dâne"
 concept_tag: FA-THINGS104-DANE
 prerequisites: [FA-C103-mowj, FA-C103-rishe]
 sounds: []
-roots: []
+roots: [persian-dana]
+etymology_hook: "dâne: inherited, usually traced to Middle Persian dānag"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C103-rishe]
 <!-- hl-knowledge: introduces=[FA-LEX-C104-THINGS104-01]; assesses=[] -->
 
 **دانه** — *dâne* — "a seed, a grain".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dâne* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *dānag*, "grain, seed".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

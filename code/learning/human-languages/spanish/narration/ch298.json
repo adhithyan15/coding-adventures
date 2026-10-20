@@ -4,7 +4,7 @@
   "chapter": 298,
   "title": "Five More Short Answers --- Maybe, Could Be, Indeed, No Doubt, Out of the Question",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f973ecad3ae5d548",
+  "sourceHash": "fnv1a64:da8fa51ffe51c38d",
   "lessons": [
     {
       "id": "ES-C298-tal-vez",
@@ -175,7 +175,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b5f72275fa005aa3",
+      "sourceHash": "fnv1a64:e89ff98b567fc2cb",
       "notice": null,
       "blocks": [
         {
@@ -232,7 +232,7 @@
             },
             {
               "kind": "speech",
-              "text": "There is nothing here you do not already own. Poder, to be able, with its stressed o cracking open into ue the way it always does. Ser, to be. Put them together and you have said \"it is able to be,\" which is a very exact description of what \"maybe\" actually claims."
+              "text": "There is nothing here you do not already own. Poder, to be able, with its stressed o cracking open into ue the way it always does. Ser, to be. Poder from Vulgar Latin potēre, a remake of posse (EtymDB 2.1); ser merged Latin esse, \"to be\", with sedēre, \"to sit\". Put them together and you have said \"it is able to be,\" which is a very exact description of what \"maybe\" actually claims."
             },
             {
               "kind": "speech",
@@ -639,7 +639,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2d20bef2b18ce649",
+      "sourceHash": "fnv1a64:4c0aac268d524681",
       "notice": null,
       "blocks": [
         {
@@ -696,7 +696,7 @@
             },
             {
               "kind": "speech",
-              "text": "Again, nothing new. Ni is \"nor, not even.\" Hablar is to speak. Together: \"not even speaking of it.\" The refusal is not of the request — it is of the conversation about the request, which is a good deal more final."
+              "text": "Nothing new. Ni from Latin nec, \"nor, not even.\" Hablar from fābulārī, to speak. Together: \"not even speaking of it.\" The refusal is not of the request — it is of the conversation about the request, which is a good deal more final."
             },
             {
               "kind": "speech",

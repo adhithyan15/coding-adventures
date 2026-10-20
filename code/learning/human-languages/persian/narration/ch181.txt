@@ -12,6 +12,9 @@ Before the new one: say the Persian for to fry, then the Persian for to chop.
 You'll want to know: نفس کشیدن.
 نفس کشیدن — nafas keshidan — "to breathe".
 
+The word, taken apart.
+nafas keshidan is "to draw breath": nafas is borrowed from Arabic nafas, "breath" (EtymDB; root n-f-s, Lane), and keshidan, "to draw", is native. keshidan, "to pull", is an inherited verb; it is usually traced to Middle Persian kašīdan.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for to chop, then the Persian for to breathe
 
 You'll want to know: مرتب کردن.
 مرتب کردن — morattab kardan — "to tidy".
+
+The word, taken apart.
+morattab kardan pairs morattab, borrowed from Arabic murattab, "arranged in order" (root r-t-b, Lane), with the Persian verb kardan, "to do, to make". kardan, "to do", is an inherited verb, from Middle Persian kardan (EtymDB).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for to breathe, then the Persian for to tidy
 You'll want to know: تکان دادن.
 تکان دادن — tekân dâdan — "to shake".
 
+The word, taken apart.
+tekân dâdan pairs tekân, "a shake", with dâdan, "to give". tekân is native Persian, but its older form is not settled. dâdan, "to give", is an inherited verb; EtymDB takes it back to the Indo-European root deh₃-, "to give".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for to tidy, then the Persian for to shake.
 You'll want to know: رد شدن.
 رد شدن — rad shodan — "to cross, to go past".
 
+The word, taken apart.
+rad shodan pairs rad, borrowed from Arabic radd, "turning back" (root r-d-d, Lane), with the Persian verb shodan, "to become"; the sense "go past" is Persian's own. shodan, "to become", is an inherited verb; it is usually traced to Middle Persian šudan, "to go".
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for to shake, then the Persian for to cross.
 
 You'll want to know: قدم زدن.
 قدم زدن — qadam zadan — "to stroll".
+
+The word, taken apart.
+qadam zadan pairs qadam, borrowed from Arabic qadam, "foot, step" (root q-d-m, Lane), with the Persian verb zadan, "to strike". zadan, "to strike", is an inherited verb; it is usually traced to Middle Persian zadan.
 
 What you've built.
 One more word for this chapter.

@@ -1,0 +1,19 @@
+{
+  "chapter": 378,
+  "title": "Che cosa voglio fare",
+  "label": "ch:it-che-cosa-voglio-fare",
+  "canDo": "I can say what I aim to do: my purpose, my intention, a plan, a resolution and a goal.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "IT-R378-ripasso-371-378",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 378: I can say what I aim to do: my purpose, my intention, a plan, a resolution and a goal.",
+    "assesses": [
+      "IT-LEX-C378-SCOPO-03",
+      "IT-LEX-C378-SCOPO-04",
+      "IT-LEX-C378-SCOPO-05"
+    ]
+  }
+}

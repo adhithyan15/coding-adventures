@@ -1,0 +1,11 @@
+{
+  "id": "LA-C443-fretum",
+  "pathSegment": "LA-PATH-443-FLUCTUS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-443-FLUCTUS",
+      "order": 3
+    }
+  ]
+}

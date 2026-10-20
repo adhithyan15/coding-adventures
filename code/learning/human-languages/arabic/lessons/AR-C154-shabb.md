@@ -14,7 +14,8 @@ romanization: "shābb"
 concept_tag: AR-QUAL154-SHABB
 prerequisites: [AR-C153-nadij, AR-C154-mali]
 sounds: []
-roots: []
+roots: [sh-b-b]
+etymology_hook: "shābb: built on the root sh-b-b, 'to grow into youth' (Lane); shābb is the active participle, 'young'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C154-mali]
 <!-- hl-knowledge: introduces=[AR-LEX-C154-QUAL154-02]; assesses=[] -->
 
 **شاب** — *shābb* — "young".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شاب** (*shābb*) is built on the native Arabic root *sh-b-b*, "to grow into youth" (Lane). *Shābb* is the active participle, "young".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

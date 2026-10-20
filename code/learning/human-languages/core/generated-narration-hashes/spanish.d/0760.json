@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 760,
+  "sourceHash": "fnv1a64:faed5af4f301b394",
+  "lessonIds": [
+    "ES-C760-disfraz",
+    "ES-C760-disfrazarse",
+    "ES-C760-maquillaje",
+    "ES-C760-estreno",
+    "ES-C760-interpretar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch760.txt",
+  "json": "spanish/narration/ch760.json",
+  "textHash": "fnv1a64:8b585343fb2f0de3",
+  "jsonHash": "fnv1a64:8ae3f7df69c94043",
+  "findings": []
+}

@@ -11,8 +11,8 @@ gloss: not — the character that turns a word around
 concept_tag: RESPONSE-NO
 prerequisites: [ZH-W04-bu]
 sounds: [tone-4, tone-lexical]
-roots: []
-etymology_hook: 不 is how Mandarin says no: there is no standalone word for it, so you negate what was asked.
+roots: [middle-chinese-pjut]
+etymology_hook: "bù 'not': inherited, from Middle Chinese pjut, a negator already in the oldest Chinese writing"
 duration:
   max_seconds: 250
 requires:
@@ -71,6 +71,13 @@ already know how to refuse it, and the same holds for every word you have so far
 One word will break the pattern later — Mandarin has a second negator for
 *having*, and you will meet it with the word it belongs to. Everything in this
 book up to now takes 不.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**不** *bù* is inherited from Middle Chinese, and it is already a negator in the
+oldest Chinese writing. The Guangyun lists it as *pjuw* and as *pjut*, both
+"not" (in Baxter's transcription); Mandarin *bù* continues *pjut*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-BU, ZH-GRAMMAR-NEGATE] -->

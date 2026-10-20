@@ -4,7 +4,7 @@
   "chapter": 274,
   "title": "What a Phrase Carries --- Authority, a Story, a Silence, a Sense of Charm",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:278384102d54977b",
+  "sourceHash": "fnv1a64:05163483addcafe8",
   "lessons": [
     {
       "id": "ES-C274-mas-vale-pajaro",
@@ -179,7 +179,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0bd26db7ffbf06a3",
+      "sourceHash": "fnv1a64:f23a9c9f8cbdde65",
       "notice": null,
       "blocks": [
         {
@@ -232,7 +232,7 @@
             },
             {
               "kind": "speech",
-              "text": "It is Don Quixote, from Cervantes' novel of 1605 — and the word has stopped being a name. Written lowercase, quijote is an ordinary Spanish noun in the dictionary, and so is the adjective quijotesco. English took the same journey to quixotic."
+              "text": "It comes from Don Quixote, Cervantes' novel of 1605 — and the word has stopped being a name. Written lowercase, quijote is an ordinary Spanish noun in the dictionary, and so is the adjective quijotesco. English took the same journey to quixotic."
             },
             {
               "kind": "speech",

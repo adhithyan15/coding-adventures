@@ -14,7 +14,8 @@ romanization: "gṛham"
 concept_tag: SA-NOUN-HOUSE
 prerequisites: [SA-C15-adjective-system, SA-C15-mauna]
 sounds: []
-roots: []
+roots: [grha-sanskrit]
+etymology_hook: "gṛha 'house': MW files it under √gṛbh 'seize' but compares Gothic gards 'house', kin to English yard"
 duration:
   max_seconds: 210
 requires:
@@ -52,6 +53,14 @@ how Sanskrit's own grammarians heard the word, and it is worth hearing that way.
 You can already stack an adjective in front of it: महत् गृहम्, "a big house";
 नव गृहम्, "a new house." The adjective comes first, as you have already
 seen it do.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+MW files *gṛha* under √gṛbh, the older form of that root, but it also compares
+Gothic *gards* "house" and Latin *hortus* "garden". On that second account the
+word is inherited, a cousin of English **yard**, and the root story is the
+grammarians' reading of it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

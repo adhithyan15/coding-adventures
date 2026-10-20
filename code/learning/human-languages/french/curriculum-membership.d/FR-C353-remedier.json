@@ -1,0 +1,11 @@
+{
+  "id": "FR-C353-remedier",
+  "pathSegment": "FR-PATH-353-REMEDE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-353-REMEDE",
+      "order": 1
+    }
+  ]
+}

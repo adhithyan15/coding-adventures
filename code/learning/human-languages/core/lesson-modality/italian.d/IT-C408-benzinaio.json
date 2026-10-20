@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C408-benzinaio",
+    "language": "italian",
+    "chapter": 408,
+    "sequence": 23250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6ca21b51afc7b828"
+  },
+  "findings": []
+}

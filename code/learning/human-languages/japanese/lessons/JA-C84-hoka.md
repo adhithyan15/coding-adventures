@@ -14,7 +14,8 @@ romanization: "hoka"
 concept_tag: JA-DEF84-HOKA
 prerequisites: [JA-C83-anna, JA-C84-donna]
 sounds: []
-roots: []
+roots: [japanese-hoka]
+etymology_hook: "hoka: native Japanese, inherited, not borrowed; kanji 他 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C84-donna]
 <!-- hl-knowledge: introduces=[JA-LEX-C84-DEF84-02]; assesses=[] -->
 
 **ほか** — *hoka* — "other, another".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ほか** (*hoka*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

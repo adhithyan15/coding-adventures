@@ -14,7 +14,8 @@ romanization: "khodkâr"
 concept_tag: FA-SCHOOL49-KHODKAR
 prerequisites: [FA-C48-daftar, FA-C49-medad]
 sounds: []
-roots: []
+roots: [persian-kar]
+etymology_hook: "khodkâr: Persian khod 'self' + kâr 'work'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C49-medad]
 <!-- hl-knowledge: introduces=[FA-LEX-C49-SCHOOL49-02]; assesses=[] -->
 
 **خودکار** — *khodkâr* — "a pen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khodkâr* is built from *khod*, "self", and *kâr*, "work": "self-working", for a pen that carries its own ink. Both parts are native Persian; *kâr* is usually traced to Middle Persian *kār*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

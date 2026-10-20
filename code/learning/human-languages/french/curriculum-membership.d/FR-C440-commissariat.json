@@ -1,0 +1,11 @@
+{
+  "id": "FR-C440-commissariat",
+  "pathSegment": "FR-PATH-440-QUARTIERS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-440-QUARTIERS",
+      "order": 3
+    }
+  ]
+}

@@ -81,6 +81,9 @@ You'll want to know: पितामहः.
 Both halves are already yours. पिता is the father, and महत् is big; the ending shifts a little in the joining, but the sense does not. A grandfather is the great father.
 Sanskrit keeps the two sides of a family apart, so this word does not stretch to the mother's side. Ends in -अः.
 
+The word, taken apart.
+Pitāmaha is built from pitā, "father", and maha, "great", a Vedic adjective beside mahat (MW): the great father. It is already in the Atharvaveda.
+
 What you've built.
 A new word made of two old ones.
 
@@ -114,6 +117,9 @@ You'll want to know: मातामही.
 It is built exactly as पितामहः (pitāmahaḥ) is, with माता standing in front instead of पिता. Having watched the joining once, you can read this one before it is explained.
 The pair also shows the line Sanskrit draws down the middle of a family: one word for each side, and no word covering both. Feminine, ending in -ī.
 
+The word, taken apart.
+Mātāmahī is built from mātā, "mother", and mahī, the feminine of maha, "great" (MW), exactly as pitāmaha is.
+
 What you've built.
 The same joining, worked a second time.
 
@@ -146,6 +152,9 @@ You'll want to know: मातुलः.
 मातुलः (mātulaḥ) is a mother's brother.
 Sanskrit has no single word covering both uncles, and this is the one for the mother's side, with माता standing plainly inside it. The line drawn by पितामहः (pitāmahaḥ) and मातामही (mātāmahī) is drawn here too.
 Latin drew it in the same place: avunculus was the mother's brother, and it is the word English wore down into uncle. Two languages, one distinction, one border apart. Ends in -अः.
+
+The word, taken apart.
+Mātula is built from mātṛ, "mother" (MW, CDIAL 10009). It lives on as Marathi māvḷā, "mother's brother".
 
 What you've built.
 Five more of a household: a husband, a wife, a grandfather, a grandmother, a mother's brother.

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C491-separation",
+  "pathSegment": "FR-PATH-491-RUPTURE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-491-RUPTURE",
+      "order": 2
+    }
+  ]
+}

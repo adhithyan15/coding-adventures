@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Excuse Me, and Say It Again",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5c805ac9c5dc8523",
+  "sourceHash": "fnv1a64:8c6dc00c3346604a",
   "lessons": [
     {
       "id": "RU-C21-izvinite",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:44ab6c097f95f386",
+      "sourceHash": "fnv1a64:c85108dcb6d6dfce",
       "notice": null,
       "blocks": [
         {
@@ -58,11 +58,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "но, the contradicting but with no secure English cousin",
+              "instruction": "но, the contradicting but, probably kin to English now",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: *но*, the contradicting *but* with no secure English cousin]"
+              "source": "[YOU RECALL: *но*, the contradicting *but*, probably kin to English *now*]"
             },
             {
               "kind": "prompt",
@@ -117,7 +117,7 @@
             },
             {
               "kind": "speech",
-              "text": "So the word literally asks the other person to take you out of the blame — which is a real picture, still visible in the Russian, and one English threw away when excuse stopped meaning anything at all on its own."
+              "text": "So the word literally asks the other person to take you out of the blame — which is a real picture, still visible in the Russian, and one English threw away when excuse stopped meaning anything at all on its own. вина is inherited; Vasmer relates it to Latvian vaina, \"guilt\"."
             }
           ]
         },

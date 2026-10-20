@@ -14,7 +14,8 @@ romanization: "prāntaḥ"
 concept_tag: SA-THG195-PRANTAH
 prerequisites: [SA-C195-rajadhani, SA-C195-janapadah]
 sounds: []
-roots: []
+roots: [sanskrit-pranta, sanskrit-anta]
+etymology_hook: "prānta = pra + anta 'end': 'edge, border' (MW; CDIAL 8940); MW compares anta with English end"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C195-janapadah]
 <!-- hl-knowledge: introduces=[SA-LEX-C195-THG195-04]; assesses=[] -->
 
 **प्रान्तः** — *prāntaḥ* — "a province, a border".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*prānta* is *pra* with *anta*, "end, limit" (MW), and so "edge, border" (CDIAL 8940); a province is the land out at the edge. MW compares *anta* with English *end*, an inherited Indo-European word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

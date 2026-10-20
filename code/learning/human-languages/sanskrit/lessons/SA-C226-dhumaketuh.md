@@ -14,7 +14,8 @@ romanization: "dhūmaketuḥ"
 concept_tag: SA-THG226-DHUMAKETUH
 prerequisites: [SA-C225-sadvalam, SA-C226-grahah]
 sounds: []
-roots: []
+roots: [sanskrit-dhuma, sanskrit-ketu]
+etymology_hook: "dhūmaketu = dhūma 'smoke' + ketu 'bright sign, banner': 'smoke-bannered', a comet (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C226-grahah]
 <!-- hl-knowledge: introduces=[SA-LEX-C226-THG226-02]; assesses=[] -->
 
 **धूमकेतुः** — *dhūmaketuḥ* — "a comet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dhūmaketu* is a compound of *dhūma*, "smoke", and *ketu*, "bright sign, banner" (MW): a star with a banner of smoke. MW compares *dhūma* with Latin *fūmus*, "smoke", and *dhūma* lives on as the Hindi word for smoke (CDIAL 6849).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

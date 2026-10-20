@@ -1,7 +1,7 @@
 {
   "language": "chinese",
   "chapter": 1,
-  "sourceHash": "fnv1a64:db861d6636ee6dff",
+  "sourceHash": "fnv1a64:046f1168d06e0971",
   "lessonIds": [
     "ZH-C01-tones",
     "ZH-C01-ni",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "chinese/narration/ch01.txt",
   "json": "chinese/narration/ch01.json",
-  "textHash": "fnv1a64:35313cd84cdf9b09",
-  "jsonHash": "fnv1a64:df672620585792e2",
+  "textHash": "fnv1a64:1d3e5f99521d6673",
+  "jsonHash": "fnv1a64:f0d98b2ba9fcc77c",
   "findings": []
 }

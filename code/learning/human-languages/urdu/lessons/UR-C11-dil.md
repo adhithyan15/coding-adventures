@@ -12,7 +12,7 @@ concept_tag: UR-HEART
 prerequisites: [UR-C10-munh]
 sounds: [rtl, short-vowels-unwritten]
 roots: [middle-persian-dil, pie-kerd]
-etymology_hook: dil is Persian, borrowed into Urdu from Middle Persian, itself inherited within Iranian from Proto-Indo-Iranian *jʰārd, from Proto-Indo-European *ḱērd- "heart" -- the very root behind Sanskrit hṛdaya, English heart, Latin cor and Greek kardía; dil and hṛdaya are not opposites, they are the same root arriving in Urdu by two different Indo-Iranian roads, the Iranian one and the Indo-Aryan one.
+etymology_hook: "dil: usually traced to Persian dil 'heart', the same old root as Sanskrit hṛdaya and English heart"
 duration:
   max_seconds: 290
 requires:

@@ -14,7 +14,8 @@ romanization: "āzādī"
 concept_tag: UR-CHIZ172-AZADI
 prerequisites: [UR-C172-aman, UR-C172-jang]
 sounds: []
-roots: []
+roots: [persian-azadi]
+etymology_hook: "āzādī: usually traced to Persian āzādī 'freedom'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C172-jang]
 <!-- hl-knowledge: introduces=[UR-LEX-C172-CHIZ172-05]; assesses=[] -->
 
 **آزادی** — *āzādī* — "freedom".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**آزادی** (*āzādī*) is a loan, usually traced to Persian *āzādī*, "freedom". It is built on *āzād*, "free".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

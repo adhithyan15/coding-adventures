@@ -1,0 +1,11 @@
+{
+  "id": "ES-R711-repaso-704-711",
+  "pathSegment": "ES-PATH-711-EMOCION",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ES-EXT-711-EMOCION",
+      "order": 5
+    }
+  ]
+}

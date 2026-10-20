@@ -12,6 +12,9 @@ Before the new one: say the Urdu for a farmer, then the Urdu for a tailor.
 You'll want to know: گلوکار.
 گلوکار — gulūkār — "a singer".
 
+The word, taken apart.
+گلوکار (gulūkār) joins Persian gulū, "throat", and -kār, "one who works": a singer works with the throat.
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Urdu for a tailor, then the Urdu for a singer.
 
 You'll want to know: پائلٹ.
 پائلٹ — pāilaṭ — "a pilot".
+
+The word, taken apart.
+پائلٹ (pāilaṭ) is a loan from English pilot.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Urdu for a singer, then the Urdu for a pilot.
 You'll want to know: ملاح.
 ملاح — mallāh — "a sailor, a boatman".
 
+The word, taken apart.
+ملاح (mallāh) is a loan from Arabic mallāḥ, "a sailor", which reached Urdu through Persian. Its Arabic root is m-l-ḥ (Lane). It is built on the same root as milḥ, "salt".
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Urdu for a pilot, then the Urdu for a sailor.
 You'll want to know: مچھیرا.
 مچھیرا — machherā — "a fisherman".
 
+The word, taken apart.
+مچھیرا (machherā) is "one who works with fish". It is built on machh, "fish", which CDIAL lists, as Hindi māch, under Sanskrit matsya, "fish" (CDIAL 9758).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Urdu for a sailor, then the Urdu for a fisherman.
 
 You'll want to know: مالی.
 مالی — mālī — "a gardener".
+
+The word, taken apart.
+مالی (mālī) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from mālin, "garlanded; gardener" (CDIAL 10094). It is built on mālā, "garland".
 
 What you've built.
 One more word for this chapter.

@@ -14,7 +14,8 @@ romanization: "ṣaff"
 concept_tag: AR-THINGS143-SAFF
 prerequisites: [AR-C142-saha, AR-C143-mimhah]
 sounds: []
-roots: []
+roots: [ṣ-f-f]
+etymology_hook: "ṣaff: built on the root ṣ-f-f, 'a row, a rank' (Lane); ṣaff is a row"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C143-mimhah]
 <!-- hl-knowledge: introduces=[AR-LEX-C143-THINGS143-02]; assesses=[] -->
 
 **صف** — *ṣaff* — "a class".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صف** (*ṣaff*) is built on the native Arabic root *ṣ-f-f*, "a row, a rank" (Lane). *Ṣaff* is a row; the class is a row of pupils.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

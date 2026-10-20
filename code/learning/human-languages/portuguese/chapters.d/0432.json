@@ -1,0 +1,19 @@
+{
+  "chapter": 432,
+  "title": "Luz e corrente",
+  "label": "ch:pt-luz-e-corrente",
+  "canDo": "I can report electrical problems: a fuse, a bulb that blows, the circuit breaker, recharging and a power cut.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-R432-revisao-425-432",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 432: I can report electrical problems: a fuse, a bulb that blows, the circuit breaker, recharging and a power cut.",
+    "assesses": [
+      "PT-LEX-C432-LUZ-03",
+      "PT-LEX-C432-LUZ-04",
+      "PT-LEX-C432-LUZ-05"
+    ]
+  }
+}

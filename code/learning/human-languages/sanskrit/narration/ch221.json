@@ -4,7 +4,7 @@
   "chapter": 221,
   "title": "Cotton, Silk, Leather, Knot, Small stool",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e78d5245980cf1ac",
+  "sourceHash": "fnv1a64:8be7ccb048d208b5",
   "lessons": [
     {
       "id": "SA-C221-karpasah",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6c63b0c1ecaa2f55",
+      "sourceHash": "fnv1a64:22f2fcd7150f4389",
       "notice": null,
       "blocks": [
         {
@@ -52,6 +52,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kārpāsa is the adjective of karpāsa, \"the cotton plant\", used for cotton itself (MW). CDIAL 2877 takes karpāsa from Austroasiatic, and MW compares Greek karpasos and Latin carbasus, \"fine flax\". Punjabi kapāh, \"cotton\", comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -62,7 +73,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,7 +122,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -142,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3eb9fe5cf5d24465",
+      "sourceHash": "fnv1a64:53f074659c7a03ae",
       "notice": null,
       "blocks": [
         {
@@ -175,6 +186,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kauśeya is an adjective from kośa, \"case, sheath\", here the silkworm's cocoon (MW): \"silken\", and so silk cloth. Kośa itself is a Rigvedic word for \"bucket, case\" (CDIAL 3539)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -185,7 +207,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -234,7 +256,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -265,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:42494fec77ac91c2",
+      "sourceHash": "fnv1a64:6f2a85ae05438cfd",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +320,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "carma is the nominative of carman, \"hide, skin\", a Rigvedic word (CDIAL 4701). MW compares Latin corium, \"hide, leather\", so it is an inherited Indo-European word. It lives on as Hindi cām, \"hide, leather\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -308,7 +341,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -357,7 +390,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -388,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:776d9e00afa019c5",
+      "sourceHash": "fnv1a64:9852f77a782cca77",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +454,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "granthi is built on the root √granth, \"to fasten, tie, string together\" (MW): a knot. It is a Rigvedic word (CDIAL 4354). The same root gives grantha, \"a book\", words strung together."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -431,7 +475,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -480,7 +524,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -511,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:316d48480685b457",
+      "sourceHash": "fnv1a64:8050c22251fc6c65",
       "notice": null,
       "blocks": [
         {
@@ -544,6 +588,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pīṭhikā is pīṭha, \"stool, seat\", with the diminutive -ikā. MW suggests pīṭha may be worn down from pi-sad, \"to sit upon\", while CDIAL 8222 says its many forms suggest a non-Aryan origin; the question is not settled. It lives on as Hindi pīṛhā, \"stool\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -554,7 +609,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -603,7 +658,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

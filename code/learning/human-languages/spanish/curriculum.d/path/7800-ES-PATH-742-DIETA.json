@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-742-DIETA",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ES-EXT-742-DIETA"
+  ],
+  "after": []
+}

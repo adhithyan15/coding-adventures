@@ -61,7 +61,7 @@ meant *if he should want it*, the shrug you make when the smallest version of
 something would do. Said often enough, the seam closed and the meaning thinned
 into *even*.
 
-The Latin underneath *quiera* is **quaerere**, *to seek*, and English kept the
+*Quiera* comes from Latin **quaerere**, *to seek*, and English kept the
 seeking rather than the wanting: to **query** is to seek an answer, to
 **acquire** is to seek toward, an **inquest** is a seeking-into, and a **quest**
 is the bare verb standing alone.

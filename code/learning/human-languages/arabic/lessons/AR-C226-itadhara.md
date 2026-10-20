@@ -14,7 +14,8 @@ romanization: "iʿtadhara"
 concept_tag: AR-VERB-ITADHARA
 prerequisites: [AR-C226-intalaqa, AR-C226-shahana]
 sounds: []
-roots: []
+roots: [ʿ-dh-r]
+etymology_hook: "iʿtadhara: built on the root ʿ-dh-r, 'to excuse' (Lane); iʿtadhara is Form VIII, 'to offer an excuse'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C226-shahana]
 <!-- hl-knowledge: introduces=[AR-LEX-C226-ACT226-03]; assesses=[] -->
 
 **اعتذر** — *iʿtadhara* — "to apologise".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**اعتذر** (*iʿtadhara*) is built on the native Arabic root *ʿ-dh-r*, "to excuse" (Lane). *Iʿtadhara* is Form VIII, "to offer an excuse".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

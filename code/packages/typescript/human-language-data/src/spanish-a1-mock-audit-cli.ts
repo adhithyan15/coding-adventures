@@ -1,8 +1,14 @@
-import { readFileSync, writeFileSync } from "node:fs";
+import { lstatSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { lessonsUpToLevel } from "./levels.js";
-import { defaultCurriculumRoot, loadEverything } from "./loader.js";
+import {
+  defaultCurriculumRoot,
+  loadCurriculumSpine,
+  loadEverything,
+  loadTrackLanguageCurriculum,
+  loadTrackLessons,
+} from "./loader.js";
 import { LINE_TERMINATORS, reportableFilename } from "./constants.js";
 
 export const SPANISH_A1_MOCK_AUDIT = "spanish/mocks/a1/book-bounded-audit.json";
@@ -486,14 +492,48 @@ export function spanishTaughtForms(
   level: MockAuditLevel = "A1",
 ): { taught: Set<string>; lessonCount: number } {
   const everything = loadEverything(root);
-  const lessons = lessonsUpToLevel(
-    everything.lessons.filter((lesson) => lesson.language === "spanish"),
-    everything.curricula.filter((path) => path.language === "spanish"),
-    everything.spine,
+  return taughtFormsFromEvidence(everything.lessons, everything.curricula, everything.spine, level);
+}
+
+/**
+ * The stem reporter needs Spanish evidence, not a parse of every other book.
+ * Both paths deliberately share the conversion below: a fast reporter must
+ * never credit a different headword from the audit it is helping a human read.
+ */
+export function spanishTaughtFormsBounded(
+  root = defaultCurriculumRoot(),
+  level: MockAuditLevel = "A1",
+): { taught: Set<string>; lessonCount: number } {
+  spanishMockDir(level);
+  // The whole-corpus loader rejects linked tracks. A narrow read must keep
+  // that boundary before following curriculum or lessons under `spanish`.
+  const track = lstatSync(resolve(root, "spanish"));
+  if (!track.isDirectory() || track.isSymbolicLink()) {
+    throw new Error("spanish must be a real directory in the curriculum tree");
+  }
+  const curriculum = loadTrackLanguageCurriculum("spanish", root);
+  return taughtFormsFromEvidence(
+    loadTrackLessons("spanish", root),
+    curriculum === undefined ? [] : [curriculum],
+    loadCurriculumSpine(root),
+    level,
+  );
+}
+
+function taughtFormsFromEvidence(
+  lessons: ReturnType<typeof loadTrackLessons>,
+  curricula: NonNullable<ReturnType<typeof loadTrackLanguageCurriculum>>[],
+  spine: ReturnType<typeof loadCurriculumSpine>,
+  level: MockAuditLevel,
+): { taught: Set<string>; lessonCount: number } {
+  const selectedLessons = lessonsUpToLevel(
+    lessons.filter((lesson) => lesson.language === "spanish"),
+    curricula.filter((path) => path.language === "spanish"),
+    spine,
     level,
   );
   const taught = new Set<string>();
-  for (const lesson of lessons) {
+  for (const lesson of selectedLessons) {
     const headword = clean(lesson.realization.headword ?? "");
     for (const rawPart of headword.split(/[/,] |\s+y\s+|\s*[—–]\s*/)) {
       const part = clean(rawPart);
@@ -506,7 +546,7 @@ export function spanishTaughtForms(
   for (const credit of citationFormCredits) taught.add(credit);
   for (const credit of numberWordCredits) taught.add(credit);
   for (let number = 0; number <= 100; number += 1) taught.add(String(number));
-  return { taught, lessonCount: lessons.length };
+  return { taught, lessonCount: selectedLessons.length };
 }
 
 export function buildSpanishA1MockAudit(

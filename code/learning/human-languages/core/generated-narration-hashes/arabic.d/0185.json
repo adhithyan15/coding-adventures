@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 185,
-  "sourceHash": "fnv1a64:64dc17569a847115",
+  "sourceHash": "fnv1a64:dbb46ecff2d3cdbc",
   "lessonIds": [
     "AR-C185-dulfin",
     "AR-C185-babbagha",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "arabic/narration/ch185.txt",
   "json": "arabic/narration/ch185.json",
-  "textHash": "fnv1a64:b7de9553e8e1cc21",
-  "jsonHash": "fnv1a64:bb03964a140dc933",
+  "textHash": "fnv1a64:fb16e4bfcb7badbd",
+  "jsonHash": "fnv1a64:a2224f6663552b42",
   "findings": []
 }

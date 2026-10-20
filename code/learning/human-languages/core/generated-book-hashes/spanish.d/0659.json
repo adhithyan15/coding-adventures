@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 659,
+  "sourceHash": "fnv1a64:a6f8af73d949f2b2",
+  "lessonIds": [
+    "ES-C659-lancha",
+    "ES-C659-velero",
+    "ES-C659-remar",
+    "ES-C659-marinero",
+    "ES-C659-capitan"
+  ],
+  "tex": "spanish/book/chapters/ch659-barcas-y-marineros.tex"
+}

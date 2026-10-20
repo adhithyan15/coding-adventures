@@ -1241,6 +1241,21 @@ R1 in out 1k
 }
 
 #[test]
+fn resolve_deck_analyses_accepts_parser_style_noise_tails() {
+    let summary = resolve_deck_analyses(
+        "
+.noise V(out) V1 1k 2k temp=310
+.end
+",
+    );
+
+    assert!(summary.diagnostics.is_empty());
+    let noise = &summary.analyses[0];
+    assert_eq!(noise.frequencies_hz, vec![1.0e3, 2.0e3]);
+    assert!((noise.temperature_kelvin - 310.0).abs() < 1.0e-12);
+}
+
+#[test]
 fn resolve_deck_analyses_reports_invalid_cards() {
     let summary = resolve_deck_analyses(
         "

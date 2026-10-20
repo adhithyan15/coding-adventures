@@ -97,14 +97,14 @@ that path.
 
 ## Status
 
-v0.1.0 — implements FM02 §3 (manifest format), §3.4 (templating),
-§3.5 (hash). Sign/verify via the existing `@coding-adventures/ed25519`.
+v1.0.0 implements FM02 §3 (manifest format), §3.4 (templating), and §3.5
+(hash). Sign/verify uses `@coding-adventures/ed25519`.
 
-Not yet implemented (will land with `forme-plugin-host`):
-- `forme install` flow (FM02 §4.2) — CLI concern, lives in FM07.
-- Trust store (`~/.forme/trust.toml`) — also CLI.
-- Grants file (`grants.toml`) — host concern; the host reads/writes
-  using the types this package exports.
+The adjacent authority surfaces are implemented by their owning packages:
+- `forme install` (FM02 §4.2) is composed by `forme-cli`.
+- The trust store (`~/.forme/trust.toml`) is owned by the CLI boundary.
+- The grants file (`grants.toml`) is persisted and consumed by the host using
+  the types this package exports.
 
 ## See also
 

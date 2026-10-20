@@ -6,7 +6,7 @@ sequence: 550
 chapter: 24
 type: word
 headword: രാത്രി
-gloss: "night" — the Sanskrit tatsama already shortened inside pātirā, with a different PIE root from Latin nox
+gloss: '"night" — the Sanskrit tatsama already shortened inside pātirā, with a different PIE root from Latin nox'
 romanization: "rātri"
 concept_tag: TIME-NIGHT
 prerequisites: [ML-C17-paathira, ML-C23-naal, ML-C20-pathinonnu-irupathu]

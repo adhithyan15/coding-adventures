@@ -14,7 +14,8 @@ romanization: "safhe"
 concept_tag: FA-CHIZ246-SAFHE
 prerequisites: [FA-C245-shakh, FA-C245-futbal]
 sounds: []
-roots: []
+roots: [arabic-safha]
+etymology_hook: "safhe ← Arabic ṣafḥa 'flat surface, page', root ṣ-f-ḥ (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C245-futbal]
 <!-- hl-knowledge: introduces=[FA-LEX-C246-CHIZ246-01]; assesses=[] -->
 
 **صفحه** — *safhe* — "a page; a screen".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*safhe* is borrowed from Arabic *ṣafḥa*, "flat surface, page". Its Arabic root is *ṣ-f-ḥ* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

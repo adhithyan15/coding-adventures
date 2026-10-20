@@ -14,7 +14,8 @@ romanization: "nīḍam"
 concept_tag: SA-THG198-NIDAM
 prerequisites: [SA-C198-citrakah, SA-C198-gandakah]
 sounds: []
-roots: []
+roots: [sanskrit-nida]
+etymology_hook: "nīḍa 'nest' ← ni 'down' + √sad 'sit': 'sitting-down place'; MW compares Latin nīdus, English nest"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C198-gandakah]
 <!-- hl-knowledge: introduces=[SA-LEX-C198-THG198-04]; assesses=[] -->
 
 **नीडम्** — *nīḍam* — "a nest".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*nīḍa* is built on *ni*, "down", and the root √sad, "to sit" (MW): a nest is where a bird sits down. It is inherited from Indo-European: MW compares Latin *nīdus* and English *nest*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

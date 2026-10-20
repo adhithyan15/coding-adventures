@@ -14,7 +14,8 @@ romanization: "atra"
 concept_tag: SA-DEIXIS-HERE
 prerequisites: [SA-C14-that, SA-C07-asti]
 sounds: []
-roots: []
+roots: [sanskrit-atra]
+etymology_hook: "atra 'here' ← the near pronoun base a- 'this' + the place suffix -tra (MW; CDIAL 228)"
 duration:
   max_seconds: 210
 requires:
@@ -51,6 +52,12 @@ it does not mean anything on its own, it means whatever the speaker is pointing 
 Its partner, the far one, comes shortly. The two of them
 differ by one sound at the front — **a-** for near — and that is not a
 coincidence. It is the whole system, and the last lesson of this chapter says so.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Atra* is built from the pronoun base *a-* "this" with the place ending *-tra*,
+the ending you will meet again in *tatra* and *kutra* (MW, CDIAL 228).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C14-DEIXIS-03] -->

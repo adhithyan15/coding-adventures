@@ -1,0 +1,11 @@
+{
+  "id": "GE-C513-geige",
+  "pathSegment": "GE-PATH-513-INSTRUMENTE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-513-INSTRUMENTE",
+      "order": 1
+    }
+  ]
+}

@@ -14,7 +14,8 @@ romanization: "shâmpu"
 concept_tag: FA-CHIZ165-SHAMPU
 prerequisites: [FA-C165-dastshuyi, FA-C165-khamirdandan]
 sounds: []
-roots: []
+roots: [english-shampoo]
+etymology_hook: "shâmpu: a loan, usually traced to English shampoo 'shampoo'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C165-khamirdandan]
 <!-- hl-knowledge: introduces=[FA-LEX-C165-CHIZ165-05]; assesses=[] -->
 
 **شامپو** — *shâmpu* — "shampoo".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*shâmpu* is a loan, usually traced to English *shampoo*, "shampoo". English took it from Hindi *chāmpo*, "press, knead".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

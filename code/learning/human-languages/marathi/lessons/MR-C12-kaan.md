@@ -12,7 +12,7 @@ concept_tag: MR-BODY-EAR
 prerequisites: [MR-C12-dola]
 sounds: []
 roots: [sanskrit-karna]
-etymology_hook: "कान continues Sanskrit कर्ण karṇa through Prakrit kaṇṇa (the rṇ cluster simplified to a geminate ṇṇ, the same kind of change Chapter 13 traced in don) to Old Marathi kāna; karṇa's own root beyond Sanskrit is disputed among scholars, with no single proposal secure, so this lesson states the dispute rather than picking one"
+etymology_hook: "कान ← Prakrit kaṇṇa ← Sanskrit karṇa 'ear' (CDIAL 2830); karṇa's own origin is disputed"
 duration:
   max_seconds: 270
 requires:

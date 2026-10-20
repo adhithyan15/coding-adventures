@@ -14,7 +14,8 @@ romanization: "paṭṭikā"
 concept_tag: SA-THG158-PATTIKA
 prerequisites: [SA-C158-lekhani, SA-C158-masi]
 sounds: []
-roots: []
+roots: [sanskrit-pattika]
+etymology_hook: "paṭṭikā 'tablet' ← paṭṭa 'slab, tablet' (MW; CDIAL 7699), whose own origin is doubtful"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C158-masi]
 <!-- hl-knowledge: introduces=[SA-LEX-C158-THG158-03]; assesses=[] -->
 
 **पट्टिका** — *paṭṭikā* — "a slate, a tablet".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*paṭṭikā* is the feminine small form of *paṭṭa* "a slab, a tablet for writing on" (MW; CDIAL 7699). CDIAL calls the derivation of *paṭṭa* from *pattra* "leaf" very doubtful, so its origin is uncertain.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

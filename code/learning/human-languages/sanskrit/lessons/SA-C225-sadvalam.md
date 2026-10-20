@@ -14,7 +14,8 @@ romanization: "śādvalam"
 concept_tag: SA-THG225-SADVALAM
 prerequisites: [SA-C225-kananam, SA-C225-kunjah]
 sounds: []
-roots: []
+roots: [sanskrit-shadvala]
+etymology_hook: "śādvala 'grassy, a meadow' ← śāda 'young grass', from √śad 'fall' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C225-kunjah]
 <!-- hl-knowledge: introduces=[SA-LEX-C225-THG225-05]; assesses=[] -->
 
 **शाद्वलम्** — *śādvalam* — "a meadow".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*śādvala* is built on *śāda*, "young grass", with the suffix *-vala*, "abounding in" (MW): a place full of fresh grass. MW derives *śāda* from √śad, "to fall off", with a first sense "falling, dropping".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

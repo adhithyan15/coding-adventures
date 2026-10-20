@@ -1,0 +1,11 @@
+{
+  "id": "FR-C379-diplome",
+  "pathSegment": "FR-PATH-379-DIPLOME",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-379-DIPLOME",
+      "order": 0
+    }
+  ]
+}

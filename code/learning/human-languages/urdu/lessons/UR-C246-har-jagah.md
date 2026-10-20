@@ -14,7 +14,8 @@ romanization: "har jagah"
 concept_tag: UR-JAGAH246-HAR-JAGAH
 prerequisites: [UR-C245-salgirah, UR-C246-garaj]
 sounds: []
-roots: []
+roots: [persian-har, persian-jaygah]
+etymology_hook: "har 'every' and jagah 'place' are both usually traced to Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C246-garaj]
 <!-- hl-knowledge: introduces=[UR-LEX-C246-JAGAH246-02]; assesses=[] -->
 
 **ہر جگہ** — *har jagah* — "everywhere".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ہر جگہ** (*har jagah*) joins *har*, "every", and *jagah*, "place", both usually traced to Persian: *jagah* to *jāygāh*, "place".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

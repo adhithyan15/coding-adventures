@@ -14,7 +14,8 @@ romanization: "tarbūz"
 concept_tag: UR-THINGS115-TARBUZ
 prerequisites: [UR-C115-matar, UR-C115-khira]
 sounds: []
-roots: []
+roots: [persian-tarbuz]
+etymology_hook: "tarbūz: usually traced to Persian tarbuz 'watermelon'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C115-khira]
 <!-- hl-knowledge: introduces=[UR-LEX-C115-THINGS115-05]; assesses=[] -->
 
 **تربوز** — *tarbūz* — "a watermelon".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**تربوز** (*tarbūz*) is a loan, usually traced to Persian *tarbuz*, "watermelon".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

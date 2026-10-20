@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 626,
+  "sourceHash": "fnv1a64:36f199cad5b7d967",
+  "lessonIds": [
+    "ES-C626-sentencia",
+    "ES-C626-acusacion",
+    "ES-C626-tribunal",
+    "ES-C626-culpable",
+    "ES-C626-fraude"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch626.txt",
+  "json": "spanish/narration/ch626.json",
+  "textHash": "fnv1a64:f31c5d6e60ecee67",
+  "jsonHash": "fnv1a64:a7953de460f30635",
+  "findings": []
+}

@@ -14,7 +14,8 @@ romanization: "ânhâ"
 concept_tag: FA-DEF83-ANHA
 prerequisites: [FA-C82-an, FA-C82-inha]
 sounds: []
-roots: []
+roots: [persian-an]
+etymology_hook: "ânhâ: Persian ân 'that' (Middle Persian ān) + plural -hâ"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C82-inha]
 <!-- hl-knowledge: introduces=[FA-LEX-C83-DEF83-01]; assesses=[] -->
 
 **آنها** — *ânhâ* — "those, they".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ânhâ* is *ân*, "that", with the plural ending *-hâ*: "those". Both pieces are native Persian; *ân* is usually traced to Middle Persian *ān*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

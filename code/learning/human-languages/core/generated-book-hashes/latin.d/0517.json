@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 517,
+  "sourceHash": "fnv1a64:db2c6eb6817efe8b",
+  "lessonIds": [
+    "LA-C517-vena",
+    "LA-C517-nervus",
+    "LA-C517-pellis",
+    "LA-C517-sudor",
+    "LA-C517-pulsus"
+  ],
+  "tex": "latin/book/chapters/ch517-inside-the-body.tex"
+}

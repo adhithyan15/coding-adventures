@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 581,
+  "sourceHash": "fnv1a64:65242cc8f9297008",
+  "lessonIds": [
+    "ES-C581-causar",
+    "ES-C581-provocar",
+    "ES-C581-debido-a",
+    "ES-C581-a-causa-de",
+    "ES-C581-gracias-a"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch581.txt",
+  "json": "spanish/narration/ch581.json",
+  "textHash": "fnv1a64:27322b692ab91f53",
+  "jsonHash": "fnv1a64:44b966e682cadbb3",
+  "findings": []
+}

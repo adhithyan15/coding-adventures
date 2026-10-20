@@ -46,7 +46,7 @@ reviews_of: [GE-C117-kette]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**Geschenk** is *ge-* + the stem of the verb "to give as a present", which first meant "to pour out a drink for someone". A present began as a drink poured for a guest.
+**Geschenk** is *ge-* + the stem of the verb "to give as a present", which first meant "to pour out a drink for someone". A present began as a drink poured for a guest. *Schenken* ← Old High German *scenken*, "to pour, to give drink" (EtymDB 2.1).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

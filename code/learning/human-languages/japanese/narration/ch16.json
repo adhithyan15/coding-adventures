@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "The Other Way to Count",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:95165d0021875865",
+  "sourceHash": "fnv1a64:46007d4aa6f0c6cb",
   "lessons": [
     {
       "id": "JA-W16-hi",
@@ -173,7 +173,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6bc699d08c4cbee2",
+      "sourceHash": "fnv1a64:68d42ccebddade0a",
       "notice": null,
       "blocks": [
         {
@@ -258,6 +258,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひとつ (hitotsu) is native: hito, the inherited word for \"one\", with the native counter -tsu. Hito is the kun'yomi of the character for one; none of the word is borrowed (KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -277,7 +288,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -482,7 +493,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:126758e8664f19b9",
+      "sourceHash": "fnv1a64:2fcce53b20f31c6f",
       "notice": null,
       "blocks": [
         {
@@ -554,6 +565,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふたつ (futatsu) is native: futa, the inherited word for \"two\", with the counter -tsu. Futa also opens futari, \"two people\" (KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -573,7 +595,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -623,7 +645,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5fc1f2e5758c83f5",
+      "sourceHash": "fnv1a64:819ff4412545dd28",
       "notice": null,
       "blocks": [
         {
@@ -695,6 +717,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "みっつ (mittsu) is native: mi, the inherited word for \"three\", with the counter -tsu, the consonant held before it (KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -714,7 +747,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -765,7 +798,7 @@
         "sight-cue",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:56204d02d47664fc",
+      "sourceHash": "fnv1a64:3562cd6c09df9884",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -875,6 +908,17 @@
         },
         {
           "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よっつ (yottsu) is native: yo, the inherited word for \"four\", with the counter -tsu; yon is built on the same yo (KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice — read, copy, recall",
           "segments": [
@@ -885,7 +929,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -935,7 +979,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:37be744da748b8e0",
+      "sourceHash": "fnv1a64:ace689e02ff993a6",
       "notice": null,
       "blocks": [
         {
@@ -1003,6 +1047,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いつつ (itsutsu) is native: itsu, the inherited word for \"five\", with the counter -tsu (KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1022,7 +1077,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

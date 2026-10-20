@@ -1,0 +1,19 @@
+{
+  "chapter": 399,
+  "title": "Na rede",
+  "label": "ch:pt-na-rede",
+  "canDo": "I can get about online: browse, search, use a search engine and follow a link.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "PT-C399-hiperligacao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 399: I can get about online: browse, search, use a search engine and follow a link.",
+    "assesses": [
+      "PT-LEX-C399-REDE-03",
+      "PT-LEX-C399-REDE-04",
+      "PT-LEX-C399-REDE-05"
+    ]
+  }
+}

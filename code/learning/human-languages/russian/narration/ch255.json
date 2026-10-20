@@ -4,7 +4,7 @@
   "chapter": 255,
   "title": "Surname, Age, Number, Message, Conversation",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8df8f2831b3e8ebe",
+  "sourceHash": "fnv1a64:991b70acb8c6a916",
   "lessons": [
     {
       "id": "RU-C255-familiya",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:381742c6bec8b8bd",
+      "sourceHash": "fnv1a64:b1c60519800f6751",
       "notice": null,
       "blocks": [
         {
@@ -593,7 +593,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "разговор (razgovór) is раз-, \"about, back and forth\", with говор, \"talk\"."
+              "text": "разговор (razgovór) is раз-, \"about, back and forth\", with говор, \"talk\". Говор is inherited; Vasmer relates it to Latvian gaura, \"chatter\"."
             }
           ]
         },

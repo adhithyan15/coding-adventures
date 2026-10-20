@@ -15,6 +15,7 @@ concept_tag: UR-VERB-CHIKHNA
 prerequisites: [UR-C147-parhana, UR-C147-yad-karna]
 sounds: []
 roots: []
+etymology_hook: "chīkhnā 'to scream': origin uncertain; CDIAL has only chīkhnā 'to taste' (4557), a different word"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C147-yad-karna]
 <!-- hl-knowledge: introduces=[UR-LEX-C147-ACT147-03]; assesses=[] -->
 
 **چیخنا** — *chīkhnā* — "to scream, to shout".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+The origin of **چیخنا** (*chīkhnā*) is uncertain. CDIAL lists a Hindi *cīkhnā* only in the sense "to taste" (CDIAL 4557), which is a different word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

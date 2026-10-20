@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C629-financiar",
+    "language": "spanish",
+    "chapter": 629,
+    "sequence": 21250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd1c17597c790c08"
+  },
+  "findings": []
+}

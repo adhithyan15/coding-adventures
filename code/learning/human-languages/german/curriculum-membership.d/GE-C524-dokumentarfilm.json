@@ -1,0 +1,11 @@
+{
+  "id": "GE-C524-dokumentarfilm",
+  "pathSegment": "GE-PATH-524-FILM",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-524-FILM",
+      "order": 2
+    }
+  ]
+}

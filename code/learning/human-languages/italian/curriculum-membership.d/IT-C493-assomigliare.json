@@ -1,0 +1,11 @@
+{
+  "id": "IT-C493-assomigliare",
+  "pathSegment": "IT-PATH-493-PARENTI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-493-PARENTI",
+      "order": 4
+    }
+  ]
+}

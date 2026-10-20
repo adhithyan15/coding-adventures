@@ -11,7 +11,7 @@ gloss: I speak Bengali
 concept_tag: BN-WORD-BANGLA
 prerequisites: [BN-C05-bola, BN-C03-ami]
 sounds: [anusvara, long-aa]
-roots: [banga, indo-aryan-bolla]
+roots: [banga, bol-speak]
 etymology_hook: "bānglā ← Sanskrit vaṅga, the name of a people of Bengal (CDIAL 11197); bôli ← *bōll 'speak' (CDIAL 9321)"
 duration:
   max_seconds: 240

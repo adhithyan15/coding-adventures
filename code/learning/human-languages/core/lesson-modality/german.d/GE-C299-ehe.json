@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C299-ehe",
+    "language": "german",
+    "chapter": 299,
+    "sequence": 16390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f5b3770493bac640"
+  },
+  "findings": []
+}

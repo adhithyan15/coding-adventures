@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-479-POMARIUM",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "LA-EXT-479-POMARIUM"
+  ],
+  "after": []
+}

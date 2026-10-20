@@ -1,0 +1,11 @@
+{
+  "id": "LA-C435-linter",
+  "pathSegment": "LA-PATH-435-NAVIGIUM",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-435-NAVIGIUM",
+      "order": 3
+    }
+  ]
+}

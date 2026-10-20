@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:db1b1d262289eea5",
+  "lessonIds": [
+    "IT-C343-dubitare",
+    "IT-C343-scettico",
+    "IT-C343-negare",
+    "IT-C343-assurdo",
+    "IT-C343-discutibile"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch343.txt",
+  "json": "italian/narration/ch343.json",
+  "textHash": "fnv1a64:22020a8c65744784",
+  "jsonHash": "fnv1a64:6ef30ec44ffacdc8",
+  "findings": []
+}

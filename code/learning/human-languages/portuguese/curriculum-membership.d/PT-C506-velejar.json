@@ -1,0 +1,11 @@
+{
+  "id": "PT-C506-velejar",
+  "pathSegment": "PT-PATH-506-AGUA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-506-AGUA",
+      "order": 2
+    }
+  ]
+}

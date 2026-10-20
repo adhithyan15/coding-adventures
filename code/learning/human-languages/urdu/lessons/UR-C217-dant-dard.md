@@ -14,7 +14,8 @@ romanization: "dāṅt dard"
 concept_tag: UR-SEHAT217-DANT-DARD
 prerequisites: [UR-C217-munchh, UR-C217-tandurusti]
 sounds: []
-roots: []
+roots: [danta-sanskrit, persian-dard]
+etymology_hook: "dāṅt ← Sanskrit danta 'tooth' (CDIAL 6152); dard 'pain' usually traced to Persian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C217-tandurusti]
 <!-- hl-knowledge: introduces=[UR-LEX-C217-SEHAT217-04]; assesses=[] -->
 
 **دانت درد** — *dāṅt dard* — "a toothache".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دانت درد** (*dāṅt dard*) joins *dāṅt*, "tooth", from Sanskrit *danta*, "tooth" (CDIAL 6152), and *dard*, "pain", usually traced to Persian *dard*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

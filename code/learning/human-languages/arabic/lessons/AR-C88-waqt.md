@@ -14,7 +14,8 @@ romanization: "waqt"
 concept_tag: AR-TIME88-WAQT
 prerequisites: [AR-C87-qabla, AR-C88-bada]
 sounds: []
-roots: []
+roots: [w-q-t]
+etymology_hook: "waqt: built on the root w-q-t, 'an appointed time' (Lane); Lane's waqt is a fixed or appointed time"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C88-bada]
 <!-- hl-knowledge: introduces=[AR-LEX-C88-TIME88-02]; assesses=[] -->
 
 **وقت** — *waqt* — "time".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**وقت** (*waqt*) is built on the native Arabic root *w-q-t*, "an appointed time" (Lane). Lane's *waqt* is a fixed or appointed time.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

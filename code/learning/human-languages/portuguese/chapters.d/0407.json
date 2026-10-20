@@ -1,0 +1,19 @@
+{
+  "chapter": 407,
+  "title": "Debaixo do capô",
+  "label": "ch:pt-debaixo-do-capo",
+  "canDo": "I can talk about parts of a car: the bonnet, the boot, the indicator, a screw and unscrewing it.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C407-desaparafusar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 407: I can talk about parts of a car: the bonnet, the boot, the indicator, a screw and unscrewing it.",
+    "assesses": [
+      "PT-LEX-C407-CAPO-03",
+      "PT-LEX-C407-CAPO-04",
+      "PT-LEX-C407-CAPO-05"
+    ]
+  }
+}

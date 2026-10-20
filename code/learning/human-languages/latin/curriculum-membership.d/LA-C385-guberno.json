@@ -1,0 +1,11 @@
+{
+  "id": "LA-C385-guberno",
+  "pathSegment": "LA-PATH-385-REGO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-385-REGO",
+      "order": 1
+    }
+  ]
+}

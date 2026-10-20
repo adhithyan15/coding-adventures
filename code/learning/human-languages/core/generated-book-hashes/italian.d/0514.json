@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 514,
+  "sourceHash": "fnv1a64:9fe8857f4dbdfb96",
+  "lessonIds": [
+    "IT-C514-tuffo",
+    "IT-C514-cuffia",
+    "IT-C514-vela",
+    "IT-C514-immergersi",
+    "IT-C514-trampolino"
+  ],
+  "tex": "italian/book/chapters/ch514-in-acqua.tex"
+}

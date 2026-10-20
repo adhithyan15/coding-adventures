@@ -18,6 +18,9 @@ You'll want to know: おちゃ.
 おちゃ — ocha — "tea".
 Count the beats as you say it: o–cha. Two beats, not three. The last two signs are one beat between them, and the small sign at the end is the reason. The next lesson takes that small sign and writes it on its own.
 
+The word, taken apart.
+おちゃ (ocha) is the native polite prefix o- with cha, "tea", the on'yomi of its character, borrowed from Chinese (Middle Chinese drae; JMdict, Unihan).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: ocha]
@@ -95,6 +98,9 @@ You'll want to know: いしゃ.
 いしゃ — isha — "a doctor".
 The small sign is spent at once. し with ゃ (small ya) after it is one beat, sha, so the word is two beats: i–sha.
 
+The word, taken apart.
+いしゃ (isha) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are i, "heal, medical" (Middle Chinese 'i) and sha, "person, he who" (tsyaeX) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: isha]
@@ -127,6 +133,9 @@ Say a doctor — R1, one lesson back.
 You'll want to know: ちょっと.
 ちょっと — chotto — "a little", and, said on its own with a small pause, "one moment".
 Three beats: cho, a held silence, to. The silence is the small っ you already write. The first beat is ち with a small sign after it that you do not write yet; it joins forward, the way ゃ (small ya) does, and the next lesson writes it.
+
+The word, taken apart.
+ちょっと (chotto) is a native word, inherited rather than borrowed, usually written in kana; JMdict marks its kanji, "one" and an inch-like measure, as ateji. Its older origin is not settled.
 
 Guided Practice.
 [pause 1 second]
@@ -205,6 +214,9 @@ You'll want to know: としょかん.
 としょかん — toshokan — "a library".
 Five signs, four beats: to–sho–ka–n. し with ょ (small yo) after it is one beat, sho, and ん is a beat on its own.
 
+The word, taken apart.
+としょかん (toshokan) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are to, "chart, map" (Middle Chinese du), sho, "book" (syo) and kan, "public building" (kwanH) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: toshokan]
@@ -237,6 +249,9 @@ You'll want to know: おちゃを ください.
 You know both words already: ocha, tea, and kudasai, the polite request at the end of itte kudasai. What is new is the small word between them, said o.
 It marks the thing the request is about: tea is what you are asking for. Put any thing you can name in front of it and the request works the same way.
 That word is spelled with a sign you have not written yet. It is said o, the same as お, but it is a different sign, and the next lesson writes it.
+
+The word, taken apart.
+おちゃを ください (ocha o kudasai) puts known pieces together: ocha, polite o- with cha, borrowed from Chinese; the native particle o, which marks the thing; and kudasai, the request form of native kudasaru, "to give (to me)" (JMdict).
 
 Guided Practice.
 [pause 1 second]

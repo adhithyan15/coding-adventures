@@ -14,7 +14,8 @@ romanization: "haspatāl"
 concept_tag: UR-HEALTH41-HASPATAL
 prerequisites: [UR-C40-ghutna, UR-C40-bukhar]
 sounds: []
-roots: []
+roots: [english-hospital]
+etymology_hook: "haspatāl ← English hospital"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C40-bukhar]
 <!-- hl-knowledge: introduces=[UR-LEX-C41-HEALTH41-01]; assesses=[] -->
 
 **ہسپتال** — *haspatāl* — "a hospital".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ہسپتال** (*haspatāl*) is a loan from English *hospital*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

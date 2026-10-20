@@ -14,7 +14,8 @@ romanization: "dokkân"
 concept_tag: FA-MAKAN156-DOKKAN
 prerequisites: [FA-C156-asiyab, FA-C156-qanat]
 sounds: []
-roots: []
+roots: [arabic-dukkan]
+etymology_hook: "dokkân ← Arabic dukkān ← Aramaic dukkānā 'platform' (EtymDB)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C156-qanat]
 <!-- hl-knowledge: introduces=[FA-LEX-C156-MAKAN156-05]; assesses=[] -->
 
 **دکان** — *dokkân* — "a small shop, a stall".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dokkân* is borrowed from Arabic *dukkān*, "shop", which EtymDB traces through Aramaic *dukkānā*, "platform, bench", back to Akkadian.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "rad kardan"
 concept_tag: FA-VERB-RAD-KARDAN
 prerequisites: [FA-C183-ashna-shodan, FA-C184-qabul-kardan]
 sounds: []
-roots: []
+roots: [arabic-radd]
+etymology_hook: "rad ← Arabic radd 'turning back, rejecting', root r-d-d (Lane), + Persian kardan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C184-qabul-kardan]
 <!-- hl-knowledge: introduces=[FA-LEX-C184-KONESH184-02]; assesses=[] -->
 
 **رد کردن** — *rad kardan* — "to refuse, to turn down".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*rad kardan* pairs *rad*, borrowed from Arabic *radd*, "turning back, rejecting" (root *r-d-d*, Lane), with the Persian verb *kardan*, "to do, to make". *kardan*, "to do", is an inherited verb, from Middle Persian *kardan* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

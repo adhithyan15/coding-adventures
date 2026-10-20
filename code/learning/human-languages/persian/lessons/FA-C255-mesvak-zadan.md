@@ -14,7 +14,8 @@ romanization: "mesvâk zadan"
 concept_tag: FA-VERB-MESVAK-ZADAN
 prerequisites: [FA-C254-avizan-kardan, FA-C255-dad-zadan]
 sounds: []
-roots: []
+roots: [arabic-miswak]
+etymology_hook: "mesvâk ← Arabic miswāk 'tooth-stick', root s-w-k (Lane), + Persian zadan"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C255-dad-zadan]
 <!-- hl-knowledge: introduces=[FA-LEX-C255-KONESH255-02]; assesses=[] -->
 
 **مسواک زدن** — *mesvâk zadan* — "to brush one's teeth".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*mesvâk zadan* pairs *mesvâk*, borrowed from Arabic *miswāk*, "tooth-stick" (root *s-w-k*, Lane), with the Persian verb *zadan*, "to strike". *zadan*, "to strike", is an inherited verb; it is usually traced to Middle Persian *zadan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

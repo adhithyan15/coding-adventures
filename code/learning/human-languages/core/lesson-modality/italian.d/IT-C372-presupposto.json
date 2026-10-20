@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C372-presupposto",
+    "language": "italian",
+    "chapter": 372,
+    "sequence": 21330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:490883de9302873b"
+  },
+  "findings": []
+}

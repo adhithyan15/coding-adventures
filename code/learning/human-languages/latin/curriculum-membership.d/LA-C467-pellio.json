@@ -1,0 +1,11 @@
+{
+  "id": "LA-C467-pellio",
+  "pathSegment": "LA-PATH-467-SUTRINA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-467-SUTRINA",
+      "order": 4
+    }
+  ]
+}

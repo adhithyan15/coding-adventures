@@ -49,7 +49,8 @@ moment, in a place you would not expect.
 ## The word, taken apart: también
 <!-- hl-knowledge: introduces=[ES-LEX-TAMBIEN, ES-LEX-TAN, ES-ETYMON-TAMBIEN-TAN-BIEN]; assesses=[ES-LEX-BIEN] -->
 
-**también** = **tan** + **bien**.
+**también** = **tan** + **bien**. *Tan* ← Latin *tam* (EtymDB 2.1); *bien* ←
+Latin *bene*.
 
 [PAUSE 2s] ***Tan*** means *so*, *as* — it is the word Spanish uses to say how
 much of something there is. And ***bien*** you have had since chapter one.

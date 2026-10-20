@@ -14,7 +14,8 @@ romanization: "ādmī"
 concept_tag: UR-FAMILY45-ADMI
 prerequisites: [UR-C45-larka, UR-C45-larki]
 sounds: []
-roots: []
+roots: [arabic-adami]
+etymology_hook: "ādmī ← Arabic ādamī 'human, of Adam', through Persian (Lane, root ʾ-d-m)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C45-larki]
 <!-- hl-knowledge: introduces=[UR-LEX-C45-FAMILY45-03]; assesses=[] -->
 
 **آدمی** — *ādmī* — "a man".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**آدمی** (*ādmī*) is a loan from Arabic *ādamī*, "human, of Adam", which reached Urdu through Persian. Its Arabic root is *ʾ-d-m* (Lane). The ending *-ī* means "belonging to", so the word is "one of Adam's".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

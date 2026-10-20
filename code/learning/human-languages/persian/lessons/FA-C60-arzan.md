@@ -14,7 +14,8 @@ romanization: "arzân"
 concept_tag: FA-ADJ60-ARZAN
 prerequisites: [FA-C60-sakht, FA-C60-geran]
 sounds: []
-roots: []
+roots: [persian-arzan]
+etymology_hook: "arzân: inherited, usually traced to Middle Persian arzān"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C60-geran]
 <!-- hl-knowledge: introduces=[FA-LEX-C60-ADJ60-05]; assesses=[] -->
 
 **ارزان** — *arzân* — "cheap".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*arzân* is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian *arzān*, "worthy". It is usually explained as built on *arz*, "worth".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

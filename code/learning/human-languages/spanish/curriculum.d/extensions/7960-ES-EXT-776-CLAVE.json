@@ -1,0 +1,8 @@
+{
+  "id": "ES-EXT-776-CLAVE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what to do if something goes wrong on a computer: a password, a file, a folder, an update or a keyboard.",
+  "prerequisites": []
+}

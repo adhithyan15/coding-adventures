@@ -14,7 +14,8 @@ romanization: "saptamaḥ"
 concept_tag: SA-ORDINAL-SEVENTH
 prerequisites: [SA-C62-fifth, SA-C59-bharatat, SA-C54-iti, SA-C42-mostly, SA-C19-seven]
 sounds: []
-roots: []
+roots: [sanskrit-saptama]
+etymology_hook: "saptama 'seventh' ← saptan 'seven' + -ma; MW compares Latin septimus (CDIAL 13151)"
 duration:
   max_seconds: 215
 requires:

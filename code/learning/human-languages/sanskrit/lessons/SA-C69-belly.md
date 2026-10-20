@@ -14,7 +14,8 @@ romanization: "udaram"
 concept_tag: SA-BODY-BELLY
 prerequisites: [SA-C69-eye, SA-C69-throat]
 sounds: []
-roots: []
+roots: [sanskrit-udara-belly]
+etymology_hook: "udara 'belly' is Rigvedic (CDIAL 1932); MW records guesses from √dṝ 'burst' or √ṛ 'go'; not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,12 @@ reviews_of: [SA-C69-throat]
 <!-- hl-knowledge: introduces=[SA-LEX-C69-BODY-03]; assesses=[] -->
 
 **उदरम्** (*udaram*) — "the belly", where **क्षुधा** is felt.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*Udara* is a Rigvedic word for the belly (CDIAL 1932). MW records two guesses, the
+roots √dṝ, "to burst", and √ṛ, "to go", so its origin is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

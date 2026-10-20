@@ -1,0 +1,11 @@
+{
+  "id": "LA-C305-facinus",
+  "pathSegment": "LA-PATH-305-SCELUS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-305-SCELUS",
+      "order": 1
+    }
+  ]
+}

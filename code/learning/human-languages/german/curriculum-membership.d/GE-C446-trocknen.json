@@ -1,0 +1,11 @@
+{
+  "id": "GE-C446-trocknen",
+  "pathSegment": "GE-PATH-446-REINIGUNG",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-446-REINIGUNG",
+      "order": 4
+    }
+  ]
+}

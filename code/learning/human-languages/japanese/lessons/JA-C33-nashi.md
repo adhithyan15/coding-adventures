@@ -14,7 +14,8 @@ romanization: "nashi"
 concept_tag: JA-FOOD33-NASHI
 prerequisites: [JA-C33-ichigo, JA-C33-momo]
 sounds: []
-roots: []
+roots: [japanese-nashi]
+etymology_hook: "nashi: native Japanese, inherited, not borrowed; usually kana, kanji 梨 as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C33-momo]
 <!-- hl-knowledge: introduces=[JA-LEX-C33-FOOD33-05]; assesses=[] -->
 
 **なし** — *nashi* — "a pear".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**なし** (*nashi*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

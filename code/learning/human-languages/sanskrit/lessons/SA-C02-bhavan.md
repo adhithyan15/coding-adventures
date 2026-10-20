@@ -14,7 +14,8 @@ romanization: "bhavān"
 concept_tag: SA-PRONOUN-YOU-RESPECTFUL
 prerequisites: [SA-C02-nama]
 sounds: [halant]
-roots: [bhavat-honorific]
+roots: [bhavat-honorific, sanskrit-bhavati]
+etymology_hook: "bhavān ← bhavat 'being, present', a participle of √bhū 'be': lit. 'the gentleman present' (MW)"
 reviews_of: [SA-C02-mama-nama-asti]
 duration:
   max_seconds: 210
@@ -52,7 +53,7 @@ second beat carries a long *ā* and closes on *n*.
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 *Bhavān* ("you," respectful) is not really a second-person word at all: it is a
-third-person honorific — "your honour," from *bhavat* ("being, gracious one") —
+third-person honorific — "your honour," from *bhavat* ("being, present," of the root √bhū "be") —
 and so it takes a *third-person* verb (*bhavān asti*, "your honour is"). For a
 first meeting, use *bhavān*.
 

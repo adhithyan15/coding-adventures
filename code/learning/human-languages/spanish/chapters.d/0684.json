@@ -1,0 +1,19 @@
+{
+  "chapter": 684,
+  "title": "Ciudad o campo",
+  "label": "ch:es-ciudad-o-campo",
+  "canDo": "I can compare city and country life and talk about locals and people from out of town.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ES-C684-vecindario",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 684: I can compare city and country life and talk about locals and people from out of town.",
+    "assesses": [
+      "ES-LEX-C684-CIUDADANO-03",
+      "ES-LEX-C684-CIUDADANO-04",
+      "ES-LEX-C684-CIUDADANO-05"
+    ]
+  }
+}

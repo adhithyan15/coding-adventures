@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C390-modo",
+    "language": "latin",
+    "chapter": 390,
+    "sequence": 20920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:18acf3527eba1f65"
+  },
+  "findings": []
+}

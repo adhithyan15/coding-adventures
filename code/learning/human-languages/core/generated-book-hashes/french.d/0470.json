@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 470,
+  "sourceHash": "fnv1a64:47d7539e2b9461e7",
+  "lessonIds": [
+    "FR-C470-frayeur",
+    "FR-C470-effrayer",
+    "FR-C470-sursauter",
+    "FR-C470-soulagement",
+    "FR-C470-rassurer"
+  ],
+  "tex": "french/book/chapters/ch470-quelle-frayeur.tex"
+}

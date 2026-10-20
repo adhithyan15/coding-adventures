@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 432,
+  "sourceHash": "fnv1a64:c58516ac6e283f55",
+  "lessonIds": [
+    "IT-C432-alloggiare",
+    "IT-C432-pernottare",
+    "IT-C432-pernottamento",
+    "IT-C432-soggiornare",
+    "IT-C432-portiere"
+  ],
+  "tex": "italian/book/chapters/ch432-pernottare.tex"
+}

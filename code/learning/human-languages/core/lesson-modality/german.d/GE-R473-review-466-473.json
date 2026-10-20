@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-R473-review-466-473",
+    "language": "german",
+    "chapter": 473,
+    "sequence": 25400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a6ce6838b7e7fe45"
+  },
+  "findings": []
+}

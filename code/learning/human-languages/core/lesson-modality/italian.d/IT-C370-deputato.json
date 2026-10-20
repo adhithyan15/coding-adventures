@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C370-deputato",
+    "language": "italian",
+    "chapter": 370,
+    "sequence": 21220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:abbc5da0e7822bbd"
+  },
+  "findings": []
+}

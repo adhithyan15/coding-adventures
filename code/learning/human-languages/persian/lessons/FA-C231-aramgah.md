@@ -14,7 +14,8 @@ romanization: "ârâmgâh"
 concept_tag: FA-MAKAN231-ARAMGAH
 prerequisites: [FA-C230-mostaqim, FA-C230-rubaru]
 sounds: []
-roots: []
+roots: [persian-aram, persian-gah]
+etymology_hook: "ârâmgâh: Persian ârâm 'rest' + gâh 'place'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C230-rubaru]
 <!-- hl-knowledge: introduces=[FA-LEX-C231-MAKAN231-01]; assesses=[] -->
 
 **آرامگاه** — *ârâmgâh* — "a tomb, a mausoleum".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*ârâmgâh* is *ârâm*, "rest", with *gâh*, "place": the resting place. Both are native Persian; *ârâm* is usually traced to Middle Persian *ārām*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

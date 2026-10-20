@@ -1,0 +1,19 @@
+{
+  "chapter": 444,
+  "title": "Coisas da rua",
+  "label": "ch:pt-coisas-da-rua",
+  "canDo": "I can describe things on the street: a post, the recycling bins, the gutter, the bollard and blocking the way.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C444-obstruir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 444: I can describe things on the street: a post, the recycling bins, the gutter, the bollard and blocking the way.",
+    "assesses": [
+      "PT-LEX-C444-MOBILIARIO-03",
+      "PT-LEX-C444-MOBILIARIO-04",
+      "PT-LEX-C444-MOBILIARIO-05"
+    ]
+  }
+}

@@ -14,7 +14,8 @@ romanization: "pheṅknā"
 concept_tag: UR-VERB-PHENKNA
 prerequisites: [UR-C213-uthana, UR-C213-girana]
 sounds: []
-roots: []
+roots: [indo-aryan-phekk]
+etymology_hook: "pheṅknā ← *pheṅk 'throw', a reconstructed form; a tadbhava (CDIAL 9106)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C213-girana]
 <!-- hl-knowledge: introduces=[UR-LEX-C213-ACT213-04]; assesses=[] -->
 
 **پھینکنا** — *pheṅknā* — "to throw".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پھینکنا** (*pheṅknā*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*pheṅk*, "throw", a form CDIAL reconstructs from its descendants (CDIAL 9106). It is a form CDIAL gives beside a reconstructed *\*phekk*, "throw".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "progrām"
 concept_tag: UR-MUST145-PROGRAM
 prerequisites: [UR-C145-ainda, UR-C145-jald-hi]
 sounds: []
-roots: []
+roots: [english-programme]
+etymology_hook: "progrām ← English programme"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C145-jald-hi]
 <!-- hl-knowledge: introduces=[UR-LEX-C145-MUST145-04]; assesses=[] -->
 
 **پروگرام** — *progrām* — "a plan, a programme". From English *programme*, and the everyday word for a plan: **کل کا پروگرام بناتے ہیں۔** — *kal kā progrām banāte haiṅ* — "Let's make a plan for tomorrow."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پروگرام** (*progrām*) is a loan from English *programme*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

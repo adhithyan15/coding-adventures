@@ -1,0 +1,19 @@
+{
+  "chapter": 352,
+  "title": "Le ripercussioni",
+  "label": "ch:it-le-ripercussioni",
+  "canDo": "I can describe the impact of an event, its knock-on effects and hidden sides, and say what set it off.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C352-innescare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 352: I can describe the impact of an event, its knock-on effects and hidden sides, and say what set it off.",
+    "assesses": [
+      "IT-LEX-C352-IMPATTO-03",
+      "IT-LEX-C352-IMPATTO-04",
+      "IT-LEX-C352-IMPATTO-05"
+    ]
+  }
+}

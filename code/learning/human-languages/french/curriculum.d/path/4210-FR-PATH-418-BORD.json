@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-418-BORD",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-418-BORD"
+  ],
+  "after": []
+}

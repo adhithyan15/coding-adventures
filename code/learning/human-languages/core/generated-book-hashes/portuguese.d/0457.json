@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 457,
+  "sourceHash": "fnv1a64:e2d88f537513e035",
+  "lessonIds": [
+    "PT-C457-carvalho",
+    "PT-C457-pinheiro",
+    "PT-C457-sobreiro",
+    "PT-C457-cortica",
+    "PT-C457-podar"
+  ],
+  "tex": "portuguese/book/chapters/ch457-as-arvores.tex"
+}

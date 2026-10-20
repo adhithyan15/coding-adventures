@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 655,
+  "sourceHash": "fnv1a64:e5c4b305c82995f0",
+  "lessonIds": [
+    "ES-C655-desfase-horario",
+    "ES-C655-turbulencia",
+    "ES-C655-mareo",
+    "ES-C655-marearse",
+    "ES-C655-chaleco",
+    "ES-R655-repaso-648-655"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch655.txt",
+  "json": "spanish/narration/ch655.json",
+  "textHash": "fnv1a64:826a803fcf347f1d",
+  "jsonHash": "fnv1a64:29461a55348600ed",
+  "findings": []
+}

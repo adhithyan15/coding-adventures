@@ -6,7 +6,7 @@ sequence: 1047
 chapter: 67
 type: grammar
 headword: tenemos · tenéis
-gloss: "we have," "you all have" — and the stem change vanishes, for a reason you already know
+gloss: '"we have," "you all have" — and the stem change vanishes, for a reason you already know'
 concept_tag: ES-GRAMMAR-TENER-PRESENT-PLURAL
 prerequisites: [ES-C08-tener, ES-C07-comemos, ES-C07-comeis-vivis]
 sounds: []

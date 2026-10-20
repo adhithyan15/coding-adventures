@@ -1,0 +1,19 @@
+{
+  "chapter": 509,
+  "title": "Na baliza",
+  "label": "ch:pt-na-baliza",
+  "canDo": "I can talk about goals, goalkeepers and strikers.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C509-cabecear",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 509: I can talk about goals, goalkeepers and strikers.",
+    "assesses": [
+      "PT-LEX-C509-BALIZA-03",
+      "PT-LEX-C509-BALIZA-04",
+      "PT-LEX-C509-BALIZA-05"
+    ]
+  }
+}

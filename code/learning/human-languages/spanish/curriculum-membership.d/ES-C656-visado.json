@@ -1,0 +1,11 @@
+{
+  "id": "ES-C656-visado",
+  "pathSegment": "ES-PATH-656-FRONTERA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-656-FRONTERA",
+      "order": 2
+    }
+  ]
+}

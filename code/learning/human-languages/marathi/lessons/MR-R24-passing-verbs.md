@@ -22,7 +22,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-LEX-SANGNE, MR-LEX-MHANNE, MR-LEX-SHIKNE, MR-LEX-MILNE, MR-ETYMON-SANGNE-KENS, MR-ETYMON-MHANNE-BHAN, MR-ETYMON-SHIKNE-SHAK, MR-ETYMON-MILNE-MIL, MR-GRAMMAR-DATIVE-FEELING]
+  knowledge: [MR-LEX-SANGNE, MR-LEX-MHANNE, MR-LEX-SHIKNE, MR-LEX-MILNE, MR-ETYMON-SANGNE-SAMKHYA, MR-ETYMON-MHANNE-BHAN, MR-ETYMON-SHIKNE-SHAK, MR-ETYMON-MILNE-MIL, MR-GRAMMAR-DATIVE-FEELING]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -47,7 +47,7 @@ Three of them you can also write; one is still owed a letter.
 [PAUSE 1s] Run the three aloud, then repair only what went missing.
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-MHANNE, MR-ETYMON-MHANNE-BHAN, MR-ETYMON-SHIKNE-SHAK, MR-ETYMON-MILNE-MIL, MR-ETYMON-SANGNE-KENS, MR-GRAMMAR-DATIVE-FEELING] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-MHANNE, MR-ETYMON-MHANNE-BHAN, MR-ETYMON-SHIKNE-SHAK, MR-ETYMON-MILNE-MIL, MR-ETYMON-SANGNE-SAMKHYA, MR-GRAMMAR-DATIVE-FEELING] -->
 
 [PAUSE 3s] Which of the four was built out of *wanting to be able*?
 (**शिकणे**.) Which one puts you in the dative? (**मिळणे**.) Then stop.

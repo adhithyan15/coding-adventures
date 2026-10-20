@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:3bb639b2a53506e8",
+  "lessonIds": [
+    "LA-C304-effringo",
+    "LA-C304-claustrum",
+    "LA-C304-rapio",
+    "LA-C304-deprehendo",
+    "LA-C304-comprehendo"
+  ],
+  "tex": "latin/book/chapters/ch304-fur-comprehensus.tex"
+}

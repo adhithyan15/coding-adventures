@@ -14,7 +14,8 @@ romanization: "bahār"
 concept_tag: UR-TIME94-BAHAR
 prerequisites: [UR-C94-roz, UR-C94-mausam]
 sounds: []
-roots: []
+roots: [persian-bahar]
+etymology_hook: "bahār: usually traced to Persian bahār 'spring'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C94-mausam]
 <!-- hl-knowledge: introduces=[UR-LEX-C94-TIME94-03]; assesses=[] -->
 
 **بہار** — *bahār* — "spring".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بہار** (*bahār*) is a loan, usually traced to Persian *bahār*, "spring".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "ninniku"
 concept_tag: JA-THINGS114-NINNIKU
 prerequisites: [JA-C113-wakame, JA-C114-hakusai]
 sounds: []
-roots: []
+roots: [japanese-ninniku]
+etymology_hook: "ninniku: written 大蒜, read as a whole; one account ties it to a Buddhist term; not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C114-hakusai]
 <!-- hl-knowledge: introduces=[JA-LEX-C114-THINGS114-02]; assesses=[] -->
 
 **にんにく** — *ninniku* — "garlic".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**にんにく** (*ninniku*) is written with characters for "big" and "garlic", read as a whole (JMdict). One account derives the word from a Buddhist term for enduring hardship; that is not settled. JMdict marks it as usually written in kana.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

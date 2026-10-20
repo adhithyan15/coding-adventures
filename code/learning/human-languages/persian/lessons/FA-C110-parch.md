@@ -15,6 +15,7 @@ concept_tag: FA-THINGS110-PARCH
 prerequisites: [FA-C110-kampyuter, FA-C110-televiziyon]
 sounds: []
 roots: []
+etymology_hook: "pârch: origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C110-televiziyon]
 <!-- hl-knowledge: introduces=[FA-LEX-C110-THINGS110-05]; assesses=[] -->
 
 **پارچ** — *pârch* — "a jug".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*pârch* is the everyday word for a jug, but no source used here gives its origin, which is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

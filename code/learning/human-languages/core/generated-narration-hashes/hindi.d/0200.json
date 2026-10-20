@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 200,
-  "sourceHash": "fnv1a64:616c2a530f08087f",
+  "sourceHash": "fnv1a64:35265c21728b7382",
   "lessonIds": [
     "HI-C200-tvaca",
     "HI-C200-rajya",
@@ -14,6 +14,6 @@
   "text": "hindi/narration/ch200.txt",
   "json": "hindi/narration/ch200.json",
   "textHash": "fnv1a64:e61feb90afa05580",
-  "jsonHash": "fnv1a64:1d1d2f0d909ffd74",
+  "jsonHash": "fnv1a64:02bac59c755c8d79",
   "findings": []
 }

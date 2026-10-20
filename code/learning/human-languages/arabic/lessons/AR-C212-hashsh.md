@@ -14,7 +14,8 @@ romanization: "hashsh"
 concept_tag: AR-SIFA212-HASHSH
 prerequisites: [AR-C212-khashin, AR-C212-lazij]
 sounds: []
-roots: []
+roots: [h-sh-sh]
+etymology_hook: "hashsh: built on the root h-sh-sh, 'to be soft, to crumble' (Lane); hashsh is 'brittle'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C212-lazij]
 <!-- hl-knowledge: introduces=[AR-LEX-C212-SIFA212-03]; assesses=[] -->
 
 **هش** — *hashsh* — "fragile".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**هش** (*hashsh*) is built on the native Arabic root *h-sh-sh*, "to be soft, to crumble" (Lane). *Hashsh* is "brittle".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

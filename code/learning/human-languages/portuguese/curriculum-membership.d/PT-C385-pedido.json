@@ -1,0 +1,11 @@
+{
+  "id": "PT-C385-pedido",
+  "pathSegment": "PT-PATH-385-BUROCRACIA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-385-BUROCRACIA",
+      "order": 2
+    }
+  ]
+}

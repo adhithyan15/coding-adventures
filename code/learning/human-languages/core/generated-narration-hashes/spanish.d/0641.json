@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 641,
+  "sourceHash": "fnv1a64:8b519be610a05a1a",
+  "lessonIds": [
+    "ES-C641-taxi",
+    "ES-C641-taxista",
+    "ES-C641-tarifa",
+    "ES-C641-trayecto",
+    "ES-C641-parar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch641.txt",
+  "json": "spanish/narration/ch641.json",
+  "textHash": "fnv1a64:2636f9db317f4c5f",
+  "jsonHash": "fnv1a64:2068f7e6170a4f22",
+  "findings": []
+}

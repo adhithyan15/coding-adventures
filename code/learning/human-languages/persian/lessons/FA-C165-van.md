@@ -14,7 +14,8 @@ romanization: "vân"
 concept_tag: FA-CHIZ165-VAN
 prerequisites: [FA-C164-zebr, FA-C164-khalvat]
 sounds: []
-roots: []
+roots: [russian-vanna]
+etymology_hook: "vân ← Russian vanna 'bathtub'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C164-khalvat]
 <!-- hl-knowledge: introduces=[FA-LEX-C165-CHIZ165-01]; assesses=[] -->
 
 **وان** — *vân* — "a bathtub".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*vân* is borrowed from Russian *vanna*, "bathtub" (EtymDB). The Russian word comes from German *Wanne*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

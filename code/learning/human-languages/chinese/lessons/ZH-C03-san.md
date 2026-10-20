@@ -11,8 +11,8 @@ gloss: three
 concept_tag: ZH-NUMBER-THREE
 prerequisites: [ZH-W03-san]
 sounds: [tone-1, tone-lexical]
-roots: []
-etymology_hook: 三 is three strokes for three, and the last word in the language where that trick works.
+roots: [middle-chinese-sam]
+etymology_hook: "sān 'three': inherited, from Middle Chinese sam, whose final m became Mandarin n"
 duration:
   max_seconds: 245
 requires:
@@ -63,6 +63,12 @@ being readable at about three. This one breaks for exactly the same reason.
 
 You are being told now so that the next character feels like a solved problem
 rather than a broken promise.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**三** *sān* is inherited from Middle Chinese *sam*, "three" (Guangyun, in
+Baxter's transcription). The final *m* has since become *n*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NUM-SAN, ZH-LEX-NUM-YI, ZH-LEX-NUM-ER] -->

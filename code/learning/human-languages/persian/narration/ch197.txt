@@ -12,6 +12,9 @@ Before the new one: say the Persian for an edge, then the Persian for the ground
 You'll want to know: شرط.
 شرط — shart — "a condition".
 
+The word, taken apart.
+shart is borrowed from Arabic šarṭ, "condition, stipulation". Its Arabic root is š-r-ṭ (Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Persian for the ground floor, then the Persian for a
 
 You'll want to know: قانون.
 قانون — qânun — "a law, a rule".
+
+The word, taken apart.
+qânun is borrowed from Arabic qānūn, "rule, law", which goes back to Greek kanōn, "rule, measuring rod" (EtymDB), the word behind English canon.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Persian for a condition, then the Persian for a law.
 You'll want to know: با این حال.
 با این حال — bâ in hâl — "nevertheless, even so".
 
+The word, taken apart.
+bâ in hâl is "with this state": bâ, "with", and in, "this", are native; hâl, "state", is borrowed from Arabic ḥāl (root ḥ-w-l, Lane).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Persian for a law, then the Persian for nevertheless
 You'll want to know: اگرچه.
 اگرچه — agarche — "although".
 
+The word, taken apart.
+agarche is agar, "if", with che, "what": "even if". Both are native; agar continues Middle Persian agar (EtymDB).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Persian for nevertheless, then the Persian for altho
 
 You'll want to know: یا.
 یا — yâ — "or".
+
+The word, taken apart.
+yâ is a native Persian word, inherited rather than borrowed; it is usually traced to Middle Persian ayāb, "or".
 
 What you've built.
 One more word for this chapter.

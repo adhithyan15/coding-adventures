@@ -14,7 +14,8 @@ romanization: "panbe"
 concept_tag: FA-CHIZ211-PANBE
 prerequisites: [FA-C210-internet, FA-C210-mobayl]
 sounds: []
-roots: []
+roots: [persian-panbe]
+etymology_hook: "panbe ← Middle Persian pambag (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C210-mobayl]
 <!-- hl-knowledge: introduces=[FA-LEX-C211-CHIZ211-01]; assesses=[] -->
 
 **پنبه** — *panbe* — "cotton".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*panbe* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *pambag*, "cotton" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

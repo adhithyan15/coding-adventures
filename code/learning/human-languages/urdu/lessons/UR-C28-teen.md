@@ -12,7 +12,7 @@ concept_tag: UR-NUMBER-THREE
 prerequisites: [UR-C28-do]
 sounds: [rtl, long-i]
 roots: [sanskrit-tri, pie-treyes]
-etymology_hook: "teen continues Sanskrit tri from Proto-Indo-European *treyes -- English three, Latin tres -- and beside Persian se, which lost both the t and the r, it shows how much more of the old word the inherited road kept."
+etymology_hook: "tīn ← Sanskrit trīṇi 'three' (CDIAL 5994), from PIE *tréyes, the same word as English three"
 duration:
   max_seconds: 265
 requires:
@@ -46,7 +46,7 @@ reviews_of: [UR-C28-do, UR-C28-ek]
 ## The word, taken apart — the same root, two distances
 <!-- hl-knowledge: introduces=[UR-ETYMON-TEEN-THREE-PIE]; assesses=[UR-LEX-TEEN, UR-LEX-EK] -->
 
-**تین** continues Sanskrit *tri*, from Indo-European \**treyes*,
+**تین** continues Sanskrit *trīṇi*, a form of *tri-*, "three" (CDIAL 5994), from Indo-European \**treyes*,
 "three." English **three**, Latin **trēs** and Greek **treîs** are the same
 word.
 

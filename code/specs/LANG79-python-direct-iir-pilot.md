@@ -168,3 +168,88 @@ Tests must expose the prior acceptance of forged FLOAT tokens before the fix,
 cover malformed raw spellings in standalone expressions and every print
 argument position, and preserve real parser-produced token forms. Compare
 native Rust VM output and errors to host Python solely as an external oracle.
+
+## Bounded follow-up: module-level float bindings
+
+Accept a module-level statement of exactly one name target, one `=` token and
+one accepted float expression: `NAME = <float expression>`. The Python 3.12
+grammar tree for this is an `assign_stmt` with three children: a target
+`expression_list` holding one `expression`, an `EQUALS` token, and a value
+`expression_list` holding one `expression`. The target `expression` must
+descend through single-child wrappers to an `atom` whose only child is one
+`NAME` token. Reassignment of an already bound name is accepted. NAME atoms
+are accepted inside every float expression: standalone expression statements,
+the right-hand side of a binding and each of the zero-to-three `print`
+argument positions. Every binding value is a Python `float`.
+
+Python evaluates the right-hand side completely before binding the target, so
+`x = x + 1.0` reads the previous value. The lowering evaluates the value into
+compiler temporaries and then emits one IIR `mov` into the name's binding
+register. A literal value therefore lowers to `const` followed by `mov`.
+A use reads the binding register directly; expressions in this subset cannot
+rebind a name, so no snapshot copy is needed.
+
+User names are mangled into the `py:` register namespace (`x` becomes
+`py:x`). Compiler temporaries remain `py` followed by decimal digits, and
+builtin names are carried only as the literal first operand of
+`call_builtin`, so neither can collide with a Python identifier.
+
+A use before any binding raises `NameError: name 'x' is not defined` at run
+time. The subset has no branches, loops, functions or `del`, so whether a name
+is bound is known statically at every program point: a name is bound after
+the first earlier statement that binds it and stays bound. The compiler emits
+a `call_builtin py_name_error "x"` at exactly that use. Earlier statements'
+output is retained in the typed run error and later statements do not run,
+matching CPython. Evaluation stays left to right, so `print(1.0 / 0.0, y)`
+still raises `ZeroDivisionError` and `y + 1.0 / 0.0` raises `NameError`.
+
+Some unbound reads do not raise `NameError` in CPython because the name
+resolves to a builtin or to a module attribute that this pilot cannot
+represent. Reading `print` as a value, any other Python 3.12 builtin name
+(for example `float`, `type` or `len`) before the module binds it, or any
+dunder name (`__name__`, `__debug__` and so on) before it is bound, fails at
+compile time as unsupported rather than producing a wrong `NameError`.
+Binding a non-`print` builtin name such as `float` or soft keywords such as
+`match`, `type` and `_` is ordinary module-global shadowing and is accepted.
+
+The following fail explicitly at compile time, with distinct messages:
+
+- binding `print`, which the pilot treats as its only callable builtin;
+- binding `__debug__`, which CPython rejects as a syntax error;
+- chained assignment such as `a = b = 1.0`;
+- tuple, list, parenthesized or starred targets, and tuple values such as
+  `x = 1.0,` (starred targets are already parse errors in this grammar;
+  caller-supplied ASTs are rejected by the single-NAME target rule);
+- annotated assignment `x: float = 1.0`;
+- augmented assignment such as `x += 1.0`;
+- attribute and subscript targets such as `a.b = 1.0` and `a[0] = 1.0`;
+- keyword targets such as `True = 1.0`;
+- binding a `print(...)` call result, which would be `None`;
+- integer right-hand sides such as `x = 1`, which still require
+  arbitrary-precision runtime support;
+- multiple statements joined by semicolons, as before.
+
+Direct-AST callers bypass the lexer, so the binding path validates syntax
+tokens the same way as the earlier token slices. The `=` token must be
+`TokenType::Equals` with no effective-type override and the exact spelling
+`=`. Every target and every read NAME token must be `TokenType::Name` with no
+override and an ASCII spelling matching the versioned lexer's NAME pattern
+`[a-zA-Z_][a-zA-Z0-9_]*` that is not a hard Python keyword. A node in place of
+either token, a forged kind, a named override or another spelling fails.
+The existing source size and direct-AST item, depth and text budgets run
+before lowering and cover the new nodes; the VM instruction budget and output
+limits are unchanged.
+
+Acceptance:
+
+- `x = 1.5\nprint(x * 2.0)\n` prints `3.0\n`.
+- `x = 1.0\nx = x + 1.0\nprint(x)\n` prints `2.0\n`.
+- `print(1.0)\nprint(y)\n` retains `1.0\n` and then raises `NameError`.
+- `print(1.0)\nprint(z)\nz = 2.0\n` raises `NameError` after `1.0\n`.
+- Each rejection above fails with a compile error.
+- Forged NAME and EQUALS tokens fail in every accepted position.
+- A literal binding lowers to `const` then `mov` into `py:x`.
+
+This slice does not add integers, strings, `del`, `global`, functions,
+control flow or any non-module scope. Host Python remains a conformance
+oracle only; Semantic IR is not an execution stage.

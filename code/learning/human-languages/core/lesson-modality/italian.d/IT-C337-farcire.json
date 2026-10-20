@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C337-farcire",
+    "language": "italian",
+    "chapter": 337,
+    "sequence": 19410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1809b0f59287f57"
+  },
+  "findings": []
+}

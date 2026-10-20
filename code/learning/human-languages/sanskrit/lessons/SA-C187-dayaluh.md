@@ -14,7 +14,8 @@ romanization: "dayāluḥ"
 concept_tag: SA-QUAL187-DAYALUH
 prerequisites: [SA-C186-suksmah, SA-C186-sthirah]
 sounds: []
-roots: []
+roots: [sanskrit-dayalu, sanskrit-daya]
+etymology_hook: "dayālu ← dayā 'compassion' + -ālu 'inclined to'; dayā is built on √day 'share, pity' (MW)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C186-sthirah]
 <!-- hl-knowledge: introduces=[SA-LEX-C187-QUAL187-01]; assesses=[] -->
 
 **दयालुः** — *dayāluḥ* — "kind".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dayālu* is *dayā*, "compassion", with the suffix *-ālu*, "inclined to" (MW). *Dayā* is built on the root √day, which MW glosses "to divide, impart" and also "to have pity on" (CDIAL 6185).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

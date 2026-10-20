@@ -1,0 +1,19 @@
+{
+  "chapter": 488,
+  "title": "Midwinter, Summer solstice, Dog Star, Of summer, To be warm",
+  "label": "ch:la-midwinter-summer-solstice-dog-star-of-summer-to-be-warm",
+  "canDo": "I can talk about the turning points of the year: midwinter, the summer solstice, the Dog Days, summer things and warm weather.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-R488-review-final-488",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 488: I can talk about the turning points of the year: midwinter, the summer solstice, the Dog Days, summer things and warm weather.",
+    "assesses": [
+      "LA-LEX-C488-BRUMA-03",
+      "LA-LEX-C488-BRUMA-04",
+      "LA-LEX-C488-BRUMA-05"
+    ]
+  }
+}

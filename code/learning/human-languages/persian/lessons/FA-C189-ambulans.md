@@ -14,7 +14,8 @@ romanization: "âmbulâns"
 concept_tag: FA-SALAMAT189-AMBULANS
 prerequisites: [FA-C189-noskhe, FA-C189-azmayesh]
 sounds: []
-roots: []
+roots: [french-ambulance]
+etymology_hook: "âmbulâns: a loan, usually traced to French ambulance 'ambulance'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C189-azmayesh]
 <!-- hl-knowledge: introduces=[FA-LEX-C189-SALAMAT189-04]; assesses=[] -->
 
 **آمبولانس** — *âmbulâns* — "an ambulance".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*âmbulâns* is a loan, usually traced to French *ambulance*, "ambulance".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

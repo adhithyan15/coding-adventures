@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 613,
+  "sourceHash": "fnv1a64:5e132b216d5f1004",
+  "lessonIds": [
+    "ES-C613-requerir",
+    "ES-C613-requisito",
+    "ES-C613-incertidumbre",
+    "ES-C613-probable",
+    "ES-C613-probabilidad"
+  ],
+  "tex": "spanish/book/chapters/ch613-lo-que-hace-falta.tex"
+}

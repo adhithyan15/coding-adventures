@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C393-punizione",
+    "language": "italian",
+    "chapter": 393,
+    "sequence": 22390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5828099809cbe2a5"
+  },
+  "findings": []
+}

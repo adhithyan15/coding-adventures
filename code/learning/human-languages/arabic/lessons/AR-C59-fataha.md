@@ -14,7 +14,8 @@ romanization: "fataḥa"
 concept_tag: AR-VERB-FATAHA
 prerequisites: [AR-C59-ata, AR-C59-wadaa]
 sounds: []
-roots: []
+roots: [f-t-ḥ]
+etymology_hook: "fataḥa: built on the root f-t-ḥ, 'to open' (Lane); the same root gives miftāḥ, 'a key'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C59-wadaa]
 <!-- hl-knowledge: introduces=[AR-LEX-C59-VERBS59-04]; assesses=[] -->
 
 **فتح** — *fataḥa* — "to open (he opened)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**فتح** (*fataḥa*) is built on the native Arabic root *f-t-ḥ*, "to open" (Lane). The same root gives *miftāḥ*, "a key"; Hebrew *pataḥ*, "to open", is a cousin.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

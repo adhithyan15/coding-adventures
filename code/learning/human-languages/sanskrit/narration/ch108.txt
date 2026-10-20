@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for ginger, then the Sanskrit for garlic.
 You'll want to know: पलाण्डुः.
 पलाण्डुः — palāṇḍuḥ — "an onion".
 
+The word, taken apart.
+palāṇḍu "an onion" appears from the law book of Manu on (MW). MW gives no derivation beyond the grammarians, so its origin is uncertain. Pali kept it as palaṇḍuka (CDIAL 7954).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for garlic, then the Sanskrit for an onion.
 
 You'll want to know: आलुकम्.
 आलुकम् — ālukam — "a potato".
+
+The word, taken apart.
+āluka is ālu with the suffix -ka, an old word-list name for an edible root, the elephant-foot yam (CDIAL 1388). The potato reached India from the Americas only in modern times, and the languages moved the old name onto it: Hindi ālū "potato" (CDIAL 1388). MW gives no source for ālu, so its origin is uncertain.
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for an onion, then the Sanskrit for a potat
 You'll want to know: वृन्ताकम्.
 वृन्ताकम् — vṛntākam — "an aubergine".
 
+The word, taken apart.
+vṛntāka "the aubergine" is one of several Sanskrit names for the plant gathered in CDIAL 9369. CDIAL 11503 thinks the names probably share one origin and, after LM, gives it as Dravidian, while DEDR 5301 lists vṛntāka beside Dravidian words for the brinjal. Its sister form vātiṅgaṇa travelled west as Persian bādingān and lives on as Hindi baigan (CDIAL 11503).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for a potato, then the Sanskrit for an aube
 You'll want to know: कूष्माण्डम्.
 कूष्माण्डम् — kūṣmāṇḍam — "a pumpkin".
 
+The word, taken apart.
+kūṣmāṇḍa, also kuṣmāṇḍa (MW), is a pumpkin-gourd. CDIAL 3374 explains it as a Sanskritized form of a Prakrit word of non-Aryan origin. That Prakrit word lives on as Hindi kohṛā and Bengali kumṛā "pumpkin" (CDIAL 3374).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for an aubergine, then the Sanskrit for a p
 
 You'll want to know: नारिकेलम्.
 नारिकेलम् — nārikelam — "a coconut".
+
+The word, taken apart.
+nārikela "coconut" is borrowed from Dravidian: CDIAL 7075, after Bloch, takes it from a Dravidian compound, comparing Tamil nāri "fibre". It lives on as Hindi nāriyal and Marathi nāreḷ "coconut" (CDIAL 7075).
 
 What you've built.
 One more word for this chapter.

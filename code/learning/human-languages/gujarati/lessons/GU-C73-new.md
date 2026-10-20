@@ -14,7 +14,7 @@ romanization: "navũ"
 concept_tag: GU-QUALITY-NEW
 prerequisites: [GU-C72-heavy, GU-C73-light]
 sounds: []
-roots: [sanskrit-nava]
+roots: [sanskrit-nava-new]
 etymology_hook: "navũ ← Sanskrit nava 'new, young', a tadbhava (CDIAL 6983)"
 duration:
   max_seconds: 200

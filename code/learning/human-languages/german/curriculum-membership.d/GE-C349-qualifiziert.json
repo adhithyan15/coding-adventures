@@ -1,0 +1,11 @@
+{
+  "id": "GE-C349-qualifiziert",
+  "pathSegment": "GE-PATH-349-STELLE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-349-STELLE",
+      "order": 3
+    }
+  ]
+}

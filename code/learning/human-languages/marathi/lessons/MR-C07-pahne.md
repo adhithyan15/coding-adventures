@@ -7,23 +7,23 @@ chapter: 14
 type: word
 headword: पाहणे
 romanization: pāhṇe
-gloss: to see — from Sanskrit paś-, the root that reached English as spectacle, inspect and spy
+gloss: to see — a verb CDIAL traces to *pracāh, "look for", not to the root behind spectacle and spy
 concept_tag: VERB-SEE
 prerequisites: [MR-C07-khane]
 sounds: [matra-aa, retroflex-na]
-roots: [sanskrit-pashyati-see, pie-spek-look]
-etymology_hook: "पाहणे goes back to Sanskrit prapaśyati, on the root paś- — the same ancient spek- that Latin turned into speciō, giving English spectacle, inspect, species and spy"
+roots: [indo-aryan-pracah, indo-aryan-cah]
+etymology_hook: "पाहणे is often tied to prapaśyati, root paś- (PIE *spek-), but CDIAL files it under *pracāh 'look for' (8492)"
 duration:
   max_seconds: 250
 requires:
   knowledge: [MR-LEX-KHANE, MR-GRAMMAR-PRESENT-GENDER]
 introduces:
-  knowledge: [MR-LEX-PAHNE, MR-ETYMON-PASH-SPEK]
+  knowledge: [MR-LEX-PAHNE, MR-ETYMON-PAHNE-PRACAH]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-LEX-KHANE, MR-GRAMMAR-PRESENT-GENDER, MR-LEX-PAHNE, MR-ETYMON-PASH-SPEK]
+  knowledge: [MR-LEX-KHANE, MR-GRAMMAR-PRESENT-GENDER, MR-LEX-PAHNE, MR-ETYMON-PAHNE-PRACAH]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -32,14 +32,14 @@ variety: standard-colloquial
 reviews_of: [MR-C07-khane, MR-C07-jane]
 ---
 
-# पाहणे (pāhṇe) — "to see," a root you already own
+# पाहणे (pāhṇe) — "to see," and a cousin it does not have
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-KHANE, MR-GRAMMAR-PRESENT-GENDER] -->
 
 [PAUSE 2s] Say "I eat" in your own gender — *mī khāto* or *mī khāte*. The next
-verb runs on the same endings, and on a root you have been using in English all
-your life without knowing it.
+verb runs on the same endings, and its history comes with a warning about
+words that only look related.
 
 ## You'll want to know: पाहणे
 <!-- hl-knowledge: introduces=[MR-LEX-PAHNE]; assesses=[] -->
@@ -57,36 +57,35 @@ is the one whose history repays digging.
 for long *ā*: **पा** *pā*. Then **ह** *ha*, and the **णे** you now know by heart.
 Three light syllables, *pā-ha-ṇe*, usually spoken as two: *pāh-ṇe*.
 
-## The word, taken apart — one root, a dozen English words
-<!-- hl-knowledge: introduces=[MR-ETYMON-PASH-SPEK]; assesses=[] -->
+## The word, taken apart — looking for, not looking at
+<!-- hl-knowledge: introduces=[MR-ETYMON-PAHNE-PRACAH]; assesses=[] -->
 
-Sanskrit's verb for seeing was **पश्यति** *paśyati*, on the root *paś-*, and
-Marathi's *pāhṇe* descends from its prefixed form **प्रपश्यति** *prapaśyati*,
-"looks out at."
+You will often read that *pāhṇe* comes from Sanskrit **पश्यति** *paśyati*,
+"sees", in its prefixed form *prapaśyati*, "looks out at". That root, *paś-*, is
+the Indo-European *\*spek-*, "to observe", which reached English through Latin
+as **spect**acle, in**spect** and **spy**. It is a good story, and CDIAL does not
+tell it.
 
-Now the payoff. That *paś-* is the Indo-European root **\*spek-**, "to observe."
-Sanskrit dropped the *s-* and swapped the consonants around; Latin kept them in
-order as *speciō*, "I look." From the Latin side English inherited an enormous
-family, every one of them a cousin of *pāhṇe*:
+CDIAL files Marathi *pāhṇẽ*, "to see, to search", under *\*pracāh*, "look for",
+a form it reconstructs from its descendants (CDIAL 8492), and lists *pāhije*,
+"it is needed", beside it. It builds *\*pracāh* on *\*cāh*, "see, look for,
+desire", the verb behind Hindi *cāhnā*, "to want" (CDIAL 4775), and it notes
+*prabhāti*, "appears", as a possible second source (CDIAL 8709).
 
-**spect**acle, in**spect**, re**spect**, su**spect**, pro**spect**, **spec**ies,
-**spec**imen, **spec**ulate, tele**scope**, and — through Italian — **spy**.
-
-So a Marathi speaker asking you to *pāhṇe* something is asking you to
-*inspect* it, in the most literal ancestral sense the word has.
+So *pāhṇe* began as looking *for* something, and *spectacle* and *spy* are
+look-alikes, not cousins.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-PAHNE, MR-ETYMON-PASH-SPEK] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-PAHNE, MR-ETYMON-PAHNE-PRACAH] -->
 
 [PAUSE 1s]
 - [YOU SAY: "pāhṇe" — to see — then "I see" in your own gender]
-- [YOU SAY: the derivation — "paśyati … prapaśyati … pāhṇe"]
-- [YOU SAY: four English cousins — "spectacle, inspect, species, spy"]
+- [YOU SAY: the derivation CDIAL gives — "*pracāh, look for … pāhṇe"]
+- [YOU SAY: the look-alikes that are not its cousins — "spectacle, inspect, spy"]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-PAHNE, MR-ETYMON-PASH-SPEK] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-PAHNE, MR-ETYMON-PAHNE-PRACAH] -->
 
-[PAUSE 3s] What is the stem of *pāhṇe*? (**पाह-**, *pāh-*.) Which Sanskrit verb
-is it from? (**पश्यति** *paśyati*, in its prefixed form *prapaśyati*.) Name three
-English words from the same ancient root. (*Spectacle, inspect, species, spy* —
-any three.) Next: a verb Marathi mostly refuses to use, and what it says instead.
+[PAUSE 3s] What is the stem of *pāhṇe*? (**पाह-**, *pāh-*.) Which form does
+CDIAL trace it to? (*\*pracāh*, "look for".) Are *spectacle* and *spy* its
+cousins? (**No** — they belong to *paśyati*, a look-alike.) Next: a verb Marathi mostly refuses to use, and what it says instead.

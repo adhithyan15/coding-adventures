@@ -1,0 +1,19 @@
+{
+  "chapter": 375,
+  "title": "Die Klausur",
+  "label": "ch:ge-die-klausur",
+  "canDo": "I can talk about written and oral exams, failing one, and a school report.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GE-C375-zeugnis",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 375: I can talk about written and oral exams, failing one, and a school report.",
+    "assesses": [
+      "GE-LEX-C375-KLAUSUR-03",
+      "GE-LEX-C375-KLAUSUR-04",
+      "GE-LEX-C375-KLAUSUR-05"
+    ]
+  }
+}

@@ -4,7 +4,7 @@
   "chapter": 43,
   "title": "Standing Alone",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:1d4dd120a761df3a",
+  "sourceHash": "fnv1a64:fc4710d85b5be712",
   "lessons": [
     {
       "id": "FR-C39-qui",
@@ -557,7 +557,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:58061901d45a1ccd",
+      "sourceHash": "fnv1a64:340920e2a5125ed3",
       "notice": null,
       "blocks": [
         {
@@ -596,7 +596,7 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing decided that except which syllables happened to carry stress in Latin. Illi gave lui, ille gave il, and illa gave one elle that was heavy enough already. The masculine split and the feminine did not, and the language has lived with the asymmetry ever since."
+              "text": "Nothing decided that except which syllables happened to carry stress in Latin. Latin illī gave lui, ille gave il, and illa gave one elle that was heavy enough already. The masculine split and the feminine did not, and the language has lived with the asymmetry ever since."
             },
             {
               "kind": "speech",

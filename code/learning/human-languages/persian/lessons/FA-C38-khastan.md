@@ -14,7 +14,8 @@ romanization: "khâstan"
 concept_tag: FA-VERB-KHASTAN
 prerequisites: [FA-C37-khandidan, FA-C38-raghsidan]
 sounds: []
-roots: []
+roots: [persian-khastan]
+etymology_hook: "khâstan ← Middle Persian xwāstan (EtymDB); inherited, native Iranian"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C38-raghsidan]
 <!-- hl-knowledge: introduces=[FA-LEX-C38-VERBS38-02]; assesses=[] -->
 
 **خواستن** — *khâstan* — "to want".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*khâstan* is a native Persian word, inherited rather than borrowed: it continues Middle Persian *xwāstan*, "to want, to ask for" (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

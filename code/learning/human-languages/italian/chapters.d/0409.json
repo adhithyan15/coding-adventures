@@ -1,0 +1,19 @@
+{
+  "chapter": 409,
+  "title": "Una gomma a terra",
+  "label": "ch:it-una-gomma-a-terra",
+  "canDo": "I can deal with a flat tyre: getting a puncture, the tyre, the jack and pumping it up.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C409-gonfiare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 409: I can deal with a flat tyre: getting a puncture, the tyre, the jack and pumping it up.",
+    "assesses": [
+      "IT-LEX-C409-GOMMA-03",
+      "IT-LEX-C409-GOMMA-04",
+      "IT-LEX-C409-GOMMA-05"
+    ]
+  }
+}

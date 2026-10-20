@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 520,
+  "sourceHash": "fnv1a64:f0c91dcfea03f7af",
+  "lessonIds": [
+    "GE-C520-krimi",
+    "GE-C520-biografie",
+    "GE-C520-kurzgeschichte",
+    "GE-C520-sachbuch",
+    "GE-C520-boesewicht"
+  ],
+  "tex": "german/book/chapters/ch520-krimis-und-biografien.tex"
+}

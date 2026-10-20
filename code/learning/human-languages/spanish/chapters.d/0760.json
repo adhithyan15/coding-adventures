@@ -1,0 +1,19 @@
+{
+  "chapter": 760,
+  "title": "Teatro y disfraces",
+  "label": "ch:es-teatro-y-disfraces",
+  "canDo": "I can talk about amateur theatre and dressing up: costumes, make-up and opening night.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ES-C760-interpretar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 760: I can talk about amateur theatre and dressing up: costumes, make-up and opening night.",
+    "assesses": [
+      "ES-LEX-C760-PERSONAJE-03",
+      "ES-LEX-C760-PERSONAJE-04",
+      "ES-LEX-C760-PERSONAJE-05"
+    ]
+  }
+}

@@ -14,7 +14,8 @@ romanization: "ḥāsiba"
 concept_tag: AR-AMAL282-HASIBA
 prerequisites: [AR-C281-mudhi, AR-C281-mumaththil]
 sounds: []
-roots: []
+roots: [ḥ-s-b]
+etymology_hook: "ḥāsiba: built on the root ḥ-s-b, 'to count, to reckon' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C281-mumaththil]
 <!-- hl-knowledge: introduces=[AR-LEX-C282-AMAL282-01]; assesses=[] -->
 
 **حاسبة** — *ḥāsiba* — "a calculator".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حاسبة** (*ḥāsiba*) is built on the native Arabic root *ḥ-s-b*, "to count, to reckon" (Lane). *Ḥāsiba* is the feminine active participle, "a thing that counts".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

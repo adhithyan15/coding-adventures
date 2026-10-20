@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-350-ORIGEM",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "PT-EXT-350-ORIGEM"
+  ],
+  "after": []
+}

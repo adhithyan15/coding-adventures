@@ -1,0 +1,19 @@
+{
+  "chapter": 273,
+  "title": "Prima di tutto",
+  "label": "ch:it-prima-di-tutto",
+  "canDo": "I can put the first steps of a story in order: at first, first of all, later on, subsequently and after that.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "IT-C273-dopodiche",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 273: I can put the first steps of a story in order: at first, first of all, later on, subsequently and after that.",
+    "assesses": [
+      "IT-LEX-C273-PRIMA-03",
+      "IT-LEX-C273-PRIMA-04",
+      "IT-LEX-C273-PRIMA-05"
+    ]
+  }
+}

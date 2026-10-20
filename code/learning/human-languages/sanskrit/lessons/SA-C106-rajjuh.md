@@ -14,7 +14,8 @@ romanization: "rajjuḥ"
 concept_tag: SA-THINGS106-RAJJUH
 prerequisites: [SA-C105-vyajanam, SA-C105-petika]
 sounds: []
-roots: []
+roots: [sanskrit-rajju]
+etymology_hook: "rajju 'rope' ← PIE *résgus (EtymDB); MW compares Lithuanian rezgù 'I plait'; Hindi lej 'rope' (CDIAL 10582)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C105-petika]
 <!-- hl-knowledge: introduces=[SA-LEX-C106-THINGS106-01]; assesses=[] -->
 
 **रज्जुः** — *rajjuḥ* — "a rope".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*rajju* "rope" is inherited from PIE *\*résgus* (EtymDB), and MW compares Lithuanian *rezgù* "I plait"; Latin *restis* "rope" is a cousin. It lives on as Hindi *lej* "rope" (CDIAL 10582).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

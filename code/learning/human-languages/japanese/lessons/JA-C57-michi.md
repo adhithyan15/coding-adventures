@@ -14,7 +14,8 @@ romanization: "michi"
 concept_tag: JA-PLACE57-MICHI
 prerequisites: [JA-C57-tooi, JA-C57-machi]
 sounds: []
-roots: []
+roots: [japanese-michi]
+etymology_hook: "michi: native Japanese, inherited, not borrowed; kanji 道 attached later as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C57-machi]
 <!-- hl-knowledge: introduces=[JA-LEX-C57-PLACE57-04]; assesses=[] -->
 
 **みち** — *michi* — "a road".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**みち** (*michi*) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

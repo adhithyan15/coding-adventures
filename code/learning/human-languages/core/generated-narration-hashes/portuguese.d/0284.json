@@ -1,0 +1,20 @@
+{
+  "language": "portuguese",
+  "chapter": 284,
+  "sourceHash": "fnv1a64:d212b8f95fa1dab7",
+  "lessonIds": [
+    "PT-C284-escandalo",
+    "PT-C284-censura",
+    "PT-C284-editorial",
+    "PT-C284-cronica",
+    "PT-C284-cronista",
+    "PT-R284-revisao-277-284"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "portuguese/narration/ch284.txt",
+  "json": "portuguese/narration/ch284.json",
+  "textHash": "fnv1a64:f6ef865106b2aebb",
+  "jsonHash": "fnv1a64:2e193177b1f1c678",
+  "findings": []
+}

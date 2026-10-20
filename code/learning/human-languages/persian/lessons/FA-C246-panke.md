@@ -14,7 +14,8 @@ romanization: "panke"
 concept_tag: FA-CHIZ246-PANKE
 prerequisites: [FA-C246-payam, FA-C246-keshow]
 sounds: []
-roots: []
+roots: [hindi-pankha]
+etymology_hook: "panke ← Hindi pankhā 'fan'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C246-keshow]
 <!-- hl-knowledge: introduces=[FA-LEX-C246-CHIZ246-04]; assesses=[] -->
 
 **پنکه** — *panke* — "an electric fan".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*panke* is borrowed from Hindi *pankhā*, "fan" (EtymDB). EtymDB traces it to Sanskrit *pakṣa*, "wing".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

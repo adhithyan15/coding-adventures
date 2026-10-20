@@ -14,7 +14,8 @@ romanization: "māthā"
 concept_tag: UR-THINGS129-MATHA
 prerequisites: [UR-C128-kamar, UR-C129-pith]
 sounds: []
-roots: []
+roots: [sanskrit-mastaka]
+etymology_hook: "māthā ← Sanskrit mastaka 'head, skull', a tadbhava (CDIAL 9926)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C129-pith]
 <!-- hl-knowledge: introduces=[UR-LEX-C129-THINGS129-02]; assesses=[] -->
 
 **ماتھا** — *māthā* — "the forehead".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ماتھا** (*māthā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *mastaka*, "head, skull" (CDIAL 9926).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

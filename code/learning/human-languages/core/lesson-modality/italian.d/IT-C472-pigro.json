@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C472-pigro",
+    "language": "italian",
+    "chapter": 472,
+    "sequence": 26660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:850451ae08455c81"
+  },
+  "findings": []
+}

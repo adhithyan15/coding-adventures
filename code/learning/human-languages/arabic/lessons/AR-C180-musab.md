@@ -14,7 +14,8 @@ romanization: "muṣāb"
 concept_tag: AR-SIFA180-MUSAB
 prerequisites: [AR-C179-ratb, AR-C179-mumtir]
 sounds: []
-roots: []
+roots: [ṣ-w-b]
+etymology_hook: "muṣāb: built on the root ṣ-w-b, 'to hit the mark' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C179-mumtir]
 <!-- hl-knowledge: introduces=[AR-LEX-C180-SIFA180-01]; assesses=[] -->
 
 **مصاب** — *muṣāb* — "injured".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مصاب** (*muṣāb*) is built on the native Arabic root *ṣ-w-b*, "to hit the mark" (Lane). *Muṣāb* is the Form IV passive participle, "struck, hit", hence "injured".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

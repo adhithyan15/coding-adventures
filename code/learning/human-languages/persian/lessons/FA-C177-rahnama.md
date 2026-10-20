@@ -14,7 +14,8 @@ romanization: "râhnamâ"
 concept_tag: FA-KAR177-RAHNAMA
 prerequisites: [FA-C176-hoquq, FA-C177-mosafer]
 sounds: []
-roots: []
+roots: [persian-rah]
+etymology_hook: "râhnamâ: Persian râh 'road' (EtymDB) + namâ 'showing' (nemudan)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C177-mosafer]
 <!-- hl-knowledge: introduces=[FA-LEX-C177-KAR177-02]; assesses=[] -->
 
 **راهنما** — *râhnamâ* — "a guide".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*râhnamâ* is built from *râh*, "road", and *-namâ*, "showing" (from *nemudan*, "to show"): the road-shower. *râh* is inherited, from Middle Persian *rāh* (EtymDB).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

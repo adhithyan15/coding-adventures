@@ -14,7 +14,8 @@ romanization: "akhlâq"
 concept_tag: FA-CHIZ170-AKHLAQ
 prerequisites: [FA-C170-khashm, FA-C170-ashk]
 sounds: []
-roots: []
+roots: [arabic-akhlaq]
+etymology_hook: "akhlâq ← Arabic aḫlāq 'character, manners', root ḫ-l-q (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C170-ashk]
 <!-- hl-knowledge: introduces=[FA-LEX-C170-CHIZ170-04]; assesses=[] -->
 
 **اخلاق** — *akhlâq* — "temper, character".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*akhlâq* is borrowed from Arabic *aḫlāq*, "character, manners". Its Arabic root is *ḫ-l-q* (Lane). It is the plural of *ḫuluq*, "nature, disposition".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

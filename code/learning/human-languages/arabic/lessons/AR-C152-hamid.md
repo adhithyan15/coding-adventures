@@ -14,7 +14,8 @@ romanization: "ḥāmiḍ"
 concept_tag: AR-QUAL152-HAMID
 prerequisites: [AR-C151-jaff, AR-C151-mutassikh]
 sounds: []
-roots: []
+roots: [ḥ-m-ḍ]
+etymology_hook: "ḥāmiḍ: built on the root ḥ-m-ḍ, 'to be sour' (Lane); ḥāmiḍ is the active participle, 'sour'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C151-mutassikh]
 <!-- hl-knowledge: introduces=[AR-LEX-C152-QUAL152-01]; assesses=[] -->
 
 **حامض** — *ḥāmiḍ* — "sour".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**حامض** (*ḥāmiḍ*) is built on the native Arabic root *ḥ-m-ḍ*, "to be sour" (Lane). *Ḥāmiḍ* is the active participle, "sour".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

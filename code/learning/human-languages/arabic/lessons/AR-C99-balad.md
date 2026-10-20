@@ -14,7 +14,8 @@ romanization: "balad"
 concept_tag: AR-WORLD99-BALAD
 prerequisites: [AR-C99-musiqa, AR-C99-akhbar]
 sounds: []
-roots: []
+roots: [b-l-d]
+etymology_hook: "balad: built on the root b-l-d, 'a country, a town' (Lane); an old noun with its own root in Lane"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C99-akhbar]
 <!-- hl-knowledge: introduces=[AR-LEX-C99-WORLD99-03]; assesses=[] -->
 
 **بلد** — *balad* — "a country".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بلد** (*balad*) is built on the native Arabic root *b-l-d*, "a country, a town" (Lane). An old noun with its own root in Lane.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

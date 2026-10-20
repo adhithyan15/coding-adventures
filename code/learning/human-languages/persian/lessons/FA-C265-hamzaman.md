@@ -14,7 +14,8 @@ romanization: "hamzamân"
 concept_tag: FA-ZAMAN265-HAMZAMAN
 prerequisites: [FA-C264-pas-farda, FA-C265-pishapish]
 sounds: []
-roots: []
+roots: [persian-ham, arabic-zaman]
+etymology_hook: "hamzamân: Persian ham- 'same' + zamân 'time' (Arabic zamān, Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C265-pishapish]
 <!-- hl-knowledge: introduces=[FA-LEX-C265-ZAMAN265-02]; assesses=[] -->
 
 **همزمان** — *hamzamân* — "at the same time".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*hamzamân* is *ham-*, "same", with *zamân*, "time": at the same time. *ham-* is native; *zamân* is usually treated as Arabic *zamān* (root *z-m-n*, Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

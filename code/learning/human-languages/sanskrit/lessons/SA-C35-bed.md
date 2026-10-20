@@ -14,7 +14,8 @@ romanization: "śayyā"
 concept_tag: SA-HOUSE-SHAYYA
 prerequisites: [SA-C35-book, SA-C33-sea, SA-C34-body]
 sounds: []
-roots: []
+roots: [sanskrit-shayya]
+etymology_hook: "śayyā 'bed' ← the root √śī 'lie down' (MW), usually set beside Greek keitai 'lies'"
 duration:
   max_seconds: 210
 requires:
@@ -45,7 +46,7 @@ reviews_of: [SA-C35-book]
 
 **शय्या** comes from *śī*, "to lie down", so a bed is simply the lying-down place.
 
-Its cousins settle rather than sleep: Greek *keitai*, "he lies"; Latin *cīvis*, a citizen — one who lies down in a place instead of moving on — behind *city*, *civil* and *civilian*; and English *home*, and *hide*, once a measure of land a single family could settle. A bed and a city turn out to be one idea at two sizes. Ends in **-आ**, like **लता**.
+Its usual cousins settle rather than sleep, and EtymDB groups them under one old root for lying down: Greek *keitai*, "he lies"; Latin *cīvis*, a citizen — one who lies down in a place instead of moving on — behind *city*, *civil* and *civilian*; and English *home*, and *hide*, once a measure of land a single family could settle. A bed and a city turn out to be one idea at two sizes. Ends in **-आ**, like **लता**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "sikkā"
 concept_tag: UR-KAM176-SIKKA
 prerequisites: [UR-C176-tankhvah, UR-C176-rupaya]
 sounds: []
-roots: []
+roots: [arabic-sikka]
+etymology_hook: "sikkā ← Arabic sikka 'a die for stamping coins', through Persian (Lane, root s-k-k)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C176-rupaya]
 <!-- hl-knowledge: introduces=[UR-LEX-C176-KAM176-05]; assesses=[] -->
 
 **سکہ** — *sikkā* — "a coin".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سکہ** (*sikkā*) is a loan from Arabic *sikka*, "a die for stamping coins", which reached Urdu through Persian. Its Arabic root is *s-k-k* (Lane).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

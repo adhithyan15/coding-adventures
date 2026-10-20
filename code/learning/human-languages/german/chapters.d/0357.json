@@ -1,0 +1,19 @@
+{
+  "chapter": 357,
+  "title": "Die Gewerkschaft",
+  "label": "ch:ge-die-gewerkschaft",
+  "canDo": "I can talk about unions and works councils, workers' demands and support for them.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C357-unterstuetzung",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 357: I can talk about unions and works councils, workers' demands and support for them.",
+    "assesses": [
+      "GE-LEX-C357-GEWERKSCHAFT-03",
+      "GE-LEX-C357-GEWERKSCHAFT-04",
+      "GE-LEX-C357-GEWERKSCHAFT-05"
+    ]
+  }
+}

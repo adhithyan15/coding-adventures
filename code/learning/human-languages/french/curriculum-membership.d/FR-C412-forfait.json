@@ -1,0 +1,11 @@
+{
+  "id": "FR-C412-forfait",
+  "pathSegment": "FR-PATH-412-GUICHET",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-412-GUICHET",
+      "order": 3
+    }
+  ]
+}

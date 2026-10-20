@@ -11,10 +11,33 @@ import {
   expectLanguageContinuity,
   expectLanguageLessonBudgets,
   expectLanguageModality,
+  languageWritingStages,
 } from "./assert-language-corpus.js";
 
 it("pins Russian continuity", () => expectLanguageContinuity("russian"));
 it("pins Russian modality", () => expectLanguageModality("russian"));
+
+it("pins Russian's writing ladder IN ORDER, pre-A1 through A1", () => {
+  const russian = languageWritingStages("russian");
+  expect(russian.defects).toEqual([]);
+  // The pre-A1 runway is привет, observed, copied, copied blind and dictated;
+  // the chapter-one checkpoint is a second dictation block. Then chapters
+  // 258-260. ORDER is the point: `missing-stage-prerequisite` rejects a timed
+  // or connected paper that sits before a controlled one, so a set-equality
+  // assertion would pass on a ladder whose rungs prove nothing.
+  expect(russian.validEvidence.map(({ lessonId, stage }) => [lessonId, stage])).toEqual([
+    ["RU-W05-privet-observe", "observe-trace"],
+    ["RU-W05-privet-guided-copy", "guided-copy"],
+    ["RU-W05-privet-delayed-copy", "delayed-copy"],
+    ["RU-W05-privet-dictation", "dictation-transcription"],
+    ["RU-C01-checkpoint", "dictation-transcription"],
+    ["RU-W258-own-line", "controlled-composition"],
+    ["RU-W259-with-a-clock", "timed-assessment-production"],
+    ["RU-W260-four-lines", "connected-composition"],
+  ]);
+  expect(russian.levels[0]).toMatchObject({ level: "pre-A1", missingStages: [], complete: true });
+  expect(russian.levels.find((level) => level.level === "A1")?.missingStages).toEqual([]);
+});
 it("pins Russian lesson-content budgets", () =>
   expectLanguageLessonBudgets("russian", {
     // 88 -> 123: the joining and repair tranche, chapters 16-22, seven chapters
@@ -59,7 +82,9 @@ it("pins Russian lesson-content budgets", () =>
     // 1338 -> 1339: RU-C01-checkpoint, chapter 1's closing checkpoint after the
     // writing runway, so the payoff can assess the ten letter atoms. It
     // introduces nothing: no idiom, sense or culture claim.
-    lessons: 1339,
+    // 1339 -> 1342: chapters 258-260, the A1 writing stages Russian had not
+    // proved. No new word or atom.
+    lessons: 1342,
     idioms: 0,
     senses: 4,
     cultureClaims: 10,

@@ -14,7 +14,8 @@ romanization: "negai"
 concept_tag: JA-WANT92-NEGAI
 prerequisites: [JA-C91-mayou, JA-C92-hoshii]
 sounds: []
-roots: []
+roots: [japanese-negau]
+etymology_hook: "negai: native, the noun from negau 'to wish'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C92-hoshii]
 <!-- hl-knowledge: introduces=[JA-LEX-C92-WANT92-02]; assesses=[] -->
 
 **ねがい** — *negai* — "a wish, a request".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ねがい** (*negai*) is native: the noun made from *negau*, "to wish", by its stem (JMdict). It is inherited rather than borrowed.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

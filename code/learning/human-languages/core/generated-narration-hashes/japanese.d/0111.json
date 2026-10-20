@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 111,
-  "sourceHash": "fnv1a64:75d5179af0c48fc3",
+  "sourceHash": "fnv1a64:999060227dfd29ae",
   "lessonIds": [
     "JA-C111-hitai",
     "JA-C111-kangoshi",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "japanese/narration/ch111.txt",
   "json": "japanese/narration/ch111.json",
-  "textHash": "fnv1a64:542bc23099a477da",
-  "jsonHash": "fnv1a64:e7a3f02d62b2014b",
+  "textHash": "fnv1a64:f42da3e5989f4adc",
+  "jsonHash": "fnv1a64:b7fd7250b42a225e",
   "findings": []
 }

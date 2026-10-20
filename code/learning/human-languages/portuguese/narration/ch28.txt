@@ -77,6 +77,7 @@ The word, taken apart: where the accent goes.
 Sete has two syllables and the stress on the first: SE-te. Sétimo has three — SÉ-ti-mo — and the stress stays where it was, on the syllable that already had it, while a new one is added behind.
 Portuguese writes that down. The acute accent on é is not decoration: it says "the stress is here, not on the second-to-last syllable where you would otherwise put it." Without it a reader would say se-TI-mo, and the word would be wrong.
 Décimo, three lessons ahead, carries the accent for the same reason.
+Sétimo comes from Latin septimus, "seventh", which Latin built on septem, "seven" (EtymDB 2.1).
 
 Guided Practice.
 [pause 1 second]

@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-443-HIVER",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-443-HIVER"
+  ],
+  "after": []
+}

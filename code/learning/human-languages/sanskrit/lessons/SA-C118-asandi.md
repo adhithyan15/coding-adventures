@@ -14,7 +14,8 @@ romanization: "āsandī"
 concept_tag: SA-THINGS118-ASANDI
 prerequisites: [SA-C118-angulih, SA-C118-kaksah]
 sounds: []
-roots: []
+roots: [sanskrit-asandi]
+etymology_hook: "āsandī 'chair, stool' (AV) ← ā + √sad 'sit' (CDIAL 1485), which MW sets beside Latin sedere, English sit"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C118-kaksah]
 <!-- hl-knowledge: introduces=[SA-LEX-C118-THINGS118-04]; assesses=[] -->
 
 **आसन्दी** — *āsandī* — "a chair".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*āsandī* "a chair, a stool" is old, in the Atharvaveda, and comes from *ā* "on" + the root √sad "sit" (CDIAL 1485). MW sets √sad beside Latin *sedere* and English *sit*: an inherited Indo-European root.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,12 @@
+{
+  "language": "sanskrit",
+  "chapter": 263,
+  "sourceHash": "fnv1a64:241043a5aeda62c9",
+  "lessonIds": [
+    "SA-C263-gamisyami",
+    "SA-C263-first-person-future",
+    "SA-C263-future-person-contrast",
+    "SA-C263-tomorrow-going-recall"
+  ],
+  "tex": "sanskrit/book/chapters/ch263-i-will-go-tomorrow.tex"
+}

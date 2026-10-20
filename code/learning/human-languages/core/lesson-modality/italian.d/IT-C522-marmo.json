@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C522-marmo",
+    "language": "italian",
+    "chapter": 522,
+    "sequence": 29230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:73ac4ea980bc7acd"
+  },
+  "findings": []
+}

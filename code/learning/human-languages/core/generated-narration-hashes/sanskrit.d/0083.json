@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 83,
-  "sourceHash": "fnv1a64:b4eb477abc417a88",
+  "sourceHash": "fnv1a64:fdaeca851d6d3767",
   "lessonIds": [
     "SA-C83-school",
     "SA-C83-student",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch83.txt",
   "json": "sanskrit/narration/ch83.json",
-  "textHash": "fnv1a64:c3fc97a04a49bf34",
-  "jsonHash": "fnv1a64:24a909fa74bd8827",
+  "textHash": "fnv1a64:aa4a202541a3bdac",
+  "jsonHash": "fnv1a64:70f9130247fa3c88",
   "findings": []
 }

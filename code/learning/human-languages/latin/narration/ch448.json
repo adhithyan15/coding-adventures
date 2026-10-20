@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 448,
+  "title": "To snore, To make a noise, To make a din, Drinker, Hoarse",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:746c04a1c821ec82",
+  "lessons": [
+    {
+      "id": "LA-C448-sterto",
+      "sequence": 23880,
+      "title": "stertō, stertere — to snore",
+      "headword": "stertō, stertere",
+      "romanization": "stertō, stertere",
+      "gloss": "to snore",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2ce6a2399169f4a0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for sleepless, then the Latin for to lie down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: stertō, stertere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "stertō, stertere — \"to snore\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Hospes ēbrius tōtam noctem stertit. The drunken guest snores all night."
+            },
+            {
+              "kind": "speech",
+              "text": "stertō, stertere, stertuī. English stertorous 'heavy and snoring' comes from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of stertō is not settled: Lewis & Short compare Greek darthanō 'to sleep', but EtymDB gives no parent. English stertor and stertorous come from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stertō, stertere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *stertō, stertere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stertō, stertere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *stertō, stertere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with stertō, stertere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *stertō, stertere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for sleepless, then the Latin for to lie down, then say stertō, stertere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for sleepless, then the Latin for to lie down, then say *stertō, stertere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does stertō, stertere mean? (\"To snore\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C448-strepo",
+      "sequence": 23890,
+      "title": "strepō, strepere — to make a noise, to clatter, to roar",
+      "headword": "strepō, strepere",
+      "romanization": "strepō, strepere",
+      "gloss": "to make a noise, to clatter, to roar",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f765287d21be71b6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to lie down, then the Latin for to snore."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: strepō, strepere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "strepō, strepere — \"to make a noise, to clatter, to roar\"."
+            },
+            {
+              "kind": "speech",
+              "text": "In viā plaustra strepunt, et nēmō dormīre potest. In the street the wagons clatter, and nobody can sleep."
+            },
+            {
+              "kind": "speech",
+              "text": "strepō, strepere, strepuī, strepitum. Any loud noise: wheels, voices, water."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of strepō is not settled: Lewis & Short give its senses, to rattle, rumble, roar, but no etymology, and EtymDB gives no parent."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "strepō, strepere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *strepō, strepere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "strepō, strepere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *strepō, strepere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with strepō, strepere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *strepō, strepere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to lie down, then the Latin for to snore, then say strepō, strepere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to lie down, then the Latin for to snore, then say *strepō, strepere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does strepō, strepere mean? (\"To make a noise, to clatter, to roar\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C448-obstrepo",
+      "sequence": 23900,
+      "title": "obstrepō, obstrepere — to make a din, to drown out with noise",
+      "headword": "obstrepō, obstrepere",
+      "romanization": "obstrepō, obstrepere",
+      "gloss": "to make a din, to drown out with noise",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8db6053406104ee9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to snore, then the Latin for to make a noise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: obstrepō, obstrepere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "obstrepō, obstrepere — \"to make a din, to drown out with noise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Virī ēbriī in caupōnā obstrepunt, et hospitēs queruntur. Drunken men make a din in the inn, and the guests complain."
+            },
+            {
+              "kind": "speech",
+              "text": "obstrepō, obstrepere, obstrepuī, obstrepitum, often with a dative: to roar at someone. English obstreperous comes from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "obstrepō is built from ob- 'against' and strepō 'to make a noise' (Lewis & Short). English obstreperous comes from obstreperus, built on it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "obstrepō, obstrepere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *obstrepō, obstrepere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "obstrepō, obstrepere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *obstrepō, obstrepere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with obstrepō, obstrepere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *obstrepō, obstrepere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to snore, then the Latin for to make a noise, then say obstrepō, obstrepere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to snore, then the Latin for to make a noise, then say *obstrepō, obstrepere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does obstrepō, obstrepere mean? (\"To make a din, to drown out with noise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C448-potor",
+      "sequence": 23910,
+      "title": "pōtor, pōtōris — a drinker, a heavy drinker",
+      "headword": "pōtor, pōtōris",
+      "romanization": "pōtor, pōtōris",
+      "gloss": "a drinker, a heavy drinker",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:52365c32e0ec324c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to make a noise, then the Latin for to make a din."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: pōtor, pōtōris",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pōtor, pōtōris — \"a drinker, a heavy drinker\"."
+            },
+            {
+              "kind": "speech",
+              "text": "In tabernā pōtōrēs multum vīnum bibunt. In the tavern the drinkers drink a lot of wine."
+            },
+            {
+              "kind": "speech",
+              "text": "Third declension, masculine: pōtor, pōtōris m., from the same root as pōtus 'drunk'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pōtor is built on the root of pōtō 'to drink' with the suffix -tor 'one who' (Lewis & Short). Greek pinō 'to drink' is a cousin of that root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōtor, pōtōris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōtor, pōtōris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōtor, pōtōris, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōtor, pōtōris*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with pōtor, pōtōris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *pōtor, pōtōris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to make a noise, then the Latin for to make a din, then say pōtor, pōtōris again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to make a noise, then the Latin for to make a din, then say *pōtor, pōtōris* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does pōtor, pōtōris mean? (\"A drinker, a heavy drinker\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C448-raucus",
+      "sequence": 23920,
+      "title": "raucus, rauca, raucum — hoarse; harsh-sounding",
+      "headword": "raucus, rauca, raucum",
+      "romanization": "raucus, rauca, raucum",
+      "gloss": "hoarse; harsh-sounding",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:49da28ed4d77eb10",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to make a din, then the Latin for a drinker."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: raucus, rauca, raucum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "raucus, rauca, raucum — \"hoarse; harsh-sounding\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Post noctem longam vōx caupōnis rauca est. After a long night the innkeeper's voice is hoarse."
+            },
+            {
+              "kind": "speech",
+              "text": "An adjective of three endings. English raucous comes from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "raucus is built on rāvis 'hoarseness' with an adjective suffix (EtymDB); Lewis & Short trace it to a root meaning 'to make a loud noise'. English raucous comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raucus, rauca, raucum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raucus, rauca, raucum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raucus, rauca, raucum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raucus, rauca, raucum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with raucus, rauca, raucum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *raucus, rauca, raucum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to make a din, then the Latin for a drinker, then say raucus, rauca, raucum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to make a din, then the Latin for a drinker, then say *raucus, rauca, raucum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does raucus, rauca, raucum mean? (\"Hoarse; harsh-sounding\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

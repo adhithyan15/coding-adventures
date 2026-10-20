@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 469,
+  "sourceHash": "fnv1a64:8423d417f036f480",
+  "lessonIds": [
+    "IT-C469-bufera",
+    "IT-C469-uragano",
+    "IT-C469-raffica",
+    "IT-C469-soffiare",
+    "IT-C469-nubifragio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch469.txt",
+  "json": "italian/narration/ch469.json",
+  "textHash": "fnv1a64:d916ff519ea0d38e",
+  "jsonHash": "fnv1a64:540d11f27686b300",
+  "findings": []
+}

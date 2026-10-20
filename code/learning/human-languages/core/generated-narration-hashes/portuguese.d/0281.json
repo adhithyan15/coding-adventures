@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 281,
+  "sourceHash": "fnv1a64:cca75b5af247e7f1",
+  "lessonIds": [
+    "PT-C281-facto",
+    "PT-C281-relatar",
+    "PT-C281-relato",
+    "PT-C281-relatorio",
+    "PT-C281-noticiar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch281.txt",
+  "json": "portuguese/narration/ch281.json",
+  "textHash": "fnv1a64:f22ab2f96c520199",
+  "jsonHash": "fnv1a64:d4aba3011ced53b9",
+  "findings": []
+}

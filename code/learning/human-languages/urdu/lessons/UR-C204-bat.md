@@ -14,7 +14,8 @@ romanization: "bāt"
 concept_tag: UR-CHIZ204-BAT
 prerequisites: [UR-C204-nambar, UR-C204-khabar]
 sounds: []
-roots: []
+roots: [sanskrit-varta]
+etymology_hook: "bāt ← Sanskrit vārttā 'livelihood; tidings', a tadbhava (CDIAL 11564)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C204-khabar]
 <!-- hl-knowledge: introduces=[UR-LEX-C204-CHIZ204-03]; assesses=[] -->
 
 **بات** — *bāt* — "a matter, something said".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بات** (*bāt*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *vārttā*, "livelihood; tidings" (CDIAL 11564).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

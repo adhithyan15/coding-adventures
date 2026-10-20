@@ -1,0 +1,11 @@
+{
+  "id": "PT-C365-estereotipo",
+  "pathSegment": "PT-PATH-365-JUSTICA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-365-JUSTICA",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ES-C574-recibir",
+  "pathSegment": "ES-PATH-574-ENTERARSE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-574-ENTERARSE",
+      "order": 1
+    }
+  ]
+}

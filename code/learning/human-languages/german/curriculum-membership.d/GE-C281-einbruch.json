@@ -1,0 +1,11 @@
+{
+  "id": "GE-C281-einbruch",
+  "pathSegment": "GE-PATH-281-EINBRUCH",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-281-EINBRUCH",
+      "order": 1
+    }
+  ]
+}

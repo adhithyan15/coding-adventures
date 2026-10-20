@@ -6,11 +6,12 @@
 //! it) on every error.
 
 use crate::{
-    check_environment, check_plan, command_line, container_name, environment_block,
-    strip_verbatim_prefix, ConfinementError, HANDLES_VARIABLE, MITIGATIONS,
+    broker_container_name, check_environment, check_plan, command_line, container_name,
+    direct_read_grants, environment_block, strip_verbatim_prefix, ConfinementError,
+    HANDLES_VARIABLE, MITIGATIONS,
 };
 use capability_os_sandbox::SandboxPlan;
-use chief_of_staff_spawn_isolation::VerifiedExecutable;
+use chief_of_staff_spawn_isolation::{check_trusted_file, open_trusted_file, VerifiedExecutable};
 use std::ffi::c_void;
 use std::fs::File;
 use std::io;
@@ -27,23 +28,27 @@ use windows_sys::Win32::Foundation::{
 };
 use windows_sys::Win32::Security::Authorization::ConvertSidToStringSidW;
 use windows_sys::Win32::Security::Authorization::{
-    GetSecurityInfo, SetEntriesInAclW, SetSecurityInfo, EXPLICIT_ACCESS_W, GRANT_ACCESS,
-    NO_MULTIPLE_TRUSTEE, SE_FILE_OBJECT, TRUSTEE_IS_SID, TRUSTEE_IS_UNKNOWN, TRUSTEE_W,
+    GetSecurityInfo, SetEntriesInAclW, SetSecurityInfo, ACCESS_MODE, EXPLICIT_ACCESS_W,
+    GRANT_ACCESS, NO_MULTIPLE_TRUSTEE, REVOKE_ACCESS, SE_FILE_OBJECT, TRUSTEE_IS_SID,
+    TRUSTEE_IS_UNKNOWN, TRUSTEE_W,
 };
 use windows_sys::Win32::Security::Isolation::{
     CreateAppContainerProfile, DeleteAppContainerProfile,
     DeriveAppContainerSidFromAppContainerName, GetAppContainerFolderPath,
 };
 use windows_sys::Win32::Security::{
-    EqualSid, FreeSid, GetSidSubAuthority, GetSidSubAuthorityCount, GetTokenInformation,
-    TokenAppContainerSid, TokenCapabilities, TokenIntegrityLevel, TokenIsAppContainer,
-    TokenIsLessPrivilegedAppContainer, TokenSecurityAttributes, ACL, DACL_SECURITY_INFORMATION,
-    NO_INHERITANCE, SECURITY_CAPABILITIES, TOKEN_APPCONTAINER_INFORMATION, TOKEN_GROUPS,
-    TOKEN_INFORMATION_CLASS, TOKEN_MANDATORY_LABEL, TOKEN_QUERY,
+    CopySid, EqualSid, FreeSid, GetLengthSid, GetSecurityDescriptorControl, GetSidSubAuthority,
+    GetSidSubAuthorityCount, GetTokenInformation, TokenAppContainerSid, TokenCapabilities,
+    TokenIntegrityLevel, TokenIsAppContainer, TokenIsLessPrivilegedAppContainer,
+    TokenSecurityAttributes, ACL, DACL_SECURITY_INFORMATION, NO_INHERITANCE,
+    PROTECTED_DACL_SECURITY_INFORMATION, SECURITY_CAPABILITIES, SE_DACL_PROTECTED,
+    TOKEN_APPCONTAINER_INFORMATION, TOKEN_GROUPS, TOKEN_INFORMATION_CLASS, TOKEN_MANDATORY_LABEL,
+    TOKEN_QUERY, UNPROTECTED_DACL_SECURITY_INFORMATION,
 };
 use windows_sys::Win32::Storage::FileSystem::{
-    CreateFileW, GetFinalPathNameByHandleW, ReOpenFile, FILE_GENERIC_EXECUTE, FILE_GENERIC_READ,
-    FILE_GENERIC_WRITE, FILE_SHARE_READ, FILE_SHARE_WRITE, OPEN_EXISTING, READ_CONTROL, WRITE_DAC,
+    CreateFileW, GetFileInformationByHandle, GetFinalPathNameByHandleW, ReOpenFile,
+    BY_HANDLE_FILE_INFORMATION, FILE_GENERIC_EXECUTE, FILE_GENERIC_READ, FILE_GENERIC_WRITE,
+    FILE_SHARE_READ, FILE_SHARE_WRITE, OPEN_EXISTING, READ_CONTROL, WRITE_DAC,
 };
 use windows_sys::Win32::System::Com::CoTaskMemFree;
 use windows_sys::Win32::System::JobObjects::{
@@ -107,6 +112,9 @@ pub struct WindowsConfinement {
     /// The AppContainer's name, for the profile registered per creation.
     name: String,
     sid: OwnedSid,
+    /// Each `Direct` read grant's file, held from preparation until the
+    /// agent has exited (P2.8c).
+    grants: Vec<Grant>,
     system_directory: Vec<u16>,
     system_root: String,
 }
@@ -118,6 +126,26 @@ impl WindowsConfinement {
         plan: &SandboxPlan,
         agent: &VerifiedExecutable,
         agent_id: &str,
+    ) -> Result<Self, ConfinementError> {
+        Self::prepare(plan, agent, container_name(agent_id))
+    }
+
+    /// The same, for the broker that serves `agent_id` (D18S P2.8b-1): its
+    /// container is [`crate::broker_container_name`], never the agent's,
+    /// so the two are different principals, each with its own one-instance
+    /// rule. `agent_id` is the agent's id as the broker protocol carries it.
+    pub fn prepare_verified_broker(
+        plan: &SandboxPlan,
+        broker: &VerifiedExecutable,
+        agent_id: &[u8],
+    ) -> Result<Self, ConfinementError> {
+        Self::prepare(plan, broker, broker_container_name(agent_id))
+    }
+
+    fn prepare(
+        plan: &SandboxPlan,
+        agent: &VerifiedExecutable,
+        name: String,
     ) -> Result<Self, ConfinementError> {
         check_plan(plan)?;
         agent
@@ -139,7 +167,12 @@ impl WindowsConfinement {
                 "{given}: not canonical (its final path is {image})"
             )));
         }
-        let name = container_name(agent_id);
+        // Each grant is checked against its file before anything changes:
+        // a refused one leaves no container and no image entry behind.
+        let grants = direct_read_grants(plan)?
+            .into_iter()
+            .map(|path| open_grant(path, &held))
+            .collect::<Result<Vec<_>, _>>()?;
         let sid = container_sid(&name)?;
         grant_image_access(&held, &sid)?;
         Ok(Self {
@@ -147,6 +180,7 @@ impl WindowsConfinement {
             image,
             name,
             sid,
+            grants,
             system_directory: system_path(GetSystemDirectoryW)?,
             system_root: String::from_utf16_lossy(&strip_nul(system_path(
                 GetSystemWindowsDirectoryW,
@@ -162,7 +196,7 @@ impl WindowsConfinement {
 
     /// Run the agent, confined, and confirm it before its first
     /// instruction. On any failure nothing of it has run, and it is ended.
-    pub fn spawn(self, request: SpawnRequest) -> Result<ConfinedChild, ConfinementError> {
+    pub fn spawn(mut self, request: SpawnRequest) -> Result<ConfinedChild, ConfinementError> {
         check_environment(
             request
                 .environment
@@ -170,6 +204,11 @@ impl WindowsConfinement {
                 .map(|(name, value)| (name.as_str(), value.as_str())),
         )?;
         let mut live = LiveInstance::claim(&self.name)?;
+        // Granted only while this instance holds the agent's claim, and
+        // taken back when `granted` drops: on every failure below, and
+        // after the agent has exited (P2.8c). Declared before the job, so
+        // on a failure the job is closed, ending the process, first.
+        let granted = GrantedFiles::grant(std::mem::take(&mut self.grants), &self.sid)?;
         // Registered from here until just after the creation; see
         // `RegisteredProfile`. Its folder is needed for the environment.
         let profile = RegisteredProfile::register(&self.name, &self.sid)?;
@@ -254,16 +293,25 @@ impl WindowsConfinement {
         startup.StartupInfo.hStdError = raw(&stderr);
         startup.lpAttributeList = attributes.as_ptr();
         // Only now, immediately before the creation, are the listed handles
-        // made inheritable, so the window in which a std spawn on another
-        // thread (which inherits every inheritable handle) could take one
-        // is as short as it can be (D18S step 8, residuals).
+        // made inheritable, and the spawn lock is held from here until this
+        // process has closed its copies of them: a std spawn on another
+        // thread, which inherits every inheritable handle, waits for it
+        // (D18S P2.8b-1). The handles and the lock are one value, whose
+        // fields drop in order, so the handles are closed before the lock is
+        // released on every path, a panic's included.
+        let spawning = Inheritable {
+            _handles: (child_stdin, child_stdout, stderr, request.inherited),
+            _lock: chief_of_staff_spawn_isolation::spawn_lock(),
+        };
         for &handle in &listed {
-            // SAFETY: each is a handle this process owns, open until it is
-            // dropped right after the creation below.
+            // SAFETY: each is a handle this process owns (in `spawning`),
+            // open until `spawning` is dropped right after the creation.
             if unsafe { SetHandleInformation(handle, HANDLE_FLAG_INHERIT, HANDLE_FLAG_INHERIT) }
                 == 0
             {
-                return Err(create_error("SetHandleInformation"));
+                let error = create_error("SetHandleInformation");
+                drop(spawning);
+                return Err(error);
             }
         }
         // SAFETY: plain data, filled by CreateProcessW.
@@ -302,7 +350,7 @@ impl WindowsConfinement {
         // one's: this process lets go of them either way. On failure the
         // caller's handles are gone too, so a retry needs new ones.
         drop(attributes);
-        drop((child_stdin, child_stdout, stderr, request.inherited));
+        drop(spawning);
         // The profile goes before the agent's first instruction, whatever
         // happened: it was needed only for the creation.
         let removed = profile.remove();
@@ -362,6 +410,7 @@ impl WindowsConfinement {
         Ok(ConfinedChild {
             process,
             job,
+            _granted: granted,
             live,
             id: information.dwProcessId,
             stdin: Some(File::from(parent_stdin)),
@@ -477,6 +526,14 @@ impl WindowsConfinement {
     }
 }
 
+/// The handles that are inheritable for one creation, and the spawn lock
+/// held while they are. Fields drop in declaration order: the handles are
+/// closed first, then the lock is released (D18S P2.8b-1).
+struct Inheritable {
+    _handles: (OwnedHandle, OwnedHandle, OwnedHandle, Vec<OwnedHandle>),
+    _lock: std::sync::MutexGuard<'static, ()>,
+}
+
 /// A confined agent. Dropping it kills the agent: its job is ended (and,
 /// as a backstop, closed; the job kills its process when its last handle
 /// closes). The drop then waits, up to ten seconds, for the process to
@@ -485,6 +542,11 @@ impl WindowsConfinement {
 pub struct ConfinedChild {
     process: OwnedHandle,
     job: OwnedHandle,
+    /// Its `Direct` read grants. A field, so they are taken back after
+    /// `drop` has ended the job and waited for the exit. Before `live`:
+    /// fields drop in order, and the claim must outlast the grants, or a
+    /// new instance could add its entry only for this one to take it back.
+    _granted: GrantedFiles,
     live: LiveInstance,
     id: u32,
     /// The agent's stdin.
@@ -545,6 +607,8 @@ const EXIT_WAIT_MS: u32 = 10_000;
 impl Drop for ConfinedChild {
     /// End the agent, and release its [`LiveInstance`] claim once it has
     /// exited. One that has not exited in time keeps the claim for good.
+    /// Its grants are taken back either way, when the fields drop after
+    /// this: taking access away early only denies more.
     fn drop(&mut self) {
         // SAFETY: both handles are open; terminating an ended job is
         // harmless.
@@ -824,23 +888,52 @@ impl Drop for LiveInstance {
 
 /// One ACE on the image itself, through a handle reopened from the held
 /// one (never by path): `sid` may read and execute it.
-///
-/// Reading the access list, adding to it and writing it back is not
-/// atomic, so two agents prepared at once from one image could each write
-/// a list without the other's entry, and that agent could then not read
-/// its own image. The read-modify-write is serialized across this process.
 fn grant_image_access(held: &File, sid: &OwnedSid) -> Result<(), ConfinementError> {
+    set_entry(
+        held,
+        FILE_SHARE_READ,
+        sid.0,
+        FILE_GENERIC_READ | FILE_GENERIC_EXECUTE,
+        GRANT_ACCESS,
+    )
+    .map_err(ConfinementError::ImageAccess)
+}
+
+/// Change the entries for `sid` in a file's access list, through a handle
+/// reopened from `held` (never by path) with `share` as its sharing:
+///
+/// ```text
+///   GRANT_ACCESS   merge `rights` into the SID's allow entry, adding one
+///                  if it has none: granting twice leaves one entry
+///   REVOKE_ACCESS  remove every explicit allow entry naming the SID
+/// ```
+///
+/// Reading the access list, changing it and writing it back is not
+/// atomic, so two changes at once could each write a list without the
+/// other's: an agent that then cannot read its own image, or a grant
+/// taken back from the wrong file. Every such change in this process is
+/// serialized here.
+///
+/// The list is written back with its protection as it was. A protected
+/// list (an owner-only file's) inherits nothing from the directory above,
+/// and must not start to: that would widen access to the file beyond the
+/// one entry asked for.
+fn set_entry(
+    held: &File,
+    share: u32,
+    sid: PSID,
+    rights: u32,
+    mode: ACCESS_MODE,
+) -> Result<(), String> {
     static ACL_UPDATE: std::sync::Mutex<()> = std::sync::Mutex::new(());
     let _serialized = ACL_UPDATE
         .lock()
         .unwrap_or_else(|poisoned| poisoned.into_inner());
-    let refuse =
-        |why: &str| ConfinementError::ImageAccess(format!("{why}: {}", io::Error::last_os_error()));
     // SAFETY: the held handle is open; ReOpenFile returns a new handle to
     // the same file object, or INVALID_HANDLE_VALUE.
-    let reopened = unsafe { ReOpenFile(raw(held), READ_CONTROL | WRITE_DAC, FILE_SHARE_READ, 0) };
+    let reopened = unsafe { ReOpenFile(raw(held), READ_CONTROL | WRITE_DAC, share, 0) };
     if reopened == INVALID_HANDLE_VALUE {
-        return Err(refuse("ReOpenFile"));
+        return Err(format!("ReOpenFile: {}", io::Error::last_os_error()));
     }
     // SAFETY: a fresh handle this process owns; wrapped once.
     let reopened = unsafe { OwnedHandle::from_raw_handle(reopened as RawHandle) };
@@ -861,20 +954,33 @@ fn grant_image_access(held: &File, sid: &OwnedSid) -> Result<(), ConfinementErro
         )
     };
     if read != 0 {
-        return Err(ConfinementError::ImageAccess(format!(
-            "GetSecurityInfo: {read}"
-        )));
+        return Err(format!("GetSecurityInfo: {read}"));
     }
+    let mut control: u16 = 0;
+    let mut revision: u32 = 0;
+    // SAFETY: a valid descriptor from GetSecurityInfo; both outputs are
+    // plain integers.
+    if unsafe { GetSecurityDescriptorControl(descriptor, &mut control, &mut revision) } == 0 {
+        let error = io::Error::last_os_error();
+        // SAFETY: allocated by GetSecurityInfo, freed once.
+        unsafe { LocalFree(descriptor as _) };
+        return Err(format!("GetSecurityDescriptorControl: {error}"));
+    }
+    let protection = if control & SE_DACL_PROTECTED != 0 {
+        PROTECTED_DACL_SECURITY_INFORMATION
+    } else {
+        UNPROTECTED_DACL_SECURITY_INFORMATION
+    };
     let entry = EXPLICIT_ACCESS_W {
-        grfAccessPermissions: FILE_GENERIC_READ | FILE_GENERIC_EXECUTE,
-        grfAccessMode: GRANT_ACCESS,
+        grfAccessPermissions: rights,
+        grfAccessMode: mode,
         grfInheritance: NO_INHERITANCE,
         Trustee: TRUSTEE_W {
             pMultipleTrustee: std::ptr::null_mut(),
             MultipleTrusteeOperation: NO_MULTIPLE_TRUSTEE,
             TrusteeForm: TRUSTEE_IS_SID,
             TrusteeType: TRUSTEE_IS_UNKNOWN,
-            ptstrName: sid.0 as *mut u16,
+            ptstrName: sid as *mut u16,
         },
     };
     let mut updated: *mut ACL = std::ptr::null_mut();
@@ -882,16 +988,14 @@ fn grant_image_access(held: &File, sid: &OwnedSid) -> Result<(), ConfinementErro
     // `updated`, which is freed with LocalFree.
     let merged = unsafe { SetEntriesInAclW(1, &entry, dacl, &mut updated) };
     let result = if merged != 0 {
-        Err(ConfinementError::ImageAccess(format!(
-            "SetEntriesInAclW: {merged}"
-        )))
+        Err(format!("SetEntriesInAclW: {merged}"))
     } else {
         // SAFETY: the handle has WRITE_DAC; the new DACL is valid.
         let set = unsafe {
             SetSecurityInfo(
                 raw(&reopened),
                 SE_FILE_OBJECT,
-                DACL_SECURITY_INFORMATION,
+                DACL_SECURITY_INFORMATION | protection,
                 std::ptr::null_mut(),
                 std::ptr::null_mut(),
                 updated,
@@ -899,9 +1003,7 @@ fn grant_image_access(held: &File, sid: &OwnedSid) -> Result<(), ConfinementErro
             )
         };
         if set != 0 {
-            Err(ConfinementError::ImageAccess(format!(
-                "SetSecurityInfo: {set}"
-            )))
+            Err(format!("SetSecurityInfo: {set}"))
         } else {
             Ok(())
         }
@@ -913,6 +1015,129 @@ fn grant_image_access(held: &File, sid: &OwnedSid) -> Result<(), ConfinementErro
         LocalFree(descriptor as _);
     }
     result
+}
+
+// ---------------------------------------------------------------------------
+// Direct read grants (P2.8c)
+// ---------------------------------------------------------------------------
+
+/// One `Direct` read grant: its path, and its file, held from preparation
+/// until the agent has exited.
+#[derive(Debug)]
+struct Grant {
+    path: String,
+    /// Shares read and write but not delete: while it is open the file
+    /// can be neither renamed nor deleted, so the path keeps naming it.
+    held: File,
+}
+
+/// Check one grant against its file:
+/// - [`open_trusted_file`]: a regular file, not a reparse point, owned and
+///   writable only by the user, Administrators, SYSTEM or TrustedInstaller;
+/// - the path is exactly the held handle's final path, case included;
+/// - it is not `image`, the agent's own (a hard link to it included).
+fn open_grant(path: String, image: &File) -> Result<Grant, ConfinementError> {
+    let refuse = |why: String| ConfinementError::Grant(format!("{path}: {why}"));
+    let held = open_trusted_file(std::path::Path::new(&path)).map_err(|e| refuse(e.to_string()))?;
+    let actual = final_path(&held).map_err(|e| refuse(format!("final path: {e}")))?;
+    if actual != path {
+        return Err(refuse(format!(
+            "not canonical (its final path is {actual})"
+        )));
+    }
+    let same = file_identity(&held).map_err(|e| refuse(format!("identity: {e}")))?
+        == file_identity(image).map_err(|e| refuse(format!("image identity: {e}")))?;
+    if same {
+        return Err(refuse("the agent's own image".to_string()));
+    }
+    Ok(Grant { path, held })
+}
+
+/// A file's identity: its volume's serial number and its index on that
+/// volume. Two handles with one identity are one file, whatever path
+/// opened each.
+fn file_identity(file: &File) -> io::Result<(u32, u32, u32)> {
+    // SAFETY: plain data, filled by the call below.
+    let mut information: BY_HANDLE_FILE_INFORMATION = unsafe { std::mem::zeroed() };
+    // SAFETY: the handle is open; the struct is written in full or not at
+    // all.
+    if unsafe { GetFileInformationByHandle(raw(file), &mut information) } == 0 {
+        return Err(io::Error::last_os_error());
+    }
+    Ok((
+        information.dwVolumeSerialNumber,
+        information.nFileIndexHigh,
+        information.nFileIndexLow,
+    ))
+}
+
+/// The grants applied for one instance: each file's access list names the
+/// agent's SID for reading while this lives. Dropping it takes every
+/// entry for that SID off each file again.
+#[derive(Debug)]
+struct GrantedFiles {
+    files: Vec<Grant>,
+    /// A copy of the agent's SID, which outlives the confinement. `u32`s,
+    /// so the SID is aligned as one must be.
+    sid: Vec<u32>,
+}
+
+impl GrantedFiles {
+    /// Add each grant's entry. On a failure the guard is dropped, which
+    /// takes back any entry already added.
+    fn grant(files: Vec<Grant>, sid: &OwnedSid) -> Result<Self, ConfinementError> {
+        // SAFETY: a valid SID; GetLengthSid reads only it.
+        let length = unsafe { GetLengthSid(sid.0) };
+        let mut copy = vec![0u32; (length as usize).div_ceil(4)];
+        // SAFETY: the buffer holds at least `length` bytes and is aligned
+        // for a SID; CopySid writes at most that many.
+        if unsafe { CopySid(length, copy.as_mut_ptr() as PSID, sid.0) } == 0 {
+            return Err(ConfinementError::Grant(format!(
+                "CopySid: {}",
+                io::Error::last_os_error()
+            )));
+        }
+        let granted = Self { files, sid: copy };
+        for grant in &granted.files {
+            set_entry(
+                &grant.held,
+                FILE_SHARE_READ | FILE_SHARE_WRITE,
+                granted.sid(),
+                FILE_GENERIC_READ,
+                GRANT_ACCESS,
+            )
+            .map_err(|why| ConfinementError::Grant(format!("{}: {why}", grant.path)))?;
+            // Writing the list back re-applied the directory's inheritable
+            // entries, which the check at preparation never saw. A file
+            // someone else may now write is refused, and the guard's drop
+            // takes the grant back (review of P2.8c).
+            check_trusted_file(&grant.held).map_err(|why| {
+                ConfinementError::Grant(format!("{}: after the grant: {why}", grant.path))
+            })?;
+        }
+        Ok(granted)
+    }
+
+    fn sid(&self) -> PSID {
+        self.sid.as_ptr() as PSID
+    }
+}
+
+impl Drop for GrantedFiles {
+    /// Take back every entry for the agent's SID. A file whose list cannot
+    /// be changed keeps its entry, which admits only this agent (a
+    /// residual the spec records); there is no one to report it to here.
+    fn drop(&mut self) {
+        for grant in &self.files {
+            let _ = set_entry(
+                &grant.held,
+                FILE_SHARE_READ | FILE_SHARE_WRITE,
+                self.sid(),
+                0,
+                REVOKE_ACCESS,
+            );
+        }
+    }
 }
 
 /// A new job: kill on close, one active process, die on an unhandled

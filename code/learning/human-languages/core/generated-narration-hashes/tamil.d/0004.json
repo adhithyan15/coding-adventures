@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 4,
-  "sourceHash": "fnv1a64:7d712b4fe8858c11",
+  "sourceHash": "fnv1a64:69bad8f0c92778ec",
   "lessonIds": [
     "TA-C04-po",
     "TA-C04-poy-varugiren",
@@ -14,7 +14,7 @@
   "drivablePrefix": 4,
   "text": "tamil/narration/ch04.txt",
   "json": "tamil/narration/ch04.json",
-  "textHash": "fnv1a64:6a83fd1f389c3c7d",
-  "jsonHash": "fnv1a64:0f4f3c07edbeff8e",
+  "textHash": "fnv1a64:b86fb7ed1cf572d6",
+  "jsonHash": "fnv1a64:a23b7e6d9f448b46",
   "findings": []
 }

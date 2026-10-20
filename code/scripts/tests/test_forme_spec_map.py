@@ -191,6 +191,91 @@ class FormeSpecMapTests(unittest.TestCase):
                 self.assertIn("## Implementation status\n", text)
                 self.assertRegex(text, r"(?m)^\| (?:Surface|Area|Contract) \| Status \|")
 
+    def test_completed_forme_surfaces_do_not_claim_deferred_delivery(self) -> None:
+        stale_claims = {
+            SPECS / "FM01-forme-kernel.md": (
+                "**Status:** Code-ready specification.",
+                "| Interactivity shape | Placeholder active for compatibility |",
+                "before a later kernel migration.",
+            ),
+            SPECS / "FM03-forme-orchestrator.md": (
+                "**Status:** Code-ready specification.",
+                "with FM02 layering in third-party plugins later.",
+            ),
+            SPECS / "FM04-forme-style-ir.md": (
+                "**Status:** Code-ready specification.",
+                "`forme-style-to-latex` (sketched; v0 ships only `-to-css`).",
+                "| Live theme persistence/editor UX | Pending |",
+                "### 9.3 The LaTeX translator (sketch)",
+                "`forme-style-to-latex` (deferred to v0.2).",
+                "sketched but not v0 deliverables",
+                "forme-style-to-latex (v0.2)",
+                "forme-style-to-terminal (v0.2)",
+            ),
+            SPECS / "FM06-forme-aot-compiler.md": (
+                "**Status:** Implementation-reconciliation specification.",
+                "remaining release gaps",
+                "| Interactivity tree shaking | Active |",
+            ),
+            SPECS / "FM07-forme-cli-dev-server.md": (
+                "authoring commands pending.",
+                "| Authoring shell integration | In progress |",
+            ),
+            TYPESCRIPT_PACKAGES / "forme-manifest" / "README.md": (
+                "v0.1.0 — implements FM02",
+                "Not yet implemented (will land with `forme-plugin-host`):",
+            ),
+            TYPESCRIPT_PACKAGES / "forme-load-assets-fs" / "README.md": (
+                "capability-backed storage adapter is still pending",
+            ),
+            TYPESCRIPT_PACKAGES / "forme-resolve-asset-refs-fs" / "README.md": (
+                "asset-aware emitter introduced later",
+                "capability-backed storage adapter is still pending",
+            ),
+            TYPESCRIPT_PACKAGES / "forme-emit-fs" / "README.md": (
+                "blog v0 effort",
+                "Capability discipline (v0 pragmatic exception)",
+                "v0 resolves it",
+                "When FM02 lands",
+                "## v0 simplifications (documented)",
+                "FM05 interactivity usage\n  remains pending.",
+            ),
+            TYPESCRIPT_PACKAGES / "forme-emit-fs" / "src" / "index.ts": (
+                "asset emission is a future stage",
+                "v0 resolves it",
+                "Read via `node:fs/promises`",
+                "When FM02 lands",
+                "v0 simplifications",
+                "no asset stages yet",
+                "renderer doesn't track them yet",
+            ),
+            TYPESCRIPT_PACKAGES / "forme-emit-fs" / "required_capabilities.json": (
+                "Pragmatic v0 resolution",
+                "read via node:fs/promises",
+                "When FM02 lands",
+            ),
+            TYPESCRIPT_PACKAGES / "forme-emit-fs" / "tests" / "stage.test.ts": (
+                "assets array is empty in v0",
+            ),
+            TYPESCRIPT_PACKAGES / "forme-types" / "README.md": (
+                "stub style/interactivity",
+            ),
+            TYPESCRIPT_PACKAGES / "forme-types" / "src" / "index.ts": (
+                "will replace.",
+            ),
+            TYPESCRIPT_PACKAGES / "forme-types" / "src" / "shapes.ts": (
+                "will\n * tighten these",
+                "FM04 will replace this",
+                "FM05 will replace",
+            ),
+        }
+
+        for path, claims in stale_claims.items():
+            text = path.read_text(encoding="utf-8")
+            for claim in claims:
+                with self.subTest(path=path.relative_to(REPO_ROOT), claim=claim):
+                    self.assertNotIn(claim, text)
+
     def test_roadmap_links_every_canonical_numbered_spec(self) -> None:
         roadmap = (SPECS / "FM00-forme-completion-roadmap.md").read_text(
             encoding="utf-8"
@@ -238,7 +323,7 @@ class FormeSpecMapTests(unittest.TestCase):
             "an unfinished roadmap must have exactly one active item; a completed roadmap must have none",
         )
 
-    def test_release_quality_milestone_is_closed(self) -> None:
+    def test_release_quality_milestone_is_closed_and_audit_gaps_are_tracked(self) -> None:
         roadmap = (SPECS / "FM00-forme-completion-roadmap.md").read_text(
             encoding="utf-8"
         )
@@ -254,13 +339,14 @@ class FormeSpecMapTests(unittest.TestCase):
             roadmap,
         )
         self.assertIn("Authoring v1 is complete.", roadmap)
-        self.assertRegex(
-            roadmap, r"No actionable Forme completion\s+backlog remains\."
+        self.assertIn(
+            "| 72 | FM-B073 | active | Implement the declarative TOML pipeline form |",
+            roadmap,
         )
-        backlog = roadmap.split("## Prioritized backlog\n", 1)[1].split(
-            "## Dependency path\n", 1
-        )[0]
-        self.assertNotRegex(backlog, r"\| (?:active|ready|blocked|later) \|")
+        self.assertIn(
+            "| 73 | FM-B074 | ready | Enforce plugin extension-kind subtype compatibility |",
+            roadmap,
+        )
 
     def test_forme_spec_markdown_links_resolve(self) -> None:
         for path in sorted(SPECS.glob("FM[0-9][0-9]-*.md")):

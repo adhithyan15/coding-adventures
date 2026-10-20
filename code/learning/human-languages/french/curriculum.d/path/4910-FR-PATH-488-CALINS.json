@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-488-CALINS",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-488-CALINS"
+  ],
+  "after": []
+}

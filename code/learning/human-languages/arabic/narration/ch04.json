@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:9cff393d5fb55bcb",
+  "sourceHash": "fnv1a64:1d3f8ffceeb9a699",
   "lessons": [
     {
       "id": "AR-W10-ayn",
@@ -371,7 +371,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f871958c2e9daf23",
+      "sourceHash": "fnv1a64:5ffb11b7301f5986",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -574,7 +574,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3306f2422bf5157e",
+      "sourceHash": "fnv1a64:10828b63690e3620",
       "notice": null,
       "blocks": [
         {
@@ -650,7 +650,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "maʿa from Semitic ʿimma, and its Hebrew cousin is עִם (ʿim), \"with.\" The same pairing you met with salām / shalom in Chapter 1 and ism / shem in Chapter 2. Three chapters, three cousins — the family resemblance is systematic, not a coincidence."
+              "text": "maʿa is usually set beside Hebrew עִם (ʿim), \"with\", though how the two are linked is debated. Compare the sure pairings you met with salām / shalom in Chapter 1 and ism / shem in Chapter 2: there the family resemblance is systematic, not a coincidence."
             }
           ]
         },
@@ -735,7 +735,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c15b2deaf663947",
+      "sourceHash": "fnv1a64:185d52c84c8c40bf",
       "notice": null,
       "blocks": [
         {
@@ -830,6 +830,17 @@
         },
         {
           "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "السلامة (as-salāma) is salāma, \"safety, soundness\", built on the native root s-l-m, \"to be safe, whole\" (Lane), with the article al-."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -878,7 +889,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -909,7 +920,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4fe7ab7d1b0254f7",
+      "sourceHash": "fnv1a64:b9bb364805236bfa",
       "notice": null,
       "blocks": [
         {
@@ -1093,7 +1104,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c5f37317280287d1",
+      "sourceHash": "fnv1a64:d89b0d56cc749200",
       "notice": null,
       "blocks": [
         {

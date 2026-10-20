@@ -12,6 +12,9 @@ Before the new one: say the Japanese for a harbour, then the Japanese for the se
 You'll want to know: にじ.
 にじ — niji — "a rainbow".
 
+The word, taken apart.
+にじ (niji) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for the setting sun, then the Japanese for 
 
 You'll want to know: かみなり.
 かみなり — kaminari — "thunder".
+
+The word, taken apart.
+かみなり (kaminari) is a native word, inherited rather than borrowed. It is usually taken apart as kami, "god", and nari, "sounding", from naru, "to sound": the god's roar. Its one kanji, "thunder", is read as a whole.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for a rainbow, then the Japanese for thunde
 You'll want to know: しも.
 しも — shimo — "frost".
 
+The word, taken apart.
+しも (shimo) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for thunder, then the Japanese for frost.
 You'll want to know: こおり.
 こおり — koori — "ice".
 
+The word, taken apart.
+こおり (koori) (kōri) is native: the noun made from kōru, "to freeze", by its stem; JMdict also spells it with the verb's kanji. It is inherited rather than borrowed.
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for frost, then the Japanese for ice.
 
 You'll want to know: なつやすみ.
 なつやすみ — natsuyasumi — "the summer holidays".
+
+The word, taken apart.
+なつやすみ (natsuyasumi) is a native compound, inherited rather than borrowed: natsu, "summer", and yasumi, "rest", the noun from yasumu, "to rest" (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C435-abkuerzen",
+  "pathSegment": "GE-PATH-435-UMWEG",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-435-UMWEG",
+      "order": 1
+    }
+  ]
+}

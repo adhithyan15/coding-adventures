@@ -89,6 +89,7 @@ The three pronouns line up with the three articles, which is the whole reason Ge
 Article: der. Pronoun: er. English: he.
 Article: die. Pronoun: sie. English: she.
 Article: das. Pronoun: es. English: it.
+All three pronouns are inherited. Es is kin to English it, and sie is usually linked to English she, whose own history is disputed.
 
 Grammar Lens: all three take -t.
 One ending covers all three — attach -t to the stem:
@@ -163,6 +164,7 @@ German never lost the distinction, so it needs no invention:
 [a table of 2 rows, read aloud]
 one person. Informal: du. Formal: Sie.
 several people. Informal: ihr. Formal: Sie.
+Ihr from Old High German ir from Proto-Germanic jīz (EtymDB 2.1), the same word as English ye.
 
 Grammar Lens: ihr takes -t.
 Attach -t to the stem:

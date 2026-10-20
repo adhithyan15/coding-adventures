@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 166,
-  "sourceHash": "fnv1a64:31cc6846643a075b",
+  "sourceHash": "fnv1a64:1da846cc52ca3614",
   "lessonIds": [
     "UR-C166-sari",
     "UR-C166-belt",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch166.txt",
   "json": "urdu/narration/ch166.json",
-  "textHash": "fnv1a64:df894381f26d3cf5",
-  "jsonHash": "fnv1a64:7ba99fe02edc09fb",
+  "textHash": "fnv1a64:cd71e39dee54f3c3",
+  "jsonHash": "fnv1a64:351dd40ea631a90a",
   "findings": []
 }

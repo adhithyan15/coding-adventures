@@ -14,7 +14,8 @@ romanization: "parindā"
 concept_tag: UR-ANIMALS68-PARINDA
 prerequisites: [UR-C68-bakri, UR-C68-bher]
 sounds: []
-roots: []
+roots: [persian-parinda]
+etymology_hook: "parindā: usually traced to Persian parinda 'bird, a flying thing'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C68-bher]
 <!-- hl-knowledge: introduces=[UR-LEX-C68-ANIMALS68-03]; assesses=[] -->
 
 **پرندہ** — *parindā* — "a bird".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**پرندہ** (*parindā*) is a loan, usually traced to Persian *parinda*, "bird, a flying thing". It is built on *parīdan*, "to fly".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

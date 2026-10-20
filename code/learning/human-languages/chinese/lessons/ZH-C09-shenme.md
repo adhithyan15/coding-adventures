@@ -12,7 +12,7 @@ concept_tag: QUESTION-WHAT
 prerequisites: [ZH-W09-me]
 sounds: [tone-2, tone-neutral]
 roots: []
-etymology_hook: 什么 is the first word the reader can use to get something back, rather than only to answer or to state.
+etymology_hook: "shénme 'what': origin not settled; it appears from about the Tang, its characters chosen for sound"
 duration:
   max_seconds: 240
 requires:
@@ -42,7 +42,7 @@ reviews_of: [ZH-W09-shen, ZH-W09-me]
 **什么** *shénme* — **what**.
 
 *shén* rises; *me* is light and toneless behind it. Both characters are ones you
-have just written.
+have already written.
 
 This one is different in kind from everything before it. 你好, 是, 不是, 再见,
 早上好, 我是 — every one of those **gives** something. **什么 asks.** It is the
@@ -55,7 +55,11 @@ not for anything it means.
 
 And keep the levels apart. The pieces you drew *inside* 什 — the person and the
 ten — belong to that **character**, not to this **word**. "Person plus ten"
-explains nothing about *what*. Some words are built; some are just words.
+explains nothing about *what*. Some words are built; others are not.
+
+Where the word comes from is not settled. It appears in writing from about the
+Tang dynasty, spelled several ways, and its two characters were chosen for their
+sound.
 
 ## Why it's said this way — 什么 on its own
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-SHENME] -->

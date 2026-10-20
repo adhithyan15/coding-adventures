@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 152,
-  "sourceHash": "fnv1a64:4a166edf329ce6d7",
+  "sourceHash": "fnv1a64:d865288778000fc6",
   "lessonIds": [
     "RU-C152-okolo",
     "RU-C152-vokrug",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch152.txt",
   "json": "russian/narration/ch152.json",
-  "textHash": "fnv1a64:82754cbae1500099",
-  "jsonHash": "fnv1a64:6bc3ffa5a0de9b94",
+  "textHash": "fnv1a64:1dac23d772651855",
+  "jsonHash": "fnv1a64:c45d1a0a1198d377",
   "findings": []
 }

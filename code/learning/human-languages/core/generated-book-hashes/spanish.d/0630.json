@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 630,
+  "sourceHash": "fnv1a64:037761f176ab5608",
+  "lessonIds": [
+    "ES-C630-economia",
+    "ES-C630-economico",
+    "ES-C630-exportacion",
+    "ES-C630-inflacion",
+    "ES-C630-comercio"
+  ],
+  "tex": "spanish/book/chapters/ch630-la-economia.tex"
+}

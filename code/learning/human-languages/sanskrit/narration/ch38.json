@@ -4,7 +4,7 @@
   "chapter": 38,
   "title": "Fire and Stone",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:362004e0008d3de6",
+  "sourceHash": "fnv1a64:995e15f248f7ee11",
   "lessons": [
     {
       "id": "SA-C38-fire",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eea3838878fe366f",
+      "sourceHash": "fnv1a64:1748ba4a9459ffab",
       "notice": null,
       "blocks": [
         {
@@ -163,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:60f8f25b60e4bfd6",
+      "sourceHash": "fnv1a64:977b1e8bcb6c83df",
       "notice": null,
       "blocks": [
         {
@@ -208,6 +208,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Bhasma is the combining form of bhasman, \"ashes\", built on the root √bhas, \"to chew, devour\" (MW): what the fire has consumed."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -218,7 +229,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -276,7 +287,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -307,7 +318,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:23941ce76d8b1b52",
+      "sourceHash": "fnv1a64:c89ad4b5c1c063c9",
       "notice": null,
       "blocks": [
         {
@@ -352,6 +363,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Śilā is already in the Atharvaveda. MW tentatively connects it with a root √śi, but its origin is not settled. It lives on as Hindi sil, a flat stone (CDIAL 12459)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -362,7 +384,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -420,7 +442,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -451,7 +473,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dbc64efe128b3273",
+      "sourceHash": "fnv1a64:cce92218c0815b97",
       "notice": null,
       "blocks": [
         {
@@ -496,6 +518,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "MW links sikatā to the root √sic, \"to pour\", but CDIAL 13386 takes it as a collective form of sika, \"sand\", and points to Iranian cousins such as Old Persian thikā, \"gravel\". The root story is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -506,7 +539,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -564,7 +597,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -595,7 +628,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0bc71c850e17d4de",
+      "sourceHash": "fnv1a64:17afa0daccb3866a",
       "notice": null,
       "blocks": [
         {
@@ -630,7 +663,7 @@
             },
             {
               "kind": "speech",
-              "text": "It stands on mṛd, and Latin mordēre, \"to bite\", is its cousin: the sense underneath both is pressing something soft until it gives. English took mordant from that Latin side."
+              "text": "It stands on mṛd, \"clay, soil\", and EtymDB sets that word beside Old English molde, which survives as English mould, the loose earth of a garden bed."
             },
             {
               "kind": "speech",
@@ -640,6 +673,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Mṛttikā is built on mṛd, \"clay, soil\" (MW, CDIAL 10286), and it lives on as Hindi miṭṭī and Bengali māṭi."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "notice",
           "title": "What you've built",
           "segments": [
@@ -650,7 +694,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -708,7 +752,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

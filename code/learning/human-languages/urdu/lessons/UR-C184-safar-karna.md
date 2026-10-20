@@ -14,7 +14,8 @@ romanization: "safar karnā"
 concept_tag: UR-VERB-SAFAR-KARNA
 prerequisites: [UR-C184-kanpna, UR-C184-bhigna]
 sounds: []
-roots: []
+roots: [arabic-safar, kr-do]
+etymology_hook: "safar ← Arabic safar 'a journey', through Persian (Lane, root s-f-r); karnā (CDIAL 2814)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C184-bhigna]
 <!-- hl-knowledge: introduces=[UR-LEX-C184-ACT184-05]; assesses=[] -->
 
 **سفر کرنا** — *safar karnā* — "to travel".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**سفر کرنا** (*safar karnā*) joins *safar*, "a journey", and *karnā*, "to do". *safar* is Arabic, "a journey", and reached Urdu through Persian (Lane, root *s-f-r*); *karnā* comes from Sanskrit *karoti*, "does" (CDIAL 2814).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

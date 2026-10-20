@@ -1,0 +1,11 @@
+{
+  "id": "IT-C391-corruzione",
+  "pathSegment": "IT-PATH-391-ACCUSA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-391-ACCUSA",
+      "order": 4
+    }
+  ]
+}

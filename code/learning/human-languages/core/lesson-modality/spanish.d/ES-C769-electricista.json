@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C769-electricista",
+    "language": "spanish",
+    "chapter": 769,
+    "sequence": 28490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a16e0bfb613dd5c"
+  },
+  "findings": []
+}

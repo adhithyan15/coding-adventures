@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 245,
-  "sourceHash": "fnv1a64:5c78a2f3ba47a3ce",
+  "sourceHash": "fnv1a64:cb0f1bc7382322b4",
   "lessonIds": [
     "SA-C245-nalika",
     "SA-C245-takram",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch245.txt",
   "json": "sanskrit/narration/ch245.json",
-  "textHash": "fnv1a64:d1446f0e48239d0b",
-  "jsonHash": "fnv1a64:99648baf94f33499",
+  "textHash": "fnv1a64:28ce183b80ba2e66",
+  "jsonHash": "fnv1a64:e28ae425d0a3bc86",
   "findings": []
 }

@@ -14,7 +14,8 @@ romanization: "sâz"
 concept_tag: FA-CHIZ207-SAZ
 prerequisites: [FA-C207-sonnat, FA-C207-mehmani]
 sounds: []
-roots: []
+roots: [persian-sakhtan]
+etymology_hook: "sâz: present stem of Persian sâkhtan 'to make'; native"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C207-mehmani]
 <!-- hl-knowledge: introduces=[FA-LEX-C207-CHIZ207-05]; assesses=[] -->
 
 **ساز** — *sâz* — "a musical instrument".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*sâz* is *sâz-*, the present stem of *sâkhtan*, "to make, to fit": a thing made and fitted, then a musical instrument. The verb is native, usually traced to Middle Persian *sāxtan*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -39,7 +39,7 @@ Cover the answer line. Every sound and shape has already had a supported turn.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C07-NUMBERS-6-10-01, ML-CONCEPT-C07-NUMBERS-6-10-02, ML-SCRIPT-DIGITS-6-8-07, ML-SCRIPT-DIGITS-9-10-07] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
-[YOU HEAR: *āṟŭ — ēḻŭ — ombatŭ*]
+[YOU HEAR: *āṟŭ — ēḻŭ — ompatŭ*]
 
 Write the three numerals from sound alone. For *ēḻŭ*, also write the word.
 Then uncover: **൬ — ൭ ഏഴ് — ൯**. Compare and repair one place.

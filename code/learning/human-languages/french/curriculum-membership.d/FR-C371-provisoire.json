@@ -1,0 +1,11 @@
+{
+  "id": "FR-C371-provisoire",
+  "pathSegment": "FR-PATH-371-ANNULER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-371-ANNULER",
+      "order": 2
+    }
+  ]
+}

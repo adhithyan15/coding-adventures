@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C645-pinchazo",
+    "language": "spanish",
+    "chapter": 645,
+    "sequence": 22050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:116401a9adc801fd"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C430-muecke",
+  "pathSegment": "GE-PATH-430-MUECKE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-430-MUECKE",
+      "order": 2
+    }
+  ]
+}

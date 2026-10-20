@@ -5,7 +5,7 @@ spine_node: SPINE-COUNT-ONE-TO-FIVE
 sequence: 347
 chapter: 7
 type: word
-headword: "āṟŭ ēḻŭ eṭṭŭ ombatŭ pattŭ"
+headword: "āṟŭ ēḻŭ eṭṭŭ ompatŭ pattŭ"
 gloss: hear and say six to ten before meeting their written forms
 concept_tag: ML-NUMBERS-6-10
 prerequisites: [ML-W07-numbers-1-5-dictation, ML-C06-dative-ikku, ML-C07-numbers-1-5]
@@ -44,7 +44,7 @@ meanings and sounds come before their shapes.
 | 6 | ***āṟŭ*** |
 | 7 | ***ēḻŭ*** |
 | 8 | ***eṭṭŭ*** |
-| 9 | ***ombatŭ*** |
+| 9 | ***ompatŭ*** |
 | 10 | ***pattŭ*** |
 
 Say the row once slowly, then once at counting speed. [REPEAT x2]
@@ -59,21 +59,22 @@ only the sound now: *e-zhu*. The written letter waits for a later micro-lesson.
 ## The word, taken apart — nine is one short of ten
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C07-NUMBERS-6-10-03]; assesses=[] -->
 
-*Ompathu* grew from an old word for **one** plus *pattŭ*, **ten**: one short of
-ten. Before *p*, the older *n* becomes *m*. Say *on-pattŭ* slowly, then let it
-settle into *ombatŭ*.
+*Ompatŭ* is usually read as an old word for **one** plus *pattŭ*, **ten**: one short of
+ten. It is native Dravidian (DEDR 1025), but how it was built is uncertain: DEDR
+sets it beside both "one" and an older word for nine. Before *p*, the older *n* becomes *m*. Say *on-pattŭ* slowly, then let it
+settle into *ompatŭ*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C07-NUMBERS-6-10-01, ML-CONCEPT-C07-NUMBERS-6-10-02, ML-CONCEPT-C07-NUMBERS-6-10-03, ML-CONCEPT-C06-DATIVE-IKKU-01, ML-CONCEPT-C06-DATIVE-IKKU-02, ML-CONCEPT-C07-NUMBERS-1-5-01, ML-CONCEPT-C07-NUMBERS-1-5-02, ML-CONCEPT-C07-NUMBERS-1-5-03] -->
 
-- [YOU SAY: *āṟŭ, ēḻŭ, eṭṭŭ, ombatŭ, pattŭ*]
+- [YOU SAY: *āṟŭ, ēḻŭ, eṭṭŭ, ompatŭ, pattŭ*]
 - [YOU HEAR: *ēḻŭ*, then say the number — seven]
-- [YOU HEAR: *ombatŭ*, then say the number — nine]
+- [YOU HEAR: *ompatŭ*, then say the number — nine]
 - [YOU RECALL: say *-ikkŭ*, then say **]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C07-NUMBERS-6-10-01, ML-CONCEPT-C07-NUMBERS-6-10-02, ML-CONCEPT-C07-NUMBERS-6-10-03] -->
 
 [PAUSE 3s] Count six to ten. Which word preserves the rare *zh*? (***Ezhu.***)
-How is *ombatŭ* built? (**One plus ten: one short of ten.**) Next, the numeral
+How is *ompatŭ* built? (**One plus ten: one short of ten.**) Next, the numeral
 shapes arrive in groups of three or fewer.

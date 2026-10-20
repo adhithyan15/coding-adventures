@@ -1,0 +1,19 @@
+{
+  "chapter": 461,
+  "title": "Gli alberi",
+  "label": "ch:it-gli-alberi",
+  "canDo": "I can name trees and care for them: the oak, the pine, the fir, pruning and the bark.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C461-corteccia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 461: I can name trees and care for them: the oak, the pine, the fir, pruning and the bark.",
+    "assesses": [
+      "IT-LEX-C461-ALBERI-03",
+      "IT-LEX-C461-ALBERI-04",
+      "IT-LEX-C461-ALBERI-05"
+    ]
+  }
+}

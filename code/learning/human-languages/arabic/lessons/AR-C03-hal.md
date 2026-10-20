@@ -12,7 +12,7 @@ concept_tag: AR-WORD-HAL
 prerequisites: [AR-C03-kayfa]
 sounds: [rtl-known-letters, deep-h]
 roots: [h-w-l]
-etymology_hook: "ḥāl ← root ḥ-w-l 'to turn, change' — so a 'state' is literally the way things have TURNED; the same root gives ḥawla ('around'), taḥwīl ('transformation') and ḥawl ('a year' — one full turn)"
+etymology_hook: "ḥāl: built on the root ḥ-w-l 'to turn, to change' (Lane): a state is the way things have turned"
 duration:
   max_seconds: 240
 requires:

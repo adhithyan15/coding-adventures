@@ -1,0 +1,11 @@
+{
+  "id": "LA-C439-egredior",
+  "pathSegment": "LA-PATH-439-EGREDIOR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-439-EGREDIOR",
+      "order": 1
+    }
+  ]
+}

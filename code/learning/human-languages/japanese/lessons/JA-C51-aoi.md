@@ -14,7 +14,8 @@ romanization: "aoi"
 concept_tag: JA-ADJ51-AOI
 prerequisites: [JA-C51-yowai, JA-C51-utsukushii]
 sounds: []
-roots: []
+roots: [japanese-aoi]
+etymology_hook: "aoi: native, the adjective from ao 'blue, green'; inherited, not borrowed; kanji 青い as kun'yomi"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [JA-C51-utsukushii]
 <!-- hl-knowledge: introduces=[JA-LEX-C51-ADJ51-04]; assesses=[] -->
 
 **あおい** — *aoi* — "blue".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**あおい** (*aoi*) is native: the adjective made from the colour word *ao*, "blue, green", with the ending *-i*; JMdict lists both. It is inherited rather than borrowed from Chinese, and the older origin of *ao* is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

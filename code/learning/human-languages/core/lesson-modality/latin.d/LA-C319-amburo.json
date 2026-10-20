@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C319-amburo",
+    "language": "latin",
+    "chapter": 319,
+    "sequence": 17270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c42c94553bcac90"
+  },
+  "findings": []
+}

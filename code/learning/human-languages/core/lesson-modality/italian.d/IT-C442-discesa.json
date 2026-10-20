@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C442-discesa",
+    "language": "italian",
+    "chapter": 442,
+    "sequence": 25000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f08ece59bb03e98"
+  },
+  "findings": []
+}

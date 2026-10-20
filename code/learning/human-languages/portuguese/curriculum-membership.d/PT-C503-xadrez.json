@@ -1,0 +1,11 @@
+{
+  "id": "PT-C503-xadrez",
+  "pathSegment": "PT-PATH-503-JOGOS",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-503-JOGOS",
+      "order": 0
+    }
+  ]
+}

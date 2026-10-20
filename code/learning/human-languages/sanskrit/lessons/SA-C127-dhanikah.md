@@ -14,7 +14,8 @@ romanization: "dhanikaḥ"
 concept_tag: SA-QUAL127-DHANIKAH
 prerequisites: [SA-C126-suskah, SA-C127-daridrah]
 sounds: []
-roots: []
+roots: [sanskrit-dhanika]
+etymology_hook: "dhanika ← dhana 'wealth, prize' + -ika 'having' (MW); dhana first meant a contest's prize (CDIAL 6717)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C127-daridrah]
 <!-- hl-knowledge: introduces=[SA-LEX-C127-QUAL127-02]; assesses=[] -->
 
 **धनिकः** — *dhanikaḥ* — "rich".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*dhanika* is built from *dhana* "wealth" with the suffix *-ika* "having": "a rich man" (MW). In the Rigveda *dhana* means the prize of a contest, and then property and wealth (CDIAL 6717); Hindi *dhan* "wealth" is the same word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

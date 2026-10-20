@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Four Things You Wear",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:4c5a98f7aafaf4e2",
+  "sourceHash": "fnv1a64:e37ddd89b1e5f7c5",
   "lessons": [
     {
       "id": "UR-C14-qamiz",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a09bb2fb700f8cd2",
+      "sourceHash": "fnv1a64:8ef63c0bebe41191",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:29f025265e000bc0",
+      "sourceHash": "fnv1a64:bf18ffb126ed15f1",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -242,7 +242,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "jūtā continues Sauraseni Prakrit jutta, \"joined,\" from Sanskrit yukta, \"joined, yoked,\" from Proto-Indo-European yewg-, \"to yoke.\" That root gives English yoke directly, the wooden bar that joins two oxen. It also gives Sanskrit its own word yoga — literally \"a joining, a yoking\" — the same root, kept inside one language this time rather than split across two. جوتا keeps the oldest, plainest sense: a thing joined onto the foot."
+              "text": "jūtā continues Prakrit jutta, \"joined,\" from Sanskrit yukta, \"joined, yoked\" (CDIAL 10479), from Proto-Indo-European yewg-, \"to yoke.\" That root gives English yoke directly, the wooden bar that joins two oxen. It also gives Sanskrit its own word yoga — literally \"a joining, a yoking\" — the same root, kept inside one language this time rather than split across two. جوتا keeps the oldest, plainest sense: a thing joined onto the foot."
             }
           ]
         },
@@ -325,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e7687304c272ed15",
+      "sourceHash": "fnv1a64:dd5aba64a996f375",
       "notice": null,
       "blocks": [
         {
@@ -371,7 +371,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ٹوپی (ṭopī) is inherited from Sauraseni Prakrit ṭopiā, \"helmet,\" related to Sanskrit ṭopikā. No further root is documented behind that — another honest dead end, like روٹی and کان."
+              "text": "ٹوپی (ṭopī) is inherited: CDIAL lists it under a reconstructed ṭoppa, \"hat, covering\", beside Prakrit ṭopiā, \"helmet\", and late Sanskrit ṭopikā, \"turban\" (CDIAL 5481). No further root is documented behind that — another honest dead end, like روٹی and کان."
             },
             {
               "kind": "speech",
@@ -467,7 +467,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d8dc662517b3e321",
+      "sourceHash": "fnv1a64:4a125fd0f1494729",
       "notice": null,
       "blocks": [
         {
@@ -513,7 +513,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "کوٹ (koṭ) is borrowed directly from English coat — a modern loan, one generation old rather than a thousand years. It happens to look identical to an older, unrelated کوٹ (koṭ) meaning \"fort,\" inherited from Sanskrit koṭṭa — the two are homographs, not cousins, and the spelling gives no warning either way."
+              "text": "کوٹ (koṭ) is borrowed directly from English coat — a modern loan, one generation old rather than a thousand years. It happens to look identical to an older, unrelated کوٹ (koṭ) meaning \"fort,\" inherited from Sanskrit koṭṭa (CDIAL 3500) — the two are homographs, not cousins, and the spelling gives no warning either way."
             },
             {
               "kind": "speech",

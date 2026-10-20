@@ -14,7 +14,8 @@ romanization: "kasi"
 concept_tag: FA-DEF84-KASI
 prerequisites: [FA-C83-har, FA-C84-hame]
 sounds: []
-roots: []
+roots: [persian-kas]
+etymology_hook: "kasi: Persian kas 'person' (Middle Persian kas) + -i 'some'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C84-hame]
 <!-- hl-knowledge: introduces=[FA-LEX-C84-DEF84-02]; assesses=[] -->
 
 **کسی** — *kasi* — "someone".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*kasi* is *kas*, "person", with the ending *-i*, "a, some": "some person". *kas* is native, usually traced to Middle Persian *kas*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

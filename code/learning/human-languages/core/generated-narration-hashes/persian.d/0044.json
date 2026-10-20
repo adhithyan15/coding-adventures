@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 44,
-  "sourceHash": "fnv1a64:8a1002db1bbfec04",
+  "sourceHash": "fnv1a64:ef6b588ad533ab39",
   "lessonIds": [
     "FA-C44-sham",
     "FA-C44-abmive",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "persian/narration/ch44.txt",
   "json": "persian/narration/ch44.json",
-  "textHash": "fnv1a64:413c30d3420d6269",
-  "jsonHash": "fnv1a64:2397418a2c8cf981",
+  "textHash": "fnv1a64:c8d21b07a88763b8",
+  "jsonHash": "fnv1a64:9a86ec2addab6432",
   "findings": []
 }

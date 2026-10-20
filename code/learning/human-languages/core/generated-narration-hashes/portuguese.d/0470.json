@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 470,
+  "sourceHash": "fnv1a64:ea1142db88a5f5c4",
+  "lessonIds": [
+    "PT-C470-humilde",
+    "PT-C470-humildade",
+    "PT-C470-modesto",
+    "PT-C470-modestia",
+    "PT-C470-elogiar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch470.txt",
+  "json": "portuguese/narration/ch470.json",
+  "textHash": "fnv1a64:fc151c9c219966e1",
+  "jsonHash": "fnv1a64:b35198207dfeae7d",
+  "findings": []
+}

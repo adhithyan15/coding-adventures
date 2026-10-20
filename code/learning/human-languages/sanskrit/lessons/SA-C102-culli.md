@@ -14,7 +14,8 @@ romanization: "cullī"
 concept_tag: SA-THINGS102-CULLI
 prerequisites: [SA-C102-casakah, SA-C102-camasah]
 sounds: []
-roots: []
+roots: [sanskrit-culli]
+etymology_hook: "cullī 'fireplace' is often taken to be borrowed from Dravidian (CDIAL 4879; DEDR 2709); Hindi cūlhā"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [SA-C102-camasah]
 <!-- hl-knowledge: introduces=[SA-LEX-C102-THINGS102-04]; assesses=[] -->
 
 **चुल्ली** — *cullī* — "a stove".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*cullī* "a fireplace, a hearth" is often taken to be borrowed from Dravidian: CDIAL 4879 says so after EWA, and DEDR 2709 sets it beside Dravidian words for a furnace or kiln. It lives on as Hindi *cūlhā* "stove" (CDIAL 4879).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

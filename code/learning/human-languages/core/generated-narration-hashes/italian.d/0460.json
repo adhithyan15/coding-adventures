@@ -1,0 +1,20 @@
+{
+  "language": "italian",
+  "chapter": 460,
+  "sourceHash": "fnv1a64:100007c88fbad44d",
+  "lessonIds": [
+    "IT-C460-radura",
+    "IT-C460-ruscello",
+    "IT-C460-torrente",
+    "IT-C460-cespuglio",
+    "IT-C460-guadare",
+    "IT-R460-ripasso-453-460"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "italian/narration/ch460.txt",
+  "json": "italian/narration/ch460.json",
+  "textHash": "fnv1a64:b14da8b9c8aaf703",
+  "jsonHash": "fnv1a64:862c175fefc9ebe1",
+  "findings": []
+}

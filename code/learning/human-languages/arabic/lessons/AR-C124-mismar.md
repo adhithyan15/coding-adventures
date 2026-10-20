@@ -14,7 +14,8 @@ romanization: "mismār"
 concept_tag: AR-THINGS124-MISMAR
 prerequisites: [AR-C124-khayt, AR-C124-zirr, AR-C26-layl, AR-C26-layl]
 sounds: []
-roots: []
+roots: [s-m-r]
+etymology_hook: "mismār: Lane lists it under s-m-r; Aramaic masmrā is the same word (EtymDB), and Hebrew has masmer"
 duration:
   max_seconds: 200
 requires:
@@ -44,6 +45,11 @@ reviews_of: [AR-C124-zirr]
 <!-- hl-knowledge: introduces=[AR-LEX-C124-THINGS124-05]; assesses=[] -->
 
 **مسمار** — *mismār* — "a nail".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مسمار** (*mismār*), "a nail", is listed by Lane under the root *s-m-r*; Aramaic *masmrā* is the same word (EtymDB), and Hebrew has *masmer*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

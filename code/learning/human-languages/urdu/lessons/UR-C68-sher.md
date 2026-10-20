@@ -14,7 +14,8 @@ romanization: "sher"
 concept_tag: UR-ANIMALS68-SHER
 prerequisites: [UR-C68-parinda, UR-C68-chuha]
 sounds: []
-roots: []
+roots: [persian-sher]
+etymology_hook: "sher: usually traced to Persian sher 'lion, tiger'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C68-chuha]
 <!-- hl-knowledge: introduces=[UR-LEX-C68-ANIMALS68-05]; assesses=[] -->
 
 **شیر** — *sher* — "a lion, a tiger".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**شیر** (*sher*) is a loan, usually traced to Persian *sher*, "lion, tiger".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

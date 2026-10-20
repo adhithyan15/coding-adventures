@@ -14,7 +14,8 @@ romanization: "dādī"
 concept_tag: UR-FAMILY43-DADI
 prerequisites: [UR-C43-beti, UR-C43-dada]
 sounds: []
-roots: []
+roots: [indo-aryan-dadda]
+etymology_hook: "dādī ← *dādda 'father or other elderly relative', a reconstructed form; a tadbhava (CDIAL 6261)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C43-dada]
 <!-- hl-knowledge: introduces=[UR-LEX-C43-FAMILY43-05]; assesses=[] -->
 
 **دادی** — *dādī* — "a grandmother (father's mother)".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**دادی** (*dādī*) is a tadbhava, a word inherited and reshaped by sound change. It comes from *\*dādda*, "father or other elderly relative", a form CDIAL reconstructs from its descendants (CDIAL 6261). *dādī* is the feminine of *dādā*, "grandfather".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

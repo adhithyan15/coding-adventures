@@ -1,0 +1,20 @@
+{
+  "chapter": 255,
+  "title": "You Should — du solltest, and Explaining Why",
+  "label": "ch:ge-you-should",
+  "canDo": "I can give advice with du solltest and man sollte, and explain why in three steps.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C255-review",
+    "kind": "production",
+    "summary": "Complete GE-C255-review: a piece of advice with du solltest, and an explanation with warum, weil and darum.",
+    "assesses": [
+      "GE-LEX-DU-SOLLTEST-01",
+      "GE-GRAMMAR-MAN-SOLLTE-02",
+      "GE-GRAMMAR-ERKLAEREN-WARUM-01",
+      "GE-GRAMMAR-ERKLAERUNG-DREI-02"
+    ]
+  }
+}

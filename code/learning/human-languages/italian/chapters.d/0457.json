@@ -1,0 +1,19 @@
+{
+  "chapter": 457,
+  "title": "Alla cassa",
+  "label": "ch:it-alla-cassa",
+  "canDo": "I can pay and try things on: the cashier, small change, the fitting room, a clearance sale and haggling.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "IT-C457-mercanteggiare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 457: I can pay and try things on: the cashier, small change, the fitting room, a clearance sale and haggling.",
+    "assesses": [
+      "IT-LEX-C457-CASSA-03",
+      "IT-LEX-C457-CASSA-04",
+      "IT-LEX-C457-CASSA-05"
+    ]
+  }
+}

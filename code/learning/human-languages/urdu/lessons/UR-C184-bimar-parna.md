@@ -14,7 +14,8 @@ romanization: "bīmār paṛnā"
 concept_tag: UR-VERB-BIMAR-PARNA
 prerequisites: [UR-C183-marna, UR-C183-barhana]
 sounds: []
-roots: []
+roots: [persian-bimar, sanskrit-patati]
+etymology_hook: "bīmār 'ill' usually traced to Persian; paṛnā 'to fall' ← Sanskrit patati (CDIAL 7722)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C183-barhana]
 <!-- hl-knowledge: introduces=[UR-LEX-C184-ACT184-01]; assesses=[] -->
 
 **بیمار پڑنا** — *bīmār paṛnā* — "to fall ill".
+
+## The phrase, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**بیمار پڑنا** (*bīmār paṛnā*) is "to fall ill". *bīmār*, "ill", is usually traced to Persian *bīmār*, and *paṛnā*, "to fall, to happen", comes from Sanskrit *patati*, "flies; falls" (CDIAL 7722).
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

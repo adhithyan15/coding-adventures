@@ -14,7 +14,8 @@ romanization: "al-qādim"
 concept_tag: AR-MUSTAQBAL157-AL-QADIM
 prerequisites: [AR-C156-dhata-marra, AR-C156-qada]
 sounds: []
-roots: []
+roots: [q-d-m]
+etymology_hook: "al-qādim: built on the root q-d-m, 'to come' (Lane)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C156-qada]
 <!-- hl-knowledge: introduces=[AR-LEX-C157-MUSTAQBAL157-01]; assesses=[] -->
 
 **القادم** — *al-qādim* — "next, coming". The future puts *sa-* in front of the present: **سأسافر الأسبوع القادم** — *sa-usāfiru al-usbūʿa al-qādim* — "I will travel next week."
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**القادم** (*al-qādim*) is built on the native Arabic root *q-d-m*, "to come; to precede" (Lane). *Qādim* is the active participle of *qadima*, "to arrive": "the one coming".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C517-spartito",
+    "language": "italian",
+    "chapter": 517,
+    "sequence": 28970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1ea5f9b8f79864c5"
+  },
+  "findings": []
+}

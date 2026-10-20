@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 514,
+  "sourceHash": "fnv1a64:e117b29593b80ca6",
+  "lessonIds": [
+    "ES-C514-reportaje",
+    "ES-C514-reportero",
+    "ES-C514-entrevistar",
+    "ES-C514-difundir",
+    "ES-C514-anunciar"
+  ],
+  "tex": "spanish/book/chapters/ch514-el-reportaje.tex"
+}

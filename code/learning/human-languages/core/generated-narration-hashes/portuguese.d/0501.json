@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:f129d601592aa3bf",
+  "lessonIds": [
+    "PT-C501-jardinagem",
+    "PT-C501-semear",
+    "PT-C501-regar",
+    "PT-C501-regador",
+    "PT-C501-vaso"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch501.txt",
+  "json": "portuguese/narration/ch501.json",
+  "textHash": "fnv1a64:242b1cd0c7257c7f",
+  "jsonHash": "fnv1a64:5ee8bbf08e13f4a9",
+  "findings": []
+}

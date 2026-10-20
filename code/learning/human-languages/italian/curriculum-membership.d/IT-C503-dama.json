@@ -1,0 +1,11 @@
+{
+  "id": "IT-C503-dama",
+  "pathSegment": "IT-PATH-503-GIOCHI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-503-GIOCHI",
+      "order": 1
+    }
+  ]
+}

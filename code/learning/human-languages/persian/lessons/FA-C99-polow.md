@@ -15,6 +15,7 @@ concept_tag: FA-THINGS99-POLOW
 prerequisites: [FA-C98-salad, FA-C98-kabab]
 sounds: []
 roots: []
+etymology_hook: "polow: often traced to Sanskrit pulāka 'lump of boiled rice' via Hindi (CDIAL 8295)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C98-kabab]
 <!-- hl-knowledge: introduces=[FA-LEX-C99-THINGS99-01]; assesses=[] -->
 
 **پلو** — *polow* — "rice pilaf".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*polow* is often traced to an Indian word: CDIAL 8295 gives Sanskrit *pulāka*, "lump of boiled rice", and lists Persian *pilāv* as taken from Hindi *palāu*. English *pilaf* comes from the Persian word through Turkish.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

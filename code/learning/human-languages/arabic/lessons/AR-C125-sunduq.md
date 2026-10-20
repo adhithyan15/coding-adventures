@@ -14,7 +14,8 @@ romanization: "ṣundūq"
 concept_tag: AR-THINGS125-SUNDUQ
 prerequisites: [AR-C125-qumama, AR-C125-salla]
 sounds: []
-roots: []
+roots: [aramaic-sunduq]
+etymology_hook: "ṣundūq: a chest in Lane; usually taken as a loan, from Aramaic per EtymDB"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C125-salla]
 <!-- hl-knowledge: introduces=[AR-LEX-C125-THINGS125-05]; assesses=[] -->
 
 **صندوق** — *ṣundūq* — "a box".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صندوق** (*ṣundūq*) is listed by Lane under *ṣ-n-d-q* as a chest or coffer. EtymDB gives an Aramaic source, and it is usually taken as a loan.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

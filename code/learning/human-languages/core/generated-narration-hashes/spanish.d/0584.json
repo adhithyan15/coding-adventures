@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 584,
+  "sourceHash": "fnv1a64:87927067846d9203",
+  "lessonIds": [
+    "ES-C584-ventaja",
+    "ES-C584-desventaja",
+    "ES-C584-inconveniente",
+    "ES-C584-positivo",
+    "ES-C584-negativo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch584.txt",
+  "json": "spanish/narration/ch584.json",
+  "textHash": "fnv1a64:6faafbc98ecbc640",
+  "jsonHash": "fnv1a64:8ece11eaa4e1bc88",
+  "findings": []
+}

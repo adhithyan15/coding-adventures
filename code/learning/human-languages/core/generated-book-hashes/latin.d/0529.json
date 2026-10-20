@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 529,
+  "sourceHash": "fnv1a64:72a53339a1db914c",
+  "lessonIds": [
+    "LA-C529-noverca",
+    "LA-C529-vitricus",
+    "LA-C529-privignus",
+    "LA-C529-filiola",
+    "LA-C529-fraternus"
+  ],
+  "tex": "latin/book/chapters/ch529-step-families.tex"
+}

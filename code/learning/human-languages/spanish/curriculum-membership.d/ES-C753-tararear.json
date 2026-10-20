@@ -1,0 +1,11 @@
+{
+  "id": "ES-C753-tararear",
+  "pathSegment": "ES-PATH-753-MUSICA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-753-MUSICA",
+      "order": 1
+    }
+  ]
+}

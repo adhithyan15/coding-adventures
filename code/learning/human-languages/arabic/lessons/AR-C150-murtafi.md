@@ -14,7 +14,8 @@ romanization: "murtafiʿ"
 concept_tag: AR-QUAL150-MURTAFI
 prerequisites: [AR-C150-ladhidh, AR-C150-munkhafid]
 sounds: []
-roots: []
+roots: [r-f-ʿ]
+etymology_hook: "murtafiʿ: built on the root r-f-ʿ, 'to raise' (Lane); murtafiʿ is the Form VIII participle, 'raised, high'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C150-munkhafid]
 <!-- hl-knowledge: introduces=[AR-LEX-C150-QUAL150-03]; assesses=[] -->
 
 **مرتفع** — *murtafiʿ* — "high".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**مرتفع** (*murtafiʿ*) is built on the native Arabic root *r-f-ʿ*, "to raise" (Lane). *Murtafiʿ* is the Form VIII participle, "raised, high".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

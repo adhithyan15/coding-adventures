@@ -14,7 +14,8 @@ romanization: "banafsh"
 concept_tag: FA-QUAL127-BANAFSH
 prerequisites: [FA-C127-torsh, FA-C127-shur]
 sounds: []
-roots: []
+roots: [persian-banafsha]
+etymology_hook: "banafsh: from banafshe 'violet', usually traced to Middle Persian wanafšag"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C127-shur]
 <!-- hl-knowledge: introduces=[FA-LEX-C127-QUAL127-04]; assesses=[] -->
 
 **بنفش** — *banafsh* — "purple".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*banafsh* is shortened from *banafshe*, the violet, usually traced to Middle Persian *wanafšag*: purple is the violet's colour.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

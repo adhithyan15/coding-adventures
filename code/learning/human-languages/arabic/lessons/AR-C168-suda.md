@@ -14,7 +14,8 @@ romanization: "ṣudāʿ"
 concept_tag: AR-SIHHA168-SUDA
 prerequisites: [AR-C168-kahil, AR-C168-halq]
 sounds: []
-roots: []
+roots: [ṣ-d-ʿ]
+etymology_hook: "ṣudāʿ: built on the root ṣ-d-ʿ, 'to split' (Lane); ṣudāʿ has the fuʿāl shape of illness words, like suʿāl, 'a cough'"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [AR-C168-halq]
 <!-- hl-knowledge: introduces=[AR-LEX-C168-SIHHA168-05]; assesses=[] -->
 
 **صداع** — *ṣudāʿ* — "a headache".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**صداع** (*ṣudāʿ*) is built on the native Arabic root *ṣ-d-ʿ*, "to split" (Lane). *Ṣudāʿ* has the *fuʿāl* shape of illness words, like *suʿāl*, "a cough".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

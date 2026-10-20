@@ -1,0 +1,20 @@
+{
+  "language": "italian",
+  "chapter": 362,
+  "sourceHash": "fnv1a64:f1d31925ef714d06",
+  "lessonIds": [
+    "IT-C362-stressato",
+    "IT-C362-esaurito",
+    "IT-C362-efficienza",
+    "IT-C362-efficiente",
+    "IT-C362-produttivita",
+    "IT-R362-ripasso-355-362"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "italian/narration/ch362.txt",
+  "json": "italian/narration/ch362.json",
+  "textHash": "fnv1a64:e4605acfb46eec42",
+  "jsonHash": "fnv1a64:f3ba3bf3edc15e55",
+  "findings": []
+}

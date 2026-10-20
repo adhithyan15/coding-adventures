@@ -12,6 +12,9 @@ Before the new one: say the Sanskrit for a pumpkin, then the Sanskrit for a coco
 You'll want to know: दाडिमम्.
 दाडिमम् — dāḍimam — "a pomegranate".
 
+The word, taken apart.
+dāḍima "the pomegranate" appears from the Mahābhārata on (MW), and neither MW nor CDIAL gives a derivation, so its origin is uncertain. It lives on as Hindi dāṛim and Bengali dālim (CDIAL 6254).
+
 What you've built.
 One more word for this chapter.
 
@@ -40,6 +43,9 @@ Before the new one: say the Sanskrit for a coconut, then the Sanskrit for a pome
 
 You'll want to know: द्राक्षा.
 द्राक्षा — drākṣā — "grapes".
+
+The word, taken apart.
+EtymDB sets drākṣā "vine, grape" beside Latin frāgum "strawberry" and an Albanian word for the same fruit, but MW and CDIAL give no such link, so it is uncertain. It lives on as Hindi and Punjabi dākh "grape, raisin" (CDIAL 6628).
 
 What you've built.
 One more word for this chapter.
@@ -70,6 +76,9 @@ Before the new one: say the Sanskrit for a pomegranate, then the Sanskrit for gr
 You'll want to know: पनसम्.
 पनसम् — panasam — "a jackfruit".
 
+The word, taken apart.
+panasa "the jackfruit tree and its fruit" is probably borrowed from Dravidian: CDIAL 7781 says so after EWA, and DEDR 3988 sets it beside a Dravidian family of jackfruit names. It lives on as Hindi panas and Marathi phaṇas (CDIAL 7781).
+
 What you've built.
 One more word for this chapter.
 
@@ -99,6 +108,9 @@ Before the new one: say the Sanskrit for grapes, then the Sanskrit for a jackfru
 You'll want to know: निम्बुकम्.
 निम्बुकम् — nimbukam — "a lemon".
 
+The word, taken apart.
+nimbūka, beside nimbū, is "the lime" in the old word lists (MW), and CDIAL 7247, after EWA, takes it as borrowed from Austroasiatic. It lives on as Hindi nimbū "lime, lemon" (CDIAL 7247).
+
 What you've built.
 One more word for this chapter.
 
@@ -127,6 +139,9 @@ Before the new one: say the Sanskrit for a jackfruit, then the Sanskrit for a le
 
 You'll want to know: अपूपः.
 अपूपः — apūpaḥ — "a cake".
+
+The word, taken apart.
+apūpa "a cake of flour" is old, in the Rigveda (MW), but its origin is uncertain: CDIAL 491 reports Charpentier's view that it was borrowed from Dravidian, comparing Tamil appam. It lives on as Hindi pūā, a sweet fried cake (CDIAL 491).
 
 What you've built.
 One more word for this chapter.

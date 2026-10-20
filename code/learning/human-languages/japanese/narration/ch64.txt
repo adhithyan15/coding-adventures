@@ -12,6 +12,9 @@ Before the new one: say the Japanese for east, then the Japanese for south.
 You'll want to know: こな.
 こな — kona — "powder, flour".
 
+The word, taken apart.
+こな (kona) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -42,6 +45,9 @@ Before the new one: say the Japanese for south, then the Japanese for powder.
 
 You'll want to know: ごま.
 ごま — goma — "sesame".
+
+The word, taken apart.
+ごま (goma) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are go, "foreign" (Middle Chinese hu) and ma, "hemp" (mae) (Unihan, KANJIDIC2; Middle Chinese in Baxter's transcription). JMdict marks it as usually written in kana.
 
 What you've built.
 One more word for this chapter.
@@ -74,6 +80,9 @@ Before the new one: say the Japanese for powder, then the Japanese for sesame.
 You'll want to know: うに.
 うに — uni — "a sea urchin".
 
+The word, taken apart.
+うに (uni) is a native word, inherited rather than borrowed. JMdict writes it with characters for "sea" and "gall", read as a whole, and marks it as usually written in kana. Its older origin is not settled.
+
 What you've built.
 One more word for this chapter.
 
@@ -105,6 +114,9 @@ Before the new one: say the Japanese for sesame, then the Japanese for a sea urc
 You'll want to know: いわし.
 いわし — iwashi — "a sardine".
 
+The word, taken apart.
+いわし (iwashi) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji, when used, is a kun'yomi attached later (JMdict, KANJIDIC2).
+
 What you've built.
 One more word for this chapter.
 
@@ -135,6 +147,9 @@ Before the new one: say the Japanese for a sea urchin, then the Japanese for a s
 
 You'll want to know: あじ.
 あじ — aji — "a flavour, a taste".
+
+The word, taken apart.
+あじ (aji) is a native Japanese word, inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2).
 
 What you've built.
 One more word for this chapter.

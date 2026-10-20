@@ -15,6 +15,7 @@ concept_tag: FA-MAKAN232-NARDE
 prerequisites: [FA-C232-rahpelle, FA-C232-pagard]
 sounds: []
 roots: []
+etymology_hook: "narde: origin not settled"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [FA-C232-pagard]
 <!-- hl-knowledge: introduces=[FA-LEX-C232-MAKAN232-05]; assesses=[] -->
 
 **نرده** — *narde* — "a railing".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+*narde* is the word for a railing, but no source used here gives its origin, which is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -14,7 +14,8 @@ romanization: "chhīṅknā"
 concept_tag: UR-VERB-CHHINKNA
 prerequisites: [UR-C151-tayyar-karna, UR-C151-sajana]
 sounds: []
-roots: []
+roots: [sanskrit-chikka]
+etymology_hook: "chhīṅknā ← Sanskrit chikkā 'sneeze', a tadbhava (CDIAL 5032)"
 duration:
   max_seconds: 200
 requires:
@@ -42,6 +43,11 @@ reviews_of: [UR-C151-sajana]
 <!-- hl-knowledge: introduces=[UR-LEX-C151-ACT151-03]; assesses=[] -->
 
 **چھینکنا** — *chhīṅknā* — "to sneeze".
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**چھینکنا** (*chhīṅknā*) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from *chikkā*, "sneeze" (CDIAL 5032). CDIAL calls it imitative of the sound.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

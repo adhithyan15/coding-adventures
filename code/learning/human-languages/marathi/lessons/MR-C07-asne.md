@@ -11,8 +11,8 @@ gloss: to be — the verb behind आहे, the word a Marathi sentence ends on
 concept_tag: VERB-BE
 prerequisites: [MR-C02-aahe]
 sounds: [inherent-a, matra-aa, retroflex-na]
-roots: [sanskrit-asti, pie-es-be]
-etymology_hook: "Sanskrit ásti is the same ancient is as Latin est and English is; Marathi's आहे belongs to that family and closes the sentence rather than sitting in its middle"
+roots: [sanskrit-aste, sanskrit-asti, pie-es-be]
+etymology_hook: "असणे is often tied to Sanskrit asti, kin to English is, but CDIAL files it under āsatē 'sits, exists' (1480)"
 duration:
   max_seconds: 240
 requires:
@@ -63,18 +63,17 @@ carrying the *-e* stroke — *a-sa-ṇe*. **आ** is that first letter with an u
 stroke added, the long *ā*. And **ह** + **े** → **हे**, *ha* with the same *-e* stroke:
 *ā-he*.
 
-## The word, taken apart — the oldest verb in the family
+## The word, taken apart — a near miss with *is*
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-Sanskrit's word for "is" was **अस्ति** *ásti*, sitting on the stem *as-*, and
-that stem goes back to the Indo-European root **\*h₁es-**. It surfaces almost
-everywhere the family reaches: Latin *est*, Greek *estí*, German *ist*, and
-English **is**. *Asṇe* is built straight on it.
+Sanskrit's word for "is" was **अस्ति** *ásti*, from the Indo-European root
+*\*es-*: Latin *est*, German *ist*, English **is**. *Asṇe* looks built on it,
+but CDIAL files it under *āsate*, "sits, exists" (CDIAL 1480), or *ākṣeti*,
+"abides" (CDIAL 1031). It began as staying put, not as being.
 
-**आहे** itself is the contested piece. Some trace it to *ásti* directly; others
-route it through a Middle Indo-Aryan verb *acchai* "stays, remains." The family
-is not in doubt, the exact line of descent is — so treat it as an open question
-rather than a settled fact.
+**आहे** is the contested piece. CDIAL weighs *ásti* (CDIAL 977), *ābhavati*,
+"is present" (CDIAL 1226), and *āsate* (CDIAL 1480), and settles on none, so
+treat its descent as an open question.
 
 ## Grammar Lens: the sentence ends on आहे
 <!-- hl-knowledge: introduces=[MR-GRAMMAR-AAHE-LAST]; assesses=[] -->

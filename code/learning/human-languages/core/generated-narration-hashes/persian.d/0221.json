@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 221,
-  "sourceHash": "fnv1a64:0c6e4c0740bfb30b",
+  "sourceHash": "fnv1a64:165308c38c6ae4c1",
   "lessonIds": [
     "FA-C221-bakhshidan",
     "FA-C221-qahr-kardan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch221.txt",
   "json": "persian/narration/ch221.json",
-  "textHash": "fnv1a64:e01c7da1b9478ee6",
-  "jsonHash": "fnv1a64:fa6fa86080b68838",
+  "textHash": "fnv1a64:0912174515a40544",
+  "jsonHash": "fnv1a64:219927b919eaa778",
   "findings": []
 }
