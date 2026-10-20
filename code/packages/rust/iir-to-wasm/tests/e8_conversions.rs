@@ -20,6 +20,7 @@ fn run_main(instrs: Vec<IIRInstr>) -> i64 {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     let wasm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).expect("lowering failed");
     let bytes = encode_module(&wasm).expect("encoding failed");

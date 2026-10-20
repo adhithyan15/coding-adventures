@@ -1,5 +1,16 @@
 # Changelog — interpreter-ir
 
+## [0.13.0] — Unreleased (LANG84 phase 4b — module release provenance)
+
+- **`IIRModule::release: Option<String>`** (LANG84 C4.1): the exact
+  `releases.csv` ID a release-versioned frontend compiled against, such as
+  `Some("5.38.0")` for Perl; `None` for frontends without an inventory and
+  for `IIRModule::new`. Backends never read it. It is not part of the binary
+  format: `serialise` output is unchanged (still 1.1) and `deserialise`
+  returns `None`.
+- Breaking for struct literals: every `IIRModule { .. }` literal in the
+  repository (161 of them, across 14 crates) now names `release: None`.
+
 ## [0.12.0] — 2026-10-19 (LANG83 PR1a — standard operation registry)
 
 Adds the contract half of [LANG83](../../../specs/LANG83-iir-standard-operation-registry.md):

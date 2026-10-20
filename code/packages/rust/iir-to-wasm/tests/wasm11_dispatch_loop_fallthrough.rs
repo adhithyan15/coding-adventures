@@ -59,6 +59,7 @@ fn dispatch_loop_function_ending_in_a_bare_conditional_jump_terminates() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
 
     let config = IIRWasmConfig::default();
@@ -100,6 +101,7 @@ fn unreachable_value_dispatch_fallthrough_validates() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
 
     let wasm_module = lower_iir_to_wasm(&module, &IIRWasmConfig::default())

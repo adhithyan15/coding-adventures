@@ -1,5 +1,11 @@
 # Changelog — iir-to-wasm
 
+## Unreleased — LANG84 phase 4b — `IIRModule::release`
+
+- Every `IIRModule { .. }` struct literal (code, tests and doc examples)
+  names the new `release: None` field from interpreter-ir 0.13.0. No
+  behaviour change: backends do not read the field.
+
 ## [0.50.0] — 2026-10-19 (LANG83 PR1b — floor division, `trap`, `write_i64`)
 
 - **New host imports** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)), appended after every older

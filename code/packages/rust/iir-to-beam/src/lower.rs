@@ -5370,6 +5370,7 @@ mod tests {
             language: "test".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         }
     }
 
@@ -5434,6 +5435,7 @@ mod tests {
             language: "test".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         };
         let beam = lower_iir_to_beam(&m, &default_cfg())
             .expect("module with `mov` must lower without errors");

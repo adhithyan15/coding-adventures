@@ -1,5 +1,11 @@
 # Changelog — iir-to-jvm-class-file
 
+## Unreleased — LANG84 phase 4b — `IIRModule::release`
+
+- Every `IIRModule { .. }` struct literal (code, tests and doc examples)
+  names the new `release: None` field from interpreter-ir 0.13.0. No
+  behaviour change: backends do not read the field.
+
 ## Unreleased — LANG83 PR1b — floor division, `trap`, `write_i64`
 
 - **`i64_div_floor` / `i64_mod_floor`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)) →

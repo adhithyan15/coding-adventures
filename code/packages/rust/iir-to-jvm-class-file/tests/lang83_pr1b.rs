@@ -32,6 +32,7 @@ fn lower(body: Vec<IIRInstr>, params: Vec<(String, String)>) -> JvmClassFile {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     assert!(validate_for_jvm(&module).is_empty(), "{:?}", validate_for_jvm(&module));
     lower_iir_to_jvm(&module, &IIRJvmConfig::new("Main")).expect("lowers")
@@ -203,6 +204,7 @@ fn unregistered_trap_kind_is_refused() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     assert!(lower_iir_to_jvm(&module, &IIRJvmConfig::new("Main")).is_err());
 }

@@ -1,5 +1,11 @@
 # Changelog — twig-ir-compiler
 
+## Unreleased — LANG84 phase 4b — `IIRModule::release`
+
+- Every `IIRModule { .. }` struct literal (code, tests and doc examples)
+  names the new `release: None` field from interpreter-ir 0.13.0. No
+  behaviour change: backends do not read the field.
+
 ## [0.45.1] — 2026-09-15 (VM-041 follow-up — union-variant `box` no longer interleaves `alloc`/`field_store`)
 
 `emit_union_def`'s per-field cons-cell construction now emits the field's

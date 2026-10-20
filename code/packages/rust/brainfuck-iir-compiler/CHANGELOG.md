@@ -1,5 +1,11 @@
 # Changelog — brainfuck-iir-compiler
 
+## Unreleased — LANG84 phase 4b — `IIRModule::release`
+
+- Every `IIRModule { .. }` struct literal (code, tests and doc examples)
+  names the new `release: None` field from interpreter-ir 0.13.0. No
+  behaviour change: backends do not read the field.
+
 ## [0.4.2] — 2026-10-20 (LANG83 PR1b security review — follow vm-core's fallible JIT handlers)
 
 ### Changed — opcode-handler closures name `vm_core::dispatch::JitHandlerMap`
