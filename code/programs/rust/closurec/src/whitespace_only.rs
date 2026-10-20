@@ -3130,6 +3130,12 @@ pub fn whitespace_only_minify(
 
     // State machine:
     let mut brace_stack: Vec<BlockKind> = Vec::new();
+    // #17840: parallel to `brace_stack`, whether each open brace is a class
+    // MEMBER body (a method or static block, opened directly in a class
+    // body), and whether the `}` most recently closed was one. See the
+    // class-body ASI note at the top of the emit loop.
+    let mut brace_is_member_body: Vec<bool> = Vec::new();
+    let mut closed_member_body = false;
     // ^ for each open `{`, the kind of block it opens.
     //   `BlockKind::Function` triggers gap-030 rule-B (emit
     //   `;` after closing `}`); `BlockKind::TryChain` triggers
@@ -3201,7 +3207,12 @@ pub fn whitespace_only_minify(
             .as_ref()
             .is_some_and(|semi| std::ptr::eq(tok, semi))
             && brace_stack.last() == Some(&BlockKind::Class)
+            && closed_member_body
+            && prev_emitted_tok.is_some_and(|p| is_structural_punct(p, "}"))
         {
+            // Only after a method or static block: `m(){}⏎n(){}` prints
+            // `m(){}n(){}` upstream. A FIELD keeps its `;` (`x=1;y=2`):
+            // without it the output wouldn't parse.
             idx += 1;
             continue;
         }
@@ -3714,6 +3725,7 @@ pub fn whitespace_only_minify(
         // try-chain, gets a synthetic `;` appended.
         if val == "}" {
             let kind = brace_stack.pop().unwrap_or(BlockKind::Other);
+            closed_member_body = brace_is_member_body.pop().unwrap_or(false);
             let next_val = kept.get(idx + 1).map(|t| t.value.as_str());
             let next_is_close_brace = next_val == Some("}");
             let next_is_chain_continuation =
@@ -3913,6 +3925,31 @@ pub fn whitespace_only_minify(
             } else {
                 BlockKind::Other
             };
+            // A class member body: opened directly in a class body after
+            // `static` (static block) or after a method's `)`, where the
+            // `(` is not a `function` expression's (`x = function(){}` is
+            // a field).
+            // (`prev_emitted_tok` is already this `{`, so look at `kept`.)
+            let member_body = brace_stack.last() == Some(&BlockKind::Class)
+                && idx >= 1
+                && Some(kept[idx - 1]).is_some_and(|p| {
+                    p.value == "static"
+                        || (is_structural_punct(p, ")") && {
+                            let open = (0..idx).rev().scan(0i32, |depth, k| {
+                                if is_structural_punct(kept[k], ")") {
+                                    *depth += 1;
+                                } else if is_structural_punct(kept[k], "(") {
+                                    *depth -= 1;
+                                }
+                                Some((k, *depth))
+                            }).find(|&(_, d)| d == 0).map(|(k, _)| k);
+                            open.is_some_and(|p| {
+                                let not_function = |k: usize| kept[k].value != "function";
+                                p >= 1 && not_function(p - 1) && (p < 2 || not_function(p - 2))
+                            })
+                        })
+                });
+            brace_is_member_body.push(member_body);
             brace_stack.push(kind);
             next_block_is_try_chain = false;
             next_block_is_switch_body = false;

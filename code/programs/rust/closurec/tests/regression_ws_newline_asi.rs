@@ -59,9 +59,28 @@ const CASES: &[(&str, &str)] = &[
     ("class P{m(){a()}\nn(){b()}}", "class P{m(){a()}n(){b()}};"),
     ("with(o){a()}", "with(o)a();"),
     ("if(a){if(b)c()}else d()", "if(a){if(b)c()}else d();"),
+    // A statement header's `)` does not end an expression: the newline-led
+    // `++`/`--` is the body (security review of #17840).
+    ("if (x)\n++y", "if(x)++y;"),
+    ("while (x)\n--y", "while(x)--y;"),
+    ("for (;;)\n++i", "for(;;)++i;"),
+    ("with (o)\n++a", "with(o)++a;"),
+    ("if (a) b(); else if (c)\n++d", "if(a)b();else if(c)++d;"),
+    ("class A{m(){}\nstatic x=1\nn(){}}", "class A{m(){}static x=1;n(){}};"),
+    ("class A{static {a()}\nm(){}}", "class A{static{a()}m(){}};"),
     // CCR-080 (#15867): the program-final `;` after a `do…while`.
     ("do{console.log(1)}while(0)", "do console.log(1);while(0);"),
     ("x=1;do{a()}while(b)", "x=1;do a();while(b);"),
+];
+
+/// Inputs whose output must parse but whose bytes still differ from upstream
+/// in class-body punctuation. Upstream keeps a field's final `;` before `}`,
+/// which is CCR-077's scope (#15862). Before #17840 these glued fields into
+/// invalid output (`class A{x=1 y=2}`).
+const PARSE_ONLY: &[&str] = &[
+    "class A{x=1\ny=2}",
+    "class A{x\ny}",
+    "class A{x = function(){}\ny = 1}",
 ];
 
 fn compile_ws(source: &str, tag: usize) -> String {
@@ -106,7 +125,8 @@ fn whitespace_only_matches_upstream_on_semicolon_light_input() {
 
 #[test]
 fn whitespace_only_output_parses() {
-    for (i, (source, _)) in CASES.iter().enumerate() {
+    let all = CASES.iter().map(|(s, _)| *s).chain(PARSE_ONLY.iter().copied());
+    for (i, source) in all.enumerate() {
         let out = compile_ws(source, i);
         // `new Function` parses without running; it is only reachable when
         // node is installed.
