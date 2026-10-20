@@ -525,11 +525,14 @@ impl ImportTable {
 struct LiteralPool {
     literals: Vec<Vec<u8>>,
     index: HashMap<u64, u32>,
+    /// LANG83 PR6a: non-float literal terms (character lists, `[short]`),
+    /// keyed by their ETF bytes.
+    terms: HashMap<Vec<u8>, u32>,
 }
 
 impl LiteralPool {
     fn new() -> Self {
-        Self { literals: Vec::new(), index: HashMap::new() }
+        Self { literals: Vec::new(), index: HashMap::new(), terms: HashMap::new() }
     }
 
     /// Intern an `f64` literal, returning its 0-based literal-table index.
@@ -542,6 +545,20 @@ impl LiteralPool {
             .expect("BEAM literal table index overflows u32 (>4 billion literals)");
         self.literals.push(etf_new_float(value));
         self.index.insert(bits, idx);
+        idx
+    }
+
+    /// Intern an already ETF-encoded (`131`-prefixed) term, returning its
+    /// 0-based literal-table index. LANG83 PR6a uses it for the float
+    /// writer's character lists and its `[short]` option list.
+    fn intern_term(&mut self, etf: Vec<u8>) -> u32 {
+        if let Some(&idx) = self.terms.get(&etf) {
+            return idx;
+        }
+        let idx = u32::try_from(self.literals.len())
+            .expect("BEAM literal table index overflows u32 (>4 billion literals)");
+        self.literals.push(etf.clone());
+        self.terms.insert(etf, idx);
         idx
     }
 
@@ -1413,6 +1430,9 @@ pub fn lower_iir_to_beam(
                 // LANG83: `print_i64` now emits `call_ext io:format/2`.
                 Some(Operand::Var(name)) if matches!(
                     name.as_str(), "putchar" | "print_i64" | "write_i64" | "getchar" | "input_more"
+                        // LANG83 PR6a: a local `call` to '__iir_write_f64'/2,
+                        // which clobbers every X register like a call_ext.
+                        | "write_f64_py" | "write_f64_js"
                         | "input_i64" | "input_str"
                 ))) {
                 continue;
@@ -1499,6 +1519,72 @@ pub fn lower_iir_to_beam(
             floor_tmp,
         });
     }
+
+    // ── Step 4b: LANG83 PR6a float writer (only when a float is printed) ──
+    //
+    // Interned here, after every function's labels are reserved, so a module
+    // that prints no float keeps byte-identical atom/import/literal tables and
+    // label numbering. The helper's two preamble labels are reserved now (the
+    // call sites below need its entry label); its body is appended after the
+    // last user function.
+    let f64_beam: Option<lang83_f64::F64Beam> = if module.functions.iter().flat_map(|f| &f.instructions).any(|i| {
+        i.op == "call_builtin"
+            && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == "write_f64_py" || n == "write_f64_js")
+    }) {
+        if module.functions.iter().any(|f| f.name == "__iir_write_f64") {
+            return Err(IIRBeamError::InvalidOperand {
+                function: "__iir_write_f64".into(),
+                detail: "a module function may not take the synthetic float writer's name".into(),
+            });
+        }
+        let overflow = || IIRBeamError::UnsupportedOp {
+            function: "__iir_write_f64".into(),
+            op: "label counter overflow — module has too many labels".into(),
+        };
+        let fi_label = label_counter.checked_add(1).ok_or_else(overflow)?;
+        let entry_label = fi_label.checked_add(1).ok_or_else(overflow)?;
+        label_counter = entry_label;
+        let lists_atom = atoms.intern("lists");
+        let mut import = |m: u32, f: &str, arity: u32| {
+            let fa = atoms.intern(f);
+            imports.intern(m, fa, arity)
+        };
+        let imp_float_to_list = import(erlang_atom, "float_to_list", 2);
+        let imp_split = import(string_atom, "split", 2);
+        let imp_list_to_integer = import(erlang_atom, "list_to_integer", 1);
+        let imp_duplicate = import(lists_atom, "duplicate", 2);
+        let imp_sublist = import(lists_atom, "sublist", 2);
+        let imp_nthtail = import(lists_atom, "nthtail", 2);
+        let imp_integer_to_list = import(erlang_atom, "integer_to_list", 1);
+        let mut lits = HashMap::new();
+        lits.insert("[short]", literal_pool.intern_term(lang83_f64::etf_short_option()));
+        for text in lang83_f64::TEXT_LITERALS {
+            lits.insert(*text, literal_pool.intern_term(lang83_f64::etf_string(text)));
+        }
+        Some(lang83_f64::F64Beam {
+            fn_atom: atoms.intern("__iir_write_f64"),
+            fi_label,
+            entry_label,
+            atom_leading: atoms.intern("leading"),
+            atom_trailing,
+            imp_float_to_list,
+            imp_split,
+            imp_list_to_integer,
+            imp_append: import_append,
+            imp_length: import_length,
+            imp_sub: import_sub,
+            imp_add: import_add,
+            imp_trim: import_trim,
+            imp_duplicate,
+            imp_sublist,
+            imp_nthtail,
+            imp_integer_to_list,
+            imp_put_chars: import_put_chars,
+            lits,
+        })
+    } else {
+        None
+    };
 
     // ── Step 5: second pass — emit BEAM instructions ──────────────────────
 
@@ -3170,6 +3256,34 @@ pub fn lower_iir_to_beam(
                     ]));
                     instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
                         BEAMOperand::u(1), BEAMOperand::u(import_put_chars as u64),
+                    ]));
+                    restore_live_across_imported_call!(cur_idx);
+                }
+                "call_builtin" if matches!(instr.srcs.first(),
+                    Some(Operand::Var(name)) if name == "write_f64_py" || name == "write_f64_js") => {
+                    // LANG83 PR6a: `'__iir_write_f64'(X, Layout)`, the module's
+                    // own float writer (see `lang83_f64`); layout 0 = Python
+                    // repr, 1 = JavaScript toString.
+                    //
+                    //   move  X        -> x0
+                    //   move  {i,0|1}  -> x1
+                    //   call  2, '__iir_write_f64'/2
+                    let source = operand_reg!(get_src!(instr, 1));
+                    let layout = u64::from(matches!(instr.srcs.first(), Some(Operand::Var(n)) if n == "write_f64_js"));
+                    let entry = f64_beam.as_ref().map(|b| b.entry_label).ok_or_else(|| IIRBeamError::UnsupportedOp {
+                        function: fn_name.clone(),
+                        op: "write_f64_*: no '__iir_write_f64' helper (internal error)".into(),
+                    })?;
+                    let cur_idx = instr_idx - 1;
+                    save_live_across_imported_call!(cur_idx);
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::x(source), BEAMOperand::x(0),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::i(layout), BEAMOperand::x(1),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_CALL, vec![
+                        BEAMOperand::u(2), BEAMOperand::f(entry),
                     ]));
                     restore_live_across_imported_call!(cur_idx);
                 }
@@ -5391,6 +5505,13 @@ pub fn lower_iir_to_beam(
     //
     // Every BEAM code section must end with `int_code_end`.  The BEAM loader
     // uses this sentinel to know where the instruction stream stops.
+    // LANG83 PR6a: the float writer, after the last user function.
+    if let Some(b) = &f64_beam {
+        lang83_f64::emit(b, mod_atom, &mut label_counter, &mut instrs).map_err(|op| {
+            IIRBeamError::UnsupportedOp { function: "__iir_write_f64".into(), op }
+        })?;
+    }
+
     instrs.push(BEAMInstruction::new(OP_INT_CODE_END, vec![]));
 
     // ── Step 7: assemble the BEAMModule ───────────────────────────────────
@@ -5421,6 +5542,404 @@ pub fn lower_iir_to_beam(
 // ===========================================================================
 // Unit tests (in-module)
 // ===========================================================================
+
+// ===========================================================================
+// LANG83 PR6a — the module-local float writer `'__iir_write_f64'/2`
+// ===========================================================================
+//
+// `call_builtin "write_f64_py", x` / `"write_f64_js", x` lower to
+//
+// ```text
+// move  X -> x0;  move {i,0|1} -> x1;  call 2, '__iir_write_f64'/2
+// ```
+//
+// and a module that prints a float gets one extra LOCAL (unexported) function.
+// OTP 25+'s `erlang:float_to_list(F, [short])` prints the SHORTEST decimal
+// that reads back as `F` (Ryu, round-half-even ties; CI runs OTP 27). The
+// function reads that string's digits `D` and decimal exponent `E` back out,
+// because Erlang's own layout (`1.0e16`, `0.1`, `1.0e-5`) is neither Python's
+// nor JavaScript's, then prints the LANG83 layout piece by piece through
+// `io:put_chars/1`, the same `io` server every other output builtin uses:
+//
+// ```erlang
+// '__iir_write_f64'(F, Js) ->
+//     L0 = float_to_list(F, [short]),                 % "-1.5e-7", "100.0", "-0.0"
+//     {Neg, L} = case L0 of [$- | T] -> {1, T}; _ -> {0, L0} end,
+//     [M | R1] = string:split(L, "e"),
+//     Exp = case R1 of [] -> 0; [X] -> list_to_integer(X) end,
+//     [I | R2] = string:split(M, "."),
+//     ILen = length(I),
+//     All = case R2 of [] -> I; [Fr] -> I ++ Fr end,
+//     D1 = string:trim(All, leading, "0"),
+//     LZ = length(All) - length(D1),
+//     D = string:trim(D1, trailing, "0"),             % the digits
+//     N = length(D),
+//     E = ILen - 1 - LZ + Exp,                        % exponent of hd(D)
+//     Neg =:= 1 andalso not (Js =:= 1 andalso N =:= 0) andalso put_chars("-"),
+//     if N =:= 0 -> put_chars(Js =:= 1 ? "0" : "0.0");      % ±0.0
+//        fixed (-4 =< E < 16 Python, -6 =< E < 21 JS) -> ...;
+//        true -> sci ...
+//     end.
+// ```
+//
+// BEAM has no `inf` or `nan` float: the emulator raises `badarith` before one
+// can exist, so there are no arms for them. `-0.0` is a distinct float since
+// OTP 27 and `float_to_list` keeps its `-`.
+//
+// Registers: every value that must survive an imported call lives in a Y
+// slot. The frame is `allocate`d and every slot is initialised to nil before
+// the first call, so a GC never scans garbage (BEAM07). Every test and BIF
+// reads X registers only. Each `gc_bif` names a Live count that covers
+// exactly the X registers still needed. The unit tests execute this function
+// on an opcode-and-BIF model (`lang83_pr6a.rs`).
+mod lang83_f64 {
+    use super::*;
+
+    /// The interned atoms, imports and literals the helper uses, and its two
+    /// preamble labels. Built only for a module that prints a float, so no
+    /// other module's tables change.
+    pub(super) struct F64Beam {
+        pub fn_atom: u32,
+        pub fi_label: u32,
+        pub entry_label: u32,
+        pub atom_leading: u32,
+        pub atom_trailing: u32,
+        pub imp_float_to_list: u32,
+        pub imp_split: u32,
+        pub imp_list_to_integer: u32,
+        pub imp_append: u32,
+        pub imp_length: u32,
+        pub imp_sub: u32,
+        pub imp_add: u32,
+        pub imp_trim: u32,
+        pub imp_duplicate: u32,
+        pub imp_sublist: u32,
+        pub imp_nthtail: u32,
+        pub imp_integer_to_list: u32,
+        pub imp_put_chars: u32,
+        /// Literal-table indices, keyed by the literal's text (`"[short]"`
+        /// for the option list, otherwise the character list itself).
+        pub lits: HashMap<&'static str, u32>,
+    }
+
+    /// The character-list literals the helper prints or splits on.
+    pub(super) const TEXT_LITERALS: &[&str] = &["e", ".", "0", "-", "0.0", "0.", ".0", "e-", "e+"];
+
+    /// ETF (`131`-prefixed) encoding of the character list `s`
+    /// (`STRING_EXT`: tag 107, u16 length, the bytes).
+    pub(super) fn etf_string(s: &str) -> Vec<u8> {
+        let mut out = vec![131, 107];
+        out.extend_from_slice(&(s.len() as u16).to_be_bytes());
+        out.extend_from_slice(s.as_bytes());
+        out
+    }
+
+    /// ETF of `[short]`: `LIST_EXT` of one `SMALL_ATOM_UTF8_EXT`, then nil.
+    pub(super) fn etf_short_option() -> Vec<u8> {
+        let mut out = vec![131, 108, 0, 0, 0, 1, 119, 5];
+        out.extend_from_slice(b"short");
+        out.push(106);
+        out
+    }
+
+    /// Y slots.
+    const JS: u8 = 0;
+    const NEG: u8 = 1;
+    /// The sign-stripped string, later reused for |E|, E+1 and the zero pad.
+    const SCRATCH: u8 = 2;
+    const EXP: u8 = 3;
+    const MANT: u8 = 4;
+    const ILEN: u8 = 5;
+    const ALL: u8 = 6;
+    const DIGITS: u8 = 7;
+    const E: u8 = 8;
+    const N: u8 = 9;
+    /// Frame size.
+    pub(super) const N_Y: u8 = 10;
+
+    struct Asm<'a> {
+        out: &'a mut Vec<BEAMInstruction>,
+        labels: &'a mut u32,
+        b: &'a F64Beam,
+    }
+
+    impl Asm<'_> {
+        fn ins(&mut self, op: u8, operands: Vec<BEAMOperand>) {
+            self.out.push(BEAMInstruction::new(op, operands));
+        }
+        fn label(&mut self) -> Result<u32, String> {
+            *self.labels = self.labels.checked_add(1).ok_or("label counter overflow")?;
+            Ok(*self.labels)
+        }
+        fn bind(&mut self, l: u32) {
+            self.ins(OP_LABEL, vec![BEAMOperand::u(u64::from(l))]);
+        }
+        fn mv(&mut self, src: BEAMOperand, dst: BEAMOperand) {
+            self.ins(OP_MOVE, vec![src, dst]);
+        }
+        fn lit(&mut self, text: &'static str, dst: BEAMOperand) {
+            let mut ops = literal_operand(self.b.lits[text]).to_vec();
+            ops.push(dst);
+            self.ins(OP_MOVE, ops);
+        }
+        fn call_ext(&mut self, arity: u64, import: u32) {
+            self.ins(OP_CALL_EXT, vec![BEAMOperand::u(arity), BEAMOperand::u(u64::from(import))]);
+        }
+        /// `io:put_chars(<literal>)`.
+        fn put_lit(&mut self, text: &'static str) {
+            self.lit(text, BEAMOperand::x(0));
+            self.call_ext(1, self.b.imp_put_chars);
+        }
+        /// `io:put_chars(Y)`.
+        fn put_y(&mut self, y: u8) {
+            self.mv(BEAMOperand::y(y), BEAMOperand::x(0));
+            self.call_ext(1, self.b.imp_put_chars);
+        }
+        fn jump(&mut self, l: u32) {
+            self.ins(OP_JUMP, vec![BEAMOperand::f(l)]);
+        }
+        /// `test Fail, A, B` — falls through when the test holds.
+        fn test(&mut self, op: u8, fail: u32, a: BEAMOperand, b: BEAMOperand) {
+            self.ins(op, vec![BEAMOperand::f(fail), a, b]);
+        }
+        fn bif1(&mut self, live: u64, import: u32, arg: BEAMOperand, dst: BEAMOperand) {
+            self.ins(OP_GC_BIF1, vec![BEAMOperand::f(0), BEAMOperand::u(live), BEAMOperand::u(u64::from(import)), arg, dst]);
+        }
+        fn bif2(&mut self, live: u64, import: u32, a: BEAMOperand, b: BEAMOperand, dst: BEAMOperand) {
+            self.ins(
+                OP_GC_BIF2,
+                vec![BEAMOperand::f(0), BEAMOperand::u(live), BEAMOperand::u(u64::from(import)), a, b, dst],
+            );
+        }
+    }
+
+    fn int(n: i64) -> BEAMOperand {
+        BEAMOperand::i(n as u64)
+    }
+
+    /// Append `'__iir_write_f64'/2` to `out`. `labels` is the module's label
+    /// counter (the helper's internal labels are taken from it).
+    pub(super) fn emit(
+        b: &F64Beam,
+        mod_atom: u32,
+        labels: &mut u32,
+        out: &mut Vec<BEAMInstruction>,
+    ) -> Result<(), String> {
+        let (x, y) = (BEAMOperand::x, BEAMOperand::y);
+        let mut a = Asm { out, labels, b };
+        a.bind(b.fi_label);
+        a.ins(OP_FUNC_INFO, vec![BEAMOperand::a(mod_atom), BEAMOperand::a(b.fn_atom), BEAMOperand::u(2)]);
+        a.bind(b.entry_label);
+        a.ins(OP_ALLOCATE, vec![BEAMOperand::u(u64::from(N_Y)), BEAMOperand::u(2)]);
+        for slot in 0..N_Y {
+            a.mv(BEAMOperand::a(0), y(slot));
+        }
+        a.mv(x(1), y(JS));
+
+        // L0 = float_to_list(F, [short]); peel a leading '-'.
+        a.lit("[short]", x(1));
+        a.call_ext(2, b.imp_float_to_list);
+        let (no_sign, signed) = (a.label()?, a.label()?);
+        a.ins(OP_GET_LIST, vec![x(0), x(1), x(2)]);
+        a.test(OP_IS_EQ_EXACT, no_sign, x(1), int(i64::from(b'-')));
+        a.mv(int(1), y(NEG));
+        a.mv(x(2), y(SCRATCH));
+        a.jump(signed);
+        a.bind(no_sign);
+        a.mv(int(0), y(NEG));
+        a.mv(x(0), y(SCRATCH));
+        a.bind(signed);
+
+        // [M | R1] = string:split(L, "e"); Exp = 0 or list_to_integer(X).
+        a.mv(y(SCRATCH), x(0));
+        a.lit("e", x(1));
+        a.call_ext(2, b.imp_split);
+        a.ins(OP_GET_LIST, vec![x(0), x(1), x(2)]);
+        a.mv(x(1), y(MANT));
+        let (has_exp, exp_done) = (a.label()?, a.label()?);
+        a.ins(OP_IS_NIL, vec![BEAMOperand::f(has_exp), x(2)]);
+        a.mv(int(0), y(EXP));
+        a.jump(exp_done);
+        a.bind(has_exp);
+        a.ins(OP_GET_LIST, vec![x(2), x(0), x(3)]);
+        a.call_ext(1, b.imp_list_to_integer);
+        a.mv(x(0), y(EXP));
+        a.bind(exp_done);
+
+        // [I | R2] = string:split(M, "."); ILen = length(I); All = I ++ Fr.
+        a.mv(y(MANT), x(0));
+        a.lit(".", x(1));
+        a.call_ext(2, b.imp_split);
+        a.ins(OP_GET_LIST, vec![x(0), x(1), x(2)]);
+        a.bif1(3, b.imp_length, x(1), x(3));
+        a.mv(x(3), y(ILEN));
+        let (has_frac, all_done) = (a.label()?, a.label()?);
+        a.ins(OP_IS_NIL, vec![BEAMOperand::f(has_frac), x(2)]);
+        a.mv(x(1), y(ALL));
+        a.jump(all_done);
+        a.bind(has_frac);
+        a.ins(OP_GET_LIST, vec![x(2), x(3), x(4)]);
+        a.mv(x(1), x(0));
+        a.mv(x(3), x(1));
+        a.call_ext(2, b.imp_append);
+        a.mv(x(0), y(ALL));
+        a.bind(all_done);
+
+        // D1 = trim(All, leading, "0"); LZ = length(All) - length(D1).
+        a.mv(y(ALL), x(0));
+        a.mv(BEAMOperand::a(b.atom_leading), x(1));
+        a.lit("0", x(2));
+        a.call_ext(3, b.imp_trim);
+        a.mv(x(0), y(DIGITS));
+        a.mv(y(ALL), x(1));
+        a.bif1(2, b.imp_length, x(1), x(2));
+        a.bif1(3, b.imp_length, x(0), x(3));
+        a.bif2(4, b.imp_sub, x(2), x(3), x(4));
+        // E = ILen - 1 - LZ + Exp
+        a.mv(x(4), x(0));
+        a.mv(y(ILEN), x(1));
+        a.mv(int(1), x(2));
+        a.bif2(3, b.imp_sub, x(1), x(2), x(1));
+        a.bif2(2, b.imp_sub, x(1), x(0), x(1));
+        a.mv(y(EXP), x(0));
+        a.bif2(2, b.imp_add, x(1), x(0), x(1));
+        a.mv(x(1), y(E));
+        // D = trim(D1, trailing, "0"); N = length(D).
+        a.mv(y(DIGITS), x(0));
+        a.mv(BEAMOperand::a(b.atom_trailing), x(1));
+        a.lit("0", x(2));
+        a.call_ext(3, b.imp_trim);
+        a.mv(x(0), y(DIGITS));
+        a.bif1(1, b.imp_length, x(0), x(1));
+        a.mv(x(1), y(N));
+
+        // The sign: always in Python; in JavaScript not for -0.
+        let (no_minus, put_minus) = (a.label()?, a.label()?);
+        a.mv(y(NEG), x(0));
+        a.test(OP_IS_EQ_EXACT, no_minus, x(0), int(1));
+        a.mv(y(JS), x(0));
+        a.test(OP_IS_EQ_EXACT, put_minus, x(0), int(1));
+        a.mv(y(N), x(0));
+        a.test(OP_IS_EQ_EXACT, put_minus, x(0), int(0));
+        a.jump(no_minus);
+        a.bind(put_minus);
+        a.put_lit("-");
+        a.bind(no_minus);
+
+        // ±0: no digits survive the trims.
+        let (nonzero, zero_py, ret) = (a.label()?, a.label()?, a.label()?);
+        a.mv(y(N), x(0));
+        a.test(OP_IS_EQ_EXACT, nonzero, x(0), int(0));
+        a.mv(y(JS), x(0));
+        a.test(OP_IS_EQ_EXACT, zero_py, x(0), int(1));
+        a.put_lit("0");
+        a.jump(ret);
+        a.bind(zero_py);
+        a.put_lit("0.0");
+        a.jump(ret);
+        a.bind(nonzero);
+
+        // Fixed when Lo =< E < Hi: (-6, 21) for JavaScript, (-4, 16) for Python.
+        let (py_range, fixed, sci) = (a.label()?, a.label()?, a.label()?);
+        a.mv(y(E), x(1));
+        a.mv(y(JS), x(0));
+        a.test(OP_IS_EQ_EXACT, py_range, x(0), int(1));
+        a.test(OP_IS_GE, sci, x(1), int(-6));
+        a.test(OP_IS_LT, sci, x(1), int(21));
+        a.jump(fixed);
+        a.bind(py_range);
+        a.test(OP_IS_GE, sci, x(1), int(-4));
+        a.test(OP_IS_LT, sci, x(1), int(16));
+        a.bind(fixed);
+        let (at_least_one, fraction) = (a.label()?, a.label()?);
+        a.test(OP_IS_LT, at_least_one, x(1), int(0));
+        // E < 0: "0." ++ duplicate(-E - 1, $0) ++ D
+        a.put_lit("0.");
+        a.mv(int(-1), x(0));
+        a.mv(y(E), x(1));
+        a.bif2(2, b.imp_sub, x(0), x(1), x(0));
+        a.mv(int(i64::from(b'0')), x(1));
+        a.call_ext(2, b.imp_duplicate);
+        a.call_ext(1, b.imp_put_chars);
+        a.put_y(DIGITS);
+        a.jump(ret);
+        a.bind(at_least_one);
+        // E1 = E + 1 integer places.
+        a.mv(y(E), x(0));
+        a.mv(int(1), x(1));
+        a.bif2(2, b.imp_add, x(0), x(1), x(2));
+        a.mv(y(N), x(3));
+        a.test(OP_IS_GE, fraction, x(2), x(3));
+        // Integral: D ++ duplicate(E1 - N, $0), then ".0" in Python.
+        a.bif2(4, b.imp_sub, x(2), x(3), x(4));
+        a.mv(x(4), y(SCRATCH));
+        a.put_y(DIGITS);
+        a.mv(y(SCRATCH), x(0));
+        a.mv(int(i64::from(b'0')), x(1));
+        a.call_ext(2, b.imp_duplicate);
+        a.call_ext(1, b.imp_put_chars);
+        a.mv(y(JS), x(0));
+        a.test(OP_IS_EQ_EXACT, ret, x(0), int(0));
+        a.put_lit(".0");
+        a.jump(ret);
+        a.bind(fraction);
+        // sublist(D, E1) ++ "." ++ nthtail(E1, D)
+        a.mv(x(2), y(SCRATCH));
+        a.mv(y(DIGITS), x(0));
+        a.mv(y(SCRATCH), x(1));
+        a.call_ext(2, b.imp_sublist);
+        a.call_ext(1, b.imp_put_chars);
+        a.put_lit(".");
+        a.mv(y(SCRATCH), x(0));
+        a.mv(y(DIGITS), x(1));
+        a.call_ext(2, b.imp_nthtail);
+        a.call_ext(1, b.imp_put_chars);
+        a.jump(ret);
+
+        // Scientific: d[.ddd]e±X, Python padding X to two digits.
+        a.bind(sci);
+        let (exponent, e_positive, e_abs, e_digits) = (a.label()?, a.label()?, a.label()?, a.label()?);
+        a.mv(y(DIGITS), x(0));
+        a.mv(int(1), x(1));
+        a.call_ext(2, b.imp_sublist);
+        a.call_ext(1, b.imp_put_chars);
+        a.mv(y(N), x(0));
+        a.test(OP_IS_LT, exponent, int(1), x(0));
+        a.put_lit(".");
+        a.mv(y(DIGITS), x(0));
+        a.ins(OP_GET_LIST, vec![x(0), x(1), x(2)]);
+        a.mv(x(2), x(0));
+        a.call_ext(1, b.imp_put_chars);
+        a.bind(exponent);
+        a.mv(y(E), x(0));
+        a.test(OP_IS_LT, e_positive, x(0), int(0));
+        a.put_lit("e-");
+        a.mv(int(0), x(0));
+        a.mv(y(E), x(1));
+        a.bif2(2, b.imp_sub, x(0), x(1), x(0));
+        a.mv(x(0), y(SCRATCH));
+        a.jump(e_abs);
+        a.bind(e_positive);
+        a.put_lit("e+");
+        a.mv(y(E), x(0));
+        a.mv(x(0), y(SCRATCH));
+        a.bind(e_abs);
+        a.mv(y(JS), x(0));
+        a.test(OP_IS_EQ_EXACT, e_digits, x(0), int(0));
+        a.mv(y(SCRATCH), x(0));
+        a.test(OP_IS_LT, e_digits, x(0), int(10));
+        a.put_lit("0");
+        a.bind(e_digits);
+        a.mv(y(SCRATCH), x(0));
+        a.call_ext(1, b.imp_integer_to_list);
+        a.call_ext(1, b.imp_put_chars);
+
+        a.bind(ret);
+        a.ins(OP_DEALLOCATE, vec![BEAMOperand::u(u64::from(N_Y))]);
+        a.ins(OP_RETURN, vec![]);
+        Ok(())
+    }
+}
 
 #[cfg(test)]
 mod tests {

@@ -457,3 +457,5 @@ module that uses a refused op at compile time, with a typed error. Since LANG83 
 `i64_neg_ovf`: Erlang integers are bignums, so the exact result is computed with one
 `gc_bif2` (`+`, `-`, `*`, or `0 - a`) and then checked with two `is_lt` tests
 against `MIN` and `MAX`; out of range raises `erlang:error('Trap.Overflow')`.
+
+LANG83 PR6a adds `write_f64_py` / `write_f64_js` → the local function `'__iir_write_f64'/2`. It takes the shortest digits from `float_to_list(F, [short])` and prints Python's `repr` or JavaScript's `toString` layout through `io:put_chars/1`.

@@ -1,5 +1,23 @@
 # Changelog — iir-to-beam
 
+## [0.23.0] — 2026-10-20 (LANG83 PR6a — shortest round-trip float output)
+
+- **`write_f64_py` / `write_f64_js`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR6a): `call 2,
+  '__iir_write_f64'/2`, a local function emitted only when a module prints a
+  float. A module that prints none keeps byte-identical tables. Its digits come
+  from `erlang:float_to_list(F, [short])` (OTP 25+, Ryu), re-parsed with
+  `string:split`, `string:trim` and `list_to_integer`. It prints through
+  `io:put_chars/1`. Values live in an initialised Y frame across every call,
+  and each `gc_bif` names the exact Live count. BEAM floats are never
+  `inf`/`nan`, so it has no arms for them. The call site joins the
+  live-across list of call-emitting builtins.
+- `LiteralPool::intern_term` holds the helper's character-list and `[short]`
+  literals.
+- No local `erl`. `tests/lang83_pr6a.rs` executes the helper on an opcode and
+  library model that clobbers X registers at every call and GC, and fails on
+  any read of a clobbered or uninitialised register. It feeds four Erlang
+  layouts of the same digits. A mutation of one Live count is caught.
+
 ## [0.22.0] — 2026-10-20 (LANG83 PR4 — overflow-checked arithmetic)
 
 - **`i64_add_ovf` / `i64_sub_ovf` / `i64_mul_ovf` / `i64_neg_ovf`**
