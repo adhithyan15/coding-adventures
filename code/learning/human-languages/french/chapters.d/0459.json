@@ -1,0 +1,19 @@
+{
+  "chapter": 459,
+  "title": "Les animaux des bois",
+  "label": "ch:fr-les-animaux-des-bois",
+  "canDo": "I can name animals of the woods: the squirrel, the hedgehog, the wild boar, the stag and the doe.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C459-biche",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 459: I can name animals of the woods: the squirrel, the hedgehog, the wild boar, the stag and the doe.",
+    "assesses": [
+      "FR-LEX-C459-ANIMAUX-03",
+      "FR-LEX-C459-ANIMAUX-04",
+      "FR-LEX-C459-ANIMAUX-05"
+    ]
+  }
+}

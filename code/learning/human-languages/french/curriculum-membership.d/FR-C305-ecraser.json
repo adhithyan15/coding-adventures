@@ -1,0 +1,11 @@
+{
+  "id": "FR-C305-ecraser",
+  "pathSegment": "FR-PATH-305-NAUFRAGE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-305-NAUFRAGE",
+      "order": 1
+    }
+  ]
+}

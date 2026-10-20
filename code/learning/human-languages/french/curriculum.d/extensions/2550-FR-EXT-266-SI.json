@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-266-SI",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can state a real condition with si and the present, and say that something depends, naming on what.",
+  "prerequisites": []
+}

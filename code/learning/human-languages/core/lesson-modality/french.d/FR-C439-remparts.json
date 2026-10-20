@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C439-remparts",
+    "language": "french",
+    "chapter": 439,
+    "sequence": 24330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:483f30ae4412ddaa"
+  },
+  "findings": []
+}

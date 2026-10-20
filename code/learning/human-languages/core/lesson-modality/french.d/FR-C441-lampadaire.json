@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C441-lampadaire",
+    "language": "french",
+    "chapter": 441,
+    "sequence": 24410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd212265aea17ce0"
+  },
+  "findings": []
+}

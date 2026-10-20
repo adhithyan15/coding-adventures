@@ -1,0 +1,11 @@
+{
+  "id": "FR-C377-memoriser",
+  "pathSegment": "FR-PATH-377-REVISION",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-377-REVISION",
+      "order": 2
+    }
+  ]
+}

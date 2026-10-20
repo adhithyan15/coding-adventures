@@ -3593,3 +3593,23 @@ fn e8_conversions_round_trip_runs_on_real_java() {
     assert_eq!(stdout.trim(), "42",
         "expected 42, got {stdout:?}; stderr: {:?}", String::from_utf8_lossy(&out.stderr));
 }
+
+/// A closure target whose `void` result the `__callClosure` dispatch does not
+/// widen leaves the operand stack short of its closing `lreturn`. The
+/// measured `max_stack` analysis reports that as an error instead of
+/// panicking or emitting a class the verifier would reject.
+#[test]
+fn closure_dispatch_stack_underflow_is_an_error_not_a_panic() {
+    let mut module = make_closure_module();
+    let target = &mut module.functions[0];
+    target.return_type = "void".into();
+    target.instructions = vec![IIRInstr::new("ret_void", None, vec![], "void")];
+    let result = lower_iir_to_jvm(&module, &IIRJvmConfig::new("ClosureVoid"));
+    assert!(
+        matches!(
+            &result,
+            Err(IIRJvmError::StackDepthAnalysis { function, .. }) if function == "__callClosure"
+        ),
+        "{result:?}"
+    );
+}

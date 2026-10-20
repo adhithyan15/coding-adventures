@@ -1,0 +1,11 @@
+{
+  "id": "FR-C429-moquette",
+  "pathSegment": "FR-PATH-429-AMPOULE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-429-AMPOULE",
+      "order": 3
+    }
+  ]
+}

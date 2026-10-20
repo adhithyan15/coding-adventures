@@ -1,0 +1,11 @@
+{
+  "id": "FR-C343-critique",
+  "pathSegment": "FR-PATH-343-AVANTAGE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-343-AVANTAGE",
+      "order": 3
+    }
+  ]
+}

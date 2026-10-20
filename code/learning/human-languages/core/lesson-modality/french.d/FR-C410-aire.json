@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C410-aire",
+    "language": "french",
+    "chapter": 410,
+    "sequence": 22840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:adc23b2b0b8fdbf7"
+  },
+  "findings": []
+}

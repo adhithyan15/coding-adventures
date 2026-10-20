@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 319,
+  "sourceHash": "fnv1a64:fb8b2accacd380b8",
+  "lessonIds": [
+    "FR-C319-reveillon",
+    "FR-C319-reveillonner",
+    "FR-C319-sapin",
+    "FR-C319-buche",
+    "FR-C319-galette"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch319.txt",
+  "json": "french/narration/ch319.json",
+  "textHash": "fnv1a64:4749a28f29a91ce5",
+  "jsonHash": "fnv1a64:bee9bfc1d4d74022",
+  "findings": []
+}

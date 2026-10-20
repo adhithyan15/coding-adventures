@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 490,
+  "sourceHash": "fnv1a64:b9150c06269b7a7d",
+  "lessonIds": [
+    "FR-C490-parrain",
+    "FR-C490-marraine",
+    "FR-C490-filleul",
+    "FR-C490-aine",
+    "FR-C490-cadet"
+  ],
+  "tex": "french/book/chapters/ch490-la-famille-au-sens-large.tex"
+}

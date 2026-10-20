@@ -1,0 +1,19 @@
+{
+  "chapter": 397,
+  "title": "Les fichiers",
+  "label": "ch:fr-les-fichiers",
+  "canDo": "I can work with files: delete, copy and paste them, and save my work.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FR-R397-revision-390-397",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 397: I can work with files: delete, copy and paste them, and save my work.",
+    "assesses": [
+      "FR-LEX-C397-FICHIER-03",
+      "FR-LEX-C397-FICHIER-04",
+      "FR-LEX-C397-FICHIER-05"
+    ]
+  }
+}

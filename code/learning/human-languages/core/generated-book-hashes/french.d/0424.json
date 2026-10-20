@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 424,
+  "sourceHash": "fnv1a64:61d9e924fffb7ca3",
+  "lessonIds": [
+    "FR-C424-auberge",
+    "FR-C424-gite",
+    "FR-C424-nuitee",
+    "FR-C424-loger",
+    "FR-C424-sejourner"
+  ],
+  "tex": "french/book/chapters/ch424-ou-dormir.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 276,
+  "title": "Les époques",
+  "label": "ch:fr-les-epoques",
+  "canDo": "I can talk about stretches of time: an era, a decade, a millennium, an age and a duration.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C276-duree",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 276: I can talk about stretches of time: an era, a decade, a millennium, an age and a duration.",
+    "assesses": [
+      "FR-LEX-C276-EPOQUE-03",
+      "FR-LEX-C276-EPOQUE-04",
+      "FR-LEX-C276-EPOQUE-05"
+    ]
+  }
+}

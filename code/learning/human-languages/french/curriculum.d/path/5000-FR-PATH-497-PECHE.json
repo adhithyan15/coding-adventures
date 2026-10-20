@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-497-PECHE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-497-PECHE"
+  ],
+  "after": []
+}

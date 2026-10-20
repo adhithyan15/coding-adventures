@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 287,
+  "sourceHash": "fnv1a64:4ad7f8b864c959d4",
+  "lessonIds": [
+    "FR-C287-cambrioler",
+    "FR-C287-cambrioleur",
+    "FR-C287-cambriolage",
+    "FR-C287-effraction",
+    "FR-C287-butin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch287.txt",
+  "json": "french/narration/ch287.json",
+  "textHash": "fnv1a64:90ff37f0a3f75bd6",
+  "jsonHash": "fnv1a64:df85f97c6f338456",
+  "findings": []
+}

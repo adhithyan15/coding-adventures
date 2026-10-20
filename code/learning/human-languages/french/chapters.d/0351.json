@@ -1,0 +1,19 @@
+{
+  "chapter": 351,
+  "title": "Comment réagir",
+  "label": "ch:fr-comment-reagir",
+  "canDo": "I can describe how someone reacted, tell a real reason from a pretext, and justify a decision.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C351-justification",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 351: I can describe how someone reacted, tell a real reason from a pretext, and justify a decision.",
+    "assesses": [
+      "FR-LEX-C351-REACTION-03",
+      "FR-LEX-C351-REACTION-04",
+      "FR-LEX-C351-REACTION-05"
+    ]
+  }
+}

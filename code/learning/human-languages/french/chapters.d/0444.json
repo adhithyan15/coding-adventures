@@ -1,0 +1,19 @@
+{
+  "chapter": 444,
+  "title": "Les commerces de bouche",
+  "label": "ch:fr-les-commerces-de-bouche",
+  "canDo": "I can shop for food in small shops: the delicatessen, the fishmonger, the caterer, the grocer and the greengrocer.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C444-primeur",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 444: I can shop for food in small shops: the delicatessen, the fishmonger, the caterer, the grocer and the greengrocer.",
+    "assesses": [
+      "FR-LEX-C444-COMMERCES-03",
+      "FR-LEX-C444-COMMERCES-04",
+      "FR-LEX-C444-COMMERCES-05"
+    ]
+  }
+}

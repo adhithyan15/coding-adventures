@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C467-tetu",
+    "language": "french",
+    "chapter": 467,
+    "sequence": 25750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a4cd167e63daed0"
+  },
+  "findings": []
+}

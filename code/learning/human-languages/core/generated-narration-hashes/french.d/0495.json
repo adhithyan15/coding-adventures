@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 495,
+  "sourceHash": "fnv1a64:0c4ec5fdfd695baa",
+  "lessonIds": [
+    "FR-C495-dispute",
+    "FR-C495-brouiller",
+    "FR-C495-tromper",
+    "FR-C495-trahir",
+    "FR-C495-trahison"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch495.txt",
+  "json": "french/narration/ch495.json",
+  "textHash": "fnv1a64:129127e85cb597c7",
+  "jsonHash": "fnv1a64:6eec13fb2d347efe",
+  "findings": []
+}

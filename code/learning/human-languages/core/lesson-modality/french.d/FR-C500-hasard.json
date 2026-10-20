@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C500-hasard",
+    "language": "french",
+    "chapter": 500,
+    "sequence": 27480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f0329ee29f422fd0"
+  },
+  "findings": []
+}

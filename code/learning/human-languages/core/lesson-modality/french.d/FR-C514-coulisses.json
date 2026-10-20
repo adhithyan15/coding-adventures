@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C514-coulisses",
+    "language": "french",
+    "chapter": 514,
+    "sequence": 28170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c8810f2bb678f7da"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C425-tente",
+  "pathSegment": "FR-PATH-425-CAMPING",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-425-CAMPING",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 414,
+  "title": "Le train de nuit",
+  "label": "ch:fr-le-train-de-nuit",
+  "canDo": "I can travel on a night train: the berth, the end of the line, the left-luggage office, the luggage trolley and the shuttle.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C414-navette",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 414: I can travel on a night train: the berth, the end of the line, the left-luggage office, the luggage trolley and the shuttle.",
+    "assesses": [
+      "FR-LEX-C414-COUCHETTE-03",
+      "FR-LEX-C414-COUCHETTE-04",
+      "FR-LEX-C414-COUCHETTE-05"
+    ]
+  }
+}

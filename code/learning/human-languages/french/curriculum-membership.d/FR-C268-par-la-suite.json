@@ -1,0 +1,11 @@
+{
+  "id": "FR-C268-par-la-suite",
+  "pathSegment": "FR-PATH-268-ORDRE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-268-ORDRE",
+      "order": 2
+    }
+  ]
+}

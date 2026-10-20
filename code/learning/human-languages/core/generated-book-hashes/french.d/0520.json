@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 520,
+  "sourceHash": "fnv1a64:757c97e5e49ee631",
+  "lessonIds": [
+    "FR-C520-libraire",
+    "FR-C520-rayon",
+    "FR-C520-feuilleter",
+    "FR-C520-livre-de-poche",
+    "FR-C520-devorer"
+  ],
+  "tex": "french/book/chapters/ch520-chez-le-libraire.tex"
+}

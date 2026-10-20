@@ -1,0 +1,11 @@
+{
+  "id": "FR-C506-classement",
+  "pathSegment": "FR-PATH-506-RESULTATS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-506-RESULTATS",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C431-deranger",
+    "language": "french",
+    "chapter": 431,
+    "sequence": 23910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:234cf086574566ad"
+  },
+  "findings": []
+}

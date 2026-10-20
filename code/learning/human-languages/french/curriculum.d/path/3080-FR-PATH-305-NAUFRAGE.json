@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-305-NAUFRAGE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-305-NAUFRAGE"
+  ],
+  "after": []
+}

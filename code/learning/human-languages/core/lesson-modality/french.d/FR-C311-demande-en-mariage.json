@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C311-demande-en-mariage",
+    "language": "french",
+    "chapter": 311,
+    "sequence": 17710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:67578ab89be7ba97"
+  },
+  "findings": []
+}

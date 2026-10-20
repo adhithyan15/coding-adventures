@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 347,
+  "sourceHash": "fnv1a64:389c87881a69bc1a",
+  "lessonIds": [
+    "FR-C347-puisque",
+    "FR-C347-etant-donne-que",
+    "FR-C347-vu-que",
+    "FR-C347-par-consequent",
+    "FR-C347-c-est-pourquoi"
+  ],
+  "tex": "french/book/chapters/ch347-puisque-et-vu-que.tex"
+}

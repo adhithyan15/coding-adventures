@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:3b6ba0943d357ae4",
+  "lessonIds": [
+    "FR-C308-naissance",
+    "FR-C308-enceinte",
+    "FR-C308-accouchement",
+    "FR-C308-allaiter",
+    "FR-C308-berceau"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch308.txt",
+  "json": "french/narration/ch308.json",
+  "textHash": "fnv1a64:3af0c671eda5557f",
+  "jsonHash": "fnv1a64:2c3c621aae5d0262",
+  "findings": []
+}

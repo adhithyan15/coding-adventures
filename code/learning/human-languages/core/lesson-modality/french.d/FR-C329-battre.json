@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C329-battre",
+    "language": "french",
+    "chapter": 329,
+    "sequence": 18640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7eb9aa0ff0f17b61"
+  },
+  "findings": []
+}

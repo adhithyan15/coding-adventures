@@ -1,0 +1,19 @@
+{
+  "chapter": 399,
+  "title": "Ça ne marche pas",
+  "label": "ch:fr-ca-ne-marche-pas",
+  "canDo": "I can say what is wrong with a device: it has broken down, crashed or frozen, needs restarting or has a virus.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FR-R399-revision-final-399",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 399: I can say what is wrong with a device: it has broken down, crashed or frozen, needs restarting or has a virus.",
+    "assesses": [
+      "FR-LEX-C399-PANNE-03",
+      "FR-LEX-C399-PANNE-04",
+      "FR-LEX-C399-PANNE-05"
+    ]
+  }
+}

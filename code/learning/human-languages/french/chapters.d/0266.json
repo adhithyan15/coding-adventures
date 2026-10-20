@@ -1,0 +1,22 @@
+{
+  "chapter": 266,
+  "title": "If — si, s'il pleut, ça dépend",
+  "label": "ch:fr-if",
+  "canDo": "I can state a real condition with si and the present, and say that something depends, naming on what.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FR-C266-revision-conditions",
+    "kind": "production",
+    "summary": "Complete FR-C266-revision-conditions: a plan with a branch in it: a real condition with si, and an answer that depends.",
+    "assesses": [
+      "FR-GRAM-SI-01",
+      "FR-LEX-CA-DEPEND-01",
+      "FR-GRAM-SI-PRESENT-01",
+      "FR-GRAM-SI-DEMAIN-02",
+      "FR-GRAM-DEPEND-DE-02",
+      "FR-ETYMON-SI-SIC-02"
+    ]
+  }
+}

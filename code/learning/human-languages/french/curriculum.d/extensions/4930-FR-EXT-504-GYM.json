@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-504-GYM",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about working out at the gym.",
+  "prerequisites": []
+}

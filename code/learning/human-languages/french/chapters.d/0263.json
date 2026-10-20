@@ -1,0 +1,20 @@
+{
+  "chapter": 263,
+  "title": "At the Station — un aller-retour, j'ai raté le train",
+  "label": "ch:fr-at-the-station",
+  "canDo": "I can buy a return or a one-way ticket, ask when and where the train leaves, and report a problem.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C263-revision-voyage",
+    "kind": "production",
+    "summary": "Complete FR-C263-revision-voyage: buy a ticket, then report a missed train and ask for the next one.",
+    "assesses": [
+      "FR-LEX-ALLER-RETOUR-01",
+      "FR-LEX-RATE-LE-TRAIN-01",
+      "FR-GRAM-BILLET-POUR-02",
+      "FR-GRAM-SIGNALER-PROBLEME-02"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C410-deviation",
+  "pathSegment": "FR-PATH-410-BOUCHONS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-410-BOUCHONS",
+      "order": 2
+    }
+  ]
+}

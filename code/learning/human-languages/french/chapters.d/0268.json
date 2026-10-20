@@ -1,0 +1,19 @@
+{
+  "chapter": 268,
+  "title": "Tout d'abord",
+  "label": "ch:fr-tout-d-abord",
+  "canDo": "I can put the steps of a story in order: first of all, in the first place, afterwards, lastly and to finish.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C268-pour-finir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 268: I can put the steps of a story in order: first of all, in the first place, afterwards, lastly and to finish.",
+    "assesses": [
+      "FR-LEX-C268-ORDRE-03",
+      "FR-LEX-C268-ORDRE-04",
+      "FR-LEX-C268-ORDRE-05"
+    ]
+  }
+}

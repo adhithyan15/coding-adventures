@@ -1,0 +1,11 @@
+{
+  "id": "FR-C313-retraite-personne",
+  "pathSegment": "FR-PATH-313-RETRAITE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-313-RETRAITE",
+      "order": 1
+    }
+  ]
+}

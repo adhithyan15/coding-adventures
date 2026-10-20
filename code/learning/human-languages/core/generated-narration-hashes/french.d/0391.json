@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 391,
+  "sourceHash": "fnv1a64:3f50c2e4fc132d0d",
+  "lessonIds": [
+    "FR-C391-epargne",
+    "FR-C391-epargner",
+    "FR-C391-investir",
+    "FR-C391-investissement",
+    "FR-C391-taux"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch391.txt",
+  "json": "french/narration/ch391.json",
+  "textHash": "fnv1a64:925dccd3cd2828ad",
+  "jsonHash": "fnv1a64:453c0becec042977",
+  "findings": []
+}

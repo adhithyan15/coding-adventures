@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C521-dedicacer",
+    "language": "french",
+    "chapter": 521,
+    "sequence": 28550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:78c20ce93702b683"
+  },
+  "findings": []
+}

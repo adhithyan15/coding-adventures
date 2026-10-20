@@ -1,0 +1,11 @@
+{
+  "id": "FR-C346-consequence",
+  "pathSegment": "FR-PATH-346-CONSEQUENCE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-346-CONSEQUENCE",
+      "order": 2
+    }
+  ]
+}

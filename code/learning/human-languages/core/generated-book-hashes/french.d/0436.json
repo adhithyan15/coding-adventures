@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 436,
+  "sourceHash": "fnv1a64:db929978755a799e",
+  "lessonIds": [
+    "FR-C436-raccourci",
+    "FR-C436-detour",
+    "FR-C436-itineraire",
+    "FR-C436-contourner",
+    "FR-C436-rebrousser"
+  ],
+  "tex": "french/book/chapters/ch436-raccourcis-et-detours.tex"
+}

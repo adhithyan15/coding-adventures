@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 430,
+  "sourceHash": "fnv1a64:850c53a72a98f73e",
+  "lessonIds": [
+    "FR-C430-punaise",
+    "FR-C430-cafard",
+    "FR-C430-moustiquaire",
+    "FR-C430-volet",
+    "FR-C430-store"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch430.txt",
+  "json": "french/narration/ch430.json",
+  "textHash": "fnv1a64:5b0aed5a31bca3ac",
+  "jsonHash": "fnv1a64:bfaa860fba93e341",
+  "findings": []
+}

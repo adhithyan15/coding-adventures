@@ -1,0 +1,11 @@
+{
+  "id": "FR-C315-testament",
+  "pathSegment": "FR-PATH-315-DEUIL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-315-DEUIL",
+      "order": 2
+    }
+  ]
+}

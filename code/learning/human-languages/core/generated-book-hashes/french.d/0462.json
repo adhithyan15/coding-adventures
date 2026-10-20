@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 462,
+  "sourceHash": "fnv1a64:d9f0d04ae618e792",
+  "lessonIds": [
+    "FR-C462-orageux",
+    "FR-C462-foudre",
+    "FR-C462-grele",
+    "FR-C462-gronder",
+    "FR-C462-rafale"
+  ],
+  "tex": "french/book/chapters/ch462-l-orage-gronde.tex"
+}

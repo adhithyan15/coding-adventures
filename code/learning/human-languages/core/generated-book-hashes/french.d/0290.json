@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 290,
+  "sourceHash": "fnv1a64:1abe7ecfa04d2a86",
+  "lessonIds": [
+    "FR-C290-crime",
+    "FR-C290-criminel",
+    "FR-C290-meurtre",
+    "FR-C290-delinquant",
+    "FR-C290-delinquance"
+  ],
+  "tex": "french/book/chapters/ch290-le-crime.tex"
+}

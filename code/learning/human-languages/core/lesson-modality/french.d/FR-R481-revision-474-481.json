@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-R481-revision-474-481",
+    "language": "french",
+    "chapter": 481,
+    "sequence": 26510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:85b003eedd3fcdb7"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C261-revision-explication",
+  "pathSegment": "FR-PATH-261-CONSEIL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-261-CONSEIL",
+      "order": 2
+    }
+  ]
+}

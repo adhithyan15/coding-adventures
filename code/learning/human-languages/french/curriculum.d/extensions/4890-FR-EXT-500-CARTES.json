@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-500-CARTES",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about card games and betting.",
+  "prerequisites": []
+}

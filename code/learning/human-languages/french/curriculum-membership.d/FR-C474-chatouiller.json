@@ -1,0 +1,11 @@
+{
+  "id": "FR-C474-chatouiller",
+  "pathSegment": "FR-PATH-474-GAIETE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-474-GAIETE",
+      "order": 4
+    }
+  ]
+}

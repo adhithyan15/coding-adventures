@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-261-CONSEIL",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can give advice with je devrais and tu devrais, and explain a decision in four moves.",
+  "prerequisites": []
+}

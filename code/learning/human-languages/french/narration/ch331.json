@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "french",
+  "chapter": 331,
+  "title": "Au four",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:040322065393b8b3",
+  "lessons": [
+    {
+      "id": "FR-C331-moule",
+      "sequence": 18720,
+      "title": "le moule — the baking tin, the mould",
+      "headword": "le moule",
+      "romanization": "le moule",
+      "gloss": "the baking tin, the mould",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d2823ab3593eefa4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for to simmer, then the French for the casserole dish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: le moule",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le moule — \"the baking tin, the mould\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Elle verse la pâte dans le moule. She pours the mixture into the tin."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine; la moule is a mussel."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "moule comes from Old French modle, inherited from Latin modulus \"a small measure\" (EtymDB), built on modus \"measure\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le moule",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le moule*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le moule, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le moule*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with le moule",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *le moule*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for to simmer, then the French for the casserole dish, then say le moule again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for to simmer, then the French for the casserole dish, then say *le moule* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does le moule mean? (\"The baking tin, the mould\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C331-enfourner",
+      "sequence": 18730,
+      "title": "enfourner — to put in the oven",
+      "headword": "enfourner",
+      "romanization": "enfourner",
+      "gloss": "to put in the oven",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:668602b4e9bf658d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the casserole dish, then the French for the baking tin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: enfourner",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "enfourner — \"to put in the oven\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Il enfourne le gâteau pour quarante minutes. He puts the cake in the oven for forty minutes."
+            },
+            {
+              "kind": "speech",
+              "text": "Informal: to gobble up food."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "enfourner is built on en- and four \"oven\", which is inherited from Latin furnus \"an oven\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "enfourner",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *enfourner*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "enfourner, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *enfourner*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with enfourner",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *enfourner*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the casserole dish, then the French for the baking tin, then say enfourner again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the casserole dish, then the French for the baking tin, then say *enfourner* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does enfourner mean? (\"To put in the oven\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C331-cuisson",
+      "sequence": 18740,
+      "title": "la cuisson — the cooking, the cooking time",
+      "headword": "la cuisson",
+      "romanization": "la cuisson",
+      "gloss": "the cooking, the cooking time",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:689342354e2086d7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the baking tin, then the French for to put in the oven."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la cuisson",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la cuisson — \"the cooking, the cooking time\"."
+            },
+            {
+              "kind": "speech",
+              "text": "La cuisson du gâteau dure quarante minutes. The cake takes forty minutes to cook."
+            },
+            {
+              "kind": "speech",
+              "text": "For meat: quelle cuisson? — how would you like it cooked?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cuisson is usually traced to Latin coctiō \"a cooking\", from coquere \"to cook\" (Lewis & Short), reshaped after cuire."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la cuisson",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la cuisson*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la cuisson, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la cuisson*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la cuisson",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la cuisson*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the baking tin, then the French for to put in the oven, then say la cuisson again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the baking tin, then the French for to put in the oven, then say *la cuisson* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la cuisson mean? (\"The cooking, the cooking time\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C331-dorer",
+      "sequence": 18750,
+      "title": "dorer — to turn golden, to brown; to gild",
+      "headword": "dorer",
+      "romanization": "dorer",
+      "gloss": "to turn golden, to brown; to gild",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6575d5694f7112c6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for to put in the oven, then the French for the cooking."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dorer",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dorer — \"to turn golden, to brown; to gild\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Le poulet dore lentement au four. The chicken is slowly turning golden in the oven."
+            },
+            {
+              "kind": "speech",
+              "text": "Faire dorer les oignons — to brown the onions."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dorer is inherited through Old French dorer (EtymDB) from Latin deaurāre \"to gild\", built on aurum \"gold\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dorer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dorer*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dorer, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dorer*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dorer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dorer*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for to put in the oven, then the French for the cooking, then say dorer again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for to put in the oven, then the French for the cooking, then say *dorer* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dorer mean? (\"To turn golden, to brown; to gild\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C331-gratiner",
+      "sequence": 18760,
+      "title": "gratiner — to brown on top, to cook with a crust",
+      "headword": "gratiner",
+      "romanization": "gratiner",
+      "gloss": "to brown on top, to cook with a crust",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:75d9324eb869e243",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the cooking, then the French for to turn golden."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: gratiner",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gratiner — \"to brown on top, to cook with a crust\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Elle fait gratiner les pâtes avec du fromage. She browns the pasta with cheese on top."
+            },
+            {
+              "kind": "speech",
+              "text": "Un gratin — a dish browned in the oven, often with cheese."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gratiner is built on gratin, the crust scraped from the dish, from the verb meaning \"to scrape\", which is usually traced to a Frankish word (EtymDB lists no parent)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gratiner",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gratiner*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gratiner, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gratiner*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with gratiner",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *gratiner*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the cooking, then the French for to turn golden, then say gratiner again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the cooking, then the French for to turn golden, then say *gratiner* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does gratiner mean? (\"To brown on top, to cook with a crust\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-R331-revision-324-331",
+      "sequence": 18770,
+      "title": "Retour sur les chapitres 324–331",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 324-331",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e029247b26cfb4e1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the French for to invade and the invasion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to invade, the invasion, to conquer, the conquest, to defeat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to invade, the invasion, to conquer, the conquest, to defeat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the historian, the ancestor, heritage, the archaeologist, the dig",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the historian, the ancestor, heritage, the archaeologist, the dig]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to free, the liberation, to resist, the resistance, to commemorate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to free, the liberation, to resist, the resistance, to commemorate]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the recipe, the ingredient, the pinch, the spoonful, to preheat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the recipe, the ingredient, the pinch, the spoonful, to preheat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the chopping board, to peel, to chop, to slice thinly, to grate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the chopping board, to peel, to chop, to slice thinly, to grate]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the salad bowl, to pour, to beat, the whisk, to whisk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the salad bowl, to pour, to beat, the whisk, to whisk]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to boil, boiling, the cooking pot, to simmer, the casserole dish",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to boil, boiling, the cooking pot, to simmer, the casserole dish]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the baking tin, to put in the oven, the cooking, to turn golden, to brown on top",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the baking tin, to put in the oven, the cooking, to turn golden, to brown on top]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To invade? (envahir.) The invasion? (l'invasion.) To conquer? (conquérir.) The conquest? (la conquête.) To defeat? (vaincre.) The historian? (l'historien.) The ancestor? (l'ancêtre.) Heritage? (le patrimoine.) The archaeologist? (l'archéologue.) The dig? (la fouille.) To free? (libérer.) The liberation? (la libération.) To resist? (résister.) The resistance? (la résistance.) To commemorate? (commémorer.) The recipe? (la recette.) The ingredient? (l'ingrédient.) The pinch? (la pincée.) The spoonful? (la cuillerée.) To preheat? (préchauffer.) The chopping board? (la planche à découper.) To peel? (éplucher.) To chop? (hacher.) To slice thinly? (émincer.) To grate? (râper.) The salad bowl? (le saladier.) To pour? (verser.) To beat? (battre.) The whisk? (le fouet.) To whisk? (fouetter.) To boil? (bouillir.) Boiling? (l'ébullition.) The cooking pot? (la marmite.) To simmer? (mijoter.) The casserole dish? (la cocotte.) The baking tin? (le moule.) To put in the oven? (enfourner.) The cooking? (la cuisson.) To turn golden? (dorer.) To brown on top? (gratiner.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 273,
+  "sourceHash": "fnv1a64:59e7719b2a747dd7",
+  "lessonIds": [
+    "FR-C273-veille",
+    "FR-C273-lendemain",
+    "FR-C273-surlendemain",
+    "FR-C273-dernierement",
+    "FR-C273-prochainement"
+  ],
+  "tex": "french/book/chapters/ch273-la-veille-et-le-lendemain.tex"
+}

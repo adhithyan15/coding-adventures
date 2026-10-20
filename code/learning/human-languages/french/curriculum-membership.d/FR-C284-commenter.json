@@ -1,0 +1,11 @@
+{
+  "id": "FR-C284-commenter",
+  "pathSegment": "FR-PATH-284-RAPPORTER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-284-RAPPORTER",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C351-justifier",
+    "language": "french",
+    "chapter": 351,
+    "sequence": 19800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cfc36c64aed01b36"
+  },
+  "findings": []
+}

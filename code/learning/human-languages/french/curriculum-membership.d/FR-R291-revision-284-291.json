@@ -1,0 +1,11 @@
+{
+  "id": "FR-R291-revision-284-291",
+  "pathSegment": "FR-PATH-291-GENDARMES",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FR-EXT-291-GENDARMES",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C371-programmer",
+    "language": "french",
+    "chapter": 371,
+    "sequence": 20830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b7e9096750ea6fd8"
+  },
+  "findings": []
+}

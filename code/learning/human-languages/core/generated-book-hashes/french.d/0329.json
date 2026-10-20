@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 329,
+  "sourceHash": "fnv1a64:967a1fa2f4512ead",
+  "lessonIds": [
+    "FR-C329-saladier",
+    "FR-C329-verser",
+    "FR-C329-battre",
+    "FR-C329-fouet",
+    "FR-C329-fouetter"
+  ],
+  "tex": "french/book/chapters/ch329-battre-les-ufs.tex"
+}

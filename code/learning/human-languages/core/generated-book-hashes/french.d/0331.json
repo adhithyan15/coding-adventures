@@ -1,0 +1,14 @@
+{
+  "language": "french",
+  "chapter": 331,
+  "sourceHash": "fnv1a64:b5a2e1542c843806",
+  "lessonIds": [
+    "FR-C331-moule",
+    "FR-C331-enfourner",
+    "FR-C331-cuisson",
+    "FR-C331-dorer",
+    "FR-C331-gratiner",
+    "FR-R331-revision-324-331"
+  ],
+  "tex": "french/book/chapters/ch331-au-four.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C439-clocher",
+  "pathSegment": "FR-PATH-439-CLOCHERS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-439-CLOCHERS",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C401-accelerer",
+    "language": "french",
+    "chapter": 401,
+    "sequence": 22350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:91fb584d073640a2"
+  },
+  "findings": []
+}

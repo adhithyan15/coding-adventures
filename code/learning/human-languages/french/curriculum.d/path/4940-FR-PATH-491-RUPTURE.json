@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-491-RUPTURE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-491-RUPTURE"
+  ],
+  "after": []
+}

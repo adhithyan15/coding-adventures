@@ -1,0 +1,11 @@
+{
+  "id": "FR-C366-solidarite",
+  "pathSegment": "FR-PATH-366-BENEVOLAT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-366-BENEVOLAT",
+      "order": 3
+    }
+  ]
+}

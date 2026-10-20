@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:07a96fcf68983eac",
+  "lessonIds": [
+    "FR-C324-envahir",
+    "FR-C324-invasion",
+    "FR-C324-conquerir",
+    "FR-C324-conquete",
+    "FR-C324-vaincre"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch324.txt",
+  "json": "french/narration/ch324.json",
+  "textHash": "fnv1a64:263bc03987a2d546",
+  "jsonHash": "fnv1a64:ab15c3acae1fba44",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:b147df9e72d97593",
+  "lessonIds": [
+    "FR-C314-deceder",
+    "FR-C314-enterrer",
+    "FR-C314-enterrement",
+    "FR-C314-funerailles",
+    "FR-C314-cimetiere"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch314.txt",
+  "json": "french/narration/ch314.json",
+  "textHash": "fnv1a64:960e1eea5576bbac",
+  "jsonHash": "fnv1a64:579eacc6a5126da3",
+  "findings": []
+}

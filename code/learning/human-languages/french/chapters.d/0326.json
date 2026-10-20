@@ -1,0 +1,19 @@
+{
+  "chapter": 326,
+  "title": "La libération",
+  "label": "ch:fr-la-liberation",
+  "canDo": "I can talk about freedom and remembrance: freeing, liberation, resisting, the resistance and commemorating.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C326-commemorer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 326: I can talk about freedom and remembrance: freeing, liberation, resisting, the resistance and commemorating.",
+    "assesses": [
+      "FR-LEX-C326-LIBERATION-03",
+      "FR-LEX-C326-LIBERATION-04",
+      "FR-LEX-C326-LIBERATION-05"
+    ]
+  }
+}

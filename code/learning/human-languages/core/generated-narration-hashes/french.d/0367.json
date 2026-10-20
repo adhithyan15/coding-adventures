@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 367,
+  "sourceHash": "fnv1a64:92b788fd128b0f0a",
+  "lessonIds": [
+    "FR-C367-supposer",
+    "FR-C367-hypothese",
+    "FR-C367-presumer",
+    "FR-C367-plausible",
+    "FR-C367-supposition"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch367.txt",
+  "json": "french/narration/ch367.json",
+  "textHash": "fnv1a64:ece5cc16a1b90a86",
+  "jsonHash": "fnv1a64:1a8e36efdfaa400c",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C461-averse",
+    "language": "french",
+    "chapter": 461,
+    "sequence": 25440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:826a75950e19429b"
+  },
+  "findings": []
+}

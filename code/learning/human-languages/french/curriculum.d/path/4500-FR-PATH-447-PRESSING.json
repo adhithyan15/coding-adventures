@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-447-PRESSING",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-447-PRESSING"
+  ],
+  "after": []
+}

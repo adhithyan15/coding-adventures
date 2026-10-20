@@ -1,0 +1,20 @@
+{
+  "chapter": 262,
+  "title": "Finding the Way — excusez-moi, tout droit",
+  "label": "ch:fr-finding-the-way",
+  "canDo": "I can stop a stranger politely, ask the way, and follow and give simple directions.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C262-revision-chemin",
+    "kind": "production",
+    "summary": "Complete FR-C262-revision-chemin: ask the way to a place and give the directions back, straight on, left and right.",
+    "assesses": [
+      "FR-LEX-EXCUSEZ-MOI-01",
+      "FR-LEX-TOUT-DROIT-01",
+      "FR-GRAM-POUR-ALLER-A-02",
+      "FR-GRAM-TOURNEZ-02"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C472-bouleverser",
+  "pathSegment": "FR-PATH-472-NOSTALGIE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-472-NOSTALGIE",
+      "order": 4
+    }
+  ]
+}

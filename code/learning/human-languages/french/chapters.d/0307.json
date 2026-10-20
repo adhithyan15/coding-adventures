@@ -1,0 +1,19 @@
+{
+  "chapter": 307,
+  "title": "Les dégâts",
+  "label": "ch:fr-les-degats",
+  "canDo": "I can talk about damage after an accident: the damage, damaging, insurance, the people hit by a disaster and a scratch.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-R307-revision-300-307",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 307: I can talk about damage after an accident: the damage, damaging, insurance, the people hit by a disaster and a scratch.",
+    "assesses": [
+      "FR-LEX-C307-DEGATS-03",
+      "FR-LEX-C307-DEGATS-04",
+      "FR-LEX-C307-DEGATS-05"
+    ]
+  }
+}

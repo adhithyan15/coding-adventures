@@ -1,0 +1,11 @@
+{
+  "id": "FR-C507-affronter",
+  "pathSegment": "FR-PATH-507-TOURNOI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-507-TOURNOI",
+      "order": 4
+    }
+  ]
+}

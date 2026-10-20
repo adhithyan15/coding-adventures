@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 484,
+  "sourceHash": "fnv1a64:e0b3de0f34b808b7",
+  "lessonIds": [
+    "FR-C484-ambulance",
+    "FR-C484-secouriste",
+    "FR-C484-brancard",
+    "FR-C484-piqure",
+    "FR-C484-salle-d-attente"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch484.txt",
+  "json": "french/narration/ch484.json",
+  "textHash": "fnv1a64:2a81a806052e8ebf",
+  "jsonHash": "fnv1a64:9530c0b28a488b58",
+  "findings": []
+}

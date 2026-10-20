@@ -1,0 +1,19 @@
+{
+  "chapter": 312,
+  "title": "Une nouvelle maison",
+  "label": "ch:fr-une-nouvelle-maison",
+  "canDo": "I can talk about moving: the move, moving in, the house-warming, the tenant and the lease.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C312-bail",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 312: I can talk about moving: the move, moving in, the house-warming, the tenant and the lease.",
+    "assesses": [
+      "FR-LEX-C312-DEMENAGEMENT-03",
+      "FR-LEX-C312-DEMENAGEMENT-04",
+      "FR-LEX-C312-DEMENAGEMENT-05"
+    ]
+  }
+}

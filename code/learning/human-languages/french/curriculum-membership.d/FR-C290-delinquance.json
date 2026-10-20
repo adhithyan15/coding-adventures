@@ -1,0 +1,11 @@
+{
+  "id": "FR-C290-delinquance",
+  "pathSegment": "FR-PATH-290-CRIME",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-290-CRIME",
+      "order": 4
+    }
+  ]
+}

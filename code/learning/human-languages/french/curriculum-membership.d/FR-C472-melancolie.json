@@ -1,0 +1,11 @@
+{
+  "id": "FR-C472-melancolie",
+  "pathSegment": "FR-PATH-472-NOSTALGIE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-472-NOSTALGIE",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-384-VALABLE",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "FR-EXT-384-VALABLE"
+  ],
+  "after": []
+}

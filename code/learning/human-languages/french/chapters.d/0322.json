@@ -1,0 +1,19 @@
+{
+  "chapter": 322,
+  "title": "Le récit",
+  "label": "ch:fr-le-recit",
+  "canDo": "I can talk about stories: an account, narrating, a legend, a myth and the moral.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C322-morale",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 322: I can talk about stories: an account, narrating, a legend, a myth and the moral.",
+    "assesses": [
+      "FR-LEX-C322-RECIT-03",
+      "FR-LEX-C322-RECIT-04",
+      "FR-LEX-C322-RECIT-05"
+    ]
+  }
+}

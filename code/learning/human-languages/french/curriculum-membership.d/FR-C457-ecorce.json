@@ -1,0 +1,11 @@
+{
+  "id": "FR-C457-ecorce",
+  "pathSegment": "FR-PATH-457-BOIS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-457-BOIS",
+      "order": 4
+    }
+  ]
+}

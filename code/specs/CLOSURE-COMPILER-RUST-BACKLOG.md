@@ -1,720 +1,229 @@
 # Closure Compiler on Rust — parity backlog
 
-**Status:** active — resumed with provenance as a completion requirement
-**Last reprioritized:** 2026-10-07
-**Current selection:** actual bounded provenance chronology, specified in
-[CV03](CV03-actual-bounded-provenance-chronology.md), branch
-`codex/closurec-chronology-20261007`. CV02 merged and is verified;
-preserve one active Closure/shared-stack PR.
-**Current audit base:** `9e4b8d1ab9b082f4ec027a67d10f97e3827579f2`
+**Status:** active. Reset on 2026-10-19 after an eight-day stall (see below).
+**Driver:** one Claude loop session. It works this queue top to bottom, one
+item per PR. Clean, green PRs squash-merge automatically (owner authorization,
+2026-10-19).
 **Upstream audit base:** `google/closure-compiler` at
-`10ca677aff381d2c2e6e1b254ba32861e503173d` (2026-09-17), current release
-`v20260915`
+`10ca677aff381d2c2e6e1b254ba32861e503173d` (2026-09-17), release `v20260915`.
+**History:** the full pre-reset file, including every loop-record row and
+evidence log, is at commit `74ffd48a0bc0c1d71cb001a53952ea43d25ba51c`
+(`git show 74ffd48a:code/specs/CLOSURE-COMPILER-RUST-BACKLOG.md`).
 
-## Recovery and provenance acceptance (2026-10-07)
+## Why the backlog was reset
 
-Verified on fetched `origin/main`: long aliases #15608, debugger preservation
-#15929, literal propagation #15964/#16011/#16019 and scheduler ordering #16118
-are merged. CCR-053 and CCR-063 are closed; their old queue descriptions below
-are historical and must not be selected again. The automation and umbrella
-#15530 were still pointing at merged #15608; the heartbeat now targets the
-completion chat and re-audits live PR state rather than hardcoding a head.
+From 2026-09-19 to 2026-10-07, small Closure PRs merged several times a day.
+Then nothing merged from 2026-10-07 to 2026-10-19. Four rules in this file
+caused that, and the reset removes each one.
 
-CCR-065's original bridge audit is stale: CLOC27 already propagates token CVs
-onto leaves and shares the real log. Live inspection found its golden trace
-assertion only proves token presence, while primitive folds read absent
-composite CVs and lose replacement lineage. CLOC31 repaired that primitive gap;
-its stronger end-to-end graph assertions failed before implementation.
-A context probe additionally caught CV metadata disabling conditional collapse
-inside primitive, array and call branches. The merged slice includes native
-recursive AST equality excluding only CVs, preserving signed-zero distinctions
-and both collapsed primitive branch histories. Context regressions failed
-before these safeguards. Composite lineage and the remaining fold families
-still require the broader provenance/tracing-neutrality audit.
+1. **One item gated all the others.** On 2026-10-07 provenance (CCR-065) was
+   made "a completion requirement". Its acceptance test covers nearly the whole
+   compiler, so source maps, `language_in`, destructuring and ADVANCED value
+   propagation all waited behind it. Provenance is now one ordinary item. It
+   ships in slices like everything else.
+2. **Everything went into one PR.** "Preserve one active Closure/shared-stack
+   PR" was read as "put every change in that PR". PR #17288 grew to 1,146
+   commits and 909 files. About 55 of those files were Closure work; the rest
+   were mermaid, diagram, ALGOL and CI repairs absorbed while catching up with
+   main. It conflicted with main in 15 non-Closure files. CI never completed
+   green on it: 27 of 30 runs were cancelled by newer pushes, and the 3 that
+   finished failed in unrelated packages. It was closed on 2026-10-19. The lexer
+   source-interval work was salvaged as #17803.
+3. **The bar for "done" rose faster than work could meet it.** It required an
+   exact-head, whole-affected-workspace re-validation after every merge from
+   main, and a final Miri run before anything counted as complete. Main lands
+   many commits a day, so the PR never caught up.
+4. **Status logs replaced the plan.** Checkpoint notes overwrote the PR
+   description, the epic #15830 description (restored from edit history on
+   2026-10-19) and this file.
 
-CLOC31 merged as [#16866](https://github.com/adhithyan15/coding-adventures/pull/16866)
-at `84252d038a9fa2eddb5f92833d0de242969e45c8`. All 34 attached checks were
-terminal and acceptable on reviewed head `3fa64764eef9de761fb198b22ff9e6191a13de2f`,
-including macOS/Ubuntu/Windows builds and both required gates. Fetched-main
-reachability and matching repaired files were verified. Its clean worktree was
-archived after preserving validation artifacts. CI compatibility repairs retained
-the scheduler's atomic test budget and oracle tool's 32 MiB capture limit.
+## Working rules
 
-The next foundation is [#16868](https://github.com/adhithyan15/coding-adventures/issues/16868):
-compact IDs, validated/bounded graph operations and canonical serialization.
-Direct-library depth 1024 has a 2,058-byte final ID and 3,258,509-byte JSON log;
-doubling depth nearly quadruples identity overhead. Shared-ancestor lineage can
-put a child before its parent. The library accepts and reserializes dangling
-parents, mismatched entry IDs and cycles. Five identical fresh CLI runs produced
-five different sidecar byte strings despite structurally equal graphs. CV01
-selected compact allocation first; it does not complete those other requirements.
+These rules exist to keep the loop moving. If a rule and progress conflict,
+stop and ask the owner. Don't stretch the PR to satisfy both.
 
-CV01 merged as [#16881](https://github.com/adhithyan15/coding-adventures/pull/16881)
-at `ec1c8d8c733f188c762e1377fe56dc07ecd2faa7`. All 34 checks were terminal and
-acceptable on reviewed head `76f7dc78995dc6c66dfcc1f1952bea0b37efcc21`, including
-all three operating systems and required gates. Fetched main contains that
-squash commit and all 14 changed files match the reviewed head. The clean worktree
-was archived after preserving its compiled baseline and validation/audit artifacts.
-Depth 1024 now serializes to 142,567 bytes and depth 4096 to 569,575 bytes, with
-20-byte IDs throughout. Disabled allocation state survives reload; present null
-state and duplicate decoded entry keys reject rather than downgrading/overwriting.
-Full compiler tests: 1,037 passed; CV49 unit/10 doctests; all other 19 consumers
-2,135 passed (49 existing ignored cases). Strict lint and security review passed.
+1. **One item, one PR.** A PR contains the selected item's code, tests, spec,
+   README and changelog shard, and nothing else. Aim for under ~1,500 changed
+   lines. If an item is bigger, split it into numbered slices, each a PR.
+2. **Never fix unrelated breakage inside a Closure PR.** If CI fails in a
+   package the item does not touch, check whether main fails the same way.
+   - If it does, open an issue, or a tiny separate fix PR when it blocks
+     merging, then continue.
+   - If only the Closure PR fails, the item caused it. Fix it in the item's own
+     files.
+3. **Sync with main only when needed.** Sync when GitHub reports a conflict or
+   a required check needs newer main, and use a real merge. Never copy main's
+   content into the branch as ordinary commits.
+4. **Done means the item's acceptance tests pass, and required CI is green on
+   the PR.** Run `cargo test -p` locally for the crates the PR touches, plus
+   `closurec` when a pipeline crate changes. CI covers the rest. Don't add Miri
+   gates unless the PR adds `unsafe`.
+5. **Short status, in the right place.** The PR description says what changed
+   and how it was tested, in plain prose. Progress notes go in issue
+   *comments*, never in issue or epic descriptions. This file changes only when
+   an item is selected, merged or added.
+6. **Timebox.** If a PR has gone 24 hours or three CI rounds without turning
+   green, stop and report to the owner instead of widening its scope.
+7. **No hidden gates.** An item waits only when its row says `Blocked by` and
+   names the blocking item.
+8. **Shared crates.** At most one open PR at a time may touch a given shared
+   crate (`javascript-ast`, `javascript-parser`, `lexer`,
+   `closure-pass-pipeline`, `cli-builder`). Other PRs may proceed.
+9. **Owner decisions.** Items marked `Decision` need the owner's answer before
+   any code. Ask once, then skip to the next item until it arrives.
 
-The compact head still accepts cycles/dangling parents and can allocate a
-self-parent edge when deriving from a future unknown ID. Public mutable maps
-bypass checked invariants; reversed BFS still violates DAG topology. CV02 selects
-controlled graph ownership/mutation, explicit budgets, bounded valid traversal,
-checked import and canonical/fail-closed serialization with artifact publication
-tests. Typed actual chronology and full source/node/output coverage remain open.
+Standing owner directions remain in force:
 
-CV02 local checkpoints (not yet published/merged): checked/private graph
-ownership, transactional accounting, strict bounded import, iterative borrowed
-topological queries, canonical byte-limited JSON and safe rejected-metadata
-disposal are implemented. Independent review exposed compatibility query gaps,
-discarded projection/stage declarations, pre-budget metadata sorting and
-pre-validation scheduler cloning, caller-stack destruction of rejected folds
-and unchecked-import normalization laundering; each has regression evidence
-and a repair. Allocator-only import status now survives canonical export and
-cannot be upgraded through checked queries/reload.
-Lexer/parser/scheduler, constant-fold and all four current deletion passes
-propagate recording errors before accepting candidates. Historical checkpoint
-09cdb43 passed six affected crates: 878 tests (including 10 CV doctests), with
-10 existing ignored cases. The subsequent key-preflight repair passed all 70 CV
-unit tests and 10 doctests. Independent ownership review passed 4f818174 and its
-corrected dependency-rejection test: scheduler-owned current/candidate trees now
-use iterative disposal on errors and intermediate replacement. Fresh AST and
-pipeline suites pass 145 tests (one existing ignored doctest); four deletion-pass
-suites pass 266 tests (14 existing ignores). The full compiler passes 1,037 tests
-across 176 targets with no ignores. All touched packages and compiler pass strict
-all-target lint; compiler verification explicitly denies unknown lints. There
-are 879 valid lesson shards. These remain local checkpoints, not CI/merge proof.
-Direct checked chains have 4,096/8,192 nodes and 569,436/1,138,780-byte exports;
-a 10,002-node wide graph passes deterministic queries. Isolated small-stack tests
-cover 65,536-level metadata, deep mixed AST families and wide sibling lists.
-The compiler EOF test now checks semantic deletion fields rather than JSON key
-order; it explicitly does not prove currently skipped comment/whitespace origins.
-The checked CLI/stage checkpoint adds the closed nine-field limit override,
-shared programmatic validation, checked compiler log construction and fallible
-direct-stage/whitespace gap and emit recording. Actual-process tests preserve
-existing artifacts on early cap/configuration failure and verify successful
-checked reload with unchanged output at all five compilation levels. Error
-diagnostics now go to stderr; the typed-AST alias-conflict fixture verifies
-empty stdout. Fresh compiler verification passes 1,043 tests across 177 targets
-with no ignores, plus 70 CV unit tests and 10 doctests; both pass strict lint
-including unknown-lint denial. There are 884 valid lesson shards.
-The borrowed checked-export checkpoint validates the complete graph before
-filters/summary and shares work through reference indexes, comparisons, sorting,
-counting and canonical compact/pretty/NDJSON encoding. All summary formats stream
-through a bounded sink. Every filtered view declares partial coverage. CLI export
-failures no longer become `{}`/zero summaries/changed formats; NONE independently
-validates evidence. All payloads are prepared before any JS/map/manifest/sidecar
-write. Real-process regression first reproduced exit 0 under a zero output cap;
-now all views reject and preserve pre-existing destinations and success stdout.
-Seventy-two fresh SIMPLE/ADVANCED processes over twelve configurations produce
-identical sidecar/summary bytes and unchanged JavaScript. Fresh full compiler:
-1,047 passed across 177 targets with no ignores; CV: 76 unit and 10 doctests;
-both strict all-target lint, 885 valid lessons, whitespace clean. A fixture
-selected a random tombstoned map key in the first full run; it now selects a
-live identity explicitly and the complete library suite passes. These are local
-checks. Independent review at 5a220f6e4a passed the implemented security scope
-and found one override-grammar correctness defect: explicit whitespace selected
-defaults. ASCII/mixed/Unicode-whitespace process probes reproduced exit 0 before
-repair; the absent-value check now tests exact emptiness and rejects those pairs.
-All seven critical process tests, 11 surface tests, two typed-AST alias tests and
-35 configuration unit tests pass after repair, with strict compiler lint and
-887 valid lessons. Final checkpoint review remains required before publishing.
-The publication checkpoint preflights the whole artifact set, rejects destination
-aliases/nonregular/read-only outputs, stages complete synced files and installs
-without clobbering, with the sidecar last. Reported pre-commit failure rolls back
-owned files; obstructed restoration preserves recovery copies and unknown files.
-Post-commit cleanup failures warn with complete outputs. Held Unix/Windows object
-identities protect ownership checks; Windows uses the full 128-bit file ID.
-Source roots and JS/map/manifest publication records hash exact consumed/final
-bytes using the existing local SHA-256 crate. Three actual-process tests failed
-before implementation and pass after repair. Native Windows fault/identity/path
-tests pass; Unix symlink cases await native CI. Final local compiler verification
-passed 1,061 tests across 178 targets with zero ignores, including read-only/
-directory rejection. CV passed 76 unit tests and 10 doctests; SHA-256 passed 27
-unit tests and four doctests. All three pass strict all-target lint with unknown
-lints denied. All 889 lesson shards validate.
-Independent exact-head review rejected publication checkpoint `d5df790ba7`:
-`rename` overwrote an unexpected staging backup occupant, and a rollback-removal
-failure for an initially absent destination named a nonexistent original backup.
-Both temp-only probes and native regressions reproduced the defects. Spec
-refinement `4f09b46596` precedes the repair: exclusive backup links, explicit
-backup-path ownership, already-present original recovery and truthful diagnostics.
-All 14 native Windows publication tests pass after repair, including same-inode
-unexpected occupants and failure between backup creation and original removal.
-The 19 shared consumers also pass fresh at the unchanged implementation scope:
-2,147 tests across 80 targets, 49 existing ignores and strict lint. All 893 lesson
-shards validate. The repaired full compiler passes 1,064 tests across 178 targets
-with zero ignores and strict all-target lint; final repaired-head review remains pending.
-Current remaining CV02 work: native CI execution and actual merge verification.
-PR [#16905](https://github.com/adhithyan15/coding-adventures/pull/16905) now publishes
-repaired head `3b7928e241`, with full-scope independent security PASS and 1,079
-Windows tests across 180 all-target targets, zero ignores, and strict lint.
-The older `90010c29de` native probes found output DACL broadening and inherited
-stage readers; specification-first repairs create atomically private objects,
-capture/recheck owner/group/DACL/protection, use distinct always-empty policy
-probes and verified handle routes, and restore privacy before rollback. An
-additional OWNER RIGHTS fresh-open regression first reproduced late original
-mutation; the repair proves production fresh opens before changing originals.
-All 20 Windows publication cases pass. Linux/macOS descriptor-bound UID/GID/mode
-preservation and extended/default ACL rejection are implemented, with seven
-native cases each and strict cross-checks. Published-head CI run `37649573380`
-executed the native Closure package command successfully on Linux and macOS.
-Its Windows general package-test step was skipped; that job is not acceptance.
+- Match Closure on **observable output**, not on internal pass structure.
+- Base ESTree is the canonical serialized AST boundary, using our own types
+  and no external AST crate (#15840).
+- No new crates.io dependencies without a recorded decision. `serde`,
+  `serde_json` and `regex` are tracked for removal (CCR-069, CCR-070).
 
-The initial repaired-head CI plan selected Closure on all platforms but left
-`build-windows-os-suites` false, which skips ordinary Windows package tests.
-The gate repair adds the compiler's affected identity and CV02 specification,
-with real-evaluator regressions that first fail both selection clauses and an
-unrelated Rust negative control. Independent review of local `79643862f1` found
-the specification-only gate still selected no compiler or Rust toolchain.
-Specification-first exact consumer mapping now seeds Closure on all platforms,
-fails on missing consumers, and respects language filters. Emitted-plan tests
-first reproduced the empty selection and now verify the real native command,
-toolchain and gate together. Refresh exact-head review and CI after these
-changes; require non-skipped compiler test commands and successful native package
-results before accepting the draft. Green job labels or older checks cannot
-substitute for execution evidence. The foundation and full compiler/provenance
-goal remain open. Correctly gated head `0e02820565` CI run `37655926931` executed
-the Windows general package-test step but failed the compiler's Rust 1.99
-strict Clippy preflight on constant-size SID `chunks_exact(4)`, before tests.
-Specification `0192308acf` preserves the checked SID range/count and byte order;
-fixed array chunks repair that lint without weakening the gate. Matching
-toolchain validation, independent exact-head review and fresh native CI remain
-required. The chronology draft stays outside the checkout until CV02 merges.
-Chronology and complete source/node/output coverage are not
-established by this foundation.
-Diagnostic short-circuits (empty-input banner and token-only tree dumps) currently
-return before trace construction. Track their provenance policy with the full
-CLI/diagnostics completion audit; normal compile/export tests do not establish
-source/output coverage for those modes.
+## Where it stands
 
-CV02 final acceptance supersedes its historical local/published checkpoints
-above. [#16905](https://github.com/adhithyan15/coding-adventures/pull/16905)
-merged at `851ce71fc033f11d0c1716ed895b7026e5c64a81` after independently reviewed
-head `7debd2f26bd36ed243b9cf8273c6c576cd59a886`. Native
-[CI 37673154223](https://github.com/adhithyan15/coding-adventures/actions/runs/37673154223)
-executed the actual compiler test command successfully on Linux, macOS and
-Windows; both required gates, Books and CodeQL were terminal and successful on
-that head. Fetched-main reachability and all 120 reviewed file blobs/modes match.
-The tested binary and validation receipts were preserved before archiving the
-managed worktree. Local compiler verification passed 1,086 tests across 180
-targets with zero ignores. Compact/checked graph and publication foundation is
-accepted; #16868, #15830 and the full delivery contract remain open.
+"Parity" is tracked at five levels: surface (CLI), language (parse, print,
+map), pass (optimization behavior), build (modules, chunks, externs, maps,
+reports) and operational (deterministic on Linux, macOS and Windows).
 
-CV03 local implementation now retains a separately sequenced typed graph
-journal and actual pipeline/pass begin, accepted schedule and terminal outcomes.
-Terminal capacity is reserved before callbacks; exact replay checks nested
-contexts, schedule slots/sweeps, result classification and contribution/deletion
-source binding. Strict raw import rejects duplicate decoded fields and malformed
-known declarations, and generic valid full import delegates to the bounded
-checked path. Canonical JSON/pretty/NDJSON and declared-partial projections retain
-chronology. The traced compiler opts in from construction; actual process tests
-observe later-sweep inline/fold ordering, tracing-neutral output, deterministic
-bytes and preservation of the entire existing artifact set on cap failures.
-Full compiler validation found three older NDJSON fixture failures; the readers
-now preserve raw records until checked reconstruction, and projection tests use
-the semantic partial-coverage contract. Final local verification passes: 1,093 compiler tests across 181 targets
-with zero ignores, plus 2,279 shared tests/doctests across 91 targets in all 20
-affected packages (49 existing ignores). Compiler and shared strict all-target
-Clippy pass with unknown lints denied; lessons and whitespace checks pass.
-The real production plan selects the actual compiler command on Linux, macOS
-and Windows, Rust toolchain and the Windows general-test gate without force.
-Build-tool uncached tests/vet and 18 Python CI gate contracts pass. Independent exact-head review, publication and native CI/merge
-remain pending. This chronology slice does not establish exact source/output coverage,
-all fold families, composite spans or provenance for every mutating pass.
+The differential ladder (`tests/diff/ladder_*`, 57 rungs × 3 levels, #15837)
+measures agreement with the pinned oracle:
 
-The remaining-fold inventory is
-[#16875](https://github.com/adhithyan15/coding-adventures/issues/16875).
-Actual SIMPLE/ADVANCED CLI probes fold Math.abs, string case conversion,
-array.join and Object.keys while losing final fold events; the Math.abs input
-retains only the unary child's history. All traced/untraced bytes match. These
-are initial cases requiring result-owned graph tests, not a complete inventory.
+| Level | Rungs agreeing |
+|---|---:|
+| `WHITESPACE_ONLY` | 54 / 57 |
+| `SIMPLE` | 34 / 57 |
+| `ADVANCED` | 24 / 57 |
 
-Required next slices after CV03: audit remaining fold families; stable composite identities
-and shared source spans on the canonical ESTree boundary; typed lineage events
-with complete source/node coverage; all mutating passes (inline/rename first),
-including one-to-many inlining, many-to-one merges, motion and deletion;
-output-range/source-map joins and graph queries. The full compiler delivery
-contract below remains mandatory. No provenance slice alone completes the loop.
+WHITESPACE_ONLY is strong. SIMPLE is real but partial. ADVANCED is mostly
+scaffolding: the pass slots exist, but most of the transformations that define
+that level are missing.
 
-## Purpose and truthfulness boundary
+The 462-fixture golden corpus reports 100% agreement. It measures regressions,
+not parity.
 
-This is the live, evidence-backed queue for turning `closurec` and its Rust
-libraries into a practical replacement for the Google Closure Compiler. It
-supersedes status prose in older CLOC specs when the two disagree; those specs
-remain the design and historical slicing record.
-
-"Parity" is not one boolean. We track five independently verifiable levels:
-
-1. **Surface parity:** a Closure command line parses with compatible defaults,
-   validation, diagnostics, and exit status.
-2. **Language parity:** supported JavaScript parses, lowers, prints, and maps
-   back to sources without silently changing compilation mode.
-3. **Pass parity:** checks and optimizations have the same observable behavior
-   as the pinned upstream compiler for the covered corpus.
-4. **Build parity:** dependency management, modules, chunks, externs, source
-   maps, manifests, JSON streams, and reports compose as they do upstream.
-5. **Operational parity:** the same invocation is deterministic and supported
-   on Linux, macOS, and Windows, with useful failures and bounded resource use.
-
-**Measured agreement against the pinned oracle**, now committed as 171 CI-gated
-fixtures under `tests/diff/ladder_*` (57 rungs x 3 levels,
-[#15837](https://github.com/adhithyan15/coding-adventures/issues/15837)):
-
-| Level | Rungs agreeing | |
-|---|---:|---|
-| `WHITESPACE_ONLY` | 54 / 57 | 95% |
-| `SIMPLE` | 34 / 57 | 60% |
-| `ADVANCED` | 24 / 57 | 42% |
-
-Agreement falls as the amount of claimed optimization rises. The ADVANCED
-figure flatters it: many of its agreements are trivial rungs where
-there is nothing to optimize. Upstream ADVANCED reduces whole programs to their
-observable effect (`var o={a:1,b:2};console.log(o.a)` → `console.log(1)`);
-we emit approximately the input. ADVANCED is better described as **scaffolded
-but not implemented** — the pass slots exist and are scheduled, but the
-transformations that define the level are largely absent. A user selecting
-`ADVANCED` today gets substantially less than the flag implies, and unlike a
-hard failure nothing tells them so.
-
-Note that the 462-fixture golden corpus reports 100% agreement over the same
-oracle. It measures regression, not parity: its fixtures were captured from
-behaviour already implemented.
-
-The present implementation has a strong WHITESPACE_ONLY formatter, a real but
-partial SIMPLE typed pipeline, a scaffolded ADVANCED level, and a large curated
-golden corpus. It is **not yet a drop-in Closure replacement**: successful flag parsing often
-does not imply semantics, unsupported typed syntax now fails closed rather than
-silently weakening output, BUNDLE and TRANSPILE_ONLY are identity operations,
-emitted source maps are placeholders, the type checker is a passthrough
-scaffold, and collapse-properties does not mutate the program.
-
-## Evidence captured by the 2026-09-19 audit
-
-### Local implementation
-
-- `closurec` is version `0.246.0` and declares 112 flags in `cli.spec.json`.
-  Its generated audit classifies all 102 pinned upstream canonical options,
-  all seven exact aliases as supported, eleven local extensions, and one
-  deprecated local alias. No upstream alias remains unsupported.
-- All 462 curated differential fixtures match both their checked-in expected
-  bytes and the pinned Closure `v20260915` oracle refresh recorded by CCR-004.
-- The conformance suite has 24 declared cases: 19 compare values and five are
-  explicit unsupported-syntax declines. All three harness tests pass.
-- Both correlation-vector provenance tests pass.
-- CCR-001 fixed Windows-native absolute, drive-rooted, UNC, and
-  mixed-separator glob expansion in [#15529](https://github.com/adhithyan15/coding-adventures/pull/15529).
-  Its full Windows validation passed all 688 unit tests and every integration
-  target before CI passed on Windows, macOS, and Ubuntu.
-- A fresh `v20260915` oracle probe found a false-success compilation defect:
-  upstream rejects malformed `var = ;` with exit 1, `JSC_PARSE_ERROR`, and no
-  output, while `closurec --compilation_level SIMPLE` exits 0 and emits
-  `var=;`. For destructuring that upstream compiles successfully, `closurec`
-  silently emits whitespace-only output after the typed bridge declines it.
-  The exact oracle hash and reproduction are tracked in
-  [#15534](https://github.com/adhithyan15/coding-adventures/issues/15534).
-- CCR-002 fixed that defect in
-  [#15544](https://github.com/adhithyan15/coding-adventures/pull/15544):
-  parse, typed-bridge, pass, and emit failures now surface as structured
-  diagnostics and a failed process without JavaScript, output files, or
-  correlation-vector sidecars.
-- `tests/diff/` contains 626 fixture directories, not one homogeneous corpus:
-  462 are `minify_*` stdout goldens targeted by CCR-004, while 164 exercise
-  CLI, diagnostic, typed-pipeline, source-map, and local extension contracts.
-  Of 546 fixture READMEs, 466 contain a version token and only 22 contain a
-  reproducible `java -jar` command. Eight minify READMEs have no version token.
-  Existing version mentions are dominated by `v20240317`, so README prose
-  cannot serve as the oracle registry.
-- The AST covers the main statement and expression families, including
-  classes, modules, optional chains, generators, templates, and async nodes.
-  Binding targets remain identifier-only, so destructuring and several
-  parameter forms cannot cross the typed bridge.
-- `closure-typechecker` documents and implements a passthrough v1 with no
-  inference diagnostics. `closure-pass-collapse-properties` discovers
-  candidates but intentionally reports `changed = false` and applies none.
-- The command runner consumes only a subset of the parsed configuration. Major
-  families still lacking end-to-end semantics include diagnostics, dependency
-  and chunk management, polyfills, conformance, instrumentation, translations,
-  JSON streams, renaming map inputs/reports, and several special passes.
-- `--create_source_map` currently calls a minimal v3 serializer with empty
-  sources and mappings. The repository already has a real VLQ source-map crate,
-  but the typed emitter path does not feed it spans.
-
-### Current upstream surface
-
-- The current Maven release is `v20260915`; the audited upstream checkout is
-  two days newer at commit `10ca677a`.
-- The release tag is annotated object `72421c28d352e5dda9a111bec39c3d41af46f3a3`
-  and dereferences to commit `56007b2869ef6ce70b659b033459b8d8113101de`.
-  The Maven artifact
-  `com.google.javascript:closure-compiler:v20260915` is 14,976,538 bytes with
-  SHA-256
-  `9C8AF06056AA06F968B5A457540A85869C7BA2861C211C56D8D4EF6C35DDF36D`;
-  its manifest records JDK 21 and it embeds Apache-2.0 license and notice files.
-- Current `CommandLineRunner.java` exposes 102 explicit option declarations.
-  After accounting for cli-builder-provided help/version and the eleven local
-  correlation-vector extensions, the actionable naming drift is the upstream
-  canonical `--typed_ast_output_file` versus the local legacy misspelling
-  `--typed_ast_output_file__INTENRNAL_USE_ONLY`.
-- The audited upstream test directory contains 395 `*Test.java` files. Signal
-  clusters include 70 `Check*`, 28 `Es6*`, 19 `*Module*`, 13 `TypeCheck*`,
-  12 `Inline*`, ten transpilation, eight peephole, six chunk, five collapse,
-  five rename, four remove-unused, three source-map, three conformance, two
-  code-printer, and one command-line test file.
-- Upstream's `DefaultPassConfig` composes many checks and optimizations beyond
-  the local scheduler: module/JSDoc/variable/strict/type/control-flow/access/
-  conformance checks; normalization; property disambiguation and collapse;
-  function, call, constructor, and variable inlining; cross-chunk movement;
-  dead-assignment and unused-code removal; polyfill/transpilation passes; and
-  final property, variable, and label renaming.
-
-Primary upstream references:
-
-- <https://github.com/google/closure-compiler>
-- <https://github.com/google/closure-compiler/blob/master/src/com/google/javascript/jscomp/CommandLineRunner.java>
-- <https://github.com/google/closure-compiler/blob/master/src/com/google/javascript/jscomp/DefaultPassConfig.java>
-- <https://github.com/google/closure-compiler/wiki/Design-Documents>
-- <https://github.com/google/closure-compiler/wiki/JS-Conformance-Framework>
-
-## Completion contract
-
-An item is complete only when its behavior is specified, covered by focused
-tests and at least one end-to-end test where applicable, documented in package
-README/changelog files, formatted and lint-clean with warnings denied, and
-verified through every affected Cargo workspace with `--no-fail-fast`. Parity
-items additionally require a reproducible upstream oracle command or a ported
-upstream test with an exact source tag/commit.
-
-**Dependency constraint (owner direction, 2026-09-21):** the Closure stack
-takes **no new crates.io dependency** without an explicitly recorded decision.
-It currently declares two — `serde` and `serde_json` — and reaches `regex`
-transitively through `grammar-tools`. Both are tracked for removal (CCR-069,
-CCR-070); zero is reachable. An external AST crate was considered and rejected
-([#15840](https://github.com/adhithyan15/coding-adventures/issues/15840)): a
-dependency in this position is a standing maintenance and security liability,
-and ESTree is a specification rather than a library, so the shape costs nothing
-to adopt ourselves.
-
-The overall project is complete only when:
-
-- supported and intentionally unsupported upstream flags are machine-audited;
-- no successful compilation silently substitutes a weaker compilation level;
-- the supported JavaScript/language-mode matrix is explicit and tested;
-- all selected upstream test families are ported or listed with a reason;
-- source maps, diagnostics, modules/chunks, externs, and reports work together;
-- Linux, macOS, and Windows run the same conformance gate; and
-- a representative real-world Closure build passes a differential migration
-  trial with documented output, diagnostics, source-map, and runtime results.
-
-## Prioritization policy
-
-Re-run priority after every merged PR and immediately after discovering work.
-Order by:
-
-1. security, data loss, broken main, nondeterminism, and cross-platform test
-   failures;
-2. silent semantic corruption or successful-but-weaker fallback;
-3. oracle quality and measurements needed to evaluate later work;
-4. end-to-end correctness before adding isolated pass breadth;
-5. broadly used Closure workflows before niche flags;
-6. smallest dependency-unblocking slice, with only one active shared-crate PR.
+Other known gaps:
+- Source maps are placeholders.
+- The type checker is a passthrough.
+- BUNDLE and TRANSPILE_ONLY are identity operations.
+- Collapse-properties changes nothing.
 
 ## ID allocation
 
-**CCR IDs are allocated in the GitHub issue tracker, not in this file.** Every
-item carries the `[closurec] CCR-NNN ...` issue title, and that is the registry.
-Before minting an ID, list the repository's issues and take the next number
-above the highest `CCR-` in any issue title, open or closed — do not infer the
-next free number from this document.
-
-The two have drifted, **in both directions**, and only one direction has been
-fixed.
-
-CCR-044 – CCR-062 existed as issues and were absent from this file. **That gap
-is now closed** — see *Backfilled index* below, and as of 2026-09-21 every ID
-from CCR-001 through CCR-089 plus CCR-015A appears somewhere in this document.
-
-The other direction is still open and is the one that matters for ID
-allocation: **not every ID in this file has an issue.** CCR-011 – CCR-014,
-CCR-016 – CCR-021, CCR-023 – CCR-026, CCR-028 – CCR-030 and CCR-032 – CCR-040
-are tracked only by their row here — searching the tracker for them returns
-nothing. CCR-041 is tracked at
-[#15542](https://github.com/adhithyan15/coding-adventures/issues/15542), whose
-title carries no `CCR-` prefix, and CCR-001 landed as PR
-[#15529](https://github.com/adhithyan15/coding-adventures/pull/15529) rather
-than an issue.
-
-| Range | Where it lives |
-|---|---|
-| CCR-001 – CCR-043 | this file; **some** also have issues (see the gaps above) |
-| CCR-044 – CCR-062 | issues **and** this file (backfilled 2026-09-21, see below) |
-| CCR-063 – CCR-089 | issues **and** this file |
-
-This is why the allocation rule above says to take the next number above the
-highest `CCR-` **in any issue title**, and not to infer it from this document:
-the highest ID here and the highest ID in the tracker are the same today
-(CCR-089), but the sets underneath them are not equal in either direction.
-
-New findings are added before selecting the next item. IDs are stable; priority
-order may change. A row marked `Blocked` names its prerequisite. `Survey` means
-the implementation must begin with a measured inventory rather than assumed
-scope.
-
-Adjacent shared-library defects that do not affect `closurec` are tracked in
-their owning queue rather than assigned misleading CCR IDs. The current such
-finding is cli-builder local/global same-ID shadowing
-[#15605](https://github.com/adhithyan15/coding-adventures/issues/15605).
+CCR IDs live in the GitHub issue tracker. Every item is an issue titled
+`[closurec] CCR-NNN …`. To mint a new ID, take the next number above the highest
+`CCR-` in any issue title, open or closed. Don't infer it from this file.
+CCR-011–014, 016–021, 023–026, 028–030 and 032–040 predate that rule and exist
+only as rows in the pre-reset file.
 
 ## Ordered queue
 
-### P0 — restore a trustworthy baseline
+Work top to bottom. When an item merges, mark it done, then re-check whether
+anything newly found outranks the next row.
 
-| Rank | ID | Work item | Acceptance evidence | Status |
+Ranking:
+1. Miscompiles, crashes and security.
+2. Fake success: output that claims more than the compiler did.
+3. Cheap ladder wins.
+4. Front-end and output contract.
+5. ADVANCED semantics.
+6. Workflows and flags.
+
+### Q0 — miscompiles, crashes, broken tooling
+
+| # | ID | Item | Acceptance | Status |
 |---:|---|---|---|---|
-| 1 | CCR-001 | Make absolute and relative `--js` globs use native Windows separators and roots without regressing POSIX behavior. | The six Windows failures pass; focused mixed-separator, exclusion, `*`, and `**` tests pass; full `closurec` suite is green on Windows. | Complete — [#15529](https://github.com/adhithyan15/coding-adventures/pull/15529) |
-| 2 | CCR-002 | Replace silent SIMPLE/ADVANCED typed-pipeline fallback with an explicit compatibility policy. Unsupported syntax must either be a hard error or an opt-in, diagnostic-bearing fallback. | Differential tests prove exit code, stderr, and output for parse, bridge, pass, and emit failures. | Complete — [#15544](https://github.com/adhithyan15/coding-adventures/pull/15544) |
-| 3 | CCR-003 | Establish one reproducible oracle manifest pinned to upstream `v20260915` and commit `10ca677a`. Record Java version, commands, flags, hashes, licensing, and fixture provenance. | Offline manifest verifier classifies all 626 differential fixture directories exactly once; every upstream-derived golden resolves to one immutable artifact pin and normalized command. | Complete — [#15558](https://github.com/adhithyan15/coding-adventures/pull/15558) |
-| 4 | CCR-004 | Re-run all 462 golden fixtures against the new oracle, classify drift, and update only reviewed deltas. | Machine-readable report records equal/changed/declined counts and every changed byte has a linked reason. | Complete — [#15583](https://github.com/adhithyan15/coding-adventures/pull/15583) |
-| 5 | CCR-005 | Generate a CLI surface audit from current `CommandLineRunner.java` and `cli.spec.json`, separating upstream, generated, extension, deprecated-alias, and unsupported flags. | CI fails on unclassified flag drift; canonical `--typed_ast_output_file` is accepted with tested compatibility for the legacy typo. | Complete — [#15595](https://github.com/adhithyan15/coding-adventures/pull/15595) |
-| 5.1 | CCR-043 | Add first-class long-form flag aliases to `cli-builder` and accept upstream `--D`, `--checks-only`, `--dev_mode`, and `--warnings_whitelist_file` as their canonical flags. | Alias collisions fail spec validation; parse results and explicit-flag tracking use canonical IDs; the CLI audit reports zero unsupported upstream aliases. | Complete — [#15608](https://github.com/adhithyan15/coding-adventures/pull/15608) |
-| 5.2 | CCR-041 | Derive correlation-vector pass inventory from the scheduler's actual execution order instead of parallel constants. SIMPLE reported `inline` even though that pass is only registered for ADVANCED. | SIMPLE and ADVANCED provenance tests prove that every reported pass actually ran and that conditional passes appear only when scheduled. | Complete — [#15836](https://github.com/adhithyan15/coding-adventures/pull/15836) |
-| 5.3 | CCR-063 | Make `closure-pass-pipeline`'s Kahn scheduler honour registration order as the global tie-breaker. Its `ready` FIFO schedules every dependency-free pass ahead of every dependent one, so `rename` (registered 8th, no deps) executes 2nd — contradicting its own documented contract. | A pipeline unit test registers independent passes out of order and gets registration order back; the 462 goldens are re-run and any delta reviewed; `cv_executed_passes.rs` order pin is updated. | Ready — [#15829](https://github.com/adhithyan15/coding-adventures/issues/15829) |
-| 5.4 | CCR-066 | Build the differential complexity ladder as a committed, ordered fixture tier: simplest JS first, each rung carrying its pinned oracle command and both outputs, ramping deliberately. Work it bottom-up; a rung that disagrees is a recorded expected-divergence with a linked issue. | CI gates the ladder at all three levels; the known-gap ledger is machine-checked rather than prose; `--language_in`/`--language_out` are pinned per rung so a divergence is never ambiguous between a capability gap and a flag mismatch. | **Complete** — all 52 rungs landed as 156 fixtures with 63 recorded divergences, gate negative-tested. Per-rung `--language_in`/`--language_out` pinning was investigated and found unnecessary: the one rung that looked like a flag mismatch (`private_field`) is upstream declining the feature outright, tracked as CCR-075 — [#15837](https://github.com/adhithyan15/coding-adventures/issues/15837) |
-| 5.5 | CCR-067 | Adopt the ESTree AST shape and retire the hand-written `GrammarASTNode` → `Program` bridge. Decision recorded in [#15840](https://github.com/adhithyan15/coding-adventures/issues/15840): **base ESTree** is the canonical serialized boundary, our own types, no external AST crate. Babel's dialect is provided as a converter over that boundary rather than as a second canonical format. | The ladder is green at every migration step; `bridge.rs`'s 117 `cv: None` sites are gone; node identity is stamped uniformly by construction; an ESTree↔Babel converter round-trips the supported node set. | Spec first — [#15840](https://github.com/adhithyan15/coding-adventures/issues/15840) |
-| 6 | CCR-006 | Add an explicit capability/status command or document generated matrix so users can tell parse-only flags from implemented semantics. | Matrix is generated from the same registry used by dispatch and cannot drift manually. | Ready — unblocked by CCR-043 |
+| 1 | #16008 | A top-level binding shadowed by a `for`-head binding is deleted, so the output throws a `ReferenceError`. | A ladder rung or regression test that fails before the fix; the output runs. | Ready |
+| 2 | #16009 | Stack overflow (SIGABRT) on a long binary-expression chain, about 60 KB of input. | Parsing, the passes and emit stay iterative or bounded, and the hostile input compiles or fails cleanly with a diagnostic. | Ready |
+| 3 | #15939 | `cargo clippy -- -D warnings` can't pass: `Cargo.toml` allows a lint that clippy 0.1.94 doesn't know. | Strict clippy passes on `closurec`. | Ready |
+| 4 | #15942 | Add a ladder rung for an array spread before an index read, the gap the CLOC28 miscompile slipped through. | The rung is committed and agrees at every level. | Ready |
+| 5 | CCR-078 #15863 | At SIMPLE, closurec propagates a const that upstream keeps. This output has never been validated. | Either match upstream, or record the divergence as intentional with runtime-equivalence evidence. | Ready |
 
-### P1 — make the front end and output contract honest
+### Q1 — cheap ladder wins (emitter and DCE parity)
 
-| Rank | ID | Work item | Acceptance evidence | Status |
-|---:|---|---|---|---|
-| 7 | CCR-007 | Wire real VLQ source maps through parser spans, transforms, emitter, wrappers, and output paths. | Upstream source-map vectors plus multi-file, Unicode, wrapper, stdin, and transformed-token end-to-end tests match decoded mappings. | Ready |
-| 7.1 | CCR-065 | **EPIC** — real end-to-end provenance: trace output bytes through folding, motion, inlining, renaming and deletion. Leaf CVs and CLOC31 primitive lineage are implemented; composite identities, remaining fold families, exact source/output spans, typed chronology and validated bounded graphs remain incomplete. Historical zero-identity bridge counts are superseded by the recovery audit above. | For a program exercising folding, inlining, renaming, motion, and deletion, the sidecar answers: source span of an output byte, every pass that touched it in real order, every call site an inlined body reached, a renamed binding's original name, and a tombstone for deleted code with the responsible pass. | Active: CV01 foundation [#16868](https://github.com/adhithyan15/coding-adventures/issues/16868), remaining folds [#16875](https://github.com/adhithyan15/coding-adventures/issues/16875), epic [#15830](https://github.com/adhithyan15/coding-adventures/issues/15830) |
-| 8 | CCR-008 | Define and enforce `language_in`; stop treating accepted syntax as independent of the selected input mode. | Current upstream accept/reject corpus matches diagnostics and exit status for representative ECMAScript modes. | Ready |
-| 9 | CCR-009 | Implement `language_out` and TRANSPILE_ONLY as real lowering stages rather than identity. Start with optional chaining/nullish coalescing and class features. | Runtime-equivalent output and upstream differential tests across at least two output modes. | Ready |
-| 10 | CCR-010 | Extend binding targets across AST, parser, typed bridge, scope analysis, passes, and emitter for array/object destructuring. | Existing declined conformance cases become value-checked; declaration, assignment, parameter, rest, default, and loop targets pass. | Ready |
-| 11 | CCR-011 | Complete async/await typed bridging, including `for await` and async generators. | CLOC12 gap-165 closes and async fixtures stay on the typed pipeline. | Ready |
-| 12 | CCR-012 | Replace template-literal mode heuristics with an explicit substitution stack supporting nested templates and complex expressions. | CLOC12 gap-044b closes with nested, tagged, escaped, and multiline tests. | Ready |
-| 13 | CCR-013 | Survey current parser/bridge/emitter syntax against upstream language-feature enums and turn every decline into a stable capability row. | Generated syntax matrix names pass/fail stage and test for every feature. | Survey |
-| 14 | CCR-014 | Integrate the type checker's first real vertical slice: primitive literals, variables, assignments, calls, returns, and JSDoc annotations. | Diagnostics have stable groups/locations; upstream TypeCheck tests for the slice pass; `checks_only` emits no JS. | Ready |
-| 15 | CCR-015 | Implement diagnostics plumbing: levels, groups, warnings guards, error formatting, counts, JSON/error streams, and exit codes. | `--jscomp_*`, formatting, hide-warnings, summary detail, and output streams match selected CommandLineRunner tests. | Ready |
-| 16 | CCR-042 | Match upstream `JSC_INVALID_OCTAL_LITERAL` warning count, locations, formatting, and successful exit behavior for the three legacy-octal minify fixtures. | The pinned CCR-004 stderr captures match end to end while stdout remains byte-identical. | Blocked by CCR-015 — [#15571](https://github.com/adhithyan15/coding-adventures/issues/15571) |
-| 17 | CCR-016 | Replace minimal numeric printing with a shortest-round-trip algorithm and audit special numeric property keys. | Exhaustive boundary/property tests plus upstream CodePrinter numeric vectors close residual CLOC12 numeric gaps. | Ready |
+Each of these is a small change to the emitter or DCE. Each also has to check
+its blast radius across the 462 goldens.
 
-### P2 — strengthen SIMPLE and ADVANCED optimization semantics
+| # | ID | Item | Status |
+|---:|---|---|---|
+| 6 | CCR-080 #15867 | The WHITESPACE_ONLY path drops the program's final terminator after `do…while`. | Ready |
+| 7 | CCR-084 #15919 | Keep the `;` on a block-final `throw`. | Ready |
+| 8 | CCR-083 #15918 | Brace-wrap a `do…while` used as a substatement. | Ready |
+| 9 | CCR-087 #15924 | Unwrap a single-statement block under a label. | Ready |
+| 10 | CCR-088 #15925 | Unwrap single-statement substatement blocks for every statement kind, not just expression statements. | Ready |
+| 11 | CCR-076 #15861 | Drop braces around a single-statement body. | Ready |
+| 12 | CCR-077 #15862 | Match upstream spacing and class-body punctuation. | Ready |
+| 13 | CCR-085 #15920 | Strip `"use strict"` unless `--emit_use_strict` is set; re-emit it single-quoted. | Ready |
+| 14 | CCR-082 #15878 | Truncate dead code after `continue`. | Ready |
+| 15 | CCR-086 #15923 | `dce_program` truncates the dead tail after a top-level `throw`. | Ready |
+| 16 | CCR-074 #15855 | The `while`→`for` rewrite hoists the preceding initializer into the `for` header. | Ready |
 
-| Rank | ID | Work item | Acceptance evidence | Status |
-|---:|---|---|---|---|
-| 19 | CCR-017 | Implement collapse-properties mutation with namespace safety, alias, extern, getter/setter, and dynamic-access guards. | Ported `CollapsePropertiesTest` slices pass and fixed-point termination is proven. | Ready |
-| 19.5 | CCR-068 | Implement object/array literal value propagation into use sites at ADVANCED — the single largest contributor to the 13/52 ADVANCED ladder result. Upstream reduces `var o={a:1,b:2};console.log(o.a)` to `console.log(1)`; we emit the input. | The ladder's `object`, `nested-obj`, `array`, `function-expr`, `iife`, and `optional-chain` rungs agree at ADVANCED. | Ready — [#15837](https://github.com/adhithyan15/coding-adventures/issues/15837) |
-| 20 | CCR-018 | Audit remove-unused-vars for nested scopes, exports, destructuring, side effects, classes, and module bindings; implement missing cases. | Ported `RemoveUnusedVarsTest` slices and runtime-effect tests pass. | Ready |
-| 21 | CCR-019 | Expand constant folding/peephole coverage and refresh its upstream pin. | All selected current `Peephole*` vectors are ported, passing, ignored with gap IDs, or skipped with reasons. | Survey |
-| 22 | CCR-020 | Expand control-flow folding and DCE for switch/try/finally/labels/loops/throw and unreachable lexical declarations. | Ported peephole/remove-dead tests plus runtime-equivalence tests pass. | Ready |
-| 23 | CCR-021 | Expand function/variable inlining with escape, recursion, evaluation-order, `this`, `arguments`, async/generator, and multi-statement safety. | Current upstream Inline test inventory is classified and selected cases pass. | Survey |
-| 24 | CCR-022 | Complete variable/global/property/label renaming semantics, maps, stable names, extern protection, reserved names, and shadowing. | Rename test families pass; input/output map round trips are deterministic. | Ready |
-| 25 | CCR-023 | Add missing ADVANCED passes in dependency order: normalization, call optimization, constructor optimization, dead assignments, devirtualization, property disambiguation/ambiguation, and final denormalization. | Each pass lands with a ported upstream slice and pipeline-order invariant. | Survey |
-| 26 | CCR-024 | Make pass configuration reflect upstream compilation levels and relevant option interactions instead of a fixed local list. | Generated schedule snapshots and end-to-end flag interaction tests match the pinned upstream configuration. | Blocked by CCR-015 and CCR-023 |
+### Q2 — front end and output contract
 
-### P3 — real build-graph and Closure workflows
+| # | ID | Item | Status |
+|---:|---|---|---|
+| 17 | CCR-065 #16970 | Exact lexical source intervals in `lexer` and `javascript-lexer`. | In review — #17803 |
+| 18 | CCR-007 #15624 | Real VLQ source maps through parser spans, passes, emitter and outputs. Build on #17803's intervals; ship parser spans, emitter mappings and multi-file/wrapper support as separate slices. | Blocked by #17803 |
+| 19 | CCR-006 #15611 | An execution-backed capability matrix, so users can tell parse-only flags from implemented ones. | Ready |
+| 20 | CCR-015 #15674 | Diagnostics plumbing: levels, groups, formatting, counts, streams and exit codes. Slice it. | Ready |
+| 21 | CCR-042 #15571 | Match the legacy-octal warning diagnostics. | Blocked by CCR-015 |
+| 22 | CCR-008 #15626 | Enforce `language_in` syntax boundaries. | Ready |
+| 23 | CCR-079 #15866 | Derive the ladder's divergence ledger from captured oracle runs. | Ready |
+| 24 | CCR-089 #15935 | Recapture the upstream-refusal evidence on the pinned JVM. | Ready |
 
-| Rank | ID | Work item | Acceptance evidence | Status |
-|---:|---|---|---|---|
-| 27 | CCR-025 | Implement dependency modes, entry points, `goog.provide`/`goog.require`, CommonJS processing, and ES module resolution/rewriting. | Multi-file graph fixtures match order, pruning, diagnostics, and output. | Ready |
-| 28 | CCR-026 | Implement chunks/modules, chunk wrappers, chunk maps, output prefixes, weak chunks, and cross-chunk motion. | DAG validation and selected upstream Chunk/Module tests pass on all hosts. | Blocked by CCR-025 |
-| 29 | CCR-027 | Make BUNDLE a real bundling mode with module resolution, ordering, wrappers, source maps, and diagnostics. | A representative multi-module application bundles and runs equivalently to upstream. | Blocked by CCR-025 and CCR-007 |
-| 30 | CCR-028 | Complete extern ingestion and built-in environment selection, including browser/custom extern interactions. | Extern diagnostics and property/variable protection match upstream cases. | Ready |
-| 31 | CCR-029 | Implement polyfill isolation/injection/rewrite and runtime-library selection. | Output and runtime behavior match upstream across language-out modes. | Blocked by CCR-009 |
-| 32 | CCR-030 | Implement manifests, dependency graphs, variable/property maps, renaming reports, exports, and name-reference reports. | Every report has deterministic golden and round-trip tests. | Blocked by CCR-022 and CCR-025 |
-| 33 | CCR-031 | Implement JSON input/output streams and stdin/stdout composition without mixing diagnostics into data streams. | Pipeline and malformed-stream tests match upstream exit/status behavior. | Blocked by CCR-015 |
+### Q3 — ADVANCED semantics
 
-### P4 — checks, policy, specialized passes, and operational proof
+| # | ID | Item | Status |
+|---:|---|---|---|
+| 25 | CCR-068 follow-up #15940 | Literal-property propagation should fire on more than one binding per program. | Ready |
+| 26 | CCR-022 #15856 | Renaming covers loop locals, catch parameters and labels. | Ready |
+| 27 | CCR-067 #15840 | ESTree migration: retire the hand-written bridge, one node family per PR. | Ready (spec first) |
+| 28 | CCR-010 #15628 | Destructuring binding targets end to end. | Blocked by CCR-067 for the bridge part |
+| 29 | CCR-065 #16875 | Connect the remaining call and composite fold lineage. | Ready |
+| 30 | CCR-065 epic #15830 | Provenance slices P2–P6 from the epic: typed edges, per-node contributions, per-pass adoption (`inline` and `rename` first), a query surface, and a join with source maps. One slice per PR. | Ready after #29; P6 needs CCR-007 |
+| 31 | CCR-009 #15627 | `language_out` lowering and TRANSPILE_ONLY, starting with optional chaining and nullish coalescing. | Ready |
 
-| Rank | ID | Work item | Acceptance evidence | Status |
-|---:|---|---|---|---|
-| 34 | CCR-032 | Implement the JS conformance framework: config parsing, allow/deny lists, requirement matching, diagnostics, and reporting. | Selected upstream `Conformance*Test` cases pass and local five declines are reviewed. | Blocked by CCR-014 and CCR-015 |
-| 35 | CCR-033 | Add remaining checks in measured slices: variables, modules, JSDoc, strict mode, control flow, access controls, suspicious code, and side effects. | Each check has a diagnostic group and current upstream test slice. | Survey |
-| 36 | CCR-034 | Implement specialized passes only after core workflows: Angular/Polymer/J2CL, Closure primitives, CSS/ID replacement, define/tweak processing, message replacement, and translation bundles. | Each accepted flag gains end-to-end semantics or an explicit unsupported error. | Blocked by CCR-024 |
-| 37 | CCR-035 | Implement instrumentation and coverage-array modes with source-map and optimization interaction tests. | Instrumented output executes and reports the same covered regions as upstream fixtures. | Blocked by CCR-007 and CCR-024 |
-| 38 | CCR-036 | Add typed-AST serialization/deserialization using the canonical flag and versioned format; decide compatibility boundary with upstream protobuf. | Round trip preserves the supported AST and rejects incompatible versions safely. | Blocked by CCR-013 and CCR-014 |
-| 39 | CCR-037 | Build a continuously generated upstream test-coverage ledger for all 395 audited test files. | Every file is ported, partially ported, blocked by a gap, or skipped with a reviewed reason and upstream hash. | Ready |
-| 40 | CCR-038 | Add deterministic fuzz/property testing for lexer/parser/emitter round trips, pass idempotence, glob/resource bounds, and source maps. | Fixed seeds reproduce failures; corpora run on all supported hosts under explicit budgets. | Blocked by CCR-007 and CCR-013 |
-| 41 | CCR-039 | Measure performance and memory against upstream on small, medium, and large real projects; optimize only profiled bottlenecks. | Published reproducible benchmark, peak-memory, and output-size report with regression budgets. | Blocked by CCR-024 and CCR-027 |
-| 42 | CCR-040 | Run a real-world migration trial and publish the remaining incompatibility ledger. | Build, runtime, diagnostics, artifacts, maps, and performance are compared against the same upstream pin on all three hosts. | Blocked by core P0-P3 work |
-| 43 | CCR-064 | TypeScript/JS authoring API so users can write passes (and checks, conformance rules, CV reporters) without building Rust. `PassRegistry` and the narrow `Pass` trait already provide the indirection; the work is a host boundary plus a typed SDK. | A TS-authored pass schedules via `depends_on`, produces byte-identical output across repeated runs, emits CV contributions indistinguishable from a Rust pass's, and fails closed on throw/hang/denied capability. | Spec first (S1) — [#15831](https://github.com/adhithyan15/coding-adventures/issues/15831) |
+### Q4 — workflows and flags
 
-### P5 — dependency elimination (CI-wait filler; never ahead of Closure delivery)
+These are ordered by how widely they are used. Each issue carries its own
+acceptance test.
 
-Per owner direction these run **only while blocked on CI or review**. They are
-self-contained, mechanical, and easy to stop and resume, which is what makes
-them suitable. None of them may displace a P0-P3 item.
+CCR-025 (dependency modes, `goog.provide`/`goog.require`, ES modules), then
+CCR-027 #15636 (BUNDLE), CCR-031 #15637 (JSON streams), CCR-045 #15638 (stdin),
+CCR-051 #15705 (flagfiles), CCR-046 #15673 (charset), CCR-044 #15632,
+CCR-049 #15703, CCR-052 #15710, CCR-048 #15693, CCR-050 #15704, CCR-054 #15726,
+CCR-055 #15731, CCR-056 #15732, CCR-057 #15733, CCR-058 #15734, CCR-059 #15735,
+CCR-060 #15737, CCR-061 #15738, CCR-062 #15739, CCR-015A #15724, CCR-047 #15683.
 
-| Rank | ID | Work item | Acceptance evidence | Status |
-|---:|---|---|---|---|
-| 44 | CCR-069 | Remove `serde`/`serde_json` from the Closure stack in favour of the in-repo `json-value` / `json-parser` / `json-serializer`, which are already linked into `closurec` via `correlation-vector`. 120 derive sites are the substance; recommend generating the impls rather than hand-writing them or re-importing a proc-macro chain. | Every checked-in JSON artifact is byte-identical, including the CLI-surface audit hash and the oracle report hash; the ladder is unchanged at all three levels; a CI check prevents reintroduction. | Ready — [#15843](https://github.com/adhithyan15/coding-adventures/issues/15843) |
-| 45 | CCR-070 | Adopt the in-repo `regex-engine` (Pike VM, zero deps, O(pattern × input)) in place of crates.io `regex`. For `closurec` this is one crate — `grammar-tools` — with three call sites. The validator at `token_grammar.rs:1130` and the matcher in `lexer::grammar_lexer` must move together or a pattern could validate under one engine and match under another. | No Closure-stack crate reaches crates.io `regex`; a grammar sweep proves every checked-in token pattern compiles under both engines; the differential dev-dependency test is extended with each migrated pattern. | Survey first — [#15845](https://github.com/adhithyan15/coding-adventures/issues/15845) |
-| 46 | CCR-071 | Expose `regex-engine` as a native extension for Python, JS/TS, Ruby, and Java. **This, not CCR-070, is where the ReDoS exposure actually is**: those engines backtrack (215 Python and 84 JS/TS files use regex here), whereas Rust's `regex` crate is already linear-time, so CodeQL ReDoS alerts against Rust usage are false positives. | A documented, tested binding for at least one language, with a benchmark showing linear behaviour on a pattern that is catastrophic under that language's native engine. | Blocked by CCR-070 survey and a binding-mechanism decision — [#15845](https://github.com/adhithyan15/coding-adventures/issues/15845) |
-| 47 | CCR-072 | Make the CLI surface audit hash a canonical projection of `cli.spec.json`'s flag surface rather than the whole file, so a version bump no longer requires the pinned upstream `CommandLineRunner.java`. | Bumping only `version` leaves `cli_surface` green with no regeneration; any real flag change still fails until regenerated; both directions are tested. | Ready — [#15832](https://github.com/adhithyan15/coding-adventures/issues/15832) |
+The larger pre-reset rows are CCR-014 (type checker), CCR-017 (collapse
+properties), CCR-018–021 and CCR-023–024 (ADVANCED passes), and CCR-026–040
+(chunks, externs, polyfills, reports, conformance, fuzzing, benchmarks, the
+migration trial). Each one starts with a survey PR that splits it into issues.
+
+### Decisions needed from the owner
+
+| ID | Question |
+|---|---|
+| CCR-075 #15860 | What should closurec do with JavaScript that Closure itself refuses to compile? |
+
+### Filler (only while waiting on CI)
+
+CCR-069 #15843 (remove serde), CCR-070 #15845 (in-repo regex), CCR-072 #15832
+(CLI audit hash projection). None of them may displace a queue item.
+
+### Recently completed
+
+- **Before the stall:**
+  - CCR-001–005, CCR-043, CCR-041, CCR-053, CCR-063, CCR-066 and CCR-073.
+  - CCR-068 slices #15964, #16011 and #16019.
+  - CCR-081.
+  - The CCR-065 foundations: #16866, #16881, #16905 and #16964.
+- **Since the reset:** none yet.
 
 ## Loop record
 
-Update this section at every selection and merge so the backlog explains why
-the loop moved.
+Add one line per selection or merge.
 
-| Date | Event | Prioritization result |
-|---|---|---|
-| 2026-09-19 | Initial code/upstream audit. Full Windows test run found six failures sharing one root cause; no open Closure/CLOC PRs were found. | Selected CCR-001 because broken cross-platform tests and unusable native absolute globs outrank semantic expansion. |
-| 2026-09-19 | CCR-001 implementation verified locally: all 688 unit tests and every integration target pass under `--no-fail-fast` on Windows. | Keep CCR-001 selected until its PR is green and merged; then re-fetch, record completion, and reprioritize the full queue. |
-| 2026-09-19 | CCR-001 merged as [#15529](https://github.com/adhithyan15/coding-adventures/pull/15529) at `a31b2ccc`; upstream remained at commit `10ca677a` and release `v20260915`. Direct oracle probing then proved malformed input exits 1 upstream but exits 0 with emitted JS locally, and proved typed-bridge declines silently weaken SIMPLE output. | Selected CCR-002 ([#15534](https://github.com/adhithyan15/coding-adventures/issues/15534)). A false-success compiler result outranks oracle infrastructure and all semantic expansion work under priority rule 2. |
-| 2026-09-19 | While implementing CCR-002, inspection found that SIMPLE correlation-vector provenance reports `inline` although the scheduler registers that pass only for ADVANCED; logged as CCR-041 ([#15542](https://github.com/adhithyan15/coding-adventures/issues/15542)). CCR-002's complete package suite passed after implementing explicit typed-pipeline errors. | Kept CCR-002 selected because false-success output remains the highest-priority open defect until merged. Ranked CCR-041 after front-end/output correctness work and before broader optimization expansion because inaccurate provenance impairs later parity measurement but does not change emitted JavaScript. |
-| 2026-09-19 | CCR-002 merged as [#15544](https://github.com/adhithyan15/coding-adventures/pull/15544) at `608963c3`; all required checks passed and no competing Closure PR remained. Fresh upstream verification found no release or `master` drift. Corpus inventory found 626 differential fixture directories, fragmented provenance, and only 22 README capture commands. | Selected CCR-003 ([#15549](https://github.com/adhithyan15/coding-adventures/issues/15549)). With false-success compilation repaired, oracle quality is the highest-priority dependency: it makes the 462-golden refresh reviewable and separates upstream evidence from local-only extension contracts before more semantic work lands. |
-| 2026-09-19 | CCR-003 implementation validated locally. The strict offline verifier classifies all 626 fixtures exactly once, preserves the 462-fixture minify cohort, verifies immutable release/artifact/capture pins and evidence paths, and keeps local contracts out of upstream provenance. The full `closurec` suite, all-target Clippy, and all 567 lesson shards pass; Clippy emits only the repository's pre-existing obsolete-lint warning. | Keep CCR-003 selected through publication and merge. CCR-004 remains the next dependency-ordered candidate, subject to a fresh upstream/repository audit and reprioritization after merge. |
-| 2026-09-19 | CCR-003 merged as [#15558](https://github.com/adhithyan15/coding-adventures/pull/15558) at `31de98ae` after all 46 checks passed. The merge commit is reachable from `origin/main`; no competing Closure/CLOC PR exists; upstream `master` remains `10ca677a` and the latest release remains `v20260915`. No newly discovered security, data-loss, cross-platform, or false-success defect outranks the now-unblocked oracle refresh. | Selected CCR-004 ([#15569](https://github.com/adhithyan15/coding-adventures/issues/15569)). It is the smallest dependency-unblocking measurement slice and must settle the current 462-golden baseline before CLI-surface or semantic expansion. |
-| 2026-09-19 | CCR-004's real pinned-oracle run found all 462 expected stdout files byte-identical and zero upstream declines. It also preserved successful upstream warning stderr for three legacy-octal fixtures; direct local execution emits no warning, so the diagnostic gap is logged as CCR-042 ([#15571](https://github.com/adhithyan15/coding-adventures/issues/15571)). | Keep CCR-004 selected through validation and merge because its baseline remains the active dependency. Rank CCR-042 immediately after the general diagnostics plumbing it depends on; it does not outrank the in-progress oracle measurement. |
-| 2026-09-19 | CCR-004 implementation and adversarial review completed. Independent real runs over all 462 fixtures reproduced report SHA-256 `e541f87f1abe4a819500e21f852e0fbe6f6a7a1d1aaf94ca265577cf75ac1ecf`; the wrong-JAR path exited 1 without touching it. The generator now hard-pins trust/argv, preflights the whole cohort, executes private immutable snapshots with sanitized JVM environment, enforces streamed and aggregate resource limits, rejects abnormal termination, rechecks Java identity, and atomically replaces only a non-symlink report. The offline verifier applies the same evidence bounds. A final independent fail-closed review reported no actionable findings; 23 focused oracle tests and the full package suite pass. | Keep CCR-004 selected through publication and merge. No new finding outranks it; CCR-042 remains dependency-ordered after CCR-015. |
-| 2026-09-19 | CCR-004 merged as [#15583](https://github.com/adhithyan15/coding-adventures/pull/15583) at `fa120baa` after every attached check passed on macOS, Ubuntu, and Windows. The merge is reachable from `origin/main`; no competing Closure PR exists; upstream `master` remains `10ca677a` and the newest dated release tag remains `v20260915`. No new security, data-loss, cross-platform, or false-success defect outranks the next dependency-ordered audit. | Selected CCR-005 ([#15590](https://github.com/adhithyan15/coding-adventures/issues/15590)). It is the smallest ready slice that turns the claimed Closure CLI surface into machine-checked evidence and unblocks the generated capability matrix in CCR-006. |
-| 2026-09-19 | CCR-005's generated surface inventory found seven exact upstream alias spellings. The local CLI supports `-D`, `-O`, and `-W`, but `cli-builder` cannot model the four upstream long aliases `--D`, `--checks-only`, `--dev_mode`, and `--warnings_whitelist_file`; logged as CCR-043 ([#15592](https://github.com/adhithyan15/coding-adventures/issues/15592)). | Keep CCR-005 selected because the audit must land before its findings can be removed from the unsupported ledger. Rank CCR-043 immediately after CCR-005: it closes measured surface-parity gaps and gives CCR-006 a complete alias-aware registry. |
-| 2026-09-19 | CCR-005 implementation validated locally. The deterministic artifact pins upstream `v20260915` / `10ca677a`, classifies all 102 canonical options and seven exact aliases, records 100 direct upstream flags, two generated flags, 11 extensions, one deprecated alias, zero unsupported canonical flags, and four unsupported upstream aliases. Regeneration matched SHA-256 `be9a6c53c184d955b0e69edd530655075879130d238f7b810f5045a0d503a615`; ten audit tests, typed-AST compatibility tests, all-target Clippy, and the full 691-unit-test package suite plus every integration target pass. | Keep CCR-005 selected through publication and merge. CCR-043 remains the leading follow-up because it removes every measured alias gap and unlocks an alias-aware CCR-006 capability registry, subject to a fresh priority audit after merge. |
-| 2026-09-19 | CCR-005 merged as [#15595](https://github.com/adhithyan15/coding-adventures/pull/15595) at `3cf21897` after every attached check passed or was intentionally skipped; Ubuntu, Windows, macOS, metadata, CodeQL detection, and aggregate gates were green. The merge is reachable from `origin/main`; no competing Closure/CLOC or `cli-builder` PR exists. Fresh upstream verification found `master` still at `10ca677a` and the newest dated release tag still `v20260915`. | Selected CCR-043 ([#15592](https://github.com/adhithyan15/coding-adventures/issues/15592)). It is the smallest measured surface-parity slice, removes every unsupported upstream alias from the audit, and gives CCR-006 one canonical alias-aware registry. No newly discovered security, data-loss, cross-platform, or false-success defect outranks it. |
-| 2026-09-19 | CCR-043 implementation validated locally. `cli-builder` 1.2.0 now resolves declared long aliases to canonical IDs, rejects effective-scope and built-in collisions, exposes aliases in deterministic help, and passes 246 unit tests, 178 integration tests, nine doctests, and warnings-denied Clippy. `closurec` 0.246.0 accepts all four missing upstream spellings; its full 692-unit-test suite and every integration target pass, as does all-target Clippy apart from the repository's pre-existing obsolete-lint warning. Regenerating the pinned CLI audit twice produced SHA-256 `51cbafca461c5dcb7362b94fcc42c9a8a36b44a60635406d72218123ba20cd37` and zero unsupported upstream aliases. Review also exposed unrelated cli-builder same-ID shadowing drift, logged as [#15605](https://github.com/adhithyan15/coding-adventures/issues/15605). | Keep CCR-043 selected through publication and merge. The new shared-library defect is lower priority and does not affect closurec because it has no subcommands; CCR-006 remains the next dependency-ordered candidate, subject to a fresh audit after merge. |
-| 2026-09-19 | The 350-package CI fan-out for CCR-043 exposed a deterministic Windows-only failure in an unrelated `mosaic-package-artifact-builder` stamp test: two immediate same-length writes can retain the same reported mtime. The exact failure reproduced locally and is logged as [#15621](https://github.com/adhithyan15/coding-adventures/issues/15621); the production write-record fallback already covers same-stamp rewrites. | Keep CCR-043 selected. Repair only the test's uncontrolled timestamp fixture as a CI prerequisite; this does not change Closure priority or production semantics. CCR-006 remains next after CCR-043 merges. |
-| 2026-09-21 | CCR-043 merged as [#15608](https://github.com/adhithyan15/coding-adventures/pull/15608) at `d2610543` after all 61 attached checks passed or were intentionally skipped on Ubuntu, macOS, and Windows. It had been rebased five times against a fast-moving `main` before merging. CCR-006 is unblocked. | Selected CCR-041 ([#15542](https://github.com/adhithyan15/coding-adventures/issues/15542)) and promoted it from rank 18 to 5.2, ahead of CCR-006. Under policy rule 2 an emitted provenance record naming a pass that never executed is a false artifact, not merely a missing capability, and it corrupts the measurement rule 3 protects. CCR-006 is a gap in what we tell users; CCR-041 is an untruth in what we already tell them, in the feature that differentiates this compiler. |
-| 2026-09-21 | CCR-041 implemented. `run_typed_pipeline` now returns `TypedPipelineRun { code, executed_passes }`, sourcing the inventory from `PipelineOutput::execution_order`; both parallel constants and the `will_rename_properties` mirror of the gating decision are deleted. Verified end to end: SIMPLE no longer reports `inline`, ADVANCED still does. Two further findings fell out. First, the constants were concealing a **second** lie: the scheduler does not execute in registration order at all, because `topo_sort`'s `ready` FIFO schedules every dependency-free pass ahead of every dependent one, so `rename` (registered 8th) runs 2nd — logged as CCR-063 ([#15829](https://github.com/adhithyan15/coding-adventures/issues/15829)). Second, removing the constants exposed that the doc comment for `transform_source_with_cv` had been orphaned onto `SIMPLE_PASS_NAMES`, leaving the public function undocumented; re-homed in the same change. | Keep CCR-041 selected through publication and merge. Rank CCR-063 at 5.3, immediately after it: it is a live ordering defect in a shared crate that the golden corpus currently masks only because the pipeline sweeps to a fixed point, and CCR-041's order pin is the test that will prove the fix. It does not outrank CCR-041, which is already implemented. |
-| 2026-09-21 | User direction clarified the provenance goal: not a run-level list of pass names, but the ability to take any piece of code and see every pass that affected it and where it moved or inlined to. Audit against that bar found the blocking link — `javascript-parser/src/bridge.rs` writes `cv: None` 117 times and `cv: Some` zero times, so no AST node carries an identity to attach lineage to; pass contributions attach to the program root; only `constant-fold` records lineage; and there is no edge vocabulary for moved/inlined-into/merged/renamed/deleted. Logged as epic CCR-065 ([#15830](https://github.com/adhithyan15/coding-adventures/issues/15830)). User also requested a TypeScript/JS pass-authoring API, logged as CCR-064 ([#15831](https://github.com/adhithyan15/coding-adventures/issues/15831)). | Ranked CCR-065 at 7.1, beside CCR-007, because both need one shared span representation and building them apart would mean building it twice. Ranked CCR-064 at 43: it is capability expansion rather than parity or correctness, but its spec slice is cheap and should be designed jointly with CCR-065, since the AST transfer format and a JS pass's provenance obligations constrain each other. |
-| 2026-09-21 | CCR-041 merged as [#15836](https://github.com/adhithyan15/coding-adventures/pull/15836) at `bf6db206` after all checks passed. Security review took two rounds: a MEDIUM (predictable temp-dir path in the new test, regressing the convention already documented in `tests/conformance.rs`) and a LOW (`unwrap_or_default()` on the provenance field would emit an exit-0 sidecar claiming zero passes ran) were both fixed before merge. One CI failure en route, self-inflicted: the new lesson shard used `##` sub-headings, which the render demotes to `###` and counts as lesson titles. | Selected CCR-066, the differential complexity ladder ([#15837](https://github.com/adhithyan15/coding-adventures/issues/15837)). It outranks every remaining semantic item because it is the instrument by which they are judged: the 462-fixture corpus reports 100% agreement while a 52-rung ladder finds 21 disagreements at SIMPLE and 39 at ADVANCED. Until the ladder exists, no other item's completion can be trusted. |
-| 2026-09-21 | Real differential runs became possible: the pinned oracle JAR downloads from Maven Central and verifies against the manifest's SHA-256 and byte length exactly, and Java 21 is present. Measured agreement: WHITESPACE_ONLY 49/52, SIMPLE 31/52, ADVANCED 13/52. Six hard failures at SIMPLE where upstream compiles and we exit 1 — two of them (a class with a method after its constructor, an object getter/setter) were untracked by any CCR item. Logged the ADVANCED literal-propagation gap as CCR-068. | Recorded the measured gradient in the truthfulness section, replacing the prose estimate. Ranked CCR-068 at 19.5 as the largest single ADVANCED contributor. Deliberately did **not** raise CCR-010 (destructuring) or CCR-011 (async): both die in `bridge.rs`, which the ESTree migration eliminates, so implementing them now means doing the work twice. |
-| 2026-09-21 | Owner set direction on architecture: adopt ESTree — **base ESTree as the canonical serialized boundary**, with Babel's dialect supplied as a converter over it rather than as a second canonical format — our own types, no external AST crate; match Closure on **observable output**, not on internal pass structure or ordering; eliminate `serde` and adopt the in-repo regex engine. Audit found `javascript-ast` has already independently made the Babel-shaped choices for literals and optional chaining, and that `regex` reaches `closurec` through exactly one crate with three call sites. | Added CCR-067 (ESTree migration) at 5.5 and a new P5 dependency-elimination track at 44-47. The dialect choice settled on base ESTree after an intermediate position favouring Babel was withdrawn: the argument for Babel (Rust cannot express ESTree's polymorphic `Literal.value`, so the split is forced) is a fact about the *internal* representation, not the boundary, which serializes to JSON where a polymorphic value is natural. Since either dialect is one mechanical converter from the other, the canonical format should be the standard rather than a single project's dialect. explicitly ranked below all Closure delivery work and designated CI-wait filler. Downgraded [#15842](https://github.com/adhithyan15/coding-adventures/issues/15842) (normalization) from prerequisite to optional technique: it was argued from Closure's internal construction, which the byte-identical-output bar does not oblige us to reproduce. |
-| 2026-09-21 | CCR-066's first slice merged as [#15849](https://github.com/adhithyan15/coding-adventures/pull/15849) at `95ff7908`, together with the renumbering of ten CCR IDs that had collided with existing issues. Tiers 4-5 then added 36 more rungs: 22 agree, 14 diverge. The 14 fall into five causes, three of which had no issue: the emitter places a statement terminator inside a block-terminated `switch`/`try` rather than after it (CCR-073, [#15854](https://github.com/adhithyan15/coding-adventures/issues/15854)); the `while`-to-`for` rewrite runs but does not hoist the initializer, making output longer than before the transform (CCR-074, [#15855](https://github.com/adhithyan15/coding-adventures/issues/15855)); and renaming skips loop-header locals, catch parameters and labels, which is the long-standing CCR-022 and now has an issue ([#15856](https://github.com/adhithyan15/coding-adventures/issues/15856)). The other two causes are CCR-068 value propagation and, on one rung, both CCR-022 and CCR-073 at once. | Keep CCR-066 selected through tiers 6-7. The tier-4/5 evidence sharpens the ADVANCED picture: seven of the fourteen divergences are single-use value propagation, confirming CCR-068 as the largest single contributor and worth taking before the other optimizer work. CCR-073 is the cheapest item on the board — emitter punctuation, no semantics — but its blast radius across the 462 existing goldens is the real cost and should be measured before it is scheduled. |
-| 2026-09-21 | CCR-066 completed. Tiers 6-7 added 75 rungs; the ladder is now the full 52 rungs as 156 fixtures and reproduces the ad-hoc survey exactly: WHITESPACE_ONLY 49/52, SIMPLE 31/52, ADVANCED 13/52. Of 43 new divergences, 14 are hard failures where closurec refuses valid JavaScript upstream compiles (seven rungs at two levels each; four die in `bridge.rs`), 26 are byte differences, and 3 are a category the ladder did not previously model: **upstream declines and we succeed**. Closure v20260915 does not implement private class elements at any level. Four new issues: CCR-075 policy for input Closure refuses ([#15860](https://github.com/adhithyan15/coding-adventures/issues/15860)), CCR-076 brace dropping ([#15861](https://github.com/adhithyan15/coding-adventures/issues/15861)), CCR-077 emitter spacing ([#15862](https://github.com/adhithyan15/coding-adventures/issues/15862)), CCR-078 propagating a const at SIMPLE where upstream does not ([#15863](https://github.com/adhithyan15/coding-adventures/issues/15863)). | CCR-066 is complete; the measurement instrument exists and is CI-gated, so every later item can now be judged against it rather than asserted. Two findings change what should come next. CCR-078 is the only place anywhere on the ladder where closurec optimizes MORE than the oracle at the same level, and that direction is riskier than being behind: output nothing has validated, in a corpus that cannot catch it. It should be settled before it is assumed to be a win. CCR-075 needs an owner decision rather than engineering, and the answer changes whether three rungs are gaps or permanent intentional divergences. Of the pure engineering items, CCR-073 remains the cheapest with a blast radius now measured at three unverified fixtures, and CCR-068 remains the largest single contributor to the ADVANCED result. |
-
-## Parallelization
-
-The loop is serialized on CI, not on thinking, so a second item can proceed
-while a PR is in flight. Two constraints bound what may run concurrently:
-
-1. **One active shared-crate PR.** Prioritization rule 6. `cli-builder`,
-   `closure-pass-pipeline`, `javascript-ast`, and `javascript-parser` are on
-   every pass's critical path; two concurrent PRs touching one of them will
-   conflict semantically even when git merges them cleanly.
-2. **This file is a conflict hotspot.** Every item updates the queue and the
-   loop record, so two concurrent Closure PRs both edit
-   `CLOSURE-COMPILER-RUST-BACKLOG.md` and collide — the same additive-merge
-   failure that forced `lessons.md` to shard into `lessons.d/`. Until it is
-   sharded, keep the durable state in the linked GitHub issues, which are the
-   source other agents should resume from, and treat the table row as a
-   pointer rather than the record.
-
-Currently safe to run alongside an in-flight `closurec` PR, because they touch
-disjoint trees:
-
-| Item | Touches | Conflicts with |
-|---|---|---|
-| CCR-072 (audit hash projection) | `tests/cli_surface_support/` | a `cli.spec.json` change |
-| CCR-069 step 1 (JSON byte-compat harness) | new test files only | nothing in flight |
-| CCR-070 survey (grammar pattern sweep) | read-only measurement | nothing |
-| CCR-067 spec (ESTree dialect) | `code/specs/` only | nothing in flight |
-| CCR-037 (upstream coverage ledger) | new files under `tests/` | nothing in flight |
-
-Not safe to run alongside a `closurec` PR: CCR-006 (same CLI registry and
-`run.rs`), CCR-063 (shared `closure-pass-pipeline`, and CCR-041's order pin
-moves with it), and any two items that both edit this file — which remains the
-hotspot described above until it is sharded.
-
-
-## Backfilled index — CCR-044 – CCR-062, plus CCR-015A
-
-These twenty items existed only as issues until 2026-09-21 — the nineteen in
-CCR-044 – CCR-062, and CCR-015A, which had been named in prose but never had a
-row. They are indexed here so every allocated ID appears in this file.
-
-**Their acceptance evidence is deliberately not duplicated.** Every one of these
-issues already states an Objective, pinned oracle evidence, the upstream
-contract, the local root cause, required behaviour and acceptance evidence, in
-more detail than a table cell holds. Copying a summary of criteria without
-re-deriving each one is how a spec drifts from the issue it claims to mirror —
-so the issue is the source of truth for detail and this table is an index to it.
-The descriptions below are the issues' own titles. Two rows — CCR-058 and
-CCR-062 — append a dependency sentence taken from their issue's own
-"Dependencies and priority" section, because those dependencies decide where
-they can sit in the queue; nothing else is added anywhere.
-
-| ID | Work item | Issue |
-|---|---|---|
-| CCR-044 | Make `checks_only` parse `WHITESPACE_ONLY` and `TRANSPILE_ONLY` inputs. | [#15632](https://github.com/adhithyan15/coding-adventures/issues/15632) |
-| CCR-045 | Compile raw JavaScript from stdin instead of printing the identity banner. | [#15638](https://github.com/adhithyan15/coding-adventures/issues/15638) |
-| CCR-046 | Honor `--charset` for input and output bytes. | [#15673](https://github.com/adhithyan15/coding-adventures/issues/15673) |
-| CCR-047 | Audit Java charset provider and alias parity. | [#15683](https://github.com/adhithyan15/coding-adventures/issues/15683) |
-| CCR-048 | Implement `browser_featureset_year` validation and define semantics. | [#15693](https://github.com/adhithyan15/coding-adventures/issues/15693) |
-| CCR-049 | Honor `env` built-in extern selection. | [#15703](https://github.com/adhithyan15/coding-adventures/issues/15703) |
-| CCR-050 | Compile jszip archive sources instead of dropping them. | [#15704](https://github.com/adhithyan15/coding-adventures/issues/15704) |
-| CCR-051 | Expand flagfile arguments instead of silently discarding them. | [#15705](https://github.com/adhithyan15/coding-adventures/issues/15705) |
-| CCR-052 | Enforce `strict_mode_input` semantics. | [#15710](https://github.com/adhithyan15/coding-adventures/issues/15710) |
-| CCR-053 | Preserve `debugger` statements through DCE. | [#15717](https://github.com/adhithyan15/coding-adventures/issues/15717) |
-| CCR-015A | Validate diagnostic groups and compose warning guards. | [#15724](https://github.com/adhithyan15/coding-adventures/issues/15724) |
-| CCR-054 | Implement `assume_function_wrapper` optimization policy. | [#15726](https://github.com/adhithyan15/coding-adventures/issues/15726) |
-| CCR-055 | Honor `rename_variable_prefix` during variable renaming. | [#15731](https://github.com/adhithyan15/coding-adventures/issues/15731) |
-| CCR-056 | Implement the upstream `--debug` option bundle. | [#15732](https://github.com/adhithyan15/coding-adventures/issues/15732) |
-| CCR-057 | Emit real AST trees for `print_ast` and `print_tree` modes. | [#15733](https://github.com/adhithyan15/coding-adventures/issues/15733) |
-| CCR-058 | Implement `print_source_after_each_pass` tracing. Should consume the scheduler-derived pass inventory from CCR-041 rather than introducing another parallel list. | [#15734](https://github.com/adhithyan15/coding-adventures/issues/15734) |
-| CCR-059 | Preserve type annotations when requested. | [#15735](https://github.com/adhithyan15/coding-adventures/issues/15735) |
-| CCR-060 | Verify expected diagnostics and fail on mismatches. | [#15737](https://github.com/adhithyan15/coding-adventures/issues/15737) |
-| CCR-061 | Audit CLI value domains, defaults, and repeatability. | [#15738](https://github.com/adhithyan15/coding-adventures/issues/15738) |
-| CCR-062 | Implement `GENERATE_IJS` incremental interface mode. Depends on CCR-014, CCR-028/CCR-049 and CCR-059; module fidelity intersects CCR-025. | [#15739](https://github.com/adhithyan15/coding-adventures/issues/15739) |
-
-Priority: these sit below the parity and correctness work in P0–P2. Most are
-flags that parse and are then ignored, which is the "successful but weaker
-fallback" failure mode ranked second in the priority rules above — a flag that
-is accepted and silently does nothing is worse than one that is rejected.
-CCR-053 and CCR-060 are the two that touch observable compile output rather
-than flag plumbing, and rank highest of this group.
-
-## Findings from the 2026-09-21 parity session
-
-| ID | Work item | Issue |
-|---|---|---|
-| CCR-079 | The ladder's divergence ledger is trusted input to the gate that reads it. Four review rounds each found the same defect one level up, because every fix added a self-declared field. Derive the ledger from captured oracle runs instead of validating hand-written values. | [#15866](https://github.com/adhithyan15/coding-adventures/issues/15866) |
-| CCR-080 | The token-only `WHITESPACE_ONLY` path drops the program-final terminator after `do…while`. Must not be fixed by porting CCR-073's "ends with `}`" byte test — that output ends in `)`. | [#15867](https://github.com/adhithyan15/coding-adventures/issues/15867) |
-| CCR-081 | The `non-minify-unverified-stdout` set was 138 fixtures dispositioned `upstream_golden`. After completing the nine incomplete invocations on 2026-09-23 the partition was **63 matched / 67 differed / 8 refused** (63+67+8=138). **Partly resolved the same day:** twelve fixtures moved to `non-minify-upstream-refuses-v20260915` under the new `upstream_refuses` disposition, backed by a captured evidence artifact — the 8 refusals, plus the four module fixtures (`simple-export`, `simple-import`, `simple-importexpr`, `simple-importmeta`) that were counted as divergences after their invocations were completed but that still refuse under their own `flags.txt`. That leaves **126**, which partitions two ways depending on how the five
-`advanced-*` fixtures are invoked: **63 matching + 63 diverging** counting them with
-the externs their invocations need, or **62 / 59 / 5 refusing** running each fixture
-under its own `flags.txt` (measured 2026-09-23). The five refuse as invoked and so
-satisfy the `upstream_refuses` predicate while sitting in this set — see #15868. The 63 divergences are still mislabelled and are the remaining work. | [#15868](https://github.com/adhithyan15/coding-adventures/issues/15868) |
-| CCR-082 | `closure-pass-dce` does not treat `continue` as a terminator, so a dead tail after it is never truncated and a loop body upstream empties survives intact. Pre-existing; surfaced by CCR-053. Upstream **hoists** a `var` out of the dead tail, so a naive truncation would be a miscompile. | [#15878](https://github.com/adhithyan15/coding-adventures/issues/15878) |
-| CCR-083 | Upstream brace-wraps a `do…while` used as the body of `if`/`else`/`while`/`for`/`for-in`/`for-of`/`with`; we emit it bare. Seven positions, all at `WHITESPACE_ONLY`. Compounds with CCR-080 on the same inputs and should land with it. | [#15918](https://github.com/adhithyan15/coding-adventures/issues/15918) |
-| CCR-084 | Upstream keeps the `;` on a block-final `throw` — the one statement kind it does not compact — and our gap-030 suppression drops it, even when the source wrote it. Confirmed at `WHITESPACE_ONLY` and at SIMPLE. | [#15919](https://github.com/adhithyan15/coding-adventures/issues/15919) |
-| CCR-085 | We keep `"use strict"`; upstream strips it unless `--emit_use_strict`, and re-emits it single-quoted. Needs a recorded **decision** on our default, not just a patch: upstream's default actively removes a directive, which can flip a program from strict to sloppy mode. Mechanism behind the `emit-use-strict` divergence CCR-081 found. | [#15920](https://github.com/adhithyan15/coding-adventures/issues/15920) |
-| CCR-086 | `dce_program` has no dead-tail truncation at all, so code after a top-level `throw` survives; a braced `{ … }` is flattened to program level before block-level truncation could reach it. Pre-existing sibling of CCR-082; surfaced by CCR-053. | [#15923](https://github.com/adhithyan15/coding-adventures/issues/15923) |
-| CCR-087 | Upstream unwraps a single-statement block under a label (`lbl:{a()}` → `lbl:a();`, `lbl:{}` → `lbl:;`); we keep the braces. Label-specific — a bare `{a()}` is not unwrapped by either side. Lowest of the CCR-080 spin-offs. | [#15924](https://github.com/adhithyan15/coding-adventures/issues/15924) |
-| CCR-088 | Single-statement substatement blocks are unwrapped only when the statement is an expression statement; `var`, `let`, `debugger`, `throw`, `return` and function declarations keep their braces where upstream drops them. The unwrap machinery exists and works — likely a missing match arm. `while(c){function g(){}}` additionally rewrites the declaration to a parenthesised expression and wants checking first. | [#15925](https://github.com/adhithyan15/coding-adventures/issues/15925) |
-| CCR-089 | The `upstream_refuses` evidence artifact was captured on OpenJDK 21.0.10 while the manifest pins — and `oracle_manifest` hard-asserts — 21.0.12. The deviation is declared in the artifact and enforced in both directions by the validator, so it cannot go unremarked; recapture on the pinned JVM to clear it. Also worth deciding once whether the pin or the practice should move, since every oracle probe recorded since the pin was set carries the same caveat unenforced. | [#15935](https://github.com/adhithyan15/coding-adventures/issues/15935) |
-
-CCR-081's sweep also enlarges CCR-075's decision surface: **eight** fixtures are
-inputs upstream genuinely refuses while `closurec` compiles them, not the three
-ladder rungs that issue was filed on. Two of the eight are `JSC_PARSE_ERROR`
-(a top-level `return`, and `new.target` outside a function) — accepting invalid
-syntax is a narrower front-end question that can be settled without waiting on
-the policy decision.
-
-Completing the nine "incomplete invocations" on 2026-09-23 added **three more**
-to that pile. `simple-import`, `simple-export` and `simple-importexpr` have
-goldens that preserve ES-module syntax verbatim (`import{a,b as c}from"y";a(3);`).
-Upstream never emits that: an unresolvable bare specifier is refused, and a
-resolvable one is rewritten (`1(3);export{};`). No invocation produces the
-golden, so the `upstream_golden` disposition is **unachievable** for them rather
-than merely unverified — the same class as the eight refusals, not the 67
-divergences.
-
-**Resolved 2026-09-23.** Those fixtures now carry a new disposition,
-`upstream_refuses`, in the set `non-minify-upstream-refuses-v20260915`; the
-source set drops to 126 and the 797 total is unchanged. The cohort is **twelve,
-not eleven** — `simple-importmeta` was filed under "completable by a flag"
-because `--chunk_output_type=ES_MODULES` does make upstream compile it, but it
-still refuses under its own recorded invocation, which is what the disposition
-records. The evidence is captured by `code/scripts/capture-upstream-refusals.sh`
-into `tests/oracle/upstream-refusals-v20260915.json` and cross-checked by
-`oracle_manifest`; the recorded predicate is the narrow, re-runnable "refuses as
-invoked", not the hand-searched "no invocation could ever produce this", which
-stays on the issue where it can be argued with.
+| Date | Event |
+|---|---|
+| 2026-10-19 | Backlog reset. #17288 closed; lexer intervals salvaged as #17803. Provenance is no longer a gate. Next: #16008. |

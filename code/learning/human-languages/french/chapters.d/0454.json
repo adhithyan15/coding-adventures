@@ -1,0 +1,19 @@
+{
+  "chapter": 454,
+  "title": "Le relief",
+  "label": "ch:fr-le-relief",
+  "canDo": "I can describe high ground: the cliff, the plateau, the summit, the mountain pass and the side of a mountain.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C454-versant",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 454: I can describe high ground: the cliff, the plateau, the summit, the mountain pass and the side of a mountain.",
+    "assesses": [
+      "FR-LEX-C454-RELIEF-03",
+      "FR-LEX-C454-RELIEF-04",
+      "FR-LEX-C454-RELIEF-05"
+    ]
+  }
+}

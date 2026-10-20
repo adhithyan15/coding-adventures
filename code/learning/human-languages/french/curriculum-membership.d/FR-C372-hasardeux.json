@@ -1,0 +1,11 @@
+{
+  "id": "FR-C372-hasardeux",
+  "pathSegment": "FR-PATH-372-RISQUE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-372-RISQUE",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C331-gratiner",
+  "pathSegment": "FR-PATH-331-FOUR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-331-FOUR",
+      "order": 4
+    }
+  ]
+}

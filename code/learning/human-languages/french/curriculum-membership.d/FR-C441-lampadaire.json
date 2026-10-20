@@ -1,0 +1,11 @@
+{
+  "id": "FR-C441-lampadaire",
+  "pathSegment": "FR-PATH-441-MOBILIER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-441-MOBILIER",
+      "order": 1
+    }
+  ]
+}

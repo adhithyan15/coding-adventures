@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-429-AMPOULE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-429-AMPOULE"
+  ],
+  "after": []
+}

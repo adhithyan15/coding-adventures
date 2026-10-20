@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "french",
+  "chapter": 381,
+  "title": "Permis ou non",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:b9375e29cd92edb8",
+  "lessons": [
+    {
+      "id": "FR-C381-autoriser",
+      "sequence": 21300,
+      "title": "autoriser — to authorise, to allow",
+      "headword": "autoriser",
+      "romanization": "autoriser",
+      "gloss": "to authorise, to allow",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9e0d2327585e8ad6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for optional, then the French for the obligation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: autoriser",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "autoriser — \"to authorise, to allow\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Les chiens ne sont pas autorisés dans le magasin. Dogs are not allowed in the shop."
+            },
+            {
+              "kind": "speech",
+              "text": "Autoriser quelqu'un à + infinitive."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "autoriser comes from Old French auctorisier (EtymDB), from Medieval Latin auctōrizāre, built on auctor \"author, guarantor\", from augēre \"to increase\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "autoriser",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *autoriser*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "autoriser, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *autoriser*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with autoriser",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *autoriser*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for optional, then the French for the obligation, then say autoriser again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for optional, then the French for the obligation, then say *autoriser* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does autoriser mean? (\"To authorise, to allow\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C381-autorisation",
+      "sequence": 21310,
+      "title": "l'autorisation — the authorisation, the permission",
+      "headword": "l'autorisation",
+      "romanization": "l'autorisation",
+      "gloss": "the authorisation, the permission",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cfada9019364cda4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the obligation, then the French for to authorise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: l'autorisation",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "l'autorisation — \"the authorisation, the permission\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Il faut une autorisation pour filmer ici. You need permission to film here."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine. Close to la permission, but more official."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "autorisation is built from autoriser and -ation. The verb rests on Latin auctor \"author, guarantor\", from augēre \"to increase\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'autorisation",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'autorisation*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'autorisation, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'autorisation*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with l'autorisation",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *l'autorisation*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the obligation, then the French for to authorise, then say l'autorisation again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the obligation, then the French for to authorise, then say *l'autorisation* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does l'autorisation mean? (\"The authorisation, the permission\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C381-tolerer",
+      "sequence": 21320,
+      "title": "tolérer — to tolerate, to put up with",
+      "headword": "tolérer",
+      "romanization": "tolérer",
+      "gloss": "to tolerate, to put up with",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a1502f97e4251ca4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for to authorise, then the French for the authorisation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: tolérer",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tolérer — \"to tolerate, to put up with\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Le professeur ne tolère pas les retards. The teacher does not tolerate lateness."
+            },
+            {
+              "kind": "speech",
+              "text": "Je tolère, with è before a silent ending."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tolérer is a learned borrowing from Latin tolerāre \"to bear, to endure\" (EtymDB; Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tolérer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tolérer*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tolérer, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tolérer*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with tolérer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *tolérer*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for to authorise, then the French for the authorisation, then say tolérer again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for to authorise, then the French for the authorisation, then say *tolérer* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does tolérer mean? (\"To tolerate, to put up with\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C381-tolerance",
+      "sequence": 21330,
+      "title": "la tolérance — the tolerance",
+      "headword": "la tolérance",
+      "romanization": "la tolérance",
+      "gloss": "the tolerance",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a09d284ef265691e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the authorisation, then the French for to tolerate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la tolérance",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la tolérance — \"the tolerance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Il faut un peu de tolérance pour vivre ensemble. Living together takes a bit of tolerance."
+            },
+            {
+              "kind": "speech",
+              "text": "Tolérance zéro — zero tolerance."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tolérance is a learned borrowing from Latin tolerantia \"endurance, bearing\" (Lewis & Short), from tolerāre \"to bear\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la tolérance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la tolérance*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la tolérance, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la tolérance*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la tolérance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la tolérance*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the authorisation, then the French for to tolerate, then say la tolérance again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the authorisation, then the French for to tolerate, then say *la tolérance* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la tolérance mean? (\"The tolerance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C381-exiger",
+      "sequence": 21340,
+      "title": "exiger — to demand, to require",
+      "headword": "exiger",
+      "romanization": "exiger",
+      "gloss": "to demand, to require",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7f11369c6fdeee0b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for to tolerate, then the French for the tolerance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: exiger",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "exiger — \"to demand, to require\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Le patron exige beaucoup de ses salariés. The boss demands a lot of his employees."
+            },
+            {
+              "kind": "speech",
+              "text": "Exiger que takes the subjunctive. Nous exigeons."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "exiger is a learned borrowing from Latin exigere \"to drive out, to demand\" (Lewis & Short), built from ex \"out\" and agere \"to drive\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "exiger",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *exiger*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "exiger, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *exiger*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with exiger",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *exiger*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for to tolerate, then the French for the tolerance, then say exiger again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for to tolerate, then the French for the tolerance, then say *exiger* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does exiger mean? (\"To demand, to require\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-R381-revision-374-381",
+      "sequence": 21350,
+      "title": "Retour sur les chapitres 374–381",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 374-381",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b59f30e21637da8c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the French for the aim and the intention."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the aim, the intention, the objective, the resolution, to aim",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the aim, the intention, the objective, the resolution, to aim]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the secondary school, the secondary-school pupil, to attend, the school report, the head teacher",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the secondary school, the secondary-school pupil, to attend, the school report, the head teacher]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the faculty, to enrol, the registration, the semester, the lecture hall",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the faculty, to enrol, the registration, the semester, the lecture hall]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to revise, the revision, to memorise, by heart, the textbook",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to revise, the revision, to memorise, by heart, the textbook]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to fail, to repeat a year, the competitive exam, the average, the resit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to fail, to repeat a year, the competitive exam, the average, the resit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the diploma, the test, the distinction, the doctorate, the grant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the diploma, the test, the distinction, the doctorate, the grant]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the norm, the regulations, compulsory, optional, the obligation",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the norm, the regulations, compulsory, optional, the obligation]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to authorise, the authorisation, to tolerate, the tolerance, to demand",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to authorise, the authorisation, to tolerate, the tolerance, to demand]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The aim? (le but.) The intention? (l'intention.) The objective? (l'objectif.) The resolution? (la résolution.) To aim? (viser.) The secondary school? (le lycée.) The secondary-school pupil? (le lycéen.) To attend? (fréquenter.) The school report? (le bulletin.) The head teacher? (le proviseur.) The faculty? (la faculté.) To enrol? (inscrire.) The registration? (l'inscription.) The semester? (le semestre.) The lecture hall? (l'amphithéâtre.) To revise? (réviser.) The revision? (la révision.) To memorise? (mémoriser.) By heart? (par cœur.) The textbook? (le manuel.) To fail? (échouer.) To repeat a year? (redoubler.) The competitive exam? (le concours.) The average? (la moyenne.) The resit? (le rattrapage.) The diploma? (le diplôme.) The test? (l'épreuve.) The distinction? (la mention.) The doctorate? (le doctorat.) The grant? (la bourse.) The norm? (la norme.) The regulations? (le règlement.) Compulsory? (obligatoire.) Optional? (facultatif.) The obligation? (l'obligation.) To authorise? (autoriser.) The authorisation? (l'autorisation.) To tolerate? (tolérer.) The tolerance? (la tolérance.) To demand? (exiger.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

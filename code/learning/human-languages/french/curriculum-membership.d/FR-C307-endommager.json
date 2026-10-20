@@ -1,0 +1,11 @@
+{
+  "id": "FR-C307-endommager",
+  "pathSegment": "FR-PATH-307-DEGATS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-307-DEGATS",
+      "order": 1
+    }
+  ]
+}

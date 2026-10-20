@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 270,
+  "sourceHash": "fnv1a64:d4d6ea9e9efcbec1",
+  "lessonIds": [
+    "FR-C270-tout-a-coup",
+    "FR-C270-subitement",
+    "FR-C270-brusquement",
+    "FR-C270-sur-le-coup",
+    "FR-C270-dans-la-foulee"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch270.txt",
+  "json": "french/narration/ch270.json",
+  "textHash": "fnv1a64:f4293a20daf6bf54",
+  "jsonHash": "fnv1a64:ec5bb160e5ceb413",
+  "findings": []
+}

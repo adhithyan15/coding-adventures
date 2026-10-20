@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C379-bourse",
+    "language": "french",
+    "chapter": 379,
+    "sequence": 21240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e04975e1212e8e2d"
+  },
+  "findings": []
+}

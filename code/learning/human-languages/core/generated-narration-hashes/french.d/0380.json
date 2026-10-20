@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 380,
+  "sourceHash": "fnv1a64:9d60fbc70c9b7aea",
+  "lessonIds": [
+    "FR-C380-norme",
+    "FR-C380-reglement",
+    "FR-C380-obligatoire",
+    "FR-C380-facultatif",
+    "FR-C380-obligation"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch380.txt",
+  "json": "french/narration/ch380.json",
+  "textHash": "fnv1a64:df2ac604a1cc9873",
+  "jsonHash": "fnv1a64:3632a6fc85922d7c",
+  "findings": []
+}

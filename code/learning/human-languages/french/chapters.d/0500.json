@@ -1,0 +1,19 @@
+{
+  "chapter": 500,
+  "title": "Cartes et paris",
+  "label": "ch:fr-cartes-et-paris",
+  "canDo": "I can talk about card games and betting.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C500-hasard",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 500: I can talk about card games and betting.",
+    "assesses": [
+      "FR-LEX-C500-CARTES-03",
+      "FR-LEX-C500-CARTES-04",
+      "FR-LEX-C500-CARTES-05"
+    ]
+  }
+}

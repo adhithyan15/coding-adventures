@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-R439-revision-432-439",
+    "language": "french",
+    "chapter": 439,
+    "sequence": 24340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:06a092760eb641fd"
+  },
+  "findings": []
+}

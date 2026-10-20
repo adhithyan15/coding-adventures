@@ -1,0 +1,11 @@
+{
+  "id": "FR-C439-remparts",
+  "pathSegment": "FR-PATH-439-CLOCHERS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-439-CLOCHERS",
+      "order": 4
+    }
+  ]
+}

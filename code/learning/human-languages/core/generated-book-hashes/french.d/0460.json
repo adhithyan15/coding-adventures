@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 460,
+  "sourceHash": "fnv1a64:8ec989ad3a6eee0e",
+  "lessonIds": [
+    "FR-C460-meteo",
+    "FR-C460-previsions",
+    "FR-C460-nuageux",
+    "FR-C460-ensoleille",
+    "FR-C460-thermometre"
+  ],
+  "tex": "french/book/chapters/ch460-le-bulletin-meteo.tex"
+}

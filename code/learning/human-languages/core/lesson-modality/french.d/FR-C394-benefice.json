@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C394-benefice",
+    "language": "french",
+    "chapter": 394,
+    "sequence": 21970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4b718ae0b779928a"
+  },
+  "findings": []
+}

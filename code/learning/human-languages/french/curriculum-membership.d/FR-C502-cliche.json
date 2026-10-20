@@ -1,0 +1,11 @@
+{
+  "id": "FR-C502-cliche",
+  "pathSegment": "FR-PATH-502-PHOTO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-502-PHOTO",
+      "order": 2
+    }
+  ]
+}

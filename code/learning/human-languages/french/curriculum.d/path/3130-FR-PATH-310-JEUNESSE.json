@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-310-JEUNESSE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-310-JEUNESSE"
+  ],
+  "after": []
+}

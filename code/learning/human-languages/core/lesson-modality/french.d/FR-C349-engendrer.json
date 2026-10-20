@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C349-engendrer",
+    "language": "french",
+    "chapter": 349,
+    "sequence": 19700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ecc9d651dd3af7b1"
+  },
+  "findings": []
+}

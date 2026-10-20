@@ -1,0 +1,19 @@
+{
+  "chapter": 434,
+  "title": "Trouver son chemin",
+  "label": "ch:fr-trouver-son-chemin",
+  "canDo": "I can find my bearings: getting oriented, the compass, spotting a landmark, the landmark itself and getting lost.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C434-egarer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 434: I can find my bearings: getting oriented, the compass, spotting a landmark, the landmark itself and getting lost.",
+    "assesses": [
+      "FR-LEX-C434-ORIENTER-03",
+      "FR-LEX-C434-ORIENTER-04",
+      "FR-LEX-C434-ORIENTER-05"
+    ]
+  }
+}

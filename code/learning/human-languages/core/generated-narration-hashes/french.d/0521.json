@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:f617b0aa4256ef5b",
+  "lessonIds": [
+    "FR-C521-lecteur",
+    "FR-C521-narrateur",
+    "FR-C521-heros",
+    "FR-C521-dedicace",
+    "FR-C521-dedicacer",
+    "FR-R521-revision-514-521"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch521.txt",
+  "json": "french/narration/ch521.json",
+  "textHash": "fnv1a64:fc5255861adf6eda",
+  "jsonHash": "fnv1a64:c60fca0d7aa6753b",
+  "findings": []
+}

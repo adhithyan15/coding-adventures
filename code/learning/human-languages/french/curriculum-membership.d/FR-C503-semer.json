@@ -1,0 +1,11 @@
+{
+  "id": "FR-C503-semer",
+  "pathSegment": "FR-PATH-503-JARDIN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-503-JARDIN",
+      "order": 2
+    }
+  ]
+}

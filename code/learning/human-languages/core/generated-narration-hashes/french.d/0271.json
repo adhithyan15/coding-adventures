@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 271,
+  "sourceHash": "fnv1a64:f72840a83c3ec9c6",
+  "lessonIds": [
+    "FR-C271-peu-a-peu",
+    "FR-C271-progressivement",
+    "FR-C271-au-fur-et-a-mesure",
+    "FR-C271-a-la-longue",
+    "FR-C271-tot-ou-tard"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch271.txt",
+  "json": "french/narration/ch271.json",
+  "textHash": "fnv1a64:94a8c282ca3faa3f",
+  "jsonHash": "fnv1a64:d0f21f55c2544f3a",
+  "findings": []
+}

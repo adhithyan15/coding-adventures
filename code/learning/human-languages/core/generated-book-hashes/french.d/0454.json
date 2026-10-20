@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 454,
+  "sourceHash": "fnv1a64:df7d825cb4d187f0",
+  "lessonIds": [
+    "FR-C454-falaise",
+    "FR-C454-plateau",
+    "FR-C454-sommet",
+    "FR-C454-col",
+    "FR-C454-versant"
+  ],
+  "tex": "french/book/chapters/ch454-le-relief.tex"
+}

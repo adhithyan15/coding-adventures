@@ -1,0 +1,11 @@
+{
+  "id": "FR-C403-reservoir",
+  "pathSegment": "FR-PATH-403-POMPE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-403-POMPE",
+      "order": 3
+    }
+  ]
+}

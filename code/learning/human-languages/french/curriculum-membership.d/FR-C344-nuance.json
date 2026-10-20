@@ -1,0 +1,11 @@
+{
+  "id": "FR-C344-nuance",
+  "pathSegment": "FR-PATH-344-RAISONNEMENT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-344-RAISONNEMENT",
+      "order": 3
+    }
+  ]
+}

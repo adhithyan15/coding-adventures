@@ -1,0 +1,11 @@
+{
+  "id": "FR-C363-manifester",
+  "pathSegment": "FR-PATH-363-MANIFESTATION",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-363-MANIFESTATION",
+      "order": 1
+    }
+  ]
+}

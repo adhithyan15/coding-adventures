@@ -1,0 +1,11 @@
+{
+  "id": "FR-C333-rouleau-a-patisserie",
+  "pathSegment": "FR-PATH-333-PETRIR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-333-PETRIR",
+      "order": 2
+    }
+  ]
+}

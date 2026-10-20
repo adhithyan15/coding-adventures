@@ -1,0 +1,11 @@
+{
+  "id": "FR-C464-secheresse",
+  "pathSegment": "FR-PATH-464-CANICULE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-464-CANICULE",
+      "order": 1
+    }
+  ]
+}

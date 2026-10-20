@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C386-accuser",
+    "language": "french",
+    "chapter": 386,
+    "sequence": 21560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b5e44f45536d3b2c"
+  },
+  "findings": []
+}
