@@ -3,8 +3,10 @@
 ## [0.23.0] — 2026-10-20 (LANG83 PR6a — shortest round-trip float output)
 
 - **`write_f64_py` / `write_f64_js`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR6a): `call 2,
-  '__iir_write_f64'/2`, a local function emitted only when a module prints a
-  float. A module that prints none keeps byte-identical tables. Its digits come
+  '__iir_write_f64'/2`, a function emitted only when a module prints a
+  float. It is exported like every function this backend emits, because
+  `ir-to-beam` writes the Code chunk's function count as `exports.len()` and
+  the loader rejects extra `func_info`s (found by the security review). A module that prints none keeps byte-identical tables. Its digits come
   from `erlang:float_to_list(F, [short])` (OTP 25+, Ryu), re-parsed with
   `string:split`, `string:trim` and `list_to_integer`. It prints through
   `io:put_chars/1`. Values live in an initialised Y frame across every call,

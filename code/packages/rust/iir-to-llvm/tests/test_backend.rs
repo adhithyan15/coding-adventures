@@ -3747,3 +3747,10 @@ fn float_writers_match_python_and_javascript_on_real_clang() {
          5e-324 1.7976931348623157e+308 2.9802322387695312e-8 Infinity -Infinity NaN "
     );
 }
+
+#[test]
+fn a_module_function_in_the_reserved_iir_namespace_is_refused_when_floats_are_printed() {
+    let mut m = float_program("write_f64_js", &[1.0]);
+    m.functions.push(IIRFunction::new("__iir_f64_digits", vec![], "void", vec![IIRInstr::new("ret_void", None, vec![], "void")]));
+    assert!(lower_iir_to_llvm(&m, &IIRLlvmConfig::default()).is_err());
+}

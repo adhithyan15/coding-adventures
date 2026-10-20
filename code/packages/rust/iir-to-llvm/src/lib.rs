@@ -979,6 +979,19 @@ pub fn lower_iir_to_llvm(
             }
         }
     }
+    // LANG83 PR6a: the float writer's module-local definitions are all named
+    // `@__iir_*`; a module function with such a name would be a duplicate
+    // definition that clang rejects with a confusing error. Refuse it here.
+    if used_write_f64 {
+        if let Some(f) = module.functions.iter().find(|f| f.name.starts_with("__iir_")) {
+            return Err(IIRLlvmError::InvalidOperand {
+                function: f.name.clone(),
+                detail: "a module function may not use the reserved `__iir_` prefix of the \
+                         float writer's module-local definitions"
+                    .into(),
+            });
+        }
+    }
     if used_print_i64 {
         out.push('\n');
         out.push_str("declare void @__print_i64(i64)\n");

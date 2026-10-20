@@ -5510,6 +5510,10 @@ pub fn lower_iir_to_beam(
         lang83_f64::emit(b, mod_atom, &mut label_counter, &mut instrs).map_err(|op| {
             IIRBeamError::UnsupportedOp { function: "__iir_write_f64".into(), op }
         })?;
+        // Exported like every function this backend emits: `ir-to-beam`
+        // writes the Code chunk's function count as `exports.len()`, and the
+        // loader rejects a module with more `func_info`s than that count.
+        exports.push(BEAMExport { function_atom_index: b.fn_atom, arity: 2, label: b.entry_label });
     }
 
     instrs.push(BEAMInstruction::new(OP_INT_CODE_END, vec![]));
@@ -5553,7 +5557,9 @@ pub fn lower_iir_to_beam(
 // move  X -> x0;  move {i,0|1} -> x1;  call 2, '__iir_write_f64'/2
 // ```
 //
-// and a module that prints a float gets one extra LOCAL (unexported) function.
+// and a module that prints a float gets one extra function. It is exported,
+// like every function this backend emits, because the Code chunk's function
+// count is the export count.
 // OTP 25+'s `erlang:float_to_list(F, [short])` prints the SHORTEST decimal
 // that reads back as `F` (Ryu, round-half-even ties; CI runs OTP 27). The
 // function reads that string's digits `D` and decimal exponent `E` back out,

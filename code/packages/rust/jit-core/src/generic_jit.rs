@@ -135,6 +135,11 @@ pub(crate) mod opcode {
     /// `Value::Int(bits)`, which is why this is a separate opcode. Emitted only
     /// for `write_f64_py` / `write_f64_js`.
     pub const CALL_BUILTIN_F64: u8 = 0x51;
+    /// `PARAM_F64 <reg>` — LANG83 PR6a prologue for an `f64`-typed parameter:
+    /// argument `reg` must be a `Value::Float`, whose bits are stored in
+    /// `regs[reg]`. Anything else is a type mismatch and fails the call
+    /// closed (error slot), instead of coercing it.
+    pub const PARAM_F64: u8 = 0x52;
     pub const RET_I64:      u8 = 0x60;
     pub const RET_VOID:     u8 = 0x61;
     pub const RET_BOOL:     u8 = 0x62;
@@ -468,14 +473,9 @@ impl Backend for GenericCirJit {
         // walking off the fixed-size file — a defensive bound, never reached
         // in practice (a function cannot declare more than 256 registers).
         for (i, a) in args.iter().enumerate().take(regs.len()) {
-            regs[i] = match a {
-                // LANG83 PR6a: an `f64` argument rides its register as its bit
-                // pattern. The compiler only accepts an `f64`-typed parameter
-                // when its sole consumers are the float writers, which read
-                // the bits back with `f64::from_bits`.
-                Value::Float(f) => f.to_bits() as i64,
-                other => other.as_i64().unwrap_or(0),
-            };
+            // An `f64`-typed parameter is re-seeded by its `PARAM_F64`
+            // prologue instruction (LANG83 PR6a), which checks the type.
+            regs[i] = a.as_i64().unwrap_or(0);
         }
 
         let mut tape: Vec<u8> = if self.tape_size > 0 {
@@ -766,6 +766,23 @@ impl Backend for GenericCirJit {
                         regs[dst as usize] = n;
                     }
                 }
+                opcode::PARAM_F64 => {
+                    if pc + 1 > code.len() {
+                        self.set_error("malformed bytecode: truncated PARAM_F64");
+                        return Value::Null;
+                    }
+                    let reg = code[pc] as usize;
+                    pc += 1;
+                    match args.get(reg) {
+                        Some(Value::Float(f)) => regs[reg] = f.to_bits() as i64,
+                        other => {
+                            self.set_error(format!(
+                                "GenericCirJit: f64 parameter {reg} received {other:?}, not a float"
+                            ));
+                            return Value::Null;
+                        }
+                    }
+                }
                 opcode::CALL_BUILTIN_F64 => {
                     // [builtin_idx:u16_le, reg:u8]
                     if pc + 3 > code.len() {
@@ -928,11 +945,17 @@ fn compile_to_bytecode(
     // argument `i` to register `i`.  A duplicate parameter name (malformed
     // IR) or a function with more than 256 parameters makes the whole
     // function uncompilable — `run` would not be able to seed it consistently.
-    for (name, _ty) in params {
+    for (name, ty) in params {
         if reg_map.contains_key(name) {
             return None;
         }
-        lookup_or_alloc_var(name, &mut reg_map, &mut next_reg)?;
+        let reg = lookup_or_alloc_var(name, &mut reg_map, &mut next_reg)?;
+        // LANG83 PR6a: an `f64` parameter is loaded as its bits by a checked
+        // prologue instruction, never by the generic integer seeding.
+        if ty == "f64" {
+            code.push(opcode::PARAM_F64);
+            code.push(reg);
+        }
     }
 
     // Track which builtin names this function actually uses; we'll emit
@@ -1840,16 +1863,31 @@ mod tests {
         assert!(j.compile(&lit(CIROperand::Int(1))).is_none(), "an integer literal is not a float");
     }
 
-    /// An `f64` parameter arrives as `Value::Float` and is seeded as its bits.
+    /// An `f64` parameter arrives as `Value::Float` and its `PARAM_F64`
+    /// prologue loads the bits; any other value fails the call closed. A float
+    /// passed to an integer parameter is NOT reinterpreted (it stays 0, as
+    /// before PR6a).
     #[test]
-    fn f64_parameter_is_seeded_as_bits() {
+    fn f64_parameter_is_loaded_by_a_checked_prologue() {
         let cir = vec![write_f64("write_f64_py", "p"), CIRInstr::new("ret_void", None::<&str>, vec![], "void")];
         let (j, seen) = f64_writer_jit();
         let params = [("p".to_string(), "f64".to_string())];
         let ctx = FunctionContext { name: "f", params: &params, return_type: "void" };
         let bin = j.compile_function(&ctx, &cir).unwrap();
         j.run(&bin, &[Value::Float(-2.5)]);
+        assert!(j.take_error().is_none());
         assert_eq!(*seen.lock().unwrap(), [Value::Float(-2.5)]);
+        for bad in [vec![Value::Int(1)], vec![]] {
+            j.run(&bin, &bad);
+            assert!(j.take_error().is_some(), "{bad:?} for an f64 parameter must fail closed");
+        }
+        assert_eq!(seen.lock().unwrap().len(), 1, "nothing printed for a bad argument");
+        // An integer parameter given a float keeps the old coercion (0).
+        let ret = vec![CIRInstr::new("ret_i64", None::<&str>, vec![var("n")], "i64")];
+        let params = [("n".to_string(), "i64".to_string())];
+        let ctx = FunctionContext { name: "g", params: &params, return_type: "i64" };
+        let bin = j.compile_function(&ctx, &ret).unwrap();
+        assert_eq!(j.run(&bin, &[Value::Float(1.5)]), Value::Int(0));
     }
 
     /// Every other use of a float register refuses the function, so the

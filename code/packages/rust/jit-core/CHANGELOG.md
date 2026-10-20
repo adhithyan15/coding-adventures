@@ -13,8 +13,11 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   value; lang-aot's harness uses `vm_core::float_format`, the same code as the
   VM's default builtins.
 - **`f64` registers, narrowly.** `const_f64` now compiles to the float's bit
-  pattern in an i64 register, and an `f64`-typed parameter is seeded from
-  `Value::Float` as its bits. Only the two float writers may read such a
+  pattern in an i64 register. An `f64`-typed parameter is loaded by the new
+  `PARAM_F64 <reg>` prologue bytecode (0x52), which requires a `Value::Float`
+  argument and fails the call closed otherwise. A float passed to any other
+  parameter is still coerced to 0, as before, so raw float bits can never
+  reach integer code. This last point came from the security review. Only the two float writers may read such a
   register. Any other instruction that touches one refuses compilation, as
   every `f64` function did before: integer arithmetic, a comparison, `mov`,
   `ret`, a plain `call_builtin`, or an integer overwrite. So float bits can

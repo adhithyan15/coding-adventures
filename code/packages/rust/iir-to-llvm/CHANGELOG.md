@@ -7,7 +7,10 @@
   holds the Burger–Dybvig shortest-digits core over `alloca [40 x i64]` big
   integers, the Python / JavaScript layout, and output through libc
   `putchar`. A `.ll` that prints a float links with nothing but libc.
-  `putchar` is declared once even when the module also uses it.
+  `putchar` is declared once even when the module also uses it. A module that
+  prints a float and defines a function named `__iir_*` is refused (the
+  security review: a duplicate definition would otherwise be a confusing
+  clang error).
 - Checked by compiling the IR with clang 18 at `-O0` and `-O2` and comparing
   against host `python3` (535 432 values) and `node` (402 112 values): no
   mismatch. New tests pin the one-routine / one-declaration shape and run 19

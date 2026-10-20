@@ -500,8 +500,10 @@ fn call_site_passes_the_float_and_layout_then_calls_the_local_helper() {
         assert_eq!(m.instructions[call].operands[0].value, 2, "arity 2");
         let set_layout = &m.instructions[call - 1];
         assert_eq!((set_layout.opcode, set_layout.operands[0].value, set_layout.operands[1].value), (OP_MOVE, layout, 1));
-        // The helper is local: not in the export table.
-        assert!(m.exports.iter().all(|e| atom(&m, u64::from(e.function_atom_index)) != "__iir_write_f64"));
+        // Exported, so the Code chunk's function count (= exports) covers it.
+        let helper = m.exports.iter().find(|e| atom(&m, u64::from(e.function_atom_index)) == "__iir_write_f64");
+        assert!(matches!(helper, Some(e) if e.arity == 2 && u64::from(e.label) == entry));
+        assert_eq!(m.exports.len(), m.instructions.iter().filter(|i| i.opcode == OP_FUNC_INFO).count());
         assert_eq!(m.instructions.iter().filter(|i| i.opcode == OP_FUNC_INFO).count(), 2, "main + one helper");
     }
 }
