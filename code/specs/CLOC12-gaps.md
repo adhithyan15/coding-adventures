@@ -1414,6 +1414,20 @@ after a `break` inside a loop is unreachable (`while (c) { break; y(); }` →
 inside switch-case consequents (`is_case_terminator`), so the loop-body `y()`
 survives. Placeholder: `drops_code_after_break_in_loop_block`.
 
+### #17841 — fold-control-flow's dead-after-`return` drop ignored hoisting
+
+**Resolved.** `closure-pass-fold-control-flow` truncated a block after
+`return` independently of DCE, and without DCE's hoisting guard. That
+deleted:
+
+- a hoisted `function h(){}`, causing a `ReferenceError`;
+- a hoisted `var x`, so the function's local leaked to the global;
+- a TDZ-shadowing `let x`.
+
+`is_droppable_dead_statement` now applies, per statement, the same whitelist as DCE's
+`tail_is_safe_to_truncate`. The `let`/`const` case also needs DCE to keep
+such tails, which is the CCR-082 review fix.
+
 ## CLOC12.149 — `FunctionExpression` (function in value position)
 
 **Landed (AST + emitter + passes):** `Expression::FunctionExpression` is now a
