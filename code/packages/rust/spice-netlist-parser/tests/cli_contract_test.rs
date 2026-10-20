@@ -112,6 +112,24 @@ fn run_netlist_json_expands_global_temperature_cards() {
             .collect::<Vec<_>>(),
         vec![300.15, 348.15]
     );
+    assert_eq!(
+        payload["measures"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|measure| measure["analysis"].as_str().unwrap())
+            .collect::<Vec<_>>(),
+        vec!["op", "op"]
+    );
+    assert_eq!(
+        payload["measures"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|measure| measure["name"].as_str().unwrap())
+            .collect::<Vec<_>>(),
+        vec!["temperature_output", "temperature_output"]
+    );
 }
 
 #[test]
