@@ -3681,3 +3681,69 @@ fn checked_ops_on_real_clang_flush_then_trap_overflow() {
         assert!(String::from_utf8_lossy(&out.stderr).contains("trap: Trap.Overflow"), "{op}");
     }
 }
+
+// ===========================================================================
+// LANG83 PR6a — write_f64_py / write_f64_js
+// ===========================================================================
+
+/// `main` writes each value with `builtin`, a space after each, and also uses
+/// `putchar` itself — so the module needs `@putchar` for two reasons and must
+/// still declare it exactly once.
+fn float_program(builtin: &str, values: &[f64]) -> IIRModule {
+    let mut body = vec![IIRInstr::new("const", Some("sp".into()), vec![Operand::Int(32)], "i64")];
+    for (i, x) in values.iter().enumerate() {
+        let name = format!("x{i}");
+        body.push(IIRInstr::new("const", Some(name.clone()), vec![Operand::Float(*x)], "f64"));
+        body.push(IIRInstr::new("call_builtin", None, vec![v(builtin), v(&name)], "void"));
+        body.push(IIRInstr::new("call_builtin", None, vec![v("putchar"), v("sp")], "void"));
+    }
+    body.push(IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"));
+    body.push(IIRInstr::new("ret", None, vec![v("z")], "i64"));
+    IIRModule {
+        name: "floats".into(),
+        functions: vec![IIRFunction::new("main", vec![], "i64", body)],
+        entry_point: Some("main".into()),
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+    }
+}
+
+#[test]
+fn float_writers_call_one_module_local_routine_with_a_layout_flag() {
+    let ll = lower(&float_program("write_f64_py", &[1.5]));
+    assert!(ll.contains("call void @__iir_write_f64(double "), "{ll}");
+    assert!(ll.contains(", i32 0)"), "Python layout is 0");
+    assert_eq!(ll.matches("define linkonce_odr void @__iir_write_f64(").count(), 1);
+    assert_eq!(ll.matches("define linkonce_odr i32 @__iir_f64_digits(").count(), 1);
+    assert_eq!(ll.matches("declare i32 @putchar(i32)").count(), 1, "putchar declared once");
+    // Self-contained: no harness runtime and no libc formatter.
+    assert!(!ll.contains("@printf") && !ll.contains("@__twig_") && !ll.contains("@snprintf"));
+    let js = lower(&float_program("write_f64_js", &[1.5]));
+    assert!(js.contains(", i32 1)"), "JavaScript layout is 1");
+    // A module that prints no float carries none of it.
+    assert!(!lower(&floor_program("i64_div_floor", &[(7, 2)])).contains("__iir_f64_digits"));
+}
+
+#[test]
+fn float_writers_match_python_and_javascript_on_real_clang() {
+    let values = [
+        0.0, -0.0, 1.0, 100.0, 0.1, 123.456, 1e15, 1e16, 1e21, 1e-4, 1e-5, 1e-7, 1.5e-7, 5e-324,
+        1.7976931348623157e308, 2.9802322387695312e-08, f64::INFINITY, f64::NEG_INFINITY, f64::NAN,
+    ];
+    let Some(out) = run_on_clang(&float_program("write_f64_py", &values), "f64_py") else { return };
+    assert!(out.status.success());
+    // Every expected string is what host python3 / node print.
+    assert_eq!(
+        String::from_utf8_lossy(&out.stdout),
+        "0.0 -0.0 1.0 100.0 0.1 123.456 1000000000000000.0 1e+16 1e+21 0.0001 1e-05 1e-07 1.5e-07 \
+         5e-324 1.7976931348623157e+308 2.9802322387695312e-08 inf -inf nan "
+    );
+    let out = run_on_clang(&float_program("write_f64_js", &values), "f64_js").expect("clang present");
+    assert!(out.status.success());
+    assert_eq!(
+        String::from_utf8_lossy(&out.stdout),
+        "0 0 1 100 0.1 123.456 1000000000000000 10000000000000000 1e+21 0.0001 0.00001 1e-7 1.5e-7 \
+         5e-324 1.7976931348623157e+308 2.9802322387695312e-8 Infinity -Infinity NaN "
+    );
+}
