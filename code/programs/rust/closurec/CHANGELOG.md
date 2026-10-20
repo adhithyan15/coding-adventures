@@ -4,6 +4,21 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - a `function`/`class` declaration in a block no longer becomes an expression (#17877)
+
+`if(true){function g(){return 7}⏎console.log(g())}` compiled at SIMPLE and
+ADVANCED to `(function g(){return 7});console.log(g());`, which throws
+`ReferenceError: g is not defined`. The same happened for `class`, for
+`case`/`default` clauses, and for every block. Without a newline the
+program failed to parse instead. The cause was the ECMAScript grammars'
+`block` rule. The fix is in `javascript-parser`: the grammars, the
+regenerated compiled grammar, and the bridge.
+
+`tests/regression_block_declarations.rs` compiles 12 shapes at SIMPLE and
+ADVANCED. When `node` is installed, it checks that each output prints what
+the source prints. Sloppy-mode Annex B hoisting, where upstream itself
+changes behaviour, stays open in CLOC12-gaps.
+
 ### Fixed - long expression chains fail cleanly instead of aborting (#16009, CLOC42)
 
 `console.log(x + x + … + x)` with about 1,000 or more terms used to overflow
