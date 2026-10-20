@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-454-WANDERUNG",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-454-WANDERUNG"
+  ],
+  "after": []
+}

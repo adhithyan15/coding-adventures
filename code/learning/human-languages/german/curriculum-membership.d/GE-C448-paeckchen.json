@@ -1,0 +1,11 @@
+{
+  "id": "GE-C448-paeckchen",
+  "pathSegment": "GE-PATH-448-POST",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-448-POST",
+      "order": 3
+    }
+  ]
+}

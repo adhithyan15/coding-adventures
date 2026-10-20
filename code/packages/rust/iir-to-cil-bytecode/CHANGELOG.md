@@ -1,5 +1,16 @@
 # Changelog — iir-to-cil-bytecode
 
+## [0.46.0] — 2026-10-19 (LANG83 PR1a — standard operation support)
+
+- **LANG83 op support.** New `op_support` module exporting `OP_SUPPORT` and
+  `op_support(name) -> OpSupport`: this backend's declaration for every entry of
+  `interpreter_ir::op_registry::STANDARD_OPS` ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)). The table describes the textual `emit_il` path (real CoreCLR, the matrix's CLR column), where every existing registered op is `Lowered`; the binary simulator path is narrower and documented as such. The four PR1b ops
+  (`write_i64`, `i64_div_floor`, `i64_mod_floor`, `trap`) are
+  `Refused("not yet lowered; LANG83 PR1b")`. `lang-aot`'s `check_module_for`
+  uses the table to refuse an unsupported op at compile time.
+- Tests: every registry entry is declared exactly once; the PR1b ops are
+  refused; the Builtin rows agree with `validate::CALL_BUILTIN_SUPPORTED_NAMES`.
+
 ## Unreleased — strict encoded string input (CLR15)
 
 Extend only `lower_typed_scalars_to_cil` with `str` transport through locals,

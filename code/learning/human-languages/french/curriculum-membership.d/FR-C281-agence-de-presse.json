@@ -1,0 +1,11 @@
+{
+  "id": "FR-C281-agence-de-presse",
+  "pathSegment": "FR-PATH-281-REPORTAGE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-281-REPORTAGE",
+      "order": 4
+    }
+  ]
+}

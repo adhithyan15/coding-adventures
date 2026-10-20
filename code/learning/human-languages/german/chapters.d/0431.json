@@ -1,0 +1,19 @@
+{
+  "chapter": 431,
+  "title": "Nicht zufrieden",
+  "label": "ch:ge-nicht-zufrieden",
+  "canDo": "I can complain: the complaint, complaining, taking faulty goods back, grumbling and being dissatisfied.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C431-unzufrieden",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 431: I can complain: the complaint, complaining, taking faulty goods back, grumbling and being dissatisfied.",
+    "assesses": [
+      "GE-LEX-C431-BESCHWERDE-03",
+      "GE-LEX-C431-BESCHWERDE-04",
+      "GE-LEX-C431-BESCHWERDE-05"
+    ]
+  }
+}

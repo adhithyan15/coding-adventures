@@ -1,0 +1,11 @@
+{
+  "id": "GE-C524-tragoedie",
+  "pathSegment": "GE-PATH-524-FILM",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-524-FILM",
+      "order": 1
+    }
+  ]
+}

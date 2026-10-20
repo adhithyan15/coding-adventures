@@ -1,0 +1,19 @@
+{
+  "chapter": 453,
+  "title": "Emballer et envoyer",
+  "label": "ch:fr-emballer-et-envoyer",
+  "canDo": "I can send things: the packaging, wrapping, the delivery man, the cardboard box and registered post.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C453-recommande",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 453: I can send things: the packaging, wrapping, the delivery man, the cardboard box and registered post.",
+    "assesses": [
+      "FR-LEX-C453-EMBALLAGE-03",
+      "FR-LEX-C453-EMBALLAGE-04",
+      "FR-LEX-C453-EMBALLAGE-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C395-utilisateur",
+    "language": "french",
+    "chapter": 395,
+    "sequence": 22020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:36b7e86628c3674d"
+  },
+  "findings": []
+}

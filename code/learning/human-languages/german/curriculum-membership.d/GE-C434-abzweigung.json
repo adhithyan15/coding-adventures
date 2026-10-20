@@ -1,0 +1,11 @@
+{
+  "id": "GE-C434-abzweigung",
+  "pathSegment": "GE-PATH-434-WEGWEISER",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-434-WEGWEISER",
+      "order": 3
+    }
+  ]
+}

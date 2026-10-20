@@ -1,0 +1,11 @@
+{
+  "id": "GE-C288-schaden",
+  "pathSegment": "GE-PATH-288-ZUSAMMENSTOSS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-288-ZUSAMMENSTOSS",
+      "order": 4
+    }
+  ]
+}

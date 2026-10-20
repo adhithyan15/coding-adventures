@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C276-zunehmen",
+    "language": "german",
+    "chapter": 276,
+    "sequence": 15240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0ab8abe9e65a85c7"
+  },
+  "findings": []
+}

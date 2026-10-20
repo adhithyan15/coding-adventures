@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 374,
+  "sourceHash": "fnv1a64:0f4653b94c6efb30",
+  "lessonIds": [
+    "GE-C374-entschliessen",
+    "GE-C374-entschluss",
+    "GE-C374-ausweg",
+    "GE-C374-flexibel",
+    "GE-C374-planung"
+  ],
+  "tex": "german/book/chapters/ch374-sich-entschlie-en.tex"
+}

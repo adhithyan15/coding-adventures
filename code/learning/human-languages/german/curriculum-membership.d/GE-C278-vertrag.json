@@ -1,0 +1,11 @@
+{
+  "id": "GE-C278-vertrag",
+  "pathSegment": "GE-PATH-278-VERHANDELN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-278-VERHANDELN",
+      "order": 2
+    }
+  ]
+}

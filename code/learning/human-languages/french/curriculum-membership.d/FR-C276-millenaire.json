@@ -1,0 +1,11 @@
+{
+  "id": "FR-C276-millenaire",
+  "pathSegment": "FR-PATH-276-EPOQUE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-276-EPOQUE",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C433-orientieren",
+    "language": "german",
+    "chapter": 433,
+    "sequence": 23290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:15dbfdc2be676b99"
+  },
+  "findings": []
+}

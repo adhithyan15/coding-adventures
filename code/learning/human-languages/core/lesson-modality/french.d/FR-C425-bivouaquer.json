@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C425-bivouaquer",
+    "language": "french",
+    "chapter": 425,
+    "sequence": 23620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ec70aaa7c1a2a4fc"
+  },
+  "findings": []
+}

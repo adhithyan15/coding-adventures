@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:12f9fdf1a5bcdd3e",
+  "lessonIds": [
+    "GE-C336-einigung",
+    "GE-C336-nachgeben",
+    "GE-C336-abwaegen",
+    "GE-C336-einerseits",
+    "GE-C336-andererseits"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch336.txt",
+  "json": "german/narration/ch336.json",
+  "textHash": "fnv1a64:37ec784dc90ac8dd",
+  "jsonHash": "fnv1a64:74d1ee98660ae193",
+  "findings": []
+}

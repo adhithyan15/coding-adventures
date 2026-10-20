@@ -1,0 +1,19 @@
+{
+  "chapter": 356,
+  "title": "Sans emploi",
+  "label": "ch:fr-sans-emploi",
+  "canDo": "I can talk about looking for a job: unemployment, being out of work, and companies that hire and recruit.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C356-recruter",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 356: I can talk about looking for a job: unemployment, being out of work, and companies that hire and recruit.",
+    "assesses": [
+      "FR-LEX-C356-CHOMAGE-03",
+      "FR-LEX-C356-CHOMAGE-04",
+      "FR-LEX-C356-CHOMAGE-05"
+    ]
+  }
+}

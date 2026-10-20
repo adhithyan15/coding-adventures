@@ -1,0 +1,11 @@
+{
+  "id": "FR-C496-couture",
+  "pathSegment": "FR-PATH-496-COUTURE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-496-COUTURE",
+      "order": 4
+    }
+  ]
+}

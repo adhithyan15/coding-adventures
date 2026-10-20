@@ -1,0 +1,19 @@
+{
+  "chapter": 483,
+  "title": "Mal au cœur",
+  "label": "ch:fr-mal-au-c-ur",
+  "canDo": "I can describe feeling sick, dizzy or having a headache.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C483-digerer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 483: I can describe feeling sick, dizzy or having a headache.",
+    "assesses": [
+      "FR-LEX-C483-NAUSEE-03",
+      "FR-LEX-C483-NAUSEE-04",
+      "FR-LEX-C483-NAUSEE-05"
+    ]
+  }
+}

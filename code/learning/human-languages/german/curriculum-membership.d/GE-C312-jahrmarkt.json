@@ -1,0 +1,11 @@
+{
+  "id": "GE-C312-jahrmarkt",
+  "pathSegment": "GE-PATH-312-VOLKSFEST",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-312-VOLKSFEST",
+      "order": 1
+    }
+  ]
+}

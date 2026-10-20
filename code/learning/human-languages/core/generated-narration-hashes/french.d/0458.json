@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 458,
+  "sourceHash": "fnv1a64:a9f08e1b5600f00d",
+  "lessonIds": [
+    "FR-C458-dune",
+    "FR-C458-maree",
+    "FR-C458-crique",
+    "FR-C458-recif",
+    "FR-C458-coquillage"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch458.txt",
+  "json": "french/narration/ch458.json",
+  "textHash": "fnv1a64:4b504e29c7489b4d",
+  "jsonHash": "fnv1a64:2c470fa89055fabc",
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-389-ENQUETE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about an investigation: investigating, a witness, giving evidence and the victim.",
+  "prerequisites": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:8595b21f5d068867",
+  "lessonIds": [
+    "GE-C314-zaubern",
+    "GE-C314-verzaubern",
+    "GE-C314-verwandeln",
+    "GE-C314-fluch",
+    "GE-C314-drache"
+  ],
+  "tex": "german/book/chapters/ch314-verzaubert.tex"
+}

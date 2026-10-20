@@ -1,0 +1,19 @@
+{
+  "chapter": 279,
+  "title": "Écrire pour le journal",
+  "label": "ch:fr-ecrire-pour-le-journal",
+  "canDo": "I can say that someone wrote up, printed and brought out a text, and talk about the newsroom and the date it came out.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C279-parution",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 279: I can say that someone wrote up, printed and brought out a text, and talk about the newsroom and the date it came out.",
+    "assesses": [
+      "FR-LEX-C279-REDIGER-03",
+      "FR-LEX-C279-REDIGER-04",
+      "FR-LEX-C279-REDIGER-05"
+    ]
+  }
+}

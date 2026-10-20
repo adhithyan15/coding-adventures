@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 419,
+  "sourceHash": "fnv1a64:00b44f28369fda23",
+  "lessonIds": [
+    "GE-C419-zwischenlandung",
+    "GE-C419-zeitverschiebung",
+    "GE-C419-verspaeten",
+    "GE-C419-festsitzen",
+    "GE-C419-notlanden"
+  ],
+  "tex": "german/book/chapters/ch419-warten-am-flughafen.tex"
+}

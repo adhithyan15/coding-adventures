@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C276-sinken",
+    "language": "german",
+    "chapter": 276,
+    "sequence": 15250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d4ef67394163b8ce"
+  },
+  "findings": []
+}

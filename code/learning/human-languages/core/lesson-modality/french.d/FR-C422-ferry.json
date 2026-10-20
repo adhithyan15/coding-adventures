@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C422-ferry",
+    "language": "french",
+    "chapter": 422,
+    "sequence": 23420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3c37204669d30606"
+  },
+  "findings": []
+}

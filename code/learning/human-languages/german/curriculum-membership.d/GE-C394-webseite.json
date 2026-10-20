@@ -1,0 +1,11 @@
+{
+  "id": "GE-C394-webseite",
+  "pathSegment": "GE-PATH-394-INTERNET",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-394-INTERNET",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 432,
+  "sourceHash": "fnv1a64:21a1176d6790c3d0",
+  "lessonIds": [
+    "GE-C432-geschaeftsfuehrer",
+    "GE-C432-unannehmlichkeit",
+    "GE-C432-anzahlung",
+    "GE-C432-entschaedigen",
+    "GE-C432-entschaedigung"
+  ],
+  "tex": "german/book/chapters/ch432-geld-zuruck.tex"
+}

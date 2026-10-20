@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 288,
+  "sourceHash": "fnv1a64:280b87519268ce11",
+  "lessonIds": [
+    "GE-C288-zusammenstossen",
+    "GE-C288-zusammenstoss",
+    "GE-C288-prallen",
+    "GE-C288-verungluecken",
+    "GE-C288-schaden"
+  ],
+  "tex": "german/book/chapters/ch288-ein-zusammensto.tex"
+}

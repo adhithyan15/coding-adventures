@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C470-geduld",
+    "language": "german",
+    "chapter": 470,
+    "sequence": 25200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00db45e7b0708e1a"
+  },
+  "findings": []
+}

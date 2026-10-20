@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C472-einsamkeit",
+    "language": "german",
+    "chapter": 472,
+    "sequence": 25320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ebff0196e23a9fed"
+  },
+  "findings": []
+}

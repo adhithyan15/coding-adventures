@@ -1,0 +1,11 @@
+{
+  "id": "FR-C313-hospitaliser",
+  "pathSegment": "FR-PATH-313-RETRAITE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-313-RETRAITE",
+      "order": 3
+    }
+  ]
+}

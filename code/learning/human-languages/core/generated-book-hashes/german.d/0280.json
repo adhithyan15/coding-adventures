@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 280,
+  "sourceHash": "fnv1a64:5970b9ac45aae1a2",
+  "lessonIds": [
+    "GE-C280-verbrechen",
+    "GE-C280-verbrecher",
+    "GE-C280-taeter",
+    "GE-C280-opfer",
+    "GE-C280-tatort"
+  ],
+  "tex": "german/book/chapters/ch280-das-verbrechen.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C318-decorer",
+  "pathSegment": "FR-PATH-318-ARTIFICE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-318-ARTIFICE",
+      "order": 4
+    }
+  ]
+}

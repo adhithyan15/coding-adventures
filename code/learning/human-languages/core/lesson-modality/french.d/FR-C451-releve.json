@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C451-releve",
+    "language": "french",
+    "chapter": 451,
+    "sequence": 24950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ab7eac56f5d8ace1"
+  },
+  "findings": []
+}

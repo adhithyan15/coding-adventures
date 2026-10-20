@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:5a6fe72384c958eb",
+  "lessonIds": [
+    "GE-C346-zweck",
+    "GE-C346-absicht",
+    "GE-C346-damit",
+    "GE-C346-absichtlich",
+    "GE-C346-anlass"
+  ],
+  "tex": "german/book/chapters/ch346-wozu.tex"
+}

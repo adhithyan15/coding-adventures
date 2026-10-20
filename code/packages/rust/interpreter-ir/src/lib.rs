@@ -25,6 +25,10 @@
 //! - [`function::IIRFunction`] — a named function with parameters, return type, and body
 //! - [`module::IIRModule`] — top-level container for all functions in a program
 //! - [`opcodes`] — predicate functions for opcode category membership, type helpers
+//!   (including the LANG83 `may_trap` / `is_terminator` predicates)
+//! - [`op_registry`] — the LANG83 standard operation registry: every operation a
+//!   frontend may emit ([`op_registry::STANDARD_OPS`]) and the
+//!   [`op_registry::OpSupport`] answer each backend declares for it
 //! - [`exception_kind`] — the dotted-path exception **kind** names `throw`/`catch`
 //!   match on (AOT00 T2), plus the built-in `Trap.*` kinds and [`exception_kind::kind_matches`]
 //! - [`serialise`] — compact binary serialisation / deserialisation
@@ -86,6 +90,7 @@ pub mod function;
 pub mod instr;
 pub mod module;
 pub mod module_exports;
+pub mod op_registry;
 pub mod opcodes;
 pub mod serialise;
 pub mod slot_state;
@@ -97,5 +102,6 @@ pub use function::{FunctionTypeStatus, IIRFunction};
 pub use instr::{IIRInstr, Operand};
 pub use module::IIRModule;
 pub use module_exports::{IIRExport, IIRImport};
+pub use op_registry::{OpKind, OpSpec, OpSupport, STANDARD_OPS};
 pub use slot_state::{SlotKind, SlotState, MAX_POLYMORPHIC_OBSERVATIONS};
 pub use source_loc::SourceLoc;

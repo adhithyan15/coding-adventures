@@ -1,0 +1,11 @@
+{
+  "id": "FR-C272-depuis-lors",
+  "pathSegment": "FR-PATH-272-JADIS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-272-JADIS",
+      "order": 4
+    }
+  ]
+}

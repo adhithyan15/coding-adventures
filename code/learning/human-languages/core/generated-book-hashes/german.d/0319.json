@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 319,
+  "sourceHash": "fnv1a64:40821c03649a52a1",
+  "lessonIds": [
+    "GE-C319-kaiser",
+    "GE-C319-herrschen",
+    "GE-C319-regieren",
+    "GE-C319-erobern",
+    "GE-C319-sieg"
+  ],
+  "tex": "german/book/chapters/ch319-kaiser-und-konige.tex"
+}

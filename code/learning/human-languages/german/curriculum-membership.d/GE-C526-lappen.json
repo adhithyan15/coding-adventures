@@ -1,0 +1,11 @@
+{
+  "id": "GE-C526-lappen",
+  "pathSegment": "GE-PATH-526-PUTZEN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-526-PUTZEN",
+      "order": 4
+    }
+  ]
+}

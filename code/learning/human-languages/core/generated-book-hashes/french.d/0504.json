@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 504,
+  "sourceHash": "fnv1a64:a804d955c56395f0",
+  "lessonIds": [
+    "FR-C504-musculation",
+    "FR-C504-haltere",
+    "FR-C504-etirer",
+    "FR-C504-sueur",
+    "FR-C504-echauffer"
+  ],
+  "tex": "french/book/chapters/ch504-a-la-salle.tex"
+}

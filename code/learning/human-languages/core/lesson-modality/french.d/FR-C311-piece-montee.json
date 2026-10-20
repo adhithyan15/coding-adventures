@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C311-piece-montee",
+    "language": "french",
+    "chapter": 311,
+    "sequence": 17730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8e267ecdb1a693f"
+  },
+  "findings": []
+}

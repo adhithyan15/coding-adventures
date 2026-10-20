@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:69426c75c1dde25d",
+  "lessonIds": [
+    "GE-C304-trauer",
+    "GE-C304-trauern",
+    "GE-C304-beileid",
+    "GE-C304-witwe",
+    "GE-C304-erben"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch304.txt",
+  "json": "german/narration/ch304.json",
+  "textHash": "fnv1a64:e631948f8203cb73",
+  "jsonHash": "fnv1a64:309b3e535bc2cfd2",
+  "findings": []
+}

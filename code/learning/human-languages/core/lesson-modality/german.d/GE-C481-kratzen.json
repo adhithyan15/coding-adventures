@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C481-kratzen",
+    "language": "german",
+    "chapter": 481,
+    "sequence": 25790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f78186f1c95c9ed"
+  },
+  "findings": []
+}

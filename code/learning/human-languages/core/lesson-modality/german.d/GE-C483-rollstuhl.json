@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C483-rollstuhl",
+    "language": "german",
+    "chapter": 483,
+    "sequence": 25900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ae38b84cd98b731"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-431-BESCHWERDE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-431-BESCHWERDE"
+  ],
+  "after": []
+}

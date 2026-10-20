@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C497-necken",
+    "language": "german",
+    "chapter": 497,
+    "sequence": 26610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d154b83a91c5684"
+  },
+  "findings": []
+}

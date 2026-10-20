@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:8f9b1e0bbb6cfc7f",
+  "lessonIds": [
+    "GE-C381-vorschrift",
+    "GE-C381-vorschreiben",
+    "GE-C381-beachten",
+    "GE-C381-einhalten",
+    "GE-C381-verpflichtet"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch381.txt",
+  "json": "german/narration/ch381.json",
+  "textHash": "fnv1a64:1892496bc968dfc2",
+  "jsonHash": "fnv1a64:6244a44c55d5baab",
+  "findings": []
+}

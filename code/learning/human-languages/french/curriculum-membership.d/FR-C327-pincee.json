@@ -1,0 +1,11 @@
+{
+  "id": "FR-C327-pincee",
+  "pathSegment": "FR-PATH-327-RECETTE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-327-RECETTE",
+      "order": 2
+    }
+  ]
+}

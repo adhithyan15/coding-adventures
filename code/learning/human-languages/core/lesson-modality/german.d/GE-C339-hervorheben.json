@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C339-hervorheben",
+    "language": "german",
+    "chapter": 339,
+    "sequence": 18490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9d1b2cff5e7d20db"
+  },
+  "findings": []
+}

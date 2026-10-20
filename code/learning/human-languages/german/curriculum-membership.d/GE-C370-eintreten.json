@@ -1,0 +1,11 @@
+{
+  "id": "GE-C370-eintreten",
+  "pathSegment": "GE-PATH-370-KLAPPEN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-370-KLAPPEN",
+      "order": 2
+    }
+  ]
+}

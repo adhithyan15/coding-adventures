@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C513-partition",
+    "language": "french",
+    "chapter": 513,
+    "sequence": 28120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fc9fa084ee193a3f"
+  },
+  "findings": []
+}

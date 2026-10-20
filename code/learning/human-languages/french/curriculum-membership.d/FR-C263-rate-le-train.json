@@ -1,0 +1,11 @@
+{
+  "id": "FR-C263-rate-le-train",
+  "pathSegment": "FR-PATH-263-BILLET",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-263-BILLET",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:0347bea9e4f5a4ab",
+  "lessonIds": [
+    "GE-C375-klausur",
+    "GE-C375-durchfallen",
+    "GE-C375-muendlich",
+    "GE-C375-schriftlich",
+    "GE-C375-zeugnis"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch375.txt",
+  "json": "german/narration/ch375.json",
+  "textHash": "fnv1a64:788e9727d837c6db",
+  "jsonHash": "fnv1a64:2d5f9c6afcc370f6",
+  "findings": []
+}

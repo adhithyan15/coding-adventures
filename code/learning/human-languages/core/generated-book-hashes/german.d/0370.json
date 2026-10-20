@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:a4594050c16d0386",
+  "lessonIds": [
+    "GE-C370-klappen",
+    "GE-C370-misslingen",
+    "GE-C370-eintreten",
+    "GE-C370-zutreffen",
+    "GE-C370-herausstellen"
+  ],
+  "tex": "german/book/chapters/ch370-ob-es-klappt.tex"
+}

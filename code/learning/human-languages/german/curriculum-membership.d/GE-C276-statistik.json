@@ -1,0 +1,11 @@
+{
+  "id": "GE-C276-statistik",
+  "pathSegment": "GE-PATH-276-UMFRAGE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-276-UMFRAGE",
+      "order": 1
+    }
+  ]
+}

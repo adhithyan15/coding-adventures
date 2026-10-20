@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-366-HYPOTHESE",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "GE-EXT-366-HYPOTHESE"
+  ],
+  "after": []
+}

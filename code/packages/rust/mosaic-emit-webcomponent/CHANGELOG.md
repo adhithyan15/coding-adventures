@@ -4,6 +4,8 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+- **A slot-bound `placeholder` reaches the field.** `HostInput` and the legacy `Input` read `placeholder` with a string-literal-only lookup, so `placeholder : slot: x` (every toolkit `Input`, the note-type editor's fields) rendered no placeholder, and the degradation report said nothing. It is now `placeholder="${escapeHtmlAttribute(x)}"` on the `<input>` and the `<textarea>`; a `For` binding or expression is interpolated the same way. `accessible_name_attr` and the placeholder share `text_attr`. For the placeholder, a name that is not a safe JS identifier is an `UnsafeSlotName` error, so `emit_host_input` now returns a `Result`.
+
 - **A multiline `HostInput` is a `<textarea>` (#15930).** `multiline: true` was read only on the legacy `Input`, so the kernel `HostInput` became a one-line `<input>`. Both now share the text-area lowering. In either, a multiline field has no Enter-to-`onCommit` branch in its `onkeydown`: Enter is a line break there on every backend (UI29 §2.1). Escape still cancels.
 
 - **mosstyle `align` becomes flex alignment (#16932).** `align` is not a CSS property, so `align: center-vertical` reached the inline style verbatim and browsers discarded it. `translate_layout_alias` maps it as html and React do: `center-vertical` → `align-items: center`, `center-horizontal` → `justify-content: center`, `center` → both, `start`/`end` → `flex-start`/`flex-end`, `space-between` → `justify-content: space-between`. Any other value passes through unchanged.

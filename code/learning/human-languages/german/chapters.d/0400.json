@@ -1,0 +1,19 @@
+{
+  "chapter": 400,
+  "title": "Freie Sicht",
+  "label": "ch:ge-freie-sicht",
+  "canDo": "I can talk about seeing and signalling from a car: the headlights, the windscreen, the wipers, the rear-view mirror and indicating.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C400-blinken",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 400: I can talk about seeing and signalling from a car: the headlights, the windscreen, the wipers, the rear-view mirror and indicating.",
+    "assesses": [
+      "GE-LEX-C400-SICHT-03",
+      "GE-LEX-C400-SICHT-04",
+      "GE-LEX-C400-SICHT-05"
+    ]
+  }
+}

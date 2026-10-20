@@ -1,0 +1,19 @@
+{
+  "chapter": 370,
+  "title": "Ob es klappt",
+  "label": "ch:ge-ob-es-klappt",
+  "canDo": "I can say whether something worked out or went wrong, whether a case arose and whether a claim is true.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GE-C370-herausstellen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 370: I can say whether something worked out or went wrong, whether a case arose and whether a claim is true.",
+    "assesses": [
+      "GE-LEX-C370-KLAPPEN-03",
+      "GE-LEX-C370-KLAPPEN-04",
+      "GE-LEX-C370-KLAPPEN-05"
+    ]
+  }
+}

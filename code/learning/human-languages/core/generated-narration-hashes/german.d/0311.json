@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:0982c9a5a3d48114",
+  "lessonIds": [
+    "GE-C311-weihnachtsmarkt",
+    "GE-C311-weihnachtsbaum",
+    "GE-C311-adventskranz",
+    "GE-C311-bescherung",
+    "GE-C311-lebkuchen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch311.txt",
+  "json": "german/narration/ch311.json",
+  "textHash": "fnv1a64:718040255bc1bc38",
+  "jsonHash": "fnv1a64:077de12a376fcc02",
+  "findings": []
+}

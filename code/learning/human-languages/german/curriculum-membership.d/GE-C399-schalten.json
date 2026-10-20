@@ -1,0 +1,11 @@
+{
+  "id": "GE-C399-schalten",
+  "pathSegment": "GE-PATH-399-LENKRAD",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-399-LENKRAD",
+      "order": 4
+    }
+  ]
+}

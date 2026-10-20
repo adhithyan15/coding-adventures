@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-512-CHANT",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about singing and tunes.",
+  "prerequisites": []
+}

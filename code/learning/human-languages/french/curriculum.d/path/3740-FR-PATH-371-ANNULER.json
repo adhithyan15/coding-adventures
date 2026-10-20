@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-371-ANNULER",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "FR-EXT-371-ANNULER"
+  ],
+  "after": []
+}

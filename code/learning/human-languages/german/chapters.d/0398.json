@@ -1,0 +1,19 @@
+{
+  "chapter": 398,
+  "title": "Über Land",
+  "label": "ch:ge-uber-land",
+  "canDo": "I can talk about roads outside town: the country road, the exit, the slip road, the roundabout and turning off.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C398-abbiegen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 398: I can talk about roads outside town: the country road, the exit, the slip road, the roundabout and turning off.",
+    "assesses": [
+      "GE-LEX-C398-LANDSTRASSE-03",
+      "GE-LEX-C398-LANDSTRASSE-04",
+      "GE-LEX-C398-LANDSTRASSE-05"
+    ]
+  }
+}

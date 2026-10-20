@@ -1,0 +1,11 @@
+{
+  "id": "GE-C376-wiederholung",
+  "pathSegment": "GE-PATH-376-LERNEN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-376-LERNEN",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C524-projeter",
+    "language": "french",
+    "chapter": 524,
+    "sequence": 28680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ce576d9874652ef"
+  },
+  "findings": []
+}

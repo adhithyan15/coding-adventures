@@ -1,0 +1,11 @@
+{
+  "id": "FR-C318-guirlande",
+  "pathSegment": "FR-PATH-318-ARTIFICE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-318-ARTIFICE",
+      "order": 3
+    }
+  ]
+}

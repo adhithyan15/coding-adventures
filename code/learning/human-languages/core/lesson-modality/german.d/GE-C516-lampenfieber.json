@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C516-lampenfieber",
+    "language": "german",
+    "chapter": 516,
+    "sequence": 27580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:96a82f9675d5f562"
+  },
+  "findings": []
+}

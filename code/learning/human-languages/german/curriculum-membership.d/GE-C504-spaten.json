@@ -1,0 +1,11 @@
+{
+  "id": "GE-C504-spaten",
+  "pathSegment": "GE-PATH-504-SAEEN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-504-SAEEN",
+      "order": 1
+    }
+  ]
+}

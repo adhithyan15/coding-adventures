@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C310-brauch",
+    "language": "german",
+    "chapter": 310,
+    "sequence": 17000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:14bb4bcb02f63aa4"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C441-pave",
+  "pathSegment": "FR-PATH-441-MOBILIER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-441-MOBILIER",
+      "order": 4
+    }
+  ]
+}

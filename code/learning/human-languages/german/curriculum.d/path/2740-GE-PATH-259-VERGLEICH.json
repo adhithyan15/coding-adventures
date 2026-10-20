@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-259-VERGLEICH",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GE-EXT-259-VERGLEICH"
+  ],
+  "after": []
+}

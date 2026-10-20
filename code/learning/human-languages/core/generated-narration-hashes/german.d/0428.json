@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 428,
+  "sourceHash": "fnv1a64:a6cd16165476e536",
+  "lessonIds": [
+    "GE-C428-abfluss",
+    "GE-C428-verstopfen",
+    "GE-C428-tropfen",
+    "GE-C428-undicht",
+    "GE-C428-klempner"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch428.txt",
+  "json": "german/narration/ch428.json",
+  "textHash": "fnv1a64:09edb77096375af4",
+  "jsonHash": "fnv1a64:fc283462b71f260d",
+  "findings": []
+}

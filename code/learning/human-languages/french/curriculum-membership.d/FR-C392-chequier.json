@@ -1,0 +1,11 @@
+{
+  "id": "FR-C392-chequier",
+  "pathSegment": "FR-PATH-392-BANQUE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-392-BANQUE",
+      "order": 2
+    }
+  ]
+}

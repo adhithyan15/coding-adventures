@@ -1,0 +1,11 @@
+{
+  "id": "GE-C284-verdacht",
+  "pathSegment": "GE-PATH-284-VERDACHT",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-284-VERDACHT",
+      "order": 0
+    }
+  ]
+}

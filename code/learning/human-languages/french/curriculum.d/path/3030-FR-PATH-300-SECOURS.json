@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-300-SECOURS",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-300-SECOURS"
+  ],
+  "after": []
+}

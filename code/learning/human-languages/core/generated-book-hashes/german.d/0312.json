@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:de9347dd2b5575e1",
+  "lessonIds": [
+    "GE-C312-volksfest",
+    "GE-C312-jahrmarkt",
+    "GE-C312-karussell",
+    "GE-C312-tracht",
+    "GE-C312-kapelle"
+  ],
+  "tex": "german/book/chapters/ch312-das-volksfest.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 427,
+  "title": "Warm oder kalt",
+  "label": "ch:ge-warm-oder-kalt",
+  "canDo": "I can deal with the temperature in a room: the air conditioning, the heating, the radiator, turning something up and turning it off.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C427-zudrehen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 427: I can deal with the temperature in a room: the air conditioning, the heating, the radiator, turning something up and turning it off.",
+    "assesses": [
+      "GE-LEX-C427-KLIMA-03",
+      "GE-LEX-C427-KLIMA-04",
+      "GE-LEX-C427-KLIMA-05"
+    ]
+  }
+}

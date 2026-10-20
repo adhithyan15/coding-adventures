@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C403-mechaniker",
+    "language": "german",
+    "chapter": 403,
+    "sequence": 21790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:556bd7a8c197616a"
+  },
+  "findings": []
+}

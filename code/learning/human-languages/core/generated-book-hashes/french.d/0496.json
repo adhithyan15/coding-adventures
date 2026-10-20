@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 496,
+  "sourceHash": "fnv1a64:b39ed4fccfb198d1",
+  "lessonIds": [
+    "FR-C496-coudre",
+    "FR-C496-tricoter",
+    "FR-C496-pelote",
+    "FR-C496-broder",
+    "FR-C496-couture"
+  ],
+  "tex": "french/book/chapters/ch496-fil-et-aiguille.tex"
+}

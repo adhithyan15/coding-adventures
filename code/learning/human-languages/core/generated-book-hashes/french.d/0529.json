@@ -1,0 +1,14 @@
+{
+  "language": "french",
+  "chapter": 529,
+  "sourceHash": "fnv1a64:c49e8a4789956cd1",
+  "lessonIds": [
+    "FR-C529-nappe",
+    "FR-C529-couvert",
+    "FR-C529-debarrasser",
+    "FR-C529-louche",
+    "FR-C529-couvercle",
+    "FR-R529-revision-522-529"
+  ],
+  "tex": "french/book/chapters/ch529-a-table.tex"
+}

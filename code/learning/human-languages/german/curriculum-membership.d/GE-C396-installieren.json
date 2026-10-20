@@ -1,0 +1,11 @@
+{
+  "id": "GE-C396-installieren",
+  "pathSegment": "GE-PATH-396-COMPUTER",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-396-COMPUTER",
+      "order": 3
+    }
+  ]
+}

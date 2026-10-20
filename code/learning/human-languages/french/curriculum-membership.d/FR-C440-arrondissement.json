@@ -1,0 +1,11 @@
+{
+  "id": "FR-C440-arrondissement",
+  "pathSegment": "FR-PATH-440-QUARTIERS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-440-QUARTIERS",
+      "order": 1
+    }
+  ]
+}

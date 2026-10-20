@@ -1,0 +1,11 @@
+{
+  "id": "GE-C434-pfeil",
+  "pathSegment": "GE-PATH-434-WEGWEISER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-434-WEGWEISER",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C396-appareil",
+  "pathSegment": "FR-PATH-396-LOGICIEL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-396-LOGICIEL",
+      "order": 2
+    }
+  ]
+}

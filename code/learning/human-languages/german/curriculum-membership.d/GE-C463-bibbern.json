@@ -1,0 +1,11 @@
+{
+  "id": "GE-C463-bibbern",
+  "pathSegment": "GE-PATH-463-RAUREIF",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-463-RAUREIF",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C380-abmelden",
+    "language": "german",
+    "chapter": 380,
+    "sequence": 20600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:663237caf0494eba"
+  },
+  "findings": []
+}

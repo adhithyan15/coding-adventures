@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C378-zusammenfassung",
+    "language": "german",
+    "chapter": 378,
+    "sequence": 20490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cc3dffbd40f97b70"
+  },
+  "findings": []
+}

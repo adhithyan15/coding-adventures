@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-252-ERZAEHLEN",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GE-EXT-252-ERZAEHLEN"
+  ],
+  "after": []
+}

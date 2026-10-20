@@ -1,0 +1,11 @@
+{
+  "id": "GE-C441-schaufenster",
+  "pathSegment": "GE-PATH-441-FASSADE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-441-FASSADE",
+      "order": 1
+    }
+  ]
+}

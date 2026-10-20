@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C518-galerie",
+    "language": "french",
+    "chapter": 518,
+    "sequence": 28380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f7dd9e353ade2c3e"
+  },
+  "findings": []
+}

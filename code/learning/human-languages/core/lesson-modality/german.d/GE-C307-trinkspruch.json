@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C307-trinkspruch",
+    "language": "german",
+    "chapter": 307,
+    "sequence": 16840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c3e587bc9e46493a"
+  },
+  "findings": []
+}

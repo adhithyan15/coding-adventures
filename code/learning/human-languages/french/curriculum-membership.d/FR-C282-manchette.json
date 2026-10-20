@@ -1,0 +1,11 @@
+{
+  "id": "FR-C282-manchette",
+  "pathSegment": "FR-PATH-282-TITRES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-282-TITRES",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-392-GERAET",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "GE-EXT-392-GERAET"
+  ],
+  "after": []
+}

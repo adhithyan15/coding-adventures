@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C315-heritage",
+    "language": "french",
+    "chapter": 315,
+    "sequence": 17940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:50f8364026acafbc"
+  },
+  "findings": []
+}

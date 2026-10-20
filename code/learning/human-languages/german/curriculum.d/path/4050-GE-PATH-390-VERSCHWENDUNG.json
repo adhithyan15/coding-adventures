@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-390-VERSCHWENDUNG",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "GE-EXT-390-VERSCHWENDUNG"
+  ],
+  "after": []
+}

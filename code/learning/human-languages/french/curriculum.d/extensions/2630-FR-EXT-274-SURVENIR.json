@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-274-SURVENIR",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that something occurred, unfolded, took place, came before something else or lasted.",
+  "prerequisites": []
+}

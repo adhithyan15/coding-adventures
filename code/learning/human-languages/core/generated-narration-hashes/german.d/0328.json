@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 328,
+  "sourceHash": "fnv1a64:5708e528db1579d9",
+  "lessonIds": [
+    "GE-C328-sieb",
+    "GE-C328-abgiessen",
+    "GE-C328-abtropfen",
+    "GE-C328-abschmecken",
+    "GE-C328-wuerzen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch328.txt",
+  "json": "german/narration/ch328.json",
+  "textHash": "fnv1a64:c8849d91dda64a07",
+  "jsonHash": "fnv1a64:5e6cd3ae8faf772f",
+  "findings": []
+}

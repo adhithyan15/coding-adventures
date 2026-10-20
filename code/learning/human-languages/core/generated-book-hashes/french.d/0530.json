@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 530,
+  "sourceHash": "fnv1a64:a23deca3787ed718",
+  "lessonIds": [
+    "FR-C530-vaisselle",
+    "FR-C530-evier",
+    "FR-C530-rincer",
+    "FR-C530-essuyer",
+    "FR-C530-torchon"
+  ],
+  "tex": "french/book/chapters/ch530-faire-la-vaisselle.tex"
+}

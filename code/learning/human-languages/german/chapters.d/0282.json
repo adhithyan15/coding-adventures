@@ -1,0 +1,19 @@
+{
+  "chapter": 282,
+  "title": "Der Überfall",
+  "label": "ch:ge-der-uberfall",
+  "canDo": "I can report a robbery: to hold up, a hold-up, to rob, to threaten and a weapon.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C282-waffe",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 282: I can report a robbery: to hold up, a hold-up, to rob, to threaten and a weapon.",
+    "assesses": [
+      "GE-LEX-C282-UEBERFALL-03",
+      "GE-LEX-C282-UEBERFALL-04",
+      "GE-LEX-C282-UEBERFALL-05"
+    ]
+  }
+}

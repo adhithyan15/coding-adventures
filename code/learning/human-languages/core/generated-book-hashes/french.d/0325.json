@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:69eefe06eab6aa0b",
+  "lessonIds": [
+    "FR-C325-historien",
+    "FR-C325-ancetre",
+    "FR-C325-patrimoine",
+    "FR-C325-archeologue",
+    "FR-C325-fouille"
+  ],
+  "tex": "french/book/chapters/ch325-les-traces-du-passe.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 355,
+  "sourceHash": "fnv1a64:25e1dc68aefb236a",
+  "lessonIds": [
+    "GE-C355-projekt",
+    "GE-C355-auftrag",
+    "GE-C355-zusammenarbeiten",
+    "GE-C355-zusammenarbeit",
+    "GE-C355-organisieren"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch355.txt",
+  "json": "german/narration/ch355.json",
+  "textHash": "fnv1a64:d3145ed86feb9f7f",
+  "jsonHash": "fnv1a64:7987a8a4b93fd5d0",
+  "findings": []
+}

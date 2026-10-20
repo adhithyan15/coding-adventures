@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 461,
+  "sourceHash": "fnv1a64:75640d6f416b4cb1",
+  "lessonIds": [
+    "FR-C461-bruine",
+    "FR-C461-bruiner",
+    "FR-C461-averse",
+    "FR-C461-eclaircie",
+    "FR-C461-degager"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch461.txt",
+  "json": "french/narration/ch461.json",
+  "textHash": "fnv1a64:99e4f28c7d9f79d6",
+  "jsonHash": "fnv1a64:b7de69d7633055e1",
+  "findings": []
+}

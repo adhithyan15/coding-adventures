@@ -1,0 +1,11 @@
+{
+  "id": "FR-C325-archeologue",
+  "pathSegment": "FR-PATH-325-PASSE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-325-PASSE",
+      "order": 3
+    }
+  ]
+}

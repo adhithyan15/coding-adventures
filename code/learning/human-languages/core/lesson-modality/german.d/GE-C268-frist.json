@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C268-frist",
+    "language": "german",
+    "chapter": 268,
+    "sequence": 14840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0c5a8c24fa32a5f0"
+  },
+  "findings": []
+}

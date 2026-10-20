@@ -1,0 +1,11 @@
+{
+  "id": "FR-C301-defibrillateur",
+  "pathSegment": "FR-PATH-301-ALERTE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-301-ALERTE",
+      "order": 2
+    }
+  ]
+}

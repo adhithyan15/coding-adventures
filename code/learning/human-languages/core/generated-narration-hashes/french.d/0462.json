@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 462,
+  "sourceHash": "fnv1a64:cc43b528a7f2feca",
+  "lessonIds": [
+    "FR-C462-orageux",
+    "FR-C462-foudre",
+    "FR-C462-grele",
+    "FR-C462-gronder",
+    "FR-C462-rafale"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch462.txt",
+  "json": "french/narration/ch462.json",
+  "textHash": "fnv1a64:a647c2dc567735c1",
+  "jsonHash": "fnv1a64:6bf840a9aadf4119",
+  "findings": []
+}

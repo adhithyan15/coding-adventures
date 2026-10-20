@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-419-ZWISCHENLANDUNG",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-419-ZWISCHENLANDUNG"
+  ],
+  "after": []
+}

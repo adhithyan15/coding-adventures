@@ -1,0 +1,11 @@
+{
+  "id": "GE-R329-review-final-329",
+  "pathSegment": "GE-PATH-329-ANRICHTEN",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "GE-EXT-329-ANRICHTEN",
+      "order": 6
+    }
+  ]
+}

@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "german",
+  "chapter": 362,
+  "title": "Freiwillig helfen",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7ba11f0a3582f0bb",
+  "lessons": [
+    {
+      "id": "GE-C362-ehrenamt",
+      "sequence": 19640,
+      "title": "das Ehrenamt — voluntary work, an unpaid post",
+      "headword": "das Ehrenamt",
+      "romanization": "das Ehrenamt",
+      "gloss": "voluntary work, an unpaid post",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:51ed3bde4b7f220b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to integrate, then the German for violence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: das Ehrenamt",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "das Ehrenamt — \"voluntary work, an unpaid post\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Neben dem Beruf hat sie ein Ehrenamt im Sportverein. Besides her job she has an unpaid post at the sports club."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Ehrenämter. Literally an office of honour."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ehrenamt joins Ehre \"honour\", Old High German ēra (EtymDB), to Amt \"office\", from Middle High German ambahte (EtymDB), a word that goes back to Proto-Germanic ambahtaz \"follower, servant\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "das Ehrenamt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *das Ehrenamt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "das Ehrenamt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *das Ehrenamt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with das Ehrenamt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *das Ehrenamt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to integrate, then the German for violence, then say das Ehrenamt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to integrate, then the German for violence, then say *das Ehrenamt* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does das Ehrenamt mean? (\"Voluntary work, an unpaid post\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C362-ehrenamtlich",
+      "sequence": 19650,
+      "title": "ehrenamtlich — unpaid, voluntary",
+      "headword": "ehrenamtlich",
+      "romanization": "ehrenamtlich",
+      "gloss": "unpaid, voluntary",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:743b026771584914",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for violence, then the German for voluntary work."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ehrenamtlich",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ehrenamtlich — \"unpaid, voluntary\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mein Großvater arbeitet ehrenamtlich in der Bibliothek. My grandfather works as a volunteer in the library."
+            },
+            {
+              "kind": "speech",
+              "text": "Ehrenamtlich arbeiten — to do voluntary work."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ehrenamtlich is built with -lich on Ehrenamt, from Ehre \"honour\", Old High German ēra, and Amt \"office\", Middle High German ambahte (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ehrenamtlich",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ehrenamtlich*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ehrenamtlich, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ehrenamtlich*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ehrenamtlich",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ehrenamtlich*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for violence, then the German for voluntary work, then say ehrenamtlich again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for violence, then the German for voluntary work, then say *ehrenamtlich* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ehrenamtlich mean? (\"Unpaid, voluntary\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C362-freiwillig",
+      "sequence": 19660,
+      "title": "freiwillig — voluntary, of your own free will",
+      "headword": "freiwillig",
+      "romanization": "freiwillig",
+      "gloss": "voluntary, of your own free will",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:148f0916b0421b61",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for voluntary work, then the German for unpaid."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: freiwillig",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "freiwillig — \"voluntary, of your own free will\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Niemand hat ihn gezwungen, er hat es freiwillig gemacht. Nobody forced him; he did it of his own free will."
+            },
+            {
+              "kind": "speech",
+              "text": "Der Freiwillige, die Freiwillige — the volunteer."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "freiwillig joins frei \"free\", Proto-Germanic frijaz (EtymDB), to Wille \"will\", with -ig: with a free will."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "freiwillig",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *freiwillig*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "freiwillig, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *freiwillig*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with freiwillig",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *freiwillig*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for voluntary work, then the German for unpaid, then say freiwillig again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for voluntary work, then the German for unpaid, then say *freiwillig* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does freiwillig mean? (\"Voluntary, of your own free will\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C362-spenden",
+      "sequence": 19670,
+      "title": "spenden — to donate, to give",
+      "headword": "spenden",
+      "romanization": "spenden",
+      "gloss": "to donate, to give",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:272520389703a9c7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for unpaid, then the German for voluntary."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: spenden",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "spenden — \"to donate, to give\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Jedes Jahr spenden wir Geld für Kinder in Not. Every year we donate money for children in need."
+            },
+            {
+              "kind": "speech",
+              "text": "Blut spenden — to give blood. Die Spende — the donation."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "spenden goes back to Middle High German spenden and Old High German spentōn \"to spend, to use\" (EtymDB). It is usually traced to Medieval Latin spendere, from expendere \"to weigh out, to pay out\" (Lewis & Short); English spend is a cousin."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "spenden",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *spenden*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "spenden, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *spenden*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with spenden",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *spenden*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for unpaid, then the German for voluntary, then say spenden again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for unpaid, then the German for voluntary, then say *spenden* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does spenden mean? (\"To donate, to give\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C362-engagieren",
+      "sequence": 19680,
+      "title": "engagieren — to get involved (mostly reflexive, sich engagieren); to hire (an artist)",
+      "headword": "engagieren",
+      "romanization": "engagieren",
+      "gloss": "to get involved (mostly reflexive, sich engagieren); to hire (an artist)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e85de5b7ed7ddbda",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for voluntary, then the German for to donate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: engagieren",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "engagieren — \"to get involved (mostly reflexive, sich engagieren); to hire (an artist)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sie engagiert sich seit Jahren für den Tierschutz. She has been involved in animal protection for years."
+            },
+            {
+              "kind": "speech",
+              "text": "Mostly reflexive: sich für etwas engagieren. Said the French way: an-ga-ZHEE-ren. Einen Musiker engagieren — to hire a musician."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "engagieren was borrowed from French engager \"to pledge, to bind\" (EtymDB), built on gage \"a pledge\", which is usually traced to a Frankish word; EtymDB lists Old High German wetti \"a pledge, a security\" as a cousin."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "engagieren",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *engagieren*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "engagieren, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *engagieren*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with engagieren",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *engagieren*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for voluntary, then the German for to donate, then say engagieren again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for voluntary, then the German for to donate, then say *engagieren* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does engagieren mean? (\"To get involved (mostly reflexive, sich engagieren); to hire (an artist)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

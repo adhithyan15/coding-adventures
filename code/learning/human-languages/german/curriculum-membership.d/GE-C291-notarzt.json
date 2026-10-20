@@ -1,0 +1,11 @@
+{
+  "id": "GE-C291-notarzt",
+  "pathSegment": "GE-PATH-291-NOTRUF",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-291-NOTRUF",
+      "order": 1
+    }
+  ]
+}

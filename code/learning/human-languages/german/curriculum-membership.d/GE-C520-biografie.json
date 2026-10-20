@@ -1,0 +1,11 @@
+{
+  "id": "GE-C520-biografie",
+  "pathSegment": "GE-PATH-520-BUECHER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-520-BUECHER",
+      "order": 1
+    }
+  ]
+}

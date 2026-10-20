@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:e5d88f839538e887",
+  "lessonIds": [
+    "GE-C420-stornieren",
+    "GE-C420-stornierung",
+    "GE-C420-umbuchen",
+    "GE-C420-erstatten",
+    "GE-C420-erstattung"
+  ],
+  "tex": "german/book/chapters/ch420-flug-gestrichen.tex"
+}

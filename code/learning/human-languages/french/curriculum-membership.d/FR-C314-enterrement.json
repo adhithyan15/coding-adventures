@@ -1,0 +1,11 @@
+{
+  "id": "FR-C314-enterrement",
+  "pathSegment": "FR-PATH-314-FUNERAILLES",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-314-FUNERAILLES",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C348-des-lors",
+    "language": "french",
+    "chapter": 348,
+    "sequence": 19640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7e887f5418e220df"
+  },
+  "findings": []
+}

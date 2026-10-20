@@ -1,0 +1,11 @@
+{
+  "id": "GE-C417-reisepass",
+  "pathSegment": "GE-PATH-417-ZOLL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-417-ZOLL",
+      "order": 4
+    }
+  ]
+}

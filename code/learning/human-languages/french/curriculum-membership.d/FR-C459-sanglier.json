@@ -1,0 +1,11 @@
+{
+  "id": "FR-C459-sanglier",
+  "pathSegment": "FR-PATH-459-ANIMAUX",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-459-ANIMAUX",
+      "order": 2
+    }
+  ]
+}

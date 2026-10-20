@@ -1,0 +1,19 @@
+{
+  "chapter": 474,
+  "title": "Rire aux éclats",
+  "label": "ch:fr-rire-aux-eclats",
+  "canDo": "I can talk about fun, laughter and good spirits.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C474-chatouiller",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 474: I can talk about fun, laughter and good spirits.",
+    "assesses": [
+      "FR-LEX-C474-GAIETE-03",
+      "FR-LEX-C474-GAIETE-04",
+      "FR-LEX-C474-GAIETE-05"
+    ]
+  }
+}

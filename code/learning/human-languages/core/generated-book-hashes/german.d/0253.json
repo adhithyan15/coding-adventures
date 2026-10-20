@@ -1,0 +1,12 @@
+{
+  "language": "german",
+  "chapter": 253,
+  "sourceHash": "fnv1a64:594e6bbece36849a",
+  "lessonIds": [
+    "GE-C253-dann",
+    "GE-C253-schliesslich",
+    "GE-C253-lesung",
+    "GE-C253-review"
+  ],
+  "tex": "german/book/chapters/ch253-a-story-in-order.tex"
+}

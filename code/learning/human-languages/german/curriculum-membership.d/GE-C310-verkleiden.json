@@ -1,0 +1,11 @@
+{
+  "id": "GE-C310-verkleiden",
+  "pathSegment": "GE-PATH-310-KARNEVAL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-310-KARNEVAL",
+      "order": 3
+    }
+  ]
+}

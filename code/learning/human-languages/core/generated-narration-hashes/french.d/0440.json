@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 440,
+  "sourceHash": "fnv1a64:d69e5024c8201524",
+  "lessonIds": [
+    "FR-C440-faubourg",
+    "FR-C440-arrondissement",
+    "FR-C440-prefecture",
+    "FR-C440-commissariat",
+    "FR-C440-caserne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch440.txt",
+  "json": "french/narration/ch440.json",
+  "textHash": "fnv1a64:e66b9605d5efb50b",
+  "jsonHash": "fnv1a64:87e3d517bf986297",
+  "findings": []
+}

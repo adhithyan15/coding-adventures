@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-336-DESACCORD",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "FR-EXT-336-DESACCORD"
+  ],
+  "after": []
+}

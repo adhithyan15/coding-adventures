@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 498,
+  "sourceHash": "fnv1a64:4ea583d4f15da917",
+  "lessonIds": [
+    "FR-C498-escalade",
+    "FR-C498-grimper",
+    "FR-C498-gourde",
+    "FR-C498-lampe-de-poche",
+    "FR-C498-feu-de-camp"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch498.txt",
+  "json": "french/narration/ch498.json",
+  "textHash": "fnv1a64:d96d75f5215a1c0a",
+  "jsonHash": "fnv1a64:e03da298c3ae918f",
+  "findings": []
+}

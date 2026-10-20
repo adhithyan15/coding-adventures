@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-480-UEBELKEIT",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe feeling sick and dizzy.",
+  "prerequisites": []
+}

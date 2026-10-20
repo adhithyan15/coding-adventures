@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-408-RADAR",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-408-RADAR"
+  ],
+  "after": []
+}

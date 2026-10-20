@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C503-kompost",
+    "language": "german",
+    "chapter": 503,
+    "sequence": 26930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:528964e6fde8cedc"
+  },
+  "findings": []
+}

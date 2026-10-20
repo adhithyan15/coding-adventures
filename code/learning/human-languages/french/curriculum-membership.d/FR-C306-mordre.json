@@ -1,0 +1,11 @@
+{
+  "id": "FR-C306-mordre",
+  "pathSegment": "FR-PATH-306-PIQURES",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-306-PIQURES",
+      "order": 3
+    }
+  ]
+}

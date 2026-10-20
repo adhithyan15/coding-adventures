@@ -1,0 +1,11 @@
+{
+  "id": "GE-C291-notaufnahme",
+  "pathSegment": "GE-PATH-291-NOTRUF",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-291-NOTRUF",
+      "order": 4
+    }
+  ]
+}

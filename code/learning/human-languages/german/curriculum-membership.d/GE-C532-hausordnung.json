@@ -1,0 +1,11 @@
+{
+  "id": "GE-C532-hausordnung",
+  "pathSegment": "GE-PATH-532-WG",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-532-WG",
+      "order": 2
+    }
+  ]
+}

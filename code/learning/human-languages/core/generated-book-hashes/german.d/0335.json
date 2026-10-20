@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:b95cdad5a114bff6",
+  "lessonIds": [
+    "GE-C335-diskussion",
+    "GE-C335-debatte",
+    "GE-C335-vorschlag",
+    "GE-C335-vorschlagen",
+    "GE-C335-betonen"
+  ],
+  "tex": "german/book/chapters/ch335-die-diskussion.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C422-gilet",
+    "language": "french",
+    "chapter": 422,
+    "sequence": 23450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:91fa42a2f3bb75b1"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C349-faehigkeit",
+  "pathSegment": "GE-PATH-349-STELLE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-349-STELLE",
+      "order": 2
+    }
+  ]
+}

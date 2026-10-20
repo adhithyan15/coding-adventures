@@ -1,0 +1,11 @@
+{
+  "id": "FR-C338-discutable",
+  "pathSegment": "FR-PATH-338-DOUTE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-338-DOUTE",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C301-evacuer",
+  "pathSegment": "FR-PATH-301-ALERTE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-301-ALERTE",
+      "order": 4
+    }
+  ]
+}

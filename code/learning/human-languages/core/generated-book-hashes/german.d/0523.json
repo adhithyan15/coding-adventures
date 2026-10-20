@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 523,
+  "sourceHash": "fnv1a64:4103372453b77a67",
+  "lessonIds": [
+    "GE-C523-fernbedienung",
+    "GE-C523-zappen",
+    "GE-C523-serie",
+    "GE-C523-staffel",
+    "GE-C523-einschaltquote"
+  ],
+  "tex": "german/book/chapters/ch523-vor-dem-fernseher.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C497-pecher",
+  "pathSegment": "FR-PATH-497-PECHE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-497-PECHE",
+      "order": 3
+    }
+  ]
+}

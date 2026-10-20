@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C447-detacher",
+    "language": "french",
+    "chapter": 447,
+    "sequence": 24720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ba5c127a2d67b86c"
+  },
+  "findings": []
+}

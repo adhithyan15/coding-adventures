@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:3a07e035794c066e",
+  "lessonIds": [
+    "GE-C335-diskussion",
+    "GE-C335-debatte",
+    "GE-C335-vorschlag",
+    "GE-C335-vorschlagen",
+    "GE-C335-betonen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch335.txt",
+  "json": "german/narration/ch335.json",
+  "textHash": "fnv1a64:e26a11ae0a8eda91",
+  "jsonHash": "fnv1a64:1c4cab982b77f434",
+  "findings": []
+}

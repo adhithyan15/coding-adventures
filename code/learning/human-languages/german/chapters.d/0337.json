@@ -1,0 +1,19 @@
+{
+  "chapter": 337,
+  "title": "Sich irren",
+  "label": "ch:ge-sich-irren",
+  "canDo": "I can say that someone is mistaken, express doubt and question a claim.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GE-R337-review-330-337",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 337: I can say that someone is mistaken, express doubt and question a claim.",
+    "assesses": [
+      "GE-LEX-C337-IRRTUM-03",
+      "GE-LEX-C337-IRRTUM-04",
+      "GE-LEX-C337-IRRTUM-05"
+    ]
+  }
+}

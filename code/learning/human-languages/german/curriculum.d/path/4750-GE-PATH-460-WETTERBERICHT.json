@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-460-WETTERBERICHT",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-460-WETTERBERICHT"
+  ],
+  "after": []
+}

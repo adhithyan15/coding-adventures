@@ -1,0 +1,19 @@
+{
+  "chapter": 332,
+  "title": "Gründe nennen",
+  "label": "ch:ge-grunde-nennen",
+  "canDo": "I can give reasons and explain them: justify a choice, add the real reason with nämlich and an extra one with zumal.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C332-erlaeutern",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 332: I can give reasons and explain them: justify a choice, add the real reason with nämlich and an extra one with zumal.",
+    "assesses": [
+      "GE-LEX-C332-BEGRUENDEN-03",
+      "GE-LEX-C332-BEGRUENDEN-04",
+      "GE-LEX-C332-BEGRUENDEN-05"
+    ]
+  }
+}

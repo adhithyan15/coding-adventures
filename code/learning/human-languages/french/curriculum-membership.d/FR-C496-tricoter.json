@@ -1,0 +1,11 @@
+{
+  "id": "FR-C496-tricoter",
+  "pathSegment": "FR-PATH-496-COUTURE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-496-COUTURE",
+      "order": 1
+    }
+  ]
+}

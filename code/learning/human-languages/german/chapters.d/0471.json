@@ -1,0 +1,19 @@
+{
+  "chapter": 471,
+  "title": "Tränen und Trost",
+  "label": "ch:ge-tranen-und-trost",
+  "canDo": "I can talk about crying and comforting someone.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C471-mitleid",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 471: I can talk about crying and comforting someone.",
+    "assesses": [
+      "GE-LEX-C471-TROST-03",
+      "GE-LEX-C471-TROST-04",
+      "GE-LEX-C471-TROST-05"
+    ]
+  }
+}

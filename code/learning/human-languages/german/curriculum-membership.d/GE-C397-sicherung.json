@@ -1,0 +1,11 @@
+{
+  "id": "GE-C397-sicherung",
+  "pathSegment": "GE-PATH-397-ABSTURZ",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-397-ABSTURZ",
+      "order": 4
+    }
+  ]
+}

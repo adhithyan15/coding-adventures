@@ -1,0 +1,19 @@
+{
+  "chapter": 417,
+  "title": "À la douane",
+  "label": "ch:fr-a-la-douane",
+  "canDo": "I can go through security and customs: the customs officer, declaring goods, the scanner gate, searching bags and changing planes.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C417-transiter",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 417: I can go through security and customs: the customs officer, declaring goods, the scanner gate, searching bags and changing planes.",
+    "assesses": [
+      "FR-LEX-C417-DOUANE-03",
+      "FR-LEX-C417-DOUANE-04",
+      "FR-LEX-C417-DOUANE-05"
+    ]
+  }
+}

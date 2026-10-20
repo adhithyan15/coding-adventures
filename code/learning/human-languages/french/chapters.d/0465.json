@@ -1,0 +1,19 @@
+{
+  "chapter": 465,
+  "title": "Tempête et inondations",
+  "label": "ch:fr-tempete-et-inondations",
+  "canDo": "I can talk about storms and floods: the storm, the flood, flooding, overflowing and the puddle.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-R465-revision-final-465",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 465: I can talk about storms and floods: the storm, the flood, flooding, overflowing and the puddle.",
+    "assesses": [
+      "FR-LEX-C465-TEMPETE-03",
+      "FR-LEX-C465-TEMPETE-04",
+      "FR-LEX-C465-TEMPETE-05"
+    ]
+  }
+}

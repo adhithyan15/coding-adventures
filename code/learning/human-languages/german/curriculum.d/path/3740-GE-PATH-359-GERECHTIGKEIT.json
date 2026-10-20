@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-359-GERECHTIGKEIT",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "GE-EXT-359-GERECHTIGKEIT"
+  ],
+  "after": []
+}

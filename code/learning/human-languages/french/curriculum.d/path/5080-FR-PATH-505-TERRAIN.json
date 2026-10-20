@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-505-TERRAIN",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-505-TERRAIN"
+  ],
+  "after": []
+}

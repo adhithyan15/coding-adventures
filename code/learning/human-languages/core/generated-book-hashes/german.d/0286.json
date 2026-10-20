@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 286,
+  "sourceHash": "fnv1a64:c5509e334219cb33",
+  "lessonIds": [
+    "GE-C286-urteil",
+    "GE-C286-richter",
+    "GE-C286-verurteilen",
+    "GE-C286-schuldig",
+    "GE-C286-unschuldig"
+  ],
+  "tex": "german/book/chapters/ch286-vor-gericht.tex"
+}

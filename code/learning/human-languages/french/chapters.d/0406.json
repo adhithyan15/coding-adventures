@@ -1,0 +1,19 @@
+{
+  "chapter": 406,
+  "title": "La voiture de près",
+  "label": "ch:fr-la-voiture-de-pres",
+  "canDo": "I can name the outside and inside of a car: the bodywork, the bonnet, the car door, the boot and the back seat.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C406-banquette",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 406: I can name the outside and inside of a car: the bodywork, the bonnet, the car door, the boot and the back seat.",
+    "assesses": [
+      "FR-LEX-C406-CARROSSERIE-03",
+      "FR-LEX-C406-CARROSSERIE-04",
+      "FR-LEX-C406-CARROSSERIE-05"
+    ]
+  }
+}

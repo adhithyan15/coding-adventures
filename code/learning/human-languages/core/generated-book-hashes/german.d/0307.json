@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 307,
+  "sourceHash": "fnv1a64:ee4751857ce02d71",
+  "lessonIds": [
+    "GE-C307-gastgeber",
+    "GE-C307-bewirten",
+    "GE-C307-ehrengast",
+    "GE-C307-ansprache",
+    "GE-C307-trinkspruch"
+  ],
+  "tex": "german/book/chapters/ch307-der-gastgeber.tex"
+}

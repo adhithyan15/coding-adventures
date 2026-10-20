@@ -1,0 +1,11 @@
+{
+  "id": "GE-C312-karussell",
+  "pathSegment": "GE-PATH-312-VOLKSFEST",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-312-VOLKSFEST",
+      "order": 2
+    }
+  ]
+}

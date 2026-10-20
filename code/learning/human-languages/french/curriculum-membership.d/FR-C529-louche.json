@@ -1,0 +1,11 @@
+{
+  "id": "FR-C529-louche",
+  "pathSegment": "FR-PATH-529-TABLE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-529-TABLE",
+      "order": 3
+    }
+  ]
+}

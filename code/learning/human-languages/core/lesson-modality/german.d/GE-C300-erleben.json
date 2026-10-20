@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C300-erleben",
+    "language": "german",
+    "chapter": 300,
+    "sequence": 16480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e23e3c3aea36517"
+  },
+  "findings": []
+}

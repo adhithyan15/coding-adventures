@@ -1,0 +1,11 @@
+{
+  "id": "FR-C298-cabosser",
+  "pathSegment": "FR-PATH-298-CHOC",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-298-CHOC",
+      "order": 4
+    }
+  ]
+}

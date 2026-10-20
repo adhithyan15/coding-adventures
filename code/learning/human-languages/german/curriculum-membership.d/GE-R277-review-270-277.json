@@ -1,0 +1,11 @@
+{
+  "id": "GE-R277-review-270-277",
+  "pathSegment": "GE-PATH-277-STREIK",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-277-STREIK",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C460-umschlagen",
+  "pathSegment": "GE-PATH-460-WETTERBERICHT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-460-WETTERBERICHT",
+      "order": 4
+    }
+  ]
+}

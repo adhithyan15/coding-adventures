@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-487-AMOUREUX",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-487-AMOUREUX"
+  ],
+  "after": []
+}

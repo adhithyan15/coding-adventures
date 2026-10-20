@@ -1,0 +1,11 @@
+{
+  "id": "FR-C468-naif",
+  "pathSegment": "FR-PATH-468-FRANCHISE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-468-FRANCHISE",
+      "order": 2
+    }
+  ]
+}

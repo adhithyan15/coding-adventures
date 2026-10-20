@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 289,
+  "sourceHash": "fnv1a64:25fec38f8627fbd0",
+  "lessonIds": [
+    "FR-C289-agression",
+    "FR-C289-agresser",
+    "FR-C289-agresseur",
+    "FR-C289-menacer",
+    "FR-C289-menace"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch289.txt",
+  "json": "french/narration/ch289.json",
+  "textHash": "fnv1a64:cad7616584c46640",
+  "jsonHash": "fnv1a64:2888cdec8d5e6271",
+  "findings": []
+}

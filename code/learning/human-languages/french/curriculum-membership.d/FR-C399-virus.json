@@ -1,0 +1,11 @@
+{
+  "id": "FR-C399-virus",
+  "pathSegment": "FR-PATH-399-PANNE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-399-PANNE",
+      "order": 4
+    }
+  ]
+}

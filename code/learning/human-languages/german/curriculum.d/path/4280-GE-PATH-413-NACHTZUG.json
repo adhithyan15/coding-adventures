@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-413-NACHTZUG",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-413-NACHTZUG"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C527-trockner",
+    "language": "german",
+    "chapter": 527,
+    "sequence": 28120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd04fd56840ed183"
+  },
+  "findings": []
+}

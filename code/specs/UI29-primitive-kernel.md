@@ -131,6 +131,28 @@ Flutter, Compose `contentDescription`, SwiftUI `.accessibilityLabel`, and
 WinUI `AutomationProperties.Name`. A backend must report a native-complete
 degradation rather than silently discard an authored name it cannot lower.
 
+`placeholder` follows the same rule. It is ghost text, so it is often data a
+host supplies (a localised hint, the toolkit `Input`'s own `placeholder`
+slot), and a literal, a slot, a `For` binding and an expression must all reach
+the native placeholder surface, in both the single-line and the text-area
+shape:
+
+| Backend | Single-line | `multiline: true` |
+|---|---|---|
+| React | `placeholder="…"` / `placeholder={x}` | same, on `<textarea>` |
+| Web Components | `placeholder="${escapeHtmlAttribute(x)}"` | same, on `<textarea>` |
+| HTML | `placeholder="{{x}}"` | same, on `<textarea>` |
+| SwiftUI | `TextField` title, `String(describing: x)` for a bound value | a `Text(verbatim:)` overlay while the value is empty, and the fallback `.accessibilityLabel` |
+| Qt | `placeholderText: x` | same, on `TextArea` |
+| WinUI (XAML) | `PlaceholderText="{x:Bind X, Mode=OneWay}"` | same |
+| Compose | the `decorationBox` placeholder `Text` | same |
+| Flutter | `InputDecoration(hintText: x)` | same |
+
+React, Web Components, SwiftUI and Flutter read literals only until the
+slot-bound placeholder fix, so a bound placeholder vanished on those four
+with no degradation reported. A name that is not an identifier in the target
+language is an `UnsafeSlotName` error on all four, never spliced into source.
+
 `HostButton` takes its content from `label`. Children nested inside a
 `HostButton` are **not** a portable content model yet: only XAML and HTML
 render them, and only when no `label` is set. Every other backend lowers the

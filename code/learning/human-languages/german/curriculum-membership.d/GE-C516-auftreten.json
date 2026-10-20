@@ -1,0 +1,11 @@
+{
+  "id": "GE-C516-auftreten",
+  "pathSegment": "GE-PATH-516-BUEHNE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-516-BUEHNE",
+      "order": 3
+    }
+  ]
+}

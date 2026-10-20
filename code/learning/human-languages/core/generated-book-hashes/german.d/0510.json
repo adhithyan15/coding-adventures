@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:5796203c29a8a6ce",
+  "lessonIds": [
+    "GE-C510-tribuene",
+    "GE-C510-zuschauer",
+    "GE-C510-anfeuern",
+    "GE-C510-jubel",
+    "GE-C510-buhen"
+  ],
+  "tex": "german/book/chapters/ch510-auf-der-tribune.tex"
+}

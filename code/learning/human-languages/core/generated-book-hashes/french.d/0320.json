@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:1bf9e3465aa83ba7",
+  "lessonIds": [
+    "FR-C320-trinquer",
+    "FR-C320-toast",
+    "FR-C320-souhaiter",
+    "FR-C320-bougie",
+    "FR-C320-voeu"
+  ],
+  "tex": "french/book/chapters/ch320-a-votre-sante.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 366,
+  "sourceHash": "fnv1a64:f6802cc706483daa",
+  "lessonIds": [
+    "FR-C366-benevole",
+    "FR-C366-benevolat",
+    "FR-C366-association",
+    "FR-C366-solidarite",
+    "FR-C366-communaute"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch366.txt",
+  "json": "french/narration/ch366.json",
+  "textHash": "fnv1a64:8169af2c7e5ac5ce",
+  "jsonHash": "fnv1a64:5e505f591329b3e4",
+  "findings": []
+}

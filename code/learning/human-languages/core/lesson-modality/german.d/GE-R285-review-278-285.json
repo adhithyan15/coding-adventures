@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-R285-review-278-285",
+    "language": "german",
+    "chapter": 285,
+    "sequence": 15720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6259e9d2223c95dc"
+  },
+  "findings": []
+}

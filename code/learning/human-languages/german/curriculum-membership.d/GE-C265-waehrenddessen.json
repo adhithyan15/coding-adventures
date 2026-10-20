@@ -1,0 +1,11 @@
+{
+  "id": "GE-C265-waehrenddessen",
+  "pathSegment": "GE-PATH-265-INZWISCHEN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-265-INZWISCHEN",
+      "order": 2
+    }
+  ]
+}

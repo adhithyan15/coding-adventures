@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 348,
+  "sourceHash": "fnv1a64:1b45f3db387bf826",
+  "lessonIds": [
+    "FR-C348-a-cause-de",
+    "FR-C348-grace-a",
+    "FR-C348-en-effet",
+    "FR-C348-des-lors",
+    "FR-C348-origine"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch348.txt",
+  "json": "french/narration/ch348.json",
+  "textHash": "fnv1a64:77b1251544ab3f59",
+  "jsonHash": "fnv1a64:1ea0117c827b5324",
+  "findings": []
+}

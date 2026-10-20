@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 515,
+  "sourceHash": "fnv1a64:0b09db9d0f63c227",
+  "lessonIds": [
+    "GE-C515-chor",
+    "GE-C515-orchester",
+    "GE-C515-dirigent",
+    "GE-C515-dirigieren",
+    "GE-C515-komponieren"
+  ],
+  "tex": "german/book/chapters/ch515-chor-und-orchester.tex"
+}

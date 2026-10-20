@@ -1,0 +1,11 @@
+{
+  "id": "FR-C522-biographie",
+  "pathSegment": "FR-PATH-522-GENRES",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-522-GENRES",
+      "order": 3
+    }
+  ]
+}

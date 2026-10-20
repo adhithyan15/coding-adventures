@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C366-gegebenenfalls",
+    "language": "german",
+    "chapter": 366,
+    "sequence": 19870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:23c8684268083aed"
+  },
+  "findings": []
+}

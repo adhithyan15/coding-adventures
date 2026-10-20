@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 445,
+  "sourceHash": "fnv1a64:e92c95e281c78fe1",
+  "lessonIds": [
+    "FR-C445-quincaillerie",
+    "FR-C445-droguerie",
+    "FR-C445-papeterie",
+    "FR-C445-mercerie",
+    "FR-C445-caviste"
+  ],
+  "tex": "french/book/chapters/ch445-petites-boutiques.tex"
+}

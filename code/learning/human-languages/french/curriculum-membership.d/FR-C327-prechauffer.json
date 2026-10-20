@@ -1,0 +1,11 @@
+{
+  "id": "FR-C327-prechauffer",
+  "pathSegment": "FR-PATH-327-RECETTE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-327-RECETTE",
+      "order": 4
+    }
+  ]
+}

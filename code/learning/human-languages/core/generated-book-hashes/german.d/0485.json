@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 485,
+  "sourceHash": "fnv1a64:40c72d7025304e25",
+  "lessonIds": [
+    "GE-C485-nacken",
+    "GE-C485-ellbogen",
+    "GE-C485-handgelenk",
+    "GE-C485-knoechel",
+    "GE-C485-huefte"
+  ],
+  "tex": "german/book/chapters/ch485-nacken-ellbogen-und-knochel.tex"
+}

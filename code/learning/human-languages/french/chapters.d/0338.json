@@ -1,0 +1,19 @@
+{
+  "chapter": 338,
+  "title": "Je n'y crois pas",
+  "label": "ch:fr-je-n-y-crois-pas",
+  "canDo": "I can say I doubt something, that I am sceptical, deny a claim and say an idea is absurd or debatable.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C338-discutable",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 338: I can say I doubt something, that I am sceptical, deny a claim and say an idea is absurd or debatable.",
+    "assesses": [
+      "FR-LEX-C338-DOUTE-03",
+      "FR-LEX-C338-DOUTE-04",
+      "FR-LEX-C338-DOUTE-05"
+    ]
+  }
+}

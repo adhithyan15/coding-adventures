@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 475,
+  "sourceHash": "fnv1a64:6521dfb0ea4c74bf",
+  "lessonIds": [
+    "FR-C475-jalousie",
+    "FR-C475-envier",
+    "FR-C475-rancune",
+    "FR-C475-rancunier",
+    "FR-C475-reconcilier"
+  ],
+  "tex": "french/book/chapters/ch475-jalousie-et-rancune.tex"
+}

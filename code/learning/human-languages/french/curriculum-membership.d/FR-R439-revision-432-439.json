@@ -1,0 +1,11 @@
+{
+  "id": "FR-R439-revision-432-439",
+  "pathSegment": "FR-PATH-439-CLOCHERS",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FR-EXT-439-CLOCHERS",
+      "order": 5
+    }
+  ]
+}

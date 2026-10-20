@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 407,
+  "sourceHash": "fnv1a64:b69082a7cf780729",
+  "lessonIds": [
+    "FR-C407-stationnement",
+    "FR-C407-stationner",
+    "FR-C407-horodateur",
+    "FR-C407-creneau",
+    "FR-C407-fourriere",
+    "FR-R407-revision-400-407"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch407.txt",
+  "json": "french/narration/ch407.json",
+  "textHash": "fnv1a64:7b40a2e3f610433b",
+  "jsonHash": "fnv1a64:fa09289bd2759c95",
+  "findings": []
+}

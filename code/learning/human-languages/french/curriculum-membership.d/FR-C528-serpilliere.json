@@ -1,0 +1,11 @@
+{
+  "id": "FR-C528-serpilliere",
+  "pathSegment": "FR-PATH-528-MENAGE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-528-MENAGE",
+      "order": 4
+    }
+  ]
+}

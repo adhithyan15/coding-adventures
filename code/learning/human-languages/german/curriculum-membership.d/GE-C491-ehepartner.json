@@ -1,0 +1,11 @@
+{
+  "id": "GE-C491-ehepartner",
+  "pathSegment": "GE-PATH-491-PATEN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-491-PATEN",
+      "order": 3
+    }
+  ]
+}

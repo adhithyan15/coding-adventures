@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 511,
+  "sourceHash": "fnv1a64:594ee66f38bb4efd",
+  "lessonIds": [
+    "GE-C511-freibad",
+    "GE-C511-kraulen",
+    "GE-C511-tauchen",
+    "GE-C511-paddeln",
+    "GE-C511-kanu"
+  ],
+  "tex": "german/book/chapters/ch511-im-wasser.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C299-plaie",
+  "pathSegment": "FR-PATH-299-CHUTE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-299-CHUTE",
+      "order": 4
+    }
+  ]
+}

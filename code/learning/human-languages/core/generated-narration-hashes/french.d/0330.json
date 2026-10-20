@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:62f6b5bd7c500d91",
+  "lessonIds": [
+    "FR-C330-bouillir",
+    "FR-C330-ebullition",
+    "FR-C330-marmite",
+    "FR-C330-mijoter",
+    "FR-C330-cocotte"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch330.txt",
+  "json": "french/narration/ch330.json",
+  "textHash": "fnv1a64:b1dbd65d42db56d2",
+  "jsonHash": "fnv1a64:011ef341947e154b",
+  "findings": []
+}

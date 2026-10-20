@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C520-rayon",
+    "language": "french",
+    "chapter": 520,
+    "sequence": 28470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8cedf36e1020c3a0"
+  },
+  "findings": []
+}

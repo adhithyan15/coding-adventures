@@ -1,0 +1,11 @@
+{
+  "id": "GE-C505-dehnen",
+  "pathSegment": "GE-PATH-505-TRAINING",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-505-TRAINING",
+      "order": 3
+    }
+  ]
+}

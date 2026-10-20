@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 317,
+  "sourceHash": "fnv1a64:8ad4049a07c234b4",
+  "lessonIds": [
+    "FR-C317-defile",
+    "FR-C317-defiler",
+    "FR-C317-carnaval",
+    "FR-C317-char",
+    "FR-C317-deguiser"
+  ],
+  "tex": "french/book/chapters/ch317-le-carnaval.tex"
+}

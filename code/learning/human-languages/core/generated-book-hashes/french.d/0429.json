@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 429,
+  "sourceHash": "fnv1a64:177922d825c7ae04",
+  "lessonIds": [
+    "FR-C429-ampoule",
+    "FR-C429-prise",
+    "FR-C429-minibar",
+    "FR-C429-moquette",
+    "FR-C429-tache-stain"
+  ],
+  "tex": "french/book/chapters/ch429-petits-soucis-dans-la-chambre.tex"
+}

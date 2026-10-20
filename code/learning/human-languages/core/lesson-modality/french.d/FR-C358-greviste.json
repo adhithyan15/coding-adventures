@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C358-greviste",
+    "language": "french",
+    "chapter": 358,
+    "sequence": 20150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:115b5f4d8671d790"
+  },
+  "findings": []
+}

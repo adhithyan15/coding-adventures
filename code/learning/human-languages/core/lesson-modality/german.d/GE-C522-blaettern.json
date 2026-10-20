@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C522-blaettern",
+    "language": "german",
+    "chapter": 522,
+    "sequence": 27880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:787b8f911ed60211"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 427,
+  "sourceHash": "fnv1a64:cf9d11a281b0fac3",
+  "lessonIds": [
+    "FR-C427-climatisation",
+    "FR-C427-chauffage",
+    "FR-C427-radiateur",
+    "FR-C427-taie",
+    "FR-C427-peignoir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch427.txt",
+  "json": "french/narration/ch427.json",
+  "textHash": "fnv1a64:0da824c38328780f",
+  "jsonHash": "fnv1a64:255451e5c02e8107",
+  "findings": []
+}

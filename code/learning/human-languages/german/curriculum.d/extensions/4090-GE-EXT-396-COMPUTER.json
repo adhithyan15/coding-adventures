@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-396-COMPUTER",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about the keyboard and the printer, printing something out, and installing a program.",
+  "prerequisites": []
+}

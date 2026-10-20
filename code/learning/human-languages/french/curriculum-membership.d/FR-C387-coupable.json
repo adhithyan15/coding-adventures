@@ -1,0 +1,11 @@
+{
+  "id": "FR-C387-coupable",
+  "pathSegment": "FR-PATH-387-PROCES",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-387-PROCES",
+      "order": 3
+    }
+  ]
+}

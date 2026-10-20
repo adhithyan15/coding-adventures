@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 269,
+  "sourceHash": "fnv1a64:e78d2e1cb9087364",
+  "lessonIds": [
+    "FR-C269-lorsque",
+    "FR-C269-des-que",
+    "FR-C269-au-moment-ou",
+    "FR-C269-aussitot",
+    "FR-C269-tandis-que"
+  ],
+  "tex": "french/book/chapters/ch269-au-moment-ou.tex"
+}

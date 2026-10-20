@@ -1,0 +1,11 @@
+{
+  "id": "FR-C436-rebrousser",
+  "pathSegment": "FR-PATH-436-RACCOURCI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-436-RACCOURCI",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C525-documentaire",
+  "pathSegment": "FR-PATH-525-ECRAN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-525-ECRAN",
+      "order": 3
+    }
+  ]
+}

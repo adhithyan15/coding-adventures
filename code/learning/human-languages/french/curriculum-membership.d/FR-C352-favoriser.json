@@ -1,0 +1,11 @@
+{
+  "id": "FR-C352-favoriser",
+  "pathSegment": "FR-PATH-352-FREIN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-352-FREIN",
+      "order": 2
+    }
+  ]
+}

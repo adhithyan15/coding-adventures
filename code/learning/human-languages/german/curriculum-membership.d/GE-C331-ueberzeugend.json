@@ -1,0 +1,11 @@
+{
+  "id": "GE-C331-ueberzeugend",
+  "pathSegment": "GE-PATH-331-UEBERZEUGEN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-331-UEBERZEUGEN",
+      "order": 1
+    }
+  ]
+}

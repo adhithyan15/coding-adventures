@@ -1,0 +1,11 @@
+{
+  "id": "GE-C335-vorschlag",
+  "pathSegment": "GE-PATH-335-DISKUSSION",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-335-DISKUSSION",
+      "order": 2
+    }
+  ]
+}

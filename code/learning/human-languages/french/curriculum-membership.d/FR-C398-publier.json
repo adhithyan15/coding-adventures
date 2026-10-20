@@ -1,0 +1,11 @@
+{
+  "id": "FR-C398-publier",
+  "pathSegment": "FR-PATH-398-RESEAU",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-398-RESEAU",
+      "order": 4
+    }
+  ]
+}

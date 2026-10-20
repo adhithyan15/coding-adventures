@@ -1,0 +1,11 @@
+{
+  "id": "FR-C459-herisson",
+  "pathSegment": "FR-PATH-459-ANIMAUX",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-459-ANIMAUX",
+      "order": 1
+    }
+  ]
+}

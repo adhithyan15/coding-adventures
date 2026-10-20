@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C412-guichet",
+    "language": "french",
+    "chapter": 412,
+    "sequence": 22910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0c73c67a271d7a01"
+  },
+  "findings": []
+}

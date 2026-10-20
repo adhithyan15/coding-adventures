@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:275e6df4a5ccfa21",
+  "lessonIds": [
+    "GE-C330-standpunkt",
+    "GE-C330-ansicht",
+    "GE-C330-auffassung",
+    "GE-C330-gesichtspunkt",
+    "GE-C330-vertreten"
+  ],
+  "tex": "german/book/chapters/ch330-mein-standpunkt.tex"
+}

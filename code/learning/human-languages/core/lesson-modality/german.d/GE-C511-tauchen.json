@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C511-tauchen",
+    "language": "german",
+    "chapter": 511,
+    "sequence": 27320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b9d5eecd9df86c27"
+  },
+  "findings": []
+}

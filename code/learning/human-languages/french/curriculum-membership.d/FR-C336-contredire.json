@@ -1,0 +1,11 @@
+{
+  "id": "FR-C336-contredire",
+  "pathSegment": "FR-PATH-336-DESACCORD",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-336-DESACCORD",
+      "order": 4
+    }
+  ]
+}

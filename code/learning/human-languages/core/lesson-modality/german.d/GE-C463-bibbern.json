@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C463-bibbern",
+    "language": "german",
+    "chapter": 463,
+    "sequence": 24870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:01eaeb295dfc0404"
+  },
+  "findings": []
+}

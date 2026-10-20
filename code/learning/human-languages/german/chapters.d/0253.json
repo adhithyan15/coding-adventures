@@ -1,0 +1,21 @@
+{
+  "chapter": 253,
+  "title": "Zuerst, Dann, Schließlich — A Story in Order",
+  "label": "ch:ge-a-story-in-order",
+  "canDo": "I can tell a short connected story in order with zuerst, dann, danach and schließlich, and read one of about a hundred words.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C253-review",
+    "kind": "production",
+    "summary": "Complete GE-C253-review: retell the reading's journey aloud in order, with the verb second after every step word.",
+    "assesses": [
+      "GE-LEX-DANN-01",
+      "GE-GRAMMAR-DANN-VERB-ZWEI-02",
+      "GE-LEX-SCHLIESSLICH-01",
+      "GE-GRAMMAR-ERZAEHL-GERUEST-02",
+      "GE-SKILL-READ-NARRATIVE-01"
+    ]
+  }
+}

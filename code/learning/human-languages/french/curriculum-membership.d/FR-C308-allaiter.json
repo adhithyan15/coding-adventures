@@ -1,0 +1,11 @@
+{
+  "id": "FR-C308-allaiter",
+  "pathSegment": "FR-PATH-308-NAISSANCE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-308-NAISSANCE",
+      "order": 3
+    }
+  ]
+}

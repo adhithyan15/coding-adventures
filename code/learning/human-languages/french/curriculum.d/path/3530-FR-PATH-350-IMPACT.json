@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-350-IMPACT",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "FR-EXT-350-IMPACT"
+  ],
+  "after": []
+}

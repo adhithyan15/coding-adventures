@@ -1,0 +1,11 @@
+{
+  "id": "GE-C253-lesung",
+  "pathSegment": "GE-PATH-253-REIHENFOLGE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-253-REIHENFOLGE",
+      "order": 2
+    }
+  ]
+}

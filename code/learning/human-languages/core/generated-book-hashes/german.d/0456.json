@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 456,
+  "sourceHash": "fnv1a64:63e7629f0fc135ad",
+  "lessonIds": [
+    "GE-C456-lichtung",
+    "GE-C456-gebuesch",
+    "GE-C456-farn",
+    "GE-C456-moos",
+    "GE-C456-rascheln"
+  ],
+  "tex": "german/book/chapters/ch456-im-wald.tex"
+}

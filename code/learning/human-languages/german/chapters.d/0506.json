@@ -1,0 +1,19 @@
+{
+  "chapter": 506,
+  "title": "Auf dem Platz",
+  "label": "ch:ge-auf-dem-platz",
+  "canDo": "I can talk about the players on a football pitch.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C506-pfeifen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 506: I can talk about the players on a football pitch.",
+    "assesses": [
+      "GE-LEX-C506-FUSSBALL-03",
+      "GE-LEX-C506-FUSSBALL-04",
+      "GE-LEX-C506-FUSSBALL-05"
+    ]
+  }
+}
