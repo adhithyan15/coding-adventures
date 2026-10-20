@@ -89,7 +89,11 @@ it("pins Russian lesson-content budgets", () =>
     // 1342 -> 1376: chapters 261-270, the B1 core that realizes all five B1
     // spine nodes (aspect in the past, reasons, travel, experience, бы): 34
     // lessons, one reading and one writing. No idiom, sense or culture claim.
-    lessons: 1376,
+    // 1376 -> 1378: chapter 266 gains объявление and the letter lesson for ъ,
+    // which the B1 vocabulary needs and the track had never taught.
+    // 1378 -> 2738: chapters 271-534, the B1 vocabulary: 1,320 word lessons
+    // (one headword each) and 40 spaced reviews. Russian attains B1 here.
+    lessons: 2738,
     idioms: 0,
     senses: 4,
     cultureClaims: 10,

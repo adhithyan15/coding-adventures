@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C401-ustanavlivat",
+    "language": "russian",
+    "chapter": 401,
+    "sequence": 23090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cfd9c382d8b964c4"
+  },
+  "findings": []
+}

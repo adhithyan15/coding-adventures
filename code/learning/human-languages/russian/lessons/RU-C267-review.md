@@ -12,18 +12,18 @@ headword: "(review)"
 gloss: "how a trip felt and what comes next — рад and устал, мне было интересно, then a hope with надеюсь, что and a dream with мечтаю"
 romanization: "(review)"
 concept_tag: REVIEW
-prerequisites: [RU-C267-mechtat, RU-C267-ya-byl-rad, RU-C266-review]
+prerequisites: [RU-C267-mechtat, RU-C267-ya-byl-rad, RU-C266-review, RU-C266-obyavleniye, RU-W266-tvyordyy-znak]
 sounds: []
 roots: []
 etymology_hook: "рад and радость share a root, and a мечта may once have been a flicker"
 duration:
-  max_seconds: 180
+  max_seconds: 200
 requires:
-  knowledge: [RU-GRAMMAR-RAD-SHORT-01, RU-GRAMMAR-USTAL-STATE-01, RU-GRAMMAR-MNE-BYLO-01, RU-LEX-MECHTAT-01, RU-GRAMMAR-NADEYUS-CHTO-01, RU-LEX-OPOZDAL-NA-POEZD-01, RU-GRAMMAR-PROBLEM-PERFECTIVE-01, RU-GRAMMAR-STORY-FRAME-01, RU-LEX-C78-TOWN2-03, RU-LEX-C126-QUAL126-04, RU-LEX-C176-ACT176-01, RU-LEX-C216-KACH216-04, RU-LEX-C184-MESTO184-03]
+  knowledge: [RU-GRAMMAR-RAD-SHORT-01, RU-GRAMMAR-USTAL-STATE-01, RU-GRAMMAR-MNE-BYLO-01, RU-LEX-MECHTAT-01, RU-GRAMMAR-NADEYUS-CHTO-01, RU-LEX-OPOZDAL-NA-POEZD-01, RU-GRAMMAR-PROBLEM-PERFECTIVE-01, RU-LEX-OBYAVLENIYE-01, RU-SCRIPT-C266-TVYORDYY-ZNAK-01, RU-LEX-C78-TOWN2-02, RU-GRAMMAR-STORY-FRAME-01, RU-LEX-C78-TOWN2-03, RU-LEX-C126-QUAL126-04, RU-LEX-C176-ACT176-01, RU-LEX-C216-KACH216-04, RU-LEX-C184-MESTO184-03]
 introduces:
   knowledge: []
 practises:
-  knowledge: [RU-GRAMMAR-RAD-SHORT-01, RU-GRAMMAR-USTAL-STATE-01, RU-GRAMMAR-MNE-BYLO-01, RU-LEX-MECHTAT-01, RU-GRAMMAR-NADEYUS-CHTO-01, RU-LEX-OPOZDAL-NA-POEZD-01, RU-GRAMMAR-PROBLEM-PERFECTIVE-01, RU-GRAMMAR-STORY-FRAME-01, RU-LEX-C78-TOWN2-03, RU-LEX-C126-QUAL126-04, RU-LEX-C176-ACT176-01, RU-LEX-C216-KACH216-04, RU-LEX-C184-MESTO184-03]
+  knowledge: [RU-GRAMMAR-RAD-SHORT-01, RU-GRAMMAR-USTAL-STATE-01, RU-GRAMMAR-MNE-BYLO-01, RU-LEX-MECHTAT-01, RU-GRAMMAR-NADEYUS-CHTO-01, RU-LEX-OPOZDAL-NA-POEZD-01, RU-GRAMMAR-PROBLEM-PERFECTIVE-01, RU-LEX-OBYAVLENIYE-01, RU-SCRIPT-C266-TVYORDYY-ZNAK-01, RU-LEX-C78-TOWN2-02, RU-GRAMMAR-STORY-FRAME-01, RU-LEX-C78-TOWN2-03, RU-LEX-C126-QUAL126-04, RU-LEX-C176-ACT176-01, RU-LEX-C216-KACH216-04, RU-LEX-C184-MESTO184-03]
 skills: [listening, speaking]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-output, language-focus, fluency]
@@ -58,17 +58,19 @@ infinitive or **о**.
 "I dream of going back there".
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[RU-GRAMMAR-RAD-SHORT-01, RU-GRAMMAR-USTAL-STATE-01, RU-GRAMMAR-MNE-BYLO-01, RU-LEX-MECHTAT-01, RU-GRAMMAR-NADEYUS-CHTO-01, RU-LEX-OPOZDAL-NA-POEZD-01, RU-GRAMMAR-PROBLEM-PERFECTIVE-01, RU-GRAMMAR-STORY-FRAME-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[RU-GRAMMAR-RAD-SHORT-01, RU-GRAMMAR-USTAL-STATE-01, RU-GRAMMAR-MNE-BYLO-01, RU-LEX-MECHTAT-01, RU-GRAMMAR-NADEYUS-CHTO-01, RU-LEX-OPOZDAL-NA-POEZD-01, RU-GRAMMAR-PROBLEM-PERFECTIVE-01, RU-LEX-OBYAVLENIYE-01, RU-LEX-C78-TOWN2-02, RU-GRAMMAR-STORY-FRAME-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *V muzéye mne býlo interésno.*]
 - [YOU SAY: *Ya opozdál na póyezd, no mne né bylo grústno.*]
+- [YOU SAY: a late train as good news: *Na vokzále býlo obyavléniye, i ya byl rad: póyezd opázdyval.*]
 - [YOU SAY: *Ya nadéyus, shto pogóda búdet khoróshaya.*]
 - [YOU ANSWER: *Kak býlo na kontsérte?* "How was the concert?" Answer with *mne býlo* and one feeling]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[RU-GRAMMAR-MNE-BYLO-01, RU-LEX-MECHTAT-01, RU-GRAMMAR-NADEYUS-CHTO-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[RU-GRAMMAR-MNE-BYLO-01, RU-LEX-MECHTAT-01, RU-GRAMMAR-NADEYUS-CHTO-01, RU-SCRIPT-C266-TVYORDYY-ZNAK-01] -->
 
 [PAUSE 3s] "It was interesting for me"? (***Мне было интересно.***) "I
 dream of the sea"? (***Я мечтаю о море.***) A hope about tomorrow: which
-verb form? (***Будет***, the future.)
+verb form? (***Будет***, the future.) And the silent sign after *ob-* in
+*obyavléniye*? (The **hard sign**, *tvyórdyy znak*.)

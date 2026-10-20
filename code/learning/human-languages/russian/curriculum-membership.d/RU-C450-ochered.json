@@ -1,0 +1,11 @@
+{
+  "id": "RU-C450-ochered",
+  "pathSegment": "RU-PATH-450-SPRAVKA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-450-SPRAVKA",
+      "order": 2
+    }
+  ]
+}

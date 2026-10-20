@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C517-orkestr",
+    "language": "russian",
+    "chapter": 517,
+    "sequence": 29070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ced801073d3b0033"
+  },
+  "findings": []
+}

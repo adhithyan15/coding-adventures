@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 270,
-  "sourceHash": "fnv1a64:88cc150fbbddcefc",
+  "sourceHash": "fnv1a64:da4d4ebbe690e26d",
   "lessonIds": [
     "RU-C270-ya-by-khotel",
     "RU-C270-yesli-by",
@@ -12,7 +12,7 @@
   "drivablePrefix": 3,
   "text": "russian/narration/ch270.txt",
   "json": "russian/narration/ch270.json",
-  "textHash": "fnv1a64:9505a0b84d2bf57b",
-  "jsonHash": "fnv1a64:56465bb455aab2a8",
+  "textHash": "fnv1a64:cb96fcba7c5c99b4",
+  "jsonHash": "fnv1a64:c35d19a347ae87da",
   "findings": []
 }

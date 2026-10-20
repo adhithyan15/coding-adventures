@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 262,
-  "sourceHash": "fnv1a64:aac63f345803e760",
+  "sourceHash": "fnv1a64:a1806ee40953b44d",
   "lessonIds": [
     "RU-C262-snachala-potom",
     "RU-C262-rasskazat",
@@ -12,7 +12,7 @@
   "drivablePrefix": 2,
   "text": "russian/narration/ch262.txt",
   "json": "russian/narration/ch262.json",
-  "textHash": "fnv1a64:92c816399bee985f",
-  "jsonHash": "fnv1a64:6ecc7a375fe33e8e",
+  "textHash": "fnv1a64:467468115bfdc234",
+  "jsonHash": "fnv1a64:a4a07e3d5cccfffa",
   "findings": []
 }

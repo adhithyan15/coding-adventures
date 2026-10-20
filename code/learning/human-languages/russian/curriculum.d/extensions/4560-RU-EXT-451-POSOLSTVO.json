@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-451-POSOLSTVO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can visit the embassy and send small parcels: the embassy, a passport for travel abroad, a small parcel, the addressee and issuing documents.",
+  "prerequisites": []
+}

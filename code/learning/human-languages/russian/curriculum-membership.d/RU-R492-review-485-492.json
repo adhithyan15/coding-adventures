@@ -1,0 +1,11 @@
+{
+  "id": "RU-R492-review-485-492",
+  "pathSegment": "RU-PATH-492-STEPFAMILY",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "RU-EXT-492-STEPFAMILY",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C296-spasat",
+    "language": "russian",
+    "chapter": 296,
+    "sequence": 17690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1bfc26257c7bfa4f"
+  },
+  "findings": []
+}

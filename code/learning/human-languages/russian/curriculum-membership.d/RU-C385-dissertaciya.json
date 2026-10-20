@@ -1,0 +1,11 @@
+{
+  "id": "RU-C385-dissertaciya",
+  "pathSegment": "RU-PATH-385-OBRAZOVANIYE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-385-OBRAZOVANIYE",
+      "order": 1
+    }
+  ]
+}

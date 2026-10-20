@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 483,
+  "sourceHash": "fnv1a64:0f72df48e7430b43",
+  "lessonIds": [
+    "RU-C483-tsarapina",
+    "RU-C483-ushibitsya",
+    "RU-C483-porez",
+    "RU-C483-ssadina",
+    "RU-C483-zazhivat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch483.txt",
+  "json": "russian/narration/ch483.json",
+  "textHash": "fnv1a64:076adf277634efa1",
+  "jsonHash": "fnv1a64:b83bb22908a37322",
+  "findings": []
+}

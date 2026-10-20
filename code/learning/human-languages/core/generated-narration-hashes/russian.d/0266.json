@@ -1,17 +1,19 @@
 {
   "language": "russian",
   "chapter": 266,
-  "sourceHash": "fnv1a64:2b77883e79de6948",
+  "sourceHash": "fnv1a64:ccdf064ca8648a01",
   "lessonIds": [
     "RU-C266-tuda-i-obratno",
     "RU-C266-opozdal",
+    "RU-C266-obyavleniye",
+    "RU-W266-tvyordyy-znak",
     "RU-C266-review"
   ],
-  "voiceLessons": 3,
+  "voiceLessons": 4,
   "drivablePrefix": 3,
   "text": "russian/narration/ch266.txt",
   "json": "russian/narration/ch266.json",
-  "textHash": "fnv1a64:5c9b14b6b3c66649",
-  "jsonHash": "fnv1a64:e055ccd103b6b8b4",
+  "textHash": "fnv1a64:b81455623c975541",
+  "jsonHash": "fnv1a64:4be90c5c21cf4914",
   "findings": []
 }

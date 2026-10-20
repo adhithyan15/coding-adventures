@@ -4,7 +4,7 @@
   "chapter": 264,
   "title": "Advice, and Why",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:2b5a476ab102a8a5",
+  "sourceHash": "fnv1a64:0e3f68448c541ae1",
   "lessons": [
     {
       "id": "RU-C264-tebe-stoit",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c6fd2d448fccd81f",
+      "sourceHash": "fnv1a64:9a105bcb890be637",
       "notice": null,
       "blocks": [
         {
@@ -91,7 +91,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "должен comes from долг, \"a debt, a duty\", which EtymDB 2.1 traces to Proto-Slavic dŭlgŭ. A duty is a debt: Я должен тебе сто рублей still means \"I owe you a hundred roubles\"."
+              "text": "должен comes from the Russian noun for \"a debt, a duty\", which EtymDB 2.1 traces to Proto-Slavic dŭlgŭ. A duty is a debt: Я должен тебе сто рублей still means \"I owe you a hundred roubles\"."
             }
           ]
         },
@@ -176,7 +176,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e2339008c9618137",
+      "sourceHash": "fnv1a64:553552caa87eefe9",
       "notice": null,
       "blocks": [
         {
@@ -226,7 +226,7 @@
             },
             {
               "kind": "speech",
-              "text": "Мог is the past of мочь, one of the few without an л: мог, могла, могли."
+              "text": "Мог is the past of мочь, one of the few whose form for a man has no л: мог, but могла, могли."
             }
           ]
         },

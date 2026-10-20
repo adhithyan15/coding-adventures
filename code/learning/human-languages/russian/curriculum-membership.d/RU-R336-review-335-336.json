@@ -1,0 +1,11 @@
+{
+  "id": "RU-R336-review-335-336",
+  "pathSegment": "RU-PATH-336-GOTOVO",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "RU-EXT-336-GOTOVO",
+      "order": 5
+    }
+  ]
+}

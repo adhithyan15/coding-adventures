@@ -1,0 +1,19 @@
+{
+  "chapter": 348,
+  "title": "Grounds and motives",
+  "label": "ch:ru-grounds-and-motives",
+  "canDo": "I can name the occasion for something, the grounds for an opinion, a factor and a motive, and say where a thing comes from.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C348-proiskhozhdenie",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 348: I can name the occasion for something, the grounds for an opinion, a factor and a motive, and say where a thing comes from.",
+    "assesses": [
+      "RU-LEX-C348-POVOD-03",
+      "RU-LEX-C348-POVOD-04",
+      "RU-LEX-C348-POVOD-05"
+    ]
+  }
+}

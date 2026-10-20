@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C394-dolg",
+    "language": "russian",
+    "chapter": 394,
+    "sequence": 22720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cc44c7c47d2a8483"
+  },
+  "findings": []
+}

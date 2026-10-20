@@ -1,0 +1,19 @@
+{
+  "chapter": 435,
+  "title": "Service and tips",
+  "label": "ch:ru-service-and-tips",
+  "canDo": "I can talk about service: the service, serving customers, the staff, tips and rudeness.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C435-khamit",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 435: I can talk about service: the service, serving customers, the staff, tips and rudeness.",
+    "assesses": [
+      "RU-LEX-C435-OBSLUZHIVANIYE-03",
+      "RU-LEX-C435-OBSLUZHIVANIYE-04",
+      "RU-LEX-C435-OBSLUZHIVANIYE-05"
+    ]
+  }
+}

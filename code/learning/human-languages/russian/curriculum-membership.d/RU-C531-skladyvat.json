@@ -1,0 +1,11 @@
+{
+  "id": "RU-C531-skladyvat",
+  "pathSegment": "RU-PATH-531-CLUTTER",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-531-CLUTTER",
+      "order": 3
+    }
+  ]
+}

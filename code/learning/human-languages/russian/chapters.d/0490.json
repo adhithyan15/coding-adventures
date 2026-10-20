@@ -1,0 +1,19 @@
+{
+  "chapter": 490,
+  "title": "Getting Better",
+  "label": "ch:ru-getting-better",
+  "canDo": "I can talk about recovering after an illness.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C490-sirop",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 490: I can talk about recovering after an illness.",
+    "assesses": [
+      "RU-LEX-C490-RECOVERY-03",
+      "RU-LEX-C490-RECOVERY-04",
+      "RU-LEX-C490-RECOVERY-05"
+    ]
+  }
+}

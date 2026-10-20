@@ -1,0 +1,19 @@
+{
+  "chapter": 424,
+  "title": "On the ferry",
+  "label": "ch:ru-on-the-ferry",
+  "canDo": "I can travel by ferry: the ferry, the deck, the cabin, the mooring and the landing stage.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C424-pristan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 424: I can travel by ferry: the ferry, the deck, the cabin, the mooring and the landing stage.",
+    "assesses": [
+      "RU-LEX-C424-PAROM-03",
+      "RU-LEX-C424-PAROM-04",
+      "RU-LEX-C424-PAROM-05"
+    ]
+  }
+}

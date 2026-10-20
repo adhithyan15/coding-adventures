@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 511,
+  "sourceHash": "fnv1a64:403c81adef40f220",
+  "lessonIds": [
+    "RU-C511-turnir",
+    "RU-C511-chempionat",
+    "RU-C511-chempion",
+    "RU-C511-medal",
+    "RU-C511-nagrazhdat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch511.txt",
+  "json": "russian/narration/ch511.json",
+  "textHash": "fnv1a64:ecb6862f7b1f03e6",
+  "jsonHash": "fnv1a64:3b2cc709ae10cb59",
+  "findings": []
+}

@@ -15,7 +15,7 @@ concept_tag: REVIEW
 prerequisites: [RU-C270-yesli-by, RU-C270-ya-by-khotel, RU-C269-review, RU-C53-money, RU-C135-to-travel]
 sounds: []
 roots: []
-etymology_hook: "бы is an old form of быть, the same бы that sits inside чтобы"
+etymology_hook: "бы is, by the usual account, an old form of быть, the same бы that sits inside чтобы"
 duration:
   max_seconds: 185
 requires:
@@ -62,7 +62,7 @@ imperfective, so its future is *буду* and the infinitive.
 [PAUSE 1s]
 - [YOU SAY: *Yésli by u menyá býli déngi, ya by puteshéstvoval.*]
 - [YOU SAY: *Yésli by ya znála, ya by pomoglá.*]
-- [YOU ANSWER: *Ty búdesh puteshéstvovat létom?* *Éto zavísit ot déneg*, then one line with *yésli*]
+- [YOU ANSWER: *Ty búdesh puteshéstvovat létom?* *Éto zavísit ot déneg*, with *déneg*, the "of" form of *déngi*; then one line with *yésli*]
 - [YOU SAY: *Ya mechtáyu o móre. Yésli by u menyá býlo vrémya, ya by puteshéstvoval.*]
 
 ## Wrap-up Recall

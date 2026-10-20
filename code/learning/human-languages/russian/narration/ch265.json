@@ -4,7 +4,7 @@
   "chapter": 265,
   "title": "Asking the Way",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:4611526f4d8206a4",
+  "sourceHash": "fnv1a64:6a3ab4d9deb97f90",
   "lessons": [
     {
       "id": "RU-C265-kak-proyti",
@@ -177,7 +177,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4d398575bf87ec1d",
+      "sourceHash": "fnv1a64:4005bd4d45c457f8",
       "notice": null,
       "blocks": [
         {
@@ -253,7 +253,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "направо is на, \"onto\", with право: the right hand. EtymDB 2.1 traces правый to Proto-Slavic pravŭ, \"right, correct\", so the right hand and being right share one root. поверните is on the root of вертеть, \"to turn\", which EtymDB takes back through Proto-Slavic vĭrtěti to Proto-Indo-European wert-: the root of Latin vertere and English -ward."
+              "text": "направо is на, \"onto\", with the root of правый, \"right\": onto the right hand. EtymDB 2.1 traces правый to Proto-Slavic pravŭ, \"right, correct\", so the right hand and being right share one root. поверните is on the root of вертеть, \"to turn\", which EtymDB takes back through Proto-Slavic vĭrtěti to Proto-Indo-European wert-: the root of Latin vertere and English -ward."
             }
           ]
         },

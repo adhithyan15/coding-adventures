@@ -4,7 +4,7 @@
   "chapter": 261,
   "title": "The Past, Seen Two Ways",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:f2c9c450a041128b",
+  "sourceHash": "fnv1a64:95e16a62621d51e6",
   "lessons": [
     {
       "id": "RU-C261-chital",
@@ -347,7 +347,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cb0506c014740661",
+      "sourceHash": "fnv1a64:0fadeeeec0df3da1",
       "notice": null,
       "blocks": [
         {
@@ -373,7 +373,7 @@
             },
             {
               "kind": "speech",
-              "text": "And the hinge from the present: kogdá ya chitáyu, ya dúmayu. Когда joins two halves with a comma at the seam. In the past, the aspect on each side tells the listener how the two halves fit together."
+              "text": "And the hinge from the present: kogdá ya chitáyu, ya dúmayu. In the past, the aspect on each side tells how the halves fit."
             }
           ]
         },
@@ -419,7 +419,7 @@
             },
             {
               "kind": "speech",
-              "text": "Neither half is finished; both went on through the same hour."
+              "text": "Neither half is finished; both went on through the same hour. Когда я читал, брат спал says it too; пока stresses the stretch of time, and its other half may be one deed inside it: Пока я читал, позвонил брат."
             }
           ]
         },

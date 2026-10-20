@@ -1,0 +1,19 @@
+{
+  "chapter": 366,
+  "title": "Elections",
+  "label": "ch:ru-elections",
+  "canDo": "I can talk about an election, say whom I vote for, speak about a party and a protest, and say that people protest.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C366-protestovat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 366: I can talk about an election, say whom I vote for, speak about a party and a protest, and say that people protest.",
+    "assesses": [
+      "RU-LEX-C366-VYBORY-03",
+      "RU-LEX-C366-VYBORY-04",
+      "RU-LEX-C366-VYBORY-05"
+    ]
+  }
+}

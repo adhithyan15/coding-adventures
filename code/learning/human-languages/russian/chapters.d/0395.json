@@ -1,0 +1,19 @@
+{
+  "chapter": 395,
+  "title": "Savings and budgets",
+  "label": "ch:ru-savings-and-budgets",
+  "canDo": "I can talk about savings and a bank deposit, investing money, the cost of something and a budget.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "RU-C395-byudzhet",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 395: I can talk about savings and a bank deposit, investing money, the cost of something and a budget.",
+    "assesses": [
+      "RU-LEX-C395-SBEREZHENIYA-03",
+      "RU-LEX-C395-SBEREZHENIYA-04",
+      "RU-LEX-C395-SBEREZHENIYA-05"
+    ]
+  }
+}

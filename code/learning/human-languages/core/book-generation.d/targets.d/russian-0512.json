@@ -1,0 +1,7 @@
+{
+  "language": "russian",
+  "chapter": 512,
+  "output": "russian/book/chapters/ch512-the-marathon.tex",
+  "unicodeScript": "Cyrillic",
+  "scriptCommand": "ru"
+}

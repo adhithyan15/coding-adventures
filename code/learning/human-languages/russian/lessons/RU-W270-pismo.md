@@ -53,9 +53,9 @@ in the imperfective: *было*, *шёл дождь*, *мы жили в гост
 **steps** in order, each one finished, in the perfective. It has a
 **feeling**. And a good one ends by looking forward, or wishing.
 
-[PAUSE 2s] A past verb agrees with who did it: *-л*, *-ла*, *-ли*, or,
-in a few such as *мог*, the same endings without the *л*: *мог*, *могла*,
-*могли*. A verb after *бы* takes the same forms.
+[PAUSE 2s] A past verb agrees with who did it: *-л*, *-ла*, *-ли*. A few,
+such as *мог*, drop the *л* only in the form for a man: *мог*, but
+*могла*, *могли*. A verb after *бы* takes the same forms.
 
 ## Writing — connected composition
 <!-- hl-knowledge: introduces=[]; assesses=[RU-GRAMMAR-NAZAD-AGO-01, RU-GRAMMAR-POKA-WHILE-01, RU-GRAMMAR-KOGDA-EVENT-01, RU-LEX-ZATEM-01, RU-GRAMMAR-POETOMU-RESULT-01, RU-LEX-TAK-CHTO-01, RU-GRAMMAR-PROBLEM-PERFECTIVE-01, RU-LEX-OPOZDAL-NA-POEZD-01, RU-GRAMMAR-RAD-SHORT-01, RU-GRAMMAR-USTAL-STATE-01, RU-GRAMMAR-MNE-BYLO-01, RU-GRAMMAR-PO-MOEMU-01, RU-GRAMMAR-COMPARATIVE-EE-01, RU-GRAMMAR-CHEM-THAN-01, RU-GRAMMAR-COMPARATIVE-IRREGULAR-01, RU-GRAMMAR-YESLI-BY-01, RU-GRAMMAR-U-MENYA-BYLO-01, RU-GRAMMAR-BY-POLITE-01, RU-LEX-MECHTAT-01, RU-GRAMMAR-NADEYUS-CHTO-01, RU-GRAMMAR-EXPLAIN-STEPS-01] -->

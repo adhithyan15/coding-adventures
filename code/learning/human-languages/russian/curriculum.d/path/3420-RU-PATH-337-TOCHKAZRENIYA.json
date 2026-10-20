@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-337-TOCHKAZRENIYA",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "RU-EXT-337-TOCHKAZRENIYA"
+  ],
+  "after": []
+}

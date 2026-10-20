@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:b7cba22a1a938f60",
+  "lessonIds": [
+    "RU-C315-ugoshcheniye",
+    "RU-C315-ugoshchat",
+    "RU-C315-zastolye",
+    "RU-C315-chokatsya",
+    "RU-C315-shampanskoye"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch315.txt",
+  "json": "russian/narration/ch315.json",
+  "textHash": "fnv1a64:44fca03731a1249f",
+  "jsonHash": "fnv1a64:d041e2803cd6b5f2",
+  "findings": []
+}

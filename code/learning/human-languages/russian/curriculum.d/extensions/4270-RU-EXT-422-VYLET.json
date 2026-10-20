@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-422-VYLET",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read the airport board: departure, flying out, arrival, the terminal and the flight attendant.",
+  "prerequisites": []
+}

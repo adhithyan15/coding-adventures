@@ -62,7 +62,8 @@ did after *до* in the street: *светофор*, *до светофора*; *
 
 A ticket is **на** the train or the bus, and *поезд* and *автобус* keep
 their plain form: **билет на поезд**, **билет на автобус** — *bilét na
-póyezd, bilét na avtóbus*.
+póyezd, bilét na avtóbus*. After *два*, *билет* adds **-а**: **два
+билета**.
 
 ## The exchange
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-SKOLKO-01, RU-LEX-C204-ACT204-04, RU-LEX-C76-NUM2-04, RU-LEX-C231-RABOTA231-02] -->
@@ -77,9 +78,10 @@ thousand roubles." After *тысяча*, *рубль* takes the counting form
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C184-MESTO184-03] -->
 
 **обратно** is the adverb of *обратный*, "reverse, return". EtymDB 2.1
-lists *обратный* without a parent; by the usual account it is *об-*,
-"around", with the root of **вертеть**, "to turn", from Proto-Indo-European
-*\*wert-*: a ticket that turns round. **туда** is "to that place", on the
+has no entry for *обратный*, but takes the verb *обратить* back to
+Proto-Slavic *\*ob(v)ortiti*. By the usual account that is *об-*,
+"around", with a root of turning, kin to **вертеть**, "to turn", from
+Proto-Indo-European *\*wert-*: a ticket that turns round. **туда** is "to that place", on the
 same pointing stem as *тот*.
 
 ## Guided Practice

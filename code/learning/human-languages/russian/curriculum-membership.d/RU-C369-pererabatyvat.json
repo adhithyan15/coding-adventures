@@ -1,0 +1,11 @@
+{
+  "id": "RU-C369-pererabatyvat",
+  "pathSegment": "RU-PATH-369-EKOLOGIYA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-369-EKOLOGIYA",
+      "order": 3
+    }
+  ]
+}

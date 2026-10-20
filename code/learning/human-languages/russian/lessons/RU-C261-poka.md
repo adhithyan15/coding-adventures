@@ -42,8 +42,7 @@ the book to the end". (*Vcherá ya chitál knígu. Vcherá ya prochitál
 knígu.*)
 
 [PAUSE 1s] And the hinge from the present: *kogdá ya chitáyu, ya dúmayu*.
-**Когда** joins two halves with a comma at the seam. In the past, the
-aspect on each side tells the listener how the two halves fit together.
+In the past, the aspect on each side tells how the halves fit.
 
 ## Grammar Lens: one going on, one cutting in
 <!-- hl-knowledge: introduces=[RU-GRAMMAR-KOGDA-EVENT-01]; assesses=[RU-LEX-KOGDA-01, RU-LEX-C232-ACT232-03, RU-LEX-BRAT-NOUN, RU-PUNCT-ZAPYATAYA-01, RU-LEX-C52-SCHOOL-01] -->
@@ -74,6 +73,9 @@ side:
 > reading, my brother was asleep.
 
 Neither half is finished; both went on through the same hour.
+*Когда я читал, брат спал* says it too; **пока** stresses the stretch of
+time, and its other half may be one deed inside it: *Пока я читал,
+позвонил брат.*
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[RU-ETYMON-POKA-KAKOI] -->

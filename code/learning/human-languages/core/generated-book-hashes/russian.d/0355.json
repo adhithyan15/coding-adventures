@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 355,
+  "sourceHash": "fnv1a64:6c312b25e0f0bd5f",
+  "lessonIds": [
+    "RU-C355-sluchaynyy",
+    "RU-C355-sluchaynost",
+    "RU-C355-sovpadenie",
+    "RU-C355-neizbezhnyy",
+    "RU-C355-voznikat"
+  ],
+  "tex": "russian/book/chapters/ch355-chance-and-coincidence.tex"
+}

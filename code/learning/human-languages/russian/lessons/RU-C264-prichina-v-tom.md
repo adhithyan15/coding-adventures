@@ -59,8 +59,8 @@ What happened, then **поэтому**, then what followed:
 > **Я потерял телефон, поэтому не мог позвонить.** — *ya poteryál
 > telefón, poétomu ne mog pozvonít* — I lost my phone, so I couldn't ring.
 
-**Мог** is the past of *мочь*, one of the few without an *л*: *мог*,
-*могла*, *могли*.
+**Мог** is the past of *мочь*, one of the few whose form for a man has no
+*л*: *мог*, but *могла*, *могли*.
 
 ## Why it's said this way: the aspect of an explanation
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C37-PEOPLE-03, RU-LEX-C228-VESHCH228-02, RU-LEX-PONIMAT, RU-GRAMMAR-ASPECT-PARTNER, RU-LEX-MEDLENNO-01, RU-LEX-C174-ACT174-03, RU-GRAMMAR-PAST-IMPERFECTIVE-PROCESS-01, RU-GRAMMAR-PAST-PERFECTIVE-RESULT-01, RU-LEX-C75-NUM1-02, RU-LEX-GOVORIT] -->

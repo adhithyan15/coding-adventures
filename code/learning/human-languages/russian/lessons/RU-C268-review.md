@@ -61,7 +61,7 @@ and **год**, **года**, **лет** to count.
 - [YOU SAY: *Dva góda nazád ya byl v Moskvé.*]
 - [YOU SAY: *Póyezd byl deshévle, chem samolyót.*]
 - [YOU SAY: *Ya uzhé dva góda mechtáyu vernútsya.*]
-- [YOU ANSWER: *Shto lúchshe, po-tvóyemu: móre íli góry?* Answer with *po-móyemu* and one comparison]
+- [YOU ANSWER: *Shto lúchshe, po-tvóyemu: móre íli góry?* *Po-tvóyemu* is "in your view". Answer with *po-móyemu* and one comparison]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-GRAMMAR-COMPARATIVE-IRREGULAR-01, RU-GRAMMAR-NAZAD-AGO-01, RU-GRAMMAR-GOD-GODA-LET-01] -->

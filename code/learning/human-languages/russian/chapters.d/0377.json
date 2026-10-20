@@ -1,0 +1,19 @@
+{
+  "chapter": 377,
+  "title": "Changing plans",
+  "label": "ch:ru-changing-plans",
+  "canDo": "I can move a meeting to another day, change my mind, turn something down, fix a time and say what I am going to do.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "RU-C377-sobiratsya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 377: I can move a meeting to another day, change my mind, turn something down, fix a time and say what I am going to do.",
+    "assesses": [
+      "RU-LEX-C377-PLANY-03",
+      "RU-LEX-C377-PLANY-04",
+      "RU-LEX-C377-PLANY-05"
+    ]
+  }
+}

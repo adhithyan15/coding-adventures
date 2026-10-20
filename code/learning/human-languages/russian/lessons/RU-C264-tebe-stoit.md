@@ -15,7 +15,7 @@ concept_tag: MODAL-SHOULD
 prerequisites: [RU-C263-review, RU-C204-stoit, RU-C176-otdykhat, RU-C05-brat, RU-C80-taxi, RU-C83-late, RU-C91-underground, RU-C72-far, RU-C20-khochu-chitat]
 sounds: []
 roots: [slavic-dilgu]
-etymology_hook: "должен is from долг, 'a debt': to be должен is to owe, and я должен тебе still means I owe you"
+etymology_hook: "должен comes from the Russian word for 'a debt': to be должен is to owe, and я должен тебе still means I owe you"
 duration:
   max_seconds: 235
 requires:
@@ -75,8 +75,8 @@ one or to *вы*. It can sound strong between friends; **стоит** and
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C231-RABOTA231-02] -->
 
-**должен** comes from **долг**, "a debt, a duty", which EtymDB 2.1 traces
-to Proto-Slavic *\*dŭlgŭ*. A duty is a debt: *Я должен тебе сто рублей*
+**должен** comes from the Russian noun for "a debt, a duty", which EtymDB
+2.1 traces to Proto-Slavic *\*dŭlgŭ*. A duty is a debt: *Я должен тебе сто рублей*
 still means "I owe you a hundred roubles".
 
 ## Guided Practice

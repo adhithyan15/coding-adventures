@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C379-v-lyubom-sluchae",
+    "language": "russian",
+    "chapter": 379,
+    "sequence": 21960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:250e9a092cf02486"
+  },
+  "findings": []
+}

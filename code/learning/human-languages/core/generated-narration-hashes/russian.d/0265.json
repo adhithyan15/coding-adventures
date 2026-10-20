@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 265,
-  "sourceHash": "fnv1a64:4611526f4d8206a4",
+  "sourceHash": "fnv1a64:6a3ab4d9deb97f90",
   "lessonIds": [
     "RU-C265-kak-proyti",
     "RU-C265-idite-pryamo",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "russian/narration/ch265.txt",
   "json": "russian/narration/ch265.json",
-  "textHash": "fnv1a64:95b758897ef42331",
-  "jsonHash": "fnv1a64:48bbb98568af4c90",
+  "textHash": "fnv1a64:618b4afca1d3651c",
+  "jsonHash": "fnv1a64:bcb38428c2c5e1df",
   "findings": []
 }

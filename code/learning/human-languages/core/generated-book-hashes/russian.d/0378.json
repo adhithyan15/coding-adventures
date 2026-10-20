@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 378,
+  "sourceHash": "fnv1a64:b888b5a4d98b229c",
+  "lessonIds": [
+    "RU-C378-dogovarivatsya",
+    "RU-C378-dogovoryonnost",
+    "RU-C378-variant",
+    "RU-C378-alternativa",
+    "RU-C378-okonchatelnyy"
+  ],
+  "tex": "russian/book/chapters/ch378-making-arrangements.tex"
+}

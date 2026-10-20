@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 368,
+  "title": "Helping people in need",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:670bdac3dd00cfca",
+  "lessons": [
+    {
+      "id": "RU-C368-blagotvoritelnost",
+      "sequence": 21380,
+      "title": "благотворительность (blagotvorítelnost) — charity",
+      "headword": "благотворительность",
+      "romanization": "blagotvorítelnost",
+      "gloss": "charity",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1ec72936397ce966",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for wealth, then the Russian for unemployment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: благотворительность",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "благотворительность (blagotvorítelnost) — \"charity\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Она много лет занимается благотворительностью. Oná mnógo let zanimáyetsya blagotvorítelnostyu. She has done charity work for many years."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine. Благотворительный концерт — a charity concert."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "благотворительность (blagotvorítelnost) is built from благо \"good\", a Church Slavonic word with -ла-, and творить \"to make, to do\": doing good."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "blagotvorítelnost",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *blagotvorítelnost*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "blagotvorítelnost, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *blagotvorítelnost*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with blagotvorítelnost",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *blagotvorítelnost*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for wealth, then the Russian for unemployment, then say blagotvorítelnost again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for wealth, then the Russian for unemployment, then say *blagotvorítelnost* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does благотворительность (blagotvorítelnost) mean? (\"Charity\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C368-volontyor",
+      "sequence": 21390,
+      "title": "волонтёр (volontyór) — a volunteer",
+      "headword": "волонтёр",
+      "romanization": "volontyór",
+      "gloss": "a volunteer",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e54e527263cefe12",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for unemployment, then the Russian for charity."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: волонтёр",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "волонтёр (volontyór) — \"a volunteer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Волонтёры помогают в больнице. Volontyóry pomogáyut v bolnítse. Volunteers help at the hospital."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine. Доброволец means the same."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "волонтёр (volontyór) was borrowed from French volontaire (EtymDB) \"voluntary, a volunteer\", from Latin voluntās \"will, choice\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "volontyór",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *volontyór*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "volontyór, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *volontyór*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with volontyór",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *volontyór*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for unemployment, then the Russian for charity, then say volontyór again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for unemployment, then the Russian for charity, then say *volontyór* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does волонтёр (volontyór) mean? (\"A volunteer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C368-posobie",
+      "sequence": 21400,
+      "title": "пособие (posóbiye) — a benefit, an allowance; a study guide",
+      "headword": "пособие",
+      "romanization": "posóbiye",
+      "gloss": "a benefit, an allowance; a study guide",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:210d82cba138483f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for charity, then the Russian for a volunteer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: пособие",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "пособие (posóbiye) — \"a benefit, an allowance; a study guide\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Он получает пособие по безработице. On polucháyet posóbiye po bezrabótitse. He receives unemployment benefit."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun. Пособие по безработице — unemployment benefit. Учебное пособие (posóbiye) — a study guide."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "пособие (posóbiye) is built on the old verb пособить \"to help\". The origin of the root is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "posóbiye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *posóbiye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "posóbiye, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *posóbiye*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with posóbiye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *posóbiye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for charity, then the Russian for a volunteer, then say posóbiye again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for charity, then the Russian for a volunteer, then say *posóbiye* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does пособие (posóbiye) mean? (\"A benefit, an allowance; a study guide\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C368-zhertvovat",
+      "sequence": 21410,
+      "title": "жертвовать (zhértvovat) — to donate, to give; to sacrifice",
+      "headword": "жертвовать",
+      "romanization": "zhértvovat",
+      "gloss": "to donate, to give; to sacrifice",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:19366a3e8694fae9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a volunteer, then the Russian for a benefit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: жертвовать",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "жертвовать (zhértvovat) — \"to donate, to give; to sacrifice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Каждый год мы жертвуем деньги детскому дому. Kázhdyy god my zhértvuyem déngi détskomu dómu. Every year we donate money to a children’s home."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; the present is жертвую, жертвуешь; the perfective is пожертвовать. With the instrumental it means to sacrifice: жертвовать (zhértvovat) временем."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "жертвовать (zhértvovat) is built on жертва \"a sacrifice, a victim\", which is usually traced to an old Slavic verb meaning to praise or to offer to the gods."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhértvovat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhértvovat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhértvovat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhértvovat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with zhértvovat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *zhértvovat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a volunteer, then the Russian for a benefit, then say zhértvovat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a volunteer, then the Russian for a benefit, then say *zhértvovat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does жертвовать (zhértvovat) mean? (\"To donate, to give; to sacrifice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C368-nuzhdatsya",
+      "sequence": 21420,
+      "title": "нуждаться (nuzhdátsya) — to need, to be in need",
+      "headword": "нуждаться",
+      "romanization": "nuzhdátsya",
+      "gloss": "to need, to be in need",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3f65bec98b53f5f0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a benefit, then the Russian for to donate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: нуждаться",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "нуждаться (nuzhdátsya) — \"to need, to be in need\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Эта семья нуждается в помощи. Éta semyá nuzhdáyetsya v pómoshchi. This family is in need of help."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective only. Нуждаться в + prepositional. More formal than нужен."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "нуждаться (nuzhdátsya) is built on нужда \"need, want\", the noun behind нужный \"necessary\", inherited from Proto-Slavic."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nuzhdátsya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nuzhdátsya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nuzhdátsya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nuzhdátsya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with nuzhdátsya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *nuzhdátsya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a benefit, then the Russian for to donate, then say nuzhdátsya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a benefit, then the Russian for to donate, then say *nuzhdátsya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does нуждаться (nuzhdátsya) mean? (\"To need, to be in need\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-R368-review-361-368",
+      "sequence": 21430,
+      "title": "Words from chapters 361–368 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 361-368",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2dc9b5bd410c9eca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Russian for an enterprise and profit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an enterprise, profit, a loss, income, a deal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an enterprise, profit, a loss, income, a deal]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a promotion, a bonus, a skill, a specialist, to dismiss",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a promotion, a bonus, a skill, a specialist, to dismiss]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "negotiations, a contract, a client, a competitor, to cooperate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: negotiations, a contract, a client, a competitor, to cooperate]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "society, the population, public, social, an inhabitant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: society, the population, public, social, an inhabitant]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the state, the government, power, politics, a politician",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the state, the government, power, politics, a politician]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an election, to vote, a party, a protest, to protest",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an election, to vote, a party, a protest, to protest]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "freedom, equality, poverty, wealth, unemployment",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: freedom, equality, poverty, wealth, unemployment]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "charity, a volunteer, a benefit, to donate, to need",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: charity, a volunteer, a benefit, to donate, to need]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An enterprise? (предприятие.) Profit? (прибыль.) A loss? (убыток.) Income? (доход.) A deal? (сделка.) A promotion? (повышение.) A bonus? (премия.) A skill? (навык.) A specialist? (специалист.) To dismiss? (увольнять.) Negotiations? (переговоры.) A contract? (контракт.) A client? (заказчик.) A competitor? (конкурент.) To cooperate? (сотрудничать.) Society? (общество.) The population? (население.) Public? (общественный.) Social? (социальный.) An inhabitant? (житель.) The state? (государство.) The government? (правительство.) Power? (власть.) Politics? (политика.) A politician? (политик.) An election? (выборы.) To vote? (голосовать.) A party? (партия.) A protest? (протест.) To protest? (протестовать.) Freedom? (свобода.) Equality? (равенство.) Poverty? (бедность.) Wealth? (богатство.) Unemployment? (безработица.) Charity? (благотворительность (blagotvorítelnost).) A volunteer? (волонтёр (volontyór).) A benefit? (пособие (posóbiye).) To donate? (жертвовать (zhértvovat).) To need? (нуждаться (nuzhdátsya).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C442-putevoditel",
+    "language": "russian",
+    "chapter": 442,
+    "sequence": 25210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:67316e2154a53755"
+  },
+  "findings": []
+}

@@ -4,7 +4,7 @@
   "chapter": 269,
   "title": "If, and It Depends",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:78b9bc5bea248990",
+  "sourceHash": "fnv1a64:5d993636cd46187d",
   "lessons": [
     {
       "id": "RU-C269-yesli",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b35cb5d17ee9b040",
+      "sourceHash": "fnv1a64:f82c073db0b66ffe",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"if\". (Yésli.) Then \"I've been learning Russian for two years\". (Ya uzhé dva góda uchú rússkiy.) The word for \"if\" has waited since the joining words of the A2 chapters. Now it joins."
+              "text": "Say \"if\". (Yésli.) Then say \"I've been learning Russian for two years\". (Ya uzhé dva góda uchú rússkiy.) The word for \"if\" has waited since the joining words of the A2 chapters. Now it joins."
             }
           ]
         },

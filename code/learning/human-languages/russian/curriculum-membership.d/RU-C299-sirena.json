@@ -1,0 +1,11 @@
+{
+  "id": "RU-C299-sirena",
+  "pathSegment": "RU-PATH-299-SIRENA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-299-SIRENA",
+      "order": 1
+    }
+  ]
+}

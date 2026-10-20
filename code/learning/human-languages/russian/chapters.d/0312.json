@@ -1,0 +1,19 @@
+{
+  "chapter": 312,
+  "title": "Congratulations and wishes",
+  "label": "ch:ru-congratulations-and-wishes",
+  "canDo": "I can congratulate someone, talk about greetings and wishes, wish someone well and raise a toast.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C312-tost",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 312: I can congratulate someone, talk about greetings and wishes, wish someone well and raise a toast.",
+    "assesses": [
+      "RU-LEX-C312-POZDRAVLYAT-03",
+      "RU-LEX-C312-POZDRAVLYAT-04",
+      "RU-LEX-C312-POZDRAVLYAT-05"
+    ]
+  }
+}

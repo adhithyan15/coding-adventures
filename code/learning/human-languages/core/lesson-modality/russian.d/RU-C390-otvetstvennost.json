@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C390-otvetstvennost",
+    "language": "russian",
+    "chapter": 390,
+    "sequence": 22550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:063749a35455a77a"
+  },
+  "findings": []
+}

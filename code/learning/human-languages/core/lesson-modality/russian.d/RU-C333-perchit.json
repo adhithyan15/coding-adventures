@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C333-perchit",
+    "language": "russian",
+    "chapter": 333,
+    "sequence": 19580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:69063e672f19a289"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 386,
+  "title": "Giving a talk",
+  "label": "ch:ru-giving-a-talk",
+  "canDo": "I can give a talk, hand in an essay, prepare a presentation, and explain a concept and a term.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "RU-C386-termin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 386: I can give a talk, hand in an essay, prepare a presentation, and explain a concept and a term.",
+    "assesses": [
+      "RU-LEX-C386-DOKLAD-03",
+      "RU-LEX-C386-DOKLAD-04",
+      "RU-LEX-C386-DOKLAD-05"
+    ]
+  }
+}

@@ -4,7 +4,7 @@
   "chapter": 263,
   "title": "What I Think, and So",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:dfd598f48ae52c28",
+  "sourceHash": "fnv1a64:7ebe2e4f373beeca",
   "lessons": [
     {
       "id": "RU-C263-po-moemu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d1b3a673fff8a052",
+      "sourceHash": "fnv1a64:1df2cb4f4e852e3a",
       "notice": null,
       "blocks": [
         {
@@ -56,7 +56,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Я думаю, что … is the plain frame, and it needs что and its comma."
+              "text": "Я думаю, что … is the plain frame, here with что and its comma."
             },
             {
               "kind": "speech",

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:620e763b1dbccf52",
+  "lessonIds": [
+    "RU-C370-uslovie",
+    "RU-C370-pri-uslovii",
+    "RU-C370-v-sluchae",
+    "RU-C370-v-protivnom-sluchae",
+    "RU-C370-dazhe-esli"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch370.txt",
+  "json": "russian/narration/ch370.json",
+  "textHash": "fnv1a64:66c5bdc50f4acfda",
+  "jsonHash": "fnv1a64:72b870b745bdaf9d",
+  "findings": []
+}

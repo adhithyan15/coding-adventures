@@ -1,0 +1,11 @@
+{
+  "id": "RU-C449-strich",
+  "pathSegment": "RU-PATH-449-STRIZHKA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-449-STRIZHKA",
+      "order": 2
+    }
+  ]
+}

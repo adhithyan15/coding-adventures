@@ -37,8 +37,8 @@ reviews_of: [RU-C154-yesli, RU-C22-li, RU-C19-kogda-soyuz]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C154-PRICH154-03, RU-GRAMMAR-KOGDA-CLAUSE-01, RU-GRAMMAR-UZHE-PRESENT-DURATION-01] -->
 
-[PAUSE 2s] Say "if". (*Yésli.*) Then "I've been learning Russian for two
-years". (*Ya uzhé dva góda uchú rússkiy.*) The word for "if" has waited
+[PAUSE 2s] Say "if". (*Yésli.*) Then say "I've been learning Russian for
+two years". (*Ya uzhé dva góda uchú rússkiy.*) The word for "if" has waited
 since the joining words of the A2 chapters. Now it joins.
 
 ## Grammar Lens: a condition and a comma

@@ -15,7 +15,7 @@ concept_tag: MODAL-WOULD
 prerequisites: [RU-C269-review, RU-C20-khotet, RU-C20-chtoby, RU-C20-moch, RU-C21-medlenno, RU-C21-povtorite, RU-C174-povtoryat, RU-C06-kofe, RU-C06-chai, RU-C88-cinema]
 sounds: []
 roots: [pie-bhuh]
-etymology_hook: "бы is an old form of быть, the same бы that sits inside чтобы"
+etymology_hook: "бы is, by the usual account, an old form of быть, the same бы that sits inside чтобы"
 duration:
   max_seconds: 280
 requires:

@@ -17,7 +17,7 @@ sounds: []
 roots: []
 etymology_hook: "the scene is in the imperfective, the steps in the perfective, and four step words keep the day in order"
 duration:
-  max_seconds: 250
+  max_seconds: 265
 requires:
   knowledge: [RU-SKILL-CONNECTED-READING, RU-GRAMMAR-STORY-FRAME-01, RU-GRAMMAR-PERFECTIVE-CHAIN-01, RU-GRAMMAR-POKA-WHILE-01, RU-GRAMMAR-KOGDA-EVENT-01, RU-LEX-RASSKAZAT-01, RU-LEX-ZATEM-01, RU-GRAMMAR-PAST-L-GENDER-01, RU-GRAMMAR-BYL-PAST-01, RU-LEX-C242-MESTO242-03, RU-LEX-C40-VERB3-02, RU-LEX-C42-VERB5-03, RU-LEX-C143-ACT143-04, RU-LEX-PODRUGA, RU-LEX-C253-VESHCH253-02, RU-LEX-C71-SEASONS-04, RU-LEX-C247-VESHCH247-03, RU-LEX-C135-ACT135-01, RU-LEX-C38-VERB1-05, RU-LEX-C80-PLACES-01, RU-LEX-C176-ACT176-01, RU-LEX-C134-ACT134-04, RU-LEX-C53-THINGS-01, RU-LEX-C38-VERB1-04, RU-LEX-C84-TIME84-02, RU-LEX-C140-ACT140-03, RU-LEX-C78-TOWN2-05, RU-LEX-C134-ACT134-02, RU-LEX-C80-PLACES-04, RU-LEX-C192-VESHCH192-01, RU-LEX-KOFE, RU-LEX-CHAI, RU-LEX-GOVORIT, RU-LEX-CHITAT, RU-LEX-C232-ACT232-03, RU-LEX-C59-WEATHER-01, RU-LEX-C70-WEEK1-05, RU-LEX-C151-MESTO151-02, RU-LEX-C83-TIME83-05, RU-LEX-C70-WEEK1-01, RU-LEX-C85-TIME85-05, RU-LEX-ZHIT, RU-LEX-NO-01]
 introduces:
@@ -40,14 +40,15 @@ reviews_of: [RU-C262-rasskazat, RU-C262-snachala-potom, RU-C261-poka, RU-C27-per
 [PAUSE 2s] The book's first passage was a few lines in the present.
 This one is a story, and it happened last summer and last Saturday.
 
-[PAUSE 1s] Every word in it has come up before. Three verbs appear in a
+[PAUSE 1s] Every word in it has come up before, apart from one name:
+*Москва*, Moscow, here *в Москве*, "in Moscow". Three verbs appear in a
 new shape, and they are explained after the passage.
 
 ## Reading
 <!-- hl-knowledge: introduces=[RU-SKILL-READ-NARRATIVE-01]; assesses=[RU-LEX-C242-MESTO242-03, RU-LEX-C40-VERB3-02, RU-LEX-C42-VERB5-03, RU-LEX-PODRUGA, RU-LEX-C253-VESHCH253-02, RU-LEX-C71-SEASONS-04, RU-LEX-C247-VESHCH247-03, RU-LEX-C80-PLACES-01, RU-LEX-C53-THINGS-01, RU-LEX-C84-TIME84-02, RU-LEX-C78-TOWN2-05, RU-LEX-C134-ACT134-02, RU-LEX-C80-PLACES-04, RU-LEX-C192-VESHCH192-01, RU-LEX-KOFE, RU-LEX-CHAI, RU-LEX-GOVORIT, RU-LEX-CHITAT, RU-LEX-C232-ACT232-03, RU-LEX-C59-WEATHER-01, RU-LEX-C70-WEEK1-05, RU-LEX-C151-MESTO151-02, RU-LEX-C83-TIME83-05, RU-LEX-C70-WEEK1-01, RU-LEX-C85-TIME85-05, RU-LEX-ZHIT, RU-LEX-NO-01] -->
 
 > Это было в субботу. Шёл дождь. Я сидел в кафе, пил кофе и читал
-> газету. Когда я прочитал газету, пришла моя подруга Анна. Сначала мы
+> газету. Когда я прочитал газету, пришла подруга Анна. Сначала мы
 > пили чай и говорили. Потом Анна рассказала историю.
 >
 > Летом она была в Москве и жила в гостинице в центре. Утром она часто

@@ -1,0 +1,19 @@
+{
+  "chapter": 298,
+  "title": "On the road",
+  "label": "ch:ru-on-the-road",
+  "canDo": "I can describe a road accident: someone hit by a car, the injured, crashing, coming out unhurt and overturning.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C298-perevernutsya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 298: I can describe a road accident: someone hit by a car, the injured, crashing, coming out unhurt and overturning.",
+    "assesses": [
+      "RU-LEX-C298-NAEZD-03",
+      "RU-LEX-C298-NAEZD-04",
+      "RU-LEX-C298-NAEZD-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C461-polyana",
+    "language": "russian",
+    "chapter": 461,
+    "sequence": 26170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b656f410a0c71c19"
+  },
+  "findings": []
+}

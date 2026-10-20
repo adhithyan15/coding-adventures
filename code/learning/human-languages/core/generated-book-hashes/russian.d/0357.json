@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 357,
+  "sourceHash": "fnv1a64:e81f4a8fd91847a9",
+  "lessonIds": [
+    "RU-C357-sotrudnik",
+    "RU-C357-rukovoditel",
+    "RU-C357-podchinyonnyy",
+    "RU-C357-rukovodit",
+    "RU-C357-kollektiv"
+  ],
+  "tex": "russian/book/chapters/ch357-colleagues-and-managers.tex"
+}

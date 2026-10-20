@@ -1,0 +1,19 @@
+{
+  "chapter": 430,
+  "title": "Making the bed",
+  "label": "ch:ru-making-the-bed",
+  "canDo": "I can talk about a hotel bed: bedding, a sheet, a pillowcase, the chambermaid and making up a bed.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C430-stelit",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 430: I can talk about a hotel bed: bedding, a sheet, a pillowcase, the chambermaid and making up a bed.",
+    "assesses": [
+      "RU-LEX-C430-POSTEL-03",
+      "RU-LEX-C430-POSTEL-04",
+      "RU-LEX-C430-POSTEL-05"
+    ]
+  }
+}

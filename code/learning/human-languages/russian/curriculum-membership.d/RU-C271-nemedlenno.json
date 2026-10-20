@@ -1,0 +1,11 @@
+{
+  "id": "RU-C271-nemedlenno",
+  "pathSegment": "RU-PATH-271-VNEZAPNO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-271-VNEZAPNO",
+      "order": 3
+    }
+  ]
+}

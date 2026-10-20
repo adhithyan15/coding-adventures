@@ -15,7 +15,7 @@ concept_tag: RU-DIRECTION-GIVE
 prerequisites: [RU-C265-kak-proyti, RU-C87-straight-on, RU-C86-to-the-right, RU-C86-to-the-left, RU-C146-povorachivat, RU-C89-traffic-lights, RU-C89-crossroads, RU-C21-povtorite, RU-C11-do-svidaniya, RU-C73-right, RU-C73-left]
 sounds: []
 roots: [slavic-pravu, pie-wert]
-etymology_hook: "направо is на 'onto' with право, the right hand; поверните is on the root of вертеть 'to turn', Latin vertere"
+etymology_hook: "направо is на 'onto' with the root of правый 'right'; поверните is on the root of вертеть 'to turn', Latin vertere"
 duration:
   max_seconds: 270
 requires:
@@ -78,9 +78,9 @@ stands; **направо** is where you go.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C86-LOC86-04, RU-LEX-C146-ACT146-02] -->
 
-**направо** is *на*, "onto", with *право*: the right hand. EtymDB 2.1
-traces *правый* to Proto-Slavic *\*pravŭ*, "right, correct", so the right
-hand and being right share one root. **поверните** is on the root of
+**направо** is *на*, "onto", with the root of *правый*, "right": onto
+the right hand. EtymDB 2.1 traces *правый* to Proto-Slavic *\*pravŭ*,
+"right, correct", so the right hand and being right share one root. **поверните** is on the root of
 *вертеть*, "to turn", which EtymDB takes back through Proto-Slavic
 *\*vĭrtěti* to Proto-Indo-European *\*wert-*: the root of Latin *vertere*
 and English *-ward*.

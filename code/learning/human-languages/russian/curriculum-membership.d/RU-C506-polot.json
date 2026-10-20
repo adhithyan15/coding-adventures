@@ -1,0 +1,11 @@
+{
+  "id": "RU-C506-polot",
+  "pathSegment": "RU-PATH-506-VEGETABLES",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-506-VEGETABLES",
+      "order": 2
+    }
+  ]
+}

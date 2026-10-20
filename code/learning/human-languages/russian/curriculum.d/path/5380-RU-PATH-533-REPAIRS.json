@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-533-REPAIRS",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "RU-EXT-533-REPAIRS"
+  ],
+  "after": []
+}

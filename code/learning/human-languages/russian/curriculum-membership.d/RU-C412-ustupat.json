@@ -1,0 +1,11 @@
+{
+  "id": "RU-C412-ustupat",
+  "pathSegment": "RU-PATH-412-PESHEKHOD",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-412-PESHEKHOD",
+      "order": 2
+    }
+  ]
+}

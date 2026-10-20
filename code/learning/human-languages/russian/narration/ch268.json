@@ -4,7 +4,7 @@
   "chapter": 268,
   "title": "Better Than, and Years Ago",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:4ae95187c78d5987",
+  "sourceHash": "fnv1a64:0abb5179588bbfb3",
   "lessons": [
     {
       "id": "RU-C268-bolshe-chem",
@@ -322,7 +322,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8ed6e0f537781b0e",
+      "sourceHash": "fnv1a64:c79896bbb40eaa16",
       "notice": null,
       "blocks": [
         {
@@ -408,11 +408,11 @@
             {
               "kind": "prompt",
               "action": "ANSWER",
-              "instruction": "Shto lúchshe, po-tvóyemu: móre íli góry? Answer with po-móyemu and one comparison",
+              "instruction": "Shto lúchshe, po-tvóyemu: móre íli góry? Po-tvóyemu is \"in your view\". Answer with po-móyemu and one comparison",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU ANSWER: *Shto lúchshe, po-tvóyemu: móre íli góry?* Answer with *po-móyemu* and one comparison]"
+              "source": "[YOU ANSWER: *Shto lúchshe, po-tvóyemu: móre íli góry?* *Po-tvóyemu* is \"in your view\". Answer with *po-móyemu* and one comparison]"
             }
           ]
         },

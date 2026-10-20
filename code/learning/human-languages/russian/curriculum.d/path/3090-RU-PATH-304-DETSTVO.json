@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-304-DETSTVO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-304-DETSTVO"
+  ],
+  "after": []
+}

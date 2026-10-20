@@ -4,7 +4,7 @@
   "chapter": 267,
   "title": "Glad, Tired, Hopeful",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:e9e3dfbc6f0df242",
+  "sourceHash": "fnv1a64:8154edb4e562df55",
   "lessons": [
     {
       "id": "RU-C267-ya-byl-rad",
@@ -342,7 +342,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1e07f74313000043",
+      "sourceHash": "fnv1a64:0d588f23907e6d5a",
       "notice": null,
       "blocks": [
         {
@@ -423,6 +423,15 @@
             {
               "kind": "prompt",
               "action": "SAY",
+              "instruction": "a late train as good news: Na vokzále býlo obyavléniye, i ya byl rad: póyezd opázdyval.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a late train as good news: *Na vokzále býlo obyavléniye, i ya byl rad: póyezd opázdyval.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
               "instruction": "Ya nadéyus, shto pogóda búdet khoróshaya.",
               "spoken": true,
               "scored": false,
@@ -453,7 +462,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"It was interesting for me\"? (Мне было интересно.) \"I dream of the sea\"? (Я мечтаю о море.) A hope about tomorrow: which verb form? (Будет, the future.)"
+              "text": "\"It was interesting for me\"? (Мне было интересно.) \"I dream of the sea\"? (Я мечтаю о море.) A hope about tomorrow: which verb form? (Будет, the future.) And the silent sign after ob- in obyavléniye? (The hard sign, tvyórdyy znak.)"
             }
           ]
         }

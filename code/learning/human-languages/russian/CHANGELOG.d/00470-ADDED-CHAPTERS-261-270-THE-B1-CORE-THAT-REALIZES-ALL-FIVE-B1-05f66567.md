@@ -15,7 +15,7 @@
   next. RU-C262-snachala-potom (CONNECTIVE-THEN) adds затем to the taught
   сначала, потом, наконец and the chain of perfectives; RU-C262-rasskazat
   (NARRATIVE-SEQUENCE) teaches the partner of рассказывать and the scene,
-  steps, end frame; RU-C262-chtenie is a 93-word story in the past.
+  steps, end frame; RU-C262-chtenie is a 92-word story in the past.
 - **263-264, SPINE-GIVE-REASONS.** по-моему and мне кажется, что beside the
   taught я думаю, что (OPINION-I-THINK); поэтому and так что against потому
   что (CONNECTIVE-SO); тебе стоит, лучше and ты должен with an infinitive
@@ -48,3 +48,16 @@
   marked as the usual account or the plain reading of the parts. EtymDB's
   entry for если glosses its есть as "to eat", and the lesson says so.
 - Every new atom is practised by at least two later lessons.
+
+An independent review then fixed errors in 11 of the 34 lessons. Every past
+form, aspect pair and agreement held. The fixes were:
+- *моя* in the reading, which no lesson had taught, and an unflagged *Москве*;
+- two later headwords (*долг*, *право*) named in an etymology;
+- the *мог / могла / могли* claim (only *мог* lacks the л);
+- the *пока* / *когда* split, now a leaning rather than a law;
+- an EtymDB attribution for *обратный*.
+
+Chapter 266 then gained two lessons, so the B1 vocabulary can use the letter ъ,
+which the track had never taught:
+- RU-C266-obyavleniye, *объявление*, "an announcement", met at the station;
+- RU-W266-tvyordyy-znak, the letter lesson for ъ, anchored in that word.

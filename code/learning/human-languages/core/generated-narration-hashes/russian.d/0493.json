@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 493,
+  "sourceHash": "fnv1a64:6be231d955b6cd33",
+  "lessonIds": [
+    "RU-C493-vlyublyonnyy",
+    "RU-C493-potseluy",
+    "RU-C493-flirtovat",
+    "RU-C493-nezhnost",
+    "RU-C493-laskovyy"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch493.txt",
+  "json": "russian/narration/ch493.json",
+  "textHash": "fnv1a64:71c06036df60e15e",
+  "jsonHash": "fnv1a64:5781a542b4821d8a",
+  "findings": []
+}

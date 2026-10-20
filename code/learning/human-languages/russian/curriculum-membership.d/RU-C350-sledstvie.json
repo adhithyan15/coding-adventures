@@ -1,0 +1,11 @@
+{
+  "id": "RU-C350-sledstvie",
+  "pathSegment": "RU-PATH-350-POSLEDSTVIYA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-350-POSLEDSTVIYA",
+      "order": 1
+    }
+  ]
+}

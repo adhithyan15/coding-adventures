@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 432,
+  "sourceHash": "fnv1a64:08e5e3902c53d70a",
+  "lessonIds": [
+    "RU-C432-protekat",
+    "RU-C432-kapat",
+    "RU-C432-zasoryatsya",
+    "RU-C432-tech",
+    "RU-C432-potop"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch432.txt",
+  "json": "russian/narration/ch432.json",
+  "textHash": "fnv1a64:fe4d32fb1318e790",
+  "jsonHash": "fnv1a64:873a1204c578369f",
+  "findings": []
+}

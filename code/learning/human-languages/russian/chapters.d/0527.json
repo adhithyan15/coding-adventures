@@ -1,0 +1,19 @@
+{
+  "chapter": 527,
+  "title": "Series and Subtitles",
+  "label": "ch:ru-series-and-subtitles",
+  "canDo": "I can talk about watching series and adaptations.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C527-ekranizatsiya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 527: I can talk about watching series and adaptations.",
+    "assesses": [
+      "RU-LEX-C527-SERIES-03",
+      "RU-LEX-C527-SERIES-04",
+      "RU-LEX-C527-SERIES-05"
+    ]
+  }
+}

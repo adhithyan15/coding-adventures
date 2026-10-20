@@ -1,0 +1,11 @@
+{
+  "id": "RU-C465-morosit",
+  "pathSegment": "RU-PATH-465-LIVEN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-465-LIVEN",
+      "order": 1
+    }
+  ]
+}

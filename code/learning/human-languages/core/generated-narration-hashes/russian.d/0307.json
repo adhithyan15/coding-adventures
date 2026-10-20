@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 307,
+  "sourceHash": "fnv1a64:1fd2aecaacb8d09f",
+  "lessonIds": [
+    "RU-C307-razvod",
+    "RU-C307-razvoditsya",
+    "RU-C307-pereyezd",
+    "RU-C307-uvolnyatsya",
+    "RU-C307-nasledstvo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch307.txt",
+  "json": "russian/narration/ch307.json",
+  "textHash": "fnv1a64:448181c9d96ea045",
+  "jsonHash": "fnv1a64:35d934700402e7ef",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 328,
+  "sourceHash": "fnv1a64:7680674abc120461",
+  "lessonIds": [
+    "RU-C328-lomtik",
+    "RU-C328-kusochek",
+    "RU-C328-narezat",
+    "RU-C328-natirat",
+    "RU-C328-tyorka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch328.txt",
+  "json": "russian/narration/ch328.json",
+  "textHash": "fnv1a64:6eb2d938d36995ea",
+  "jsonHash": "fnv1a64:5440c355c491a73f",
+  "findings": []
+}

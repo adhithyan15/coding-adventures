@@ -1,0 +1,11 @@
+{
+  "id": "RU-C407-svorachivat",
+  "pathSegment": "RU-PATH-407-OBGON",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-407-OBGON",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-296-SPASATEL",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-296-SPASATEL"
+  ],
+  "after": []
+}

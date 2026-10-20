@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C313-yolka",
+    "language": "russian",
+    "chapter": 313,
+    "sequence": 18550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c9f991c447df3e68"
+  },
+  "findings": []
+}

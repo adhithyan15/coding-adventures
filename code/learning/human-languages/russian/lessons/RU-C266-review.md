@@ -9,27 +9,27 @@ sequence: 16190
 chapter: 266
 type: review
 headword: "(review)"
-gloss: "at the station — a return ticket до a place and на a train, then a missed train and a lost ticket reported in the perfective"
+gloss: "at the station — a return ticket до a place and на a train, an announcement that the train is late, then a missed train and a lost ticket reported in the perfective"
 romanization: "(review)"
 concept_tag: REVIEW
-prerequisites: [RU-C266-opozdal, RU-C266-tuda-i-obratno, RU-C265-review]
+prerequisites: [RU-W266-tvyordyy-znak, RU-C266-obyavleniye, RU-C266-opozdal, RU-C266-tuda-i-obratno, RU-C265-review]
 sounds: []
 roots: []
-etymology_hook: "обратно turns back, and опоздать comes after"
+etymology_hook: "обратно turns back, опоздать comes after, and объявление shows"
 duration:
-  max_seconds: 190
+  max_seconds: 240
 requires:
-  knowledge: [RU-LEX-TUDA-I-OBRATNO-01, RU-GRAMMAR-BILET-DO-NA-01, RU-LEX-OPOZDAL-NA-POEZD-01, RU-GRAMMAR-PROBLEM-PERFECTIVE-01, RU-LEX-KAK-PROYTI-01, RU-GRAMMAR-IDITE-POVERNITE-01, RU-GRAMMAR-DO-NA-ROUTE-01, RU-GRAMMAR-K-DATIVE-01, RU-LEX-C110-THINGS110-02, RU-LEX-C135-ACT135-01, RU-LEX-DVA-01, RU-LEX-C79-TRAVEL-01, RU-GRAMMAR-EXPLAIN-STEPS-01]
+  knowledge: [RU-LEX-TUDA-I-OBRATNO-01, RU-GRAMMAR-BILET-DO-NA-01, RU-LEX-OPOZDAL-NA-POEZD-01, RU-GRAMMAR-PROBLEM-PERFECTIVE-01, RU-LEX-OBYAVLENIYE-01, RU-SCRIPT-C266-TVYORDYY-ZNAK-01, RU-LEX-C78-TOWN2-02, RU-LEX-C176-ACT176-02, RU-LEX-KAK-PROYTI-01, RU-GRAMMAR-IDITE-POVERNITE-01, RU-GRAMMAR-DO-NA-ROUTE-01, RU-GRAMMAR-K-DATIVE-01, RU-LEX-C110-THINGS110-02, RU-LEX-C135-ACT135-01, RU-LEX-DVA-01, RU-LEX-C79-TRAVEL-01, RU-GRAMMAR-EXPLAIN-STEPS-01]
 introduces:
   knowledge: []
 practises:
-  knowledge: [RU-LEX-TUDA-I-OBRATNO-01, RU-GRAMMAR-BILET-DO-NA-01, RU-LEX-OPOZDAL-NA-POEZD-01, RU-GRAMMAR-PROBLEM-PERFECTIVE-01, RU-LEX-KAK-PROYTI-01, RU-GRAMMAR-IDITE-POVERNITE-01, RU-GRAMMAR-DO-NA-ROUTE-01, RU-GRAMMAR-K-DATIVE-01, RU-LEX-C110-THINGS110-02, RU-LEX-C135-ACT135-01, RU-LEX-DVA-01, RU-LEX-C79-TRAVEL-01, RU-GRAMMAR-EXPLAIN-STEPS-01]
+  knowledge: [RU-LEX-TUDA-I-OBRATNO-01, RU-GRAMMAR-BILET-DO-NA-01, RU-LEX-OPOZDAL-NA-POEZD-01, RU-GRAMMAR-PROBLEM-PERFECTIVE-01, RU-LEX-OBYAVLENIYE-01, RU-SCRIPT-C266-TVYORDYY-ZNAK-01, RU-LEX-C78-TOWN2-02, RU-LEX-C176-ACT176-02, RU-LEX-KAK-PROYTI-01, RU-GRAMMAR-IDITE-POVERNITE-01, RU-GRAMMAR-DO-NA-ROUTE-01, RU-GRAMMAR-K-DATIVE-01, RU-LEX-C110-THINGS110-02, RU-LEX-C135-ACT135-01, RU-LEX-DVA-01, RU-LEX-C79-TRAVEL-01, RU-GRAMMAR-EXPLAIN-STEPS-01]
 skills: [listening, speaking]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-output, language-focus, fluency]
 register: neutral
 variety: standard-contemporary
-reviews_of: [RU-C266-tuda-i-obratno, RU-C266-opozdal]
+reviews_of: [RU-C266-tuda-i-obratno, RU-C266-opozdal, RU-C266-obyavleniye, RU-W266-tvyordyy-znak]
 ---
 
 # Review — a ticket, and a train that left without you
@@ -41,12 +41,14 @@ reviews_of: [RU-C266-tuda-i-obratno, RU-C266-opozdal]
 tudá i obrátno, pozhálusta.*)
 
 ## What you've built
-<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-OPOZDAL-NA-POEZD-01, RU-GRAMMAR-PROBLEM-PERFECTIVE-01, RU-LEX-C135-ACT135-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-OPOZDAL-NA-POEZD-01, RU-GRAMMAR-PROBLEM-PERFECTIVE-01, RU-LEX-C135-ACT135-01, RU-LEX-OBYAVLENIYE-01, RU-SCRIPT-C266-TVYORDYY-ZNAK-01] -->
 
-Two lessons, and the station can be handled out loud. A ticket goes
-**до** a place and **на** a train; a return is **туда и обратно**. And
-when it goes wrong, the perfective past says what happened and is still
-true: **я опоздал на поезд**, **я потерял билет**.
+Three lessons and a letter, and the station can be handled out loud. A
+ticket goes **до** a place and **на** a train; a return is **туда и
+обратно**. An **объявление**, *obyavléniye*, tells the whole station
+at once, and the hard sign, *tvyórdyy znak*, keeps its *ob-* and *-yav-*
+apart. And when it goes wrong, the perfective past says what happened and
+is still true: **я опоздал на поезд**, **я потерял билет**.
 
 ## The exchange
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-KAK-PROYTI-01, RU-GRAMMAR-IDITE-POVERNITE-01, RU-GRAMMAR-DO-NA-ROUTE-01, RU-GRAMMAR-K-DATIVE-01, RU-LEX-C110-THINGS110-02] -->
@@ -58,17 +60,20 @@ The whole trip so far in two lines: a problem in the perfective, a
 question about the way, and an answer in two steps.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-TUDA-I-OBRATNO-01, RU-GRAMMAR-BILET-DO-NA-01, RU-LEX-OPOZDAL-NA-POEZD-01, RU-GRAMMAR-PROBLEM-PERFECTIVE-01, RU-LEX-DVA-01, RU-LEX-C79-TRAVEL-01, RU-GRAMMAR-EXPLAIN-STEPS-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-TUDA-I-OBRATNO-01, RU-GRAMMAR-BILET-DO-NA-01, RU-LEX-OPOZDAL-NA-POEZD-01, RU-GRAMMAR-PROBLEM-PERFECTIVE-01, RU-LEX-OBYAVLENIYE-01, RU-LEX-C78-TOWN2-02, RU-LEX-C176-ACT176-02, RU-LEX-DVA-01, RU-LEX-C79-TRAVEL-01, RU-GRAMMAR-EXPLAIN-STEPS-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *Izvinítye, ya opozdála na póyezd. Kak proytí k kásse?*]
 - [YOU SAY: *Dva biléta na póyezd, tudá i obrátno.*]
+- [YOU ANSWER: *Shto v obyavlénii na vokzále?* The train is late: *Póyezd opázdyvayet.*]
 - [YOU SAY: *K sozhaléniyu, ya poteryál bilét.*]
 - [YOU ANSWER: *Pochemú ty opozdál?* Explain what happened, then what followed, with *poétomu*]
 - [YOU ANSWER: the cashier asks *Tudá i obrátno?* Answer for a single: *Nyet, v odnú stóronu.*]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-OPOZDAL-NA-POEZD-01, RU-GRAMMAR-BILET-DO-NA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-OPOZDAL-NA-POEZD-01, RU-GRAMMAR-BILET-DO-NA-01, RU-LEX-OBYAVLENIYE-01, RU-SCRIPT-C266-TVYORDYY-ZNAK-01] -->
 
 [PAUSE 3s] "She's missed the train"? (***Она опоздала на поезд.***) "Two
-tickets for the bus"? (***Два билета на автобус.***)
+tickets for the bus"? (***Два билета на автобус.***) "An announcement"?
+(***Объявление.***) In *obyavléniye*, what keeps *ob-* and *-yav-* apart?
+(The **hard sign**, *tvyórdyy znak*, which makes no sound of its own.)

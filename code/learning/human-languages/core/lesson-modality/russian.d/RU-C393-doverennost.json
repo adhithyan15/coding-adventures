@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C393-doverennost",
+    "language": "russian",
+    "chapter": 393,
+    "sequence": 22700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:99c99656d57e429b"
+  },
+  "findings": []
+}

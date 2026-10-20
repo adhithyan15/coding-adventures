@@ -1,0 +1,11 @@
+{
+  "id": "RU-C452-prodavshchitsa",
+  "pathSegment": "RU-PATH-452-BULOCHNAYA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-452-BULOCHNAYA",
+      "order": 3
+    }
+  ]
+}

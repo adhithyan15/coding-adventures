@@ -46,7 +46,7 @@ reasons starts one step earlier, with what you think of it.
 ## Grammar Lens: three frames
 <!-- hl-knowledge: introduces=[RU-GRAMMAR-PO-MOEMU-01]; assesses=[RU-LEX-DUMAT, RU-GRAMMAR-CHTO-COMPLEMENTISER-01, RU-LEX-C64-COLOUR2-03, RU-LEX-C113-THINGS113-02, RU-PUNCT-ZAPYATAYA-01] -->
 
-**Я думаю, что …** is the plain frame, and it needs **что** and its comma.
+**Я думаю, что …** is the plain frame, here with **что** and its comma.
 
 **По-моему, …** — *po-móyemu* — "in my view". It takes no *что*; a comma
 follows it, and then the opinion:

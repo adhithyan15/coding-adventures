@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:e64adf34317d3569",
+  "lessonIds": [
+    "RU-C385-obrazovanie",
+    "RU-C385-dissertaciya",
+    "RU-C385-kafedra",
+    "RU-C385-bakalavr",
+    "RU-C385-magistr"
+  ],
+  "tex": "russian/book/chapters/ch385-higher-education.tex"
+}

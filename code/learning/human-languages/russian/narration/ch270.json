@@ -4,7 +4,7 @@
   "chapter": 270,
   "title": "Would, and a Letter About a Trip",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:88cc150fbbddcefc",
+  "sourceHash": "fnv1a64:da4d4ebbe690e26d",
   "lessons": [
     {
       "id": "RU-C270-ya-by-khotel",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8c935df27ba4d091",
+      "sourceHash": "fnv1a64:cdacbdd841a4941c",
       "notice": null,
       "blocks": [
         {
@@ -307,7 +307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:efaf2f17476c9e40",
+      "sourceHash": "fnv1a64:68ab5588d2ff5807",
       "notice": null,
       "blocks": [
         {
@@ -388,11 +388,11 @@
             {
               "kind": "prompt",
               "action": "ANSWER",
-              "instruction": "Ty búdesh puteshéstvovat létom? Éto zavísit ot déneg, then one line with yésli",
+              "instruction": "Ty búdesh puteshéstvovat létom? Éto zavísit ot déneg, with déneg, the \"of\" form of déngi; then one line with yésli",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU ANSWER: *Ty búdesh puteshéstvovat létom?* *Éto zavísit ot déneg*, then one line with *yésli*]"
+              "source": "[YOU ANSWER: *Ty búdesh puteshéstvovat létom?* *Éto zavísit ot déneg*, with *déneg*, the \"of\" form of *déngi*; then one line with *yésli*]"
             },
             {
               "kind": "prompt",
@@ -438,7 +438,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:2ae7f68a944edec1",
+      "sourceHash": "fnv1a64:fa1a0e1168256fa7",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -498,7 +498,7 @@
             },
             {
               "kind": "speech",
-              "text": "A past verb agrees with who did it: -л, -ла, -ли, or, in a few such as мог, the same endings without the л: мог, могла, могли. A verb after бы takes the same forms."
+              "text": "A past verb agrees with who did it: -л, -ла, -ли. A few, such as мог, drop the л only in the form for a man: мог, but могла, могли. A verb after бы takes the same forms."
             }
           ]
         },

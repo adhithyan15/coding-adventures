@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 293,
+  "sourceHash": "fnv1a64:8fca73a0704cb472",
+  "lessonIds": [
+    "RU-C293-sud",
+    "RU-C293-advokat",
+    "RU-C293-prigovor",
+    "RU-C293-tyurma",
+    "RU-C293-obvinyat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch293.txt",
+  "json": "russian/narration/ch293.json",
+  "textHash": "fnv1a64:b8b3b0de95887151",
+  "jsonHash": "fnv1a64:8a9da0f651640f3f",
+  "findings": []
+}

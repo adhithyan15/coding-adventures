@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C319-sochinyat",
+    "language": "russian",
+    "chapter": 319,
+    "sequence": 18900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9681d8afa6dde506"
+  },
+  "findings": []
+}

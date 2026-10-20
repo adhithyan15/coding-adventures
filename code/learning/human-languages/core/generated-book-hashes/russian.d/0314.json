@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:d0bf2ebda3490a12",
+  "lessonIds": [
+    "RU-C314-salyut",
+    "RU-C314-feyerverk",
+    "RU-C314-konfetti",
+    "RU-C314-khlopushka",
+    "RU-C314-sharik"
+  ],
+  "tex": "russian/book/chapters/ch314-fireworks.tex"
+}

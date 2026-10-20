@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 429,
+  "sourceHash": "fnv1a64:932d7e4bb35417c8",
+  "lessonIds": [
+    "RU-C429-administrator",
+    "RU-C429-zaselyatsya",
+    "RU-C429-vyselyatsya",
+    "RU-C429-zalog",
+    "RU-C429-prodlevat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch429.txt",
+  "json": "russian/narration/ch429.json",
+  "textHash": "fnv1a64:109c8922b426f016",
+  "jsonHash": "fnv1a64:3fc49884afe4d52f",
+  "findings": []
+}

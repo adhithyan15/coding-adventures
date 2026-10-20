@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C501-nitka",
+    "language": "russian",
+    "chapter": 501,
+    "sequence": 28240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9f2a31dc679b5300"
+  },
+  "findings": []
+}

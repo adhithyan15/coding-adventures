@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 464,
+  "sourceHash": "fnv1a64:f17a19477a6d1d23",
+  "lessonIds": [
+    "RU-C464-prognoz",
+    "RU-C464-sinoptik",
+    "RU-C464-osadki",
+    "RU-C464-pasmurnyy",
+    "RU-C464-proyasnyatsya"
+  ],
+  "tex": "russian/book/chapters/ch464-the-weather-forecast.tex"
+}

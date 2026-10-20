@@ -1,0 +1,11 @@
+{
+  "id": "RU-C405-buksovat",
+  "pathSegment": "RU-PATH-405-SHINA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-405-SHINA",
+      "order": 4
+    }
+  ]
+}

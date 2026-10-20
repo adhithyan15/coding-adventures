@@ -1,0 +1,11 @@
+{
+  "id": "RU-C525-naizust",
+  "pathSegment": "RU-PATH-525-POETRY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-525-POETRY",
+      "order": 4
+    }
+  ]
+}

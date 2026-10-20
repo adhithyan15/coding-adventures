@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 448,
+  "sourceHash": "fnv1a64:31bf1d79aa405c18",
+  "lessonIds": [
+    "RU-C448-prachechnaya",
+    "RU-C448-khimchistka",
+    "RU-C448-shtopat",
+    "RU-C448-zashivat",
+    "RU-C448-prishivat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch448.txt",
+  "json": "russian/narration/ch448.json",
+  "textHash": "fnv1a64:cbafa0cfbdbec169",
+  "jsonHash": "fnv1a64:9dbf2468cc9f37ff",
+  "findings": []
+}

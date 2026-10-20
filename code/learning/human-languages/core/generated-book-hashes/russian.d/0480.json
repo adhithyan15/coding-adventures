@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 480,
+  "sourceHash": "fnv1a64:d294b519b09f077d",
+  "lessonIds": [
+    "RU-C480-khokhotat",
+    "RU-C480-khikhikat",
+    "RU-C480-rydat",
+    "RU-C480-uteshat",
+    "RU-C480-utesheniye"
+  ],
+  "tex": "russian/book/chapters/ch480-laughter-and-tears.tex"
+}

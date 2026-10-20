@@ -1,0 +1,11 @@
+{
+  "id": "RU-C290-pokhishchat",
+  "pathSegment": "RU-PATH-290-MOSHENNIK",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-290-MOSHENNIK",
+      "order": 3
+    }
+  ]
+}

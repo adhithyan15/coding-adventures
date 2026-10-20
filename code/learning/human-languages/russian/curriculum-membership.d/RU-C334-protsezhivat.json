@@ -1,0 +1,11 @@
+{
+  "id": "RU-C334-protsezhivat",
+  "pathSegment": "RU-PATH-334-FARSH",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-334-FARSH",
+      "order": 2
+    }
+  ]
+}

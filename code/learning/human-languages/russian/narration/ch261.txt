@@ -88,7 +88,7 @@ Warm-up.
 [pause 2 seconds]
 Say "yesterday I was reading a book", then "yesterday I read the book to the end". (Vcherá ya chitál knígu. Vcherá ya prochitál knígu.)
 [pause 1 second]
-And the hinge from the present: kogdá ya chitáyu, ya dúmayu. Когда joins two halves with a comma at the seam. In the past, the aspect on each side tells the listener how the two halves fit together.
+And the hinge from the present: kogdá ya chitáyu, ya dúmayu. In the past, the aspect on each side tells how the halves fit.
 
 Grammar Lens: one going on, one cutting in.
 Когда я читал, позвонил брат. — kogdá ya chitál, pozvoníl brat — When I was reading, my brother rang.
@@ -100,7 +100,7 @@ First the book was finished, then the call. Брату is брат with -у: a m
 Grammar Lens: пока, for two things at once.
 The goodbye пока has a second job: "while, for as long as". Inside a story it usually takes the imperfective, and it lays two scenes side by side:
 Пока я читал, брат спал. — poká ya chitál, brat spal — While I was reading, my brother was asleep.
-Neither half is finished; both went on through the same hour.
+Neither half is finished; both went on through the same hour. Когда я читал, брат спал says it too; пока stresses the stretch of time, and its other half may be one deed inside it: Пока я читал, позвонил брат.
 
 The word, taken apart.
 пока is по- with an old pronoun meaning "which, what kind", the ancestor of какой, on the question-root PIE kʷo- of как and of English who and when. By the usual account "for as long as" is its old sense, and the goodbye, "for now", grew out of it in the twentieth century. Когда comes off the same root.

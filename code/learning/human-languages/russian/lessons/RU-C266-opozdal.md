@@ -15,7 +15,7 @@ concept_tag: PROBLEM-REPORT
 prerequisites: [RU-C266-tuda-i-obratno, RU-C176-opazdyvat, RU-C135-to-lose, RU-C143-ukhodit, RU-C112-problem, RU-C215-k-sozhaleniyu, RU-C136-nichego, RU-C138-cherez, RU-C69-hour, RU-C21-pomogite]
 sounds: []
 roots: [pie-pos]
-etymology_hook: "опоздать is о- with поздно 'late', whose root is the 'after' of Latin post"
+etymology_hook: "опоздать is о- with поздно 'late', whose root is usually set beside Latin post, 'after'"
 duration:
   max_seconds: 240
 requires:
@@ -77,8 +77,9 @@ When it is serious: **Помогите, пожалуйста!**
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C176-ACT176-02] -->
 
 **опоздать** is *о-* with the root of **поздно**, "late". EtymDB 2.1 lists
-*опоздать* without a parent; the usual account takes *поздно* back to a
-Proto-Slavic *\*pozdŭ* and relates it to Latin *post*, "after".
+*опоздать* without a parent, and takes *поздний*, "late", back to
+Proto-Slavic *\*pozdĭnŭ*. The usual account relates that root to Latin
+*post*, "after"; EtymDB itself does not draw the link.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-OPOZDAL-NA-POEZD-01, RU-GRAMMAR-PROBLEM-PERFECTIVE-01] -->

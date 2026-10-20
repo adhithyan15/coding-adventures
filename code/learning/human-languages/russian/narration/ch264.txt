@@ -22,7 +22,7 @@ Grammar Lens: ты должен, you must.
 Должен is a duty, and it agrees like the past: должен to a man, должна (dolzhná) to a woman, должны (dolzhný) to more than one or to вы. It can sound strong between friends; стоит and лучше are gentler.
 
 The word, taken apart.
-должен comes from долг, "a debt, a duty", which EtymDB 2.1 traces to Proto-Slavic dŭlgŭ. A duty is a debt: Я должен тебе сто рублей still means "I owe you a hundred roubles".
+должен comes from the Russian noun for "a debt, a duty", which EtymDB 2.1 traces to Proto-Slavic dŭlgŭ. A duty is a debt: Я должен тебе сто рублей still means "I owe you a hundred roubles".
 
 Guided Practice.
 [pause 1 second]
@@ -54,7 +54,7 @@ Word for word, "the reason is in that, that …": в том points ahead, and ч
 Grammar Lens: an explanation in three steps.
 What happened, then поэтому, then what followed:
 Я потерял телефон, поэтому не мог позвонить. — ya poteryál telefón, poétomu ne mog pozvonít — I lost my phone, so I couldn't ring.
-Мог is the past of мочь, one of the few without an л: мог, могла, могли.
+Мог is the past of мочь, one of the few whose form for a man has no л: мог, but могла, могли.
 
 Why it's said this way: the aspect of an explanation.
 Учитель говорил быстро, и я не понимал правило. Потом он повторил медленно, и я понял. — uchítel govoríl býstro, i ya ne ponimál právilo. potóm on povtoríl médlenno, i ya pónyal — The teacher was talking fast and I didn't understand the rule. Then he said it again slowly, and I understood.
