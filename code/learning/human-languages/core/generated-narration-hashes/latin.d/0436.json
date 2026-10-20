@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 436,
-  "sourceHash": "fnv1a64:fffe359853f6d6f7",
+  "sourceHash": "fnv1a64:5ac37e8afdcc1054",
   "lessonIds": [
     "LA-C436-puppis",
     "LA-C436-prora",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch436.txt",
   "json": "latin/narration/ch436.json",
-  "textHash": "fnv1a64:22801e3018940ea8",
-  "jsonHash": "fnv1a64:2f67ac0a5b99993d",
+  "textHash": "fnv1a64:04e396ab0c1bcbed",
+  "jsonHash": "fnv1a64:cc6ff466bd0f410f",
   "findings": []
 }

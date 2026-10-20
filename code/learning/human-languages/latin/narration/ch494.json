@@ -4,7 +4,7 @@
   "chapter": 494,
   "title": "Hatred and disgust",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:129c2952cab5ac1b",
+  "sourceHash": "fnv1a64:3be5747248d8193d",
   "lessons": [
     {
       "id": "LA-C494-odi",
@@ -161,7 +161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2075585da6a6ab57",
+      "sourceHash": "fnv1a64:f86856951f6a22a3",
       "notice": null,
       "blocks": [
         {
@@ -196,7 +196,7 @@
             },
             {
               "kind": "speech",
-              "text": "Built on odium — hatred. In everyday Latin it often means simply annoying. English odious."
+              "text": "Built on odium — hatred. In everyday Latin it often means no more than annoying. English odious."
             }
           ]
         },

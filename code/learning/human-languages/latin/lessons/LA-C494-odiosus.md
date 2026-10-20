@@ -47,7 +47,7 @@ reviews_of: [LA-C494-odi]
 >
 > *The journey was long and tiresome.*
 
-Built on *odium* — hatred. In everyday Latin it often means simply annoying. English *odious*.
+Built on *odium* — hatred. In everyday Latin it often means no more than annoying. English *odious*.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

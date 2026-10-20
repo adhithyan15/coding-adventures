@@ -314,7 +314,7 @@ describe("corpus level summary", () => {
     // Six tracks now exceed A2, and naming them is stronger than a blanket
     // "nothing does" -- it says which rung was climbed and by whom. Italian joins
     // Spanish with its B1 core, chapters 263-272, Portuguese with its B1
-    // core, chapters 259-268, French with its B1 core, chapters 258-267, and
+    // core, chapters 259-268, French with its B1 core, chapters 258-267,
     // German with its B1 core, chapters 252-261, and Latin with its B1 core,
     // chapters 281-290.
     expect(

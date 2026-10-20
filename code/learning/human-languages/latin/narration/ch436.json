@@ -4,7 +4,7 @@
   "chapter": 436,
   "title": "Stern, Prow, Keel, Rowing bench, For cargo",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fffe359853f6d6f7",
+  "sourceHash": "fnv1a64:5ac37e8afdcc1054",
   "lessons": [
     {
       "id": "LA-C436-puppis",
@@ -587,7 +587,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:89d11e2018d3e4ad",
+      "sourceHash": "fnv1a64:6ea4b45cd2409673",
       "notice": null,
       "blocks": [
         {
@@ -622,7 +622,7 @@
             },
             {
               "kind": "speech",
-              "text": "An adjective of three endings. Nāvis onerāria, a merchant ship, or simply onerāria; iūmentum onerārium, a pack animal."
+              "text": "An adjective of three endings. Nāvis onerāria, a merchant ship, or onerāria on its own; iūmentum onerārium, a pack animal."
             }
           ]
         },

@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 367,
-  "sourceHash": "fnv1a64:be3f7f40d76c840d",
+  "sourceHash": "fnv1a64:356b22777ca20b2a",
   "lessonIds": [
     "LA-C367-cum",
     "LA-C367-ne",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch367.txt",
   "json": "latin/narration/ch367.json",
-  "textHash": "fnv1a64:884751e8d562d476",
-  "jsonHash": "fnv1a64:76d0908fd1088493",
+  "textHash": "fnv1a64:00ba765cd649226e",
+  "jsonHash": "fnv1a64:129ccd147bf8714f",
   "findings": []
 }

@@ -47,7 +47,7 @@ reviews_of: [LA-C436-transtrum]
 >
 > *Cargo ships carry grain to the city.*
 
-An adjective of three endings. *Nāvis onerāria*, a merchant ship, or simply *onerāria*; *iūmentum onerārium*, a pack animal.
+An adjective of three endings. *Nāvis onerāria*, a merchant ship, or *onerāria* on its own; *iūmentum onerārium*, a pack animal.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

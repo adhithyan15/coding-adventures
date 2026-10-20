@@ -4,7 +4,7 @@
   "chapter": 367,
   "title": "Since, Lest, But That",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:be3f7f40d76c840d",
+  "sourceHash": "fnv1a64:356b22777ca20b2a",
   "lessons": [
     {
       "id": "LA-C367-cum",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:817a4b3f552b17bf",
+      "sourceHash": "fnv1a64:c0bb25b62f7dc4b7",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "As a preposition cum takes the ablative: cum amīcō, with a friend. As a conjunction with the subjunctive it gives a reason or the scene: cum essem, since I was. With the indicative it is simply when."
+              "text": "As a preposition cum takes the ablative: cum amīcō, with a friend. As a conjunction with the subjunctive it gives a reason or the scene: cum essem, since I was. With the indicative it means when."
             }
           ]
         },

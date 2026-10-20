@@ -47,7 +47,7 @@ reviews_of: [LA-C366-idcirco]
 >
 > *Since I was ill, I stayed at home.*
 
-As a preposition *cum* takes the ablative: *cum amīcō*, with a friend. As a conjunction with the subjunctive it gives a reason or the scene: *cum essem*, since I was. With the indicative it is simply when.
+As a preposition *cum* takes the ablative: *cum amīcō*, with a friend. As a conjunction with the subjunctive it gives a reason or the scene: *cum essem*, since I was. With the indicative it means when.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
