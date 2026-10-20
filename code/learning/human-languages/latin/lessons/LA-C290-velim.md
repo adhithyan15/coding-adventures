@@ -16,7 +16,7 @@ sounds: []
 roots: []
 etymology_hook: "the -i- of velim and sim is usually explained as an old wishing mood that Latin folded into its subjunctive"
 duration:
-  max_seconds: 235
+  max_seconds: 245
 requires:
   knowledge: [LA-LEX-C49-FRAME-02, LA-LEX-C49-FRAME-01, LA-LEX-C111-WANT111-01, LA-LEX-SUM-01, LA-GRAMMAR-C287-CUPIO-INF-02, LA-GRAMMAR-C283-ACC-INF-02, LA-LEX-C289-SI-01]
 introduces:
@@ -58,8 +58,9 @@ rather".
 > **Hoc facere possim.** — I could do this.
 > **Mālim manēre.** — I would rather stay.
 
-[PAUSE 1s] Cicero writes *velim scire*, "I should like to know", when he
-asks a friend a question in a letter (Lewis & Short quote it).
+[PAUSE 1s] Cicero writes *velim scire*, "I should like to know", in one of
+his dialogues, and *velim* again in a letter telling his friend Atticus how
+much he would like to see him (Lewis & Short quote both).
 
 ## Why it's said this way: a mood, not a tense
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-SUM-01, LA-GRAMMAR-C283-ACC-INF-02] -->
@@ -75,8 +76,9 @@ to work.
 
 The **-i-** of *velim*, *possim* and *sim* is usually explained as the mark
 of an old wishing mood, which Greek kept as a mood of its own and Latin
-folded into the subjunctive. Neither EtymDB nor Lewis & Short records
-endings, so this is the account histories of Latin give, offered as one.
+folded into the subjunctive. Lewis & Short do record an older *siem*,
+*siet* for *sim*, *sit* in Plautus; the link to the Greek mood is the account
+histories of Latin give, offered as one.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-GRAMMAR-C290-SUBIUNCTIVUS-01, LA-LEX-C289-SI-01, LA-LEX-C49-FRAME-02] -->

@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-349-FABULOR",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-349-FABULOR"
+  ],
+  "after": []
+}

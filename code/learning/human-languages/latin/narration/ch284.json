@@ -4,7 +4,7 @@
   "chapter": 284,
   "title": "What You Should Do, and Why",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:2a5b3c0674535020",
+  "sourceHash": "fnv1a64:a458b20873c8444a",
   "lessons": [
     {
       "id": "LA-C284-debes",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d4d4a8e28f6399b7",
+      "sourceHash": "fnv1a64:225d9b8efbd9b10e",
       "notice": null,
       "blocks": [
         {
@@ -105,7 +105,7 @@
             },
             {
               "kind": "speech",
-              "text": "Dēbēbās is the imperfect, \"you were bound to\", and the sentence carries the regret: the coming was owed, and it did not happen."
+              "text": "Dēbēbās is the imperfect, \"you were bound to\", and the sentence carries the regret: the coming was owed, and it did not happen. The perfect does the same work, venīre dēbuistī, and so does oportet in the perfect: oportuit tē venīre."
             }
           ]
         },

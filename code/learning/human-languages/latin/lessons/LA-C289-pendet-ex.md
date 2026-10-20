@@ -71,7 +71,7 @@ nostrā potestāte*, in our power.
 **pendeō**, as its own lesson said, is the intransitive partner of *pendō*,
 "to weigh, to hang up", usually traced to Proto-Indo-European
 *\*(s)pend-*, "to stretch, to pull" (EtymDB 2.1). **ex** is inherited from
-Proto-Indo-European *\*h1eghs*, "out" (EtymDB 2.1), and English *exit*
+Proto-Indo-European *\*h₁eǵʰs*, "out" (EtymDB 2.1), and English *exit*
 begins with it. A thing that *pendet ex* is held up by something else, and
 falls if that gives way.
 

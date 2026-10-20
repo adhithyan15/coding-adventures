@@ -46,7 +46,8 @@ Three lessons, and an opinion has three shapes. **putō** with the
 accusative and infinitive, which turns the sentence into what you think.
 **meā sententiā**, which leaves it alone. And **mihi vidētur**, "it seems to
 me", with the thing that seems as its subject. Then **ergō** to draw the
-conclusion, beside the *itaque* of a story and the *igitur* of an argument.
+conclusion, beside *itaque*, which leans to stories, and *igitur*, which
+leans to arguments.
 
 > *Meā sententiā, Mārcus fessus est; ergō dormit.*
 > — In my opinion Marcus is tired; so he is sleeping.

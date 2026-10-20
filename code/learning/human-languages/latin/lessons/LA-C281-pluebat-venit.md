@@ -14,7 +14,7 @@ concept_tag: ASPECT-ONGOING-PAST
 prerequisites: [LA-C281-ambulabam, LA-C15-weather-verbs, LA-C175-subito, LA-C107-forum, LA-C51-amicus, LA-C59-m-objects]
 sounds: []
 roots: [facere-latin]
-etymology_hook: "perfectum is 'carried through', from perficiō; the imperfect is the past not carried through"
+etymology_hook: "perfectum is per- 'through' + faciō 'to do': carried through; the imperfect is the past not carried through"
 duration:
   max_seconds: 290
 requires:
@@ -55,7 +55,7 @@ moment, and was done: that is the **perfect**, *vēnit*.
 > **In forō ambulābam; subitō amīcum vīdī.** — I was walking in the forum;
 > suddenly I saw a friend.
 
-[PAUSE 1s] A word like *subitō*, "suddenly", nearly guarantees a perfect
+[PAUSE 1s] A word like *subitō*, "suddenly", usually brings a perfect
 after it: suddenness is an event.
 
 ## Why it's said this way: habitābam or habitāvī?
@@ -72,10 +72,10 @@ decides.
 ## The word, taken apart: perfect and imperfect
 <!-- hl-knowledge: introduces=[LA-ETYMON-C281-PERFECTUM-02]; assesses=[] -->
 
-The names are Latin. **perfectum** comes from *perficiō*, "to carry through,
-to finish" (Lewis & Short), which EtymDB 2.1 builds from *per-*, "through",
-and *faciō*, "to make, to do". The perfect is the past that was carried
-through. **imperfectum** puts *in-*, "not", in front: unfinished, still
+The names are Latin. **perfectum** is the participle of a verb that Lewis &
+Short gloss "to carry through, to finish", and EtymDB 2.1 builds that verb
+from *per-*, "through", and *faciō*, "to make, to do". The perfect is the
+past that was carried through. **imperfectum** puts *in-*, "not", in front: unfinished, still
 going, which is what *pluēbat* is.
 
 ## Guided Practice

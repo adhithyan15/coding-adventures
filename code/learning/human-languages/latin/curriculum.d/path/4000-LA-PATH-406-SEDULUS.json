@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-406-SEDULUS",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "LA-EXT-406-SEDULUS"
+  ],
+  "after": []
+}

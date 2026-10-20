@@ -4,7 +4,7 @@
   "chapter": 281,
   "title": "The Scene and the Event",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1b1a9fdb14abd5e4",
+  "sourceHash": "fnv1a64:a6f322faa3d9521c",
   "lessons": [
     {
       "id": "LA-C281-vidi-vidit",
@@ -610,7 +610,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c058ad57560a252",
+      "sourceHash": "fnv1a64:da21ddf36bda2cad",
       "notice": null,
       "blocks": [
         {
@@ -671,7 +671,7 @@
             },
             {
               "kind": "speech",
-              "text": "A word like subitō, \"suddenly\", nearly guarantees a perfect after it: suddenness is an event."
+              "text": "A word like subitō, \"suddenly\", usually brings a perfect after it: suddenness is an event."
             }
           ]
         },
@@ -709,7 +709,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The names are Latin. perfectum comes from perficiō, \"to carry through, to finish\" (Lewis & Short), which EtymDB 2.1 builds from per-, \"through\", and faciō, \"to make, to do\". The perfect is the past that was carried through. imperfectum puts in-, \"not\", in front: unfinished, still going, which is what pluēbat is."
+              "text": "The names are Latin. perfectum is the participle of a verb that Lewis & Short gloss \"to carry through, to finish\", and EtymDB 2.1 builds that verb from per-, \"through\", and faciō, \"to make, to do\". The perfect is the past that was carried through. imperfectum puts in-, \"not\", in front: unfinished, still going, which is what pluēbat is."
             }
           ]
         },

@@ -1,0 +1,20 @@
+{
+  "language": "latin",
+  "chapter": 446,
+  "sourceHash": "fnv1a64:89a65d29fa4d7880",
+  "lessonIds": [
+    "LA-C446-lectulus",
+    "LA-C446-stramentum",
+    "LA-C446-teges",
+    "LA-C446-cervical",
+    "LA-C446-lodix",
+    "LA-R446-review-439-446"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "latin/narration/ch446.txt",
+  "json": "latin/narration/ch446.json",
+  "textHash": "fnv1a64:6742bc8209a3ec6a",
+  "jsonHash": "fnv1a64:da5ffbb437ec93ca",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 494,
+  "sourceHash": "fnv1a64:129c2952cab5ac1b",
+  "lessonIds": [
+    "LA-C494-odi",
+    "LA-C494-odiosus",
+    "LA-C494-fastidio",
+    "LA-C494-fastidium",
+    "LA-C494-taedet"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch494.txt",
+  "json": "latin/narration/ch494.json",
+  "textHash": "fnv1a64:c01ffef39f50bb2c",
+  "jsonHash": "fnv1a64:8fac2b71cc3e0204",
+  "findings": []
+}

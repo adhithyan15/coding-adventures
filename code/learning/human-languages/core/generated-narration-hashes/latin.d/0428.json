@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 428,
+  "sourceHash": "fnv1a64:e7c1f4284c338a9b",
+  "lessonIds": [
+    "LA-C428-profectio",
+    "LA-C428-reditus",
+    "LA-C428-peregrinatio",
+    "LA-C428-peregrinor",
+    "LA-C428-progredior"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch428.txt",
+  "json": "latin/narration/ch428.json",
+  "textHash": "fnv1a64:e0a4ef3d39d89cd8",
+  "jsonHash": "fnv1a64:0dcd246a7a4ef926",
+  "findings": []
+}

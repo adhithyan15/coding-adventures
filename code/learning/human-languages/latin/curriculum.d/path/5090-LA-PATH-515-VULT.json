@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-515-VULT",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "LA-EXT-515-VULT"
+  ],
+  "after": []
+}

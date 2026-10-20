@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-490-MAER",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "LA-EXT-490-MAER"
+  ],
+  "after": []
+}

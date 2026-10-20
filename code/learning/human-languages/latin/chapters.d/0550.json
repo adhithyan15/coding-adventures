@@ -1,0 +1,19 @@
+{
+  "chapter": 550,
+  "title": "Readers and booksellers",
+  "label": "ch:la-readers-and-booksellers",
+  "canDo": "I can talk about readers, booksellers and reading.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C550-evolvo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 550: I can talk about readers, booksellers and reading.",
+    "assesses": [
+      "LA-LEX-C550-LIBR-03",
+      "LA-LEX-C550-LIBR-04",
+      "LA-LEX-C550-LIBR-05"
+    ]
+  }
+}

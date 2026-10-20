@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 425,
+  "sourceHash": "fnv1a64:b70d46e11ed6fd51",
+  "lessonIds": [
+    "LA-C425-agger",
+    "LA-C425-silex",
+    "LA-C425-crepido",
+    "LA-C425-orbita",
+    "LA-C425-sterno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch425.txt",
+  "json": "latin/narration/ch425.json",
+  "textHash": "fnv1a64:7ac1ba33ea5ca9dc",
+  "jsonHash": "fnv1a64:0a4a3384d72fc74a",
+  "findings": []
+}

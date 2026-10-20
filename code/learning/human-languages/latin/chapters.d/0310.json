@@ -1,0 +1,19 @@
+{
+  "chapter": 310,
+  "title": "Vērum aut falsum",
+  "label": "ch:la-verum-aut-falsum",
+  "canDo": "I can talk about truth and lies in court: to swear, perjury, to lie, to prove and information.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C310-indicium",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 310: I can talk about truth and lies in court: to swear, perjury, to lie, to prove and information.",
+    "assesses": [
+      "LA-LEX-C310-IURO-03",
+      "LA-LEX-C310-IURO-04",
+      "LA-LEX-C310-IURO-05"
+    ]
+  }
+}

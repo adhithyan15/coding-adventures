@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 436,
+  "sourceHash": "fnv1a64:f51b14eb89e961e7",
+  "lessonIds": [
+    "LA-C436-puppis",
+    "LA-C436-prora",
+    "LA-C436-carina",
+    "LA-C436-transtrum",
+    "LA-C436-onerarius"
+  ],
+  "tex": "latin/book/chapters/ch436-stern-prow-keel-rowing-bench-for-cargo.tex"
+}

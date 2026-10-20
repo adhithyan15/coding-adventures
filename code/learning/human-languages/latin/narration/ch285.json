@@ -4,7 +4,7 @@
   "chapter": 285,
   "title": "Asking the Way",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:b26a896886e7a88f",
+  "sourceHash": "fnv1a64:9182ef226ecbaaa1",
   "lessons": [
     {
       "id": "LA-C285-qua-via",
@@ -216,7 +216,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:746822eb8ab43519",
+      "sourceHash": "fnv1a64:8a252f0854396bcf",
       "notice": null,
       "blocks": [
         {
@@ -284,7 +284,7 @@
             },
             {
               "kind": "speech",
-              "text": "Roman comedy has a scene built on exactly this. In Terence's Adelphoe, a slave gets rid of an old man by sending him across town: ad sinistram, then ad dextram, along hāc rēctā plateā, \"this straight street\", to a place where the person he wants is not. Lewis & Short quote the ad dextram from that play. A Roman audience laughed because they gave and got directions this way every day."
+              "text": "Roman comedy has a scene built on exactly this. In Terence's Adelphoe, a slave gets rid of an old man by sending him across town: ad sinistram, then ad dextram, along hāc rēctā plateā, \"this straight street\", to a place where the person he wants is not. Lewis & Short cite ad dexteram, the longer spelling, from Plautus and from Terence's Andria. A Roman audience laughed because they gave and got directions this way every day."
             }
           ]
         },
@@ -295,7 +295,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "dextram is the adjective dexter with manum left out: Lewis & Short give ad dextram as short for ad dextram manum or partem, \"to the right hand\" or \"side\". The dexter lesson traced the word itself to Proto-Indo-European deks-, \"right\", and named Greek dexios as a cousin."
+              "text": "dextram is the adjective dexter with manum left out: Lewis & Short take dextra, \"the right\", as dextra manus, \"the right hand\", with the noun understood. The dexter lesson traced the word itself to Proto-Indo-European deks-, \"right\", and named Greek dexios as a cousin."
             }
           ]
         },
@@ -554,7 +554,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6977de03bc1c457f",
+      "sourceHash": "fnv1a64:1e4621db5b45165d",
       "notice": null,
       "blocks": [
         {

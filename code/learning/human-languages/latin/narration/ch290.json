@@ -4,7 +4,7 @@
   "chapter": 290,
   "title": "Would",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:bc74abfb6c3f8ad1",
+  "sourceHash": "fnv1a64:67fe55aac7fc3749",
   "lessons": [
     {
       "id": "LA-C290-velim",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8a4bf7fe008d21a1",
+      "sourceHash": "fnv1a64:7df828b0646c7826",
       "notice": null,
       "blocks": [
         {
@@ -94,7 +94,7 @@
             },
             {
               "kind": "speech",
-              "text": "Cicero writes velim scire, \"I should like to know\", when he asks a friend a question in a letter (Lewis & Short quote it)."
+              "text": "Cicero writes velim scire, \"I should like to know\", in one of his dialogues, and velim again in a letter telling his friend Atticus how much he would like to see him (Lewis & Short quote both)."
             }
           ]
         },
@@ -122,7 +122,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The -i- of velim, possim and sim is usually explained as the mark of an old wishing mood, which Greek kept as a mood of its own and Latin folded into the subjunctive. Neither EtymDB nor Lewis & Short records endings, so this is the account histories of Latin give, offered as one."
+              "text": "The -i- of velim, possim and sim is usually explained as the mark of an old wishing mood, which Greek kept as a mood of its own and Latin folded into the subjunctive. Lewis & Short do record an older siem, siet for sim, sit in Plautus; the link to the Greek mood is the account histories of Latin give, offered as one."
             }
           ]
         },
@@ -440,7 +440,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:72026606d7bb16c5",
+      "sourceHash": "fnv1a64:5f227192aa28d525",
       "notice": null,
       "blocks": [
         {
@@ -517,11 +517,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "In tuā potestāte est. — then Spērō tē venīre.",
+              "instruction": "In tuā potestāte est. — then Spērō tē valēre.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *In tuā potestāte est.* — then *Spērō tē venīre.*]"
+              "source": "[YOU SAY: *In tuā potestāte est.* — then *Spērō tē valēre.*]"
             },
             {
               "kind": "prompt",

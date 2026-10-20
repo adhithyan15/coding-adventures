@@ -37,3 +37,14 @@ vocabulary. Each chapter ends on a short review; chapter 282 carries an
   where both are silent (the -b- of -bam, eram from *esam, the -i- of
   velim, the origins of dum and ergō).
 - The five B1 spine ledgers no longer omit any concept.
+
+An independent review then fixed errors in 16 of the 38 lessons. Every
+paradigm and macron held. The fixes were:
+- three later headwords (*perficiō*, *angō*, *dēspērō*) mentioned in passing,
+  now described without being named;
+- rules stated too firmly (*itaque* for stories against *igitur* for
+  arguments, *subitō* with the perfect), now given as leanings;
+- *spērō tē venīre*, now *spērō tē valēre*, the classical present hope;
+- source citations corrected (*ad dexteram* in Terence's *Andria*; *velim
+  scire* in the *Tusculans*);
+- PIE forms aligned with EtymDB.

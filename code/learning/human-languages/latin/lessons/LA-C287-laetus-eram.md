@@ -14,7 +14,7 @@ concept_tag: ADJECTIVE-FEELING
 prerequisites: [LA-R286-by-sea, LA-C69-laetus, LA-C69-tristis, LA-C212-anxius, LA-C241-sollicitus, LA-C148-iratus, LA-C78-gaudeo, LA-C78-timeo]
 sounds: []
 roots: []
-etymology_hook: "sollicitus is 'stirred through and through', anxius 'squeezed': Latin feelings are bodily"
+etymology_hook: "sollicitus is 'stirred through and through', anxius 'squeezed': two Latin worries that are bodily"
 duration:
   max_seconds: 265
 requires:
@@ -42,8 +42,8 @@ open past. (*Eram.*)
 ## Grammar Lens: the feeling agrees with who felt it
 <!-- hl-knowledge: introduces=[LA-GRAMMAR-C287-AFFECTUS-01]; assesses=[LA-LEX-C212-QUAL212-03, LA-LEX-C241-QUAL241-03, LA-LEX-C148-QUAL148-03] -->
 
-A feeling in a story is a state, so it takes the imperfect, and the
-adjective matches the person who felt it:
+A feeling in a story is a state, so it usually takes the imperfect, and
+the adjective matches the person who felt it:
 
 > **Laetus eram.** — I was happy (a man speaking).
 > **Laeta eram.** — I was happy (a woman speaking).
@@ -72,7 +72,7 @@ describes the person; the verb tells what the person was doing inside.
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C212-QUAL212-03, LA-LEX-C241-QUAL241-03] -->
 
 Two of these feelings are bodily, and their own lessons said how. **anxius**
-is built on *angō*, "to squeeze, to choke" (Lewis & Short): worry as a
+is built on the verb for "to squeeze, to choke" (Lewis & Short): worry as a
 tight throat. **sollicitus** is built from *sollus*, "whole", and *cieō*,
 "to stir up" (Lewis & Short): stirred through and through. English took
 them over as *anxious* and *solicitous*.
@@ -94,4 +94,4 @@ them over as *anxious* and *solicitous*.
 [PAUSE 3s] A woman says "I was happy". (***Laeta eram.***) "We were
 worried"? (***Sollicitī erāmus.***) Which feeling word has one form for a
 man and a woman? (***Trīstis.***) Which tense does a feeling in a story
-take? (The **imperfect**: it is a state.)
+usually take? (The **imperfect**: it is a state.)

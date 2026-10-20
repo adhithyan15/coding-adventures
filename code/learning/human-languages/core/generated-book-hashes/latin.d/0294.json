@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 294,
+  "sourceHash": "fnv1a64:73832008f1146077",
+  "lessonIds": [
+    "LA-C294-identidem",
+    "LA-C294-subinde",
+    "LA-C294-crebro",
+    "LA-C294-plerumque",
+    "LA-C294-quotiens"
+  ],
+  "tex": "latin/book/chapters/ch294-identidem.tex"
+}

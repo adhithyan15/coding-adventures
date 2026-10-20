@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 436,
+  "sourceHash": "fnv1a64:fffe359853f6d6f7",
+  "lessonIds": [
+    "LA-C436-puppis",
+    "LA-C436-prora",
+    "LA-C436-carina",
+    "LA-C436-transtrum",
+    "LA-C436-onerarius"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch436.txt",
+  "json": "latin/narration/ch436.json",
+  "textHash": "fnv1a64:22801e3018940ea8",
+  "jsonHash": "fnv1a64:2f67ac0a5b99993d",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 484,
+  "title": "Beech, Fir, Elm, Ash, Shady",
+  "label": "ch:la-beech-fir-elm-ash-shady",
+  "canDo": "I can name the trees of a forest and describe it: beech, fir, elm and ash, and shady woods.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C484-opacus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 484: I can name the trees of a forest and describe it: beech, fir, elm and ash, and shady woods.",
+    "assesses": [
+      "LA-LEX-C484-FAGUS-03",
+      "LA-LEX-C484-FAGUS-04",
+      "LA-LEX-C484-FAGUS-05"
+    ]
+  }
+}

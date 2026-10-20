@@ -1,0 +1,11 @@
+{
+  "id": "LA-C438-portitor",
+  "pathSegment": "LA-PATH-438-CONSCENDO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-438-CONSCENDO",
+      "order": 4
+    }
+  ]
+}

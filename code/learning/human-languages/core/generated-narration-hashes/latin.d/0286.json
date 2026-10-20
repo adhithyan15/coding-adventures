@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 286,
-  "sourceHash": "fnv1a64:90bd85d6a672daf2",
+  "sourceHash": "fnv1a64:f40e153603920048",
   "lessonIds": [
     "LA-C286-navis",
     "LA-C286-naulum",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "latin/narration/ch286.txt",
   "json": "latin/narration/ch286.json",
-  "textHash": "fnv1a64:f88d4462e218ad16",
-  "jsonHash": "fnv1a64:45186bfb5280fccb",
+  "textHash": "fnv1a64:27ae2a6156383520",
+  "jsonHash": "fnv1a64:9d35d2352677f68a",
   "findings": []
 }

@@ -1,0 +1,19 @@
+{
+  "chapter": 492,
+  "title": "Comfort and gentleness",
+  "label": "ch:la-comfort-and-gentleness",
+  "canDo": "I can talk about comforting someone.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C492-lenio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 492: I can talk about comforting someone.",
+    "assesses": [
+      "LA-LEX-C492-SOLA-03",
+      "LA-LEX-C492-SOLA-04",
+      "LA-LEX-C492-SOLA-05"
+    ]
+  }
+}

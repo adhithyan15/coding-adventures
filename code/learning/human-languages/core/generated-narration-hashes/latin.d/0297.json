@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 297,
+  "sourceHash": "fnv1a64:7222d8fafbb16a64",
+  "lessonIds": [
+    "LA-C297-incipio",
+    "LA-C297-coepi",
+    "LA-C297-finio",
+    "LA-C297-perficio",
+    "LA-C297-intermitto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch297.txt",
+  "json": "latin/narration/ch297.json",
+  "textHash": "fnv1a64:bad276eab3abbfe5",
+  "jsonHash": "fnv1a64:a5bc111c5bd181d8",
+  "findings": []
+}

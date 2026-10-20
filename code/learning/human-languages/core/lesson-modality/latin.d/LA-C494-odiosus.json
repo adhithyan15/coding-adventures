@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C494-odiosus",
+    "language": "latin",
+    "chapter": 494,
+    "sequence": 26260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2075585da6a6ab57"
+  },
+  "findings": []
+}

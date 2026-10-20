@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C338-tribunus",
+    "language": "latin",
+    "chapter": 338,
+    "sequence": 18240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6b6f52e0af7b4b1d"
+  },
+  "findings": []
+}

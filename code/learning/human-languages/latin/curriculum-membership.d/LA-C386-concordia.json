@@ -1,0 +1,11 @@
+{
+  "id": "LA-C386-concordia",
+  "pathSegment": "LA-PATH-386-SOCIETAS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-386-SOCIETAS",
+      "order": 4
+    }
+  ]
+}

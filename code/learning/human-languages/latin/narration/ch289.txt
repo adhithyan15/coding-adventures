@@ -53,7 +53,7 @@ That is a real condition: it may well rain, and if it does, the second half foll
 Grammar Lens: ordinary verbs on both sides.
 Sī pluit, in vīllā manēmus. — If it rains, we stay in the farmhouse.
 [pause 2 seconds]
-Each half has the tense the facts need. A real condition about the past takes the perfect, the way any past event does:
+Each half has the tense the facts need. A real condition about a past event takes the perfect, as any event does; a past scene would take the imperfect:
 Sī herī in forō fuistī, amīcum vīdistī. — If you were in the forum yesterday, you saw my friend.
 [pause 2 seconds]
 The speaker does not know whether you were there. If you were, the seeing follows. Nothing in the verbs is pretending.
@@ -80,7 +80,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "if it rains, we stay in the farmhouse". (Sī pluit, in vīllā manēmus.) Which tense goes after sī for a real past? (The perfect, like any event.) Say "if you are tired, rest". (Sī fessus es, quiēsce.)
+Say "if it rains, we stay in the farmhouse". (Sī pluit, in vīllā manēmus.) Which tense goes after sī for a real past event? (The perfect, like any event.) Say "if you are tired, rest". (Sī fessus es, quiēsce.)
 
 
 Lesson 3 of 4.
@@ -105,7 +105,7 @@ In tuā potestāte est. — It is up to you; it is in your power.
 You own potestās, "power, the ability to act"; in tuā potestāte is "in your power". Cicero, writing about fate, asks what is in nostrā potestāte, in our power.
 
 The phrase, taken apart.
-pendeō, as its own lesson said, is the intransitive partner of pendō, "to weigh, to hang up", usually traced to Proto-Indo-European (s)pend-, "to stretch, to pull" (EtymDB 2.1). ex is inherited from Proto-Indo-European h1eghs, "out" (EtymDB 2.1), and English exit begins with it. A thing that pendet ex is held up by something else, and falls if that gives way.
+pendeō, as its own lesson said, is the intransitive partner of pendō, "to weigh, to hang up", usually traced to Proto-Indo-European (s)pend-, "to stretch, to pull" (EtymDB 2.1). ex is inherited from Proto-Indo-European h₁eǵʰs, "out" (EtymDB 2.1), and English exit begins with it. A thing that pendet ex is held up by something else, and falls if that gives way.
 
 Guided Practice.
 [pause 1 second]

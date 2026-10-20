@@ -1,0 +1,11 @@
+{
+  "id": "LA-C434-mulio",
+  "pathSegment": "LA-PATH-434-STABULUM",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-434-STABULUM",
+      "order": 4
+    }
+  ]
+}

@@ -97,17 +97,17 @@ The cōgitō lesson gave you a famous sentence. Say it. (Cōgitō, ergō sum. I 
 You also own itaque, "and so", and igitur, "therefore". This lesson sorts all three.
 
 Grammar Lens: what happened next, and what follows.
-itaque tells a story forward. It stands first, and what comes after it is the next thing that happened, because of the last:
+itaque tells a story forward. It usually stands first, and what comes after it is the next thing that happened, because of the last:
 Pluēbat; itaque in vīllā mānsimus. — It was raining, and so we stayed in the farmhouse.
 [pause 2 seconds]
 igitur and ergō draw a conclusion. They belong to an argument more than to a story. In Cicero's prose igitur usually comes second, after the first word: Fessus igitur es. — So you are tired.
 [pause 1 second]
 ergō, "therefore, so", often stands first, and it has the sound of someone reaching the point: Fessus es; ergō dormī. — You are tired; so sleep.
 [pause 1 second]
-So: a story's and so is itaque; an argument's therefore is igitur or ergō.
+So, as a leaning and not a law: a story's and so is mostly itaque; an argument's therefore is mostly igitur or ergō. Itaque can carry an argument too, and Lewis & Short note that the historians Sallust and Livy often open a sentence with igitur.
 
 The word, taken apart: ergō.
-Before ergō meant "therefore", it meant "on account of", and it followed a genitive: virtūtis ergō, "on account of courage", an old formula for decorating a soldier (Lewis & Short). Lewis & Short build the word from ex, "out of", and a root meaning "to stretch, to direct", but the origin is not settled. The sense moved from "on account of this" to "so, then".
+Before ergō meant "therefore", it meant "on account of", and it followed a genitive: virtūtis ergō, "on account of courage", an old formula for decorating a soldier (Lewis & Short). Lewis & Short build the word from ex, "out of", and a root meaning "to stretch upward", but the origin is not settled. The sense moved from "on account of this" to "so, then".
 
 Guided Practice.
 [pause 1 second]
@@ -122,7 +122,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which "so" carries a story forward? (Itaque.) Which two draw a conclusion? (Igitur and ergō.) Where does igitur usually stand in Cicero? (Second, after the first word.) And what did ergō mean before "therefore"? (On account of, after a genitive.)
+Which "so" mostly carries a story forward? (Itaque.) Which two mostly draw a conclusion? (Igitur and ergō.) Where does igitur usually stand in Cicero? (Second, after the first word.) And what did ergō mean before "therefore"? (On account of, after a genitive.)
 
 
 Lesson 4 of 4.
@@ -133,7 +133,7 @@ Warm-up.
 Say "I think it is raining". (Putō pluere.) Then "I believe you are tired". (Crēdō tē fessum esse.)
 
 What you've built.
-Three lessons, and an opinion has three shapes. putō with the accusative and infinitive, which turns the sentence into what you think. meā sententiā, which leaves it alone. And mihi vidētur, "it seems to me", with the thing that seems as its subject. Then ergō to draw the conclusion, beside the itaque of a story and the igitur of an argument.
+Three lessons, and an opinion has three shapes. putō with the accusative and infinitive, which turns the sentence into what you think. meā sententiā, which leaves it alone. And mihi vidētur, "it seems to me", with the thing that seems as its subject. Then ergō to draw the conclusion, beside itaque, which leans to stories, and igitur, which leans to arguments.
 Meā sententiā, Mārcus fessus est; ergō dormit. — In my opinion Marcus is tired; so he is sleeping.
 [pause 2 seconds]
 The opinion leaves Mārcus nominative. Say it with putō instead, and he turns accusative: Putō Mārcum fessum esse.

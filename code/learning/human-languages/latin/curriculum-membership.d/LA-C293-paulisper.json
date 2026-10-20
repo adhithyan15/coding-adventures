@@ -1,0 +1,11 @@
+{
+  "id": "LA-C293-paulisper",
+  "pathSegment": "LA-PATH-293-PAULATIM",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-293-PAULATIM",
+      "order": 3
+    }
+  ]
+}

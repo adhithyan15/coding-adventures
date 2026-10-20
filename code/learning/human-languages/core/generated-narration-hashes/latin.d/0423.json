@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 423,
+  "sourceHash": "fnv1a64:76f253684aa89742",
+  "lessonIds": [
+    "LA-C423-semita",
+    "LA-C423-callis",
+    "LA-C423-trames",
+    "LA-C423-clivus",
+    "LA-C423-gradior"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch423.txt",
+  "json": "latin/narration/ch423.json",
+  "textHash": "fnv1a64:9a622f684b034347",
+  "jsonHash": "fnv1a64:3a890331985eb8c2",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 329,
+  "title": "Mors",
+  "label": "ch:la-mors",
+  "canDo": "I can talk about a death: death, dead, to breathe one's last, to die and to pass away.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C329-decedo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 329: I can talk about a death: death, dead, to breathe one's last, to die and to pass away.",
+    "assesses": [
+      "LA-LEX-C329-MORS-03",
+      "LA-LEX-C329-MORS-04",
+      "LA-LEX-C329-MORS-05"
+    ]
+  }
+}

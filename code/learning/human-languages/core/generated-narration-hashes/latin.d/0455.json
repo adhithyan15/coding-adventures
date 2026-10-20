@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 455,
+  "sourceHash": "fnv1a64:7f94925ca3430119",
+  "lessonIds": [
+    "LA-C455-conspicor",
+    "LA-C455-accedo",
+    "LA-C455-revertor",
+    "LA-C455-moror",
+    "LA-C455-commoror"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch455.txt",
+  "json": "latin/narration/ch455.json",
+  "textHash": "fnv1a64:fa33ad83b0b6cb37",
+  "jsonHash": "fnv1a64:8133d0e9d299a324",
+  "findings": []
+}

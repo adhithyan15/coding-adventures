@@ -1,0 +1,11 @@
+{
+  "id": "LA-C360-stultitia",
+  "pathSegment": "LA-PATH-360-MANIFESTUS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-360-MANIFESTUS",
+      "order": 3
+    }
+  ]
+}

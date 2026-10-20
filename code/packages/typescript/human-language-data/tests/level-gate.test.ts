@@ -339,6 +339,9 @@ describe("the gate that would have caught the A2 claim", () => {
     // French followed as the fourth, with chapters 258-267 (the B1 core: the
     // imparfait, reasons, travel, experience and the conditionnel, realizing all
     // five B1 nodes) and chapters 268-531 (1,320 headwords, 388 verbs).
+    // Latin followed as the sixth, with chapters 281-290 (the B1 core: both
+    // pasts, reasons, travel, experience and the subjunctive, realizing all
+    // five B1 nodes) and chapters 291-554 (1,320 headwords, 403 verbs).
     for (const level of Object.values(HELD)) {
       expectedByLevel.set(level, (expectedByLevel.get(level) ?? 0) + 1);
     }

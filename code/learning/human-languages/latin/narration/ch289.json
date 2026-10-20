@@ -4,7 +4,7 @@
   "chapter": 289,
   "title": "If",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:bf7da4e579114eb7",
+  "sourceHash": "fnv1a64:006b73868afdfc1a",
   "lessons": [
     {
       "id": "LA-C289-si",
@@ -189,7 +189,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1eb2508d0655382b",
+      "sourceHash": "fnv1a64:69458b38b6fe80bf",
       "notice": null,
       "blocks": [
         {
@@ -236,7 +236,7 @@
             },
             {
               "kind": "speech",
-              "text": "Each half has the tense the facts need. A real condition about the past takes the perfect, the way any past event does:"
+              "text": "Each half has the tense the facts need. A real condition about a past event takes the perfect, as any event does; a past scene would take the imperfect:"
             },
             {
               "kind": "speech",
@@ -356,7 +356,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"if it rains, we stay in the farmhouse\". (Sī pluit, in vīllā manēmus.) Which tense goes after sī for a real past? (The perfect, like any event.) Say \"if you are tired, rest\". (Sī fessus es, quiēsce.)"
+              "text": "Say \"if it rains, we stay in the farmhouse\". (Sī pluit, in vīllā manēmus.) Which tense goes after sī for a real past event? (The perfect, like any event.) Say \"if you are tired, rest\". (Sī fessus es, quiēsce.)"
             }
           ]
         }
@@ -375,7 +375,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:71c5dcf042eb9e5e",
+      "sourceHash": "fnv1a64:aa184f0e12b8efc6",
       "notice": null,
       "blocks": [
         {
@@ -462,7 +462,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "pendeō, as its own lesson said, is the intransitive partner of pendō, \"to weigh, to hang up\", usually traced to Proto-Indo-European (s)pend-, \"to stretch, to pull\" (EtymDB 2.1). ex is inherited from Proto-Indo-European h1eghs, \"out\" (EtymDB 2.1), and English exit begins with it. A thing that pendet ex is held up by something else, and falls if that gives way."
+              "text": "pendeō, as its own lesson said, is the intransitive partner of pendō, \"to weigh, to hang up\", usually traced to Proto-Indo-European (s)pend-, \"to stretch, to pull\" (EtymDB 2.1). ex is inherited from Proto-Indo-European h₁eǵʰs, \"out\" (EtymDB 2.1), and English exit begins with it. A thing that pendet ex is held up by something else, and falls if that gives way."
             }
           ]
         },

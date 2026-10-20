@@ -153,7 +153,7 @@ The rain was already going on, and it went on afterwards: that is the imperfect,
 So a story runs on two tracks. The imperfect paints the scene: weather, places, what people were doing. The perfect moves the events along.
 In forō ambulābam; subitō amīcum vīdī. — I was walking in the forum; suddenly I saw a friend.
 [pause 1 second]
-A word like subitō, "suddenly", nearly guarantees a perfect after it: suddenness is an event.
+A word like subitō, "suddenly", usually brings a perfect after it: suddenness is an event.
 
 Why it's said this way: habitābam or habitāvī?
 [pause 2 seconds]
@@ -162,7 +162,7 @@ Sometimes both are right. Rōmae habitāvī counts it up from outside: I lived i
 One small trap: pluit in the perfect is spelled pluit too, "it rained", the way accidit serves two tenses. Only the story around it decides.
 
 The word, taken apart: perfect and imperfect.
-The names are Latin. perfectum comes from perficiō, "to carry through, to finish" (Lewis & Short), which EtymDB 2.1 builds from per-, "through", and faciō, "to make, to do". The perfect is the past that was carried through. imperfectum puts in-, "not", in front: unfinished, still going, which is what pluēbat is.
+The names are Latin. perfectum is the participle of a verb that Lewis & Short gloss "to carry through, to finish", and EtymDB 2.1 builds that verb from per-, "through", and faciō, "to make, to do". The perfect is the past that was carried through. imperfectum puts in-, "not", in front: unfinished, still going, which is what pluēbat is.
 
 Guided Practice.
 [pause 1 second]

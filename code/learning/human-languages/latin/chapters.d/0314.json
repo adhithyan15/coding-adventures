@@ -1,0 +1,19 @@
+{
+  "chapter": 314,
+  "title": "Cāsus in viā",
+  "label": "ch:la-casus-in-via",
+  "canDo": "I can describe a fall or a knock: to strike against, headlong, to hurl down, a blow and wounded.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-R314-review-307-314",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 314: I can describe a fall or a knock: to strike against, headlong, to hurl down, a blow and wounded.",
+    "assesses": [
+      "LA-LEX-C314-OFFENDO-03",
+      "LA-LEX-C314-OFFENDO-04",
+      "LA-LEX-C314-OFFENDO-05"
+    ]
+  }
+}

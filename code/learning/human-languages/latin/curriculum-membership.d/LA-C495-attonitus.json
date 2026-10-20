@@ -1,0 +1,11 @@
+{
+  "id": "LA-C495-attonitus",
+  "pathSegment": "LA-PATH-495-MIRA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-495-MIRA",
+      "order": 3
+    }
+  ]
+}

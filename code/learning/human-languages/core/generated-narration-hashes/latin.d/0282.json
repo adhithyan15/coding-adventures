@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 282,
-  "sourceHash": "fnv1a64:c4253ae612413297",
+  "sourceHash": "fnv1a64:1d5ddef27c637983",
   "lessonIds": [
     "LA-C282-primum-deinde",
     "LA-C282-dum",
@@ -12,7 +12,7 @@
   "drivablePrefix": 2,
   "text": "latin/narration/ch282.txt",
   "json": "latin/narration/ch282.json",
-  "textHash": "fnv1a64:a28702e3328c0008",
-  "jsonHash": "fnv1a64:fa2bf1b4225b823c",
+  "textHash": "fnv1a64:12795a0a08649df0",
+  "jsonHash": "fnv1a64:a36d07e5b14f7b81",
   "findings": []
 }

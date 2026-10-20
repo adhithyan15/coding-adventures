@@ -60,7 +60,7 @@ how long ago.
 - [YOU SAY: *Abhinc duōs annōs Rōmam vēnī.*]
 - [YOU SAY: *Decem diēs ibi mānsī.*]
 - [YOU SAY: *Rōma maior erat quam putāvī, et laetus eram.*]
-- [YOU SAY: *Iterum Rōmam vidēre cupiō, et spērō tē venīre.*]
+- [YOU SAY: *Iterum Rōmam vidēre cupiō, et spērō tē valēre.*]
 - [YOU SAY: a place you have been: when, for how long, and what was bigger or better than you expected]
 
 ## Wrap-up Recall

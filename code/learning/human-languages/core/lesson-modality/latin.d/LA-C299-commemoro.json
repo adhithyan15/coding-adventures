@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C299-commemoro",
+    "language": "latin",
+    "chapter": 299,
+    "sequence": 16220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3244e6be0eb60475"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-458-ANGIPORTUM",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "LA-EXT-458-ANGIPORTUM"
+  ],
+  "after": []
+}

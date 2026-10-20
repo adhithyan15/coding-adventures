@@ -16,7 +16,7 @@ sounds: []
 roots: []
 etymology_hook: "via is the road, iter the going along it; both come back to verbs of carrying and going"
 duration:
-  max_seconds: 185
+  max_seconds: 190
 requires:
   knowledge: [LA-LEX-C285-VIA-01, LA-GRAMMAR-C285-QUA-VIA-02, LA-GRAMMAR-C285-DIRECTIO-01, LA-LEX-C285-ITER-01, LA-LEX-C285-ITER-FACIO-02, LA-GRAMMAR-C284-DEBERE-01, LA-GRAMMAR-C284-CAUSA-01, LA-GRAMMAR-C284-DEBEBAS-02]
 introduces:

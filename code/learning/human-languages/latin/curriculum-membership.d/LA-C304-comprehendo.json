@@ -1,0 +1,11 @@
+{
+  "id": "LA-C304-comprehendo",
+  "pathSegment": "LA-PATH-304-COMPREHENDO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-304-COMPREHENDO",
+      "order": 4
+    }
+  ]
+}

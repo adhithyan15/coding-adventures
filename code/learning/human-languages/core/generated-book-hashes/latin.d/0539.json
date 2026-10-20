@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 539,
+  "sourceHash": "fnv1a64:555aec754035d9b6",
+  "lessonIds": [
+    "LA-C539-alea",
+    "LA-C539-fritillus",
+    "LA-C539-latrunculus",
+    "LA-C539-lusus",
+    "LA-C539-luctor"
+  ],
+  "tex": "latin/book/chapters/ch539-dice-and-board-games.tex"
+}

@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-506-COMI",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "LA-EXT-506-COMI"
+  ],
+  "after": []
+}

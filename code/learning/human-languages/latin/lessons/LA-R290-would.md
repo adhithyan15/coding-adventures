@@ -60,7 +60,7 @@ is raining, and wishes it were not.
 [PAUSE 1s]
 - [YOU SAY: *Sī pecūniam habērem, nāvem emerem.*]
 - [YOU SAY: *Hoc facere possim, sed mālim manēre.*]
-- [YOU SAY: *In tuā potestāte est.* — then *Spērō tē venīre.*]
+- [YOU SAY: *In tuā potestāte est.* — then *Spērō tē valēre.*]
 - [YOU SAY: *Sī nōn plueret, nāvigārēmus.*]
 - [YOU SAY: one real condition and one unreal one about today]
 

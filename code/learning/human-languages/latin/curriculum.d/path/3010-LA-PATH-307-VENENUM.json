@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-307-VENENUM",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-307-VENENUM"
+  ],
+  "after": []
+}

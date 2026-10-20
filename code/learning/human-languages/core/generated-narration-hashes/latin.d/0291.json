@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 291,
+  "sourceHash": "fnv1a64:73d1f6563bca1079",
+  "lessonIds": [
+    "LA-C291-primo",
+    "LA-C291-tunc",
+    "LA-C291-antequam",
+    "LA-C291-nondum",
+    "LA-C291-demum"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch291.txt",
+  "json": "latin/narration/ch291.json",
+  "textHash": "fnv1a64:5ee96d9ee4f082aa",
+  "jsonHash": "fnv1a64:1c018340a937fcd9",
+  "findings": []
+}

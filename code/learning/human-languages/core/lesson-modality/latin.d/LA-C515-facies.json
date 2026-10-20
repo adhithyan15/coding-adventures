@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C515-facies",
+    "language": "latin",
+    "chapter": 515,
+    "sequence": 27340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:25ce265d91f8cc0a"
+  },
+  "findings": []
+}

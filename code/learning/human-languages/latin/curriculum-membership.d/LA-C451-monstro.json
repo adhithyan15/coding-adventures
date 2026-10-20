@@ -1,0 +1,11 @@
+{
+  "id": "LA-C451-monstro",
+  "pathSegment": "LA-PATH-451-PERCONTOR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-451-PERCONTOR",
+      "order": 3
+    }
+  ]
+}

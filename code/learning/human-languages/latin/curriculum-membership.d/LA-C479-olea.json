@@ -1,0 +1,11 @@
+{
+  "id": "LA-C479-olea",
+  "pathSegment": "LA-PATH-479-POMARIUM",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-479-POMARIUM",
+      "order": 1
+    }
+  ]
+}

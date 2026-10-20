@@ -4,7 +4,7 @@
   "chapter": 286,
   "title": "By Sea",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:90bd85d6a672daf2",
+  "sourceHash": "fnv1a64:f40e153603920048",
   "lessons": [
     {
       "id": "LA-C286-navis",
@@ -341,7 +341,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c3fe6b9e1f935301",
+      "sourceHash": "fnv1a64:f5dd4d44b2f29c11",
       "notice": null,
       "blocks": [
         {
@@ -392,7 +392,7 @@
             },
             {
               "kind": "speech",
-              "text": "You own perdō, \"to lose\", too, and the two are not the same. Perdō is losing by wasting or wrecking: money thrown away, a thing ruined. Āmittō is losing by letting go: it slipped away from you."
+              "text": "You own perdō, \"to lose\", too. The two overlap, but they lean different ways. Perdō leans to losing by wasting or wrecking: money thrown away, a thing ruined. Āmittō leans to losing by letting go: it slipped away from you."
             }
           ]
         },

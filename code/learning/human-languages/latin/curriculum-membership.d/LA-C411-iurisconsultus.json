@@ -1,0 +1,11 @@
+{
+  "id": "LA-C411-iurisconsultus",
+  "pathSegment": "LA-PATH-411-TRIBUNAL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-411-TRIBUNAL",
+      "order": 4
+    }
+  ]
+}

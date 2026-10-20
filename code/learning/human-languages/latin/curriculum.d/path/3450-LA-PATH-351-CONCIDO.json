@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-351-CONCIDO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-351-CONCIDO"
+  ],
+  "after": []
+}

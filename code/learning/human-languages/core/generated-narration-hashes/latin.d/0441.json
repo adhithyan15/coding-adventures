@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:dcd5459767486cb0",
+  "lessonIds": [
+    "LA-C441-portus",
+    "LA-C441-navale",
+    "LA-C441-aestuarium",
+    "LA-C441-pharus",
+    "LA-C441-promunturium"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch441.txt",
+  "json": "latin/narration/ch441.json",
+  "textHash": "fnv1a64:424a8bf5e9d7d934",
+  "jsonHash": "fnv1a64:0cc6be54cecbe4fb",
+  "findings": []
+}

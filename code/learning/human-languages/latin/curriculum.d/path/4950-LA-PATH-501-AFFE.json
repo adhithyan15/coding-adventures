@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-501-AFFE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "LA-EXT-501-AFFE"
+  ],
+  "after": []
+}

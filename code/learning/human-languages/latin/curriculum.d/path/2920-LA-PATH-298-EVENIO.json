@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-298-EVENIO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-298-EVENIO"
+  ],
+  "after": []
+}

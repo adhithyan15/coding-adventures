@@ -4,7 +4,7 @@
   "chapter": 287,
   "title": "How It Felt",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:24777f1af0f51332",
+  "sourceHash": "fnv1a64:3c99cbc4009a858a",
   "lessons": [
     {
       "id": "LA-C287-laetus-eram",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f32918432aa6592a",
+      "sourceHash": "fnv1a64:4575fda42e8877b1",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "A feeling in a story is a state, so it takes the imperfect, and the adjective matches the person who felt it:"
+              "text": "A feeling in a story is a state, so it usually takes the imperfect, and the adjective matches the person who felt it:"
             },
             {
               "kind": "speech",
@@ -102,7 +102,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Two of these feelings are bodily, and their own lessons said how. anxius is built on angō, \"to squeeze, to choke\" (Lewis & Short): worry as a tight throat. sollicitus is built from sollus, \"whole\", and cieō, \"to stir up\" (Lewis & Short): stirred through and through. English took them over as anxious and solicitous."
+              "text": "Two of these feelings are bodily, and their own lessons said how. anxius is built on the verb for \"to squeeze, to choke\" (Lewis & Short): worry as a tight throat. sollicitus is built from sollus, \"whole\", and cieō, \"to stir up\" (Lewis & Short): stirred through and through. English took them over as anxious and solicitous."
             }
           ]
         },
@@ -186,7 +186,7 @@
             },
             {
               "kind": "speech",
-              "text": "A woman says \"I was happy\". (Laeta eram.) \"We were worried\"? (Sollicitī erāmus.) Which feeling word has one form for a man and a woman? (Trīstis.) Which tense does a feeling in a story take? (The imperfect: it is a state.)"
+              "text": "A woman says \"I was happy\". (Laeta eram.) \"We were worried\"? (Sollicitī erāmus.) Which feeling word has one form for a man and a woman? (Trīstis.) Which tense does a feeling in a story usually take? (The imperfect: it is a state.)"
             }
           ]
         }
@@ -205,7 +205,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4160c2656166d5ee",
+      "sourceHash": "fnv1a64:aabb2d3f141960ca",
       "notice": null,
       "blocks": [
         {
@@ -302,7 +302,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "spērō is the verb of spēs, \"hope\", and EtymDB 2.1 traces it, like the noun, to Proto-Indo-European speh₁-, \"to prosper, to turn out well\". Put dē-, \"away\", in front and you have dēspērō, \"to give up hope\" (Lewis & Short), which reached English as despair and desperate."
+              "text": "spērō is the verb of spēs, \"hope\", and EtymDB 2.1 traces it, like the noun, to Proto-Indo-European speh₁-, \"to prosper, to turn out well\". Put dē-, \"away\", in front and you have the verb for \"to give up hope\" (Lewis & Short), which reached English as despair and desperate."
             }
           ]
         },

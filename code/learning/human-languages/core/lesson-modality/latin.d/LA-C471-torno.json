@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C471-torno",
+    "language": "latin",
+    "chapter": 471,
+    "sequence": 25070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:400ae5f9b3834662"
+  },
+  "findings": []
+}

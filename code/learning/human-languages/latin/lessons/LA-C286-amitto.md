@@ -50,9 +50,10 @@ fare". (*Naulum solvī.*)
 > **Sarcinam āmīsī!** — I have lost my pack!
 > **Occāsiōnem āmīsī.** — I let the chance slip.
 
-[PAUSE 2s] You own **perdō**, "to lose", too, and the two are not the same.
-*Perdō* is losing by wasting or wrecking: money thrown away, a thing
-ruined. *Āmittō* is losing by letting go: it slipped away from you.
+[PAUSE 2s] You own **perdō**, "to lose", too. The two overlap, but they
+lean different ways. *Perdō* leans to losing by wasting or wrecking: money
+thrown away, a thing ruined. *Āmittō* leans to losing by letting go: it
+slipped away from you.
 
 ## Grammar Lens: reporting the problem
 <!-- hl-knowledge: introduces=[LA-GRAMMAR-C286-QUID-ACCIDIT-02]; assesses=[LA-LEX-C160-ACT160-03, LA-LEX-C286-NAVIS-01, LA-GRAMMAR-C281-PERFECTUM-01] -->

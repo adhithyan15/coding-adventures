@@ -14,7 +14,7 @@ concept_tag: AMBITION-EXPRESS
 prerequisites: [LA-C287-laetus-eram, LA-C112-spes, LA-C111-cupio, LA-C49-volo, LA-C111-opto, LA-C19-valeo-family, LA-C187-pax]
 sounds: []
 roots: [spes-latin]
-etymology_hook: "spērō is the verb of spēs 'hope', usually traced to PIE *speh₁- 'to prosper'; dēspērō gives despair"
+etymology_hook: "spērō is the verb of spēs 'hope', usually traced to PIE *speh₁- 'to prosper'; with dē- in front it gives English despair"
 duration:
   max_seconds: 230
 requires:
@@ -77,7 +77,7 @@ who wants. And **optō**, "to wish for, to choose", hopes for a thing, like
 
 **spērō** is the verb of *spēs*, "hope", and EtymDB 2.1 traces it, like
 the noun, to Proto-Indo-European *\*speh₁-*, "to prosper, to turn out well".
-Put *dē-*, "away", in front and you have *dēspērō*, "to give up hope"
+Put *dē-*, "away", in front and you have the verb for "to give up hope"
 (Lewis & Short), which reached English as *despair* and *desperate*.
 
 ## Guided Practice

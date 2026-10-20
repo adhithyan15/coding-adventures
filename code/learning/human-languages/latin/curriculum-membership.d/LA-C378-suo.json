@@ -1,0 +1,11 @@
+{
+  "id": "LA-C378-suo",
+  "pathSegment": "LA-PATH-378-TEXO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-378-TEXO",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 480,
+  "sourceHash": "fnv1a64:8cbbbd7ba00ff63e",
+  "lessonIds": [
+    "LA-C480-rupes",
+    "LA-C480-cautes",
+    "LA-C480-praeruptus",
+    "LA-C480-arduus",
+    "LA-C480-scando"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch480.txt",
+  "json": "latin/narration/ch480.json",
+  "textHash": "fnv1a64:a9421652c6e4a8d0",
+  "jsonHash": "fnv1a64:d5e9c2f7fda89e52",
+  "findings": []
+}

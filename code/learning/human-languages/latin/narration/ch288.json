@@ -4,7 +4,7 @@
   "chapter": 288,
   "title": "Bigger Than, and How Long",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:982fe8e39d02cf48",
+  "sourceHash": "fnv1a64:c42e3ab6e75b16b1",
   "lessons": [
     {
       "id": "LA-C288-maior-quam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ec6e1dab7e489192",
+      "sourceHash": "fnv1a64:0532d8471f08e094",
       "notice": null,
       "blocks": [
         {
@@ -94,7 +94,7 @@
             },
             {
               "kind": "speech",
-              "text": "Facilis gives facilior, easier. An adjective with a vowel before -us, like idōneus, takes magis, \"more\", in front instead: magis idōneus quam, more suitable than."
+              "text": "Facilis gives facilior, easier. An adjective with a vowel before -us, like idōneus, usually takes magis, \"more\", in front instead: magis idōneus quam, more suitable than."
             }
           ]
         },
@@ -124,7 +124,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The -ior ending is inherited: EtymDB 2.1 builds maior from the root of magnus, Proto-Indo-European megh2-, \"great\", with a comparative ending -yos. melior is traced to a Proto-Indo-European melyos, \"better\", with no link to bonus at all, which is why it has to be learned whole. English took major, minor and, through French, ameliorate."
+              "text": "The -ior ending is inherited: EtymDB 2.1 builds maior from the root of magnus, Proto-Indo-European méǵh₂s, \"great\", with a comparative ending -yos. melior is traced to a Proto-Indo-European melyos, \"better\", with no link to bonus at all, which is why it has to be learned whole. English took major, minor and, through French, ameliorate."
             }
           ]
         },
@@ -404,7 +404,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:176eb32770ad774b",
+      "sourceHash": "fnv1a64:e46fd1e2160502cf",
       "notice": null,
       "blocks": [
         {
@@ -480,11 +480,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "Iterum Rōmam vidēre cupiō, et spērō tē venīre.",
+              "instruction": "Iterum Rōmam vidēre cupiō, et spērō tē valēre.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *Iterum Rōmam vidēre cupiō, et spērō tē venīre.*]"
+              "source": "[YOU SAY: *Iterum Rōmam vidēre cupiō, et spērō tē valēre.*]"
             },
             {
               "kind": "prompt",

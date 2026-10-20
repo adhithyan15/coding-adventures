@@ -47,7 +47,8 @@ the second half follows. Latin keeps both halves plain.
 > **Sī pluit, in vīllā manēmus.** — If it rains, we stay in the farmhouse.
 
 [PAUSE 2s] Each half has the tense the facts need. A real condition about
-the past takes the perfect, the way any past event does:
+a past event takes the perfect, as any event does; a past scene would take
+the imperfect:
 
 > **Sī herī in forō fuistī, amīcum vīdistī.** — If you were in the forum
 > yesterday, you saw my friend.
@@ -80,6 +81,6 @@ the seeing follows. Nothing in the verbs is pretending.
 <!-- hl-knowledge: introduces=[]; assesses=[LA-GRAMMAR-C289-SI-REAL-01, LA-LEX-C289-SI-01, LA-GRAMMAR-C281-PERFECTUM-01] -->
 
 [PAUSE 3s] Say "if it rains, we stay in the farmhouse". (***Sī pluit, in
-vīllā manēmus.***) Which tense goes after *sī* for a real past? (The
-**perfect**, like any event.) Say "if you are tired, rest". (***Sī fessus
+vīllā manēmus.***) Which tense goes after *sī* for a real past
+event? (The **perfect**, like any event.) Say "if you are tired, rest". (***Sī fessus
 es, quiēsce.***)

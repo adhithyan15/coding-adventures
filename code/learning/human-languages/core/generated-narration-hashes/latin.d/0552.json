@@ -1,0 +1,20 @@
+{
+  "language": "latin",
+  "chapter": 552,
+  "sourceHash": "fnv1a64:781b2356cd11a52c",
+  "lessonIds": [
+    "LA-C552-domicilium",
+    "LA-C552-conclave",
+    "LA-C552-supellex",
+    "LA-C552-verro",
+    "LA-C552-scopae",
+    "LA-R552-review-545-552"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "latin/narration/ch552.txt",
+  "json": "latin/narration/ch552.json",
+  "textHash": "fnv1a64:c5204fc7d5bd787c",
+  "jsonHash": "fnv1a64:7ca820ee583dec78",
+  "findings": []
+}

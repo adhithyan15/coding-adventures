@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C442-salum",
+    "language": "latin",
+    "chapter": 442,
+    "sequence": 23570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bca15c0c441a16ea"
+  },
+  "findings": []
+}

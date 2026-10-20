@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 410,
+  "sourceHash": "fnv1a64:997cd2d477ef6d7c",
+  "lessonIds": [
+    "LA-C410-rogatio",
+    "LA-C410-promulgo",
+    "LA-C410-abrogo",
+    "LA-C410-sancio",
+    "LA-C410-praescribo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch410.txt",
+  "json": "latin/narration/ch410.json",
+  "textHash": "fnv1a64:f72af5c5f3ed7e62",
+  "jsonHash": "fnv1a64:19d36607b72e7671",
+  "findings": []
+}

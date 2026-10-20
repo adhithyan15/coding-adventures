@@ -16,7 +16,7 @@ sounds: []
 roots: [habere-latin]
 etymology_hook: "dēbeō is dē 'away from' + habeō 'to have': to hold what is owed, so to have to"
 duration:
-  max_seconds: 240
+  max_seconds: 250
 requires:
   knowledge: [LA-LEX-C109-CAN109-03, LA-LEX-C110-CAN110-03, LA-LEX-C198-ACT198-05, LA-LEX-C75-VERBA1-01, LA-LEX-C68-AEGER-01, LA-GRAMMAR-C281-IMPERFECTUM-01, LA-GRAMMAR-C283-ACC-INF-02, LA-LEX-C283-ERGO-01]
 introduces:
@@ -67,6 +67,8 @@ Latin moves it onto *dēbeō* instead, and keeps the plain infinitive:
 
 [PAUSE 2s] *Dēbēbās* is the imperfect, "you were bound to", and the
 sentence carries the regret: the coming was owed, and it did not happen.
+The perfect does the same work, *venīre dēbuistī*, and so does *oportet*
+in the perfect: *oportuit tē venīre*.
 
 ## The word, taken apart: dēbeō
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C109-CAN109-03] -->

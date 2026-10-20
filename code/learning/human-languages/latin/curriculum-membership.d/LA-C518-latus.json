@@ -1,0 +1,11 @@
+{
+  "id": "LA-C518-latus",
+  "pathSegment": "LA-PATH-518-LATU",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-518-LATU",
+      "order": 0
+    }
+  ]
+}

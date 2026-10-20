@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 368,
+  "title": "The Orator",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:40d921750b2ad3a5",
+  "lessons": [
+    {
+      "id": "LA-C368-orator",
+      "sequence": 19760,
+      "title": "ōrātor, ōrātōris — a speaker, an orator; an envoy",
+      "headword": "ōrātor, ōrātōris",
+      "romanization": "ōrātor, ōrātōris",
+      "gloss": "a speaker, an orator; an envoy",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fd66d989028b30d6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for that … not, then the Latin for as."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ōrātor, ōrātōris",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ōrātor, ōrātōris — \"a speaker, an orator; an envoy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ōrātor ā populō laudātus est. The speaker was praised by the people."
+            },
+            {
+              "kind": "speech",
+              "text": "ōrātor, ōrātōris m. Built on ōrō, to speak, to plead. An envoy who speaks for his city is also an ōrātor. English orator."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ōrātor is built on ōrō \"to speak, to plead\" (Lewis & Short), with the ending -tor of the one who does it. English orator comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōrātor, ōrātōris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōrātor, ōrātōris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōrātor, ōrātōris, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōrātor, ōrātōris*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ōrātor, ōrātōris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ōrātor, ōrātōris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for that … not, then the Latin for as, then say ōrātor, ōrātōris again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for that … not, then the Latin for as, then say *ōrātor, ōrātōris* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ōrātor, ōrātōris mean? (\"A speaker, an orator; an envoy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C368-eloquentia",
+      "sequence": 19770,
+      "title": "ēloquentia, ēloquentiae — eloquence",
+      "headword": "ēloquentia, ēloquentiae",
+      "romanization": "ēloquentia, ēloquentiae",
+      "gloss": "eloquence",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a6d1dadcaf86579d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for as, then the Latin for a speaker."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ēloquentia, ēloquentiae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ēloquentia, ēloquentiae — \"eloquence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ēloquentia eius iūdicēs mōvit. His eloquence moved the judges."
+            },
+            {
+              "kind": "speech",
+              "text": "ēloquentia, ēloquentiae f. Built on ēloquēns, speaking out well. English eloquence."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ēloquentia is built on ēloquēns \"speaking out well\" (EtymDB; Lewis & Short), the participle of a verb made from ē \"out\" and loquor \"to speak\". English eloquence comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēloquentia, ēloquentiae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēloquentia, ēloquentiae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēloquentia, ēloquentiae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēloquentia, ēloquentiae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ēloquentia, ēloquentiae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ēloquentia, ēloquentiae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for as, then the Latin for a speaker, then say ēloquentia, ēloquentiae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for as, then the Latin for a speaker, then say *ēloquentia, ēloquentiae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ēloquentia, ēloquentiae mean? (\"Eloquence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C368-disputatio",
+      "sequence": 19780,
+      "title": "disputātiō, disputātiōnis — a discussion, a debate",
+      "headword": "disputātiō, disputātiōnis",
+      "romanization": "disputātiō, disputātiōnis",
+      "gloss": "a discussion, a debate",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4f4a3e3aa61cd500",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a speaker, then the Latin for eloquence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: disputātiō, disputātiōnis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "disputātiō, disputātiōnis — \"a discussion, a debate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Disputātiō dē lēgibus longa fuit. The debate about the laws was long."
+            },
+            {
+              "kind": "speech",
+              "text": "disputātiō, disputātiōnis f., the noun of disputō, to discuss. English disputation."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "disputātiō is the noun built on disputō \"to discuss, to argue\" (EtymDB; Lewis & Short). English disputation comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "disputātiō, disputātiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *disputātiō, disputātiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "disputātiō, disputātiōnis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *disputātiō, disputātiōnis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with disputātiō, disputātiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *disputātiō, disputātiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a speaker, then the Latin for eloquence, then say disputātiō, disputātiōnis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a speaker, then the Latin for eloquence, then say *disputātiō, disputātiōnis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does disputātiō, disputātiōnis mean? (\"A discussion, a debate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C368-dissero",
+      "sequence": 19790,
+      "title": "disserō, disserere — to discuss, to hold forth (on)",
+      "headword": "disserō, disserere",
+      "romanization": "disserō, disserere",
+      "gloss": "to discuss, to hold forth (on)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6a4c4233e6dadd1c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for eloquence, then the Latin for a discussion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: disserō, disserere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "disserō, disserere — \"to discuss, to hold forth (on)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Senex dē amīcitiā disseruit. The old man spoke at length about friendship."
+            },
+            {
+              "kind": "speech",
+              "text": "disserō, disserere, disseruī, dissertum. Dē + ablative names the subject. It is a different verb from serō, to sow. English dissertation."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "disserō is built from dis- \"apart\" and serō, serere, seruī \"to join, to string together\" (Lewis & Short), a different verb from serō \"to sow\": to set ideas out in a row. English dissertation comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "disserō, disserere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *disserō, disserere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "disserō, disserere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *disserō, disserere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with disserō, disserere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *disserō, disserere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for eloquence, then the Latin for a discussion, then say disserō, disserere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for eloquence, then the Latin for a discussion, then say *disserō, disserere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does disserō, disserere mean? (\"To discuss, to hold forth (on)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C368-eloquor",
+      "sequence": 19800,
+      "title": "ēloquor, ēloquī — to speak out, to utter",
+      "headword": "ēloquor, ēloquī",
+      "romanization": "ēloquor, ēloquī",
+      "gloss": "to speak out, to utter",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4cee0573eaa5cf03",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a discussion, then the Latin for to discuss."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ēloquor, ēloquī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ēloquor, ēloquī — \"to speak out, to utter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Tandem quod sentiēbat ēlocūtus est. At last he spoke out what he felt."
+            },
+            {
+              "kind": "speech",
+              "text": "Deponent: ēloquor, ēloquī, ēlocūtus sum. Ē + loquor: to speak out. English eloquent."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ēloquor is built from ē \"out\" and loquor \"to speak\" (Lewis & Short). English eloquent comes from its present participle."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēloquor, ēloquī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēloquor, ēloquī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēloquor, ēloquī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēloquor, ēloquī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ēloquor, ēloquī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ēloquor, ēloquī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a discussion, then the Latin for to discuss, then say ēloquor, ēloquī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a discussion, then the Latin for to discuss, then say *ēloquor, ēloquī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ēloquor, ēloquī mean? (\"To speak out, to utter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

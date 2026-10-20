@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 289,
-  "sourceHash": "fnv1a64:bf7da4e579114eb7",
+  "sourceHash": "fnv1a64:006b73868afdfc1a",
   "lessonIds": [
     "LA-C289-si",
     "LA-C289-si-pluit",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "latin/narration/ch289.txt",
   "json": "latin/narration/ch289.json",
-  "textHash": "fnv1a64:9d826e242dc2625d",
-  "jsonHash": "fnv1a64:4e4d2708393f1cb1",
+  "textHash": "fnv1a64:3f648eb097f5cd10",
+  "jsonHash": "fnv1a64:fe97889fd26f2179",
   "findings": []
 }

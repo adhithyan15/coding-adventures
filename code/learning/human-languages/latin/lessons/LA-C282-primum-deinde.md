@@ -16,7 +16,7 @@ sounds: []
 roots: [vincere-latin]
 etymology_hook: "Suetonius reports Caesar's triumph carried three perfects and no joiners: vēnī, vīdī, vīcī"
 duration:
-  max_seconds: 265
+  max_seconds: 275
 requires:
   knowledge: [LA-GRAMMAR-C281-PERFECTUM-01, LA-GRAMMAR-C281-PERFECTUM-AVI-02, LA-GRAMMAR-C281-SCAENA-01, LA-LEX-C55-ORDINAL-01, LA-LEX-C101-VERBA7-05, LA-LEX-C105-QUANTUM-03, LA-LEX-C208-TEMP208-02, LA-LEX-C157-ACT157-05, LA-LEX-C117-LOC117-05, LA-LEX-C165-ACT165-05, LA-LEX-C78-VERBA4-02]
 introduces:
@@ -66,8 +66,9 @@ pluēbat*, at that moment it was raining.
 
 **prīmum** is the neuter of *prīmus*, "first", standing alone as an adverb
 (Lewis & Short list it under *primus*): "as the first thing". *Postrēmō*
-works the same way from *postrēmus*, "last", and *deinde* is built from *dē*
-and *inde*, "from there": from that point on.
+comes from *postrēmus*, "last", too, though it is the ablative, "at the
+last", and *deinde* is built from *dē* and *inde*, "from there": from that
+point on.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-GRAMMAR-C282-ORDO-01, LA-GRAMMAR-C281-PERFECTUM-AVI-02, LA-GRAMMAR-C281-SCAENA-01, LA-LEX-C117-LOC117-05, LA-LEX-C165-ACT165-05, LA-LEX-C78-VERBA4-02] -->

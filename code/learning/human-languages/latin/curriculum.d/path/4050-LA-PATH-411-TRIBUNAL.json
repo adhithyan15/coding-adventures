@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-411-TRIBUNAL",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "LA-EXT-411-TRIBUNAL"
+  ],
+  "after": []
+}

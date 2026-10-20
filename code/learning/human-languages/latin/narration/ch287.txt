@@ -10,7 +10,7 @@ Warm-up.
 Say "happy", then "sad". (Laetus. Trīstis.) Then "I was", the open past. (Eram.)
 
 Grammar Lens: the feeling agrees with who felt it.
-A feeling in a story is a state, so it takes the imperfect, and the adjective matches the person who felt it:
+A feeling in a story is a state, so it usually takes the imperfect, and the adjective matches the person who felt it:
 Laetus eram. — I was happy (a man speaking). Laeta eram. — I was happy (a woman speaking). Sollicitī erāmus. — We were worried. Trīstis erat. — He was sad, or she was: trīstis serves both.
 [pause 2 seconds]
 Anxius, sollicitus and īrātus follow laetus: -us for a man, -a for a woman, -ī for several. Trīstis has one form for a man and a woman, and trīstēs for several.
@@ -23,7 +23,7 @@ Laeta eram, quod caelum serēnum erat. — I was happy, because the sky was clea
 Latin can also put the feeling in a verb: gaudēbam, "I was glad", beside laetus eram; timēbam, "I was afraid". The adjective describes the person; the verb tells what the person was doing inside.
 
 The word, taken apart: anxius and sollicitus.
-Two of these feelings are bodily, and their own lessons said how. anxius is built on angō, "to squeeze, to choke" (Lewis & Short): worry as a tight throat. sollicitus is built from sollus, "whole", and cieō, "to stir up" (Lewis & Short): stirred through and through. English took them over as anxious and solicitous.
+Two of these feelings are bodily, and their own lessons said how. anxius is built on the verb for "to squeeze, to choke" (Lewis & Short): worry as a tight throat. sollicitus is built from sollus, "whole", and cieō, "to stir up" (Lewis & Short): stirred through and through. English took them over as anxious and solicitous.
 
 Guided Practice.
 [pause 1 second]
@@ -42,7 +42,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-A woman says "I was happy". (Laeta eram.) "We were worried"? (Sollicitī erāmus.) Which feeling word has one form for a man and a woman? (Trīstis.) Which tense does a feeling in a story take? (The imperfect: it is a state.)
+A woman says "I was happy". (Laeta eram.) "We were worried"? (Sollicitī erāmus.) Which feeling word has one form for a man and a woman? (Trīstis.) Which tense does a feeling in a story usually take? (The imperfect: it is a state.)
 
 
 Lesson 2 of 3.
@@ -69,7 +69,7 @@ Rōmam vidēre cupiō. — I long to see Rome. Mercātor esse volō. — I want 
 Mercātor stays nominative: it is the same person as the one who wants. And optō, "to wish for, to choose", hopes for a thing, like spērō: nāvem optō.
 
 The word, taken apart: spērō.
-spērō is the verb of spēs, "hope", and EtymDB 2.1 traces it, like the noun, to Proto-Indo-European speh₁-, "to prosper, to turn out well". Put dē-, "away", in front and you have dēspērō, "to give up hope" (Lewis & Short), which reached English as despair and desperate.
+spērō is the verb of spēs, "hope", and EtymDB 2.1 traces it, like the noun, to Proto-Indo-European speh₁-, "to prosper, to turn out well". Put dē-, "away", in front and you have the verb for "to give up hope" (Lewis & Short), which reached English as despair and desperate.
 
 Guided Practice.
 [pause 1 second]

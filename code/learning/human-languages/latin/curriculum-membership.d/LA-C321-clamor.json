@@ -1,0 +1,11 @@
+{
+  "id": "LA-C321-clamor",
+  "pathSegment": "LA-PATH-321-MINAE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-321-MINAE",
+      "order": 4
+    }
+  ]
+}

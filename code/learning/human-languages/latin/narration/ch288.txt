@@ -20,7 +20,7 @@ Mare altius est quam flūmen. — The sea is deeper than the river. Iter longius
 [pause 1 second]
 Mare and iter are neuter, so altius, longius. Nāvis is feminine, and -ior serves a man or a woman alike: celerior.
 [pause 1 second]
-Facilis gives facilior, easier. An adjective with a vowel before -us, like idōneus, takes magis, "more", in front instead: magis idōneus quam, more suitable than.
+Facilis gives facilior, easier. An adjective with a vowel before -us, like idōneus, usually takes magis, "more", in front instead: magis idōneus quam, more suitable than.
 
 You'll want to know: maior, minor, melior.
 Three common adjectives have a comparative of their own, learned whole:
@@ -28,7 +28,7 @@ magnus — maior, bigger. parvus — minor, smaller. bonus, good — melior, bet
 Rōma maior est quam oppidum meum. — Rome is bigger than my town.
 
 The word, taken apart: maior and melior.
-The -ior ending is inherited: EtymDB 2.1 builds maior from the root of magnus, Proto-Indo-European megh2-, "great", with a comparative ending -yos. melior is traced to a Proto-Indo-European melyos, "better", with no link to bonus at all, which is why it has to be learned whole. English took major, minor and, through French, ameliorate.
+The -ior ending is inherited: EtymDB 2.1 builds maior from the root of magnus, Proto-Indo-European méǵh₂s, "great", with a comparative ending -yos. melior is traced to a Proto-Indo-European melyos, "better", with no link to bonus at all, which is why it has to be learned whole. English took major, minor and, through French, ameliorate.
 
 Guided Practice.
 [pause 1 second]
@@ -110,7 +110,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: Rōma maior erat quam putāvī, et laetus eram.]
 [pause 8 seconds for the answer]
-[your turn — say: Iterum Rōmam vidēre cupiō, et spērō tē venīre.]
+[your turn — say: Iterum Rōmam vidēre cupiō, et spērō tē valēre.]
 [pause 8 seconds for the answer]
 [your turn — say: a place you have been: when, for how long, and what was bigger or better than you expected]
 [pause 8 seconds for the answer]

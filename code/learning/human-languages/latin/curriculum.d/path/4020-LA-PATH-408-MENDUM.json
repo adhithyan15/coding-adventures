@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-408-MENDUM",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "LA-EXT-408-MENDUM"
+  ],
+  "after": []
+}

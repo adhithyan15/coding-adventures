@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 391,
+  "sourceHash": "fnv1a64:0b08d317aa3a378f",
+  "lessonIds": [
+    "LA-C391-etiamsi",
+    "LA-C391-tametsi",
+    "LA-C391-alioqui",
+    "LA-C391-secus",
+    "LA-C391-sive"
+  ],
+  "tex": "latin/book/chapters/ch391-even-if-and-otherwise.tex"
+}

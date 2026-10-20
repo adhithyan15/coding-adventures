@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C530-ancillula",
+    "language": "latin",
+    "chapter": 530,
+    "sequence": 28120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ecc233c9e89c9403"
+  },
+  "findings": []
+}

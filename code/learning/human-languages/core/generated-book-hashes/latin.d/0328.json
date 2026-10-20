@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 328,
+  "sourceHash": "fnv1a64:05e6356809970491",
+  "lessonIds": [
+    "LA-C328-flammeum",
+    "LA-C328-pronuba",
+    "LA-C328-nuptialis",
+    "LA-C328-matrona",
+    "LA-C328-divortium"
+  ],
+  "tex": "latin/book/chapters/ch328-nuptiae.tex"
+}

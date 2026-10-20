@@ -1,0 +1,19 @@
+{
+  "chapter": 296,
+  "title": "Initium et exitus",
+  "label": "ch:la-initium-et-exitus",
+  "canDo": "I can name the parts of a story in time: the beginning, the start, the way out or outcome, the gap between and the moment.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C296-momentum",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 296: I can name the parts of a story in time: the beginning, the start, the way out or outcome, the gap between and the moment.",
+    "assesses": [
+      "LA-LEX-C296-INITIUM-03",
+      "LA-LEX-C296-INITIUM-04",
+      "LA-LEX-C296-INITIUM-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 535,
+  "sourceHash": "fnv1a64:e7329c69feb182a5",
+  "lessonIds": [
+    "LA-C535-amplector",
+    "LA-C535-complector",
+    "LA-C535-amans",
+    "LA-C535-amator",
+    "LA-C535-procus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch535.txt",
+  "json": "latin/narration/ch535.json",
+  "textHash": "fnv1a64:1a863a09296805b4",
+  "jsonHash": "fnv1a64:f8eb81bbbe9105a2",
+  "findings": []
+}

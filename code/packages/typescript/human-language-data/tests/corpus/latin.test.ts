@@ -53,7 +53,9 @@ it("pins Latin lesson-content budgets", () =>
     // 1307 -> 1345: chapters 281-290, the B1 core that realizes all five B1
     // spine nodes (both pasts, reasons, travel, experience, the subjunctive):
     // 38 lessons, one reading and one writing, no idiom, sense or culture claim.
-    lessons: 1345,
+    // 1345 -> 2705: chapters 291-554, the B1 vocabulary: 1,320 word lessons (one
+    // headword each) and 40 spaced reviews. Latin attains B1 here.
+    lessons: 2705,
     idioms: 16,
     senses: 6,
     cultureClaims: 17,

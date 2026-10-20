@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 283,
-  "sourceHash": "fnv1a64:bf9beb7ea1ccce59",
+  "sourceHash": "fnv1a64:f140ee2516eb3c23",
   "lessonIds": [
     "LA-C283-puto",
     "LA-C283-mea-sententia",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "latin/narration/ch283.txt",
   "json": "latin/narration/ch283.json",
-  "textHash": "fnv1a64:1c0c4146ccb35316",
-  "jsonHash": "fnv1a64:17284514cfde4dd0",
+  "textHash": "fnv1a64:89021dd60b91ee65",
+  "jsonHash": "fnv1a64:317ffec4859dec48",
   "findings": []
 }

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C526-convalesco",
+  "pathSegment": "LA-PATH-526-SANO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-526-SANO",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C481-delabor",
+  "pathSegment": "LA-PATH-481-CONVALLIS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-481-CONVALLIS",
+      "order": 4
+    }
+  ]
+}

@@ -64,17 +64,17 @@ says **dextrā**, "on the right", and **sinistrā**, "on the left".
 [PAUSE 2s] Roman comedy has a scene built on exactly this. In Terence's
 *Adelphoe*, a slave gets rid of an old man by sending him across town:
 *ad sinistram*, then *ad dextram*, along *hāc rēctā plateā*, "this straight
-street", to a place where the person he wants is not. Lewis & Short quote
-the *ad dextram* from that play. A Roman audience laughed because they gave
-and got directions this way every day.
+street", to a place where the person he wants is not. Lewis & Short cite
+*ad dexteram*, the longer spelling, from Plautus and from Terence's
+*Andria*. A Roman audience laughed because they gave and got directions
+this way every day.
 
 ## The word, taken apart: dextram
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C114-WHY114-04] -->
 
 **dextram** is the adjective *dexter* with *manum* left out: Lewis & Short
-give *ad dextram* as short for *ad dextram manum* or *partem*, "to the right
-hand" or "side". The
-*dexter* lesson traced the word itself to Proto-Indo-European *\*deks-*,
+take *dextra*, "the right", as *dextra manus*, "the right hand", with the
+noun understood. The *dexter* lesson traced the word itself to Proto-Indo-European *\*deks-*,
 "right", and named Greek *dexios* as a cousin.
 
 ## Guided Practice

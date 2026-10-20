@@ -1,0 +1,11 @@
+{
+  "id": "LA-C411-litigo",
+  "pathSegment": "LA-PATH-411-TRIBUNAL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-411-TRIBUNAL",
+      "order": 2
+    }
+  ]
+}

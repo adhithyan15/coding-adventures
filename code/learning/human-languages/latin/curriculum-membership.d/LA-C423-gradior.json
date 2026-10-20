@@ -1,0 +1,11 @@
+{
+  "id": "LA-C423-gradior",
+  "pathSegment": "LA-PATH-423-SEMITA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-423-SEMITA",
+      "order": 4
+    }
+  ]
+}

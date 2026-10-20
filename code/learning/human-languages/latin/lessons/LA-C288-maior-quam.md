@@ -58,7 +58,7 @@ Take the stem of the adjective and add **-ior**, "more": *long-us*,
 serves a man or a woman alike: *celerior*.
 
 [PAUSE 1s] *Facilis* gives *facilior*, easier. An adjective with a vowel
-before *-us*, like *idōneus*, takes **magis**, "more", in front instead:
+before *-us*, like *idōneus*, usually takes **magis**, "more", in front instead:
 *magis idōneus quam*, more suitable than.
 
 ## You'll want to know: maior, minor, melior
@@ -75,7 +75,7 @@ Three common adjectives have a comparative of their own, learned whole:
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C93-MAGNUS-05] -->
 
 The **-ior** ending is inherited: EtymDB 2.1 builds **maior** from the root
-of *magnus*, Proto-Indo-European *\*megh2-*, "great", with a comparative
+of *magnus*, Proto-Indo-European *\*méǵh₂s*, "great", with a comparative
 ending *\*-yos*. **melior** is traced to a Proto-Indo-European *\*melyos*,
 "better", with no link to *bonus* at all, which is why it has to be learned
 whole. English took *major*, *minor* and, through French, *ameliorate*.

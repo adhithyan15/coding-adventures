@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 464,
+  "sourceHash": "fnv1a64:522750b25f1ec26f",
+  "lessonIds": [
+    "LA-C464-statera",
+    "LA-C464-trutina",
+    "LA-C464-lanx",
+    "LA-C464-appendo",
+    "LA-C464-penso"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch464.txt",
+  "json": "latin/narration/ch464.json",
+  "textHash": "fnv1a64:9d910d9b1628eda6",
+  "jsonHash": "fnv1a64:d6f6b093225b79db",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C337-certamen",
+    "language": "latin",
+    "chapter": 337,
+    "sequence": 18180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c3e6c05c7753f9fe"
+  },
+  "findings": []
+}

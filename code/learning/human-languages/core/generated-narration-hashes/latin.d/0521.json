@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:4d7a3d8af0e149ca",
+  "lessonIds": [
+    "LA-C521-aegrotus",
+    "LA-C521-aegroto",
+    "LA-C521-languidus",
+    "LA-C521-debilis",
+    "LA-C521-debilitas"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch521.txt",
+  "json": "latin/narration/ch521.json",
+  "textHash": "fnv1a64:9f1809b20f77b0fe",
+  "jsonHash": "fnv1a64:a33faed12281af57",
+  "findings": []
+}

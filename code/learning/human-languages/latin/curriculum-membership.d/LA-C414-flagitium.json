@@ -1,0 +1,11 @@
+{
+  "id": "LA-C414-flagitium",
+  "pathSegment": "LA-PATH-414-INIURIA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-414-INIURIA",
+      "order": 1
+    }
+  ]
+}

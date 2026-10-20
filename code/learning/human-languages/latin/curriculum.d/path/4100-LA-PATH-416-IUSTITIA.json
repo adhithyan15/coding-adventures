@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-416-IUSTITIA",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "LA-EXT-416-IUSTITIA"
+  ],
+  "after": []
+}

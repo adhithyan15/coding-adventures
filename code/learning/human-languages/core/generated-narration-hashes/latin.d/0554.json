@@ -1,0 +1,21 @@
+{
+  "language": "latin",
+  "chapter": 554,
+  "sourceHash": "fnv1a64:dc23c7b5be2be150",
+  "lessonIds": [
+    "LA-C554-subsellium",
+    "LA-C554-urceus",
+    "LA-C554-repono",
+    "LA-C554-sarcio",
+    "LA-C554-pecto",
+    "LA-R554-review-553-554",
+    "LA-R554-review-final-554"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "latin/narration/ch554.txt",
+  "json": "latin/narration/ch554.json",
+  "textHash": "fnv1a64:d809f8e5a134f93f",
+  "jsonHash": "fnv1a64:d53bd53e126cbee4",
+  "findings": []
+}

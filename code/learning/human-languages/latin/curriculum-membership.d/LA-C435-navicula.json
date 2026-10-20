@@ -1,0 +1,11 @@
+{
+  "id": "LA-C435-navicula",
+  "pathSegment": "LA-PATH-435-NAVIGIUM",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-435-NAVIGIUM",
+      "order": 1
+    }
+  ]
+}

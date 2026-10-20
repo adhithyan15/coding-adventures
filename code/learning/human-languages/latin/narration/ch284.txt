@@ -23,7 +23,7 @@ Grammar Lens: dēbēbās, you should have.
 English moves the past onto the infinitive: "you should have come". Latin moves it onto dēbeō instead, and keeps the plain infinitive:
 Herī venīre dēbēbās. — You should have come yesterday.
 [pause 2 seconds]
-Dēbēbās is the imperfect, "you were bound to", and the sentence carries the regret: the coming was owed, and it did not happen.
+Dēbēbās is the imperfect, "you were bound to", and the sentence carries the regret: the coming was owed, and it did not happen. The perfect does the same work, venīre dēbuistī, and so does oportet in the perfect: oportuit tē venīre.
 
 The word, taken apart: dēbeō.
 dēbeō is contracted from dē, "away from", and habeō, "to have" (Lewis & Short), as its own lesson said: to have something that belongs to someone else. A debt, dēbitum, is what you hold and must give back; advice with dēbēs treats the right action as something owed.

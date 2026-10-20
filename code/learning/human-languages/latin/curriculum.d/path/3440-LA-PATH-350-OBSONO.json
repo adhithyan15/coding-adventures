@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-350-OBSONO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-350-OBSONO"
+  ],
+  "after": []
+}

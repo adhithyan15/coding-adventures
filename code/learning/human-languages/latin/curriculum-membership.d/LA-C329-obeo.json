@@ -1,0 +1,11 @@
+{
+  "id": "LA-C329-obeo",
+  "pathSegment": "LA-PATH-329-MORS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-329-MORS",
+      "order": 3
+    }
+  ]
+}

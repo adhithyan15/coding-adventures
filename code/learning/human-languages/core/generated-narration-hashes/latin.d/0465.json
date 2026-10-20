@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 465,
+  "sourceHash": "fnv1a64:a602b2068bdc76d1",
+  "lessonIds": [
+    "LA-C465-modius",
+    "LA-C465-sextarius",
+    "LA-C465-pondo",
+    "LA-C465-quadrans",
+    "LA-C465-nummularius"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch465.txt",
+  "json": "latin/narration/ch465.json",
+  "textHash": "fnv1a64:992d2212dfd8bf82",
+  "jsonHash": "fnv1a64:331c20eaf30d1068",
+  "findings": []
+}

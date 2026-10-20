@@ -4,7 +4,7 @@
   "chapter": 282,
   "title": "A Story in Order",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:c4253ae612413297",
+  "sourceHash": "fnv1a64:1d5ddef27c637983",
   "lessons": [
     {
       "id": "LA-C282-primum-deinde",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0504c7551c94b8b8",
+      "sourceHash": "fnv1a64:016011565a8371d7",
       "notice": null,
       "blocks": [
         {
@@ -91,7 +91,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "prīmum is the neuter of prīmus, \"first\", standing alone as an adverb (Lewis & Short list it under primus): \"as the first thing\". Postrēmō works the same way from postrēmus, \"last\", and deinde is built from dē and inde, \"from there\": from that point on."
+              "text": "prīmum is the neuter of prīmus, \"first\", standing alone as an adverb (Lewis & Short list it under primus): \"as the first thing\". Postrēmō comes from postrēmus, \"last\", too, though it is the ablative, \"at the last\", and deinde is built from dē and inde, \"from there\": from that point on."
             }
           ]
         },

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C516-membrum",
+  "pathSegment": "LA-PATH-516-GUTT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-516-GUTT",
+      "order": 3
+    }
+  ]
+}

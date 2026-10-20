@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-523-ROBU",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "LA-EXT-523-ROBU"
+  ],
+  "after": []
+}

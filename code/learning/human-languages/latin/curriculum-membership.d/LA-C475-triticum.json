@@ -1,0 +1,11 @@
+{
+  "id": "LA-C475-triticum",
+  "pathSegment": "LA-PATH-475-MESSIS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-475-MESSIS",
+      "order": 4
+    }
+  ]
+}

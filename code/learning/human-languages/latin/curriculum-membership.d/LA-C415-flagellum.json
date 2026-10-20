@@ -1,0 +1,11 @@
+{
+  "id": "LA-C415-flagellum",
+  "pathSegment": "LA-PATH-415-CASTIGO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-415-CASTIGO",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C313-decido",
+  "pathSegment": "LA-PATH-313-RUINA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-313-RUINA",
+      "order": 4
+    }
+  ]
+}

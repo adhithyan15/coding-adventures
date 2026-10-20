@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:aef372d6f708fa46",
+  "lessonIds": [
+    "LA-C303-furtum",
+    "LA-C303-latrocinium",
+    "LA-C303-grassator",
+    "LA-C303-praedo",
+    "LA-C303-praeda"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch303.txt",
+  "json": "latin/narration/ch303.json",
+  "textHash": "fnv1a64:ad346123961b32d0",
+  "jsonHash": "fnv1a64:d4c1f58e3aae0a96",
+  "findings": []
+}

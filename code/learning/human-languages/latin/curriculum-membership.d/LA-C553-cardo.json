@@ -1,0 +1,11 @@
+{
+  "id": "LA-C553-cardo",
+  "pathSegment": "LA-PATH-553-LIMN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-553-LIMN",
+      "order": 3
+    }
+  ]
+}
