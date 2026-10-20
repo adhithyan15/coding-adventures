@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- `main` returns `i64` 0 (`const 0; ret`) instead of `ret_void`. Every backend
+  reads the entry function's result as the process status. CoreCLR rejected a
+  void `int32 MccarthyEntry()` (CI's macOS and Windows CLR column), and on BEAM
+  a void `return` hands back whatever x0 held, the atom `ok` from the last print,
+  which the matrix launcher cannot read as an integer.
 - LANG84 phase 4a: release selection. `compile_source_at(source, release,
   module_name, &FrontendBudgets)` compiles against exactly one checked
   inventory release, or `DEFAULT_RELEASE` (still the unversioned LANG81 pair)

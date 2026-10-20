@@ -340,13 +340,21 @@ pub fn compile_ast_at(
             });
         }
     }
-    compiler.emit("ret_void", None, vec![], "void");
+    // `main` returns the exit status 0 rather than `ret_void`. Every backend
+    // reads the entry function's result as the process status: CoreCLR
+    // rejects an `int32 MccarthyEntry()` that returns nothing, and on BEAM a
+    // void `return` hands back whatever x0 last held (the atom `ok` from the
+    // final print), which the launcher cannot read as an integer. Returning a
+    // real `i64` 0 gives every column the same, well-defined status.
+    let exit = compiler.register();
+    compiler.emit("const", Some(exit.clone()), vec![Operand::Int(0)], "i64");
+    compiler.emit("ret", None, vec![Operand::Var(exit)], "i64");
     let mut module = IIRModule::new(module_name, "perl");
     module.entry_point = Some("main".into());
     module.add_or_replace(IIRFunction::new(
         "main",
         vec![],
-        "void",
+        "i64",
         compiler.instructions,
     ));
     let errors = module.validate();
