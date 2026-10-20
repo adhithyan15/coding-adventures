@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 493,
+  "sourceHash": "fnv1a64:c9a704c9aba64651",
+  "lessonIds": [
+    "LA-C493-irascor",
+    "LA-C493-iracundus",
+    "LA-C493-iracundia",
+    "LA-C493-indignus",
+    "LA-C493-indignor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch493.txt",
+  "json": "latin/narration/ch493.json",
+  "textHash": "fnv1a64:e46578ec712734c8",
+  "jsonHash": "fnv1a64:85b314bdaec58dbf",
+  "findings": []
+}

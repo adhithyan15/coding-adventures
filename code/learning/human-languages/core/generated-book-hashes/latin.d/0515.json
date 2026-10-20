@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 515,
+  "sourceHash": "fnv1a64:6c194a41ff026d42",
+  "lessonIds": [
+    "LA-C515-vultus",
+    "LA-C515-facies",
+    "LA-C515-crinis",
+    "LA-C515-supercilium",
+    "LA-C515-palpebra"
+  ],
+  "tex": "latin/book/chapters/ch515-the-face.tex"
+}

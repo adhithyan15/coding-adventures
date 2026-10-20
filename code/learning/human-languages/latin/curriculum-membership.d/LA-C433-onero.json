@@ -1,0 +1,11 @@
+{
+  "id": "LA-C433-onero",
+  "pathSegment": "LA-PATH-433-IUMENTUM",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-433-IUMENTUM",
+      "order": 4
+    }
+  ]
+}

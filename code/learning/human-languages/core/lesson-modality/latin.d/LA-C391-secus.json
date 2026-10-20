@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C391-secus",
+    "language": "latin",
+    "chapter": 391,
+    "sequence": 20970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f5c500bfe6eccf1"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C500-cupidus",
+  "pathSegment": "LA-PATH-500-CUPI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-500-CUPI",
+      "order": 1
+    }
+  ]
+}

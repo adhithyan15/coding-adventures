@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 480,
+  "title": "Cliff, Jagged rock, Sheer, Steep, To climb",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8cbbbd7ba00ff63e",
+  "lessons": [
+    {
+      "id": "LA-C480-rupes",
+      "sequence": 25520,
+      "title": "rūpēs, rūpis — a cliff, a rock face",
+      "headword": "rūpēs, rūpis",
+      "romanization": "rūpēs, rūpis",
+      "gloss": "a cliff, a rock face",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7287b75abfbb0f22",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to graft, then the Latin for the grape harvest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: rūpēs, rūpis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rūpēs, rūpis — \"a cliff, a rock face\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Caprae in rūpibus altīs ambulant. Goats walk on the high cliffs."
+            },
+            {
+              "kind": "speech",
+              "text": "Third declension, feminine: rūpēs, rūpis f. A broken rock face, from rumpō 'to break'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rūpēs is built on rumpō 'to break' (Lewis & Short): rock broken off, a cliff. EtymDB lists it without a parent."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rūpēs, rūpis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rūpēs, rūpis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rūpēs, rūpis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rūpēs, rūpis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with rūpēs, rūpis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *rūpēs, rūpis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to graft, then the Latin for the grape harvest, then say rūpēs, rūpis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to graft, then the Latin for the grape harvest, then say *rūpēs, rūpis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does rūpēs, rūpis mean? (\"A cliff, a rock face\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C480-cautes",
+      "sequence": 25530,
+      "title": "cautēs, cautis — a jagged rock, a crag",
+      "headword": "cautēs, cautis",
+      "romanization": "cautēs, cautis",
+      "gloss": "a jagged rock, a crag",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b30a4443b16666f5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for the grape harvest, then the Latin for a cliff."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: cautēs, cautis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cautēs, cautis — \"a jagged rock, a crag\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Nāvis in cautēs cadit et frangitur. The ship runs onto the jagged rocks and breaks up."
+            },
+            {
+              "kind": "speech",
+              "text": "Third declension, feminine: cautēs, cautis f., mostly plural. Sharp rocks on a coast or a mountain."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cautēs is inherited; Lewis & Short and EtymDB connect it with cōs 'whetstone', from PIE ḱeh₃- 'to sharpen': a sharp rock."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cautēs, cautis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cautēs, cautis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cautēs, cautis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cautēs, cautis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with cautēs, cautis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *cautēs, cautis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for the grape harvest, then the Latin for a cliff, then say cautēs, cautis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for the grape harvest, then the Latin for a cliff, then say *cautēs, cautis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does cautēs, cautis mean? (\"A jagged rock, a crag\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C480-praeruptus",
+      "sequence": 25540,
+      "title": "praeruptus, praerupta, praeruptum — sheer, very steep, broken off",
+      "headword": "praeruptus, praerupta, praeruptum",
+      "romanization": "praeruptus, praerupta, praeruptum",
+      "gloss": "sheer, very steep, broken off",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d166ea058830ae98",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a cliff, then the Latin for a jagged rock."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: praeruptus, praerupta, praeruptum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "praeruptus, praerupta, praeruptum — \"sheer, very steep, broken off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Via in monte praerupta est, itaque mūlī lentē eunt. The road up the mountain is very steep, so the mules go slowly."
+            },
+            {
+              "kind": "speech",
+              "text": "An adjective of three endings, the participle of praerumpō 'to break off in front'. Of rock: sheer."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "praeruptus is the past participle of praerumpō 'to break off in front', from prae- and rumpō 'to break' (Lewis & Short): land broken off sharply."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "praeruptus, praerupta, praeruptum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *praeruptus, praerupta, praeruptum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "praeruptus, praerupta, praeruptum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *praeruptus, praerupta, praeruptum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with praeruptus, praerupta, praeruptum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *praeruptus, praerupta, praeruptum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a cliff, then the Latin for a jagged rock, then say praeruptus, praerupta, praeruptum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a cliff, then the Latin for a jagged rock, then say *praeruptus, praerupta, praeruptum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does praeruptus, praerupta, praeruptum mean? (\"Sheer, very steep, broken off\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C480-arduus",
+      "sequence": 25550,
+      "title": "arduus, ardua, arduum — steep, high; difficult",
+      "headword": "arduus, ardua, arduum",
+      "romanization": "arduus, ardua, arduum",
+      "gloss": "steep, high; difficult",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bf0738e954a04960",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a jagged rock, then the Latin for sheer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: arduus, ardua, arduum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "arduus, ardua, arduum — \"steep, high; difficult\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sēmita ardua est, et viātōrēs lassī sunt. The path is steep, and the travellers are weary."
+            },
+            {
+              "kind": "speech",
+              "text": "An adjective of three endings. Rēs ardua, a hard task. English arduous comes from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "arduus is inherited, but its origin is not settled: Lewis & Short link it, doubtfully, with alō 'to nourish' and altus 'high', and EtymDB gives no parent. English arduous comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arduus, ardua, arduum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arduus, ardua, arduum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arduus, ardua, arduum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arduus, ardua, arduum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with arduus, ardua, arduum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *arduus, ardua, arduum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a jagged rock, then the Latin for sheer, then say arduus, ardua, arduum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a jagged rock, then the Latin for sheer, then say *arduus, ardua, arduum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does arduus, ardua, arduum mean? (\"Steep, high; difficult\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C480-scando",
+      "sequence": 25560,
+      "title": "scandō, scandere — to climb, to mount",
+      "headword": "scandō, scandere",
+      "romanization": "scandō, scandere",
+      "gloss": "to climb, to mount",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d35af7666e5e027b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for sheer, then the Latin for steep."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: scandō, scandere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "scandō, scandere — \"to climb, to mount\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Amīcī montem scandunt et urbem procul cōnspicantur. The friends climb the mountain and catch sight of the city far off."
+            },
+            {
+              "kind": "speech",
+              "text": "scandō, scandere, scandī, scānsum. English scan (to count out the feet of a verse) comes from it, and ascend and descend from its compounds."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "scandō is inherited from PIE skend- 'to jump, to climb' (EtymDB). English scan comes from it, and ascend and descend from its compounds ascendō and dēscendō (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "scandō, scandere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *scandō, scandere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "scandō, scandere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *scandō, scandere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with scandō, scandere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *scandō, scandere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for sheer, then the Latin for steep, then say scandō, scandere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for sheer, then the Latin for steep, then say *scandō, scandere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does scandō, scandere mean? (\"To climb, to mount\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

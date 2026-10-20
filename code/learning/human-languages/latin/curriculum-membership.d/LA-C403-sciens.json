@@ -1,0 +1,11 @@
+{
+  "id": "LA-C403-sciens",
+  "pathSegment": "LA-PATH-403-DOCTUS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-403-DOCTUS",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C431-scutica",
+  "pathSegment": "LA-PATH-431-HABENA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-431-HABENA",
+      "order": 4
+    }
+  ]
+}

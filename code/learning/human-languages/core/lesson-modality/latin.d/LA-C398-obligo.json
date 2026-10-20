@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C398-obligo",
+    "language": "latin",
+    "chapter": 398,
+    "sequence": 21320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:efa12cc1449d9765"
+  },
+  "findings": []
+}

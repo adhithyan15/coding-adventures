@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 546,
+  "sourceHash": "fnv1a64:21b1841c96d49ade",
+  "lessonIds": [
+    "LA-C546-cavea",
+    "LA-C546-pulpitum",
+    "LA-C546-aulaeum",
+    "LA-C546-prologus",
+    "LA-C546-pantomimus"
+  ],
+  "tex": "latin/book/chapters/ch546-at-the-theatre.tex"
+}

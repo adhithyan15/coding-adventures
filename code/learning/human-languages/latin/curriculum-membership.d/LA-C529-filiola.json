@@ -1,0 +1,11 @@
+{
+  "id": "LA-C529-filiola",
+  "pathSegment": "LA-PATH-529-NOVE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-529-NOVE",
+      "order": 3
+    }
+  ]
+}

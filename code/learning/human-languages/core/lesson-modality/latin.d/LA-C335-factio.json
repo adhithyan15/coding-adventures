@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C335-factio",
+    "language": "latin",
+    "chapter": 335,
+    "sequence": 18080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d4d15ffe379d2e22"
+  },
+  "findings": []
+}

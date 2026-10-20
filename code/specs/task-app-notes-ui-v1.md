@@ -53,7 +53,8 @@ an aesthetic gap.
 > **Update (#15930):** the gap below is closed. `HostInput` now takes
 > `multiline: true` on every backend and lowers exactly as the legacy
 > `Input ( multiline : true )` does (UI29 §2.1), so this call site can move
-> to `HostInput` as part of retiring `Input` (U29-X1). No userland
+> to `HostInput` as part of retiring `Input` (U29-X1) — done: the body is now
+> `HostInput ( multiline : true )` and saves on Ctrl/Cmd+Enter (UI25 §4). No userland
 > `MultilineInput` is needed: a text area cannot be composed from
 > single-line fields, so it belongs in the kernel.
 

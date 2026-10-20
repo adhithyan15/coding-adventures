@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-504-PROB",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "LA-EXT-504-PROB"
+  ],
+  "after": []
+}

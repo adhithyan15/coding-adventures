@@ -1,0 +1,11 @@
+{
+  "id": "LA-C392-cautio",
+  "pathSegment": "LA-PATH-392-CAVEO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-392-CAVEO",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 351,
+  "title": "Concīdere et terere",
+  "label": "ch:la-concidere-et-terere",
+  "canDo": "I can describe preparing food: to chop up, to cut, the mortar, the pestle and to grind.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C351-tero",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 351: I can describe preparing food: to chop up, to cut, the mortar, the pestle and to grind.",
+    "assesses": [
+      "LA-LEX-C351-CONCIDO-03",
+      "LA-LEX-C351-CONCIDO-04",
+      "LA-LEX-C351-CONCIDO-05"
+    ]
+  }
+}

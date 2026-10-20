@@ -1,0 +1,11 @@
+{
+  "id": "LA-C546-pantomimus",
+  "pathSegment": "LA-PATH-546-CAVE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-546-CAVE",
+      "order": 4
+    }
+  ]
+}

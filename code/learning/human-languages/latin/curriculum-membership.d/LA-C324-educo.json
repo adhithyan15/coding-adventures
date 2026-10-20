@@ -1,0 +1,11 @@
+{
+  "id": "LA-C324-educo",
+  "pathSegment": "LA-PATH-324-PUER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-324-PUER",
+      "order": 4
+    }
+  ]
+}

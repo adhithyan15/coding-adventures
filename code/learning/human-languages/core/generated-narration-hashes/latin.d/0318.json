@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 318,
+  "sourceHash": "fnv1a64:1973d39ece3017a6",
+  "lessonIds": [
+    "LA-C318-cremo",
+    "LA-C318-uro",
+    "LA-C318-flagro",
+    "LA-C318-fumo",
+    "LA-C318-conflagro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch318.txt",
+  "json": "latin/narration/ch318.json",
+  "textHash": "fnv1a64:939ba0bf3b791aa7",
+  "jsonHash": "fnv1a64:985b185321a89917",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 369,
+  "title": "Urging and Dissuading",
+  "label": "ch:la-urging-and-dissuading",
+  "canDo": "I can urge someone on, talk someone out of a plan, speak of persuasion, and offer or turn down an excuse.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C369-excusatio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 369: I can urge someone on, talk someone out of a plan, speak of persuasion, and offer or turn down an excuse.",
+    "assesses": [
+      "LA-LEX-C369-HORTOR-03",
+      "LA-LEX-C369-HORTOR-04",
+      "LA-LEX-C369-HORTOR-05"
+    ]
+  }
+}

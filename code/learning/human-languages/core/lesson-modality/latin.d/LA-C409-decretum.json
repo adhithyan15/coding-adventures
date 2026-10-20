@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C409-decretum",
+    "language": "latin",
+    "chapter": 409,
+    "sequence": 21870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eeda68f5ba46bbf4"
+  },
+  "findings": []
+}

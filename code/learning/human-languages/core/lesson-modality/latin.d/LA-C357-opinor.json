@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C357-opinor",
+    "language": "latin",
+    "chapter": 357,
+    "sequence": 19230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3568f8fecde3343a"
+  },
+  "findings": []
+}

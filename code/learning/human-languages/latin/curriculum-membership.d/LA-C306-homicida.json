@@ -1,0 +1,11 @@
+{
+  "id": "LA-C306-homicida",
+  "pathSegment": "LA-PATH-306-CAEDES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-306-CAEDES",
+      "order": 1
+    }
+  ]
+}

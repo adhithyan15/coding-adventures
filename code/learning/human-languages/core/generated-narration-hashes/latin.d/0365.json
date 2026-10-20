@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:716bf077c203a865",
+  "lessonIds": [
+    "LA-C365-quandoquidem",
+    "LA-C365-quippe",
+    "LA-C365-etenim",
+    "LA-C365-nempe",
+    "LA-C365-scilicet"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch365.txt",
+  "json": "latin/narration/ch365.json",
+  "textHash": "fnv1a64:88d140361b03c145",
+  "jsonHash": "fnv1a64:e56aba2ffe5c67db",
+  "findings": []
+}

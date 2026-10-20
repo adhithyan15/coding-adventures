@@ -1,0 +1,11 @@
+{
+  "id": "LA-C356-discumbo",
+  "pathSegment": "LA-PATH-356-APPONO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-356-APPONO",
+      "order": 3
+    }
+  ]
+}

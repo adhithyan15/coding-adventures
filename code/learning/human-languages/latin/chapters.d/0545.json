@@ -1,0 +1,19 @@
+{
+  "chapter": 545,
+  "title": "Sound and harmony",
+  "label": "ch:la-sound-and-harmony",
+  "canDo": "I can describe sounds, echoes and harmony.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C545-concentus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 545: I can describe sounds, echoes and harmony.",
+    "assesses": [
+      "LA-LEX-C545-SONU-03",
+      "LA-LEX-C545-SONU-04",
+      "LA-LEX-C545-SONU-05"
+    ]
+  }
+}

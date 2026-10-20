@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 509,
+  "sourceHash": "fnv1a64:7d7f4d00db6fb1d3",
+  "lessonIds": [
+    "LA-C509-fortitudo",
+    "LA-C509-audacia",
+    "LA-C509-temerarius",
+    "LA-C509-constans",
+    "LA-C509-prudentia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch509.txt",
+  "json": "latin/narration/ch509.json",
+  "textHash": "fnv1a64:6f0a2e41baa435e2",
+  "jsonHash": "fnv1a64:e408fa8cf2f3889d",
+  "findings": []
+}

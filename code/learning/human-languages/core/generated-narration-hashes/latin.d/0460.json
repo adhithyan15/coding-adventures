@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 460,
+  "sourceHash": "fnv1a64:dfae36edcc4cdbb9",
+  "lessonIds": [
+    "LA-C460-turba",
+    "LA-C460-frequens",
+    "LA-C460-frequento",
+    "LA-C460-commeo",
+    "LA-C460-suburbanus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch460.txt",
+  "json": "latin/narration/ch460.json",
+  "textHash": "fnv1a64:a731c3bb96ae7b73",
+  "jsonHash": "fnv1a64:6484307c1b1cc650",
+  "findings": []
+}

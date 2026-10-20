@@ -1,0 +1,11 @@
+{
+  "id": "LA-C446-cervical",
+  "pathSegment": "LA-PATH-446-LECTULUS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-446-LECTULUS",
+      "order": 3
+    }
+  ]
+}

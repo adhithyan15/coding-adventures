@@ -1,0 +1,11 @@
+{
+  "id": "LA-C309-patronus",
+  "pathSegment": "LA-PATH-309-ACCUSO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-309-ACCUSO",
+      "order": 3
+    }
+  ]
+}

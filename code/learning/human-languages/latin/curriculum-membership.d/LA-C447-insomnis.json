@@ -1,0 +1,11 @@
+{
+  "id": "LA-C447-insomnis",
+  "pathSegment": "LA-PATH-447-CIMEX",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-447-CIMEX",
+      "order": 3
+    }
+  ]
+}

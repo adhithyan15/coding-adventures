@@ -1,0 +1,11 @@
+{
+  "id": "LA-C530-verna",
+  "pathSegment": "LA-PATH-530-ERUS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-530-ERUS",
+      "order": 1
+    }
+  ]
+}

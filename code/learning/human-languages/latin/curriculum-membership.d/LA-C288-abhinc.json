@@ -1,0 +1,11 @@
+{
+  "id": "LA-C288-abhinc",
+  "pathSegment": "LA-PATH-288-COMPARATIO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-288-COMPARATIO",
+      "order": 1
+    }
+  ]
+}

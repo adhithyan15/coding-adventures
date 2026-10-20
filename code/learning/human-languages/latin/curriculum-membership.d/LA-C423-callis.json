@@ -1,0 +1,11 @@
+{
+  "id": "LA-C423-callis",
+  "pathSegment": "LA-PATH-423-SEMITA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-423-SEMITA",
+      "order": 1
+    }
+  ]
+}

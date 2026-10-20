@@ -1,0 +1,11 @@
+{
+  "id": "LA-C283-ergo",
+  "pathSegment": "LA-PATH-283-SENTENTIA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-283-SENTENTIA",
+      "order": 2
+    }
+  ]
+}

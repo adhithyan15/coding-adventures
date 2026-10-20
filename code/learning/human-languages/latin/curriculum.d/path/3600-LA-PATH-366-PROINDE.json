@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-366-PROINDE",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "LA-EXT-366-PROINDE"
+  ],
+  "after": []
+}

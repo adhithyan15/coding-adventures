@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-294-IDENTIDEM",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-294-IDENTIDEM"
+  ],
+  "after": []
+}

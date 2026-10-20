@@ -1,0 +1,19 @@
+{
+  "chapter": 547,
+  "title": "Images and art",
+  "label": "ch:la-images-and-art",
+  "canDo": "I can talk about portraits, shapes and mosaics.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C547-caelo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 547: I can talk about portraits, shapes and mosaics.",
+    "assesses": [
+      "LA-LEX-C547-IMAG-03",
+      "LA-LEX-C547-IMAG-04",
+      "LA-LEX-C547-IMAG-05"
+    ]
+  }
+}

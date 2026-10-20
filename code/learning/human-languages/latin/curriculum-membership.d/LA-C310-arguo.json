@@ -1,0 +1,11 @@
+{
+  "id": "LA-C310-arguo",
+  "pathSegment": "LA-PATH-310-IURO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-310-IURO",
+      "order": 3
+    }
+  ]
+}

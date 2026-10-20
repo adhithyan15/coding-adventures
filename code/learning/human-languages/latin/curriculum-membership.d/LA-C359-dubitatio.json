@@ -1,0 +1,11 @@
+{
+  "id": "LA-C359-dubitatio",
+  "pathSegment": "LA-PATH-359-PONDERO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-359-PONDERO",
+      "order": 2
+    }
+  ]
+}

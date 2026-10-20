@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C554-urceus",
+    "language": "latin",
+    "chapter": 554,
+    "sequence": 29340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c4b82f7df4b5f353"
+  },
+  "findings": []
+}

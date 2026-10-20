@@ -1,0 +1,11 @@
+{
+  "id": "LA-C291-primo",
+  "pathSegment": "LA-PATH-291-PRIMO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-291-PRIMO",
+      "order": 0
+    }
+  ]
+}

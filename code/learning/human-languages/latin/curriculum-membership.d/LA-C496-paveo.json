@@ -1,0 +1,11 @@
+{
+  "id": "LA-C496-paveo",
+  "pathSegment": "LA-PATH-496-PAV",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-496-PAV",
+      "order": 0
+    }
+  ]
+}

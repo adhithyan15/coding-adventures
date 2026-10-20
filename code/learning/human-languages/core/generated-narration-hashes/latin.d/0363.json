@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 363,
+  "sourceHash": "fnv1a64:58f656d68bfc0f66",
+  "lessonIds": [
+    "LA-C363-concedo",
+    "LA-C363-denego",
+    "LA-C363-confiteor",
+    "LA-C363-obicio",
+    "LA-C363-contendo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch363.txt",
+  "json": "latin/narration/ch363.json",
+  "textHash": "fnv1a64:ddac6c6e264170fe",
+  "jsonHash": "fnv1a64:f43bb7e2294c5e3c",
+  "findings": []
+}

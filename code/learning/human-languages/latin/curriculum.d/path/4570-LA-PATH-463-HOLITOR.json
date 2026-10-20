@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-463-HOLITOR",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "LA-EXT-463-HOLITOR"
+  ],
+  "after": []
+}

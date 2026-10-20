@@ -1,0 +1,19 @@
+{
+  "chapter": 504,
+  "title": "Honesty and pretence",
+  "label": "ch:la-honesty-and-pretence",
+  "canDo": "I can talk about honesty, lies and pretence.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-R504-review-497-504",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 504: I can talk about honesty, lies and pretence.",
+    "assesses": [
+      "LA-LEX-C504-PROB-03",
+      "LA-LEX-C504-PROB-04",
+      "LA-LEX-C504-PROB-05"
+    ]
+  }
+}

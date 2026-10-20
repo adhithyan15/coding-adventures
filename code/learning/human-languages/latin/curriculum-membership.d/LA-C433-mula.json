@@ -1,0 +1,11 @@
+{
+  "id": "LA-C433-mula",
+  "pathSegment": "LA-PATH-433-IUMENTUM",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-433-IUMENTUM",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C387-concito",
+  "pathSegment": "LA-PATH-387-SEDITIO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-387-SEDITIO",
+      "order": 4
+    }
+  ]
+}

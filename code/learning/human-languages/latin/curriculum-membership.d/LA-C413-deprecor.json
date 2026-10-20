@@ -1,0 +1,11 @@
+{
+  "id": "LA-C413-deprecor",
+  "pathSegment": "LA-PATH-413-CONDEMNO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-413-CONDEMNO",
+      "order": 3
+    }
+  ]
+}

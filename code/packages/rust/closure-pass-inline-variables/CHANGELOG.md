@@ -2,6 +2,46 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline-variables` crate will be documented in this file.
 
+## [0.19.0] - 2026-10-20
+
+### Changed — SIMPLE keeps a top-level `const` (CCR-078, #15863, CLOC43)
+
+In open-world mode (`InlineVariablesPass::new()`, run at SIMPLE), a top-level
+`const` literal is no longer propagated to ordinary uses. The pinned oracle
+keeps it: `let a=1;const b=2;console.log(a+b);` is left unchanged, where we
+emitted `console.log(a+2)`.
+
+The literal is still substituted at a *statement condition*, which upstream
+also folds: a bare-name `if` test, the left operand of a statement `&&`/`||`,
+or the test of a statement `?:`. So `const T=!0;T&&f()` still becomes
+`const T=!0;f()`.
+
+`closed_world()` (ADVANCED) is unchanged.
+
+### Fixed — a shadow inside an expression blocks propagation (CCR-078 review)
+
+The shadow guard counted declarations at statement level only. So a binding
+inside a function or arrow expression, a method, a class expression or a
+catch clause was invisible to it. The rewrite then planted the const's value
+into references to that *shadowing* binding, at both levels. That was a
+miscompile:
+
+```js
+const T = true;
+(function (T) { if (T) a(); else b(); })(false);   // ran a() instead of b()
+```
+
+`count_binding_sites` now also counts binding sites over the serialized AST.
+A candidate must be bound exactly once in the whole program.
+
+Tests:
+- `expression_scoped_shadows_block_propagation` covers 10 shapes in both
+  worlds.
+- Three new unit tests for the SIMPLE change.
+- The upstream-ported suite now runs closed-world, since upstream's
+  `InlineVariablesTest` inlines globals.
+- Its `let`/`var` case now checks a *reassigned* binding.
+
 ## [0.18.0] - 2026-09-25
 
 ### Added — optional chains resolve like plain ones (CLOC30)

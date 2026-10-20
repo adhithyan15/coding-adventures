@@ -1,0 +1,11 @@
+{
+  "id": "LA-C385-administro",
+  "pathSegment": "LA-PATH-385-REGO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-385-REGO",
+      "order": 2
+    }
+  ]
+}

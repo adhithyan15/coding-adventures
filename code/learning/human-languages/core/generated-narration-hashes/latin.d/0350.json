@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:5951e89f05969c9d",
+  "lessonIds": [
+    "LA-C350-obsono",
+    "LA-C350-obsonium",
+    "LA-C350-abluo",
+    "LA-C350-tergeo",
+    "LA-C350-cultellus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch350.txt",
+  "json": "latin/narration/ch350.json",
+  "textHash": "fnv1a64:cefcd8dc2933491f",
+  "jsonHash": "fnv1a64:908c3fc184240254",
+  "findings": []
+}

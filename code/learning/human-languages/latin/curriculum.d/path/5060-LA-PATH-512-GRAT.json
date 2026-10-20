@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-512-GRAT",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "LA-EXT-512-GRAT"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 524,
+  "sourceHash": "fnv1a64:af6ce4a46c9699a2",
+  "lessonIds": [
+    "LA-C524-pestis",
+    "LA-C524-pestilentia",
+    "LA-C524-contagio",
+    "LA-C524-ulcus",
+    "LA-C524-tumeo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch524.txt",
+  "json": "latin/narration/ch524.json",
+  "textHash": "fnv1a64:6fb4a8d5d794ca4b",
+  "jsonHash": "fnv1a64:8d21c78d45f36592",
+  "findings": []
+}

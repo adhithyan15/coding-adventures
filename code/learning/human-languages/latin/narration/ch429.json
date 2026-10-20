@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 429,
+  "title": "Wagon, Light gig, War chariot, Covered carriage, Travelling coach",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f4f992093c5bf14f",
+  "lessons": [
+    {
+      "id": "LA-C429-carrus",
+      "sequence": 22900,
+      "title": "carrus, carrī — a wagon, a baggage cart",
+      "headword": "carrus, carrī",
+      "romanization": "carrus, carrī",
+      "gloss": "a wagon, a baggage cart",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:69cb076d8d56075c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to travel abroad, then the Latin for to go forward."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: carrus, carrī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "carrus, carrī — \"a wagon, a baggage cart\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Carrus frūmentum ex agrīs ad oppidum vehit. The wagon carries grain from the fields to the town."
+            },
+            {
+              "kind": "speech",
+              "text": "Second declension, masculine: carrus, carrī m. (also carrum, carrī n.). A heavy cart for goods. English car, carry and career come from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "carrus was borrowed from Gaulish karros 'wagon', from PIE ḱers- 'to run' (EtymDB); Lewis & Short give no origin. English car, carry and career go back to it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "carrus, carrī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *carrus, carrī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "carrus, carrī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *carrus, carrī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with carrus, carrī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *carrus, carrī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to travel abroad, then the Latin for to go forward, then say carrus, carrī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to travel abroad, then the Latin for to go forward, then say *carrus, carrī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does carrus, carrī mean? (\"A wagon, a baggage cart\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C429-cisium",
+      "sequence": 22910,
+      "title": "cisium, cisiī — a light gig, a fast two-wheeled cart",
+      "headword": "cisium, cisiī",
+      "romanization": "cisium, cisiī",
+      "gloss": "a light gig, a fast two-wheeled cart",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3f5c247734a96972",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to go forward, then the Latin for a wagon."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: cisium, cisiī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cisium, cisiī — \"a light gig, a fast two-wheeled cart\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Cisium celere est; itaque mercātor cisiō ad urbem it. A gig is fast; so the merchant goes to the city by gig."
+            },
+            {
+              "kind": "speech",
+              "text": "Second declension, neuter: cisium, cisiī n. A light two-wheeled carriage for one or two people, for speed rather than baggage."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of cisium is not settled. Lewis & Short give the sense, a light two-wheeled vehicle, but no source, and EtymDB does not list it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cisium, cisiī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cisium, cisiī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cisium, cisiī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cisium, cisiī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with cisium, cisiī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *cisium, cisiī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to go forward, then the Latin for a wagon, then say cisium, cisiī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to go forward, then the Latin for a wagon, then say *cisium, cisiī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does cisium, cisiī mean? (\"A light gig, a fast two-wheeled cart\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C429-essedum",
+      "sequence": 22920,
+      "title": "essedum, essedī — a two-wheeled chariot; a light travelling carriage",
+      "headword": "essedum, essedī",
+      "romanization": "essedum, essedī",
+      "gloss": "a two-wheeled chariot; a light travelling carriage",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ed7dc58c7cfb0e2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a wagon, then the Latin for a light gig."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: essedum, essedī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "essedum, essedī — \"a two-wheeled chariot; a light travelling carriage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Dīves essedō celerī ad vīllam vehitur. The rich man rides to his country house in a fast two-wheeled carriage."
+            },
+            {
+              "kind": "speech",
+              "text": "Second declension, neuter: essedum, essedī n. First a war chariot of northern peoples, later a smart carriage in the city."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "essedum names the war chariot of the Gauls and Britons (Lewis & Short, under essedārius), later a travelling carriage. It is usually thought to be a Gaulish word, but neither Lewis & Short nor EtymDB states an origin, so the line is hedged."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "essedum, essedī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *essedum, essedī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "essedum, essedī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *essedum, essedī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with essedum, essedī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *essedum, essedī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a wagon, then the Latin for a light gig, then say essedum, essedī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a wagon, then the Latin for a light gig, then say *essedum, essedī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does essedum, essedī mean? (\"A two-wheeled chariot; a light travelling carriage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C429-carpentum",
+      "sequence": 22930,
+      "title": "carpentum, carpentī — a covered carriage; a two-wheeled coach",
+      "headword": "carpentum, carpentī",
+      "romanization": "carpentum, carpentī",
+      "gloss": "a covered carriage; a two-wheeled coach",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:81da3092f2f4580e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a light gig, then the Latin for a two-wheeled chariot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: carpentum, carpentī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "carpentum, carpentī — \"a covered carriage; a two-wheeled coach\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Māter et fīliae carpentō ad vīllam vehuntur. The mother and her daughters ride to the country house in a covered carriage."
+            },
+            {
+              "kind": "speech",
+              "text": "Second declension, neuter: carpentum, carpentī n. Married women of rank rode in it. English carpenter first meant a maker of carriages."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "carpentum was borrowed from Gaulish carbantos 'two-wheeled carriage' (EtymDB); Lewis & Short give no origin. English carpenter comes, through French, from Latin carpentārius 'carriage-maker', built on it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "carpentum, carpentī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *carpentum, carpentī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "carpentum, carpentī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *carpentum, carpentī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with carpentum, carpentī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *carpentum, carpentī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a light gig, then the Latin for a two-wheeled chariot, then say carpentum, carpentī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a light gig, then the Latin for a two-wheeled chariot, then say *carpentum, carpentī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does carpentum, carpentī mean? (\"A covered carriage; a two-wheeled coach\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C429-carruca",
+      "sequence": 22940,
+      "title": "carrūca, carrūcae — a travelling coach, a four-wheeled carriage",
+      "headword": "carrūca, carrūcae",
+      "romanization": "carrūca, carrūcae",
+      "gloss": "a travelling coach, a four-wheeled carriage",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:02557693f5c96066",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a two-wheeled chariot, then the Latin for a covered carriage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: carrūca, carrūcae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "carrūca, carrūcae — \"a travelling coach, a four-wheeled carriage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Dīves in carrūcā sedet et servī post eum ambulant. The rich man sits in his coach and the slaves walk behind him."
+            },
+            {
+              "kind": "speech",
+              "text": "First declension, feminine: carrūca, carrūcae f. A grand four-wheeled coach. In French it later became charrue, a plough."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "carrūca is built on carrus 'wagon' (EtymDB), which was borrowed from Gaulish karros. Lewis & Short gloss it as a four-wheeled travelling and state coach."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "carrūca, carrūcae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *carrūca, carrūcae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "carrūca, carrūcae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *carrūca, carrūcae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with carrūca, carrūcae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *carrūca, carrūcae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a two-wheeled chariot, then the Latin for a covered carriage, then say carrūca, carrūcae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a two-wheeled chariot, then the Latin for a covered carriage, then say *carrūca, carrūcae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does carrūca, carrūcae mean? (\"A travelling coach, a four-wheeled carriage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

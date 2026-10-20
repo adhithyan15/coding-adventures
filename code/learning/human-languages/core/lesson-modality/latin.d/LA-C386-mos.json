@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C386-mos",
+    "language": "latin",
+    "chapter": 386,
+    "sequence": 20700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e3cf2bd83295aa9d"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 431,
+  "title": "Rein, Leather strap, Bridle, To bridle, Whip",
+  "label": "ch:la-rein-leather-strap-bridle-to-bridle-whip",
+  "canDo": "I can talk about steering a horse: the reins, a leather strap, the bridle, bridling, and the whip.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C431-scutica",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 431: I can talk about steering a horse: the reins, a leather strap, the bridle, bridling, and the whip.",
+    "assesses": [
+      "LA-LEX-C431-HABENA-03",
+      "LA-LEX-C431-HABENA-04",
+      "LA-LEX-C431-HABENA-05"
+    ]
+  }
+}

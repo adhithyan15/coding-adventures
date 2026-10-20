@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 366,
+  "sourceHash": "fnv1a64:82291425edbf500e",
+  "lessonIds": [
+    "LA-C366-videlicet",
+    "LA-C366-nimirum",
+    "LA-C366-atqui",
+    "LA-C366-proinde",
+    "LA-C366-idcirco"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch366.txt",
+  "json": "latin/narration/ch366.json",
+  "textHash": "fnv1a64:78304999ef3018f5",
+  "jsonHash": "fnv1a64:b495ba6f573da43c",
+  "findings": []
+}

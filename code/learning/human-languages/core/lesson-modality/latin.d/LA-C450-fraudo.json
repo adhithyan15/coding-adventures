@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C450-fraudo",
+    "language": "latin",
+    "chapter": 450,
+    "sequence": 24000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:17cc45be0a006b76"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C333-festus",
+    "language": "latin",
+    "chapter": 333,
+    "sequence": 17950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d3a1e04c34da04ad"
+  },
+  "findings": []
+}

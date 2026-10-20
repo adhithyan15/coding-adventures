@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 527,
+  "title": "Rest and sleep",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f7bcefa9a72081d4",
+  "lessons": [
+    {
+      "id": "LA-C527-requiesco",
+      "sequence": 27940,
+      "title": "requiēscō, requiēscere — to rest, take a rest",
+      "headword": "requiēscō, requiēscere",
+      "romanization": "requiēscō, requiēscere",
+      "gloss": "to rest, take a rest",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:24633117bdd04b48",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to refresh, then the Latin for a draught."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: requiēscō, requiēscere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "requiēscō, requiēscere — \"to rest, take a rest\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Post labōrem in hortō requiēscimus. After work we rest in the garden."
+            },
+            {
+              "kind": "speech",
+              "text": "requiēscō, requiēscere, requiēvī, requiētum. On tombs: requiēscat in pāce — may he rest in peace."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "requiēscō is built on re- and quiēscō \"to rest\" (Lewis & Short), from quiēs \"quiet\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "requiēscō, requiēscere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *requiēscō, requiēscere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "requiēscō, requiēscere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *requiēscō, requiēscere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with requiēscō, requiēscere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *requiēscō, requiēscere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to refresh, then the Latin for a draught, then say requiēscō, requiēscere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to refresh, then the Latin for a draught, then say *requiēscō, requiēscere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does requiēscō, requiēscere mean? (\"To rest, take a rest\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C527-requies",
+      "sequence": 27950,
+      "title": "requiēs, requiētis — rest, repose",
+      "headword": "requiēs, requiētis",
+      "romanization": "requiēs, requiētis",
+      "gloss": "rest, repose",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:924ce99386afd2f1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a draught, then the Latin for to rest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: requiēs, requiētis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "requiēs, requiētis — \"rest, repose\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Nautae nūllam requiem habent. The sailors have no rest."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, third declension; accusative requiem. English requiem, from the first word of a prayer for the dead."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "requiēs is built on re- and quiēs \"rest, quiet\" (EtymDB; Lewis & Short), which EtymDB traces to a Proto-Indo-European word for \"rest\". English requiem comes from its accusative."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "requiēs, requiētis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *requiēs, requiētis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "requiēs, requiētis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *requiēs, requiētis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with requiēs, requiētis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *requiēs, requiētis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a draught, then the Latin for to rest, then say requiēs, requiētis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a draught, then the Latin for to rest, then say *requiēs, requiētis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does requiēs, requiētis mean? (\"Rest, repose\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C527-dormito",
+      "sequence": 27960,
+      "title": "dormītō, dormītāre — to doze, be sleepy",
+      "headword": "dormītō, dormītāre",
+      "romanization": "dormītō, dormītāre",
+      "gloss": "to doze, be sleepy",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d704d21d2912c961",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to rest, then the Latin for rest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dormītō, dormītāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dormītō, dormītāre — \"to doze, be sleepy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Avus post prandium in sellā dormītat. Grandfather dozes in his chair after lunch."
+            },
+            {
+              "kind": "speech",
+              "text": "dormītō, dormītāre, dormītāvī: the frequentative of dormiō."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dormītō is the frequentative of dormiō \"to sleep\" (EtymDB; Lewis & Short). English dormitory comes from dormītōrium, built on the same verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dormītō, dormītāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dormītō, dormītāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dormītō, dormītāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dormītō, dormītāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dormītō, dormītāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dormītō, dormītāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to rest, then the Latin for rest, then say dormītō, dormītāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to rest, then the Latin for rest, then say *dormītō, dormītāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dormītō, dormītāre mean? (\"To doze, be sleepy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C527-insomnia",
+      "sequence": 27970,
+      "title": "īnsomnia, īnsomniae — sleeplessness",
+      "headword": "īnsomnia, īnsomniae",
+      "romanization": "īnsomnia, īnsomniae",
+      "gloss": "sleeplessness",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a15548c05d645a20",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for rest, then the Latin for to doze."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: īnsomnia, īnsomniae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "īnsomnia, īnsomniae — \"sleeplessness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Propter cūrās īnsomniā labōrō. Because of my worries I suffer from sleeplessness."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, first declension, from īnsomnis — sleepless. English insomnia."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "īnsomnia is built on īnsomnis \"sleepless\", from in- \"not\" and somnus \"sleep\" (Lewis & Short; EtymDB). English insomnia comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "īnsomnia, īnsomniae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *īnsomnia, īnsomniae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "īnsomnia, īnsomniae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *īnsomnia, īnsomniae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with īnsomnia, īnsomniae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *īnsomnia, īnsomniae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for rest, then the Latin for to doze, then say īnsomnia, īnsomniae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for rest, then the Latin for to doze, then say *īnsomnia, īnsomniae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does īnsomnia, īnsomniae mean? (\"Sleeplessness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C527-recumbo",
+      "sequence": 27980,
+      "title": "recumbō, recumbere — to recline, lie down",
+      "headword": "recumbō, recumbere",
+      "romanization": "recumbō, recumbere",
+      "gloss": "to recline, lie down",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a51c1173c7fc073",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to doze, then the Latin for sleeplessness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: recumbō, recumbere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "recumbō, recumbere — \"to recline, lie down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Hospitēs ad cēnam recumbunt. The guests recline at dinner."
+            },
+            {
+              "kind": "speech",
+              "text": "recumbō, recumbere, recubuī. Romans lay on couches to eat. English recumbent."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "recumbō is built on re- \"back\" and -cumbō, a form of cubō \"to lie down\" (Lewis & Short). English recumbent comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "recumbō, recumbere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *recumbō, recumbere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "recumbō, recumbere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *recumbō, recumbere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with recumbō, recumbere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *recumbō, recumbere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to doze, then the Latin for sleeplessness, then say recumbō, recumbere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to doze, then the Latin for sleeplessness, then say *recumbō, recumbere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does recumbō, recumbere mean? (\"To recline, lie down\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

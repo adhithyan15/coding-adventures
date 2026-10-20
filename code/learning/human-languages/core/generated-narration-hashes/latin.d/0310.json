@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 310,
+  "sourceHash": "fnv1a64:cad020a32cf7af25",
+  "lessonIds": [
+    "LA-C310-iuro",
+    "LA-C310-periurium",
+    "LA-C310-mentior",
+    "LA-C310-arguo",
+    "LA-C310-indicium"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch310.txt",
+  "json": "latin/narration/ch310.json",
+  "textHash": "fnv1a64:3f982691f312647c",
+  "jsonHash": "fnv1a64:f5d15135aafc65d5",
+  "findings": []
+}

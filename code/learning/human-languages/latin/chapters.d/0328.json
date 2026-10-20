@@ -1,0 +1,19 @@
+{
+  "chapter": 328,
+  "title": "Nūptiae",
+  "label": "ch:la-nuptiae",
+  "canDo": "I can describe a Roman wedding and its end: the bridal veil, the matron of honour, of a wedding, the married woman and divorce.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C328-divortium",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 328: I can describe a Roman wedding and its end: the bridal veil, the matron of honour, of a wedding, the married woman and divorce.",
+    "assesses": [
+      "LA-LEX-C328-FLAMMEUM-03",
+      "LA-LEX-C328-FLAMMEUM-04",
+      "LA-LEX-C328-FLAMMEUM-05"
+    ]
+  }
+}

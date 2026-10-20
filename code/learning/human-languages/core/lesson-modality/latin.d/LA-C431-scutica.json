@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C431-scutica",
+    "language": "latin",
+    "chapter": 431,
+    "sequence": 23050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f31d19ffdd893b1d"
+  },
+  "findings": []
+}

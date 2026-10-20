@@ -1,0 +1,11 @@
+{
+  "id": "LA-C374-noceo",
+  "pathSegment": "LA-PATH-374-NOCEO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-374-NOCEO",
+      "order": 0
+    }
+  ]
+}

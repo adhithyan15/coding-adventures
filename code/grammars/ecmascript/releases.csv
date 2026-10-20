@@ -1,0 +1,53 @@
+# LANG84 release inventory: JavaScript/ECMAScript (code/specs/LANG84-grammar-driven-versioned-frontends.md).
+# Retrieved 2026-10-20. 29 rows: 17 ECMA-262 editions (channel edition) and 12
+#   Netscape/Mozilla JavaScript versions (channel final). ECMAScript has no single tag series, so
+#   the release unit is the published edition or version (LANG84 "Every tagged release").
+# es2016-es2026: tc39/ecma262 tags; source_sha is the commit the tag names.
+# es1-es2015: Ecma archive PDFs; source_sha `-` until release_evidence.py records their SHA-256
+#   (ecma-international.org was unreachable from the inventory environment).
+# js1.x: MDN archived 'New in JavaScript' pages pinned in mdn/archived-content (or mdn/content for
+#   1.8.2); source_sha is the page's git blob ID.
+# date: reduced precision (YYYY-MM or YYYY) when the source states only a month or year;
+#   `?` marks a date taken from a secondary source. See README.md for every date's source.
+# excluded: ES4 (ECMA-262 4th edition) -- abandoned in 2008 and never published.
+# excluded: tc39/ecma262 tags es2016-draft-1, es2016-draft-20151005, es2016-draft-20151019,
+#   es2016-draft-20151103, es2016-draft-20151201, es2016-draft-20151210, es2016-draft-20151220,
+#   es2016-draft-20160120, es2016-draft-20160215, es2016-draft-201607-25 -- working drafts.
+# excluded: tc39/ecma262 tags es2020-candidate-2020-04, es2020-candidate-2020-05,
+#   es2021-candidate-2021-03, es2022-candidate-2022-03, es2023-candidate-2023-04,
+#   es2024-candidate-2024-02, es2024-candidate-2024-02-28, es2025-candidate-2025-03-31,
+#   es2025-candidate-2025-04-23, es2026-candidate-2026-03-31 -- candidate drafts before
+#   Ecma General Assembly approval; the approved edition is the esYYYY tag.
+# excluded: tc39/ecma262 tag es2026-errata -- errata to the published ES2026 edition.
+# existing_pair: pre-LANG84 pairs in this directory. They do not cite source_ref/source_sha and
+#   have no release_probes test, so they have not reached stage G and their rows stay pending.
+release,date,channel,source_ref,source_sha,predecessor,grammar_status,grammar_stage,grammar_subset,iir_status,backend_status,profile,date_source,lineage,existing_pair
+js1.0,1996-03?,final,https://github.com/mdn/archived-content/blob/b0aa15f42b0b53e790dc175ae8914b61460593a8/files/en-us/archive/web/javascript/new_in_javascript/1.1/index.html,a7dfc40b6f023c7f0d4dbd37716104b28534cec8,,pending,none,-,-,-,-,secondary,first,-
+js1.1,1996-08-19,final,https://github.com/mdn/archived-content/blob/b0aa15f42b0b53e790dc175ae8914b61460593a8/files/en-us/archive/web/javascript/new_in_javascript/1.1/index.html,a7dfc40b6f023c7f0d4dbd37716104b28534cec8,js1.0,pending,none,-,-,-,-,mdn,line,-
+es1,1997-06,edition,https://ecma-international.org/wp-content/uploads/ECMA-262_1st_edition_june_1997.pdf,-,js1.1,pending,none,-,-,-,-,edition-document,curated,es1.tokens;es1.grammar
+js1.2,1997-06-11,final,https://github.com/mdn/archived-content/blob/b0aa15f42b0b53e790dc175ae8914b61460593a8/files/en-us/archive/web/javascript/new_in_javascript/1.2/index.html,a2648614d5a4931f1cf828864b1bedf1c9a72870,js1.1,pending,none,-,-,-,-,mdn,line,-
+es2,1998-08?,edition,https://ecma-international.org/wp-content/uploads/ECMA-262_2nd_edition_august_1998.pdf,-,es1,pending,none,-,-,-,-,edition-document,line,-
+js1.3,1998-10-19,final,https://github.com/mdn/archived-content/blob/b0aa15f42b0b53e790dc175ae8914b61460593a8/files/en-us/archive/web/javascript/new_in_javascript/1.3/index.html,cc34b07f74d53a2226308cea75c9b6e012281638,js1.2,pending,none,-,-,-,-,mdn,line,-
+js1.4,1999,final,https://github.com/mdn/archived-content/blob/b0aa15f42b0b53e790dc175ae8914b61460593a8/files/en-us/archive/web/javascript/new_in_javascript/1.4/index.html,88d72fac255ef75bc745b9ed3eaa8c802c5a59f5,js1.3,pending,none,-,-,-,-,mdn,line,-
+es3,1999-12,edition,https://ecma-international.org/wp-content/uploads/ECMA-262_3rd_edition_december_1999.pdf,-,es2,pending,none,-,-,-,-,edition-document,line,es3.tokens;es3.grammar
+js1.5,2000-11-14,final,https://github.com/mdn/archived-content/blob/b0aa15f42b0b53e790dc175ae8914b61460593a8/files/en-us/archive/web/javascript/new_in_javascript/1.5/index.html,e00fb3953424028f80a6034c01c7b2f22d1575f6,js1.4,pending,none,-,-,-,-,mdn,line,-
+js1.6,2005-11-29,final,https://github.com/mdn/archived-content/blob/b0aa15f42b0b53e790dc175ae8914b61460593a8/files/en-us/archive/web/javascript/new_in_javascript/1.6/index.html,7f91a2416fe22d00148b15da6756553960b503bb,js1.5,pending,none,-,-,-,-,mozilla-archive,line,-
+js1.7,2006-10-24,final,https://github.com/mdn/archived-content/blob/b0aa15f42b0b53e790dc175ae8914b61460593a8/files/en-us/archive/web/javascript/new_in_javascript/1.7/index.html,8cdcf08297b33d5a4db16ddbdfaf7dd9529ba433,js1.6,pending,none,-,-,-,-,mozilla-archive,line,-
+js1.8,2008-06-17,final,https://github.com/mdn/archived-content/blob/b0aa15f42b0b53e790dc175ae8914b61460593a8/files/en-us/archive/web/javascript/new_in_javascript/1.8/index.html,2ef4b335d965d1f874c28caaf3737bc7cc4460d8,js1.7,pending,none,-,-,-,-,mozilla-archive,line,-
+js1.8.1,2009-06-30,final,https://github.com/mdn/archived-content/blob/b0aa15f42b0b53e790dc175ae8914b61460593a8/files/en-us/archive/web/javascript/new_in_javascript/1.8.1/index.html,df0d260f59969e440090af87646e2102dbd602b7,js1.8,pending,none,-,-,-,-,mozilla-archive,line,-
+es5,2009-12,edition,https://ecma-international.org/wp-content/uploads/ECMA-262_5th_edition_december_2009.pdf,-,es3,pending,none,-,-,-,-,edition-document,line,es5.tokens;es5.grammar
+js1.8.2,2010-01-21,final,https://github.com/mdn/content/blob/a64fca52b72fd03b0efd7661207d5afdd220aac3/files/en-us/mozilla/firefox/releases/3.6/index.md,5640ea70b1787fe5c30b1b9e8dec606620a918f9,js1.8.1,pending,none,-,-,-,-,mozilla-archive,line,-
+js1.8.5,2011-03-22,final,https://github.com/mdn/archived-content/blob/b0aa15f42b0b53e790dc175ae8914b61460593a8/files/en-us/archive/web/javascript/new_in_javascript/1.8.5/index.html,ceac2614b51a9ed966c4f6e9e12445b437c52553,js1.8.2,pending,none,-,-,-,-,mozilla-archive,line,-
+es5.1,2011-06,edition,https://ecma-international.org/wp-content/uploads/ECMA-262_5.1_edition_june_2011.pdf,-,es5,pending,none,-,-,-,-,edition-document,line,-
+es2015,2015-06,edition,https://ecma-international.org/wp-content/uploads/ECMA-262_6th_edition_june_2015.pdf,-,es5.1,pending,none,-,-,-,-,edition-document,line,es2015.tokens;es2015.grammar
+es2016,2016-06,edition,https://github.com/tc39/ecma262/tree/es2016,b154ce84698377ab53fe88c889633263607f4423,es2015,pending,none,-,-,-,-,edition-document,line,es2016.tokens;es2016.grammar
+es2017,2017-06,edition,https://github.com/tc39/ecma262/tree/es2017,7301daf5ab1f0959b203c2e63ecccb21fe13d5e5,es2016,pending,none,-,-,-,-,edition-document,line,es2017.tokens;es2017.grammar
+es2018,2018-06,edition,https://github.com/tc39/ecma262/tree/es2018,0d37f42998733743c294209884120d722384f095,es2017,pending,none,-,-,-,-,edition-document,line,es2018.tokens;es2018.grammar
+es2019,2019-06,edition,https://github.com/tc39/ecma262/tree/es2019,bc6fd169661d8737d7087bb822ef2a9c7148ac0b,es2018,pending,none,-,-,-,-,edition-document,line,es2019.tokens;es2019.grammar
+es2020,2020-06,edition,https://github.com/tc39/ecma262/tree/es2020,dfd5ea2ec5862de21b005737650ba08bc57271fa,es2019,pending,none,-,-,-,-,edition-document,line,es2020.tokens;es2020.grammar
+es2021,2021-06,edition,https://github.com/tc39/ecma262/tree/es2021,fc85c50181b2b8d7d75f034800528d87fda6b654,es2020,pending,none,-,-,-,-,edition-document,line,es2021.tokens;es2021.grammar
+es2022,2022-06,edition,https://github.com/tc39/ecma262/tree/es2022,d711ba960cd12b7658d6bb26d7556e690290190c,es2021,pending,none,-,-,-,-,edition-document,line,es2022.tokens;es2022.grammar
+es2023,2023-06,edition,https://github.com/tc39/ecma262/tree/es2023,d048f32e861c2ed4a26f59a50d392918f26da3ba,es2022,pending,none,-,-,-,-,edition-document,line,es2023.tokens;es2023.grammar
+es2024,2024-06,edition,https://github.com/tc39/ecma262/tree/es2024,0b24a049c11fe0604b1c929772e7cbd671b78492,es2023,pending,none,-,-,-,-,edition-document,line,es2024.tokens;es2024.grammar
+es2025,2025-06,edition,https://github.com/tc39/ecma262/tree/es2025,84b38ad852ff426795fa29cebc06949027336c64,es2024,pending,none,-,-,-,-,edition-document,line,es2025.tokens;es2025.grammar
+es2026,2026-06,edition,https://github.com/tc39/ecma262/tree/es2026,0248456c758431e4bb8e5d26333ff1865123c9cd,es2025,pending,none,-,-,-,-,edition-document,line,-

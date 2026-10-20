@@ -6527,11 +6527,10 @@ mod tests {
 
     #[test]
     fn propagates_const_literal_but_only_advanced_removes_binding() {
-        // CLOC13.H: a top-level `const` bound to a literal is propagated to
-        // its use sites at BOTH levels (inline-variables), and constant-fold
-        // folds the now-concrete `RATE + 1` → `3`. Only ADVANCED (closed-
-        // world) then removes the now-unreferenced binding; SIMPLE keeps
-        // `const RATE = 2` — another script might read it.
+        // A top-level `const` bound to a literal is propagated, folded and
+        // removed only at ADVANCED (closed world). At SIMPLE (open world) the
+        // reference compiler keeps it at its ordinary uses (CCR-078, #15863),
+        // since another script might read it.
         let src = "const RATE = 2; total(base * RATE); margin(RATE + 1);";
         let mk = |level| {
             transform_source(
@@ -6548,8 +6547,8 @@ mod tests {
         };
         assert_eq!(
             mk(crate::config::CompilationLevel::Simple),
-            "const RATE=2;total(base*2);margin(3);",
-            "SIMPLE propagates the literal but KEEPS the binding (open-world)"
+            "const RATE=2;total(base*RATE);margin(RATE+1);",
+            "SIMPLE keeps the top-level const at its ordinary uses (open-world, CCR-078)"
         );
         assert_eq!(
             mk(crate::config::CompilationLevel::Advanced),

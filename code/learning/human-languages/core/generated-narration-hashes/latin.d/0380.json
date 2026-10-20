@@ -1,0 +1,20 @@
+{
+  "language": "latin",
+  "chapter": 380,
+  "sourceHash": "fnv1a64:854fa842fe2ef68e",
+  "lessonIds": [
+    "LA-C380-conduco",
+    "LA-C380-loco",
+    "LA-C380-famulus",
+    "LA-C380-navo",
+    "LA-C380-fatigo",
+    "LA-R380-review-373-380"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "latin/narration/ch380.txt",
+  "json": "latin/narration/ch380.json",
+  "textHash": "fnv1a64:13842c80dba09fc9",
+  "jsonHash": "fnv1a64:e3a7ac7d70c0d9ea",
+  "findings": []
+}

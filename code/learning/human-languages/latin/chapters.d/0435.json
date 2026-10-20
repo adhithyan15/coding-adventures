@@ -1,0 +1,19 @@
+{
+  "chapter": 435,
+  "title": "Vessel, Little boat, Skiff, Punt, Raft",
+  "label": "ch:la-vessel-little-boat-skiff-punt-raft",
+  "canDo": "I can name boats of every size: a vessel, a little boat, a skiff, a punt and a raft.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C435-ratis",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 435: I can name boats of every size: a vessel, a little boat, a skiff, a punt and a raft.",
+    "assesses": [
+      "LA-LEX-C435-NAVIGIUM-03",
+      "LA-LEX-C435-NAVIGIUM-04",
+      "LA-LEX-C435-NAVIGIUM-05"
+    ]
+  }
+}

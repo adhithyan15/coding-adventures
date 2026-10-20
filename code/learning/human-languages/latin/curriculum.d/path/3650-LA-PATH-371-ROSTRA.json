@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-371-ROSTRA",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "LA-EXT-371-ROSTRA"
+  ],
+  "after": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "LA-EXT-447-CIMEX",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can complain about a bad night: bedbugs, being bitten, scratching, a sleepless night, and lying down.",
+  "prerequisites": []
+}

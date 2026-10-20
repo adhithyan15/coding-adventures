@@ -1,0 +1,11 @@
+{
+  "id": "LA-C546-pulpitum",
+  "pathSegment": "LA-PATH-546-CAVE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-546-CAVE",
+      "order": 1
+    }
+  ]
+}

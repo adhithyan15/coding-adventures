@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C481-convallis",
+    "language": "latin",
+    "chapter": 481,
+    "sequence": 25570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:582d64d0d9bf3d11"
+  },
+  "findings": []
+}

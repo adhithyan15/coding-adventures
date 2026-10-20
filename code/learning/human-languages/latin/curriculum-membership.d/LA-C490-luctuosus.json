@@ -1,0 +1,11 @@
+{
+  "id": "LA-C490-luctuosus",
+  "pathSegment": "LA-PATH-490-MAER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-490-MAER",
+      "order": 4
+    }
+  ]
+}

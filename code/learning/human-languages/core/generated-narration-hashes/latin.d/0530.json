@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 530,
+  "sourceHash": "fnv1a64:4189f55aa982315f",
+  "lessonIds": [
+    "LA-C530-erus",
+    "LA-C530-verna",
+    "LA-C530-ancillula",
+    "LA-C530-servilis",
+    "LA-C530-pedisequus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch530.txt",
+  "json": "latin/narration/ch530.json",
+  "textHash": "fnv1a64:c91fb70c68f1f620",
+  "jsonHash": "fnv1a64:7ebce42358b6e232",
+  "findings": []
+}

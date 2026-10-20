@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:03811d440300e692",
+  "lessonIds": [
+    "LA-C300-tabellarius",
+    "LA-C300-praeco",
+    "LA-C300-mandatum",
+    "LA-C300-legatio",
+    "LA-C300-renuntio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch300.txt",
+  "json": "latin/narration/ch300.json",
+  "textHash": "fnv1a64:335dcf6cadf55866",
+  "jsonHash": "fnv1a64:38cb78458d769946",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C442-aequor",
+  "pathSegment": "LA-PATH-442-SALUM",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-442-SALUM",
+      "order": 2
+    }
+  ]
+}

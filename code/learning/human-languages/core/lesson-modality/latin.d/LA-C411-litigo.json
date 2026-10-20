@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C411-litigo",
+    "language": "latin",
+    "chapter": 411,
+    "sequence": 21980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c848693cf774e955"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C470-runcina",
+  "pathSegment": "LA-PATH-470-ASCIA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-470-ASCIA",
+      "order": 2
+    }
+  ]
+}

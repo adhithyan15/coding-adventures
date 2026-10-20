@@ -1,0 +1,20 @@
+{
+  "language": "latin",
+  "chapter": 372,
+  "sourceHash": "fnv1a64:aa2647b207826650",
+  "lessonIds": [
+    "LA-C372-auctor",
+    "LA-C372-impulsus",
+    "LA-C372-efficio",
+    "LA-C372-efficax",
+    "LA-C372-excito",
+    "LA-R372-review-365-372"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "latin/narration/ch372.txt",
+  "json": "latin/narration/ch372.json",
+  "textHash": "fnv1a64:cbd9c38cd835f245",
+  "jsonHash": "fnv1a64:7d5b0552bb8462e9",
+  "findings": []
+}

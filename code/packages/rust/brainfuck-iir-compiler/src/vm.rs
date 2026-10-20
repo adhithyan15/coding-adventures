@@ -366,7 +366,7 @@ impl BrainfuckVM {
             "load_mem",
             Box::new(
                 move |ctx: &mut vm_core::dispatch::DispatchCtx<'_>,
-                      _builtins: &std::collections::HashMap<String, Box<dyn Fn(&[Value]) -> Value + Send + Sync>>,
+                      _jit_handlers: &vm_core::dispatch::JitHandlerMap,
                       instr: &interpreter_ir::instr::IIRInstr|
                       -> Result<Option<Value>, VMError> {
                     // Operand bounds check: returns VMError instead of panicking
@@ -405,7 +405,7 @@ impl BrainfuckVM {
             "store_mem",
             Box::new(
                 move |ctx: &mut vm_core::dispatch::DispatchCtx<'_>,
-                      _builtins: &std::collections::HashMap<String, Box<dyn Fn(&[Value]) -> Value + Send + Sync>>,
+                      _jit_handlers: &vm_core::dispatch::JitHandlerMap,
                       instr: &interpreter_ir::instr::IIRInstr|
                       -> Result<Option<Value>, VMError> {
                     // Operand bounds checks before indexing.
@@ -440,7 +440,7 @@ impl BrainfuckVM {
             "label",
             Box::new(
                 move |_ctx: &mut vm_core::dispatch::DispatchCtx<'_>,
-                      _builtins: &std::collections::HashMap<String, Box<dyn Fn(&[Value]) -> Value + Send + Sync>>,
+                      _jit_handlers: &vm_core::dispatch::JitHandlerMap,
                       _instr: &interpreter_ir::instr::IIRInstr|
                       -> Result<Option<Value>, VMError> {
                     if let Some(cap) = max_steps {

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C298-intervenio",
+  "pathSegment": "LA-PATH-298-EVENIO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-298-EVENIO",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 382,
+  "title": "Senators and People",
+  "label": "ch:la-senators-and-people",
+  "canDo": "I can talk about senators, patricians and plebeians, the nobility and the popular side.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C382-popularis",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 382: I can talk about senators, patricians and plebeians, the nobility and the popular side.",
+    "assesses": [
+      "LA-LEX-C382-SENATOR-03",
+      "LA-LEX-C382-SENATOR-04",
+      "LA-LEX-C382-SENATOR-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 537,
+  "title": "Quarrels and making up",
+  "label": "ch:la-quarrels-and-making-up",
+  "canDo": "I can talk about quarrels and making up.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C537-desero",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 537: I can talk about quarrels and making up.",
+    "assesses": [
+      "LA-LEX-C537-IURG-03",
+      "LA-LEX-C537-IURG-04",
+      "LA-LEX-C537-IURG-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C452-invius",
+  "pathSegment": "LA-PATH-452-ABERRO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-452-ABERRO",
+      "order": 2
+    }
+  ]
+}

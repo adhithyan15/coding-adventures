@@ -1,0 +1,11 @@
+{
+  "id": "LA-C547-imago",
+  "pathSegment": "LA-PATH-547-IMAG",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-547-IMAG",
+      "order": 0
+    }
+  ]
+}
