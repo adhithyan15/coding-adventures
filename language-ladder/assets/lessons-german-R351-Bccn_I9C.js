@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: GE-R353-review-346-353
+spine_node: SPINE-GIVE-REASONS
+sequence: 19220
+chapter: 353
+type: review
+headword: (dialogue)
+gloss: a review of chapters 346-353
+concept_tag: REVIEW
+prerequisites: [GE-C346-zweck, GE-C346-absicht, GE-C346-damit, GE-C346-absichtlich, GE-C346-anlass, GE-C347-zufall, GE-C347-zufaellig, GE-C347-verhindern, GE-C347-vermeiden, GE-C347-weshalb, GE-C348-verantwortung, GE-C348-verantwortlich, GE-C348-rechtfertigen, GE-C348-ausrede, GE-C348-deswegen, GE-C349-stellenanzeige, GE-C349-vorstellungsgespraech, GE-C349-faehigkeit, GE-C349-qualifiziert, GE-C349-beherrschen, GE-C350-arbeitgeber, GE-C350-arbeitnehmer, GE-C350-einstellen, GE-C350-beschaeftigen, GE-C350-befristet, GE-C351-teilzeit, GE-C351-vollzeit, GE-C351-schicht, GE-C351-ueberstunde, GE-C351-feierabend, GE-C352-entlassen, GE-C352-arbeitslos, GE-C352-arbeitslosigkeit, GE-C352-probezeit, GE-C352-einarbeiten, GE-C353-betrieb, GE-C353-unternehmen, GE-C353-abteilung, GE-C353-vorgesetzte, GE-C353-leiten]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [GE-LEX-C346-ZWECK-01, GE-LEX-C346-ZWECK-02, GE-LEX-C346-ZWECK-03, GE-LEX-C346-ZWECK-04, GE-LEX-C346-ZWECK-05, GE-LEX-C347-ZUFALL-01, GE-LEX-C347-ZUFALL-02, GE-LEX-C347-ZUFALL-03, GE-LEX-C347-ZUFALL-04, GE-LEX-C347-ZUFALL-05, GE-LEX-C348-VERANTWORTUNG-01, GE-LEX-C348-VERANTWORTUNG-02, GE-LEX-C348-VERANTWORTUNG-03, GE-LEX-C348-VERANTWORTUNG-04, GE-LEX-C348-VERANTWORTUNG-05, GE-LEX-C349-STELLE-01, GE-LEX-C349-STELLE-02, GE-LEX-C349-STELLE-03, GE-LEX-C349-STELLE-04, GE-LEX-C349-STELLE-05, GE-LEX-C350-ARBEITGEBER-01, GE-LEX-C350-ARBEITGEBER-02, GE-LEX-C350-ARBEITGEBER-03, GE-LEX-C350-ARBEITGEBER-04, GE-LEX-C350-ARBEITGEBER-05, GE-LEX-C351-ARBEITSZEIT-01, GE-LEX-C351-ARBEITSZEIT-02, GE-LEX-C351-ARBEITSZEIT-03, GE-LEX-C351-ARBEITSZEIT-04, GE-LEX-C351-ARBEITSZEIT-05, GE-LEX-C352-ARBEITSLOS-01, GE-LEX-C352-ARBEITSLOS-02, GE-LEX-C352-ARBEITSLOS-03, GE-LEX-C352-ARBEITSLOS-04, GE-LEX-C352-ARBEITSLOS-05, GE-LEX-C353-BETRIEB-01, GE-LEX-C353-BETRIEB-02, GE-LEX-C353-BETRIEB-03, GE-LEX-C353-BETRIEB-04, GE-LEX-C353-BETRIEB-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [GE-LEX-C346-ZWECK-01, GE-LEX-C346-ZWECK-02, GE-LEX-C346-ZWECK-03, GE-LEX-C346-ZWECK-04, GE-LEX-C346-ZWECK-05, GE-LEX-C347-ZUFALL-01, GE-LEX-C347-ZUFALL-02, GE-LEX-C347-ZUFALL-03, GE-LEX-C347-ZUFALL-04, GE-LEX-C347-ZUFALL-05, GE-LEX-C348-VERANTWORTUNG-01, GE-LEX-C348-VERANTWORTUNG-02, GE-LEX-C348-VERANTWORTUNG-03, GE-LEX-C348-VERANTWORTUNG-04, GE-LEX-C348-VERANTWORTUNG-05, GE-LEX-C349-STELLE-01, GE-LEX-C349-STELLE-02, GE-LEX-C349-STELLE-03, GE-LEX-C349-STELLE-04, GE-LEX-C349-STELLE-05, GE-LEX-C350-ARBEITGEBER-01, GE-LEX-C350-ARBEITGEBER-02, GE-LEX-C350-ARBEITGEBER-03, GE-LEX-C350-ARBEITGEBER-04, GE-LEX-C350-ARBEITGEBER-05, GE-LEX-C351-ARBEITSZEIT-01, GE-LEX-C351-ARBEITSZEIT-02, GE-LEX-C351-ARBEITSZEIT-03, GE-LEX-C351-ARBEITSZEIT-04, GE-LEX-C351-ARBEITSZEIT-05, GE-LEX-C352-ARBEITSLOS-01, GE-LEX-C352-ARBEITSLOS-02, GE-LEX-C352-ARBEITSLOS-03, GE-LEX-C352-ARBEITSLOS-04, GE-LEX-C352-ARBEITSLOS-05, GE-LEX-C353-BETRIEB-01, GE-LEX-C353-BETRIEB-02, GE-LEX-C353-BETRIEB-03, GE-LEX-C353-BETRIEB-04, GE-LEX-C353-BETRIEB-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
+reviews_of: [GE-C346-zweck, GE-C346-absicht, GE-C346-damit, GE-C346-absichtlich, GE-C346-anlass, GE-C347-zufall, GE-C347-zufaellig, GE-C347-verhindern, GE-C347-vermeiden, GE-C347-weshalb, GE-C348-verantwortung, GE-C348-verantwortlich, GE-C348-rechtfertigen, GE-C348-ausrede, GE-C348-deswegen, GE-C349-stellenanzeige, GE-C349-vorstellungsgespraech, GE-C349-faehigkeit, GE-C349-qualifiziert, GE-C349-beherrschen, GE-C350-arbeitgeber, GE-C350-arbeitnehmer, GE-C350-einstellen, GE-C350-beschaeftigen, GE-C350-befristet, GE-C351-teilzeit, GE-C351-vollzeit, GE-C351-schicht, GE-C351-ueberstunde, GE-C351-feierabend, GE-C352-entlassen, GE-C352-arbeitslos, GE-C352-arbeitslosigkeit, GE-C352-probezeit, GE-C352-einarbeiten, GE-C353-betrieb, GE-C353-unternehmen, GE-C353-abteilung, GE-C353-vorgesetzte, GE-C353-leiten]
+---
+
+# Words from chapters 346–353 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-C346-ZWECK-01, GE-LEX-C346-ZWECK-02] -->
+
+[PAUSE 3s] Say the German for the purpose and the intention.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-C346-ZWECK-01, GE-LEX-C346-ZWECK-02, GE-LEX-C346-ZWECK-03, GE-LEX-C346-ZWECK-04, GE-LEX-C346-ZWECK-05, GE-LEX-C347-ZUFALL-01, GE-LEX-C347-ZUFALL-02, GE-LEX-C347-ZUFALL-03, GE-LEX-C347-ZUFALL-04, GE-LEX-C347-ZUFALL-05, GE-LEX-C348-VERANTWORTUNG-01, GE-LEX-C348-VERANTWORTUNG-02, GE-LEX-C348-VERANTWORTUNG-03, GE-LEX-C348-VERANTWORTUNG-04, GE-LEX-C348-VERANTWORTUNG-05, GE-LEX-C349-STELLE-01, GE-LEX-C349-STELLE-02, GE-LEX-C349-STELLE-03, GE-LEX-C349-STELLE-04, GE-LEX-C349-STELLE-05, GE-LEX-C350-ARBEITGEBER-01, GE-LEX-C350-ARBEITGEBER-02, GE-LEX-C350-ARBEITGEBER-03, GE-LEX-C350-ARBEITGEBER-04, GE-LEX-C350-ARBEITGEBER-05, GE-LEX-C351-ARBEITSZEIT-01, GE-LEX-C351-ARBEITSZEIT-02, GE-LEX-C351-ARBEITSZEIT-03, GE-LEX-C351-ARBEITSZEIT-04, GE-LEX-C351-ARBEITSZEIT-05, GE-LEX-C352-ARBEITSLOS-01, GE-LEX-C352-ARBEITSLOS-02, GE-LEX-C352-ARBEITSLOS-03, GE-LEX-C352-ARBEITSLOS-04, GE-LEX-C352-ARBEITSLOS-05, GE-LEX-C353-BETRIEB-01, GE-LEX-C353-BETRIEB-02, GE-LEX-C353-BETRIEB-03, GE-LEX-C353-BETRIEB-04, GE-LEX-C353-BETRIEB-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: the purpose, the intention, in order that, on purpose, the occasion]
+- [YOU SAY: the chance, by chance, to prevent, to avoid, why]
+- [YOU SAY: the responsibility, responsible, to justify, the excuse, that is why]
+- [YOU SAY: the job advertisement, the job interview, the ability, qualified, to master]
+- [YOU SAY: the employer, the employee, to hire, to employ, fixed-term]
+- [YOU SAY: part-time, full-time, the shift, the hour of overtime, the end of the working day]
+- [YOU SAY: to lay off, unemployed, unemployment, the trial period, to train in]
+- [YOU SAY: the firm, the company, the department, the superior, to run]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-C346-ZWECK-01, GE-LEX-C346-ZWECK-02, GE-LEX-C346-ZWECK-03, GE-LEX-C346-ZWECK-04, GE-LEX-C346-ZWECK-05, GE-LEX-C347-ZUFALL-01, GE-LEX-C347-ZUFALL-02, GE-LEX-C347-ZUFALL-03, GE-LEX-C347-ZUFALL-04, GE-LEX-C347-ZUFALL-05, GE-LEX-C348-VERANTWORTUNG-01, GE-LEX-C348-VERANTWORTUNG-02, GE-LEX-C348-VERANTWORTUNG-03, GE-LEX-C348-VERANTWORTUNG-04, GE-LEX-C348-VERANTWORTUNG-05, GE-LEX-C349-STELLE-01, GE-LEX-C349-STELLE-02, GE-LEX-C349-STELLE-03, GE-LEX-C349-STELLE-04, GE-LEX-C349-STELLE-05, GE-LEX-C350-ARBEITGEBER-01, GE-LEX-C350-ARBEITGEBER-02, GE-LEX-C350-ARBEITGEBER-03, GE-LEX-C350-ARBEITGEBER-04, GE-LEX-C350-ARBEITGEBER-05, GE-LEX-C351-ARBEITSZEIT-01, GE-LEX-C351-ARBEITSZEIT-02, GE-LEX-C351-ARBEITSZEIT-03, GE-LEX-C351-ARBEITSZEIT-04, GE-LEX-C351-ARBEITSZEIT-05, GE-LEX-C352-ARBEITSLOS-01, GE-LEX-C352-ARBEITSLOS-02, GE-LEX-C352-ARBEITSLOS-03, GE-LEX-C352-ARBEITSLOS-04, GE-LEX-C352-ARBEITSLOS-05, GE-LEX-C353-BETRIEB-01, GE-LEX-C353-BETRIEB-02, GE-LEX-C353-BETRIEB-03, GE-LEX-C353-BETRIEB-04, GE-LEX-C353-BETRIEB-05] -->
+
+[PAUSE 3s] The purpose? (**der Zweck**.) The intention? (**die Absicht**.) In order that? (**damit**.) On purpose? (**absichtlich**.) The occasion? (**der Anlass**.) The chance? (**der Zufall**.) By chance? (**zufällig**.) To prevent? (**verhindern**.) To avoid? (**vermeiden**.) Why? (**weshalb**.) The responsibility? (**die Verantwortung**.) Responsible? (**verantwortlich**.) To justify? (**rechtfertigen**.) The excuse? (**die Ausrede**.) That is why? (**deswegen**.) The job advertisement? (**die Stellenanzeige**.) The job interview? (**das Vorstellungsgespräch**.) The ability? (**die Fähigkeit**.) Qualified? (**qualifiziert**.) To master? (**beherrschen**.) The employer? (**der Arbeitgeber**.) The employee? (**der Arbeitnehmer**.) To hire? (**einstellen**.) To employ? (**beschäftigen**.) Fixed-term? (**befristet**.) Part-time? (**die Teilzeit**.) Full-time? (**die Vollzeit**.) The shift? (**die Schicht**.) The hour of overtime? (**die Überstunde**.) The end of the working day? (**der Feierabend**.) To lay off? (**entlassen**.) Unemployed? (**arbeitslos**.) Unemployment? (**die Arbeitslosigkeit**.) The trial period? (**die Probezeit**.) To train in? (**einarbeiten**.) The firm? (**der Betrieb**.) The company? (**das Unternehmen**.) The department? (**die Abteilung**.) The superior? (**der Vorgesetzte**.) To run? (**leiten**.)
+`;export{t};

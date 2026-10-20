@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: GE-R325-review-318-325
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 17770
+chapter: 325
+type: review
+headword: (dialogue)
+gloss: a review of chapters 318-325
+concept_tag: REVIEW
+prerequisites: [GE-C318-krieg, GE-C318-frieden, GE-C318-schlacht, GE-C318-besiegen, GE-C318-niederlage, GE-C319-kaiser, GE-C319-herrschen, GE-C319-regieren, GE-C319-erobern, GE-C319-sieg, GE-C320-mittelalter, GE-C320-antike, GE-C320-chronik, GE-C320-vorfahr, GE-C320-untergang, GE-C321-erfinden, GE-C321-erfindung, GE-C321-gruenden, GE-C321-entstehen, GE-C321-zurueckkehren, GE-C322-zutat, GE-C322-prise, GE-C322-essloeffel, GE-C322-abmessen, GE-C322-schuessel, GE-C323-schaelen, GE-C323-hacken, GE-C323-wuerfeln, GE-C323-raspeln, GE-C323-halbieren, GE-C324-ruehren, GE-C324-umruehren, GE-C324-verquirlen, GE-C324-aufschlagen, GE-C324-schneebesen, GE-C325-teig, GE-C325-hefe, GE-C325-kneten, GE-C325-ausrollen, GE-C325-nudelholz]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [GE-LEX-C318-KRIEG-01, GE-LEX-C318-KRIEG-02, GE-LEX-C318-KRIEG-03, GE-LEX-C318-KRIEG-04, GE-LEX-C318-KRIEG-05, GE-LEX-C319-KAISER-01, GE-LEX-C319-KAISER-02, GE-LEX-C319-KAISER-03, GE-LEX-C319-KAISER-04, GE-LEX-C319-KAISER-05, GE-LEX-C320-MITTELALTER-01, GE-LEX-C320-MITTELALTER-02, GE-LEX-C320-MITTELALTER-03, GE-LEX-C320-MITTELALTER-04, GE-LEX-C320-MITTELALTER-05, GE-LEX-C321-ERFINDEN-01, GE-LEX-C321-ERFINDEN-02, GE-LEX-C321-ERFINDEN-03, GE-LEX-C321-ERFINDEN-04, GE-LEX-C321-ERFINDEN-05, GE-LEX-C322-ZUTAT-01, GE-LEX-C322-ZUTAT-02, GE-LEX-C322-ZUTAT-03, GE-LEX-C322-ZUTAT-04, GE-LEX-C322-ZUTAT-05, GE-LEX-C323-SCHAELEN-01, GE-LEX-C323-SCHAELEN-02, GE-LEX-C323-SCHAELEN-03, GE-LEX-C323-SCHAELEN-04, GE-LEX-C323-SCHAELEN-05, GE-LEX-C324-RUEHREN-01, GE-LEX-C324-RUEHREN-02, GE-LEX-C324-RUEHREN-03, GE-LEX-C324-RUEHREN-04, GE-LEX-C324-RUEHREN-05, GE-LEX-C325-TEIG-01, GE-LEX-C325-TEIG-02, GE-LEX-C325-TEIG-03, GE-LEX-C325-TEIG-04, GE-LEX-C325-TEIG-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [GE-LEX-C318-KRIEG-01, GE-LEX-C318-KRIEG-02, GE-LEX-C318-KRIEG-03, GE-LEX-C318-KRIEG-04, GE-LEX-C318-KRIEG-05, GE-LEX-C319-KAISER-01, GE-LEX-C319-KAISER-02, GE-LEX-C319-KAISER-03, GE-LEX-C319-KAISER-04, GE-LEX-C319-KAISER-05, GE-LEX-C320-MITTELALTER-01, GE-LEX-C320-MITTELALTER-02, GE-LEX-C320-MITTELALTER-03, GE-LEX-C320-MITTELALTER-04, GE-LEX-C320-MITTELALTER-05, GE-LEX-C321-ERFINDEN-01, GE-LEX-C321-ERFINDEN-02, GE-LEX-C321-ERFINDEN-03, GE-LEX-C321-ERFINDEN-04, GE-LEX-C321-ERFINDEN-05, GE-LEX-C322-ZUTAT-01, GE-LEX-C322-ZUTAT-02, GE-LEX-C322-ZUTAT-03, GE-LEX-C322-ZUTAT-04, GE-LEX-C322-ZUTAT-05, GE-LEX-C323-SCHAELEN-01, GE-LEX-C323-SCHAELEN-02, GE-LEX-C323-SCHAELEN-03, GE-LEX-C323-SCHAELEN-04, GE-LEX-C323-SCHAELEN-05, GE-LEX-C324-RUEHREN-01, GE-LEX-C324-RUEHREN-02, GE-LEX-C324-RUEHREN-03, GE-LEX-C324-RUEHREN-04, GE-LEX-C324-RUEHREN-05, GE-LEX-C325-TEIG-01, GE-LEX-C325-TEIG-02, GE-LEX-C325-TEIG-03, GE-LEX-C325-TEIG-04, GE-LEX-C325-TEIG-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
+reviews_of: [GE-C318-krieg, GE-C318-frieden, GE-C318-schlacht, GE-C318-besiegen, GE-C318-niederlage, GE-C319-kaiser, GE-C319-herrschen, GE-C319-regieren, GE-C319-erobern, GE-C319-sieg, GE-C320-mittelalter, GE-C320-antike, GE-C320-chronik, GE-C320-vorfahr, GE-C320-untergang, GE-C321-erfinden, GE-C321-erfindung, GE-C321-gruenden, GE-C321-entstehen, GE-C321-zurueckkehren, GE-C322-zutat, GE-C322-prise, GE-C322-essloeffel, GE-C322-abmessen, GE-C322-schuessel, GE-C323-schaelen, GE-C323-hacken, GE-C323-wuerfeln, GE-C323-raspeln, GE-C323-halbieren, GE-C324-ruehren, GE-C324-umruehren, GE-C324-verquirlen, GE-C324-aufschlagen, GE-C324-schneebesen, GE-C325-teig, GE-C325-hefe, GE-C325-kneten, GE-C325-ausrollen, GE-C325-nudelholz]
+---
+
+# Words from chapters 318–325 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-C318-KRIEG-01, GE-LEX-C318-KRIEG-02] -->
+
+[PAUSE 3s] Say the German for the war and the peace.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-C318-KRIEG-01, GE-LEX-C318-KRIEG-02, GE-LEX-C318-KRIEG-03, GE-LEX-C318-KRIEG-04, GE-LEX-C318-KRIEG-05, GE-LEX-C319-KAISER-01, GE-LEX-C319-KAISER-02, GE-LEX-C319-KAISER-03, GE-LEX-C319-KAISER-04, GE-LEX-C319-KAISER-05, GE-LEX-C320-MITTELALTER-01, GE-LEX-C320-MITTELALTER-02, GE-LEX-C320-MITTELALTER-03, GE-LEX-C320-MITTELALTER-04, GE-LEX-C320-MITTELALTER-05, GE-LEX-C321-ERFINDEN-01, GE-LEX-C321-ERFINDEN-02, GE-LEX-C321-ERFINDEN-03, GE-LEX-C321-ERFINDEN-04, GE-LEX-C321-ERFINDEN-05, GE-LEX-C322-ZUTAT-01, GE-LEX-C322-ZUTAT-02, GE-LEX-C322-ZUTAT-03, GE-LEX-C322-ZUTAT-04, GE-LEX-C322-ZUTAT-05, GE-LEX-C323-SCHAELEN-01, GE-LEX-C323-SCHAELEN-02, GE-LEX-C323-SCHAELEN-03, GE-LEX-C323-SCHAELEN-04, GE-LEX-C323-SCHAELEN-05, GE-LEX-C324-RUEHREN-01, GE-LEX-C324-RUEHREN-02, GE-LEX-C324-RUEHREN-03, GE-LEX-C324-RUEHREN-04, GE-LEX-C324-RUEHREN-05, GE-LEX-C325-TEIG-01, GE-LEX-C325-TEIG-02, GE-LEX-C325-TEIG-03, GE-LEX-C325-TEIG-04, GE-LEX-C325-TEIG-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: the war, the peace, the battle, to defeat, the defeat]
+- [YOU SAY: the emperor, to rule, to govern, to conquer, the victory]
+- [YOU SAY: the Middle Ages, antiquity, the chronicle, the ancestor, the downfall]
+- [YOU SAY: to invent, the invention, to found, to come into being, to return]
+- [YOU SAY: the ingredient, the pinch, the tablespoon, to measure out, the bowl]
+- [YOU SAY: to peel, to chop, to dice, to grate, to halve]
+- [YOU SAY: to stir, to give a stir, to whisk, to crack open, the whisk]
+- [YOU SAY: the dough, the yeast, to knead, to roll out, the rolling pin]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-C318-KRIEG-01, GE-LEX-C318-KRIEG-02, GE-LEX-C318-KRIEG-03, GE-LEX-C318-KRIEG-04, GE-LEX-C318-KRIEG-05, GE-LEX-C319-KAISER-01, GE-LEX-C319-KAISER-02, GE-LEX-C319-KAISER-03, GE-LEX-C319-KAISER-04, GE-LEX-C319-KAISER-05, GE-LEX-C320-MITTELALTER-01, GE-LEX-C320-MITTELALTER-02, GE-LEX-C320-MITTELALTER-03, GE-LEX-C320-MITTELALTER-04, GE-LEX-C320-MITTELALTER-05, GE-LEX-C321-ERFINDEN-01, GE-LEX-C321-ERFINDEN-02, GE-LEX-C321-ERFINDEN-03, GE-LEX-C321-ERFINDEN-04, GE-LEX-C321-ERFINDEN-05, GE-LEX-C322-ZUTAT-01, GE-LEX-C322-ZUTAT-02, GE-LEX-C322-ZUTAT-03, GE-LEX-C322-ZUTAT-04, GE-LEX-C322-ZUTAT-05, GE-LEX-C323-SCHAELEN-01, GE-LEX-C323-SCHAELEN-02, GE-LEX-C323-SCHAELEN-03, GE-LEX-C323-SCHAELEN-04, GE-LEX-C323-SCHAELEN-05, GE-LEX-C324-RUEHREN-01, GE-LEX-C324-RUEHREN-02, GE-LEX-C324-RUEHREN-03, GE-LEX-C324-RUEHREN-04, GE-LEX-C324-RUEHREN-05, GE-LEX-C325-TEIG-01, GE-LEX-C325-TEIG-02, GE-LEX-C325-TEIG-03, GE-LEX-C325-TEIG-04, GE-LEX-C325-TEIG-05] -->
+
+[PAUSE 3s] The war? (**der Krieg**.) The peace? (**der Frieden**.) The battle? (**die Schlacht**.) To defeat? (**besiegen**.) The defeat? (**die Niederlage**.) The emperor? (**der Kaiser**.) To rule? (**herrschen**.) To govern? (**regieren**.) To conquer? (**erobern**.) The victory? (**der Sieg**.) The Middle Ages? (**das Mittelalter**.) Antiquity? (**die Antike**.) The chronicle? (**die Chronik**.) The ancestor? (**der Vorfahr**.) The downfall? (**der Untergang**.) To invent? (**erfinden**.) The invention? (**die Erfindung**.) To found? (**gründen**.) To come into being? (**entstehen**.) To return? (**zurückkehren**.) The ingredient? (**die Zutat**.) The pinch? (**die Prise**.) The tablespoon? (**der Esslöffel**.) To measure out? (**abmessen**.) The bowl? (**die Schüssel**.) To peel? (**schälen**.) To chop? (**hacken**.) To dice? (**würfeln**.) To grate? (**raspeln**.) To halve? (**halbieren**.) To stir? (**rühren**.) To give a stir? (**umrühren**.) To whisk? (**verquirlen**.) To crack open? (**aufschlagen**.) The whisk? (**der Schneebesen**.) The dough? (**der Teig**.) The yeast? (**die Hefe**.) To knead? (**kneten**.) To roll out? (**ausrollen**.) The rolling pin? (**das Nudelholz**.)
+`;export{t};

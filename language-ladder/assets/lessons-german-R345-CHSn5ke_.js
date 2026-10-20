@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: GE-R345-review-338-345
+spine_node: SPINE-GIVE-REASONS
+sequence: 18810
+chapter: 345
+type: review
+headword: (dialogue)
+gloss: a review of chapters 338-345
+concept_tag: REVIEW
+prerequisites: [GE-C338-vermutung, GE-C338-annahme, GE-C338-anscheinend, GE-C338-offensichtlich, GE-C338-ahnen, GE-C339-aeusserung, GE-C339-hinweisen, GE-C339-hinweis, GE-C339-hervorheben, GE-C339-darlegen, GE-C340-beurteilen, GE-C340-einschaetzen, GE-C340-einschaetzung, GE-C340-kritisieren, GE-C340-kritik, GE-C341-obwohl, GE-C341-zwar, GE-C341-allerdings, GE-C341-dennoch, GE-C341-tatsaechlich, GE-C342-wirkung, GE-C342-wirken, GE-C342-verursachen, GE-C342-ausloesen, GE-C342-ausloeser, GE-C343-konsequenz, GE-C343-resultat, GE-C343-folglich, GE-C343-sodass, GE-C343-daher, GE-C344-beeinflussen, GE-C344-einfluss, GE-C344-auswirkung, GE-C344-auswirken, GE-C344-betreffen, GE-C345-zusammenhang, GE-C345-zusammenhaengen, GE-C345-beweis, GE-C345-belegen, GE-C345-nachweisen]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [GE-LEX-C338-VERMUTUNG-01, GE-LEX-C338-VERMUTUNG-02, GE-LEX-C338-VERMUTUNG-03, GE-LEX-C338-VERMUTUNG-04, GE-LEX-C338-VERMUTUNG-05, GE-LEX-C339-HINWEIS-01, GE-LEX-C339-HINWEIS-02, GE-LEX-C339-HINWEIS-03, GE-LEX-C339-HINWEIS-04, GE-LEX-C339-HINWEIS-05, GE-LEX-C340-KRITIK-01, GE-LEX-C340-KRITIK-02, GE-LEX-C340-KRITIK-03, GE-LEX-C340-KRITIK-04, GE-LEX-C340-KRITIK-05, GE-LEX-C341-OBWOHL-01, GE-LEX-C341-OBWOHL-02, GE-LEX-C341-OBWOHL-03, GE-LEX-C341-OBWOHL-04, GE-LEX-C341-OBWOHL-05, GE-LEX-C342-WIRKUNG-01, GE-LEX-C342-WIRKUNG-02, GE-LEX-C342-WIRKUNG-03, GE-LEX-C342-WIRKUNG-04, GE-LEX-C342-WIRKUNG-05, GE-LEX-C343-KONSEQUENZ-01, GE-LEX-C343-KONSEQUENZ-02, GE-LEX-C343-KONSEQUENZ-03, GE-LEX-C343-KONSEQUENZ-04, GE-LEX-C343-KONSEQUENZ-05, GE-LEX-C344-EINFLUSS-01, GE-LEX-C344-EINFLUSS-02, GE-LEX-C344-EINFLUSS-03, GE-LEX-C344-EINFLUSS-04, GE-LEX-C344-EINFLUSS-05, GE-LEX-C345-ZUSAMMENHANG-01, GE-LEX-C345-ZUSAMMENHANG-02, GE-LEX-C345-ZUSAMMENHANG-03, GE-LEX-C345-ZUSAMMENHANG-04, GE-LEX-C345-ZUSAMMENHANG-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [GE-LEX-C338-VERMUTUNG-01, GE-LEX-C338-VERMUTUNG-02, GE-LEX-C338-VERMUTUNG-03, GE-LEX-C338-VERMUTUNG-04, GE-LEX-C338-VERMUTUNG-05, GE-LEX-C339-HINWEIS-01, GE-LEX-C339-HINWEIS-02, GE-LEX-C339-HINWEIS-03, GE-LEX-C339-HINWEIS-04, GE-LEX-C339-HINWEIS-05, GE-LEX-C340-KRITIK-01, GE-LEX-C340-KRITIK-02, GE-LEX-C340-KRITIK-03, GE-LEX-C340-KRITIK-04, GE-LEX-C340-KRITIK-05, GE-LEX-C341-OBWOHL-01, GE-LEX-C341-OBWOHL-02, GE-LEX-C341-OBWOHL-03, GE-LEX-C341-OBWOHL-04, GE-LEX-C341-OBWOHL-05, GE-LEX-C342-WIRKUNG-01, GE-LEX-C342-WIRKUNG-02, GE-LEX-C342-WIRKUNG-03, GE-LEX-C342-WIRKUNG-04, GE-LEX-C342-WIRKUNG-05, GE-LEX-C343-KONSEQUENZ-01, GE-LEX-C343-KONSEQUENZ-02, GE-LEX-C343-KONSEQUENZ-03, GE-LEX-C343-KONSEQUENZ-04, GE-LEX-C343-KONSEQUENZ-05, GE-LEX-C344-EINFLUSS-01, GE-LEX-C344-EINFLUSS-02, GE-LEX-C344-EINFLUSS-03, GE-LEX-C344-EINFLUSS-04, GE-LEX-C344-EINFLUSS-05, GE-LEX-C345-ZUSAMMENHANG-01, GE-LEX-C345-ZUSAMMENHANG-02, GE-LEX-C345-ZUSAMMENHANG-03, GE-LEX-C345-ZUSAMMENHANG-04, GE-LEX-C345-ZUSAMMENHANG-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
+reviews_of: [GE-C338-vermutung, GE-C338-annahme, GE-C338-anscheinend, GE-C338-offensichtlich, GE-C338-ahnen, GE-C339-aeusserung, GE-C339-hinweisen, GE-C339-hinweis, GE-C339-hervorheben, GE-C339-darlegen, GE-C340-beurteilen, GE-C340-einschaetzen, GE-C340-einschaetzung, GE-C340-kritisieren, GE-C340-kritik, GE-C341-obwohl, GE-C341-zwar, GE-C341-allerdings, GE-C341-dennoch, GE-C341-tatsaechlich, GE-C342-wirkung, GE-C342-wirken, GE-C342-verursachen, GE-C342-ausloesen, GE-C342-ausloeser, GE-C343-konsequenz, GE-C343-resultat, GE-C343-folglich, GE-C343-sodass, GE-C343-daher, GE-C344-beeinflussen, GE-C344-einfluss, GE-C344-auswirkung, GE-C344-auswirken, GE-C344-betreffen, GE-C345-zusammenhang, GE-C345-zusammenhaengen, GE-C345-beweis, GE-C345-belegen, GE-C345-nachweisen]
+---
+
+# Words from chapters 338–345 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-C338-VERMUTUNG-01, GE-LEX-C338-VERMUTUNG-02] -->
+
+[PAUSE 3s] Say the German for the guess and the assumption.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-C338-VERMUTUNG-01, GE-LEX-C338-VERMUTUNG-02, GE-LEX-C338-VERMUTUNG-03, GE-LEX-C338-VERMUTUNG-04, GE-LEX-C338-VERMUTUNG-05, GE-LEX-C339-HINWEIS-01, GE-LEX-C339-HINWEIS-02, GE-LEX-C339-HINWEIS-03, GE-LEX-C339-HINWEIS-04, GE-LEX-C339-HINWEIS-05, GE-LEX-C340-KRITIK-01, GE-LEX-C340-KRITIK-02, GE-LEX-C340-KRITIK-03, GE-LEX-C340-KRITIK-04, GE-LEX-C340-KRITIK-05, GE-LEX-C341-OBWOHL-01, GE-LEX-C341-OBWOHL-02, GE-LEX-C341-OBWOHL-03, GE-LEX-C341-OBWOHL-04, GE-LEX-C341-OBWOHL-05, GE-LEX-C342-WIRKUNG-01, GE-LEX-C342-WIRKUNG-02, GE-LEX-C342-WIRKUNG-03, GE-LEX-C342-WIRKUNG-04, GE-LEX-C342-WIRKUNG-05, GE-LEX-C343-KONSEQUENZ-01, GE-LEX-C343-KONSEQUENZ-02, GE-LEX-C343-KONSEQUENZ-03, GE-LEX-C343-KONSEQUENZ-04, GE-LEX-C343-KONSEQUENZ-05, GE-LEX-C344-EINFLUSS-01, GE-LEX-C344-EINFLUSS-02, GE-LEX-C344-EINFLUSS-03, GE-LEX-C344-EINFLUSS-04, GE-LEX-C344-EINFLUSS-05, GE-LEX-C345-ZUSAMMENHANG-01, GE-LEX-C345-ZUSAMMENHANG-02, GE-LEX-C345-ZUSAMMENHANG-03, GE-LEX-C345-ZUSAMMENHANG-04, GE-LEX-C345-ZUSAMMENHANG-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: the guess, the assumption, apparently, obviously, to suspect]
+- [YOU SAY: the remark, to indicate, the hint, to bring out, to set out]
+- [YOU SAY: to judge, to assess, the assessment, to criticize, the criticism]
+- [YOU SAY: although, admittedly, however, nevertheless, in fact]
+- [YOU SAY: the effect, to work, to cause, to trigger, the trigger]
+- [YOU SAY: the consequence, the result, consequently, so that, therefore]
+- [YOU SAY: to influence, the influence, the impact, to affect, to concern]
+- [YOU SAY: the connection, to be connected, the proof, to back up, to prove]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-C338-VERMUTUNG-01, GE-LEX-C338-VERMUTUNG-02, GE-LEX-C338-VERMUTUNG-03, GE-LEX-C338-VERMUTUNG-04, GE-LEX-C338-VERMUTUNG-05, GE-LEX-C339-HINWEIS-01, GE-LEX-C339-HINWEIS-02, GE-LEX-C339-HINWEIS-03, GE-LEX-C339-HINWEIS-04, GE-LEX-C339-HINWEIS-05, GE-LEX-C340-KRITIK-01, GE-LEX-C340-KRITIK-02, GE-LEX-C340-KRITIK-03, GE-LEX-C340-KRITIK-04, GE-LEX-C340-KRITIK-05, GE-LEX-C341-OBWOHL-01, GE-LEX-C341-OBWOHL-02, GE-LEX-C341-OBWOHL-03, GE-LEX-C341-OBWOHL-04, GE-LEX-C341-OBWOHL-05, GE-LEX-C342-WIRKUNG-01, GE-LEX-C342-WIRKUNG-02, GE-LEX-C342-WIRKUNG-03, GE-LEX-C342-WIRKUNG-04, GE-LEX-C342-WIRKUNG-05, GE-LEX-C343-KONSEQUENZ-01, GE-LEX-C343-KONSEQUENZ-02, GE-LEX-C343-KONSEQUENZ-03, GE-LEX-C343-KONSEQUENZ-04, GE-LEX-C343-KONSEQUENZ-05, GE-LEX-C344-EINFLUSS-01, GE-LEX-C344-EINFLUSS-02, GE-LEX-C344-EINFLUSS-03, GE-LEX-C344-EINFLUSS-04, GE-LEX-C344-EINFLUSS-05, GE-LEX-C345-ZUSAMMENHANG-01, GE-LEX-C345-ZUSAMMENHANG-02, GE-LEX-C345-ZUSAMMENHANG-03, GE-LEX-C345-ZUSAMMENHANG-04, GE-LEX-C345-ZUSAMMENHANG-05] -->
+
+[PAUSE 3s] The guess? (**die Vermutung**.) The assumption? (**die Annahme**.) Apparently? (**anscheinend**.) Obviously? (**offensichtlich**.) To suspect? (**ahnen**.) The remark? (**die Äußerung**.) To indicate? (**hinweisen**.) The hint? (**der Hinweis**.) To bring out? (**hervorheben**.) To set out? (**darlegen**.) To judge? (**beurteilen**.) To assess? (**einschätzen**.) The assessment? (**die Einschätzung**.) To criticize? (**kritisieren**.) The criticism? (**die Kritik**.) Although? (**obwohl**.) Admittedly? (**zwar**.) However? (**allerdings**.) Nevertheless? (**dennoch**.) In fact? (**tatsächlich**.) The effect? (**die Wirkung**.) To work? (**wirken**.) To cause? (**verursachen**.) To trigger? (**auslösen**.) The trigger? (**der Auslöser**.) The consequence? (**die Konsequenz**.) The result? (**das Resultat**.) Consequently? (**folglich**.) So that? (**sodass**.) Therefore? (**daher**.) To influence? (**beeinflussen**.) The influence? (**der Einfluss**.) The impact? (**die Auswirkung**.) To affect? (**auswirken**.) To concern? (**betreffen**.) The connection? (**der Zusammenhang**.) To be connected? (**zusammenhängen**.) The proof? (**der Beweis**.) To back up? (**belegen**.) To prove? (**nachweisen**.)
+`;export{t};

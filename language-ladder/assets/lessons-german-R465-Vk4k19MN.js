@@ -1,0 +1,102 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: GE-R465-review-462-465
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 24980
+chapter: 465
+type: review
+headword: (dialogue)
+gloss: a review of chapters 462-465
+concept_tag: REVIEW
+prerequisites: [GE-C462-unwetter, GE-C462-aufziehen, GE-C462-hagel, GE-C462-hageln, GE-C462-donnern, GE-C463-raureif, GE-C463-gefrieren, GE-C463-tauen, GE-C463-tauwetter, GE-C463-bibbern, GE-C464-hitzewelle, GE-C464-duerre, GE-C464-luftfeuchtigkeit, GE-C464-schwuel, GE-C464-austrocknen, GE-C465-sturm, GE-C465-boee, GE-C465-orkan, GE-C465-ueberschwemmen, GE-C465-pfuetze]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [GE-LEX-C462-UNWETTER-01, GE-LEX-C462-UNWETTER-02, GE-LEX-C462-UNWETTER-03, GE-LEX-C462-UNWETTER-04, GE-LEX-C462-UNWETTER-05, GE-LEX-C463-RAUREIF-01, GE-LEX-C463-RAUREIF-02, GE-LEX-C463-RAUREIF-03, GE-LEX-C463-RAUREIF-04, GE-LEX-C463-RAUREIF-05, GE-LEX-C464-HITZEWELLE-01, GE-LEX-C464-HITZEWELLE-02, GE-LEX-C464-HITZEWELLE-03, GE-LEX-C464-HITZEWELLE-04, GE-LEX-C464-HITZEWELLE-05, GE-LEX-C465-STURM-01, GE-LEX-C465-STURM-02, GE-LEX-C465-STURM-03, GE-LEX-C465-STURM-04, GE-LEX-C465-STURM-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [GE-LEX-C462-UNWETTER-01, GE-LEX-C462-UNWETTER-02, GE-LEX-C462-UNWETTER-03, GE-LEX-C462-UNWETTER-04, GE-LEX-C462-UNWETTER-05, GE-LEX-C463-RAUREIF-01, GE-LEX-C463-RAUREIF-02, GE-LEX-C463-RAUREIF-03, GE-LEX-C463-RAUREIF-04, GE-LEX-C463-RAUREIF-05, GE-LEX-C464-HITZEWELLE-01, GE-LEX-C464-HITZEWELLE-02, GE-LEX-C464-HITZEWELLE-03, GE-LEX-C464-HITZEWELLE-04, GE-LEX-C464-HITZEWELLE-05, GE-LEX-C465-STURM-01, GE-LEX-C465-STURM-02, GE-LEX-C465-STURM-03, GE-LEX-C465-STURM-04, GE-LEX-C465-STURM-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
+reviews_of: [GE-C462-unwetter, GE-C462-aufziehen, GE-C462-hagel, GE-C462-hageln, GE-C462-donnern, GE-C463-raureif, GE-C463-gefrieren, GE-C463-tauen, GE-C463-tauwetter, GE-C463-bibbern, GE-C464-hitzewelle, GE-C464-duerre, GE-C464-luftfeuchtigkeit, GE-C464-schwuel, GE-C464-austrocknen, GE-C465-sturm, GE-C465-boee, GE-C465-orkan, GE-C465-ueberschwemmen, GE-C465-pfuetze]
+---
+
+# Regen, Wind und Sonne
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-C462-UNWETTER-01, GE-LEX-C462-UNWETTER-02] -->
+
+[PAUSE 3s] Say the German for the severe weather and to come up.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-C462-UNWETTER-01, GE-LEX-C462-UNWETTER-02, GE-LEX-C462-UNWETTER-03, GE-LEX-C462-UNWETTER-04, GE-LEX-C462-UNWETTER-05, GE-LEX-C463-RAUREIF-01, GE-LEX-C463-RAUREIF-02, GE-LEX-C463-RAUREIF-03, GE-LEX-C463-RAUREIF-04, GE-LEX-C463-RAUREIF-05, GE-LEX-C464-HITZEWELLE-01, GE-LEX-C464-HITZEWELLE-02, GE-LEX-C464-HITZEWELLE-03, GE-LEX-C464-HITZEWELLE-04, GE-LEX-C464-HITZEWELLE-05, GE-LEX-C465-STURM-01, GE-LEX-C465-STURM-02, GE-LEX-C465-STURM-03, GE-LEX-C465-STURM-04, GE-LEX-C465-STURM-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: the severe weather, to come up, the hail, to hail, to thunder]
+- [YOU SAY: the hoarfrost, to freeze, to thaw, the thaw, to shiver]
+- [YOU SAY: the heatwave, the drought, the humidity, muggy, to dry out]
+- [YOU SAY: the storm, the gust, the hurricane, to flood, the puddle]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-C462-UNWETTER-01, GE-LEX-C462-UNWETTER-02, GE-LEX-C462-UNWETTER-03, GE-LEX-C462-UNWETTER-04, GE-LEX-C462-UNWETTER-05, GE-LEX-C463-RAUREIF-01, GE-LEX-C463-RAUREIF-02, GE-LEX-C463-RAUREIF-03, GE-LEX-C463-RAUREIF-04, GE-LEX-C463-RAUREIF-05, GE-LEX-C464-HITZEWELLE-01, GE-LEX-C464-HITZEWELLE-02, GE-LEX-C464-HITZEWELLE-03, GE-LEX-C464-HITZEWELLE-04, GE-LEX-C464-HITZEWELLE-05, GE-LEX-C465-STURM-01, GE-LEX-C465-STURM-02, GE-LEX-C465-STURM-03, GE-LEX-C465-STURM-04, GE-LEX-C465-STURM-05] -->
+
+[PAUSE 3s] The severe weather? (**das Unwetter**.) To come up? (**aufziehen**.) The hail? (**der Hagel**.) To hail? (**hageln**.) To thunder? (**donnern**.) The hoarfrost? (**der Raureif**.) To freeze? (**gefrieren**.) To thaw? (**tauen**.) The thaw? (**das Tauwetter**.) To shiver? (**bibbern**.) The heatwave? (**die Hitzewelle**.) The drought? (**die Dürre**.) The humidity? (**die Luftfeuchtigkeit**.) Muggy? (**schwül**.) To dry out? (**austrocknen**.) The storm? (**der Sturm**.) The gust? (**die Böe**.) The hurricane? (**der Orkan**.) To flood? (**überschwemmen**.) The puddle? (**die Pfütze**.)
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: GE-R465-review-final-465
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 24990
+chapter: 465
+type: review
+headword: (dialogue)
+gloss: one more pass over chapter 465
+concept_tag: REVIEW
+prerequisites: [GE-C465-sturm, GE-C465-boee, GE-C465-orkan, GE-C465-ueberschwemmen, GE-C465-pfuetze]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [GE-LEX-C465-STURM-01, GE-LEX-C465-STURM-02, GE-LEX-C465-STURM-03, GE-LEX-C465-STURM-04, GE-LEX-C465-STURM-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [GE-LEX-C465-STURM-01, GE-LEX-C465-STURM-02, GE-LEX-C465-STURM-03, GE-LEX-C465-STURM-04, GE-LEX-C465-STURM-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
+reviews_of: [GE-C465-sturm, GE-C465-boee, GE-C465-orkan, GE-C465-ueberschwemmen, GE-C465-pfuetze]
+---
+
+# Sturm und Hochwasser — once more
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-C465-STURM-01, GE-LEX-C465-STURM-02] -->
+
+[PAUSE 3s] Say the German for the storm and the gust.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-C465-STURM-01, GE-LEX-C465-STURM-02, GE-LEX-C465-STURM-03, GE-LEX-C465-STURM-04, GE-LEX-C465-STURM-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: the storm, the gust, the hurricane, to flood, the puddle]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-C465-STURM-01, GE-LEX-C465-STURM-02, GE-LEX-C465-STURM-03, GE-LEX-C465-STURM-04, GE-LEX-C465-STURM-05] -->
+
+[PAUSE 3s] The storm? (**der Sturm**.) The gust? (**die Böe**.) The hurricane? (**der Orkan**.) To flood? (**überschwemmen**.) The puddle? (**die Pfütze**.)
+`;export{t as n,r as t};

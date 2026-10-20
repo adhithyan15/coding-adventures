@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: GE-R453-review-446-453
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 24360
+chapter: 453
+type: review
+headword: (dialogue)
+gloss: a review of chapters 446-453
+concept_tag: REVIEW
+prerequisites: [GE-C446-reinigung, GE-C446-waschsalon, GE-C446-entfernen, GE-C446-flicken, GE-C446-trocknen, GE-C447-friseur, GE-C447-foehnen, GE-C447-optiker, GE-C447-uhrmacher, GE-C447-juwelier, GE-C448-frankieren, GE-C448-verschicken, GE-C448-einwerfen, GE-C448-paeckchen, GE-C448-einschreiben, GE-C449-kassierer, GE-C449-kassieren, GE-C449-bargeld, GE-C449-kartenlesegeraet, GE-C449-wechselgeld, GE-C450-geldautomat, GE-C450-geheimzahl, GE-C450-kontoauszug, GE-C450-einloesen, GE-C450-auszahlen, GE-C451-reduzieren, GE-C451-sonderangebot, GE-C451-schnaeppchen, GE-C451-feilschen, GE-C451-flohmarkt, GE-C452-verpackung, GE-C452-verpacken, GE-C452-karton, GE-C452-liefern, GE-C452-umtauschen, GE-C453-klippe, GE-C453-hochebene, GE-C453-gipfel, GE-C453-abhang, GE-C453-schlucht]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [GE-LEX-C446-REINIGUNG-01, GE-LEX-C446-REINIGUNG-02, GE-LEX-C446-REINIGUNG-03, GE-LEX-C446-REINIGUNG-04, GE-LEX-C446-REINIGUNG-05, GE-LEX-C447-FRISEUR-01, GE-LEX-C447-FRISEUR-02, GE-LEX-C447-FRISEUR-03, GE-LEX-C447-FRISEUR-04, GE-LEX-C447-FRISEUR-05, GE-LEX-C448-POST-01, GE-LEX-C448-POST-02, GE-LEX-C448-POST-03, GE-LEX-C448-POST-04, GE-LEX-C448-POST-05, GE-LEX-C449-KASSE-01, GE-LEX-C449-KASSE-02, GE-LEX-C449-KASSE-03, GE-LEX-C449-KASSE-04, GE-LEX-C449-KASSE-05, GE-LEX-C450-GELDAUTOMAT-01, GE-LEX-C450-GELDAUTOMAT-02, GE-LEX-C450-GELDAUTOMAT-03, GE-LEX-C450-GELDAUTOMAT-04, GE-LEX-C450-GELDAUTOMAT-05, GE-LEX-C451-SCHNAEPPCHEN-01, GE-LEX-C451-SCHNAEPPCHEN-02, GE-LEX-C451-SCHNAEPPCHEN-03, GE-LEX-C451-SCHNAEPPCHEN-04, GE-LEX-C451-SCHNAEPPCHEN-05, GE-LEX-C452-LIEFERUNG-01, GE-LEX-C452-LIEFERUNG-02, GE-LEX-C452-LIEFERUNG-03, GE-LEX-C452-LIEFERUNG-04, GE-LEX-C452-LIEFERUNG-05, GE-LEX-C453-GIPFEL-01, GE-LEX-C453-GIPFEL-02, GE-LEX-C453-GIPFEL-03, GE-LEX-C453-GIPFEL-04, GE-LEX-C453-GIPFEL-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [GE-LEX-C446-REINIGUNG-01, GE-LEX-C446-REINIGUNG-02, GE-LEX-C446-REINIGUNG-03, GE-LEX-C446-REINIGUNG-04, GE-LEX-C446-REINIGUNG-05, GE-LEX-C447-FRISEUR-01, GE-LEX-C447-FRISEUR-02, GE-LEX-C447-FRISEUR-03, GE-LEX-C447-FRISEUR-04, GE-LEX-C447-FRISEUR-05, GE-LEX-C448-POST-01, GE-LEX-C448-POST-02, GE-LEX-C448-POST-03, GE-LEX-C448-POST-04, GE-LEX-C448-POST-05, GE-LEX-C449-KASSE-01, GE-LEX-C449-KASSE-02, GE-LEX-C449-KASSE-03, GE-LEX-C449-KASSE-04, GE-LEX-C449-KASSE-05, GE-LEX-C450-GELDAUTOMAT-01, GE-LEX-C450-GELDAUTOMAT-02, GE-LEX-C450-GELDAUTOMAT-03, GE-LEX-C450-GELDAUTOMAT-04, GE-LEX-C450-GELDAUTOMAT-05, GE-LEX-C451-SCHNAEPPCHEN-01, GE-LEX-C451-SCHNAEPPCHEN-02, GE-LEX-C451-SCHNAEPPCHEN-03, GE-LEX-C451-SCHNAEPPCHEN-04, GE-LEX-C451-SCHNAEPPCHEN-05, GE-LEX-C452-LIEFERUNG-01, GE-LEX-C452-LIEFERUNG-02, GE-LEX-C452-LIEFERUNG-03, GE-LEX-C452-LIEFERUNG-04, GE-LEX-C452-LIEFERUNG-05, GE-LEX-C453-GIPFEL-01, GE-LEX-C453-GIPFEL-02, GE-LEX-C453-GIPFEL-03, GE-LEX-C453-GIPFEL-04, GE-LEX-C453-GIPFEL-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
+reviews_of: [GE-C446-reinigung, GE-C446-waschsalon, GE-C446-entfernen, GE-C446-flicken, GE-C446-trocknen, GE-C447-friseur, GE-C447-foehnen, GE-C447-optiker, GE-C447-uhrmacher, GE-C447-juwelier, GE-C448-frankieren, GE-C448-verschicken, GE-C448-einwerfen, GE-C448-paeckchen, GE-C448-einschreiben, GE-C449-kassierer, GE-C449-kassieren, GE-C449-bargeld, GE-C449-kartenlesegeraet, GE-C449-wechselgeld, GE-C450-geldautomat, GE-C450-geheimzahl, GE-C450-kontoauszug, GE-C450-einloesen, GE-C450-auszahlen, GE-C451-reduzieren, GE-C451-sonderangebot, GE-C451-schnaeppchen, GE-C451-feilschen, GE-C451-flohmarkt, GE-C452-verpackung, GE-C452-verpacken, GE-C452-karton, GE-C452-liefern, GE-C452-umtauschen, GE-C453-klippe, GE-C453-hochebene, GE-C453-gipfel, GE-C453-abhang, GE-C453-schlucht]
+---
+
+# Words from chapters 446–453 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-C446-REINIGUNG-01, GE-LEX-C446-REINIGUNG-02] -->
+
+[PAUSE 3s] Say the German for the dry cleaner and the launderette.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-C446-REINIGUNG-01, GE-LEX-C446-REINIGUNG-02, GE-LEX-C446-REINIGUNG-03, GE-LEX-C446-REINIGUNG-04, GE-LEX-C446-REINIGUNG-05, GE-LEX-C447-FRISEUR-01, GE-LEX-C447-FRISEUR-02, GE-LEX-C447-FRISEUR-03, GE-LEX-C447-FRISEUR-04, GE-LEX-C447-FRISEUR-05, GE-LEX-C448-POST-01, GE-LEX-C448-POST-02, GE-LEX-C448-POST-03, GE-LEX-C448-POST-04, GE-LEX-C448-POST-05, GE-LEX-C449-KASSE-01, GE-LEX-C449-KASSE-02, GE-LEX-C449-KASSE-03, GE-LEX-C449-KASSE-04, GE-LEX-C449-KASSE-05, GE-LEX-C450-GELDAUTOMAT-01, GE-LEX-C450-GELDAUTOMAT-02, GE-LEX-C450-GELDAUTOMAT-03, GE-LEX-C450-GELDAUTOMAT-04, GE-LEX-C450-GELDAUTOMAT-05, GE-LEX-C451-SCHNAEPPCHEN-01, GE-LEX-C451-SCHNAEPPCHEN-02, GE-LEX-C451-SCHNAEPPCHEN-03, GE-LEX-C451-SCHNAEPPCHEN-04, GE-LEX-C451-SCHNAEPPCHEN-05, GE-LEX-C452-LIEFERUNG-01, GE-LEX-C452-LIEFERUNG-02, GE-LEX-C452-LIEFERUNG-03, GE-LEX-C452-LIEFERUNG-04, GE-LEX-C452-LIEFERUNG-05, GE-LEX-C453-GIPFEL-01, GE-LEX-C453-GIPFEL-02, GE-LEX-C453-GIPFEL-03, GE-LEX-C453-GIPFEL-04, GE-LEX-C453-GIPFEL-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: the dry cleaner, the launderette, to remove, to patch, to dry]
+- [YOU SAY: the hairdresser, to blow-dry, the optician, the watchmaker, the jeweller]
+- [YOU SAY: to put postage on, to send, to post, the small parcel, the registered letter]
+- [YOU SAY: the cashier, to take the money, the cash, the card reader, the change]
+- [YOU SAY: the cash machine, the PIN, the bank statement, to redeem, to pay out]
+- [YOU SAY: to reduce, the special offer, the bargain, to haggle, the flea market]
+- [YOU SAY: the packaging, to wrap up, the cardboard box, to deliver, to exchange]
+- [YOU SAY: the cliff, the plateau, the summit, the slope, the gorge]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-C446-REINIGUNG-01, GE-LEX-C446-REINIGUNG-02, GE-LEX-C446-REINIGUNG-03, GE-LEX-C446-REINIGUNG-04, GE-LEX-C446-REINIGUNG-05, GE-LEX-C447-FRISEUR-01, GE-LEX-C447-FRISEUR-02, GE-LEX-C447-FRISEUR-03, GE-LEX-C447-FRISEUR-04, GE-LEX-C447-FRISEUR-05, GE-LEX-C448-POST-01, GE-LEX-C448-POST-02, GE-LEX-C448-POST-03, GE-LEX-C448-POST-04, GE-LEX-C448-POST-05, GE-LEX-C449-KASSE-01, GE-LEX-C449-KASSE-02, GE-LEX-C449-KASSE-03, GE-LEX-C449-KASSE-04, GE-LEX-C449-KASSE-05, GE-LEX-C450-GELDAUTOMAT-01, GE-LEX-C450-GELDAUTOMAT-02, GE-LEX-C450-GELDAUTOMAT-03, GE-LEX-C450-GELDAUTOMAT-04, GE-LEX-C450-GELDAUTOMAT-05, GE-LEX-C451-SCHNAEPPCHEN-01, GE-LEX-C451-SCHNAEPPCHEN-02, GE-LEX-C451-SCHNAEPPCHEN-03, GE-LEX-C451-SCHNAEPPCHEN-04, GE-LEX-C451-SCHNAEPPCHEN-05, GE-LEX-C452-LIEFERUNG-01, GE-LEX-C452-LIEFERUNG-02, GE-LEX-C452-LIEFERUNG-03, GE-LEX-C452-LIEFERUNG-04, GE-LEX-C452-LIEFERUNG-05, GE-LEX-C453-GIPFEL-01, GE-LEX-C453-GIPFEL-02, GE-LEX-C453-GIPFEL-03, GE-LEX-C453-GIPFEL-04, GE-LEX-C453-GIPFEL-05] -->
+
+[PAUSE 3s] The dry cleaner? (**die Reinigung**.) The launderette? (**der Waschsalon**.) To remove? (**entfernen**.) To patch? (**flicken**.) To dry? (**trocknen**.) The hairdresser? (**der Friseur**.) To blow-dry? (**föhnen**.) The optician? (**der Optiker**.) The watchmaker? (**der Uhrmacher**.) The jeweller? (**der Juwelier**.) To put postage on? (**frankieren**.) To send? (**verschicken**.) To post? (**einwerfen**.) The small parcel? (**das Päckchen**.) The registered letter? (**das Einschreiben**.) The cashier? (**der Kassierer**.) To take the money? (**kassieren**.) The cash? (**das Bargeld**.) The card reader? (**das Kartenlesegerät**.) The change? (**das Wechselgeld**.) The cash machine? (**der Geldautomat**.) The PIN? (**die Geheimzahl**.) The bank statement? (**der Kontoauszug**.) To redeem? (**einlösen**.) To pay out? (**auszahlen**.) To reduce? (**reduzieren**.) The special offer? (**das Sonderangebot**.) The bargain? (**das Schnäppchen**.) To haggle? (**feilschen**.) The flea market? (**der Flohmarkt**.) The packaging? (**die Verpackung**.) To wrap up? (**verpacken**.) The cardboard box? (**der Karton**.) To deliver? (**liefern**.) To exchange? (**umtauschen**.) The cliff? (**die Klippe**.) The plateau? (**die Hochebene**.) The summit? (**der Gipfel**.) The slope? (**der Abhang**.) The gorge? (**die Schlucht**.)
+`;export{t};

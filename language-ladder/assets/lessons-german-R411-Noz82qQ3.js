@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: GE-R413-review-406-413
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 22310
+chapter: 413
+type: review
+headword: (dialogue)
+gloss: a review of chapters 406-413
+concept_tag: REVIEW
+prerequisites: [GE-C406-einparken, GE-C406-ausparken, GE-C406-parkluecke, GE-C406-parkhaus, GE-C406-parkschein, GE-C407-rasen, GE-C407-blitzer, GE-C407-erwischen, GE-C407-bussgeld, GE-C407-strafzettel, GE-C408-vorfahrt, GE-C408-ueberholen, GE-C408-draengeln, GE-C408-gegenverkehr, GE-C408-ausweichen, GE-C409-baustelle, GE-C409-umleitung, GE-C409-umleiten, GE-C409-sperren, GE-C409-raststaette, GE-C410-auffahrunfall, GE-C410-auffahren, GE-C410-schleudern, GE-C410-fussgaenger, GE-C410-radfahrer, GE-C411-fahrkartenautomat, GE-C411-fahrschein, GE-C411-fahrpreis, GE-C411-entwerten, GE-C411-loesen, GE-C412-bahnsteig, GE-C412-durchsage, GE-C412-abteil, GE-C412-schaffner, GE-C412-kontrollieren, GE-C413-schlafwagen, GE-C413-speisewagen, GE-C413-endstation, GE-C413-reservieren, GE-C413-weiterfahren]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [GE-LEX-C406-PARKEN-01, GE-LEX-C406-PARKEN-02, GE-LEX-C406-PARKEN-03, GE-LEX-C406-PARKEN-04, GE-LEX-C406-PARKEN-05, GE-LEX-C407-BLITZER-01, GE-LEX-C407-BLITZER-02, GE-LEX-C407-BLITZER-03, GE-LEX-C407-BLITZER-04, GE-LEX-C407-BLITZER-05, GE-LEX-C408-VORFAHRT-01, GE-LEX-C408-VORFAHRT-02, GE-LEX-C408-VORFAHRT-03, GE-LEX-C408-VORFAHRT-04, GE-LEX-C408-VORFAHRT-05, GE-LEX-C409-UMLEITUNG-01, GE-LEX-C409-UMLEITUNG-02, GE-LEX-C409-UMLEITUNG-03, GE-LEX-C409-UMLEITUNG-04, GE-LEX-C409-UMLEITUNG-05, GE-LEX-C410-UNFALL-01, GE-LEX-C410-UNFALL-02, GE-LEX-C410-UNFALL-03, GE-LEX-C410-UNFALL-04, GE-LEX-C410-UNFALL-05, GE-LEX-C411-FAHRSCHEIN-01, GE-LEX-C411-FAHRSCHEIN-02, GE-LEX-C411-FAHRSCHEIN-03, GE-LEX-C411-FAHRSCHEIN-04, GE-LEX-C411-FAHRSCHEIN-05, GE-LEX-C412-BAHNSTEIG-01, GE-LEX-C412-BAHNSTEIG-02, GE-LEX-C412-BAHNSTEIG-03, GE-LEX-C412-BAHNSTEIG-04, GE-LEX-C412-BAHNSTEIG-05, GE-LEX-C413-NACHTZUG-01, GE-LEX-C413-NACHTZUG-02, GE-LEX-C413-NACHTZUG-03, GE-LEX-C413-NACHTZUG-04, GE-LEX-C413-NACHTZUG-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [GE-LEX-C406-PARKEN-01, GE-LEX-C406-PARKEN-02, GE-LEX-C406-PARKEN-03, GE-LEX-C406-PARKEN-04, GE-LEX-C406-PARKEN-05, GE-LEX-C407-BLITZER-01, GE-LEX-C407-BLITZER-02, GE-LEX-C407-BLITZER-03, GE-LEX-C407-BLITZER-04, GE-LEX-C407-BLITZER-05, GE-LEX-C408-VORFAHRT-01, GE-LEX-C408-VORFAHRT-02, GE-LEX-C408-VORFAHRT-03, GE-LEX-C408-VORFAHRT-04, GE-LEX-C408-VORFAHRT-05, GE-LEX-C409-UMLEITUNG-01, GE-LEX-C409-UMLEITUNG-02, GE-LEX-C409-UMLEITUNG-03, GE-LEX-C409-UMLEITUNG-04, GE-LEX-C409-UMLEITUNG-05, GE-LEX-C410-UNFALL-01, GE-LEX-C410-UNFALL-02, GE-LEX-C410-UNFALL-03, GE-LEX-C410-UNFALL-04, GE-LEX-C410-UNFALL-05, GE-LEX-C411-FAHRSCHEIN-01, GE-LEX-C411-FAHRSCHEIN-02, GE-LEX-C411-FAHRSCHEIN-03, GE-LEX-C411-FAHRSCHEIN-04, GE-LEX-C411-FAHRSCHEIN-05, GE-LEX-C412-BAHNSTEIG-01, GE-LEX-C412-BAHNSTEIG-02, GE-LEX-C412-BAHNSTEIG-03, GE-LEX-C412-BAHNSTEIG-04, GE-LEX-C412-BAHNSTEIG-05, GE-LEX-C413-NACHTZUG-01, GE-LEX-C413-NACHTZUG-02, GE-LEX-C413-NACHTZUG-03, GE-LEX-C413-NACHTZUG-04, GE-LEX-C413-NACHTZUG-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
+reviews_of: [GE-C406-einparken, GE-C406-ausparken, GE-C406-parkluecke, GE-C406-parkhaus, GE-C406-parkschein, GE-C407-rasen, GE-C407-blitzer, GE-C407-erwischen, GE-C407-bussgeld, GE-C407-strafzettel, GE-C408-vorfahrt, GE-C408-ueberholen, GE-C408-draengeln, GE-C408-gegenverkehr, GE-C408-ausweichen, GE-C409-baustelle, GE-C409-umleitung, GE-C409-umleiten, GE-C409-sperren, GE-C409-raststaette, GE-C410-auffahrunfall, GE-C410-auffahren, GE-C410-schleudern, GE-C410-fussgaenger, GE-C410-radfahrer, GE-C411-fahrkartenautomat, GE-C411-fahrschein, GE-C411-fahrpreis, GE-C411-entwerten, GE-C411-loesen, GE-C412-bahnsteig, GE-C412-durchsage, GE-C412-abteil, GE-C412-schaffner, GE-C412-kontrollieren, GE-C413-schlafwagen, GE-C413-speisewagen, GE-C413-endstation, GE-C413-reservieren, GE-C413-weiterfahren]
+---
+
+# Words from chapters 406–413 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-C406-PARKEN-01, GE-LEX-C406-PARKEN-02] -->
+
+[PAUSE 3s] Say the German for to park and to pull out.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-C406-PARKEN-01, GE-LEX-C406-PARKEN-02, GE-LEX-C406-PARKEN-03, GE-LEX-C406-PARKEN-04, GE-LEX-C406-PARKEN-05, GE-LEX-C407-BLITZER-01, GE-LEX-C407-BLITZER-02, GE-LEX-C407-BLITZER-03, GE-LEX-C407-BLITZER-04, GE-LEX-C407-BLITZER-05, GE-LEX-C408-VORFAHRT-01, GE-LEX-C408-VORFAHRT-02, GE-LEX-C408-VORFAHRT-03, GE-LEX-C408-VORFAHRT-04, GE-LEX-C408-VORFAHRT-05, GE-LEX-C409-UMLEITUNG-01, GE-LEX-C409-UMLEITUNG-02, GE-LEX-C409-UMLEITUNG-03, GE-LEX-C409-UMLEITUNG-04, GE-LEX-C409-UMLEITUNG-05, GE-LEX-C410-UNFALL-01, GE-LEX-C410-UNFALL-02, GE-LEX-C410-UNFALL-03, GE-LEX-C410-UNFALL-04, GE-LEX-C410-UNFALL-05, GE-LEX-C411-FAHRSCHEIN-01, GE-LEX-C411-FAHRSCHEIN-02, GE-LEX-C411-FAHRSCHEIN-03, GE-LEX-C411-FAHRSCHEIN-04, GE-LEX-C411-FAHRSCHEIN-05, GE-LEX-C412-BAHNSTEIG-01, GE-LEX-C412-BAHNSTEIG-02, GE-LEX-C412-BAHNSTEIG-03, GE-LEX-C412-BAHNSTEIG-04, GE-LEX-C412-BAHNSTEIG-05, GE-LEX-C413-NACHTZUG-01, GE-LEX-C413-NACHTZUG-02, GE-LEX-C413-NACHTZUG-03, GE-LEX-C413-NACHTZUG-04, GE-LEX-C413-NACHTZUG-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to park, to pull out, the parking space, the multi-storey car park, the parking ticket]
+- [YOU SAY: to speed, the speed camera, to catch, the fine, the penalty ticket]
+- [YOU SAY: the right of way, to overtake, to tailgate, the oncoming traffic, to swerve]
+- [YOU SAY: the road works, the diversion, to divert, to close, the motorway service area]
+- [YOU SAY: the rear-end collision, to drive into the back, to skid, the pedestrian, the cyclist]
+- [YOU SAY: the ticket machine, the travel ticket, the fare, to stamp, to get a ticket]
+- [YOU SAY: the platform, the announcement, the compartment, the conductor, to check]
+- [YOU SAY: the sleeping car, the dining car, the end of the line, to book, to travel on]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-C406-PARKEN-01, GE-LEX-C406-PARKEN-02, GE-LEX-C406-PARKEN-03, GE-LEX-C406-PARKEN-04, GE-LEX-C406-PARKEN-05, GE-LEX-C407-BLITZER-01, GE-LEX-C407-BLITZER-02, GE-LEX-C407-BLITZER-03, GE-LEX-C407-BLITZER-04, GE-LEX-C407-BLITZER-05, GE-LEX-C408-VORFAHRT-01, GE-LEX-C408-VORFAHRT-02, GE-LEX-C408-VORFAHRT-03, GE-LEX-C408-VORFAHRT-04, GE-LEX-C408-VORFAHRT-05, GE-LEX-C409-UMLEITUNG-01, GE-LEX-C409-UMLEITUNG-02, GE-LEX-C409-UMLEITUNG-03, GE-LEX-C409-UMLEITUNG-04, GE-LEX-C409-UMLEITUNG-05, GE-LEX-C410-UNFALL-01, GE-LEX-C410-UNFALL-02, GE-LEX-C410-UNFALL-03, GE-LEX-C410-UNFALL-04, GE-LEX-C410-UNFALL-05, GE-LEX-C411-FAHRSCHEIN-01, GE-LEX-C411-FAHRSCHEIN-02, GE-LEX-C411-FAHRSCHEIN-03, GE-LEX-C411-FAHRSCHEIN-04, GE-LEX-C411-FAHRSCHEIN-05, GE-LEX-C412-BAHNSTEIG-01, GE-LEX-C412-BAHNSTEIG-02, GE-LEX-C412-BAHNSTEIG-03, GE-LEX-C412-BAHNSTEIG-04, GE-LEX-C412-BAHNSTEIG-05, GE-LEX-C413-NACHTZUG-01, GE-LEX-C413-NACHTZUG-02, GE-LEX-C413-NACHTZUG-03, GE-LEX-C413-NACHTZUG-04, GE-LEX-C413-NACHTZUG-05] -->
+
+[PAUSE 3s] To park? (**einparken**.) To pull out? (**ausparken**.) The parking space? (**die Parklücke**.) The multi-storey car park? (**das Parkhaus**.) The parking ticket? (**der Parkschein**.) To speed? (**rasen**.) The speed camera? (**der Blitzer**.) To catch? (**erwischen**.) The fine? (**das Bußgeld**.) The penalty ticket? (**der Strafzettel**.) The right of way? (**die Vorfahrt**.) To overtake? (**überholen**.) To tailgate? (**drängeln**.) The oncoming traffic? (**der Gegenverkehr**.) To swerve? (**ausweichen**.) The road works? (**die Baustelle**.) The diversion? (**die Umleitung**.) To divert? (**umleiten**.) To close? (**sperren**.) The motorway service area? (**die Raststätte**.) The rear-end collision? (**der Auffahrunfall**.) To drive into the back? (**auffahren**.) To skid? (**schleudern**.) The pedestrian? (**der Fußgänger**.) The cyclist? (**der Radfahrer**.) The ticket machine? (**der Fahrkartenautomat**.) The travel ticket? (**der Fahrschein**.) The fare? (**der Fahrpreis**.) To stamp? (**entwerten**.) To get a ticket? (**lösen**.) The platform? (**der Bahnsteig**.) The announcement? (**die Durchsage**.) The compartment? (**das Abteil**.) The conductor? (**der Schaffner**.) To check? (**kontrollieren**.) The sleeping car? (**der Schlafwagen**.) The dining car? (**der Speisewagen**.) The end of the line? (**die Endstation**.) To book? (**reservieren**.) To travel on? (**weiterfahren**.)
+`;export{t};

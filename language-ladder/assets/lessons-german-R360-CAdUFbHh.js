@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: GE-R361-review-354-361
+spine_node: SPINE-GIVE-REASONS
+sequence: 19630
+chapter: 361
+type: review
+headword: (dialogue)
+gloss: a review of chapters 354-361
+concept_tag: REVIEW
+prerequisites: [GE-C354-besprechung, GE-C354-sitzung, GE-C354-protokoll, GE-C354-praesentieren, GE-C354-praesentation, GE-C355-projekt, GE-C355-auftrag, GE-C355-zusammenarbeiten, GE-C355-zusammenarbeit, GE-C355-organisieren, GE-C356-karriere, GE-C356-aufstieg, GE-C356-herausforderung, GE-C356-bewaeltigen, GE-C356-scheitern, GE-C357-gewerkschaft, GE-C357-betriebsrat, GE-C357-forderung, GE-C357-unterstuetzen, GE-C357-unterstuetzung, GE-C358-gesellschaft, GE-C358-demokratie, GE-C358-abstimmen, GE-C358-abstimmung, GE-C358-beitragen, GE-C359-gerechtigkeit, GE-C359-ungleichheit, GE-C359-armut, GE-C359-reichtum, GE-C359-benachteiligen, GE-C360-vorurteil, GE-C360-toleranz, GE-C360-minderheit, GE-C360-diskriminieren, GE-C360-gleichberechtigung, GE-C361-einwanderung, GE-C361-flucht, GE-C361-fluechtling, GE-C361-integrieren, GE-C361-gewalt]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [GE-LEX-C354-BESPRECHUNG-01, GE-LEX-C354-BESPRECHUNG-02, GE-LEX-C354-BESPRECHUNG-03, GE-LEX-C354-BESPRECHUNG-04, GE-LEX-C354-BESPRECHUNG-05, GE-LEX-C355-PROJEKT-01, GE-LEX-C355-PROJEKT-02, GE-LEX-C355-PROJEKT-03, GE-LEX-C355-PROJEKT-04, GE-LEX-C355-PROJEKT-05, GE-LEX-C356-KARRIERE-01, GE-LEX-C356-KARRIERE-02, GE-LEX-C356-KARRIERE-03, GE-LEX-C356-KARRIERE-04, GE-LEX-C356-KARRIERE-05, GE-LEX-C357-GEWERKSCHAFT-01, GE-LEX-C357-GEWERKSCHAFT-02, GE-LEX-C357-GEWERKSCHAFT-03, GE-LEX-C357-GEWERKSCHAFT-04, GE-LEX-C357-GEWERKSCHAFT-05, GE-LEX-C358-GESELLSCHAFT-01, GE-LEX-C358-GESELLSCHAFT-02, GE-LEX-C358-GESELLSCHAFT-03, GE-LEX-C358-GESELLSCHAFT-04, GE-LEX-C358-GESELLSCHAFT-05, GE-LEX-C359-GERECHTIGKEIT-01, GE-LEX-C359-GERECHTIGKEIT-02, GE-LEX-C359-GERECHTIGKEIT-03, GE-LEX-C359-GERECHTIGKEIT-04, GE-LEX-C359-GERECHTIGKEIT-05, GE-LEX-C360-VORURTEIL-01, GE-LEX-C360-VORURTEIL-02, GE-LEX-C360-VORURTEIL-03, GE-LEX-C360-VORURTEIL-04, GE-LEX-C360-VORURTEIL-05, GE-LEX-C361-EINWANDERUNG-01, GE-LEX-C361-EINWANDERUNG-02, GE-LEX-C361-EINWANDERUNG-03, GE-LEX-C361-EINWANDERUNG-04, GE-LEX-C361-EINWANDERUNG-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [GE-LEX-C354-BESPRECHUNG-01, GE-LEX-C354-BESPRECHUNG-02, GE-LEX-C354-BESPRECHUNG-03, GE-LEX-C354-BESPRECHUNG-04, GE-LEX-C354-BESPRECHUNG-05, GE-LEX-C355-PROJEKT-01, GE-LEX-C355-PROJEKT-02, GE-LEX-C355-PROJEKT-03, GE-LEX-C355-PROJEKT-04, GE-LEX-C355-PROJEKT-05, GE-LEX-C356-KARRIERE-01, GE-LEX-C356-KARRIERE-02, GE-LEX-C356-KARRIERE-03, GE-LEX-C356-KARRIERE-04, GE-LEX-C356-KARRIERE-05, GE-LEX-C357-GEWERKSCHAFT-01, GE-LEX-C357-GEWERKSCHAFT-02, GE-LEX-C357-GEWERKSCHAFT-03, GE-LEX-C357-GEWERKSCHAFT-04, GE-LEX-C357-GEWERKSCHAFT-05, GE-LEX-C358-GESELLSCHAFT-01, GE-LEX-C358-GESELLSCHAFT-02, GE-LEX-C358-GESELLSCHAFT-03, GE-LEX-C358-GESELLSCHAFT-04, GE-LEX-C358-GESELLSCHAFT-05, GE-LEX-C359-GERECHTIGKEIT-01, GE-LEX-C359-GERECHTIGKEIT-02, GE-LEX-C359-GERECHTIGKEIT-03, GE-LEX-C359-GERECHTIGKEIT-04, GE-LEX-C359-GERECHTIGKEIT-05, GE-LEX-C360-VORURTEIL-01, GE-LEX-C360-VORURTEIL-02, GE-LEX-C360-VORURTEIL-03, GE-LEX-C360-VORURTEIL-04, GE-LEX-C360-VORURTEIL-05, GE-LEX-C361-EINWANDERUNG-01, GE-LEX-C361-EINWANDERUNG-02, GE-LEX-C361-EINWANDERUNG-03, GE-LEX-C361-EINWANDERUNG-04, GE-LEX-C361-EINWANDERUNG-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
+reviews_of: [GE-C354-besprechung, GE-C354-sitzung, GE-C354-protokoll, GE-C354-praesentieren, GE-C354-praesentation, GE-C355-projekt, GE-C355-auftrag, GE-C355-zusammenarbeiten, GE-C355-zusammenarbeit, GE-C355-organisieren, GE-C356-karriere, GE-C356-aufstieg, GE-C356-herausforderung, GE-C356-bewaeltigen, GE-C356-scheitern, GE-C357-gewerkschaft, GE-C357-betriebsrat, GE-C357-forderung, GE-C357-unterstuetzen, GE-C357-unterstuetzung, GE-C358-gesellschaft, GE-C358-demokratie, GE-C358-abstimmen, GE-C358-abstimmung, GE-C358-beitragen, GE-C359-gerechtigkeit, GE-C359-ungleichheit, GE-C359-armut, GE-C359-reichtum, GE-C359-benachteiligen, GE-C360-vorurteil, GE-C360-toleranz, GE-C360-minderheit, GE-C360-diskriminieren, GE-C360-gleichberechtigung, GE-C361-einwanderung, GE-C361-flucht, GE-C361-fluechtling, GE-C361-integrieren, GE-C361-gewalt]
+---
+
+# Words from chapters 354–361 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-C354-BESPRECHUNG-01, GE-LEX-C354-BESPRECHUNG-02] -->
+
+[PAUSE 3s] Say the German for the meeting and the session.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-C354-BESPRECHUNG-01, GE-LEX-C354-BESPRECHUNG-02, GE-LEX-C354-BESPRECHUNG-03, GE-LEX-C354-BESPRECHUNG-04, GE-LEX-C354-BESPRECHUNG-05, GE-LEX-C355-PROJEKT-01, GE-LEX-C355-PROJEKT-02, GE-LEX-C355-PROJEKT-03, GE-LEX-C355-PROJEKT-04, GE-LEX-C355-PROJEKT-05, GE-LEX-C356-KARRIERE-01, GE-LEX-C356-KARRIERE-02, GE-LEX-C356-KARRIERE-03, GE-LEX-C356-KARRIERE-04, GE-LEX-C356-KARRIERE-05, GE-LEX-C357-GEWERKSCHAFT-01, GE-LEX-C357-GEWERKSCHAFT-02, GE-LEX-C357-GEWERKSCHAFT-03, GE-LEX-C357-GEWERKSCHAFT-04, GE-LEX-C357-GEWERKSCHAFT-05, GE-LEX-C358-GESELLSCHAFT-01, GE-LEX-C358-GESELLSCHAFT-02, GE-LEX-C358-GESELLSCHAFT-03, GE-LEX-C358-GESELLSCHAFT-04, GE-LEX-C358-GESELLSCHAFT-05, GE-LEX-C359-GERECHTIGKEIT-01, GE-LEX-C359-GERECHTIGKEIT-02, GE-LEX-C359-GERECHTIGKEIT-03, GE-LEX-C359-GERECHTIGKEIT-04, GE-LEX-C359-GERECHTIGKEIT-05, GE-LEX-C360-VORURTEIL-01, GE-LEX-C360-VORURTEIL-02, GE-LEX-C360-VORURTEIL-03, GE-LEX-C360-VORURTEIL-04, GE-LEX-C360-VORURTEIL-05, GE-LEX-C361-EINWANDERUNG-01, GE-LEX-C361-EINWANDERUNG-02, GE-LEX-C361-EINWANDERUNG-03, GE-LEX-C361-EINWANDERUNG-04, GE-LEX-C361-EINWANDERUNG-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: the meeting, the session, the minutes, to present, the presentation]
+- [YOU SAY: the project, the order, to work together, the cooperation, to organize]
+- [YOU SAY: the career, the rise, the challenge, to cope with, to fail]
+- [YOU SAY: the trade union, the works council, the demand, to support, the support]
+- [YOU SAY: society, democracy, to vote, the vote, to contribute]
+- [YOU SAY: justice, inequality, poverty, wealth, to put at a disadvantage]
+- [YOU SAY: the prejudice, tolerance, the minority, to discriminate against, equal rights]
+- [YOU SAY: immigration, flight, the refugee, to integrate, violence]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-C354-BESPRECHUNG-01, GE-LEX-C354-BESPRECHUNG-02, GE-LEX-C354-BESPRECHUNG-03, GE-LEX-C354-BESPRECHUNG-04, GE-LEX-C354-BESPRECHUNG-05, GE-LEX-C355-PROJEKT-01, GE-LEX-C355-PROJEKT-02, GE-LEX-C355-PROJEKT-03, GE-LEX-C355-PROJEKT-04, GE-LEX-C355-PROJEKT-05, GE-LEX-C356-KARRIERE-01, GE-LEX-C356-KARRIERE-02, GE-LEX-C356-KARRIERE-03, GE-LEX-C356-KARRIERE-04, GE-LEX-C356-KARRIERE-05, GE-LEX-C357-GEWERKSCHAFT-01, GE-LEX-C357-GEWERKSCHAFT-02, GE-LEX-C357-GEWERKSCHAFT-03, GE-LEX-C357-GEWERKSCHAFT-04, GE-LEX-C357-GEWERKSCHAFT-05, GE-LEX-C358-GESELLSCHAFT-01, GE-LEX-C358-GESELLSCHAFT-02, GE-LEX-C358-GESELLSCHAFT-03, GE-LEX-C358-GESELLSCHAFT-04, GE-LEX-C358-GESELLSCHAFT-05, GE-LEX-C359-GERECHTIGKEIT-01, GE-LEX-C359-GERECHTIGKEIT-02, GE-LEX-C359-GERECHTIGKEIT-03, GE-LEX-C359-GERECHTIGKEIT-04, GE-LEX-C359-GERECHTIGKEIT-05, GE-LEX-C360-VORURTEIL-01, GE-LEX-C360-VORURTEIL-02, GE-LEX-C360-VORURTEIL-03, GE-LEX-C360-VORURTEIL-04, GE-LEX-C360-VORURTEIL-05, GE-LEX-C361-EINWANDERUNG-01, GE-LEX-C361-EINWANDERUNG-02, GE-LEX-C361-EINWANDERUNG-03, GE-LEX-C361-EINWANDERUNG-04, GE-LEX-C361-EINWANDERUNG-05] -->
+
+[PAUSE 3s] The meeting? (**die Besprechung**.) The session? (**die Sitzung**.) The minutes? (**das Protokoll**.) To present? (**präsentieren**.) The presentation? (**die Präsentation**.) The project? (**das Projekt**.) The order? (**der Auftrag**.) To work together? (**zusammenarbeiten**.) The cooperation? (**die Zusammenarbeit**.) To organize? (**organisieren**.) The career? (**die Karriere**.) The rise? (**der Aufstieg**.) The challenge? (**die Herausforderung**.) To cope with? (**bewältigen**.) To fail? (**scheitern**.) The trade union? (**die Gewerkschaft**.) The works council? (**der Betriebsrat**.) The demand? (**die Forderung**.) To support? (**unterstützen**.) The support? (**die Unterstützung**.) Society? (**die Gesellschaft**.) Democracy? (**die Demokratie**.) To vote? (**abstimmen**.) The vote? (**die Abstimmung**.) To contribute? (**beitragen**.) Justice? (**die Gerechtigkeit**.) Inequality? (**die Ungleichheit**.) Poverty? (**die Armut**.) Wealth? (**der Reichtum**.) To put at a disadvantage? (**benachteiligen**.) The prejudice? (**das Vorurteil**.) Tolerance? (**die Toleranz**.) The minority? (**die Minderheit**.) To discriminate against? (**diskriminieren**.) Equal rights? (**die Gleichberechtigung**.) Immigration? (**die Einwanderung**.) Flight? (**die Flucht**.) The refugee? (**der Flüchtling**.) To integrate? (**integrieren**.) Violence? (**die Gewalt**.)
+`;export{t};
