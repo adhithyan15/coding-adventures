@@ -1,8 +1,8 @@
 # @coding-adventures/forme-cli
 
-The product command driver for Forme. It loads a TypeScript or JavaScript
-project config, validates the typed DAG, runs the orchestrator, formats stable
-diagnostics, and returns documented process exit codes.
+The product command driver for Forme. It loads a TypeScript, JavaScript, or
+declarative TOML project config, validates the typed DAG, runs the orchestrator,
+formats stable diagnostics, and returns documented process exit codes.
 
 The command surface is declared in `forme.cli.json` and parsed by
 `@coding-adventures/cli-builder`. The shared parser owns subcommand routing,
@@ -24,11 +24,13 @@ forme clean
 forme watch
 forme watch --port 4321 --debounce 100
 forme build --config pipelines/site.ts
+forme check --config forme.config.toml
 forme build --help
 ```
 
-The default config search checks `forme.config.ts`, `.mts`, `.js`, and `.mjs`
-in the current directory. Relative stage paths execute from the config's
+The default config search checks `forme.config.ts`, `.mts`, `.js`, `.mjs`, then
+`forme.config.toml` in the current directory. The executable forms retain
+canonical precedence when more than one default exists. Relative stage paths execute from the config's
 directory, so the same project behaves consistently whether the CLI is invoked
 inside a monorepo, through an npm script, or from an installed external
 project.
@@ -115,8 +117,11 @@ on exception stacks for expected failures.
 
 TypeScript and JavaScript configs are executable modules. The CLI treats the
 selected project config as trusted code, matching FM03's direct-import host; it
-does not claim to sandbox config evaluation. Installed plugin stages are
-separate verified snapshots and always require an attested native sandbox.
+does not claim to sandbox config evaluation. TOML configs are bounded UTF-8
+data parsed through the closed FM03 schema; package stage names lower to
+`StageRef`s and follow the same installed-plugin resolution path. Unknown file
+extensions are rejected. Installed plugin stages are separate verified
+snapshots and always require an attested native sandbox.
 
 ## Repository bootstrap helper
 
