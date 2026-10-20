@@ -801,6 +801,21 @@ def check_inventory(path: Path, matrix: list[dict[str, str]] | None = None) -> R
     return report
 
 
+# C0/C1 controls, DEL, and the bidi/zero-width format characters. A CSV
+# cell is untrusted text that ends up in CI logs: a quoted cell holding a
+# newline followed by `::error::` would otherwise start a GitHub Actions
+# workflow command, and bidi controls could make a message read differently
+# from what it says.
+UNPRINTABLE_RE = re.compile(
+    "[\x00-\x1f\x7f-\x9f\u061c\u200b-\u200f\u2028-\u202e\u2066-\u2069\ufeff]"
+)
+
+
+def printable(text: str) -> str:
+    """`text` with every control or bidi character shown as `\\uXXXX`."""
+    return UNPRINTABLE_RE.sub(lambda m: f"\\u{ord(m.group(0)):04x}", text)
+
+
 def check(grammars: Path, matrix_source: Path | None = None) -> int:
     paths = sorted(grammars.glob("*/releases.csv"))
     if not paths:
@@ -822,13 +837,13 @@ def check(grammars: Path, matrix_source: Path | None = None) -> int:
         report = check_inventory(path, matrix)
         name = path.relative_to(grammars)
         for message in report.errors:
-            print(f"{name}: {message}", file=sys.stderr)
+            print(f"{name}: {printable(message)}", file=sys.stderr)
         if report.errors:
             failed = True
         else:
             print(f"{name}: ok ({report.rows} rows)")
         for note in report.notes:
-            print(f"{name}: {note}")
+            print(f"{name}: {printable(note)}")
     return 1 if failed else 0
 
 

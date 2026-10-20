@@ -288,6 +288,23 @@ class InventoryTest(Fixture):
         ):
             self.assertEqual(release_inventory.main(["check", str(self.root)]), 1)
 
+    def test_printed_messages_cannot_start_a_workflow_command(self) -> None:
+        self.write(
+            "lang",
+            [
+                HEADER,
+                f'"1.0\n::error::pwned\u202e",1990-01-01,final,https://x,{SHA},,'
+                + PENDING,
+            ],
+        )
+        err = io.StringIO()
+        with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(err):
+            self.assertEqual(release_inventory.main(["check", str(self.root)]), 1)
+        self.assertIn("\\u000a::error::pwned\\u202e", err.getvalue())
+        for line in err.getvalue().splitlines():
+            self.assertFalse(line.startswith("::"), line)
+        self.assertEqual(release_inventory.printable("a\tb"), "a\\u0009b")
+
     def test_repository_inventories_are_valid(self) -> None:
         out, err = io.StringIO(), io.StringIO()
         with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
