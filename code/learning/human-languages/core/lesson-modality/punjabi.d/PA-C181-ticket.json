@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C181-ticket",
+    "language": "punjabi",
+    "chapter": 181,
+    "sequence": 9480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:48f94baa91e0f5f7"
+  },
+  "findings": []
+}

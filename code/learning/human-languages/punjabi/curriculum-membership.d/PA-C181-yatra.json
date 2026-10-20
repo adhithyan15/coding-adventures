@@ -1,0 +1,11 @@
+{
+  "id": "PA-C181-yatra",
+  "pathSegment": "PA-PATH-181-A2-TRANSPORT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-181-A2-TRANSPORT",
+      "order": 3
+    }
+  ]
+}

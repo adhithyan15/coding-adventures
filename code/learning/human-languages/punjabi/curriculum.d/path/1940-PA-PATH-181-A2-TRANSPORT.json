@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-181-A2-TRANSPORT",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PA-EXT-181-A2-TRANSPORT"
+  ],
+  "after": []
+}

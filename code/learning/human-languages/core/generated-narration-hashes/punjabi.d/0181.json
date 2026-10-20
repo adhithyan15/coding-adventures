@@ -1,0 +1,22 @@
+{
+  "language": "punjabi",
+  "chapter": 181,
+  "sourceHash": "fnv1a64:09f1298f137fa807",
+  "lessonIds": [
+    "PA-C181-rel",
+    "PA-C181-ticket",
+    "PA-C181-yayya",
+    "PA-C181-yatra",
+    "PA-C181-vapas",
+    "PA-C181-paidal",
+    "PA-C181-travel-review",
+    "PA-C181-payoff"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 2,
+  "text": "punjabi/narration/ch181.txt",
+  "json": "punjabi/narration/ch181.json",
+  "textHash": "fnv1a64:a4f1da268e683336",
+  "jsonHash": "fnv1a64:151930e2cda702c5",
+  "findings": []
+}

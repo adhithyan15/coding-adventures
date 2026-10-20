@@ -1,0 +1,16 @@
+{
+  "language": "punjabi",
+  "chapter": 181,
+  "sourceHash": "fnv1a64:3e710befbad3b61d",
+  "lessonIds": [
+    "PA-C181-rel",
+    "PA-C181-ticket",
+    "PA-C181-yayya",
+    "PA-C181-yatra",
+    "PA-C181-vapas",
+    "PA-C181-paidal",
+    "PA-C181-travel-review",
+    "PA-C181-payoff"
+  ],
+  "tex": "punjabi/book/chapters/ch181-a-train-ticket-and-the-way-home.tex"
+}
