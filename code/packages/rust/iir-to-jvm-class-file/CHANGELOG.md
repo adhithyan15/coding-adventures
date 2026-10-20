@@ -1,5 +1,23 @@
 # Changelog — iir-to-jvm-class-file
 
+## Unreleased — LANG83 PR6a — shortest round-trip float output
+
+- **`write_f64_py` / `write_f64_js`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR6a): `dload x;
+  iconst_0|1; invokestatic <class>.__iir_write_f64(DI)V`. The class gets one
+  private static helper. Its digits come from `Double.toString` (JDK 19+
+  shortest), re-read through `new BigDecimal(..).stripTrailingZeros()`, and it
+  lays them out with `toPlainString` or a `StringBuilder`, then makes one
+  `System.out.print`.
+- Java never prints fewer than two digits (`Double.MIN_VALUE` is `4.9E-324`,
+  where Python and JS print `5e-324`). So when two digits survive, the helper
+  tries the one-digit neighbours with `BigDecimal.doubleValue` and keeps the
+  closer one that reads back. It breaks an exact tie to the even digit.
+- Version 49, no StackMapTable. Every branch target is reached with an empty
+  operand stack, and `max_stack` is measured. A non-float operand and a user
+  function named `__iir_write_f64` are refused.
+- Checked on JDK 21 with the verifier on, against host `python3` (535 432
+  values) and `node` (402 112 values): no mismatch.
+
 ## Unreleased — LANG83 PR4 — overflow-checked arithmetic
 
 - **`i64_add_ovf` / `i64_sub_ovf` / `i64_mul_ovf` / `i64_neg_ovf`**

@@ -327,3 +327,5 @@ tested before the plain `ladd`/`lsub`/`lmul`/`lneg` (sign tests for add/sub,
 multiplication), and a failing test runs the same flush-then-throw sequence with
 `Trap.Overflow`. `Math.*Exact` is not used: its `ArithmeticException` carries no
 kind and does not flush.
+
+LANG83 PR6a adds `write_f64_py` / `write_f64_js` → the class's private static `__iir_write_f64(DI)V`. It takes the shortest digits from `Double.toString` (JDK 19+), with a one-digit correction for the deepest subnormals, and prints Python's `repr` or JavaScript's `toString` layout.
