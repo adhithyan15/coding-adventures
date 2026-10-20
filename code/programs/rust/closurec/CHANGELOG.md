@@ -4,6 +4,16 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - outer binding shadowed by a `for`-head `let`/`const` survives (#16008)
+
+`var x = 1; for (let x of [7]) console.log(x); console.log(x);` compiled at
+ADVANCED to output without `var x = 1;`, which threw `ReferenceError`. The fix
+is in `closure-scope-analyzer` 0.21.0, which gives a lexical `for` head its own
+loop scope. `tests/regression_for_head_shadow.rs` compiles the issue's matrix at
+SIMPLE and ADVANCED, checks that the outer declaration survives and pins the
+output bytes, and, when `node` is installed, checks that the output prints
+what the source prints.
+
 ### Added - actual bounded provenance chronology (CV03)
 
 Traced compilation starts a fresh checked chronology log before input graph
