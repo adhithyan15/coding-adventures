@@ -1,0 +1,11 @@
+{
+  "id": "RU-C440-bulvar",
+  "pathSegment": "RU-PATH-440-PEREKHOD",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-440-PEREKHOD",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "language": "russian",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:9f7cd105297d00b3",
+  "lessonIds": [
+    "RU-C500-vyazat",
+    "RU-C500-spitsy",
+    "RU-C500-klubok",
+    "RU-C500-vyshivat",
+    "RU-C500-kruzhevo",
+    "RU-R500-review-493-500"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "russian/narration/ch500.txt",
+  "json": "russian/narration/ch500.json",
+  "textHash": "fnv1a64:d3491a0af2a3c12e",
+  "jsonHash": "fnv1a64:b50a1db255c80c3e",
+  "findings": []
+}

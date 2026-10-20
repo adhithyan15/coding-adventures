@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C525-naizust",
+    "language": "russian",
+    "chapter": 525,
+    "sequence": 29510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d76603ce217fb2c9"
+  },
+  "findings": []
+}

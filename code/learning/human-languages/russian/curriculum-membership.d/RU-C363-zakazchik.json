@@ -1,0 +1,11 @@
+{
+  "id": "RU-C363-zakazchik",
+  "pathSegment": "RU-PATH-363-PEREGOVORY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-363-PEREGOVORY",
+      "order": 2
+    }
+  ]
+}

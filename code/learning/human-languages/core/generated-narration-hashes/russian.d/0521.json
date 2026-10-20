@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:77bab2c076933cd0",
+  "lessonIds": [
+    "RU-C521-kist",
+    "RU-C521-kholst",
+    "RU-C521-akvarel",
+    "RU-C521-peyzazh",
+    "RU-C521-pozirovat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch521.txt",
+  "json": "russian/narration/ch521.json",
+  "textHash": "fnv1a64:e782c7d8b08e8bd7",
+  "jsonHash": "fnv1a64:1abbfc87c2c1dd7c",
+  "findings": []
+}

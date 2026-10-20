@@ -1,0 +1,11 @@
+{
+  "id": "RU-C471-obizhat",
+  "pathSegment": "RU-PATH-471-HURT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-471-HURT",
+      "order": 2
+    }
+  ]
+}

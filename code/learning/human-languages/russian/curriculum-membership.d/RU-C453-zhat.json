@@ -1,0 +1,11 @@
+{
+  "id": "RU-C453-zhat",
+  "pathSegment": "RU-PATH-453-PRIMERKA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-453-PRIMERKA",
+      "order": 3
+    }
+  ]
+}

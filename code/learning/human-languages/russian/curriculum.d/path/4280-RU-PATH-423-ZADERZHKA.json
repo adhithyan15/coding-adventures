@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-423-ZADERZHKA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "RU-EXT-423-ZADERZHKA"
+  ],
+  "after": []
+}

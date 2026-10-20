@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-455-OPLATA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "RU-EXT-455-OPLATA"
+  ],
+  "after": []
+}

@@ -27,7 +27,11 @@ name-formal result is also allowed when its actual has the same proof.
 Whole-number additive offsets may remain inside that bounded transform while
 their checked total stays within `2^53 - 1` units, so every path value remains
 an exact binary64 integer; the budget is tracked through parentheses and
-supported wrappers and applied per conditional path. Unary
+supported wrappers and applied per conditional path. Exact whole-number
+factors may also scale the sign-rooted integer transform through magnitude
+`2^53`, including exact additive composition; fractional factors, non-unit
+divisors, denominator roots, repeated roots, and oversized products stay
+conservative. Unary
 signs, arithmetic composition with finite static operands, and real-valued
 standard functions preserve it, while a finite static real actual is safe
 directly. Variable-free exact `sign` and exact-range `entier`
@@ -677,9 +681,17 @@ cil_text,beam}` and `compile_iir_to_host_executable` compile an already-built
 module. Each `compile_source_to_*` is the frontend followed by one of them.
 `tests/op_conformance.rs` builds an IIR case for every registry operation. Each
 `Lowered` case compiles on every code-generation backend and runs on WASM, VM,
-JIT, LLVM and native. Each `Refused` case is rejected at compile time. Output is
-one ordered stream on every column: `print_i64`, `putchar` and `print_str`
-interleave in program order. See
+JIT, LLVM, native and (with a JDK) the JVM. Each `Refused` case is rejected at
+compile time. Output is one ordered stream on every column: `print_i64`,
+`write_i64`, `putchar` and `print_str` interleave in program order.
+
+Since LANG83 PR1b every backend lowers `write_i64` (no newline),
+`i64_div_floor` / `i64_mod_floor` (floor semantics; a zero divisor traps
+`Trap.DivZero`, `MIN / -1` traps `Trap.Overflow`, `MIN mod -1` is 0) and
+`trap "<kind>"`. A trap flushes the output written so far before reporting its
+kind; the conformance suite proves that ("print, then trap") on WASM, VM, JIT,
+LLVM, native and JVM. Modules using the PR1b i64 operations keep the wide i64
+value model on the JVM (they are never narrowed to `i32`). See
 `code/specs/LANG83-iir-standard-operation-registry.md`.
 
 ## Limitations

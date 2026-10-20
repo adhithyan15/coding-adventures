@@ -1,0 +1,20 @@
+{
+  "language": "russian",
+  "chapter": 516,
+  "sourceHash": "fnv1a64:6a0d60e0d6947e4f",
+  "lessonIds": [
+    "RU-C516-melodiya",
+    "RU-C516-ritm",
+    "RU-C516-pripev",
+    "RU-C516-napevat",
+    "RU-C516-falshivit",
+    "RU-R516-review-509-516"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "russian/narration/ch516.txt",
+  "json": "russian/narration/ch516.json",
+  "textHash": "fnv1a64:1bbb5b4fee284708",
+  "jsonHash": "fnv1a64:d8f04a4a382c1b46",
+  "findings": []
+}

@@ -1,6 +1,6 @@
 [package]
 name        = "twig-module-driver"
-version     = "0.14.0"
+version     = "0.15.0"
 edition     = "2021"
 description = "LANG56-LANG72 — multi-file module resolver for Twig.  Resolves (import …) declarations recursively, compiles and links all modules into a single IIRModule ready for twig-vm.  LANG72 adds TW05-Q: Phase 3.5 topological type-check via twig-type-checker — strict-mode modules with type errors return ModuleDriverError::TypeErrors."
 

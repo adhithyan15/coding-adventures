@@ -1,4 +1,31 @@
 # Changelog — `x86_64-backend`
+
+## 0.41.0 - 2026-10-19 - fail-closed real-to-integer narrowing
+
+`real_to_int_trunc` and `real_to_int_floor` now trap with `ud2` instead of
+storing a wrong integer. `cvttsd2si` returns the integer-indefinite `i64::MIN`
+on NaN, ±∞ and out-of-range input, so `entier(exp(exp(4)))` printed a large
+*negative* number. The input is rounded in place (`roundsd` mode 1 for floor,
+3 for trunc), converted, converted back with `cvtsi2sd` and compared with
+`ucomisd`. An unordered or unequal compare falls through to the trap.
+
+## Unreleased — LANG83 PR1b — floor division, `trap`, `write_i64`
+
+- **`i64_div_floor` / `i64_mod_floor`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)): both
+  edges are tested *before* `idiv` (which would raise `#DE`/SIGFPE for a zero
+  divisor or `MIN / -1`): `test rcx,rcx` → `Trap.DivZero`; `cmp rcx,-1` +
+  `MIN` compare → `Trap.Overflow` (div) or a divide by 1 (mod, `MIN mod -1 = 0`).
+  Then `cqo; idiv rcx` and the floor fix-up (`r != 0 && (r ^ b) < 0` →
+  `q -= 1` / `r += b`, with R8 as scratch).
+- **`trap "<kind>"`** → `mov <arg0>, kind_id; call __twig_trap; ud2`, with the
+  stable `exception_kind::trap_kind_id`. An unregistered kind is malformed IR.
+- **`write_i64`** joins `V1_BUILTINS` → `__twig_write_i64`.
+- `op_support`: the four PR1b ops are `Lowered`.
+- Tests: byte-pattern checks for both floor ops (guards precede `idiv`, trap
+  ids 3/5, fix-up shape), the trap sequence on SysV and MS x64, and the
+  `write_i64` relocation. Execution is covered by `twig-aot`'s native test and
+  `lang-aot`'s `op_conformance` NativeAot column.
+
 ## Unreleased — LANG83 PR1a — standard operation support
 
 - **LANG83 op support.** New `op_support` module exporting `OP_SUPPORT` and

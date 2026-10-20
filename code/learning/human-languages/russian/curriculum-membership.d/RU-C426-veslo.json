@@ -1,0 +1,11 @@
+{
+  "id": "RU-C426-veslo",
+  "pathSegment": "RU-PATH-426-VESLO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-426-VESLO",
+      "order": 3
+    }
+  ]
+}

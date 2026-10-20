@@ -1,0 +1,11 @@
+{
+  "id": "RU-C419-reys",
+  "pathSegment": "RU-PATH-419-REGISTRATSIYA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-419-REGISTRATSIYA",
+      "order": 2
+    }
+  ]
+}

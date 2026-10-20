@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:bfc74c39ced96be4",
+  "lessonIds": [
+    "RU-C323-voyna",
+    "RU-C323-bitva",
+    "RU-C323-srazheniye",
+    "RU-C323-srazhatsya",
+    "RU-C323-vrag"
+  ],
+  "tex": "russian/book/chapters/ch323-war.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 534,
+  "title": "Mornings at Home",
+  "label": "ch:ru-mornings-at-home",
+  "canDo": "I can describe getting ready in the morning.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-R534-review-final-534",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 534: I can describe getting ready in the morning.",
+    "assesses": [
+      "RU-LEX-C534-MORNING-03",
+      "RU-LEX-C534-MORNING-04",
+      "RU-LEX-C534-MORNING-05"
+    ]
+  }
+}

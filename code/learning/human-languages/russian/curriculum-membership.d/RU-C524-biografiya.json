@@ -1,0 +1,11 @@
+{
+  "id": "RU-C524-biografiya",
+  "pathSegment": "RU-PATH-524-GENRES",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-524-GENRES",
+      "order": 2
+    }
+  ]
+}

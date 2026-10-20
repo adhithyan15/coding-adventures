@@ -1,0 +1,11 @@
+{
+  "id": "RU-C460-boloto",
+  "pathSegment": "RU-PATH-460-RUCHEY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-460-RUCHEY",
+      "order": 1
+    }
+  ]
+}

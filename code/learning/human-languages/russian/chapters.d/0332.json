@@ -1,0 +1,19 @@
+{
+  "chapter": 332,
+  "title": "In the oven",
+  "label": "ch:ru-in-the-oven",
+  "canDo": "I can describe oven cooking: baking, a baking tray, heating up, food catching and browning.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C332-obzharivat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 332: I can describe oven cooking: baking, a baking tray, heating up, food catching and browning.",
+    "assesses": [
+      "RU-LEX-C332-ZAPEKAT-03",
+      "RU-LEX-C332-ZAPEKAT-04",
+      "RU-LEX-C332-ZAPEKAT-05"
+    ]
+  }
+}

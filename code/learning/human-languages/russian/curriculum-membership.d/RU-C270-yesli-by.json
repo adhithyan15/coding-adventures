@@ -1,0 +1,11 @@
+{
+  "id": "RU-C270-yesli-by",
+  "pathSegment": "RU-PATH-270-WOULD",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-270-WOULD",
+      "order": 1
+    }
+  ]
+}

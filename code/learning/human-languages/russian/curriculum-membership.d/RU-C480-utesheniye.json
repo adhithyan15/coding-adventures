@@ -1,0 +1,11 @@
+{
+  "id": "RU-C480-utesheniye",
+  "pathSegment": "RU-PATH-480-LAUGHTER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-480-LAUGHTER",
+      "order": 4
+    }
+  ]
+}

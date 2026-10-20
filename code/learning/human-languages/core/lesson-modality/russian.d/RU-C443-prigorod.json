@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C443-prigorod",
+    "language": "russian",
+    "chapter": 443,
+    "sequence": 25280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1c4d9d034d39a0f4"
+  },
+  "findings": []
+}

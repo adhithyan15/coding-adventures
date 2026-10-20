@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 363,
+  "sourceHash": "fnv1a64:ef3933d58abc2899",
+  "lessonIds": [
+    "RU-C363-peregovory",
+    "RU-C363-kontrakt",
+    "RU-C363-zakazchik",
+    "RU-C363-konkurent",
+    "RU-C363-sotrudnichat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch363.txt",
+  "json": "russian/narration/ch363.json",
+  "textHash": "fnv1a64:f122f2cad1140243",
+  "jsonHash": "fnv1a64:6c53472f9d1b0f33",
+  "findings": []
+}

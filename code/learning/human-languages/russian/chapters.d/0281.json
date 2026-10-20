@@ -1,0 +1,19 @@
+{
+  "chapter": 281,
+  "title": "On the air",
+  "label": "ch:ru-on-the-air",
+  "canDo": "I can talk about a correspondent, a news report, a presenter, being on air and a TV channel.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C281-telekanal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 281: I can talk about a correspondent, a news report, a presenter, being on air and a TV channel.",
+    "assesses": [
+      "RU-LEX-C281-EFIR-03",
+      "RU-LEX-C281-EFIR-04",
+      "RU-LEX-C281-EFIR-05"
+    ]
+  }
+}

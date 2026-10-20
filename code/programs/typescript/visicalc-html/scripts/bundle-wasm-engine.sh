@@ -35,19 +35,30 @@ OUT_DIR="$DEMO_DIR/vendor"
 OUT="$OUT_DIR/spreadsheet-engine-wasm.js"
 
 if [ ! -f "$WASM" ]; then
-  echo "Building the .wasm (missing)…"
-  (cd "$REPO_ROOT/code/packages/rust/spreadsheet-wasm" && bash build-wasm.sh)
+  echo "error: $WASM is missing; build it with code/packages/rust/spreadsheet-wasm/build-wasm.sh" >&2
+  exit 1
+fi
+
+# The bundle is a pure function of the committed .wasm and the loader, so it
+# is regenerated rather than edited, and `--check` (CI) fails when the
+# committed bundle is not what those two produce. The .wasm itself is checked
+# against its sources by spreadsheet-wasm's `build-wasm.sh --check`.
+render_bundle() {
+  printf '// AUTO-GENERATED — DO NOT EDIT. Regenerate with scripts/bundle-wasm-engine.sh\n'
+  printf 'var __SPREADSHEET_WASM_B64__ = "%s";\n' "$(base64 < "$WASM" | tr -d '\n')"
+  cat "$LOADER"
+}
+
+if [ "${1:-}" = "--check" ]; then
+  if ! render_bundle | cmp -s - "$OUT"; then
+    echo "error: $OUT is stale: it does not embed the committed .wasm with the current loader." >&2
+    echo "       Regenerate with: bash $SCRIPT_DIR/bundle-wasm-engine.sh" >&2
+    exit 1
+  fi
+  echo "vendor/spreadsheet-engine-wasm.js is current"
+  exit 0
 fi
 
 mkdir -p "$OUT_DIR"
-
-# base64, stripped of newlines (one long string literal).
-B64="$(base64 < "$WASM" | tr -d '\n')"
-
-{
-  printf '// AUTO-GENERATED — DO NOT EDIT. Regenerate with scripts/bundle-wasm-engine.sh\n'
-  printf 'var __SPREADSHEET_WASM_B64__ = "%s";\n' "$B64"
-  cat "$LOADER"
-} > "$OUT"
-
+render_bundle > "$OUT"
 echo "Wrote $OUT ($(wc -c < "$OUT") bytes; wasm $(wc -c < "$WASM") bytes)"

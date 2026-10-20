@@ -1,0 +1,11 @@
+{
+  "id": "RU-C300-zatoplyat",
+  "pathSegment": "RU-PATH-300-NAVODNENIYE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-300-NAVODNENIYE",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C391-grazhdanstvo",
+  "pathSegment": "RU-PATH-391-ZAKONODATELSTVO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-391-ZAKONODATELSTVO",
+      "order": 2
+    }
+  ]
+}

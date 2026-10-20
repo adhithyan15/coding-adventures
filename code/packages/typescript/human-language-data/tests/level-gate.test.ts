@@ -345,11 +345,15 @@ describe("the gate that would have caught the A2 claim", () => {
     // Latin followed as the sixth, with chapters 281-290 (the B1 core: both
     // pasts, reasons, travel, experience and the subjunctive, realizing all
     // five B1 nodes) and chapters 291-554 (1,320 headwords, 403 verbs).
-    // Persian followed, with chapters 290-299 (the B1 core: the present and
-    // past stems, the mi- past, reasons, travel, experience, the subjunctive
-    // and the unreal condition, realizing all five B1 nodes, plus letter
-    // lessons for ع غ ژ ث ذ ض ئ) and chapters 300-539 (1,200 headwords, 358
+    // Russian followed as the seventh, with chapters 261-270 (the B1 core:
+    // aspect in the past, reasons, travel, experience and бы, realizing all five
+    // B1 nodes, plus the letter ъ) and chapters 271-534 (1,320 headwords, 456
     // verbs).
+    // Persian followed as the eighth, with chapters 290-299 (the B1 core: the
+    // present and past stems, the mi- past, reasons, travel, experience, the
+    // subjunctive and the unreal condition, realizing all five B1 nodes, plus
+    // letter lessons for ع غ ژ ث ذ ض ئ) and chapters 300-539 (1,200 headwords,
+    // 358 verbs).
     for (const level of Object.values(HELD)) {
       expectedByLevel.set(level, (expectedByLevel.get(level) ?? 0) + 1);
     }

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C534-prichyosyvatsya",
+    "language": "russian",
+    "chapter": 534,
+    "sequence": 29950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:93a0e276348b6455"
+  },
+  "findings": []
+}

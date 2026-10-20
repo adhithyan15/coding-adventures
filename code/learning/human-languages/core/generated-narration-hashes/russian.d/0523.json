@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 523,
+  "sourceHash": "fnv1a64:b02197e6823489fa",
+  "lessonIds": [
+    "RU-C523-syuzhet",
+    "RU-C523-personazh",
+    "RU-C523-geroinya",
+    "RU-C523-razvyazka",
+    "RU-C523-zachityvatsya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch523.txt",
+  "json": "russian/narration/ch523.json",
+  "textHash": "fnv1a64:547deb1aa1df97c4",
+  "jsonHash": "fnv1a64:33820c4febc3dff0",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C520-snimatsya",
+  "pathSegment": "RU-PATH-520-SCREENACTING",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-520-SCREENACTING",
+      "order": 4
+    }
+  ]
+}

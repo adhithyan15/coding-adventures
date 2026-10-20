@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 319,
+  "sourceHash": "fnv1a64:407fab251260729b",
+  "lessonIds": [
+    "RU-C319-legenda",
+    "RU-C319-mif",
+    "RU-C319-geroy",
+    "RU-C319-rasskazchik",
+    "RU-C319-sochinyat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch319.txt",
+  "json": "russian/narration/ch319.json",
+  "textHash": "fnv1a64:dcac7385ba028ef5",
+  "jsonHash": "fnv1a64:3b141bd09bcb9e96",
+  "findings": []
+}

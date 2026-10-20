@@ -1,0 +1,19 @@
+{
+  "chapter": 313,
+  "title": "The New Year tree",
+  "label": "ch:ru-the-new-year-tree",
+  "canDo": "I can talk about a New Year tree, fairy lights, decorating, a decoration and dressing the tree.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C313-naryazhat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 313: I can talk about a New Year tree, fairy lights, decorating, a decoration and dressing the tree.",
+    "assesses": [
+      "RU-LEX-C313-YOLKA-03",
+      "RU-LEX-C313-YOLKA-04",
+      "RU-LEX-C313-YOLKA-05"
+    ]
+  }
+}

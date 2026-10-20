@@ -1,0 +1,19 @@
+{
+  "chapter": 418,
+  "title": "Changing trains",
+  "label": "ch:ru-changing-trains",
+  "canDo": "I can travel with a change: changing trains, the last stop, local trains, going past and seeing someone off.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-R418-review-411-418",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 418: I can travel with a change: changing trains, the last stop, local trains, going past and seeing someone off.",
+    "assesses": [
+      "RU-LEX-C418-PERESADKA-03",
+      "RU-LEX-C418-PERESADKA-04",
+      "RU-LEX-C418-PERESADKA-05"
+    ]
+  }
+}

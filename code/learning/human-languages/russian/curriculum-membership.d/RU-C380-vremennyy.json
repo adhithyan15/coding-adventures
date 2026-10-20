@@ -1,0 +1,11 @@
+{
+  "id": "RU-C380-vremennyy",
+  "pathSegment": "RU-PATH-380-BUDUSHCHEYE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-380-BUDUSHCHEYE",
+      "order": 4
+    }
+  ]
+}

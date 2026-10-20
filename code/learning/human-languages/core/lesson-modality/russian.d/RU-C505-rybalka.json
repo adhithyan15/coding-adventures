@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C505-rybalka",
+    "language": "russian",
+    "chapter": 505,
+    "sequence": 28440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:48d5ccc761557abf"
+  },
+  "findings": []
+}

@@ -1,4 +1,13 @@
-import { mkdtempSync, realpathSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import {
+  mkdirSync,
+  mkdtempSync,
+  readdirSync,
+  readFileSync,
+  realpathSync,
+  rmSync,
+  symlinkSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -12,6 +21,7 @@ import {
   lowerIrToJvmClassFile,
   writeClassFile,
 } from "../src/index.js";
+import { type ClassFileWriteStrategy, writeClassFileWithStrategy } from "../src/backend.js";
 
 function simpleProgram(): IrProgram {
   const program = new IrProgram("_start");
@@ -33,6 +43,29 @@ function programWithCallAndStaticData(): IrProgram {
   return program;
 }
 
+// A directory link that every platform can create without privileges.
+// On Windows the "junction" type makes a junction — exactly the reparse
+// point an attacker without SeCreateSymbolicLinkPrivilege could plant.
+// POSIX ignores the type argument and makes an ordinary symlink.
+function linkDirectory(target: string, linkPath: string): void {
+  symlinkSync(target, linkPath, "junction");
+}
+
+// File symlinks need a privilege on Windows that a developer machine may not
+// grant.  Report whether the link was made so the caller can skip instead of
+// passing (or failing) for the wrong reason.
+function tryLinkFile(target: string, linkPath: string): boolean {
+  try {
+    symlinkSync(target, linkPath, "file");
+    return true;
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "EPERM") {
+      return false;
+    }
+    throw error;
+  }
+}
+
 describe("ir-to-jvm-class-file", () => {
   it("lowers a simple program to a parseable class file", () => {
     const artifact = lowerIrToJvmClassFile(simpleProgram(), { className: "Example" });
@@ -49,6 +82,7 @@ describe("ir-to-jvm-class-file", () => {
       const artifact = lowerIrToJvmClassFile(simpleProgram(), { className: "demo.Example" });
       const target = writeClassFile(artifact, tempdir);
       expect(target).toBe(join(realpathSync.native(tempdir), "demo", "Example.class"));
+      expect(new Uint8Array(readFileSync(target))).toEqual(artifact.classBytes);
     } finally {
       rmSync(tempdir, { recursive: true, force: true });
     }
@@ -58,6 +92,28 @@ describe("ir-to-jvm-class-file", () => {
     expect(() => lowerIrToJvmClassFile(simpleProgram(), { className: ".Bad" })).toThrow(
       JvmBackendError,
     );
+  });
+
+  it("rejects hand-built artifacts whose class filename escapes the root", () => {
+    const artifact = lowerIrToJvmClassFile(simpleProgram(), { className: "Example" });
+    const tempdir = mkdtempSync(join(tmpdir(), "ts-jvm-escape-"));
+    try {
+      for (const classFilename of [
+        "../Example.class",
+        "demo/./Example.class",
+        "demo\\..\\..\\Example.class",
+        "C:Example.class",
+        "demo/Exa\0mple.class",
+        "/",
+      ]) {
+        expect(() => writeClassFile({ ...artifact, classFilename }, tempdir)).toThrow(
+          JvmBackendError,
+        );
+      }
+      expect(readdirSync(tempdir)).toEqual([]);
+    } finally {
+      rmSync(tempdir, { recursive: true, force: true });
+    }
   });
 
   it("lowers callable splits and static data layout", () => {
@@ -83,14 +139,53 @@ describe("ir-to-jvm-class-file", () => {
       JvmBackendError,
     );
   });
+});
+
+// Every write-safety property is checked under both walks.  On POSIX "auto"
+// is the descriptor walk, so running "path-checks" here is what keeps the
+// Windows walk tested on every platform; on Windows both rows exercise it.
+const STRATEGIES: readonly ClassFileWriteStrategy[] = ["auto", "path-checks"];
+
+describe.each(STRATEGIES)("secure class-file writer (strategy: %s)", (strategy) => {
+  const write = (artifact: ReturnType<typeof lowerIrToJvmClassFile>, outputDir: string) =>
+    writeClassFileWithStrategy(artifact, outputDir, strategy);
+
+  it("creates missing root and package directories", () => {
+    const tempdir = mkdtempSync(join(tmpdir(), "ts-jvm-create-"));
+    try {
+      const artifact = lowerIrToJvmClassFile(simpleProgram(), { className: "a.b.Example" });
+      const target = write(artifact, join(tempdir, "out", "classes"));
+      expect(target).toBe(
+        join(realpathSync.native(tempdir), "out", "classes", "a", "b", "Example.class"),
+      );
+      expect(new Uint8Array(readFileSync(target))).toEqual(artifact.classBytes);
+    } finally {
+      rmSync(tempdir, { recursive: true, force: true });
+    }
+  });
+
+  it("overwrites an existing class file and leaves no temp files behind", () => {
+    const tempdir = mkdtempSync(join(tmpdir(), "ts-jvm-overwrite-"));
+    try {
+      const first = lowerIrToJvmClassFile(simpleProgram(), { className: "demo.Example" });
+      const second = lowerIrToJvmClassFile(programWithCallAndStaticData(), { className: "demo.Example" });
+      write(first, tempdir);
+      const target = write(second, tempdir);
+      expect(new Uint8Array(readFileSync(target))).toEqual(second.classBytes);
+      expect(readdirSync(join(tempdir, "demo"))).toEqual(["Example.class"]);
+    } finally {
+      rmSync(tempdir, { recursive: true, force: true });
+    }
+  });
 
   it("rejects symlinked parent directories", () => {
     const tempdir = mkdtempSync(join(tmpdir(), "ts-jvm-symlink-"));
     const sink = mkdtempSync(join(tmpdir(), "ts-jvm-symlink-sink-"));
     try {
-      symlinkSync(sink, join(tempdir, "demo"));
+      linkDirectory(sink, join(tempdir, "demo"));
       const artifact = lowerIrToJvmClassFile(simpleProgram(), { className: "demo.Example" });
-      expect(() => writeClassFile(artifact, tempdir)).toThrow(JvmBackendError);
+      expect(() => write(artifact, tempdir)).toThrow(JvmBackendError);
+      expect(readdirSync(sink)).toEqual([]);
     } finally {
       rmSync(tempdir, { recursive: true, force: true });
       rmSync(sink, { recursive: true, force: true });
@@ -101,11 +196,26 @@ describe("ir-to-jvm-class-file", () => {
     const tempdir = mkdtempSync(join(tmpdir(), "ts-jvm-root-link-"));
     const sink = mkdtempSync(join(tmpdir(), "ts-jvm-root-link-sink-"));
     try {
-      symlinkSync(sink, join(tempdir, "linked-root"));
+      linkDirectory(sink, join(tempdir, "linked-root"));
       const artifact = lowerIrToJvmClassFile(simpleProgram(), { className: "demo.Example" });
-      expect(() => writeClassFile(artifact, join(tempdir, "linked-root", "nested"))).toThrow(
+      expect(() => write(artifact, join(tempdir, "linked-root", "nested"))).toThrow(
         JvmBackendError,
       );
+      expect(readdirSync(sink)).toEqual([]);
+    } finally {
+      rmSync(tempdir, { recursive: true, force: true });
+      rmSync(sink, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects an output root that is itself a symlink", () => {
+    const tempdir = mkdtempSync(join(tmpdir(), "ts-jvm-root-self-link-"));
+    const sink = mkdtempSync(join(tmpdir(), "ts-jvm-root-self-link-sink-"));
+    try {
+      linkDirectory(sink, join(tempdir, "linked-root"));
+      const artifact = lowerIrToJvmClassFile(simpleProgram(), { className: "Example" });
+      expect(() => write(artifact, join(tempdir, "linked-root"))).toThrow(JvmBackendError);
+      expect(readdirSync(sink)).toEqual([]);
     } finally {
       rmSync(tempdir, { recursive: true, force: true });
       rmSync(sink, { recursive: true, force: true });
@@ -117,11 +227,53 @@ describe("ir-to-jvm-class-file", () => {
     const fileRoot = join(tempdir, "not-a-directory");
     try {
       const artifact = lowerIrToJvmClassFile(simpleProgram(), { className: "Example" });
-      rmSync(fileRoot, { force: true });
       writeFileSync(fileRoot, "x");
-      expect(() => writeClassFile(artifact, fileRoot)).toThrow(JvmBackendError);
+      expect(() => write(artifact, fileRoot)).toThrow(JvmBackendError);
+      expect(readFileSync(fileRoot, "utf8")).toBe("x");
     } finally {
       rmSync(tempdir, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects a package directory that is a file", () => {
+    const tempdir = mkdtempSync(join(tmpdir(), "ts-jvm-file-package-"));
+    try {
+      writeFileSync(join(tempdir, "demo"), "x");
+      const artifact = lowerIrToJvmClassFile(simpleProgram(), { className: "demo.Example" });
+      expect(() => write(artifact, tempdir)).toThrow(JvmBackendError);
+      expect(readFileSync(join(tempdir, "demo"), "utf8")).toBe("x");
+    } finally {
+      rmSync(tempdir, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects an output file that is a directory", () => {
+    const tempdir = mkdtempSync(join(tmpdir(), "ts-jvm-dir-target-"));
+    try {
+      mkdirSync(join(tempdir, "Example.class"));
+      const artifact = lowerIrToJvmClassFile(simpleProgram(), { className: "Example" });
+      expect(() => write(artifact, tempdir)).toThrow(JvmBackendError);
+      expect(readdirSync(tempdir)).toEqual(["Example.class"]);
+    } finally {
+      rmSync(tempdir, { recursive: true, force: true });
+    }
+  });
+
+  it("refuses to write through a symlinked output file", (context) => {
+    const tempdir = mkdtempSync(join(tmpdir(), "ts-jvm-file-link-"));
+    const sink = mkdtempSync(join(tmpdir(), "ts-jvm-file-link-sink-"));
+    try {
+      const sentinel = join(sink, "sentinel.txt");
+      writeFileSync(sentinel, "untouched");
+      if (!tryLinkFile(sentinel, join(tempdir, "Example.class"))) {
+        context.skip();
+      }
+      const artifact = lowerIrToJvmClassFile(simpleProgram(), { className: "Example" });
+      expect(() => write(artifact, tempdir)).toThrow(JvmBackendError);
+      expect(readFileSync(sentinel, "utf8")).toBe("untouched");
+    } finally {
+      rmSync(tempdir, { recursive: true, force: true });
+      rmSync(sink, { recursive: true, force: true });
     }
   });
 });

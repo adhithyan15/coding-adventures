@@ -1,0 +1,11 @@
+{
+  "id": "RU-C439-srezat",
+  "pathSegment": "RU-PATH-439-RAZVILKA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-439-RAZVILKA",
+      "order": 3
+    }
+  ]
+}

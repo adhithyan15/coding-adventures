@@ -1,0 +1,19 @@
+{
+  "chapter": 375,
+  "title": "Without fail",
+  "label": "ch:ru-without-fail",
+  "canDo": "I can say that I will do something without fail, that something is necessary or is enough, and that I can guarantee it.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "RU-C375-dostatochno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 375: I can say that I will do something without fail, that something is necessary or is enough, and that I can guarantee it.",
+    "assesses": [
+      "RU-LEX-C375-NEOBKHODIMO-03",
+      "RU-LEX-C375-NEOBKHODIMO-04",
+      "RU-LEX-C375-NEOBKHODIMO-05"
+    ]
+  }
+}

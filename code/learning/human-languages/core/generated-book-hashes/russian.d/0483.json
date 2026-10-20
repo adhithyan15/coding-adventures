@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 483,
+  "sourceHash": "fnv1a64:ed9831e7582edd37",
+  "lessonIds": [
+    "RU-C483-tsarapina",
+    "RU-C483-ushibitsya",
+    "RU-C483-porez",
+    "RU-C483-ssadina",
+    "RU-C483-zazhivat"
+  ],
+  "tex": "russian/book/chapters/ch483-scratches-and-grazes.tex"
+}

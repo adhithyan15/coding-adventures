@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C306-rasstavatsya",
+    "language": "russian",
+    "chapter": 306,
+    "sequence": 18230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e0714e9f1262b192"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-R532-review-525-532",
+  "pathSegment": "RU-PATH-532-DIY",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "RU-EXT-532-DIY",
+      "order": 5
+    }
+  ]
+}

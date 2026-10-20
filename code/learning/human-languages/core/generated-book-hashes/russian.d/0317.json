@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 317,
+  "sourceHash": "fnv1a64:81d3f2cfc8950d87",
+  "lessonIds": [
+    "RU-C317-imeninnik",
+    "RU-C317-imeniny",
+    "RU-C317-zagadyvat",
+    "RU-C317-zaduvat",
+    "RU-C317-veselitsya"
+  ],
+  "tex": "russian/book/chapters/ch317-the-birthday-party.tex"
+}

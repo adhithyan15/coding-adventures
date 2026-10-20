@@ -1,0 +1,14 @@
+{
+  "language": "russian",
+  "chapter": 310,
+  "sourceHash": "fnv1a64:1372ad0d41f07cd7",
+  "lessonIds": [
+    "RU-C310-yubiley",
+    "RU-C310-godovshchina",
+    "RU-C310-novorozhdyonnyy",
+    "RU-C310-krestiny",
+    "RU-C310-krestit",
+    "RU-R310-review-303-310"
+  ],
+  "tex": "russian/book/chapters/ch310-anniversaries-and-christenings.tex"
+}

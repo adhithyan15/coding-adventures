@@ -1,0 +1,14 @@
+{
+  "language": "russian",
+  "chapter": 410,
+  "sourceHash": "fnv1a64:6bf46b2bb7a577d4",
+  "lessonIds": [
+    "RU-C410-stolknoveniye",
+    "RU-C410-stalkivatsya",
+    "RU-C410-vrezatsya",
+    "RU-C410-sbivat",
+    "RU-C410-vmyatina",
+    "RU-R410-review-403-410"
+  ],
+  "tex": "russian/book/chapters/ch410-a-small-accident.tex"
+}

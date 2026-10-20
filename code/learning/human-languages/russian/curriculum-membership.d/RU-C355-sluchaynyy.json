@@ -1,0 +1,11 @@
+{
+  "id": "RU-C355-sluchaynyy",
+  "pathSegment": "RU-PATH-355-SLUCHAYNO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-355-SLUCHAYNO",
+      "order": 0
+    }
+  ]
+}

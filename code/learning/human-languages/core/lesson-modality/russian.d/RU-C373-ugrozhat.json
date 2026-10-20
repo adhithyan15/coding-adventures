@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C373-ugrozhat",
+    "language": "russian",
+    "chapter": 373,
+    "sequence": 21670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3288f3353ba0a508"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C439-srezat",
+    "language": "russian",
+    "chapter": 439,
+    "sequence": 25070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:be15dd87fb1b0ec4"
+  },
+  "findings": []
+}

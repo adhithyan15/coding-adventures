@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 437,
+  "sourceHash": "fnv1a64:9b34c3d4ec025209",
+  "lessonIds": [
+    "RU-C437-zabluditsya",
+    "RU-C437-oriyentirovatsya",
+    "RU-C437-bluzhdat",
+    "RU-C437-kompas",
+    "RU-C437-navigator"
+  ],
+  "tex": "russian/book/chapters/ch437-getting-lost.tex"
+}

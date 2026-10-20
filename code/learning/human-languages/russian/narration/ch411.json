@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 411,
+  "title": "Giving someone a lift",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:24c25805c80a7060",
+  "lessons": [
+    {
+      "id": "RU-C411-poputchik",
+      "sequence": 23610,
+      "title": "попутчик (popútchik) — a fellow traveller",
+      "headword": "попутчик",
+      "romanization": "popútchik",
+      "gloss": "a fellow traveller",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c105e6f2fa0a854b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to knock down, then the Russian for a dent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: попутчик",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "попутчик (popútchik) — \"a fellow traveller\"."
+            },
+            {
+              "kind": "speech",
+              "text": "В поезде у меня был весёлый попутчик. V póyezde u menyá byl vesyólyy popútchik. I had a cheerful fellow traveller on the train."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine попутчица. Built on по пути — on the way."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "попутчик (popútchik) is built on попутный 'going the same way', from по пути 'on the way'. Путь is inherited from Proto-Slavic pǫtĭ 'a path, a road' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "popútchik",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *popútchik*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "popútchik, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *popútchik*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with popútchik",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *popútchik*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to knock down, then the Russian for a dent, then say popútchik again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to knock down, then the Russian for a dent, then say *popútchik* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does попутчик (popútchik) mean? (\"A fellow traveller\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C411-poputka",
+      "sequence": 23620,
+      "title": "попутка (popútka) — a lift (in a passing car), a hitched ride",
+      "headword": "попутка",
+      "romanization": "popútka",
+      "gloss": "a lift (in a passing car), a hitched ride",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b69710bb82223466",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a dent, then the Russian for a fellow traveller."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: попутка",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "попутка (popútka) — \"a lift (in a passing car), a hitched ride\"."
+            },
+            {
+              "kind": "speech",
+              "text": "До деревни мы ехали на попутке. Do derévni my yékhali na popútke. We got to the village in a passing car."
+            },
+            {
+              "kind": "speech",
+              "text": "Colloquial. Ловить попутку — to hitch a ride."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "попутка (popútka) is a colloquial short form of попутная машина 'a car going the same way', from по пути 'on the way'. Путь is inherited from Proto-Slavic pǫtĭ (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "popútka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *popútka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "popútka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *popútka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with popútka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *popútka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a dent, then the Russian for a fellow traveller, then say popútka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a dent, then the Russian for a fellow traveller, then say *popútka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does попутка (popútka) mean? (\"A lift (in a passing car), a hitched ride\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C411-podvozit",
+      "sequence": 23630,
+      "title": "подвозить (podvozít) — to give (someone) a lift",
+      "headword": "подвозить",
+      "romanization": "podvozít",
+      "gloss": "to give (someone) a lift",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ffed436cd0609f5a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a fellow traveller, then the Russian for a lift."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: подвозить",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "подвозить (podvozít) — \"to give (someone) a lift\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Каждое утро сосед подвозит меня до работы. Kázhdoye útro soséd podvózit menyá do rabóty. Every morning the neighbour gives me a lift to work."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; perfective подвезти (подвезу, подвезёшь). Present подвожу, подвозишь."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "подвозить (podvozít) is built from под- 'up to' and возить 'to carry by vehicle'. Возить is inherited from Proto-Slavic voziti 'to cart, to convey' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "podvozít",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *podvozít*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "podvozít, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *podvozít*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with podvozít",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *podvozít*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a fellow traveller, then the Russian for a lift, then say podvozít again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a fellow traveller, then the Russian for a lift, then say *podvozít* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does подвозить (podvozít) mean? (\"To give (someone) a lift\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C411-vysazhivat",
+      "sequence": 23640,
+      "title": "высаживать (vysázhivat) — to drop off (a passenger); to plant out",
+      "headword": "высаживать",
+      "romanization": "vysázhivat",
+      "gloss": "to drop off (a passenger); to plant out",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9ed7559e0bf59a07",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a lift, then the Russian for to give."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: высаживать",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "высаживать (vysázhivat) — \"to drop off (a passenger); to plant out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Такси высаживает нас у входа. Taksí vysázhivayet nas u vkhóda. The taxi drops us off at the entrance."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; the perfective is высадить (высажу, высадишь). Also высаживать (vysázhivat) цветы — to plant out flowers."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "высаживать (vysázhivat) is built from вы- 'out' and -саживать, from садить 'to seat, to plant', the 'make sit' partner of сидеть 'to sit'. EtymDB lists садить without a deeper source."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vysázhivat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vysázhivat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vysázhivat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vysázhivat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with vysázhivat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *vysázhivat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a lift, then the Russian for to give, then say vysázhivat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a lift, then the Russian for to give, then say *vysázhivat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does высаживать (vysázhivat) mean? (\"To drop off (a passenger); to plant out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C411-pristyogivatsya",
+      "sequence": 23650,
+      "title": "пристёгиваться (pristyógivatsya) — to fasten one's seat belt, to buckle up",
+      "headword": "пристёгиваться",
+      "romanization": "pristyógivatsya",
+      "gloss": "to fasten one's seat belt, to buckle up",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:22675ddb7d4c3648",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to give, then the Russian for to drop off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: пристёгиваться",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "пристёгиваться (pristyógivatsya) — \"to fasten one's seat belt, to buckle up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "В машине мы всегда пристёгиваемся. V mashíne my vsegdá pristyógivayemsya. We always fasten our seat belts in the car."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; perfective пристегнуться. Пристегнуть ремень — to fasten a belt."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "пристёгиваться (pristyógivatsya) is built from при- 'onto', -стёгивать, which goes with стегать 'to stitch, to lash', and -ся. EtymDB does not list the verb, so the deeper origin is left open."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pristyógivatsya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pristyógivatsya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pristyógivatsya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pristyógivatsya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with pristyógivatsya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *pristyógivatsya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to give, then the Russian for to drop off, then say pristyógivatsya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to give, then the Russian for to drop off, then say *pristyógivatsya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does пристёгиваться (pristyógivatsya) mean? (\"To fasten one's seat belt, to buckle up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

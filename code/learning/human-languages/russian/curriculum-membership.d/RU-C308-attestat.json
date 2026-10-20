@@ -1,0 +1,11 @@
+{
+  "id": "RU-C308-attestat",
+  "pathSegment": "RU-PATH-308-VYPUSKNIK",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-308-VYPUSKNIK",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 519,
+  "sourceHash": "fnv1a64:4ff696f5e5c29bc2",
+  "lessonIds": [
+    "RU-C519-zanaves",
+    "RU-C519-antrakt",
+    "RU-C519-aplodirovat",
+    "RU-C519-premyera",
+    "RU-C519-klanyatsya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch519.txt",
+  "json": "russian/narration/ch519.json",
+  "textHash": "fnv1a64:92dcc19195818141",
+  "jsonHash": "fnv1a64:9bc7c1dbca858bc7",
+  "findings": []
+}

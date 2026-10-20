@@ -1,0 +1,11 @@
+{
+  "id": "RU-C374-ozhidat",
+  "pathSegment": "RU-PATH-374-OZHIDANIYA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-374-OZHIDANIYA",
+      "order": 1
+    }
+  ]
+}

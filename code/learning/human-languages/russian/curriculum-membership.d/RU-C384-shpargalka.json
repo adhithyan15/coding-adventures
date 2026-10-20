@@ -1,0 +1,11 @@
+{
+  "id": "RU-C384-shpargalka",
+  "pathSegment": "RU-PATH-384-UCHYOBA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-384-UCHYOBA",
+      "order": 3
+    }
+  ]
+}

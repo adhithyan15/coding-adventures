@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 327,
+  "sourceHash": "fnv1a64:5923c6b8b7570d16",
+  "lessonIds": [
+    "RU-C327-arkheolog",
+    "RU-C327-raskopki",
+    "RU-C327-nakhodka",
+    "RU-C327-sokrovishche",
+    "RU-C327-klad"
+  ],
+  "tex": "russian/book/chapters/ch327-treasure-and-finds.tex"
+}

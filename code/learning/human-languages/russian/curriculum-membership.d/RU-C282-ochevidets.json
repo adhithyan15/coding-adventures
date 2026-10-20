@@ -1,0 +1,11 @@
+{
+  "id": "RU-C282-ochevidets",
+  "pathSegment": "RU-PATH-282-ISTOCHNIK",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-282-ISTOCHNIK",
+      "order": 1
+    }
+  ]
+}

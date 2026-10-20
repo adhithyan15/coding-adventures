@@ -1,0 +1,19 @@
+{
+  "chapter": 531,
+  "title": "Clutter and Clearing Out",
+  "label": "ch:ru-clutter-and-clearing-out",
+  "canDo": "I can talk about mess, junk and putting things away.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C531-vybrasyvat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 531: I can talk about mess, junk and putting things away.",
+    "assesses": [
+      "RU-LEX-C531-CLUTTER-03",
+      "RU-LEX-C531-CLUTTER-04",
+      "RU-LEX-C531-CLUTTER-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C328-narezat",
+  "pathSegment": "RU-PATH-328-NAREZAT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-328-NAREZAT",
+      "order": 2
+    }
+  ]
+}

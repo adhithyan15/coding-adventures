@@ -1,0 +1,14 @@
+{
+  "language": "russian",
+  "chapter": 418,
+  "sourceHash": "fnv1a64:8ca580afa220be23",
+  "lessonIds": [
+    "RU-C418-peresazhivatsya",
+    "RU-C418-konechnaya",
+    "RU-C418-prigorodnyy",
+    "RU-C418-proyezzhat",
+    "RU-C418-provozhat",
+    "RU-R418-review-411-418"
+  ],
+  "tex": "russian/book/chapters/ch418-changing-trains.tex"
+}

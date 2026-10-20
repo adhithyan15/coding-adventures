@@ -1,0 +1,11 @@
+{
+  "id": "RU-C507-tsvesti",
+  "pathSegment": "RU-PATH-507-BLOSSOM",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-507-BLOSSOM",
+      "order": 1
+    }
+  ]
+}

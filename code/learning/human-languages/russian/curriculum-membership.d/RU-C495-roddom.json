@@ -1,0 +1,11 @@
+{
+  "id": "RU-C495-roddom",
+  "pathSegment": "RU-PATH-495-EXPECTING",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-495-EXPECTING",
+      "order": 1
+    }
+  ]
+}

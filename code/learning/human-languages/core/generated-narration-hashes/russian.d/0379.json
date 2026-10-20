@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 379,
+  "sourceHash": "fnv1a64:f3ca10eafa4b3ade",
+  "lessonIds": [
+    "RU-C379-zapasnoy",
+    "RU-C379-v-lyubom-sluchae",
+    "RU-C379-kolebatsya",
+    "RU-C379-reshatsya",
+    "RU-C379-v-zavisimosti-ot"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch379.txt",
+  "json": "russian/narration/ch379.json",
+  "textHash": "fnv1a64:346e1b4b3ac84bd8",
+  "jsonHash": "fnv1a64:8035b5dd097358c5",
+  "findings": []
+}

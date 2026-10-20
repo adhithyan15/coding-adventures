@@ -1,0 +1,11 @@
+{
+  "id": "RU-C360-grafik",
+  "pathSegment": "RU-PATH-360-SOVESHCHANIYE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-360-SOVESHCHANIYE",
+      "order": 2
+    }
+  ]
+}

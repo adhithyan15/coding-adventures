@@ -1,0 +1,11 @@
+{
+  "id": "RU-C498-rovesnik",
+  "pathSegment": "RU-PATH-498-FRIENDS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-498-FRIENDS",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C373-predotvrashchat",
+    "language": "russian",
+    "chapter": 373,
+    "sequence": 21680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bb76ad476c797288"
+  },
+  "findings": []
+}

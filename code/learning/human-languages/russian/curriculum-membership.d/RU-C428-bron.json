@@ -1,0 +1,11 @@
+{
+  "id": "RU-C428-bron",
+  "pathSegment": "RU-PATH-428-NOCHLEG",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-428-NOCHLEG",
+      "order": 4
+    }
+  ]
+}

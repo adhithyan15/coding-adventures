@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 361,
+  "sourceHash": "fnv1a64:d6cd99935364db30",
+  "lessonIds": [
+    "RU-C361-predpriyatie",
+    "RU-C361-pribyl",
+    "RU-C361-ubytok",
+    "RU-C361-dokhod",
+    "RU-C361-sdelka"
+  ],
+  "tex": "russian/book/chapters/ch361-profit-and-loss.tex"
+}

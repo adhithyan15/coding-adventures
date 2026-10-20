@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-306-POMOLVKA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-306-POMOLVKA"
+  ],
+  "after": []
+}

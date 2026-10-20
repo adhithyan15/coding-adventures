@@ -1,0 +1,11 @@
+{
+  "id": "RU-C483-ssadina",
+  "pathSegment": "RU-PATH-483-SCRATCHES",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-483-SCRATCHES",
+      "order": 3
+    }
+  ]
+}

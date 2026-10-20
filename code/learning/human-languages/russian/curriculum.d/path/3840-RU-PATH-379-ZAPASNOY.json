@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-379-ZAPASNOY",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "RU-EXT-379-ZAPASNOY"
+  ],
+  "after": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 440,
+  "sourceHash": "fnv1a64:dc0b0a891fc0a78d",
+  "lessonIds": [
+    "RU-C440-perekhod",
+    "RU-C440-perekhodit",
+    "RU-C440-naberezhnaya",
+    "RU-C440-bulvar",
+    "RU-C440-alleya"
+  ],
+  "tex": "russian/book/chapters/ch440-crossing-the-street.tex"
+}
