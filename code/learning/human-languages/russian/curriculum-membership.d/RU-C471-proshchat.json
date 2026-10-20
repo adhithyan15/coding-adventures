@@ -1,0 +1,11 @@
+{
+  "id": "RU-C471-proshchat",
+  "pathSegment": "RU-PATH-471-HURT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-471-HURT",
+      "order": 4
+    }
+  ]
+}

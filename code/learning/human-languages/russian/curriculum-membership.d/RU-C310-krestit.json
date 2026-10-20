@@ -1,0 +1,11 @@
+{
+  "id": "RU-C310-krestit",
+  "pathSegment": "RU-PATH-310-YUBILEY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-310-YUBILEY",
+      "order": 4
+    }
+  ]
+}

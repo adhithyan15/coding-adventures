@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-400-BEZOPASNOST",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "RU-EXT-400-BEZOPASNOST"
+  ],
+  "after": []
+}

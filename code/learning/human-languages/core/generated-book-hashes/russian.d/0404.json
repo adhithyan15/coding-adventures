@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 404,
+  "sourceHash": "fnv1a64:8e4aa997f6b23d20",
+  "lessonIds": [
+    "RU-C404-kapot",
+    "RU-C404-dvigatel",
+    "RU-C404-akkumulyator",
+    "RU-C404-zavodit",
+    "RU-C404-glokhnut"
+  ],
+  "tex": "russian/book/chapters/ch404-under-the-bonnet.tex"
+}

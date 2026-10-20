@@ -1,0 +1,11 @@
+{
+  "id": "RU-C319-sochinyat",
+  "pathSegment": "RU-PATH-319-LEGENDA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-319-LEGENDA",
+      "order": 4
+    }
+  ]
+}

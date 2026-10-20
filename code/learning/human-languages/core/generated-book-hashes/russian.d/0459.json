@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 459,
+  "sourceHash": "fnv1a64:fc40da694426c1eb",
+  "lessonIds": [
+    "RU-C459-pokhod",
+    "RU-C459-tropa",
+    "RU-C459-prival",
+    "RU-C459-karabkatsya",
+    "RU-C459-spotykatsya"
+  ],
+  "tex": "russian/book/chapters/ch459-going-hiking.tex"
+}

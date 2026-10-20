@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 443,
+  "sourceHash": "fnv1a64:ff1d33eea5612e70",
+  "lessonIds": [
+    "RU-C443-brodit",
+    "RU-C443-progulivatsya",
+    "RU-C443-kvartal",
+    "RU-C443-prigorod",
+    "RU-C443-mostovaya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch443.txt",
+  "json": "russian/narration/ch443.json",
+  "textHash": "fnv1a64:f0ec3dd6517a046c",
+  "jsonHash": "fnv1a64:aa7b0a86e4569b5a",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C510-sopernik",
+  "pathSegment": "RU-PATH-510-RESULTS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-510-RESULTS",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 497,
+  "sourceHash": "fnv1a64:b3571d25f5e878c9",
+  "lessonIds": [
+    "RU-C497-vospitaniye",
+    "RU-C497-balovat",
+    "RU-C497-slushatsya",
+    "RU-C497-shalit",
+    "RU-C497-neposlushnyy"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch497.txt",
+  "json": "russian/narration/ch497.json",
+  "textHash": "fnv1a64:a82f7e00fe2efa7b",
+  "jsonHash": "fnv1a64:5a4b7f490b6a510c",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 291,
+  "sourceHash": "fnv1a64:fd438dfd090d78b0",
+  "lessonIds": [
+    "RU-C291-sledovatel",
+    "RU-C291-rassledovaniye",
+    "RU-C291-rassledovat",
+    "RU-C291-podozrevayemyy",
+    "RU-C291-podozrevat"
+  ],
+  "tex": "russian/book/chapters/ch291-the-investigation.tex"
+}

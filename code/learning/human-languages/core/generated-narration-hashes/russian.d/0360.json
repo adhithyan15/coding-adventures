@@ -1,0 +1,20 @@
+{
+  "language": "russian",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:babd34e395591790",
+  "lessonIds": [
+    "RU-C360-soveshchanie",
+    "RU-C360-otchyot",
+    "RU-C360-grafik",
+    "RU-C360-smena",
+    "RU-C360-otchityvatsya",
+    "RU-R360-review-353-360"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "russian/narration/ch360.txt",
+  "json": "russian/narration/ch360.json",
+  "textHash": "fnv1a64:9c0753a164f0d8f6",
+  "jsonHash": "fnv1a64:39b1a3a621ec52cd",
+  "findings": []
+}

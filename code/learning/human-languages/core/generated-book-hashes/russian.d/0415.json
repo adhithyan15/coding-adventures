@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 415,
+  "sourceHash": "fnv1a64:048aee53ac5a6dcd",
+  "lessonIds": [
+    "RU-C415-otpravlyatsya",
+    "RU-C415-pribyvat",
+    "RU-C415-otkhodit",
+    "RU-C415-obyavlyat",
+    "RU-C415-uspevat"
+  ],
+  "tex": "russian/book/chapters/ch415-the-train-is-leaving.tex"
+}

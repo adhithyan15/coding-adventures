@@ -1,0 +1,19 @@
+{
+  "chapter": 307,
+  "title": "Divorce and moving on",
+  "label": "ch:ru-divorce-and-moving-on",
+  "canDo": "I can talk about a divorce, getting divorced, a house move, quitting a job and an inheritance.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C307-nasledstvo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 307: I can talk about a divorce, getting divorced, a house move, quitting a job and an inheritance.",
+    "assesses": [
+      "RU-LEX-C307-RAZVOD-03",
+      "RU-LEX-C307-RAZVOD-04",
+      "RU-LEX-C307-RAZVOD-05"
+    ]
+  }
+}

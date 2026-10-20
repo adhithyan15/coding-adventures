@@ -1,0 +1,11 @@
+{
+  "id": "RU-C431-provetrivat",
+  "pathSegment": "RU-PATH-431-SKVOZNYAK",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-431-SKVOZNYAK",
+      "order": 3
+    }
+  ]
+}

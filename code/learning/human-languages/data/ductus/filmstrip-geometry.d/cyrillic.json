@@ -1003,6 +1003,56 @@
     },
     {
       "script": "cyrillic",
+      "glyph": "ъ",
+      "font": "_fonts/NotoSansCyrillic-Static.ttf",
+      "source": {
+        "citation": "RussianIrina, ‘Learning Russian - Alphabet letters, handwriting’, lowercase ъ demonstration, 10:34–10:38, YouTube, 5 February 2013",
+        "url": "https://www.youtube.com/watch?v=tqDLDfYoO2o",
+        "variation": "The native-teacher video presents all 33 Russian letters first in print and then in the classic handwritten form taught at school. In the 10:34–10:38 lowercase ъ demonstration, the pen begins near the upper left, curls down and back up through a narrow entry loop, sweeps right through a rounded top shoulder, descends the tall main stem to the baseline, turns right, circles the lower bowl counterclockwise, and closes it against the stem without lifting. The demonstrated school hand therefore uses one continuous pen-down run with zero intervening lifts: looped entry and top shoulder, main stem down, then the joined lower bowl. The bundled Noto Sans Cyrillic glyph is a printed ъ-like form with a broad horizontal top flag extending left of a straight main stem and a wide closed lower bowl, without the narrow entry loop or rounded top shoulder. This learner path preserves the source's flag-to-stem-to-bowl order and zero-lift evidence while fitting the printed outline: sweep right along the top flag, descend the main stem, circle the lower bowl counterclockwise, and close it against the stem without lifting. Connected cursive restores the source's narrow entry loop and rounded shoulder, and individual handwriting may round, narrow, widen, or slant the flag, stem, and bowl differently."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 5 movements",
+      "viewBox": {
+        "minX": -55,
+        "minY": -606,
+        "width": 703,
+        "height": 959.4
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "sweep right along the broad top flag",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M163 0L163 462L15 462L15 536L251 536L251 338L357 338Q578 338 578 173Q578 91 521.5 45.5Q465 0 357 0L163 0ZM251 73L357 73Q487 73 487 173Q487 220 456 242.5Q425 265 357 265L251 265L251 73Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M15 499 L15 499\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M15 499 L80 499 L145 499 L207 499 L207 499\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"207\" cy=\"499\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"296.5\" y=\"196.3\" text-anchor=\"middle\" font-size=\"56.3\" fill=\"#6b7280\"><tspan x=\"296.5\" y=\"196.3\">1. sweep right along the</tspan><tspan x=\"296.5\" y=\"265\">broad top flag</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "descend the main stem to the baseline",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M163 0L163 462L15 462L15 536L251 536L251 338L357 338Q578 338 578 173Q578 91 521.5 45.5Q465 0 357 0L163 0ZM251 73L357 73Q487 73 487 173Q487 220 456 242.5Q425 265 357 265L251 265L251 73Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M15 499 L80 499 L145 499 L207 499 L207 499\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M207 499 L207 300 L207 150 L207 36\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"207\" cy=\"36\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"296.5\" y=\"196.3\" text-anchor=\"middle\" font-size=\"56.3\" fill=\"#6b7280\"><tspan x=\"296.5\" y=\"196.3\">2. descend the main stem</tspan><tspan x=\"296.5\" y=\"265\">to the baseline</tspan></text>"
+        },
+        {
+          "number": 3,
+          "label": "sweep right along the lower bowl",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M163 0L163 462L15 462L15 536L251 536L251 338L357 338Q578 338 578 173Q578 91 521.5 45.5Q465 0 357 0L163 0ZM251 73L357 73Q487 73 487 173Q487 220 456 242.5Q425 265 357 265L251 265L251 73Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M15 499 L80 499 L145 499 L207 499 L207 300 L207 150 L207 36 L207 36\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M207 36 L280 36 L357 36 L440 45 L510 85\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"510\" cy=\"85\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"296.5\" y=\"196.3\" text-anchor=\"middle\" font-size=\"56.3\" fill=\"#6b7280\"><tspan x=\"296.5\" y=\"196.3\">3. sweep right along the</tspan><tspan x=\"296.5\" y=\"265\">lower bowl</tspan></text>"
+        },
+        {
+          "number": 4,
+          "label": "curve upward around the bowl's right side",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M163 0L163 462L15 462L15 536L251 536L251 338L357 338Q578 338 578 173Q578 91 521.5 45.5Q465 0 357 0L163 0ZM251 73L357 73Q487 73 487 173Q487 220 456 242.5Q425 265 357 265L251 265L251 73Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M15 499 L80 499 L145 499 L207 499 L207 300 L207 150 L207 36 L280 36 L357 36 L440 45 L510 85 L510 85\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M510 85 L533 130 L533 173 L515 220 L470 265 L410 294 L357 301\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"357\" cy=\"301\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"296.5\" y=\"196.3\" text-anchor=\"middle\" font-size=\"56.3\" fill=\"#6b7280\"><tspan x=\"296.5\" y=\"196.3\">4. curve upward around</tspan><tspan x=\"296.5\" y=\"265\">the bowl&apos;s right side</tspan></text>"
+        },
+        {
+          "number": 5,
+          "label": "return left through the upper bowl to close against the stem",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M163 0L163 462L15 462L15 536L251 536L251 338L357 338Q578 338 578 173Q578 91 521.5 45.5Q465 0 357 0L163 0ZM251 73L357 73Q487 73 487 173Q487 220 456 242.5Q425 265 357 265L251 265L251 73Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M15 499 L80 499 L145 499 L207 499 L207 300 L207 150 L207 36 L280 36 L357 36 L440 45 L510 85 L533 130 L533 173 L515 220 L470 265 L410 294 L357 301 L357 301\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M357 301 L305 301 L251 301 L207 301\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"207\" cy=\"301\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"296.5\" y=\"196.3\" text-anchor=\"middle\" font-size=\"56.3\" fill=\"#6b7280\"><tspan x=\"296.5\" y=\"196.3\">5. return left through</tspan><tspan x=\"296.5\" y=\"265\">the upper bowl to close</tspan><tspan x=\"296.5\" y=\"333.7\">against the stem</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "cyrillic",
       "glyph": "ы",
       "font": "_fonts/NotoSansCyrillic-Static.ttf",
       "source": {

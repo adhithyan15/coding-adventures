@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 285,
+  "sourceHash": "fnv1a64:5deab173fa0c4015",
+  "lessonIds": [
+    "RU-C285-sobytiye",
+    "RU-C285-proisshestviye",
+    "RU-C285-khronika",
+    "RU-C285-svodka",
+    "RU-C285-itog"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch285.txt",
+  "json": "russian/narration/ch285.json",
+  "textHash": "fnv1a64:b7f8e5b8d3c3c5ff",
+  "jsonHash": "fnv1a64:e731d50241ee68be",
+  "findings": []
+}

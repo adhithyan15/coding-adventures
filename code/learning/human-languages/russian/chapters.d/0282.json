@@ -1,0 +1,19 @@
+{
+  "chapter": 282,
+  "title": "Sources and rumours",
+  "label": "ch:ru-sources-and-rumours",
+  "canDo": "I can say where a story came from: a source, an eyewitness, a rumour, a detail and a fact.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C282-fakt",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 282: I can say where a story came from: a source, an eyewitness, a rumour, a detail and a fact.",
+    "assesses": [
+      "RU-LEX-C282-ISTOCHNIK-03",
+      "RU-LEX-C282-ISTOCHNIK-04",
+      "RU-LEX-C282-ISTOCHNIK-05"
+    ]
+  }
+}

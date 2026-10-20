@@ -1,0 +1,11 @@
+{
+  "id": "RU-C279-statya",
+  "pathSegment": "RU-PATH-279-IZVESTIYE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-279-IZVESTIYE",
+      "order": 3
+    }
+  ]
+}

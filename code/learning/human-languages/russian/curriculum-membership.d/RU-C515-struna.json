@@ -1,0 +1,11 @@
+{
+  "id": "RU-C515-struna",
+  "pathSegment": "RU-PATH-515-INSTRUMENTS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-515-INSTRUMENTS",
+      "order": 3
+    }
+  ]
+}

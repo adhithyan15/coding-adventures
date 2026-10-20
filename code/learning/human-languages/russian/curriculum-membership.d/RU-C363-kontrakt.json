@@ -1,0 +1,11 @@
+{
+  "id": "RU-C363-kontrakt",
+  "pathSegment": "RU-PATH-363-PEREGOVORY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-363-PEREGOVORY",
+      "order": 1
+    }
+  ]
+}

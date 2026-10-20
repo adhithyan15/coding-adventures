@@ -1,0 +1,11 @@
+{
+  "id": "RU-C316-yarmarka",
+  "pathSegment": "RU-PATH-316-KARNAVAL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-316-KARNAVAL",
+      "order": 4
+    }
+  ]
+}

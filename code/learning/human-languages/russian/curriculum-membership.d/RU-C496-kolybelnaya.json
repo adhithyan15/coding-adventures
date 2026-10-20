@@ -1,0 +1,11 @@
+{
+  "id": "RU-C496-kolybelnaya",
+  "pathSegment": "RU-PATH-496-BABY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-496-BABY",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 430,
+  "sourceHash": "fnv1a64:0048bd4d2c686cec",
+  "lessonIds": [
+    "RU-C430-postel",
+    "RU-C430-prostynya",
+    "RU-C430-navolochka",
+    "RU-C430-gornichnaya",
+    "RU-C430-stelit"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch430.txt",
+  "json": "russian/narration/ch430.json",
+  "textHash": "fnv1a64:848259087c52de12",
+  "jsonHash": "fnv1a64:50469e5753f55ea6",
+  "findings": []
+}

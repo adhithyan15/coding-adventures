@@ -359,7 +359,7 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     controls = readControls(root);
     assert.equal(controls.find.readOnly, false);
     controls.find.value = "venture";
-    controls.find.dispatchEvent(new Event(backend === "html" ? "input" : "change", { bubbles: true }));
+    controls.find.dispatchEvent(new Event("input", { bubbles: true }));
     await settle();
     assert.deepEqual(calls.at(-1), { type: "findChange", value: "venture" });
     assert.match(renderScope(root).textContent, /1 of 2/);
@@ -379,7 +379,7 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     const nextAddress = "https://venture.test/next";
     controls.address.value = nextAddress;
     controls.address.dispatchEvent(
-      new Event(backend === "html" ? "input" : "change", { bubbles: true }),
+      new Event("input", { bubbles: true }),
     );
     await settle();
     assert.deepEqual(calls.at(-1), { type: "addressChange", value: nextAddress });

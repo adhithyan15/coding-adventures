@@ -1,0 +1,11 @@
+{
+  "id": "RU-C501-igolka",
+  "pathSegment": "RU-PATH-501-SEWING",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-501-SEWING",
+      "order": 1
+    }
+  ]
+}

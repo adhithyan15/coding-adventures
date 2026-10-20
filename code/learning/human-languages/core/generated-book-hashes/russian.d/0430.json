@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 430,
+  "sourceHash": "fnv1a64:0ff71cc5fecd5224",
+  "lessonIds": [
+    "RU-C430-postel",
+    "RU-C430-prostynya",
+    "RU-C430-navolochka",
+    "RU-C430-gornichnaya",
+    "RU-C430-stelit"
+  ],
+  "tex": "russian/book/chapters/ch430-making-the-bed.tex"
+}

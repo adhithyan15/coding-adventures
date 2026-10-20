@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C323-srazheniye",
+    "language": "russian",
+    "chapter": 323,
+    "sequence": 19080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:833c38e19fe0cbbc"
+  },
+  "findings": []
+}

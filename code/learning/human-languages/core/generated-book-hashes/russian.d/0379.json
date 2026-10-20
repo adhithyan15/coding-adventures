@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 379,
+  "sourceHash": "fnv1a64:41df87e43aa6e964",
+  "lessonIds": [
+    "RU-C379-zapasnoy",
+    "RU-C379-v-lyubom-sluchae",
+    "RU-C379-kolebatsya",
+    "RU-C379-reshatsya",
+    "RU-C379-v-zavisimosti-ot"
+  ],
+  "tex": "russian/book/chapters/ch379-a-fallback-plan.tex"
+}

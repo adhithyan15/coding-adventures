@@ -1,0 +1,11 @@
+{
+  "id": "RU-C274-ponachalu",
+  "pathSegment": "RU-PATH-274-POSTEPENNO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-274-POSTEPENNO",
+      "order": 2
+    }
+  ]
+}

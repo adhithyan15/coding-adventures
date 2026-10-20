@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C494-rasstavaniye",
+    "language": "russian",
+    "chapter": 494,
+    "sequence": 27920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1da14a29cf3e4987"
+  },
+  "findings": []
+}

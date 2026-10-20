@@ -1,0 +1,11 @@
+{
+  "id": "RU-C467-gololyod",
+  "pathSegment": "RU-PATH-467-MOROZ",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-467-MOROZ",
+      "order": 1
+    }
+  ]
+}

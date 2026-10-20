@@ -1,0 +1,11 @@
+{
+  "id": "RU-C499-gostepriimstvo",
+  "pathSegment": "RU-PATH-499-VISITS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-499-VISITS",
+      "order": 2
+    }
+  ]
+}

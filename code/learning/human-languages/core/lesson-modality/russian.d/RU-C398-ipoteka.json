@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C398-ipoteka",
+    "language": "russian",
+    "chapter": 398,
+    "sequence": 22940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:747bdcd9ce7f3c7c"
+  },
+  "findings": []
+}

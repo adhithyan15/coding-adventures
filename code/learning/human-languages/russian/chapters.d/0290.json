@@ -1,0 +1,19 @@
+{
+  "chapter": 290,
+  "title": "Tricks and hiding",
+  "label": "ch:ru-tricks-and-hiding",
+  "canDo": "I can talk about a swindler, cheating, stealing a car, kidnapping and hiding.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C290-pryatatsya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 290: I can talk about a swindler, cheating, stealing a car, kidnapping and hiding.",
+    "assesses": [
+      "RU-LEX-C290-MOSHENNIK-03",
+      "RU-LEX-C290-MOSHENNIK-04",
+      "RU-LEX-C290-MOSHENNIK-05"
+    ]
+  }
+}

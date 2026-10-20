@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:79a44c73d29522ad",
+  "lessonIds": [
+    "RU-C305-vospityvat",
+    "RU-C305-usynovlyat",
+    "RU-C305-staret",
+    "RU-C305-vypusknoy",
+    "RU-C305-pokoleniye"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch305.txt",
+  "json": "russian/narration/ch305.json",
+  "textHash": "fnv1a64:073189d317383255",
+  "jsonHash": "fnv1a64:aa5b5c3d884ce0e5",
+  "findings": []
+}

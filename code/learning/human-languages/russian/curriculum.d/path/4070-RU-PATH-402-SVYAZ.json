@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-402-SVYAZ",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "RU-EXT-402-SVYAZ"
+  ],
+  "after": []
+}

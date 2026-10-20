@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C324-pobezhdat",
+    "language": "russian",
+    "chapter": 324,
+    "sequence": 19120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c5d98e4ca03b9b87"
+  },
+  "findings": []
+}

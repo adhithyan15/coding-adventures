@@ -1,0 +1,11 @@
+{
+  "id": "RU-C345-nespravedlivyy",
+  "pathSegment": "RU-PATH-345-SPRAVEDLIVO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-345-SPRAVEDLIVO",
+      "order": 1
+    }
+  ]
+}

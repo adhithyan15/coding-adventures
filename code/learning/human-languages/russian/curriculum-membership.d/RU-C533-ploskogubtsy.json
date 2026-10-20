@@ -1,0 +1,11 @@
+{
+  "id": "RU-C533-ploskogubtsy",
+  "pathSegment": "RU-PATH-533-REPAIRS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-533-REPAIRS",
+      "order": 1
+    }
+  ]
+}

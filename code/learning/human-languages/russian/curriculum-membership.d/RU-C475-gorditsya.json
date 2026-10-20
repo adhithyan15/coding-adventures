@@ -1,0 +1,11 @@
+{
+  "id": "RU-C475-gorditsya",
+  "pathSegment": "RU-PATH-475-PRIDE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-475-PRIDE",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 465,
+  "title": "A downpour",
+  "label": "ch:ru-a-downpour",
+  "canDo": "I can talk about rain: a downpour, drizzle, getting soaked, puddles and rain pouring down.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C465-lit",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 465: I can talk about rain: a downpour, drizzle, getting soaked, puddles and rain pouring down.",
+    "assesses": [
+      "RU-LEX-C465-LIVEN-03",
+      "RU-LEX-C465-LIVEN-04",
+      "RU-LEX-C465-LIVEN-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 504,
+  "sourceHash": "fnv1a64:f3a98aa05b286010",
+  "lessonIds": [
+    "RU-C504-shashki",
+    "RU-C504-peshka",
+    "RU-C504-kubik",
+    "RU-C504-koloda",
+    "RU-C504-zhulnichat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch504.txt",
+  "json": "russian/narration/ch504.json",
+  "textHash": "fnv1a64:ffd5cbe1d3a8dfea",
+  "jsonHash": "fnv1a64:b10289ac8e074eef",
+  "findings": []
+}

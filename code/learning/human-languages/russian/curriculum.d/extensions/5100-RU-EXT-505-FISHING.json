@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-505-FISHING",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about a fishing trip.",
+  "prerequisites": []
+}

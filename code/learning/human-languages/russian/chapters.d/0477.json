@@ -1,0 +1,19 @@
+{
+  "chapter": 477,
+  "title": "Longing and Loneliness",
+  "label": "ch:ru-longing-and-loneliness",
+  "canDo": "I can talk about missing people and places.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C477-sozhalet",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 477: I can talk about missing people and places.",
+    "assesses": [
+      "RU-LEX-C477-LONGING-03",
+      "RU-LEX-C477-LONGING-04",
+      "RU-LEX-C477-LONGING-05"
+    ]
+  }
+}

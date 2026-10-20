@@ -1,0 +1,11 @@
+{
+  "id": "RU-C276-etap",
+  "pathSegment": "RU-PATH-276-DESYATILETIYE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-276-DESYATILETIYE",
+      "order": 2
+    }
+  ]
+}

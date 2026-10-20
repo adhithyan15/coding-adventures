@@ -1,0 +1,11 @@
+{
+  "id": "RU-C497-balovat",
+  "pathSegment": "RU-PATH-497-UPBRINGING",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-497-UPBRINGING",
+      "order": 1
+    }
+  ]
+}

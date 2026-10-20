@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:64434a21fbd56b28",
+  "lessonIds": [
+    "RU-C365-gosudarstvo",
+    "RU-C365-pravitelstvo",
+    "RU-C365-vlast",
+    "RU-C365-politika",
+    "RU-C365-politik"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch365.txt",
+  "json": "russian/narration/ch365.json",
+  "textHash": "fnv1a64:523d765e5cc84a5a",
+  "jsonHash": "fnv1a64:a73adb4e31de8d9d",
+  "findings": []
+}

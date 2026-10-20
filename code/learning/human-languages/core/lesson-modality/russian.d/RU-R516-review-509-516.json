@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-R516-review-509-516",
+    "language": "russian",
+    "chapter": 516,
+    "sequence": 29050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e6e918cb52ef0fb1"
+  },
+  "findings": []
+}

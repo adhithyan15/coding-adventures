@@ -1,0 +1,19 @@
+{
+  "chapter": 432,
+  "title": "A leaking tap",
+  "label": "ch:ru-a-leaking-tap",
+  "canDo": "I can report water problems: a leak, dripping, a blocked drain, water running and a flood.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C432-potop",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 432: I can report water problems: a leak, dripping, a blocked drain, water running and a flood.",
+    "assesses": [
+      "RU-LEX-C432-PROTEKAT-03",
+      "RU-LEX-C432-PROTEKAT-04",
+      "RU-LEX-C432-PROTEKAT-05"
+    ]
+  }
+}

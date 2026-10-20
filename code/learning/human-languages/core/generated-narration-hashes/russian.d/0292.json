@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 292,
+  "sourceHash": "fnv1a64:aab6c28ad7644341",
+  "lessonIds": [
+    "RU-C292-obyskivat",
+    "RU-C292-arestovyvat",
+    "RU-C292-doprashivat",
+    "RU-C292-dopros",
+    "RU-C292-pokazaniya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch292.txt",
+  "json": "russian/narration/ch292.json",
+  "textHash": "fnv1a64:f2d622e75b01a123",
+  "jsonHash": "fnv1a64:8b4db9ec6c509220",
+  "findings": []
+}

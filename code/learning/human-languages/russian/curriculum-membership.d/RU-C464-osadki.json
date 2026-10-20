@@ -1,0 +1,11 @@
+{
+  "id": "RU-C464-osadki",
+  "pathSegment": "RU-PATH-464-PROGNOZ",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-464-PROGNOZ",
+      "order": 2
+    }
+  ]
+}

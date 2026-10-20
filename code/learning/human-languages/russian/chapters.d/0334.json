@@ -1,0 +1,19 @@
+{
+  "chapter": 334,
+  "title": "Stuffing and straining",
+  "label": "ch:ru-stuffing-and-straining",
+  "canDo": "I can talk about mince and stuffing, and about straining with a colander and a sieve.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-R334-review-327-334",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 334: I can talk about mince and stuffing, and about straining with a colander and a sieve.",
+    "assesses": [
+      "RU-LEX-C334-FARSH-03",
+      "RU-LEX-C334-FARSH-04",
+      "RU-LEX-C334-FARSH-05"
+    ]
+  }
+}

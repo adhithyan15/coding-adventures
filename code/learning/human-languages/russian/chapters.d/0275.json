@@ -1,0 +1,19 @@
+{
+  "chapter": 275,
+  "title": "Delays and coincidences",
+  "label": "ch:ru-delays-and-coincidences",
+  "canDo": "I can say that something dragged on, was put off, was held up, happened again or coincided with something else.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C275-sovpadat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 275: I can say that something dragged on, was put off, was held up, happened again or coincided with something else.",
+    "assesses": [
+      "RU-LEX-C275-ZATYAGIVATSYA-03",
+      "RU-LEX-C275-ZATYAGIVATSYA-04",
+      "RU-LEX-C275-ZATYAGIVATSYA-05"
+    ]
+  }
+}

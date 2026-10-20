@@ -1,0 +1,11 @@
+{
+  "id": "RU-C418-proyezzhat",
+  "pathSegment": "RU-PATH-418-PERESADKA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-418-PERESADKA",
+      "order": 3
+    }
+  ]
+}

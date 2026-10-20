@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-467-MOROZ",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "RU-EXT-467-MOROZ"
+  ],
+  "after": []
+}

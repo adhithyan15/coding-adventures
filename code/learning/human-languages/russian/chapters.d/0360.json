@@ -1,0 +1,19 @@
+{
+  "chapter": 360,
+  "title": "Meetings and reports",
+  "label": "ch:ru-meetings-and-reports",
+  "canDo": "I can talk about a work meeting, a report, my schedule and my shift, and say whom I report to.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "RU-R360-review-353-360",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 360: I can talk about a work meeting, a report, my schedule and my shift, and say whom I report to.",
+    "assesses": [
+      "RU-LEX-C360-SOVESHCHANIYE-03",
+      "RU-LEX-C360-SOVESHCHANIYE-04",
+      "RU-LEX-C360-SOVESHCHANIYE-05"
+    ]
+  }
+}

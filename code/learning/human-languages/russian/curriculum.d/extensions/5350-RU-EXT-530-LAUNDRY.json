@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-530-LAUNDRY",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about doing the laundry and getting stains out.",
+  "prerequisites": []
+}

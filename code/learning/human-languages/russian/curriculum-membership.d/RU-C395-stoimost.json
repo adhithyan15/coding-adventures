@@ -1,0 +1,11 @@
+{
+  "id": "RU-C395-stoimost",
+  "pathSegment": "RU-PATH-395-SBEREZHENIYA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-395-SBEREZHENIYA",
+      "order": 3
+    }
+  ]
+}

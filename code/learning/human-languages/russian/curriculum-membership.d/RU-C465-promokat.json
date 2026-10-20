@@ -1,0 +1,11 @@
+{
+  "id": "RU-C465-promokat",
+  "pathSegment": "RU-PATH-465-LIVEN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-465-LIVEN",
+      "order": 2
+    }
+  ]
+}

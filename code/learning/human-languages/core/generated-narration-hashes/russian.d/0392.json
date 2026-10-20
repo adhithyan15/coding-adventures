@@ -1,0 +1,20 @@
+{
+  "language": "russian",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:ef9bd1511c049021",
+  "lessonIds": [
+    "RU-C392-ogranichivat",
+    "RU-C392-lishat",
+    "RU-C392-obyazyvat",
+    "RU-C392-narushitel",
+    "RU-C392-nevinovnyy",
+    "RU-R392-review-385-392"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "russian/narration/ch392.txt",
+  "json": "russian/narration/ch392.json",
+  "textHash": "fnv1a64:61aa1bcee30f7e91",
+  "jsonHash": "fnv1a64:1033087a0b1e3398",
+  "findings": []
+}

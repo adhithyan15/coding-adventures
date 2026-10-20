@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C292-arestovyvat",
+    "language": "russian",
+    "chapter": 292,
+    "sequence": 17480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c56438da4b8630e8"
+  },
+  "findings": []
+}

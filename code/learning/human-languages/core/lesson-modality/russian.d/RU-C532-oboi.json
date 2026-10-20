@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C532-oboi",
+    "language": "russian",
+    "chapter": 532,
+    "sequence": 29820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8af0646315c40e4e"
+  },
+  "findings": []
+}

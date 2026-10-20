@@ -141,6 +141,22 @@ below shows substantial SIMPLE and ADVANCED gaps. Use the differential fixtures
 and divergence ledger to evaluate a specific feature before relying on it in a
 build.
 
+### Input depth limit
+
+SIMPLE and ADVANCED put a bound on operator, member and call chains, such as
+`a + b + … + z`, `a.b.c…` and `f()()…`. The bound is about 8,000 `+`
+operands or 16,000 calls (`MAX_CHAIN_SPINE`, measured by
+`javascript_parser::check_chain_spine`). A deeper chain fails at the parse
+stage with exit 1 and a diagnostic that names its line and column:
+`… is nested too deeply to compile (spine limit 16384)`.
+
+The compile runs on a thread with a 1 GiB stack reservation, so the same
+inputs compile on every platform.
+
+Other deep shapes, such as nested parentheses or blocks, hit the parser's
+rule-depth guard instead. See
+[CLOC42](../../../specs/CLOC42-bounded-expression-chains.md).
+
 ## Compilation levels
 
 `--compilation_level` (`-O`) selects how hard the compiler works:
@@ -289,15 +305,15 @@ runtime validation remains pending CI. Cross-compilation is not ACL runtime evid
 
 `tests/diff/ladder_*` is an ordered complexity ladder compiled by both
 `closurec` and the pinned Closure `v20260915` oracle. The fixture and
-divergence-ledger checks on 2026-09-26 cover 57 rungs:
+divergence-ledger checks on 2026-10-20 cover 58 rungs:
 
 | Level | Rungs agreeing | |
 |-------|---------------:|---|
-| `WHITESPACE_ONLY` | 54 / 57 | 95% |
-| `SIMPLE` | 35 / 57 | 61% |
-| `ADVANCED` | 24 / 57 | 42% |
+| `WHITESPACE_ONLY` | 55 / 58 | 95% |
+| `SIMPLE` | 36 / 58 | 62% |
+| `ADVANCED` | 24 / 58 | 41% |
 
-All 57 rungs are committed as fixtures under `tests/diff/ladder_*`. Agreement falls as the amount of claimed optimization rises. The `ADVANCED`
+All 58 rungs are committed as fixtures under `tests/diff/ladder_*`. Agreement falls as the amount of claimed optimization rises. The `ADVANCED`
 figure flatters it: most of its agreements are rungs with nothing to optimize.
 Upstream `ADVANCED` reduces whole programs to their observable effect —
 `var o={a:1,b:2};console.log(o.a)` becomes `console.log(1)` — where `closurec`

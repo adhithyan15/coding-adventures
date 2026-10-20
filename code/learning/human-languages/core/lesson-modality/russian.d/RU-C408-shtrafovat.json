@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C408-shtrafovat",
+    "language": "russian",
+    "chapter": 408,
+    "sequence": 23490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a0d70f7a438278e7"
+  },
+  "findings": []
+}

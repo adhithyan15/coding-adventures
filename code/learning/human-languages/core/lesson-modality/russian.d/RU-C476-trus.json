@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C476-trus",
+    "language": "russian",
+    "chapter": 476,
+    "sequence": 26980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d1270724821b7f85"
+  },
+  "findings": []
+}

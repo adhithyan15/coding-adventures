@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:cede307b5e801239",
+  "lessonIds": [
+    "RU-C414-perron",
+    "RU-C414-platforma",
+    "RU-C414-tablo",
+    "RU-C414-otpravleniye",
+    "RU-C414-pribytiye"
+  ],
+  "tex": "russian/book/chapters/ch414-on-the-platform.tex"
+}

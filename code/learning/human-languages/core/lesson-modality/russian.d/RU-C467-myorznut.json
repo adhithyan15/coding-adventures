@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C467-myorznut",
+    "language": "russian",
+    "chapter": 467,
+    "sequence": 26510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f14f9512deaaefcd"
+  },
+  "findings": []
+}

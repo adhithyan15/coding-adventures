@@ -1,0 +1,15 @@
+{
+  "language": "russian",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:ded050ca0fb044a9",
+  "lessonIds": [
+    "RU-C336-dobavlyat",
+    "RU-C336-vykladyvat",
+    "RU-C336-varyonyy",
+    "RU-C336-zharenyy",
+    "RU-C336-vynimat",
+    "RU-R336-review-335-336",
+    "RU-R336-review-final-336"
+  ],
+  "tex": "russian/book/chapters/ch336-serving-up.tex"
+}

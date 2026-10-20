@@ -1,0 +1,20 @@
+{
+  "language": "russian",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:56c8b64442e65fb1",
+  "lessonIds": [
+    "RU-C334-farsh",
+    "RU-C334-farshirovat",
+    "RU-C334-protsezhivat",
+    "RU-C334-durshlag",
+    "RU-C334-sito",
+    "RU-R334-review-327-334"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "russian/narration/ch334.txt",
+  "json": "russian/narration/ch334.json",
+  "textHash": "fnv1a64:e5956a937741df34",
+  "jsonHash": "fnv1a64:4c687ec54df18924",
+  "findings": []
+}

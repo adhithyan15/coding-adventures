@@ -1,0 +1,20 @@
+{
+  "language": "russian",
+  "chapter": 442,
+  "sourceHash": "fnv1a64:978d6ecaf145b126",
+  "lessonIds": [
+    "RU-C442-ekskursiya",
+    "RU-C442-ekskursovod",
+    "RU-C442-putevoditel",
+    "RU-C442-dostoprimechatelnost",
+    "RU-C442-osmatrivat",
+    "RU-R442-review-435-442"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "russian/narration/ch442.txt",
+  "json": "russian/narration/ch442.json",
+  "textHash": "fnv1a64:f780671ef167a746",
+  "jsonHash": "fnv1a64:60564ea026f65781",
+  "findings": []
+}

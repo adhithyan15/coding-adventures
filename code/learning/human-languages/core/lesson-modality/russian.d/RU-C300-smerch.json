@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C300-smerch",
+    "language": "russian",
+    "chapter": 300,
+    "sequence": 17900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:91aaecd0c81776c7"
+  },
+  "findings": []
+}

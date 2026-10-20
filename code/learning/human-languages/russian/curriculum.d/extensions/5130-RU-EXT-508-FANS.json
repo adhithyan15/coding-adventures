@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-508-FANS",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about fans cheering at a match.",
+  "prerequisites": []
+}

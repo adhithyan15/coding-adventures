@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-R402-review-final-402",
+    "language": "russian",
+    "chapter": 402,
+    "sequence": 23190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d3c879eb44424ee8"
+  },
+  "findings": []
+}

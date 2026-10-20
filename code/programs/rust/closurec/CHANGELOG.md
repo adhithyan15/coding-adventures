@@ -4,6 +4,31 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - long expression chains fail cleanly instead of aborting (#16009, CLOC42)
+
+`console.log(x + x + … + x)` with about 1,000 or more terms used to overflow
+the stack in a debug build, and 10,000 or more in release. The process died
+with SIGABRT (exit 134) and gave no diagnostic. Two changes fix this:
+
+- **Chain bound.** closurec now measures chain depth with
+  `javascript_parser::check_chain_spine` before building the typed AST. Past
+  `MAX_CHAIN_SPINE` (16,384 units, about 8,000 `+` operands or 16,000 calls),
+  SIMPLE and ADVANCED fail at the parse stage. They print a located
+  diagnostic, exit 1 and write no output. Externs files past the bound are
+  treated like externs files that fail to parse.
+- **Compiler thread.** `run_compiler` runs the compile on a worker thread with
+  a 1 GiB stack reservation. Every chain within the bound therefore compiles
+  on every platform, including Windows, where the main thread only has 1 MiB.
+  If that thread can't be started, the compile fails closed with exit 2
+  (`could not start the compiler thread …`) instead of running on a smaller
+  stack.
+
+`tests/regression_chain_depth.rs` checks both changes in a debug build:
+
+- The issue's 10,000-term reproduction fails cleanly.
+- For six chain shapes, the deepest chain the bound admits compiles at SIMPLE
+  and ADVANCED, and one link deeper fails cleanly.
+
 ### Fixed - outer binding shadowed by a `for`-head `let`/`const` survives (#16008)
 
 `var x = 1; for (let x of [7]) console.log(x); console.log(x);` compiled at
@@ -47,6 +72,25 @@ strict ACL setup. Optional diagnostic failure cannot hide an ACL setup error.
 A child-PATH shadow regression verifies the native utility and intended denial;
 a missing setup path remains fatal. No production publication checks change.
 Fresh complete validation, exact-head review and three-platform CI are required.
+
+### Added - ladder rung for an array spread before an index read (#15942)
+
+`ladder_t6_array_spread_index_{ws,simple,advanced}` compiles
+`var a = [..."xy", 5]; console.log(a[1]);`. Its `expected.stdout` was captured
+from the pinned `v20260915` jar, verified by sha256 and byte length, using the
+manifest's `closure-flags-file-v1` argv under Java 21.0.10. This is the shape
+behind the CLOC28 miscompile, where folding past the spread printed `5`
+instead of `y`. Until now no rung covered it.
+
+- WHITESPACE_ONLY and SIMPLE match upstream byte for byte.
+- ADVANCED is a known divergence: closurec doesn't inline the single-use
+  array (CCR-068), but its output is still correct.
+
+The other changes that go with the new rung:
+
+- The ledger gains one entry; its count pin moves from 59 to 60.
+- The fixture tripwire moves from 797 to 800.
+- The parity figures are now 55/58, 36/58 and 24/58.
 
 ### Fixed - token-independent OWNER RIGHTS admission (CV02)
 
@@ -149,7 +193,6 @@ shapes under node at SIMPLE and ADVANCED.
 `throw 1;console.log(1);` now compiles to `throw 1;` at SIMPLE and ADVANCED,
 as upstream does. The fix is in `closure-pass-dce`.
 `tests/regression_toplevel_throw.rs` pins five rows captured from the jar.
-
 ### Fixed locally - verified Windows publication policies (CV02)
 
 Create prepared directories and files with atomically protected current-user
@@ -988,6 +1031,15 @@ conditionally registered passes (`inline`, `remove-unused-vars`, `treeshake`,
 `rename-globals`, `rename-properties`) appear in the trace exactly when they
 were registered, that every reported name is a known pass, and pinning the
 scheduler's real order so a future fix to #15829 must consciously update it.
+
+### Fixed - outer binding shadowed in a `switch` case survives (#17836)
+
+`var x = 1; switch (1) { case 1: let x = 2; } console.log(x);` compiled at
+SIMPLE and ADVANCED without `var x = 1;` and threw `ReferenceError`. The fix
+is in `closure-scope-analyzer` 0.22.0, which gives the case block its own
+scope. `tests/regression_switch_case_shadow.rs` pins four shapes at both
+levels and, when `node` is present, checks that the output prints what the
+source prints.
 
 ### Fixed - strict clippy passes on closurec (#15939)
 

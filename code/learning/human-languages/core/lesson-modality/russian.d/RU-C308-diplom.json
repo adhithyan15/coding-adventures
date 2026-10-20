@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C308-diplom",
+    "language": "russian",
+    "chapter": 308,
+    "sequence": 18320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5706f1c90b41d131"
+  },
+  "findings": []
+}
