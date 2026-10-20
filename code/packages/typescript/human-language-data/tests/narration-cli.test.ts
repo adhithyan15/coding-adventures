@@ -397,7 +397,11 @@ describe("the committed corpus export", () => {
   // `npm run generate:narration`, and the committed script no longer matches it.
   // The full export now covers more than 1,500 authored lessons, so retain a
   // file-local integration budget instead of relying on Vitest's 30s default.
-  it("is in sync with the lessons it came from", { timeout: 60_000 }, () => {
+  // 120s, not 60s: the check takes ~20s alone on a laptop, but under
+  // `vitest run --coverage` on a loaded forced-full-build shard it measured
+  // past 60s twice in a row (PR #17803, shard 4 of 15), while the same shard
+  // passed on main only when the package as a whole finished ~100s sooner.
+  it("is in sync with the lessons it came from", { timeout: 120_000 }, () => {
     vi.spyOn(process.stderr, "write").mockImplementation(() => true);
     expect(runNarrationGeneration(["--check"])).toBe(0);
   });
