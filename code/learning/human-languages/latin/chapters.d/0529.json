@@ -1,0 +1,19 @@
+{
+  "chapter": 529,
+  "title": "Step-families",
+  "label": "ch:la-step-families",
+  "canDo": "I can talk about step-parents and step-children.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C529-fraternus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 529: I can talk about step-parents and step-children.",
+    "assesses": [
+      "LA-LEX-C529-NOVE-03",
+      "LA-LEX-C529-NOVE-04",
+      "LA-LEX-C529-NOVE-05"
+    ]
+  }
+}

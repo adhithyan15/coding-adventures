@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:11ca9894d53fd138",
+  "lessonIds": [
+    "LA-C320-pavor",
+    "LA-C320-metus",
+    "LA-C320-formido",
+    "LA-C320-pavidus",
+    "LA-C320-trepido"
+  ],
+  "tex": "latin/book/chapters/ch320-pavor.tex"
+}

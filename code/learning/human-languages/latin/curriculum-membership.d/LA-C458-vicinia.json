@@ -1,0 +1,11 @@
+{
+  "id": "LA-C458-vicinia",
+  "pathSegment": "LA-PATH-458-ANGIPORTUM",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-458-ANGIPORTUM",
+      "order": 1
+    }
+  ]
+}

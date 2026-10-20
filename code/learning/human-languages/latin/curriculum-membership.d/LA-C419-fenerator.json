@@ -1,0 +1,11 @@
+{
+  "id": "LA-C419-fenerator",
+  "pathSegment": "LA-PATH-419-PERSOLVO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-419-PERSOLVO",
+      "order": 4
+    }
+  ]
+}

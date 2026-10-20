@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 327,
+  "sourceHash": "fnv1a64:10a610e05f9f8586",
+  "lessonIds": [
+    "LA-C327-sponsa",
+    "LA-C327-sponsalia",
+    "LA-C327-despondeo",
+    "LA-C327-nupta",
+    "LA-C327-matrimonium"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch327.txt",
+  "json": "latin/narration/ch327.json",
+  "textHash": "fnv1a64:91a482aa7c8f42d1",
+  "jsonHash": "fnv1a64:e1c22a9aeb634a52",
+  "findings": []
+}

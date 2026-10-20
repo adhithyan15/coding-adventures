@@ -1,0 +1,11 @@
+{
+  "id": "LA-C487-favonius",
+  "pathSegment": "LA-PATH-487-AQUILO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-487-AQUILO",
+      "order": 2
+    }
+  ]
+}

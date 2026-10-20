@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C308-ius",
+    "language": "latin",
+    "chapter": 308,
+    "sequence": 16710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8748ed1794768818"
+  },
+  "findings": []
+}

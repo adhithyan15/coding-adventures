@@ -1,0 +1,11 @@
+{
+  "id": "LA-C544-citharoedus",
+  "pathSegment": "LA-PATH-544-CITH",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-544-CITH",
+      "order": 1
+    }
+  ]
+}

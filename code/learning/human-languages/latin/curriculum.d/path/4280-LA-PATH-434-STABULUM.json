@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-434-STABULUM",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "LA-EXT-434-STABULUM"
+  ],
+  "after": []
+}

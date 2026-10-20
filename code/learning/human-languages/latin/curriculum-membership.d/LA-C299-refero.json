@@ -1,0 +1,11 @@
+{
+  "id": "LA-C299-refero",
+  "pathSegment": "LA-PATH-299-NARRATIO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-299-NARRATIO",
+      "order": 3
+    }
+  ]
+}

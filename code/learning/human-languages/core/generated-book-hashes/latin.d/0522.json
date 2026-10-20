@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:6d5518a84c21d1c7",
+  "lessonIds": [
+    "LA-C522-palleo",
+    "LA-C522-pallidus",
+    "LA-C522-rubeo",
+    "LA-C522-macer",
+    "LA-C522-macies"
+  ],
+  "tex": "latin/book/chapters/ch522-pale-red-and-thin.tex"
+}

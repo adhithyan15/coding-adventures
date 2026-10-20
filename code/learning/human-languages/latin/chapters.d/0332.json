@@ -1,0 +1,19 @@
+{
+  "chapter": 332,
+  "title": "Testāmentum",
+  "label": "ch:la-testamentum",
+  "canDo": "I can talk about a will and inheritance: an heir, an inheritance, a will, to seal and to leave behind.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C332-relinquo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 332: I can talk about a will and inheritance: an heir, an inheritance, a will, to seal and to leave behind.",
+    "assesses": [
+      "LA-LEX-C332-HERES-03",
+      "LA-LEX-C332-HERES-04",
+      "LA-LEX-C332-HERES-05"
+    ]
+  }
+}

@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 296,
+  "title": "Initium et exitus",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1901bf87081ed648",
+  "lessons": [
+    {
+      "id": "LA-C296-initium",
+      "sequence": 16050,
+      "title": "initium, initiī — a beginning",
+      "headword": "initium, initiī",
+      "romanization": "initium, initiī",
+      "gloss": "a beginning",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0d6465100209337f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for early, then the Latin for a little while ago."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: initium, initiī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "initium, initiī — \"a beginning\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Initium fābulae laetum erat, fīnis trīstis. The beginning of the story was happy, the end sad."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter, 2nd declension. Initiō: at the start. English initial."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "initium is built on ineō, \"to go in, to begin\", from in and eō, \"to go\" (EtymDB): the going-in. English initial and initiate come from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "initium, initiī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *initium, initiī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "initium, initiī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *initium, initiī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with initium, initiī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *initium, initiī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for early, then the Latin for a little while ago, then say initium, initiī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for early, then the Latin for a little while ago, then say *initium, initiī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does initium, initiī mean? (\"A beginning\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C296-principium",
+      "sequence": 16060,
+      "title": "prīncipium, prīncipiī — a start, an origin",
+      "headword": "prīncipium, prīncipiī",
+      "romanization": "prīncipium, prīncipiī",
+      "gloss": "a start, an origin",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:28472f4490f46a1e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a little while ago, then the Latin for a beginning."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: prīncipium, prīncipiī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "prīncipium, prīncipiī — \"a start, an origin\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ā prīncipiō rem tōtam nārrāvit. He told the whole affair from the start."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter, 2nd declension. Ā prīncipiō: from the start. English principle."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "prīncipium is built on prīnceps, \"first, the one who takes first place\" (EtymDB): what comes first. English principle comes from it through French."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prīncipium, prīncipiī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prīncipium, prīncipiī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prīncipium, prīncipiī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prīncipium, prīncipiī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with prīncipium, prīncipiī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *prīncipium, prīncipiī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a little while ago, then the Latin for a beginning, then say prīncipium, prīncipiī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a little while ago, then the Latin for a beginning, then say *prīncipium, prīncipiī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does prīncipium, prīncipiī mean? (\"A start, an origin\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C296-exitus",
+      "sequence": 16070,
+      "title": "exitus, exitūs — a way out; an outcome, an end",
+      "headword": "exitus, exitūs",
+      "romanization": "exitus, exitūs",
+      "gloss": "a way out; an outcome, an end",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9ae435beea43f529",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a beginning, then the Latin for a start."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: exitus, exitūs",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "exitus, exitūs — \"a way out; an outcome, an end\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Nēmō exitum reī prōvidēre poterat. Nobody could foresee the outcome of the affair."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine, 4th declension, from exeō, 'to go out'. English exit."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "exitus is built on exeō, \"to go out\", from ex and eō, \"to go\" (EtymDB): a going out, and so the way a thing comes out. English exit is from the same verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "exitus, exitūs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *exitus, exitūs*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "exitus, exitūs, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *exitus, exitūs*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with exitus, exitūs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *exitus, exitūs*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a beginning, then the Latin for a start, then say exitus, exitūs again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a beginning, then the Latin for a start, then say *exitus, exitūs* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does exitus, exitūs mean? (\"A way out; an outcome, an end\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C296-intervallum",
+      "sequence": 16080,
+      "title": "intervallum, intervallī — a gap, an interval",
+      "headword": "intervallum, intervallī",
+      "romanization": "intervallum, intervallī",
+      "gloss": "a gap, an interval",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7819e4636ba8784c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a start, then the Latin for a way out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: intervallum, intervallī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "intervallum, intervallī — \"a gap, an interval\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Post breve intervallum nūntius alter vēnit. After a short interval a second messenger came."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter. First the space between two stakes of a rampart, then any gap in space or time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "intervallum joins inter, \"between\", and vallum, \"rampart, palisade\" (EtymDB): the space between the stakes. English interval comes from it through French."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "intervallum, intervallī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *intervallum, intervallī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "intervallum, intervallī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *intervallum, intervallī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with intervallum, intervallī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *intervallum, intervallī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a start, then the Latin for a way out, then say intervallum, intervallī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a start, then the Latin for a way out, then say *intervallum, intervallī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does intervallum, intervallī mean? (\"A gap, an interval\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C296-momentum",
+      "sequence": 16090,
+      "title": "mōmentum, mōmentī — a moment; weight, importance",
+      "headword": "mōmentum, mōmentī",
+      "romanization": "mōmentum, mōmentī",
+      "gloss": "a moment; weight, importance",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:79341819a5482f0a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a way out, then the Latin for a gap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: mōmentum, mōmentī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mōmentum, mōmentī — \"a moment; weight, importance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mōmentō temporis omnia mūtāta sunt. In a moment of time everything was changed."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter. A slight movement that tips the scales, then an instant, and also 'weight, importance'. English moment, momentum."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mōmentum is built on moveō, \"to move\" (EtymDB): a movement, the tilt of a balance, and so an instant. English moment and momentum come from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mōmentum, mōmentī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mōmentum, mōmentī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mōmentum, mōmentī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mōmentum, mōmentī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with mōmentum, mōmentī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *mōmentum, mōmentī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a way out, then the Latin for a gap, then say mōmentum, mōmentī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a way out, then the Latin for a gap, then say *mōmentum, mōmentī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does mōmentum, mōmentī mean? (\"A moment; weight, importance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

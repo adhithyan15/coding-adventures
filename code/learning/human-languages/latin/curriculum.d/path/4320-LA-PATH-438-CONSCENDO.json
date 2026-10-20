@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-438-CONSCENDO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "LA-EXT-438-CONSCENDO"
+  ],
+  "after": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 551,
+  "sourceHash": "fnv1a64:3faa0a85d698d280",
+  "lessonIds": [
+    "LA-C551-capsa",
+    "LA-C551-scrinium",
+    "LA-C551-membrana",
+    "LA-C551-pugillares",
+    "LA-C551-rescribo"
+  ],
+  "tex": "latin/book/chapters/ch551-book-boxes-and-tablets.tex"
+}

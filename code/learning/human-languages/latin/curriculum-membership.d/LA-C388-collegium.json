@@ -1,0 +1,11 @@
+{
+  "id": "LA-C388-collegium",
+  "pathSegment": "LA-PATH-388-MUNICEPS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-388-MUNICEPS",
+      "order": 4
+    }
+  ]
+}

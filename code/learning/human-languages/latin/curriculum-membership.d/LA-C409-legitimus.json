@@ -1,0 +1,11 @@
+{
+  "id": "LA-C409-legitimus",
+  "pathSegment": "LA-PATH-409-EDICTUM",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-409-EDICTUM",
+      "order": 3
+    }
+  ]
+}

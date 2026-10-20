@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:960713f8caf5b17d",
+  "lessonIds": [
+    "LA-C371-rostra",
+    "LA-C371-contio",
+    "LA-C371-pronuntio",
+    "LA-C371-recito",
+    "LA-C371-temere"
+  ],
+  "tex": "latin/book/chapters/ch371-at-the-speakers-platform.tex"
+}

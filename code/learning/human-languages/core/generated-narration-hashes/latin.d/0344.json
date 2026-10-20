@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:aa67c6067072fdf1",
+  "lessonIds": [
+    "LA-C344-maiores",
+    "LA-C344-annales",
+    "LA-C344-conditor",
+    "LA-C344-origo",
+    "LA-C344-vetustas"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch344.txt",
+  "json": "latin/narration/ch344.json",
+  "textHash": "fnv1a64:b46c1195a4f4f2f7",
+  "jsonHash": "fnv1a64:d36c2432a7bd2a2e",
+  "findings": []
+}

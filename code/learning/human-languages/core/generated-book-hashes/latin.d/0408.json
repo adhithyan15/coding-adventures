@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 408,
+  "sourceHash": "fnv1a64:2e7b917839bcdbf3",
+  "lessonIds": [
+    "LA-C408-mendum",
+    "LA-C408-vitium",
+    "LA-C408-ferula",
+    "LA-C408-verber",
+    "LA-C408-vapulo"
+  ],
+  "tex": "latin/book/chapters/ch408-mistakes-and-the-cane.tex"
+}

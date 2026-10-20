@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C406-neglegens",
+    "language": "latin",
+    "chapter": 406,
+    "sequence": 21750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e91a14ca44b6a88d"
+  },
+  "findings": []
+}

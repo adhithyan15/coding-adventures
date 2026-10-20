@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 404,
+  "title": "What Pupils Studied",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:35ddd6156d7d6311",
+  "lessons": [
+    {
+      "id": "LA-C404-rhetor",
+      "sequence": 21600,
+      "title": "rhētor, rhētoris — a teacher of public speaking",
+      "headword": "rhētor, rhētoris",
+      "romanization": "rhētor, rhētoris",
+      "gloss": "a teacher of public speaking",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:16d5f12aaf83804f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for knowing, then the Latin for inexperienced."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: rhētor, rhētoris",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rhētor, rhētoris — \"a teacher of public speaking\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Iuvenēs apud rhētorem dīcere discunt. Young men learn to speak in public with a rhetoric teacher."
+            },
+            {
+              "kind": "speech",
+              "text": "rhētor, rhētoris m., borrowed from Greek rhētōr, a speaker. The last stage of a Roman education was the school of the rhētor."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rhētor was borrowed from Greek rhētōr \"a public speaker\" (EtymDB; Lewis & Short). English rhetor and rhetoric come from the same Greek word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rhētor, rhētoris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rhētor, rhētoris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rhētor, rhētoris, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rhētor, rhētoris*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with rhētor, rhētoris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *rhētor, rhētoris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for knowing, then the Latin for inexperienced, then say rhētor, rhētoris again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for knowing, then the Latin for inexperienced, then say *rhētor, rhētoris* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does rhētor, rhētoris mean? (\"A teacher of public speaking\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C404-rhetorica",
+      "sequence": 21610,
+      "title": "rhētorica, rhētoricae — rhetoric, the art of speaking",
+      "headword": "rhētorica, rhētoricae",
+      "romanization": "rhētorica, rhētoricae",
+      "gloss": "rhetoric, the art of speaking",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8f6adfb2cf851ca2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for inexperienced, then the Latin for a teacher of public speaking."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: rhētorica, rhētoricae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rhētorica, rhētoricae — \"rhetoric, the art of speaking\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Rhētoricam in scholā didicit. He learned rhetoric at school."
+            },
+            {
+              "kind": "speech",
+              "text": "rhētorica, rhētoricae f., also ars rhētorica. English rhetoric."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rhētorica was borrowed from Greek rhētorikē \"the art of speaking\" (EtymDB), built on rhētōr \"a speaker\". English rhetoric comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rhētorica, rhētoricae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rhētorica, rhētoricae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rhētorica, rhētoricae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rhētorica, rhētoricae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with rhētorica, rhētoricae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *rhētorica, rhētoricae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for inexperienced, then the Latin for a teacher of public speaking, then say rhētorica, rhētoricae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for inexperienced, then the Latin for a teacher of public speaking, then say *rhētorica, rhētoricae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does rhētorica, rhētoricae mean? (\"Rhetoric, the art of speaking\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C404-dialectica",
+      "sequence": 21620,
+      "title": "dialectica, dialecticae — logic, dialectic",
+      "headword": "dialectica, dialecticae",
+      "romanization": "dialectica, dialecticae",
+      "gloss": "logic, dialectic",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fe851b29595579d9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a teacher of public speaking, then the Latin for rhetoric."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dialectica, dialecticae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dialectica, dialecticae — \"logic, dialectic\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Dialectica docet vēra ā falsīs distinguere. Logic teaches us to tell true from false."
+            },
+            {
+              "kind": "speech",
+              "text": "dialectica, dialecticae f., from Greek dialektikē, the art of discussion: the logic of the philosophers. English dialectic."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dialectica was borrowed from Greek dialektikē \"the art of discussion\" (Lewis & Short), built on a verb meaning \"to talk things through\". English dialectic comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dialectica, dialecticae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dialectica, dialecticae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dialectica, dialecticae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dialectica, dialecticae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dialectica, dialecticae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dialectica, dialecticae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a teacher of public speaking, then the Latin for rhetoric, then say dialectica, dialecticae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a teacher of public speaking, then the Latin for rhetoric, then say *dialectica, dialecticae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dialectica, dialecticae mean? (\"Logic, dialectic\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C404-geometria",
+      "sequence": 21630,
+      "title": "geōmetria, geōmetriae — geometry",
+      "headword": "geōmetria, geōmetriae",
+      "romanization": "geōmetria, geōmetriae",
+      "gloss": "geometry",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b3a62e7916ca1f82",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for rhetoric, then the Latin for logic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: geōmetria, geōmetriae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "geōmetria, geōmetriae — \"geometry\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Geōmetria terrae mēnsūram docet. Geometry teaches the measuring of land."
+            },
+            {
+              "kind": "speech",
+              "text": "geōmetria, geōmetriae f., from Greek geōmetria, land-measuring: gē, earth + metron, a measure. English geometry."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "geōmetria was borrowed from Greek geōmetria \"land-measuring\" (EtymDB), built from gē \"earth\" and metron \"a measure\". English geometry comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "geōmetria, geōmetriae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *geōmetria, geōmetriae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "geōmetria, geōmetriae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *geōmetria, geōmetriae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with geōmetria, geōmetriae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *geōmetria, geōmetriae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for rhetoric, then the Latin for logic, then say geōmetria, geōmetriae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for rhetoric, then the Latin for logic, then say *geōmetria, geōmetriae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does geōmetria, geōmetriae mean? (\"Geometry\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C404-elementum",
+      "sequence": 21640,
+      "title": "elementum, elementī — a first principle, an element; (plural) the ABC",
+      "headword": "elementum, elementī",
+      "romanization": "elementum, elementī",
+      "gloss": "a first principle, an element; (plural) the ABC",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e3b256d0dbb0cbdc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for logic, then the Latin for geometry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: elementum, elementī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "elementum, elementī — \"a first principle, an element; (plural) the ABC\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Puer prīma elementa discit. The boy is learning his ABC."
+            },
+            {
+              "kind": "speech",
+              "text": "elementum, elementī n. In the plural, elementa are the letters, the first steps of any subject, and the four elements: earth, water, air and fire. English element."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of elementum is not settled: Lewis & Short connect it with alō \"to nourish\", and EtymDB pairs it with Greek stoicheion \"an element\", the word it translates. English element comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "elementum, elementī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *elementum, elementī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "elementum, elementī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *elementum, elementī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with elementum, elementī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *elementum, elementī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for logic, then the Latin for geometry, then say elementum, elementī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for logic, then the Latin for geometry, then say *elementum, elementī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does elementum, elementī mean? (\"A first principle, an element; (plural) the ABC\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-R404-review-397-404",
+      "sequence": 21650,
+      "title": "Words from chapters 397–404 — a review",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 397-404",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:98ac43f6b82026f7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Latin for an oath and an agreement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an oath, an agreement, to strike a bargain, a pact, to bargain for",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an oath, an agreement, to strike a bargain, a pact, to bargain for]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to violate, to make good, to oblige, fixed, void",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to violate, to make good, to oblige, fixed, void]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bad faith, treacherous, a deceit, to deceive, to call to witness",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: bad faith, treacherous, a deceit, to deceive, to call to witness]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to teach, to educate, to train up, to equip, to instruct",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to teach, to educate, to train up, to equip, to instruct]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a slave who takes a boy to school, a teacher, a teacher of literature and grammar, an elementary teacher of letters, a schoolfellow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a slave who takes a boy to school, a teacher, a teacher of literature and grammar, an elementary teacher of letters, a schoolfellow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to learn by heart, to learn thoroughly, to be eager, to think over, to call to mind",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to learn by heart, to learn thoroughly, to be eager, to think over, to call to mind]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "learned, unlearned, educated, knowing, inexperienced",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: learned, unlearned, educated, knowing, inexperienced]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a teacher of public speaking, rhetoric, logic, geometry, a first principle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a teacher of public speaking, rhetoric, logic, geometry, a first principle]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An oath? (iūsiūrandum, iūrisiūrandī.) An agreement? (cōnventiō, cōnventiōnis.) To strike a bargain? (pacīscor, pacīscī.) A pact? (pactum, pactī.) To bargain for? (stipulor, stipulārī.) To violate? (violō, violāre.) To make good? (praestō, praestāre.) To oblige? (obligō, obligāre.) Fixed? (ratus, rata, ratum.) Void? (irritus, irrita, irritum.) Bad faith? (perfidia, perfidiae.) Treacherous? (perfidus, perfida, perfidum.) A deceit? (fallācia, fallāciae.) To deceive? (dēcipiō, dēcipere.) To call to witness? (testor, testārī.) To teach? (doceō, docēre.) To educate? (ērudiō, ērudīre.) To train up? (īnstituō, īnstituere.) To equip? (īnstruō, īnstruere.) To instruct? (praecipiō, praecipere.) A slave who takes a boy to school? (paedagōgus, paedagōgī.) A teacher? (praeceptor, praeceptōris.) A teacher of literature and grammar? (grammaticus, grammaticī.) An elementary teacher of letters? (litterātor, litterātōris.) A schoolfellow? (condiscipulus, condiscipulī.) To learn by heart? (ēdiscō, ēdiscere.) To learn thoroughly? (perdiscō, perdiscere.) To be eager? (studeō, studēre.) To think over? (meditor, meditārī.) To call to mind? (recordor, recordārī.) Learned? (doctus, docta, doctum.) Unlearned? (indoctus, indocta, indoctum.) Educated? (ērudītus, ērudīta, ērudītum.) Knowing? (sciēns, scientis.) Inexperienced? (imperītus, imperīta, imperītum.) A teacher of public speaking? (rhētor, rhētoris.) Rhetoric? (rhētorica, rhētoricae.) Logic? (dialectica, dialecticae.) Geometry? (geōmetria, geōmetriae.) A first principle? (elementum, elementī.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

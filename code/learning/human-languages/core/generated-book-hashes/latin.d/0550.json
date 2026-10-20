@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 550,
+  "sourceHash": "fnv1a64:0b143c7b8ffea46b",
+  "lessonIds": [
+    "LA-C550-litteratus",
+    "LA-C550-bibliopola",
+    "LA-C550-lector",
+    "LA-C550-perlego",
+    "LA-C550-evolvo"
+  ],
+  "tex": "latin/book/chapters/ch550-readers-and-booksellers.tex"
+}

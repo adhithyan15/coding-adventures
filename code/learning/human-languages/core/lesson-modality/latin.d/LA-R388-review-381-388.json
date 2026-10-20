@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-R388-review-381-388",
+    "language": "latin",
+    "chapter": 388,
+    "sequence": 20830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:57a7d4a58f279169"
+  },
+  "findings": []
+}

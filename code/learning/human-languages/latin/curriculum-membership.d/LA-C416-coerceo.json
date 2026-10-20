@@ -1,0 +1,11 @@
+{
+  "id": "LA-C416-coerceo",
+  "pathSegment": "LA-PATH-416-IUSTITIA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-416-IUSTITIA",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-537-IURG",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "LA-EXT-537-IURG"
+  ],
+  "after": []
+}

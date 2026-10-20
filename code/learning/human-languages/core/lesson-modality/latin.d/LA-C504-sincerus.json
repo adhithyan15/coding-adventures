@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C504-sincerus",
+    "language": "latin",
+    "chapter": 504,
+    "sequence": 26770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c53556ab6394658e"
+  },
+  "findings": []
+}

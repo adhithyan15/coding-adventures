@@ -51,17 +51,57 @@ pub fn parse_javascript_program(
 
 /// Parse a typed AST for a subset that excludes regex literals.
 ///
-/// LANG78's native numeric compiler selects this entry so repeated division
-/// cannot be consumed as a regex. The ordinary APIs retain their regex rules.
-/// ASI and parser depth protection use the same path as typed parsing; callers
-/// still own source limits and rejection of unsupported AST constructs.
-/// A separate pre-bridge spine check bounds flat chains before constructing
-/// recursively dropped typed nodes.
+/// LANG78's native numeric compiler originally selected this entry so
+/// repeated division cannot be consumed as a regex. The ordinary APIs retain
+/// their regex rules. ASI and parser depth protection use the same path as
+/// typed parsing; callers still own source limits and rejection of
+/// unsupported AST constructs. A separate pre-bridge spine check bounds flat
+/// chains before constructing recursively dropped typed nodes.
 /// Exponentiation is outside this restricted entry and rejects before parsing.
+///
+/// Since 0.63.0 this is exactly [`parse_javascript_cst_division_only`]
+/// followed by the typed bridge. The native IIR compiler now stops at the
+/// CST (LANG84: the IIR compiler walks the parse tree); this typed form stays
+/// for any other caller that wants the division-only goal *and* a typed AST.
 pub fn parse_javascript_program_division_only(
     source: &str,
     version: EsVersion,
 ) -> Result<coding_adventures_javascript_ast::Program, String> {
+    let node = parse_javascript_cst_division_only(source, version)?;
+    bridge::grammar_to_program(&node, version).map_err(|e| e.to_string())
+}
+
+/// Parse the regex-free numeric subset to the post-ASI parse tree (CST).
+///
+/// This is the parse-tree entry point of LANG84 decision 6, "the IIR compiler
+/// walks the parse tree". It returns the `GrammarASTNode` that the generic
+/// `GrammarParser` builds from `es<version>.grammar`, with no typed AST in
+/// between. The pipeline is:
+///
+/// ```text
+/// source
+///   │ tokenize_javascript_division_only   GrammarLexer, REGEX/BAD_REGEX off
+///   │ reject STAR_STAR / STAR_STAR_EQUALS  (right-recursive exponent rule)
+///   ▼
+/// tokens
+///   │ asi::parse_with_asi                 GrammarParser + depth guard + ASI
+///   ▼
+/// GrammarASTNode  ── check_division_only_spines (flat-chain width bound)
+/// ```
+///
+/// Every step is the one [`parse_javascript_program_division_only`] has
+/// always run before calling the bridge, in the same order and with the same
+/// error messages. So the CST handed out here is precisely the tree that
+/// entry used to bridge, and a caller that walks it sees what the bridge saw.
+///
+/// The spine bound is kept even though no typed tree is built any more: it
+/// is part of this entry's contract (hostile `1/1/…/1` chains are reported as
+/// a "spine limit" diagnostic), and it also caps how wide a single operator
+/// or suffix chain can be for whoever walks the tree.
+pub fn parse_javascript_cst_division_only(
+    source: &str,
+    version: EsVersion,
+) -> Result<GrammarASTNode, String> {
     let tokens = tokenize_javascript_division_only(source, version)?;
     // Exponentiation's grammar is right-recursive: a hostile chain can exhaust
     // the parser stack before a CST exists. Native numeric lowering does not
@@ -81,7 +121,7 @@ pub fn parse_javascript_program_division_only(
     let node = asi::parse_with_asi(tokens, version)
         .map_err(|e| format!("JavaScript parse failed: {e}"))?;
     check_division_only_spines(&node)?;
-    bridge::grammar_to_program(&node, version).map_err(|e| e.to_string())
+    Ok(node)
 }
 
 // Grammar repetitions are shallow CSTs, but the bridge folds operator and
@@ -433,6 +473,38 @@ mod tests {
         let deep = format!("{}1{};", "(".repeat(200), ")".repeat(200));
         assert!(parse_javascript_program_division_only(&deep, EsVersion::Es2020).is_err());
         assert!(parse_javascript_program("var r=/x/g;", EsVersion::Es2020).is_ok());
+    }
+
+    #[test]
+    fn division_only_cst_is_the_tree_the_typed_entry_bridges() {
+        // Same steps, same errors: the typed entry is the CST entry plus the
+        // bridge, so every failure text matches and every success bridges.
+        for source in [
+            "console.log(8 / 2 / 2)\nconsole.log(6 / 3 / 2)",
+            "let x = 1 / 2; const y = x * 4;",
+            "console.log(/1/);",
+            "console.log(8 /);",
+            "1 ** 2;",
+            &format!("console.log({});", vec!["1"; 5_000].join("/")),
+            &format!("{}1{};", "(".repeat(200), ")".repeat(200)),
+        ] {
+            let cst = parse_javascript_cst_division_only(source, EsVersion::Es2020);
+            let typed = parse_javascript_program_division_only(source, EsVersion::Es2020);
+            match (cst, typed) {
+                (Ok(cst), Ok(typed)) => {
+                    assert_eq!(cst.rule_name, "program");
+                    let bridged = bridge::grammar_to_program(&cst, EsVersion::Es2020).unwrap();
+                    assert_eq!(format!("{bridged:?}"), format!("{typed:?}"), "{source}");
+                }
+                (Err(cst), Err(typed)) => assert_eq!(cst, typed, "{source}"),
+                (cst, typed) => panic!("{source}: CST {cst:?} vs typed {typed:?}"),
+            }
+        }
+        // ASI ran: two statements without a semicolon between them.
+        let cst =
+            parse_javascript_cst_division_only("console.log(1)\nconsole.log(2)", EsVersion::Es2020)
+                .unwrap();
+        assert_eq!(cst.children.len(), 2);
     }
 
     #[test]

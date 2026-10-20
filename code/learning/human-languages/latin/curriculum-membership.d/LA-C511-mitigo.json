@@ -1,0 +1,11 @@
+{
+  "id": "LA-C511-mitigo",
+  "pathSegment": "LA-PATH-511-CRUD",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-511-CRUD",
+      "order": 3
+    }
+  ]
+}

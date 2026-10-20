@@ -1,0 +1,11 @@
+{
+  "id": "LA-C302-exploro",
+  "pathSegment": "LA-PATH-302-SPECULATOR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-302-SPECULATOR",
+      "order": 2
+    }
+  ]
+}

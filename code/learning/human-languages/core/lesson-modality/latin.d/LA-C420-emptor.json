@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C420-emptor",
+    "language": "latin",
+    "chapter": 420,
+    "sequence": 22450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d0d42d7a824218f"
+  },
+  "findings": []
+}

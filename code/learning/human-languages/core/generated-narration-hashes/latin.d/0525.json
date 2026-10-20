@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:752828605b069160",
+  "lessonIds": [
+    "LA-C525-tussio",
+    "LA-C525-vomo",
+    "LA-C525-sitio",
+    "LA-C525-lippus",
+    "LA-C525-lippitudo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch525.txt",
+  "json": "latin/narration/ch525.json",
+  "textHash": "fnv1a64:2f9aad0b6ba7f06f",
+  "jsonHash": "fnv1a64:08d2b026f3bc7306",
+  "findings": []
+}

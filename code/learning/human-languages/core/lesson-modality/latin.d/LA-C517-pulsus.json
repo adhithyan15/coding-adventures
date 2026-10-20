@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C517-pulsus",
+    "language": "latin",
+    "chapter": 517,
+    "sequence": 27470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fa5162e7578d1df7"
+  },
+  "findings": []
+}

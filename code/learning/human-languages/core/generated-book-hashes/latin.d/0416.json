@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 416,
+  "sourceHash": "fnv1a64:e8a02ac59b52ebaf",
+  "lessonIds": [
+    "LA-C416-iustitia",
+    "LA-C416-aequitas",
+    "LA-C416-obtempero",
+    "LA-C416-coerceo",
+    "LA-C416-vindico"
+  ],
+  "tex": "latin/book/chapters/ch416-justice-and-obedience.tex"
+}

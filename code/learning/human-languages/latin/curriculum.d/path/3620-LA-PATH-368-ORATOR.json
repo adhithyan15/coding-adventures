@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-368-ORATOR",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "LA-EXT-368-ORATOR"
+  ],
+  "after": []
+}

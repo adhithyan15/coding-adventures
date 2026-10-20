@@ -1,0 +1,11 @@
+{
+  "id": "LA-C492-lenio",
+  "pathSegment": "LA-PATH-492-SOLA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-492-SOLA",
+      "order": 4
+    }
+  ]
+}

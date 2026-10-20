@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C462-nundinor",
+    "language": "latin",
+    "chapter": 462,
+    "sequence": 24590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:832f08879f7c46cf"
+  },
+  "findings": []
+}

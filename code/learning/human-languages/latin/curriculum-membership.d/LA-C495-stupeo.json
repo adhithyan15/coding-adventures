@@ -1,0 +1,11 @@
+{
+  "id": "LA-C495-stupeo",
+  "pathSegment": "LA-PATH-495-MIRA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-495-MIRA",
+      "order": 2
+    }
+  ]
+}

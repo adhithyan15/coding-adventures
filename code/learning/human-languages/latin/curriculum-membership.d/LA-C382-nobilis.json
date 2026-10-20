@@ -1,0 +1,11 @@
+{
+  "id": "LA-C382-nobilis",
+  "pathSegment": "LA-PATH-382-SENATOR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-382-SENATOR",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 483,
+  "sourceHash": "fnv1a64:da7f2c575046d3f7",
+  "lessonIds": [
+    "LA-C483-stagnum",
+    "LA-C483-gurges",
+    "LA-C483-vorago",
+    "LA-C483-mano",
+    "LA-C483-inundo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch483.txt",
+  "json": "latin/narration/ch483.json",
+  "textHash": "fnv1a64:23afba7fecaeed31",
+  "jsonHash": "fnv1a64:6894e17aa25573ac",
+  "findings": []
+}

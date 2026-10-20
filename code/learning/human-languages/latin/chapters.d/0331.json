@@ -1,0 +1,19 @@
+{
+  "chapter": 331,
+  "title": "Lūctus",
+  "label": "ch:la-luctus",
+  "canDo": "I can talk about mourning and remembrance: grief, the dirge, the speech of praise, the memorial and the offerings to the dead.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C331-inferiae",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 331: I can talk about mourning and remembrance: grief, the dirge, the speech of praise, the memorial and the offerings to the dead.",
+    "assesses": [
+      "LA-LEX-C331-LUCTUS-03",
+      "LA-LEX-C331-LUCTUS-04",
+      "LA-LEX-C331-LUCTUS-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 468,
+  "title": "To dye, Purple shellfish, Purple dye, Paint, Paintbrush",
+  "label": "ch:la-to-dye-purple-shellfish-purple-dye-paint-paintbrush",
+  "canDo": "I can talk about dyeing and painting: dyeing cloth, the purple shellfish, purple dye, paint and a paintbrush.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C468-penicillus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 468: I can talk about dyeing and painting: dyeing cloth, the purple shellfish, purple dye, paint and a paintbrush.",
+    "assesses": [
+      "LA-LEX-C468-TINGO-03",
+      "LA-LEX-C468-TINGO-04",
+      "LA-LEX-C468-TINGO-05"
+    ]
+  }
+}

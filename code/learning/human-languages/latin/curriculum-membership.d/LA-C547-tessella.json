@@ -1,0 +1,11 @@
+{
+  "id": "LA-C547-tessella",
+  "pathSegment": "LA-PATH-547-IMAG",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-547-IMAG",
+      "order": 3
+    }
+  ]
+}

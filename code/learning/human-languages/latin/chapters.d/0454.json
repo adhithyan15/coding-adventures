@@ -1,0 +1,19 @@
+{
+  "chapter": 454,
+  "title": "To the right, To the left, Slanting, To go round, Detour",
+  "label": "ch:la-to-the-right-to-the-left-slanting-to-go-round-detour",
+  "canDo": "I can give directions: to the right, to the left, at a slant, going round, and taking a detour.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-R454-review-447-454",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 454: I can give directions: to the right, to the left, at a slant, going round, and taking a detour.",
+    "assesses": [
+      "LA-LEX-C454-DEXTRORSUM-03",
+      "LA-LEX-C454-DEXTRORSUM-04",
+      "LA-LEX-C454-DEXTRORSUM-05"
+    ]
+  }
+}

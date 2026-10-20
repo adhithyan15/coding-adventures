@@ -1,0 +1,11 @@
+{
+  "id": "LA-C554-urceus",
+  "pathSegment": "LA-PATH-554-SUBS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-554-SUBS",
+      "order": 1
+    }
+  ]
+}

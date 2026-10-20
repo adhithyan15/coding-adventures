@@ -1,0 +1,11 @@
+{
+  "id": "LA-C409-praeceptum",
+  "pathSegment": "LA-PATH-409-EDICTUM",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-409-EDICTUM",
+      "order": 2
+    }
+  ]
+}

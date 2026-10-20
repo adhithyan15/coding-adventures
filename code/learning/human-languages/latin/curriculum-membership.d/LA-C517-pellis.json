@@ -1,0 +1,11 @@
+{
+  "id": "LA-C517-pellis",
+  "pathSegment": "LA-PATH-517-VENA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-517-VENA",
+      "order": 2
+    }
+  ]
+}

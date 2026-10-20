@@ -1,0 +1,11 @@
+{
+  "id": "LA-C477-pascuum",
+  "pathSegment": "LA-PATH-477-PECUS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-477-PECUS",
+      "order": 4
+    }
+  ]
+}

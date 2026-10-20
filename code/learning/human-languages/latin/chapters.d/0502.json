@@ -1,0 +1,19 @@
+{
+  "chapter": 502,
+  "title": "Jokes and wit",
+  "label": "ch:la-jokes-and-wit",
+  "canDo": "I can talk about jokes and witty people.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C502-facetus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 502: I can talk about jokes and witty people.",
+    "assesses": [
+      "LA-LEX-C502-IOCU-03",
+      "LA-LEX-C502-IOCU-04",
+      "LA-LEX-C502-IOCU-05"
+    ]
+  }
+}

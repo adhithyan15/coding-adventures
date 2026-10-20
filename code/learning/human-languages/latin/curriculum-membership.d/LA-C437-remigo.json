@@ -1,0 +1,11 @@
+{
+  "id": "LA-C437-remigo",
+  "pathSegment": "LA-PATH-437-RUDENS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-437-RUDENS",
+      "order": 4
+    }
+  ]
+}

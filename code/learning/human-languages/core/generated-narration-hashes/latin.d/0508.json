@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:2101fda49487ef3e",
+  "lessonIds": [
+    "LA-C508-ignavia",
+    "LA-C508-pigritia",
+    "LA-C508-segnis",
+    "LA-C508-strenuus",
+    "LA-C508-assiduus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch508.txt",
+  "json": "latin/narration/ch508.json",
+  "textHash": "fnv1a64:2659fa554d44e2e3",
+  "jsonHash": "fnv1a64:932e5079f0817205",
+  "findings": []
+}

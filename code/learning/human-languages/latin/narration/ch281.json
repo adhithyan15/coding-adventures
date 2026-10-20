@@ -1,0 +1,942 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 281,
+  "title": "The Scene and the Event",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a6f322faa3d9521c",
+  "lessons": [
+    {
+      "id": "LA-C281-vidi-vidit",
+      "sequence": 15400,
+      "title": "vīdī, vīdit — the past of what happened",
+      "headword": "vīdī, vīdit, vīdērunt",
+      "romanization": "vīdī, vīdit, vīdērunt",
+      "gloss": "the perfect, all six persons — the past of a thing that happened and was over, with one set of endings on every verb",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9516e8e9785b12b8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I recently read a book\". (Nūper librum lēgī.) Now \"before, I lived in Rome\". (Anteā Rōmae habitāvī.) And ask \"what happened?\" (Quid accidit?)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "All three are the perfect, Latin's past for a thing that happened and was over. Here are its six persons."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one stem, six endings",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Every verb has a perfect stem: for videō, vīd-, with a long ī. Onto it go six endings, the same for every verb:"
+            },
+            {
+              "kind": "speech",
+              "text": "vīdī — I saw. vīdistī — you saw. vīdit — he saw, she saw. vīdimus — we saw. vīdistis — you all saw. vīdērunt — they saw."
+            },
+            {
+              "kind": "speech",
+              "text": "Stories lean on two of them: -it for one person, -ērunt for several."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The stem is learned with each verb. veniō has vēn-: vēnit, vēnērunt. sum has fu-: fuī, I was; fuit, he was."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Vīdī is also \"I have seen\"; the sentence decides."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: the -āvī verbs",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Most -āre verbs add -āv-, like the habitāvī you own:"
+            },
+            {
+              "kind": "speech",
+              "text": "ambulāre — ambulāvī, I walked; ambulāvit, he walked clāmāre — clāmāvit, he shouted nārrāre — nārrāvit, she told; nārrāvērunt, they told."
+            },
+            {
+              "kind": "speech",
+              "text": "The stems learned one by one are the others: vīdī, vēnī, fuī, lēgī, and bibī, from bibō, with nothing added at all."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart: fuī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fuī looks nothing like sum because it is built on another root, the one the chapter on sum named: Proto-Indo-European bʰuH-, \"to become\", which EtymDB 2.1 lists among the parents of sum and which also gives English be."
+            },
+            {
+              "kind": "speech",
+              "text": "vīdī keeps the root of videō with a longer vowel (Lewis & Short give vīdi as its perfect). That vowel is how the ear tells videt, \"he sees\", from vīdit, \"he saw\"."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vīdī, vīdistī, vīdit — then vīdimus, vīdistis, vīdērunt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vīdī, vīdistī, vīdit* — then *vīdimus, vīdistis, vīdērunt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "videt, he sees; then vīdit, he saw — and hear the long ī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *videt*, he sees; then *vīdit*, he saw — and hear the long *ī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēnit, he came; vēnērunt, they came",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēnit*, he came; *vēnērunt*, they came]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fuī, I was; fuit, it was",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fuī*, I was; *fuit*, it was]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ambulāvī, I walked; ambulāvērunt, they walked",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ambulāvī*, I walked; *ambulāvērunt*, they walked]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Nūper amīcum vīdī. — Recently I saw a friend",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Nūper amīcum vīdī.* — Recently I saw a friend]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"He saw\"? (Vīdit.) \"They came\"? (Vēnērunt.) \"I walked\"? (Ambulāvī.) Which ending says \"they\"? (-ērunt.) And which root is behind fuī? (bʰuH-, \"to become\", the root of English be.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C281-eram",
+      "sequence": 15410,
+      "title": "eram, erat — the past that stays open",
+      "headword": "eram, erat, erant",
+      "romanization": "eram, erat, erant",
+      "gloss": "the imperfect of sum — was, were, used to be: the verb a past scene is painted with",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d713db9e499a8ac0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I am\" and \"they are\". (Sum. Sunt.) Now \"I was\", in the perfect. (Fuī.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Fuī closes a door: I was, and that is over. Latin has a second \"was\" that holds it open."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: six forms, and the endings you know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ōlim Rōma parva erat. — Long ago Rome was small."
+            },
+            {
+              "kind": "speech",
+              "text": "erat is \"was\", the imperfect of sum. All six persons:"
+            },
+            {
+              "kind": "speech",
+              "text": "eram — I was. erās — you were. erat — he, she, it was. erāmus — we were. erātis — you all were. erant — they were."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The endings -m, -s, -t, -mus, -tis, -nt are those of sum, es, est, sumus, estis, sunt, on the stem era-. Before -m, -t and -nt the a is short."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Erat is a state that went on, with no edge in view."
+            },
+            {
+              "kind": "speech",
+              "text": "Fessus eram. — I was tired. Caelum obscūrum erat. — The sky was dark."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: fuit or erat?",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Both are \"was\"; the choice is the frame. Laetus eram paints a mood that lasted through the story. Laetus fuī sums it up from outside: I was happy, and that time is over. A story sets its scene with erat."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart: eram",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "eram is usually explained as an older esam, built on the same root as est: between two vowels an old Latin s turned into r, and es-a-m came out as eram. Neither EtymDB nor Lewis & Short records a form that old, so this is the account histories of Latin give, offered here as one. The s survives where no vowel followed it: es, est, estis."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eram, erās, erat — then erāmus, erātis, erant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eram, erās, erat* — then *erāmus, erātis, erant*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ōlim Rōma parva erat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ōlim Rōma parva erat.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Fessus eram. — then a woman says it: Fessa eram.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Fessus eram.* — then a woman says it: *Fessa eram.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Caelum obscūrum erat. — then In vīllā erāmus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Caelum obscūrum erat.* — then *In vīllā erāmus.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the closed door, then the open one — fuit, then erat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the closed door, then the open one — *fuit*, then *erat*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"They were\"? (Erant.) \"We were\"? (Erāmus.) Whose endings does eram borrow? (The present sum, es, est.) Which \"was\" paints a scene, fuit or erat? (Erat.) And what did the r of eram used to be? (An s, between two vowels.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C281-ambulabam",
+      "sequence": 15420,
+      "title": "ambulābam — I was walking",
+      "headword": "ambulābam, habēbam, legēbam",
+      "romanization": "ambulābam, habēbam, legēbam",
+      "gloss": "the imperfect of every other verb — -ba- between the stem and the ending: was walking, used to walk",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:912599bbb4a3ecff",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I was tired\", the open past. (Fessus eram.) Now \"I walked\", the closed one. (Ambulāvī.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Eram belongs to one verb. Every other verb makes its open past with two letters slipped in before the ending."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: -ba- before the ending",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Take the present stem, add -ba-, then the endings eram taught you:"
+            },
+            {
+              "kind": "speech",
+              "text": "ambulābam — I was walking. ambulābās — you were walking. ambulābat — he was walking. ambulābāmus — we were walking. ambulābātis — you all were walking. ambulābant — they were walking."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The vowel before -ba- comes from the infinitive. An -āre verb keeps its ā, and an -ēre verb its ē: habēre, habēbam, I had, I used to have; sedēre, sedēbat, he was sitting."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The other verbs put -ēbam on the stem: legere, legēbam, I was reading; volō gives volēbat, he wanted. And the verbs with -iō keep their i: venīre, veniēbam; dormīre, dormiēbat, he was sleeping."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What it says is the same for all of them: an action under way, or a habit. Ambulābam is \"I was walking\", and also \"I used to walk\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: the -b- of -bam",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Histories of Latin often trace the -b- of -bam to the root behind fuī, Proto-Indo-European bʰuH-, \"to become\". That is a reconstruction, and neither EtymDB nor Lewis & Short takes it up, so it is offered as the usual account, not as a fact."
+            },
+            {
+              "kind": "speech",
+              "text": "What is certain is where the ending went. Spanish kept it: cantābat, \"he was singing\", is Spanish cantaba. French wore the b away, so the same form there is chantait."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ambulābam, ambulābās, ambulābat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ambulābam, ambulābās, ambulābat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ambulābāmus, ambulābātis, ambulābant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ambulābāmus, ambulābātis, ambulābant*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "habēbam, I had; sedēbat, he was sitting",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *habēbam*, I had; *sedēbat*, he was sitting]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mercātōrēs clāmābant. — The merchants were shouting",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mercātōrēs clāmābant.* — The merchants were shouting]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "legēbam, I was reading; veniēbam, I was coming",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *legēbam*, I was reading; *veniēbam*, I was coming]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Amīcus dormiēbat. — My friend was sleeping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Amīcus dormiēbat.* — My friend was sleeping]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the closed past, then the open one — ambulāvit, then ambulābat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the closed past, then the open one — *ambulāvit*, then *ambulābat*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"They were walking\"? (Ambulābant.) \"I had\"? (Habēbam.) \"I was reading\"? (Legēbam.) What two letters come before the ending? (-ba-.) And which Romance language still keeps the b? (Spanish: cantaba.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C281-pluebat-venit",
+      "sequence": 15430,
+      "title": "pluēbat … vēnit — the scene and the event",
+      "headword": "pluēbat … vēnit",
+      "romanization": "pluēbat … vēnit",
+      "gloss": "two pasts in one sentence — the imperfect holds the scene still, the perfect drops the event into it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:da21ddf36bda2cad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"it rains\", with no subject. (Pluit.) Now put it in the open past, the way legere gives legēbat. (Pluēbat, it was raining.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: which past for which job",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Pluēbat. Subitō amīcus vēnit. — It was raining. Suddenly a friend came."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The rain was already going on, and it went on afterwards: that is the imperfect, pluēbat. The friend's arrival happened once, at one moment, and was done: that is the perfect, vēnit."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "So a story runs on two tracks. The imperfect paints the scene: weather, places, what people were doing. The perfect moves the events along."
+            },
+            {
+              "kind": "speech",
+              "text": "In forō ambulābam; subitō amīcum vīdī. — I was walking in the forum; suddenly I saw a friend."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A word like subitō, \"suddenly\", usually brings a perfect after it: suddenness is an event."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: habitābam or habitāvī?",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Sometimes both are right. Rōmae habitāvī counts it up from outside: I lived in Rome, a closed stretch. Rōmae habitābam puts you inside it: I was living in Rome then."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One small trap: pluit in the perfect is spelled pluit too, \"it rained\", the way accidit serves two tenses. Only the story around it decides."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart: perfect and imperfect",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The names are Latin. perfectum is the participle of a verb that Lewis & Short gloss \"to carry through, to finish\", and EtymDB 2.1 builds that verb from per-, \"through\", and faciō, \"to make, to do\". The perfect is the past that was carried through. imperfectum puts in-, \"not\", in front: unfinished, still going, which is what pluēbat is."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Pluēbat. Subitō amīcus vēnit.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Pluēbat. Subitō amīcus vēnit.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "In forō ambulābam; subitō amīcum vīdī.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *In forō ambulābam; subitō amīcum vīdī.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a scene — Caelum obscūrum erat. — and an event — Amīcus vēnit.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a scene — *Caelum obscūrum erat.* — and an event — *Amīcus vēnit.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inside it, then outside it — Rōmae habitābam, then Rōmae habitāvī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: inside it, then outside it — *Rōmae habitābam*, then *Rōmae habitāvī*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "LA-C281-pluebat-venit-which",
+              "prompt": "In 'Pluebat. Subito amicus venit.', which verb is the event?",
+              "assesses": [
+                "LA-GRAMMAR-C281-SCAENA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "venit",
+                "vēnit",
+                "the perfect venit"
+              ],
+              "feedback": {
+                "correct": "Venit: it happened once and was done.",
+                "incorrect": "Venit, the perfect. Pluebat is the scene."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which past paints the scene? (The imperfect: pluēbat.) Which moves the story along? (The perfect: vēnit.) After subitō, which one is likely? (The perfect: suddenness is an event.) And what does perfectum mean, taken apart? (Carried through.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-R281-the-scene-and-the-event",
+      "sequence": 15440,
+      "title": "Review — the scene, and what happened in it",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "a scene and an event in one breath — the perfect, eram, the -bam imperfect, and which past does which job",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c2cf475bf07d6d37",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"they saw\". (Vīdērunt.) Then \"we were\", the open past. (Erāmus.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four lessons, and both of Latin's story pasts are in your hands. The perfect, a stem and six endings: vīdī, vīdit, vīdērunt, with -āvī for most -āre verbs. The imperfect: eram, erat, erant for sum, and -ba- before the ending for every other verb: ambulābam, habēbam, legēbam, veniēbam."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And the division of labour between them: the imperfect holds the scene still, the perfect drops the events into it."
+            },
+            {
+              "kind": "speech",
+              "text": "Pluēbat, et in caupōnā sedēbam. Subitō amīcus intrāvit. — It was raining, and I was sitting in the inn. Suddenly a friend came in."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two verbs of scene, pluēbat and sedēbam; one event, intrāvit, and subitō in front of it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a scene in three — Caelum obscūrum erat. Pluēbat. In caupōnā sedēbam.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a scene in three — *Caelum obscūrum erat. Pluēbat. In caupōnā sedēbam.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the event — Subitō amīcus intrāvit. — and a closed one — In caupōnā cēnāvērunt.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the event — *Subitō amīcus intrāvit.* — and a closed one — *In caupōnā cēnāvērunt.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "In forō ambulābam; subitō amīcum vīdī.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *In forō ambulābam; subitō amīcum vīdī.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one of your own — a scene with erat or -bat, and one thing that happened, with subitō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one of your own — a scene with *erat* or *-bat*, and one thing that happened, with *subitō*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"He came in\"? (Intrāvit.) \"I was sitting\"? (Sedēbam.) Which ending says \"they\" in the perfect? (-ērunt.) In pluēbat … intrāvit, which verb is the scene? (Pluēbat.) What does perfectum mean? (Carried through.) What was the r of eram once? (An s.) And which language still says cantaba? (Spanish, keeping the -b-.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

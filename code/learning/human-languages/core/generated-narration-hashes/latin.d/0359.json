@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 359,
+  "sourceHash": "fnv1a64:4ccc1cae9e986c24",
+  "lessonIds": [
+    "LA-C359-pondero",
+    "LA-C359-delibero",
+    "LA-C359-dubitatio",
+    "LA-C359-probabilis",
+    "LA-C359-verisimilis"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch359.txt",
+  "json": "latin/narration/ch359.json",
+  "textHash": "fnv1a64:2d190102f6c13b4c",
+  "jsonHash": "fnv1a64:9057c8eee8fb2d74",
+  "findings": []
+}

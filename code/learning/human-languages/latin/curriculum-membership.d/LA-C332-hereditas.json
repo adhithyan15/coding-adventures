@@ -1,0 +1,11 @@
+{
+  "id": "LA-C332-hereditas",
+  "pathSegment": "LA-PATH-332-HERES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-332-HERES",
+      "order": 1
+    }
+  ]
+}

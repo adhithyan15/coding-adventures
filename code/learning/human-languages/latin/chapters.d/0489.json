@@ -1,0 +1,19 @@
+{
+  "chapter": 489,
+  "title": "Joy and gladness",
+  "label": "ch:la-joy-and-gladness",
+  "canDo": "I can talk about joy and gladness.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C489-iucunditas",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 489: I can talk about joy and gladness.",
+    "assesses": [
+      "LA-LEX-C489-GAUD-03",
+      "LA-LEX-C489-GAUD-04",
+      "LA-LEX-C489-GAUD-05"
+    ]
+  }
+}

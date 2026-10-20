@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:cfb37e9c7702fb3e",
+  "lessonIds": [
+    "LA-C365-quandoquidem",
+    "LA-C365-quippe",
+    "LA-C365-etenim",
+    "LA-C365-nempe",
+    "LA-C365-scilicet"
+  ],
+  "tex": "latin/book/chapters/ch365-for-of-course-namely.tex"
+}

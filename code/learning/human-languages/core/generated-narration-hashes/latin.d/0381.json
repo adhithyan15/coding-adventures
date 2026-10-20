@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:4bea79c58639c861",
+  "lessonIds": [
+    "LA-C381-causidicus",
+    "LA-C381-cliens",
+    "LA-C381-navicularius",
+    "LA-C381-librarius",
+    "LA-C381-agrimensor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch381.txt",
+  "json": "latin/narration/ch381.json",
+  "textHash": "fnv1a64:da31448e8edabab5",
+  "jsonHash": "fnv1a64:2321b4fa67978e48",
+  "findings": []
+}

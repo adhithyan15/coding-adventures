@@ -1,0 +1,19 @@
+{
+  "chapter": 444,
+  "title": "Dead calm, Calm weather, Peninsula, Of the shore, To sail out",
+  "label": "ch:la-dead-calm-calm-weather-peninsula-of-the-shore-to-sail-out",
+  "canDo": "I can talk about calm seas and coasts: a dead calm, calm weather, a peninsula, things of the shore, and sailing out.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C444-enavigo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 444: I can talk about calm seas and coasts: a dead calm, calm weather, a peninsula, things of the shore, and sailing out.",
+    "assesses": [
+      "LA-LEX-C444-MALACIA-03",
+      "LA-LEX-C444-MALACIA-04",
+      "LA-LEX-C444-MALACIA-05"
+    ]
+  }
+}

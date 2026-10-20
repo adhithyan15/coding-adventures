@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C383-censor",
+    "language": "latin",
+    "chapter": 383,
+    "sequence": 20570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:be22934a477d92b8"
+  },
+  "findings": []
+}

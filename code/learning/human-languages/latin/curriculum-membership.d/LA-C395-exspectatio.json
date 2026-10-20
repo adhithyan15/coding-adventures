@@ -1,0 +1,11 @@
+{
+  "id": "LA-C395-exspectatio",
+  "pathSegment": "LA-PATH-395-DIFFERO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-395-DIFFERO",
+      "order": 4
+    }
+  ]
+}

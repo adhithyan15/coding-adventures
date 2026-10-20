@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 511,
+  "sourceHash": "fnv1a64:856c6f564ba90029",
+  "lessonIds": [
+    "LA-C511-crudelitas",
+    "LA-C511-saevitia",
+    "LA-C511-laedo",
+    "LA-C511-mitigo",
+    "LA-C511-mansuetus"
+  ],
+  "tex": "latin/book/chapters/ch511-cruelty-and-gentleness.tex"
+}

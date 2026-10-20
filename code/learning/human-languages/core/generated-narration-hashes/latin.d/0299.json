@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 299,
+  "sourceHash": "fnv1a64:447d8a6072dbc0cd",
+  "lessonIds": [
+    "LA-C299-narratio",
+    "LA-C299-commemoro",
+    "LA-C299-memoro",
+    "LA-C299-refero",
+    "LA-C299-inquam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch299.txt",
+  "json": "latin/narration/ch299.json",
+  "textHash": "fnv1a64:f24bd5c57574feb6",
+  "jsonHash": "fnv1a64:6439ce368d74000d",
+  "findings": []
+}

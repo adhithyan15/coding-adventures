@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-422-DIVITIAE",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "LA-EXT-422-DIVITIAE"
+  ],
+  "after": []
+}

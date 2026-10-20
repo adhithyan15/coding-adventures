@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-483-STAGNUM",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "LA-EXT-483-STAGNUM"
+  ],
+  "after": []
+}

@@ -1,0 +1,14 @@
+{
+  "language": "latin",
+  "chapter": 520,
+  "sourceHash": "fnv1a64:3d4b3781370b1234",
+  "lessonIds": [
+    "LA-C520-spiritus",
+    "LA-C520-anhelo",
+    "LA-C520-singultus",
+    "LA-C520-oscito",
+    "LA-C520-sternuo",
+    "LA-R520-review-513-520"
+  ],
+  "tex": "latin/book/chapters/ch520-breathing.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C352-clibanus",
+  "pathSegment": "LA-PATH-352-SUBIGO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-352-SUBIGO",
+      "order": 4
+    }
+  ]
+}

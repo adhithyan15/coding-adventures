@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-543-CANT",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "LA-EXT-543-CANT"
+  ],
+  "after": []
+}

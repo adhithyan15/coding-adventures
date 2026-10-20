@@ -1,0 +1,11 @@
+{
+  "id": "LA-C424-anfractus",
+  "pathSegment": "LA-PATH-424-COMPITUM",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-424-COMPITUM",
+      "order": 3
+    }
+  ]
+}

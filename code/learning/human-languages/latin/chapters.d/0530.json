@@ -1,0 +1,19 @@
+{
+  "chapter": 530,
+  "title": "Masters and slaves",
+  "label": "ch:la-masters-and-slaves",
+  "canDo": "I can describe masters and slaves in a Roman house.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C530-pedisequus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 530: I can describe masters and slaves in a Roman house.",
+    "assesses": [
+      "LA-LEX-C530-ERUS-03",
+      "LA-LEX-C530-ERUS-04",
+      "LA-LEX-C530-ERUS-05"
+    ]
+  }
+}

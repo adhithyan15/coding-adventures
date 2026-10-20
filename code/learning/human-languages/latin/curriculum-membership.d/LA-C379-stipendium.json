@@ -1,0 +1,11 @@
+{
+  "id": "LA-C379-stipendium",
+  "pathSegment": "LA-PATH-379-QUAESTUS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-379-QUAESTUS",
+      "order": 1
+    }
+  ]
+}

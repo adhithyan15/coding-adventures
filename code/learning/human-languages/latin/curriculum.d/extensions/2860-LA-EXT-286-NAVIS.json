@@ -1,0 +1,8 @@
+{
+  "id": "LA-EXT-286-NAVIS",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can book a passage on a ship, pay the fare, and report that something went wrong on the way.",
+  "prerequisites": []
+}

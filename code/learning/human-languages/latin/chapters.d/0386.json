@@ -1,0 +1,19 @@
+{
+  "chapter": 386,
+  "title": "Living Together",
+  "label": "ch:la-living-together",
+  "canDo": "I can talk about a partnership, kindness and culture, custom and character, an institution and harmony.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C386-concordia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 386: I can talk about a partnership, kindness and culture, custom and character, an institution and harmony.",
+    "assesses": [
+      "LA-LEX-C386-SOCIETAS-03",
+      "LA-LEX-C386-SOCIETAS-04",
+      "LA-LEX-C386-SOCIETAS-05"
+    ]
+  }
+}

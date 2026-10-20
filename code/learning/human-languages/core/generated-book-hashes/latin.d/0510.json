@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:7a0d7729cae4cbbe",
+  "lessonIds": [
+    "LA-C510-ineptus",
+    "LA-C510-insanus",
+    "LA-C510-insania",
+    "LA-C510-demens",
+    "LA-C510-deliro"
+  ],
+  "tex": "latin/book/chapters/ch510-folly-and-madness.tex"
+}

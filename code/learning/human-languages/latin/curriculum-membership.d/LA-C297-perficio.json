@@ -1,0 +1,11 @@
+{
+  "id": "LA-C297-perficio",
+  "pathSegment": "LA-PATH-297-INCIPIO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-297-INCIPIO",
+      "order": 3
+    }
+  ]
+}

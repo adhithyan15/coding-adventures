@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-449-VAPPA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "LA-EXT-449-VAPPA"
+  ],
+  "after": []
+}

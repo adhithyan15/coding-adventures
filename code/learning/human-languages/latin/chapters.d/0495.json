@@ -1,0 +1,19 @@
+{
+  "chapter": 495,
+  "title": "Wonder and amazement",
+  "label": "ch:la-wonder-and-amazement",
+  "canDo": "I can describe wonder and amazement.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C495-obstupesco",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 495: I can describe wonder and amazement.",
+    "assesses": [
+      "LA-LEX-C495-MIRA-03",
+      "LA-LEX-C495-MIRA-04",
+      "LA-LEX-C495-MIRA-05"
+    ]
+  }
+}

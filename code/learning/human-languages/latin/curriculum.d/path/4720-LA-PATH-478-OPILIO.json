@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-478-OPILIO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "LA-EXT-478-OPILIO"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 331,
+  "sourceHash": "fnv1a64:90dbaab267d6bcd5",
+  "lessonIds": [
+    "LA-C331-luctus",
+    "LA-C331-nenia",
+    "LA-C331-laudatio",
+    "LA-C331-monumentum",
+    "LA-C331-inferiae"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch331.txt",
+  "json": "latin/narration/ch331.json",
+  "textHash": "fnv1a64:9d238676de36758f",
+  "jsonHash": "fnv1a64:6914fe4a45dae827",
+  "findings": []
+}

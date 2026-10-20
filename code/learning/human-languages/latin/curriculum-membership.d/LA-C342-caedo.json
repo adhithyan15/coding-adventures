@@ -1,0 +1,11 @@
+{
+  "id": "LA-C342-caedo",
+  "pathSegment": "LA-PATH-342-CLADES",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-342-CLADES",
+      "order": 2
+    }
+  ]
+}

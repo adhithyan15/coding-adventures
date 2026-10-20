@@ -1,0 +1,11 @@
+{
+  "id": "LA-C286-amitto",
+  "pathSegment": "LA-PATH-286-NAVIS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-286-NAVIS",
+      "order": 2
+    }
+  ]
+}

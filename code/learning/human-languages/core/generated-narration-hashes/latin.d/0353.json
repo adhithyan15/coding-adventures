@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 353,
+  "sourceHash": "fnv1a64:44f8994048f62eec",
+  "lessonIds": [
+    "LA-C353-ferveo",
+    "LA-C353-caccabus",
+    "LA-C353-elixus",
+    "LA-C353-spuma",
+    "LA-C353-despumo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch353.txt",
+  "json": "latin/narration/ch353.json",
+  "textHash": "fnv1a64:bce48d54692ca73e",
+  "jsonHash": "fnv1a64:15ee798e4b10ee99",
+  "findings": []
+}

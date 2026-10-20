@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 546,
+  "sourceHash": "fnv1a64:1080d377866e479e",
+  "lessonIds": [
+    "LA-C546-cavea",
+    "LA-C546-pulpitum",
+    "LA-C546-aulaeum",
+    "LA-C546-prologus",
+    "LA-C546-pantomimus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch546.txt",
+  "json": "latin/narration/ch546.json",
+  "textHash": "fnv1a64:71253c9f49be9b4d",
+  "jsonHash": "fnv1a64:cd5f13766c4705a3",
+  "findings": []
+}

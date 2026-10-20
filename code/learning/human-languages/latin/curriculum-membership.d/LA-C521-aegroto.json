@@ -1,0 +1,11 @@
+{
+  "id": "LA-C521-aegroto",
+  "pathSegment": "LA-PATH-521-AEGR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-521-AEGR",
+      "order": 1
+    }
+  ]
+}

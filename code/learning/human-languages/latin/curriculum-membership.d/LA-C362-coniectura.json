@@ -1,0 +1,11 @@
+{
+  "id": "LA-C362-coniectura",
+  "pathSegment": "LA-PATH-362-REFELLO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-362-REFELLO",
+      "order": 4
+    }
+  ]
+}

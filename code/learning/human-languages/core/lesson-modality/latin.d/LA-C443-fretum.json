@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C443-fretum",
+    "language": "latin",
+    "chapter": 443,
+    "sequence": 23650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:576635b685b72ce0"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-359-PONDERO",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "LA-EXT-359-PONDERO"
+  ],
+  "after": []
+}

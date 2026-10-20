@@ -1,0 +1,15 @@
+{
+  "language": "latin",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:b4a746bb2d97bd08",
+  "lessonIds": [
+    "LA-C422-divitiae",
+    "LA-C422-egeo",
+    "LA-C422-egestas",
+    "LA-C422-careo",
+    "LA-C422-abundo",
+    "LA-R422-review-421-422",
+    "LA-R422-review-final-422"
+  ],
+  "tex": "latin/book/chapters/ch422-rich-and-poor.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 539,
+  "title": "Dice and board games",
+  "label": "ch:la-dice-and-board-games",
+  "canDo": "I can talk about dice and board games.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C539-luctor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 539: I can talk about dice and board games.",
+    "assesses": [
+      "LA-LEX-C539-ALEA-03",
+      "LA-LEX-C539-ALEA-04",
+      "LA-LEX-C539-ALEA-05"
+    ]
+  }
+}

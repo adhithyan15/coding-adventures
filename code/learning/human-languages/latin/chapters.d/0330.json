@@ -1,0 +1,19 @@
+{
+  "chapter": 330,
+  "title": "Fūnus",
+  "label": "ch:la-funus",
+  "canDo": "I can describe a Roman funeral: the funeral, to bury, the burial, the pyre and the funeral procession.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-R330-review-323-330",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 330: I can describe a Roman funeral: the funeral, to bury, the burial, the pyre and the funeral procession.",
+    "assesses": [
+      "LA-LEX-C330-FUNUS-03",
+      "LA-LEX-C330-FUNUS-04",
+      "LA-LEX-C330-FUNUS-05"
+    ]
+  }
+}

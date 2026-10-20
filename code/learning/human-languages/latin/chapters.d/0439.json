@@ -1,0 +1,19 @@
+{
+  "chapter": 439,
+  "title": "To put in, To step out, To haul ashore, To launch, Navigable",
+  "label": "ch:la-to-put-in-to-step-out-to-haul-ashore-to-launch-navigable",
+  "canDo": "I can talk about arriving and leaving by ship: putting in, going ashore, hauling a ship up, launching it, and a navigable river.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C439-navigabilis",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 439: I can talk about arriving and leaving by ship: putting in, going ashore, hauling a ship up, launching it, and a navigable river.",
+    "assesses": [
+      "LA-LEX-C439-EGREDIOR-03",
+      "LA-LEX-C439-EGREDIOR-04",
+      "LA-LEX-C439-EGREDIOR-05"
+    ]
+  }
+}

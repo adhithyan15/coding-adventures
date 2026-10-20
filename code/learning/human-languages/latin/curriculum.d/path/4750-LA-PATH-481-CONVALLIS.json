@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-481-CONVALLIS",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "LA-EXT-481-CONVALLIS"
+  ],
+  "after": []
+}
