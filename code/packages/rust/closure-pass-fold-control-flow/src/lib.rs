@@ -627,7 +627,8 @@ fn fold_tagged_statement(stmt: &TaggedStatement, st: &mut FoldState) -> Statemen
 
 /// Folds `BlockStatement.body` by recursing into each statement
 /// AND dropping everything after a `ReturnStatement` (dead code
-/// after a definite terminator).
+/// after a definite terminator) — when that dead tail is safe to
+/// drop (#17841, [`dead_tail_is_safe_to_drop`]).
 fn fold_block_statement(b: &BlockStatement, st: &mut FoldState) -> BlockStatement {
     let mut new_body = Vec::with_capacity(b.body.len());
     let mut hit_terminator = false;
@@ -635,11 +636,19 @@ fn fold_block_statement(b: &BlockStatement, st: &mut FoldState) -> BlockStatemen
     // Capture each dead-after-terminator statement's CV id so it can be
     // tombstoned (see the `record_fold_deleting` call below).
     let mut removed_cvs: Vec<Option<String>> = Vec::new();
-    for s in &b.body {
+    for (i, s) in b.body.iter().enumerate() {
         if hit_terminator {
-            dropped_count += 1;
-            removed_cvs.push(statement_cv(s));
-            continue;
+            // The rest of the block is unreachable. Drop it as a unit, but
+            // only if nothing in it hoists or shadows a name (#17841);
+            // otherwise keep folding it as ordinary statements.
+            if dead_tail_is_safe_to_drop(&b.body[i..]) {
+                for dead in &b.body[i..] {
+                    dropped_count += 1;
+                    removed_cvs.push(statement_cv(dead));
+                }
+                break;
+            }
+            hit_terminator = false;
         }
         let folded = fold_statement(s, st);
 
@@ -917,6 +926,45 @@ fn coalesce_var_decls<T: VarDeclCarrier>(items: Vec<T>, st: &mut FoldState) -> V
         i = j;
     }
     out
+}
+
+/// Can the unreachable tail after a `return` be deleted without changing
+/// behaviour? (#17841)
+///
+/// Unreachable is not the same as unobservable. Three kinds of dead
+/// statement still affect the code *before* the `return`:
+///
+/// | dead statement     | why it is still observable                          |
+/// |--------------------|-----------------------------------------------------|
+/// | `function h(){}`   | hoists: `h()` before the `return` calls it          |
+/// | `var x;`           | hoists: makes `x` local, so `x = 3` stays local     |
+/// | `let x;`/`const x;`| shadows `x` (in its TDZ) across the whole block     |
+///
+/// ```js
+/// function f(){ return h(); function h(){ return 1; } }   // 1, not ReferenceError
+/// function g(){ x = 3; return x; var x; }                // leaves global x alone
+/// ```
+///
+/// This is the same whitelist as `closure-pass-dce`'s `tail_is_safe_to_truncate`:
+/// a tail may go only when every statement is an expression, empty, jump or
+/// `debugger` statement. A `class`, any declaration and any compound statement,
+/// which could wrap a `var`, keep the whole tail. Keeping dead code is never a
+/// miscompile; DCE and remove-unused-vars still clean up what they can prove.
+fn dead_tail_is_safe_to_drop(stmts: &[Statement]) -> bool {
+    stmts.iter().all(|s| {
+        matches!(
+            s,
+            Statement::Tagged(
+                TaggedStatement::ExpressionStatement(_)
+                    | TaggedStatement::EmptyStatement(_)
+                    | TaggedStatement::BreakStatement(_)
+                    | TaggedStatement::ContinueStatement(_)
+                    | TaggedStatement::ReturnStatement(_)
+                    | TaggedStatement::ThrowStatement(_)
+                    | TaggedStatement::DebuggerStatement(_)
+            )
+        )
+    })
 }
 
 /// A statement that unconditionally transfers control out of the
@@ -5295,5 +5343,102 @@ mod tests {
             Some("v.first"),
             "tombstone should record the surviving container decl's cv"
         );
+    }
+
+    // ---- #17841: a hoisted declaration keeps the dead tail alive ----------
+    //
+    // `function f(){ return h(); function h(){} }` — `h` hoists, so it is
+    // callable at `h()` although its declaration sits after the `return`.
+    // The dead-after-return drop deleted it and the output threw
+    // ReferenceError. A dead `var` likewise still makes the name local to the
+    // function, and a dead `let`/`const` still shadows (TDZ) across the block.
+    // The drop now applies the same whitelist as closure-pass-dce.
+
+    /// `function f(){ <body> }` → the folded body of `f`.
+    fn fold_function_body(body: Vec<Statement>) -> Vec<Statement> {
+        let fdecl = Declaration::FunctionDeclaration(FunctionDeclaration {
+            cv: Some("fn.1".to_string()),
+            id: Identifier {
+                cv: None,
+                name: "f".to_string(),
+            },
+            params: vec![],
+            body: blk(body),
+            generator: false,
+            is_async: false,
+        });
+        let prog = program().with_body(vec![ProgramItem::Declaration(fdecl)]);
+        let (out, _, _, _) = run_pass(prog);
+        let ProgramItem::Declaration(Declaration::FunctionDeclaration(out_fn)) = &out.body[0] else {
+            panic!("expected FunctionDeclaration");
+        };
+        out_fn.body.body.clone()
+    }
+
+    fn bare_return() -> Statement {
+        Statement::return_statement(ReturnStatement {
+            cv: None,
+            argument: None,
+        })
+    }
+
+    fn inner_fn_decl(name: &str) -> Statement {
+        Statement::Declaration(Declaration::FunctionDeclaration(FunctionDeclaration {
+            cv: None,
+            id: Identifier {
+                cv: None,
+                name: name.to_string(),
+            },
+            params: vec![],
+            body: blk(vec![]),
+            generator: false,
+            is_async: false,
+        }))
+    }
+
+    fn let_stmt(name: &str) -> Statement {
+        use coding_adventures_javascript_ast::{BindingTarget, VariableDeclaration, VariableDeclarator};
+        Statement::Declaration(Declaration::VariableDeclaration(VariableDeclaration {
+            cv: None,
+            kind: VarKind::Let,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: BindingTarget::Identifier(Identifier {
+                    cv: None,
+                    name: name.to_string(),
+                }),
+                init: None,
+            }],
+        }))
+    }
+
+    #[test]
+    fn hoisted_function_after_return_is_kept() {
+        let body = fold_function_body(vec![bare_return(), inner_fn_decl("h")]);
+        assert_eq!(body.len(), 2, "the hoisted `function h` must survive: {body:?}");
+    }
+
+    #[test]
+    fn hoisted_var_after_return_is_kept() {
+        let body = fold_function_body(vec![bare_return(), var_decl_stmt("x")]);
+        assert_eq!(body.len(), 2, "the hoisted `var x` must survive: {body:?}");
+    }
+
+    #[test]
+    fn dead_let_after_return_is_kept() {
+        let body = fold_function_body(vec![bare_return(), let_stmt("x")]);
+        assert_eq!(body.len(), 2, "the TDZ-shadowing `let x` must survive: {body:?}");
+    }
+
+    #[test]
+    fn whole_tail_is_kept_when_any_part_hoists() {
+        // return; g(); function h(){} — the tail is kept as a unit (dropping
+        // just `g()` is a later optimisation, not this fix).
+        let body = fold_function_body(vec![
+            bare_return(),
+            expr_stmt(ident("g"), None),
+            inner_fn_decl("h"),
+        ]);
+        assert_eq!(body.len(), 3, "{body:?}");
     }
 }

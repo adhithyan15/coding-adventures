@@ -17,6 +17,15 @@ contexts. Exact serialization caps succeed; one-less and journal admission
 failures preserve all existing artifacts with empty success stdout. Graph facts
 and invocation consistency do not establish complete byte ownership/source maps.
 
+### Fixed - hoisted declarations after a `return` survive (#17841)
+
+At SIMPLE and ADVANCED, `function f(){return h();function h(){return 1}}`
+compiled to `function f(){return h()}`, which threw `ReferenceError`. A dead
+`var` after a `return` was dropped the same way, so a function's local `x`
+leaked to the global. The fix is in `closure-pass-fold-control-flow`.
+`tests/regression_hoisted_after_return.rs` pins both cases at both levels and,
+when `node` is installed, checks that the output prints what the source prints.
+
 ### Fixed - native ACL fixture diagnostic isolation (CV02)
 
 The `0dfbcf7b10` Windows run passed the new structural-policy and supported
