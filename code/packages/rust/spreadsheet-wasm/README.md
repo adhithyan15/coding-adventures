@@ -61,6 +61,8 @@ lower-fidelity per [`spreadsheet-io`](../spreadsheet-io).
 ```bash
 # Compile to pkg/spreadsheet_engine.wasm (one-time: rustup target add wasm32-unknown-unknown)
 bash build-wasm.sh
+# Fail if the committed .wasm is stale against its sources (CI runs this)
+bash build-wasm.sh --check
 
 # Prove it computes, end-to-end, in Node:
 node js/smoke.mjs

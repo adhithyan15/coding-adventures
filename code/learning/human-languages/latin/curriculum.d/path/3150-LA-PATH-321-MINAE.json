@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-321-MINAE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-321-MINAE"
+  ],
+  "after": []
+}

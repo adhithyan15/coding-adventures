@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-300-TABELLARIUS",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-300-TABELLARIUS"
+  ],
+  "after": []
+}

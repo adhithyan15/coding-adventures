@@ -342,6 +342,9 @@ describe("the gate that would have caught the A2 claim", () => {
     // German followed as the fifth, with chapters 252-261 (the B1 core: the
     // Präteritum, reasons, travel, experience and the Konjunktiv II, realizing
     // all five B1 nodes) and chapters 262-533 (1,360 headwords, 485 verbs).
+    // Latin followed as the sixth, with chapters 281-290 (the B1 core: both
+    // pasts, reasons, travel, experience and the subjunctive, realizing all
+    // five B1 nodes) and chapters 291-554 (1,320 headwords, 403 verbs).
     for (const level of Object.values(HELD)) {
       expectedByLevel.set(level, (expectedByLevel.get(level) ?? 0) + 1);
     }

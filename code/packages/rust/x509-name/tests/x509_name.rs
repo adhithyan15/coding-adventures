@@ -52,6 +52,7 @@ fn decodes_empty_and_multivalued_names_without_interpreting_values() {
     assert_eq!(empty.rdn_count(), 0);
     assert_eq!(empty.attribute_count(), 0);
     assert_eq!(empty.encoded(), empty_encoding);
+    assert_eq!(empty.contents(), &[]);
 
     let common_name = attribute(COMMON_NAME, 0x0c, b"A");
     let country = attribute(COUNTRY_NAME, 0x13, b"US");
@@ -60,6 +61,7 @@ fn decodes_empty_and_multivalued_names_without_interpreting_values() {
     let decoded = decode(&encoded).unwrap();
     assert_eq!(decoded.rdn_count(), 1);
     assert_eq!(decoded.attribute_count(), 2);
+    assert_eq!(decoded.contents(), &encoded[2..]);
 
     let first_rdn = decoded.get_rdn(0).unwrap();
     assert_eq!(first_rdn.len(), 2);

@@ -1,0 +1,20 @@
+{
+  "language": "latin",
+  "chapter": 462,
+  "sourceHash": "fnv1a64:250c67259179d17b",
+  "lessonIds": [
+    "LA-C462-nundinor",
+    "LA-C462-clamito",
+    "LA-C462-vendito",
+    "LA-C462-mercimonium",
+    "LA-C462-institor",
+    "LA-R462-review-455-462"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "latin/narration/ch462.txt",
+  "json": "latin/narration/ch462.json",
+  "textHash": "fnv1a64:00e3b1e45277854d",
+  "jsonHash": "fnv1a64:9ad5d1391ccbedd3",
+  "findings": []
+}

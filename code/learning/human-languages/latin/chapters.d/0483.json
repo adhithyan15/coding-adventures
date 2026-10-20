@@ -1,0 +1,19 @@
+{
+  "chapter": 483,
+  "title": "Pool, Whirlpool, Chasm, To trickle, To flood",
+  "label": "ch:la-pool-whirlpool-chasm-to-trickle-to-flood",
+  "canDo": "I can talk about still and dangerous water: a pool, a whirlpool, a chasm, water trickling and a river flooding.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C483-inundo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 483: I can talk about still and dangerous water: a pool, a whirlpool, a chasm, water trickling and a river flooding.",
+    "assesses": [
+      "LA-LEX-C483-STAGNUM-03",
+      "LA-LEX-C483-STAGNUM-04",
+      "LA-LEX-C483-STAGNUM-05"
+    ]
+  }
+}

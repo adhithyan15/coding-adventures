@@ -1,0 +1,19 @@
+{
+  "chapter": 404,
+  "title": "What Pupils Studied",
+  "label": "ch:la-what-pupils-studied",
+  "canDo": "I can name the teacher of speaking, rhetoric, logic and geometry, and the first elements of a subject.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "LA-R404-review-397-404",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 404: I can name the teacher of speaking, rhetoric, logic and geometry, and the first elements of a subject.",
+    "assesses": [
+      "LA-LEX-C404-RHETORICA-03",
+      "LA-LEX-C404-RHETORICA-04",
+      "LA-LEX-C404-RHETORICA-05"
+    ]
+  }
+}

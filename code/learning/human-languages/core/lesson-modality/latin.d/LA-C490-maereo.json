@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C490-maereo",
+    "language": "latin",
+    "chapter": 490,
+    "sequence": 26070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8142e7682d3ee4e8"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C397-stipulor",
+  "pathSegment": "LA-PATH-397-PACTUM",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-397-PACTUM",
+      "order": 4
+    }
+  ]
+}

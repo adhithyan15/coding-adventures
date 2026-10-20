@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C452-aberro",
+    "language": "latin",
+    "chapter": 452,
+    "sequence": 24080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2f268069d3297809"
+  },
+  "findings": []
+}

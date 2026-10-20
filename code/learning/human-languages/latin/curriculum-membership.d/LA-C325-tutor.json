@@ -1,0 +1,11 @@
+{
+  "id": "LA-C325-tutor",
+  "pathSegment": "LA-PATH-325-BULLA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-325-BULLA",
+      "order": 4
+    }
+  ]
+}

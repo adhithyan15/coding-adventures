@@ -1,0 +1,4 @@
+# The committed pkg/spreadsheet_engine.wasm must match the sources it is built
+# from (bash and python3 are Unix-only here; BUILD covers Windows).
+cargo test -p spreadsheet-wasm -- --nocapture
+bash build-wasm.sh --check

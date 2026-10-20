@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:c353ebedec98d2b7",
+  "lessonIds": [
+    "LA-C405-abacus",
+    "LA-C405-calculus",
+    "LA-C405-enumero",
+    "LA-C405-dicto",
+    "LA-C405-pensum"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch405.txt",
+  "json": "latin/narration/ch405.json",
+  "textHash": "fnv1a64:f611c239e93173ad",
+  "jsonHash": "fnv1a64:3b9c9dfb7a45bdc1",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 453,
+  "title": "Leader, Knowing, To escort, To find, To track",
+  "label": "ch:la-leader-knowing-to-escort-to-find-to-track",
+  "canDo": "I can talk about people who help you find the way: a leader, someone knowing the country, escorting, finding, and tracking.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C453-vestigo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 453: I can talk about people who help you find the way: a leader, someone knowing the country, escorting, finding, and tracking.",
+    "assesses": [
+      "LA-LEX-C453-PERITUS-03",
+      "LA-LEX-C453-PERITUS-04",
+      "LA-LEX-C453-PERITUS-05"
+    ]
+  }
+}

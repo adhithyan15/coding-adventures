@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C317-ardor",
+    "language": "latin",
+    "chapter": 317,
+    "sequence": 17170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:956a53464704496b"
+  },
+  "findings": []
+}

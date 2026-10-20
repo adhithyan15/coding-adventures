@@ -1,0 +1,20 @@
+{
+  "language": "latin",
+  "chapter": 486,
+  "sourceHash": "fnv1a64:a4776ac3c294eeb6",
+  "lessonIds": [
+    "LA-C486-pruina",
+    "LA-C486-frigus",
+    "LA-C486-gelo",
+    "LA-C486-rigeo",
+    "LA-C486-algeo",
+    "LA-R486-review-479-486"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "latin/narration/ch486.txt",
+  "json": "latin/narration/ch486.json",
+  "textHash": "fnv1a64:ceca8b8cbbd66b97",
+  "jsonHash": "fnv1a64:6eb76a90b8e6b49b",
+  "findings": []
+}

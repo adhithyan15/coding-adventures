@@ -1,0 +1,20 @@
+{
+  "language": "latin",
+  "chapter": 496,
+  "sourceHash": "fnv1a64:3e9047917cfd55a4",
+  "lessonIds": [
+    "LA-C496-paveo",
+    "LA-C496-vereor",
+    "LA-C496-perterreo",
+    "LA-C496-horribilis",
+    "LA-C496-terribilis",
+    "LA-R496-review-489-496"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "latin/narration/ch496.txt",
+  "json": "latin/narration/ch496.json",
+  "textHash": "fnv1a64:0f949567ea534b15",
+  "jsonHash": "fnv1a64:6790ea5b374bd510",
+  "findings": []
+}

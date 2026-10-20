@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 538,
+  "title": "Free time",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:cf8bd43664c391e3",
+  "lessons": [
+    {
+      "id": "LA-C538-otiosus",
+      "sequence": 28510,
+      "title": "ōtiōsus, ōtiōsa, ōtiōsum — at leisure, idle",
+      "headword": "ōtiōsus, ōtiōsa, ōtiōsum",
+      "romanization": "ōtiōsus, ōtiōsa, ōtiōsum",
+      "gloss": "at leisure, idle",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c5b6ea3f8ae99423",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for faithless, then the Latin for to abandon."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ōtiōsus, ōtiōsa, ōtiōsum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ōtiōsus, ōtiōsa, ōtiōsum — \"at leisure, idle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Diē fēstō cīvēs ōtiōsī in forō ambulant. On the holiday the citizens stroll at leisure in the forum."
+            },
+            {
+              "kind": "speech",
+              "text": "From ōtium: free of business, with no blame meant. English otiose."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ōtiōsus is built on ōtium \"leisure\" with -ōsus (EtymDB; Lewis & Short). English otiose comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōtiōsus, ōtiōsa, ōtiōsum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōtiōsus, ōtiōsa, ōtiōsum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōtiōsus, ōtiōsa, ōtiōsum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōtiōsus, ōtiōsa, ōtiōsum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ōtiōsus, ōtiōsa, ōtiōsum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ōtiōsus, ōtiōsa, ōtiōsum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for faithless, then the Latin for to abandon, then say ōtiōsus, ōtiōsa, ōtiōsum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for faithless, then the Latin for to abandon, then say *ōtiōsus, ōtiōsa, ōtiōsum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ōtiōsus, ōtiōsa, ōtiōsum mean? (\"At leisure, idle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C538-vaco",
+      "sequence": 28520,
+      "title": "vacō, vacāre — to be free, have time (for)",
+      "headword": "vacō, vacāre",
+      "romanization": "vacō, vacāre",
+      "gloss": "to be free, have time (for)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7c59204f5d3b104e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to abandon, then the Latin for at leisure."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: vacō, vacāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vacō, vacāre — \"to be free, have time (for)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Hodiē vacō; tēcum ambulāre possum. Today I am free; I can go for a walk with you."
+            },
+            {
+              "kind": "speech",
+              "text": "vacō, vacāre, vacāvī, vacātum. To be empty, then to be free for something: vacāre litterīs — to have time for literature. English vacant, vacation."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vacō is inherited, through Proto-Italic, from a Proto-Indo-European root meaning \"empty\" (EtymDB). English vacant and vacation come from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vacō, vacāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vacō, vacāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vacō, vacāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vacō, vacāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with vacō, vacāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *vacō, vacāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to abandon, then the Latin for at leisure, then say vacō, vacāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to abandon, then the Latin for at leisure, then say *vacō, vacāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does vacō, vacāre mean? (\"To be free, have time (for)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C538-feriatus",
+      "sequence": 28530,
+      "title": "fēriātus, fēriāta, fēriātum — on holiday, keeping holiday",
+      "headword": "fēriātus, fēriāta, fēriātum",
+      "romanization": "fēriātus, fēriāta, fēriātum",
+      "gloss": "on holiday, keeping holiday",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:913fbffce0d09b48",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for at leisure, then the Latin for to be free."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: fēriātus, fēriāta, fēriātum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fēriātus, fēriāta, fēriātum — \"on holiday, keeping holiday\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Puerī fēriātī tōtum diem lūdunt. The boys on holiday play all day."
+            },
+            {
+              "kind": "speech",
+              "text": "The participle of fērior — to keep holiday, from fēriae, already known."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fēriātus is the participle of fērior \"to keep holiday\", built on fēriae \"holidays\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fēriātus, fēriāta, fēriātum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fēriātus, fēriāta, fēriātum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fēriātus, fēriāta, fēriātum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fēriātus, fēriāta, fēriātum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with fēriātus, fēriāta, fēriātum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *fēriātus, fēriāta, fēriātum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for at leisure, then the Latin for to be free, then say fēriātus, fēriāta, fēriātum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for at leisure, then the Latin for to be free, then say *fēriātus, fēriāta, fēriātum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does fēriātus, fēriāta, fēriātum mean? (\"On holiday, keeping holiday\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C538-relaxo",
+      "sequence": 28540,
+      "title": "relaxō, relaxāre — to relax, ease; to loosen",
+      "headword": "relaxō, relaxāre",
+      "romanization": "relaxō, relaxāre",
+      "gloss": "to relax, ease; to loosen",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aa01c7bea80cbc7d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to be free, then the Latin for on holiday."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: relaxō, relaxāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "relaxō, relaxāre — \"to relax, ease; to loosen\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Post labōrem animum mūsicā relaxō. After work I relax my mind with music."
+            },
+            {
+              "kind": "speech",
+              "text": "relaxō, relaxāre, relaxāvī, relaxātum: re- + laxō 'to loosen'. English relax."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "relaxō is built on re- and laxō \"to loosen\", from laxus \"slack\" (EtymDB; Lewis & Short). English relax and release come from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "relaxō, relaxāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *relaxō, relaxāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "relaxō, relaxāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *relaxō, relaxāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with relaxō, relaxāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *relaxō, relaxāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to be free, then the Latin for on holiday, then say relaxō, relaxāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to be free, then the Latin for on holiday, then say *relaxō, relaxāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does relaxō, relaxāre mean? (\"To relax, ease; to loosen\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C538-remissio",
+      "sequence": 28550,
+      "title": "remissiō, remissiōnis — relaxation; a letting go",
+      "headword": "remissiō, remissiōnis",
+      "romanization": "remissiō, remissiōnis",
+      "gloss": "relaxation; a letting go",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:58616b8739b25072",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for on holiday, then the Latin for to relax."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: remissiō, remissiōnis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "remissiō, remissiōnis — \"relaxation; a letting go\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Post studia remissiō animī necessāria est. After study, relaxation of the mind is necessary."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, third declension, from remittō — to send back, slacken. English remission."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "remissiō is the action noun of remittō \"to send back, slacken\", built on re- and mittō (Lewis & Short). English remission comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "remissiō, remissiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *remissiō, remissiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "remissiō, remissiōnis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *remissiō, remissiōnis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with remissiō, remissiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *remissiō, remissiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for on holiday, then the Latin for to relax, then say remissiō, remissiōnis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for on holiday, then the Latin for to relax, then say *remissiō, remissiōnis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does remissiō, remissiōnis mean? (\"Relaxation; a letting go\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

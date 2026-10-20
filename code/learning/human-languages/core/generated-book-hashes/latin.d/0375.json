@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:de5b18b30c8da8fe",
+  "lessonIds": [
+    "LA-C375-contingo",
+    "LA-C375-exsisto",
+    "LA-C375-fortuitus",
+    "LA-C375-inopinatus",
+    "LA-C375-motus"
+  ],
+  "tex": "latin/book/chapters/ch375-things-that-happen.tex"
+}

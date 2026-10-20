@@ -1,0 +1,19 @@
+{
+  "chapter": 325,
+  "title": "Nōmen et bulla",
+  "label": "ch:la-nomen-et-bulla",
+  "canDo": "I can talk about a Roman child growing up: the amulet, the toys, the first name, the extra family name and the guardian.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C325-tutor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 325: I can talk about a Roman child growing up: the amulet, the toys, the first name, the extra family name and the guardian.",
+    "assesses": [
+      "LA-LEX-C325-BULLA-03",
+      "LA-LEX-C325-BULLA-04",
+      "LA-LEX-C325-BULLA-05"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "language": "latin",
+  "chapter": 354,
+  "sourceHash": "fnv1a64:0a84ae669b44a23d",
+  "lessonIds": [
+    "LA-C354-assus",
+    "LA-C354-lucanica",
+    "LA-C354-craticula",
+    "LA-C354-frigo",
+    "LA-C354-torreo",
+    "LA-R354-review-347-354"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "latin/narration/ch354.txt",
+  "json": "latin/narration/ch354.json",
+  "textHash": "fnv1a64:e71a5f9106ba2623",
+  "jsonHash": "fnv1a64:908cf096e4862e2e",
+  "findings": []
+}

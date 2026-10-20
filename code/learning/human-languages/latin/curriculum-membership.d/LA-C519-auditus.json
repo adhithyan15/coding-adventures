@@ -1,0 +1,11 @@
+{
+  "id": "LA-C519-auditus",
+  "pathSegment": "LA-PATH-519-SENS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-519-SENS",
+      "order": 1
+    }
+  ]
+}

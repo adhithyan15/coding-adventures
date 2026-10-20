@@ -1,0 +1,11 @@
+{
+  "id": "LA-C356-ministro",
+  "pathSegment": "LA-PATH-356-APPONO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-356-APPONO",
+      "order": 1
+    }
+  ]
+}

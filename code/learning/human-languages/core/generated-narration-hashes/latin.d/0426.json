@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:e3c5de5102958427",
+  "lessonIds": [
+    "LA-C426-pulverulentus",
+    "LA-C426-lutulentus",
+    "LA-C426-vestigium",
+    "LA-C426-lassus",
+    "LA-C426-defatigo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch426.txt",
+  "json": "latin/narration/ch426.json",
+  "textHash": "fnv1a64:d8378b60eaf63118",
+  "jsonHash": "fnv1a64:a1722399ab96913f",
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "LA-EXT-441-PORTUS",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a harbour and its coast: the harbour, the dockyard, a tidal inlet, the lighthouse and a headland.",
+  "prerequisites": []
+}

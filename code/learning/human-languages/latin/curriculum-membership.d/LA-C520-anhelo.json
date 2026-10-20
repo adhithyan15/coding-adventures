@@ -1,0 +1,11 @@
+{
+  "id": "LA-C520-anhelo",
+  "pathSegment": "LA-PATH-520-SPIR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-520-SPIR",
+      "order": 1
+    }
+  ]
+}

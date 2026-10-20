@@ -1,0 +1,11 @@
+{
+  "id": "LA-C469-ferrarius",
+  "pathSegment": "LA-PATH-469-INCUS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-469-INCUS",
+      "order": 3
+    }
+  ]
+}

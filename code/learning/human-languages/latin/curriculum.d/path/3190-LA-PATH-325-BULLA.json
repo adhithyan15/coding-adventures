@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-325-BULLA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-325-BULLA"
+  ],
+  "after": []
+}

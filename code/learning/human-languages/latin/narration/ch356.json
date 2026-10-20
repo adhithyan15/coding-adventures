@@ -1,0 +1,878 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 356,
+  "title": "Cēna appōnitur",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:668e5155457290d0",
+  "lessons": [
+    {
+      "id": "LA-C356-appono",
+      "sequence": 19130,
+      "title": "appōnō, appōnere — to serve up, to put before",
+      "headword": "appōnō, appōnere",
+      "romanization": "appōnō, appōnere",
+      "gloss": "to serve up, to put before",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:02efcd256ef73767",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to pour in, then the Latin for to strain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: appōnō, appōnere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "appōnō, appōnere — \"to serve up, to put before\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Servī cēnam amīcīs appōnēbant. The slaves were serving dinner to the friends."
+            },
+            {
+              "kind": "speech",
+              "text": "appōnō, appōnere, apposuī, appositum: ad + pōnō (taught), to set food before someone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "appōnō is built on pōnō, \"to put\", with ad-, \"to, beside\" (Lewis & Short): to put before someone."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "appōnō, appōnere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *appōnō, appōnere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "appōnō, appōnere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *appōnō, appōnere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with appōnō, appōnere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *appōnō, appōnere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to pour in, then the Latin for to strain, then say appōnō, appōnere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to pour in, then the Latin for to strain, then say *appōnō, appōnere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does appōnō, appōnere mean? (\"To serve up, to put before\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C356-ministro",
+      "sequence": 19140,
+      "title": "ministrō, ministrāre — to wait at table, to serve",
+      "headword": "ministrō, ministrāre",
+      "romanization": "ministrō, ministrāre",
+      "gloss": "to wait at table, to serve",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:440ffe6ae91c3d86",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to strain, then the Latin for to serve up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ministrō, ministrāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ministrō, ministrāre — \"to wait at table, to serve\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Puerī vīnum ministrābant. The slave boys were serving the wine."
+            },
+            {
+              "kind": "speech",
+              "text": "ministrō, ministrāre, ministrāvī, ministrātum, from minister, 'servant'. English minister."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ministrō is built on minister, \"servant, attendant\" (EtymDB), itself from minus, \"less\", as magister is from magis. English minister comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ministrō, ministrāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ministrō, ministrāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ministrō, ministrāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ministrō, ministrāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ministrō, ministrāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ministrō, ministrāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to strain, then the Latin for to serve up, then say ministrō, ministrāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to strain, then the Latin for to serve up, then say *ministrō, ministrāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ministrō, ministrāre mean? (\"To wait at table, to serve\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C356-triclinium",
+      "sequence": 19150,
+      "title": "triclīnium, triclīniī — a dining room; a dining couch",
+      "headword": "triclīnium, triclīniī",
+      "romanization": "triclīnium, triclīniī",
+      "gloss": "a dining room; a dining couch",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8b73a7bc89759987",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to serve up, then the Latin for to wait at table."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: triclīnium, triclīniī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "triclīnium, triclīniī — \"a dining room; a dining couch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Hospitēs in triclīnium intrāvērunt. The guests went into the dining room."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter, a Greek loan: three couches round a table, three guests on each."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "triclīnium was borrowed from Greek triklinion, from treis, \"three\", and klinē, \"couch\" (EtymDB): the room with three couches."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "triclīnium, triclīniī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *triclīnium, triclīniī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "triclīnium, triclīniī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *triclīnium, triclīniī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with triclīnium, triclīniī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *triclīnium, triclīniī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to serve up, then the Latin for to wait at table, then say triclīnium, triclīniī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to serve up, then the Latin for to wait at table, then say *triclīnium, triclīniī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does triclīnium, triclīniī mean? (\"A dining room; a dining couch\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C356-discumbo",
+      "sequence": 19160,
+      "title": "discumbō, discumbere — to recline at table",
+      "headword": "discumbō, discumbere",
+      "romanization": "discumbō, discumbere",
+      "gloss": "to recline at table",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4561c060ee4f4537",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to wait at table, then the Latin for a dining room."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: discumbō, discumbere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "discumbō, discumbere — \"to recline at table\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Omnēs discubuērunt, et cēna incēpit. Everyone took their places at table, and the dinner began."
+            },
+            {
+              "kind": "speech",
+              "text": "discumbō, discumbere, discubuī, discubitum. Romans ate lying on the left elbow."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "discumbō is built on -cumbō, \"to lie down\", with dis-, \"apart\" (EtymDB): each guest lying down in his place."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "discumbō, discumbere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *discumbō, discumbere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "discumbō, discumbere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *discumbō, discumbere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with discumbō, discumbere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *discumbō, discumbere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to wait at table, then the Latin for a dining room, then say discumbō, discumbere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to wait at table, then the Latin for a dining room, then say *discumbō, discumbere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does discumbō, discumbere mean? (\"To recline at table\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C356-ferculum",
+      "sequence": 19170,
+      "title": "ferculum, ferculī — a course, a dish; a tray",
+      "headword": "ferculum, ferculī",
+      "romanization": "ferculum, ferculī",
+      "gloss": "a course, a dish; a tray",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2f89e94b6ff356ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a dining room, then the Latin for to recline at table."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ferculum, ferculī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ferculum, ferculī — \"a course, a dish; a tray\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Prīmum ferculum ōva et olīvae erant. The first course was eggs and olives."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter, from ferō: a tray that carries food, and so a course. In a triumph, a ferculum carried the spoils."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ferculum is built on ferō, \"to carry\", with the tool ending -culum (EtymDB): a carrier, a tray."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ferculum, ferculī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ferculum, ferculī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ferculum, ferculī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ferculum, ferculī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ferculum, ferculī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ferculum, ferculī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a dining room, then the Latin for to recline at table, then say ferculum, ferculī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a dining room, then the Latin for to recline at table, then say *ferculum, ferculī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ferculum, ferculī mean? (\"A course, a dish; a tray\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-R356-review-355-356",
+      "sequence": 19180,
+      "title": "The last stories — a review",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 355-356",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:608694599908de11",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Latin for to season and a seasoning."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to season, a seasoning, to sprinkle, to pour in, to strain",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to season, a seasoning, to sprinkle, to pour in, to strain]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to serve up, to wait at table, a dining room, to recline at table, a course",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to serve up, to wait at table, a dining room, to recline at table, a course]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To season? (condiō, condīre.) A seasoning? (condīmentum, condīmentī.) To sprinkle? (aspergō, aspergere.) To pour in? (īnfundō, īnfundere.) To strain? (cōlō, cōlāre.) To serve up? (appōnō, appōnere.) To wait at table? (ministrō, ministrāre.) A dining room? (triclīnium, triclīniī.) To recline at table? (discumbō, discumbere.) A course? (ferculum, ferculī.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-R356-review-final-356",
+      "sequence": 19190,
+      "title": "Cēna appōnitur — once more",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "one more pass over chapter 356",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8017d8520ec717f8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Latin for to serve up and to wait at table."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to serve up, to wait at table, a dining room, to recline at table, a course",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to serve up, to wait at table, a dining room, to recline at table, a course]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To serve up? (appōnō, appōnere.) To wait at table? (ministrō, ministrāre.) A dining room? (triclīnium, triclīniī.) To recline at table? (discumbō, discumbere.) A course? (ferculum, ferculī.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

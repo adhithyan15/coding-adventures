@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C493-indignor",
+    "language": "latin",
+    "chapter": 493,
+    "sequence": 26240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7906df3fc3579c5f"
+  },
+  "findings": []
+}

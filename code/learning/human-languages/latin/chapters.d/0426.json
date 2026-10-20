@@ -1,0 +1,19 @@
+{
+  "chapter": 426,
+  "title": "Dusty, Muddy, Footprint, Weary, To wear out",
+  "label": "ch:la-dusty-muddy-footprint-weary-to-wear-out",
+  "canDo": "I can describe the road in bad weather and how a traveller feels: dusty, muddy, footprints, weary, and worn out.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C426-defatigo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 426: I can describe the road in bad weather and how a traveller feels: dusty, muddy, footprints, weary, and worn out.",
+    "assesses": [
+      "LA-LEX-C426-LUTULENTUS-03",
+      "LA-LEX-C426-LUTULENTUS-04",
+      "LA-LEX-C426-LUTULENTUS-05"
+    ]
+  }
+}

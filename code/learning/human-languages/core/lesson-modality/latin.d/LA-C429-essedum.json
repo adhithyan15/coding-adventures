@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C429-essedum",
+    "language": "latin",
+    "chapter": 429,
+    "sequence": 22920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8ed7dc58c7cfb0e2"
+  },
+  "findings": []
+}

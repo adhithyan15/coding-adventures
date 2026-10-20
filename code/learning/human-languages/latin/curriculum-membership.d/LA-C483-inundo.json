@@ -1,0 +1,11 @@
+{
+  "id": "LA-C483-inundo",
+  "pathSegment": "LA-PATH-483-STAGNUM",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-483-STAGNUM",
+      "order": 4
+    }
+  ]
+}

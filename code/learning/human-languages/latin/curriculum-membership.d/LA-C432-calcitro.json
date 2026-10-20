@@ -1,0 +1,11 @@
+{
+  "id": "LA-C432-calcitro",
+  "pathSegment": "LA-PATH-432-EQUITO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-432-EQUITO",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C353-spuma",
+  "pathSegment": "LA-PATH-353-FERVEO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-353-FERVEO",
+      "order": 3
+    }
+  ]
+}

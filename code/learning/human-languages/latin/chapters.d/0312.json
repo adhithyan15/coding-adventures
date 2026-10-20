@@ -1,0 +1,19 @@
+{
+  "chapter": 312,
+  "title": "Poena et supplicium",
+  "label": "ch:la-poena-et-supplicium",
+  "canDo": "I can tell what punishment followed: to admit, to punish, execution, exile and chains.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C312-vinculum",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 312: I can tell what punishment followed: to admit, to punish, execution, exile and chains.",
+    "assesses": [
+      "LA-LEX-C312-SUPPLICIUM-03",
+      "LA-LEX-C312-SUPPLICIUM-04",
+      "LA-LEX-C312-SUPPLICIUM-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C546-prologus",
+    "language": "latin",
+    "chapter": 546,
+    "sequence": 28950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2421e5fdca7d9ab3"
+  },
+  "findings": []
+}

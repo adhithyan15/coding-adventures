@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 316,
+  "sourceHash": "fnv1a64:10d1a322b958a8b3",
+  "lessonIds": [
+    "LA-C316-eripio",
+    "LA-C316-incolumis",
+    "LA-C316-subvenio",
+    "LA-C316-succurro",
+    "LA-C316-auxilium"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch316.txt",
+  "json": "latin/narration/ch316.json",
+  "textHash": "fnv1a64:515077fbdeb76258",
+  "jsonHash": "fnv1a64:8a0052c680a6c6d5",
+  "findings": []
+}

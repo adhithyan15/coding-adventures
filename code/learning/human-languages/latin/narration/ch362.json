@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 362,
+  "title": "Proving Someone Wrong",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0bfe18f83c61bbc8",
+  "lessons": [
+    {
+      "id": "LA-C362-refello",
+      "sequence": 19450,
+      "title": "refellō, refellere — to prove false, to refute",
+      "headword": "refellō, refellere",
+      "romanization": "refellō, refellere",
+      "gloss": "to prove false, to refute",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ba5220b484f472ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to show, then the Latin for to strengthen."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: refellō, refellere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "refellō, refellere — \"to prove false, to refute\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Facile erat eius verba refellere. It was easy to refute his words."
+            },
+            {
+              "kind": "speech",
+              "text": "refellō, refellere, refellī, with no supine. Built on fallō, to deceive: to show up a deception."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "refellō is built from re- \"back\" and fallō \"to deceive\" (EtymDB; Lewis & Short): to turn a deception back on itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "refellō, refellere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *refellō, refellere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "refellō, refellere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *refellō, refellere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with refellō, refellere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *refellō, refellere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to show, then the Latin for to strengthen, then say refellō, refellere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to show, then the Latin for to strengthen, then say *refellō, refellere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does refellō, refellere mean? (\"To prove false, to refute\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C362-refuto",
+      "sequence": 19460,
+      "title": "refūtō, refūtāre — to refute; to drive back",
+      "headword": "refūtō, refūtāre",
+      "romanization": "refūtō, refūtāre",
+      "gloss": "to refute; to drive back",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b34423899ef0db24",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to strengthen, then the Latin for to prove false."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: refūtō, refūtāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "refūtō, refūtāre — \"to refute; to drive back\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Hanc opīniōnem nōn difficile est refūtāre. This opinion is not hard to refute."
+            },
+            {
+              "kind": "speech",
+              "text": "refūtō, refūtāre, refūtāvī, refūtātum. First to beat back an attack, then an argument. English refute."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "refūtō is built from re- \"back\" and an old verb fūtō, which EtymDB glosses \"to beat\"; Lewis & Short connect it instead with fundō \"to pour\", so its deeper origin is not settled. English refute comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "refūtō, refūtāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *refūtō, refūtāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "refūtō, refūtāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *refūtō, refūtāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with refūtō, refūtāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *refūtō, refūtāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to strengthen, then the Latin for to prove false, then say refūtō, refūtāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to strengthen, then the Latin for to prove false, then say *refūtō, refūtāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does refūtō, refūtāre mean? (\"To refute; to drive back\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C362-redarguo",
+      "sequence": 19470,
+      "title": "redarguō, redarguere — to disprove, to show to be wrong",
+      "headword": "redarguō, redarguere",
+      "romanization": "redarguō, redarguere",
+      "gloss": "to disprove, to show to be wrong",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9e33bf998487de1e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to prove false, then the Latin for to refute."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: redarguō, redarguere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "redarguō, redarguere — \"to disprove, to show to be wrong\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Testis falsum dīxit, sed iūdex eum redarguit. The witness told a lie, but the judge proved him wrong."
+            },
+            {
+              "kind": "speech",
+              "text": "redarguō, redarguere, redarguī. Built on arguō: to prove the other side wrong, back to its face."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "redarguō is built from red- \"back\" and arguō \"to make clear, to prove\" (Lewis & Short): to prove a claim back against the one who made it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "redarguō, redarguere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *redarguō, redarguere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "redarguō, redarguere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *redarguō, redarguere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with redarguō, redarguere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *redarguō, redarguere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to prove false, then the Latin for to refute, then say redarguō, redarguere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to prove false, then the Latin for to refute, then say *redarguō, redarguere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does redarguō, redarguere mean? (\"To disprove, to show to be wrong\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C362-convinco",
+      "sequence": 19480,
+      "title": "convincō, convincere — to prove wrong, to convict; to prove",
+      "headword": "convincō, convincere",
+      "romanization": "convincō, convincere",
+      "gloss": "to prove wrong, to convict; to prove",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:afc3ed76e695e3c5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to refute, then the Latin for to disprove."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: convincō, convincere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "convincō, convincere — \"to prove wrong, to convict; to prove\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Eum mendāciī convīcērunt. They convicted him of lying."
+            },
+            {
+              "kind": "speech",
+              "text": "convincō, convincere, convīcī, convictum. The charge goes in the genitive: mendāciī convincere, to convict of lying. In Latin it proves, it does not persuade. English convict and convince."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "convincō is built from con- and vincō \"to conquer\" (EtymDB; Lewis & Short): to beat an opponent completely in argument. English convict and convince both come from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "convincō, convincere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *convincō, convincere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "convincō, convincere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *convincō, convincere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with convincō, convincere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *convincō, convincere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to refute, then the Latin for to disprove, then say convincō, convincere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to refute, then the Latin for to disprove, then say *convincō, convincere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does convincō, convincere mean? (\"To prove wrong, to convict; to prove\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C362-coniectura",
+      "sequence": 19490,
+      "title": "coniectūra, coniectūrae — a guess, a conjecture; an inference",
+      "headword": "coniectūra, coniectūrae",
+      "romanization": "coniectūra, coniectūrae",
+      "gloss": "a guess, a conjecture; an inference",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dba36b7fb618e503",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to disprove, then the Latin for to prove wrong."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: coniectūra, coniectūrae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "coniectūra, coniectūrae — \"a guess, a conjecture; an inference\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Hoc nōn sciō, sed coniectūrā tantum dīcō. I do not know this; I say it only by guesswork."
+            },
+            {
+              "kind": "speech",
+              "text": "coniectūra, coniectūrae f. Built on coniciō, to throw together: pieces thrown together to make a guess. English conjecture."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "coniectūra is built on coniciō \"to throw together, to infer\" (EtymDB; Lewis & Short), from con- and iaciō \"to throw\". English conjecture comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "coniectūra, coniectūrae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *coniectūra, coniectūrae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "coniectūra, coniectūrae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *coniectūra, coniectūrae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with coniectūra, coniectūrae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *coniectūra, coniectūrae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to disprove, then the Latin for to prove wrong, then say coniectūra, coniectūrae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to disprove, then the Latin for to prove wrong, then say *coniectūra, coniectūrae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does coniectūra, coniectūrae mean? (\"A guess, a conjecture; an inference\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

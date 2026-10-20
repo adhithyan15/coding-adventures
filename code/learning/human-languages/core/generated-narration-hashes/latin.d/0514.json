@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 514,
+  "sourceHash": "fnv1a64:f1eef21b9a9364b1",
+  "lessonIds": [
+    "LA-C514-contemno",
+    "LA-C514-sperno",
+    "LA-C514-despicio",
+    "LA-C514-indignatio",
+    "LA-C514-displiceo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch514.txt",
+  "json": "latin/narration/ch514.json",
+  "textHash": "fnv1a64:8d880d4724769f3b",
+  "jsonHash": "fnv1a64:773c661203bbf745",
+  "findings": []
+}

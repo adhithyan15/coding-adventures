@@ -1,0 +1,11 @@
+{
+  "id": "LA-C291-tunc",
+  "pathSegment": "LA-PATH-291-PRIMO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-291-PRIMO",
+      "order": 1
+    }
+  ]
+}

@@ -95,11 +95,18 @@ impl Error for X509SubjectPublicKeyInfoError {}
 /// One borrowed generic RFC 5280 subject public key information value.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct X509SubjectPublicKeyInfo<'a> {
+    contents: &'a [u8],
     algorithm: X509AlgorithmIdentifier<'a>,
     subject_public_key: DerBitString<'a>,
 }
 
 impl<'a> X509SubjectPublicKeyInfo<'a> {
+    /// Return the canonical DER contents of the SubjectPublicKeyInfo sequence
+    /// without its outer tag and length.
+    pub const fn contents(self) -> &'a [u8] {
+        self.contents
+    }
+
     pub const fn algorithm(self) -> X509AlgorithmIdentifier<'a> {
         self.algorithm
     }
@@ -114,6 +121,7 @@ pub fn decode_x509_subject_public_key_info<'a>(
     decoder: &mut Asn1Decoder,
     element: Asn1Element<'a>,
 ) -> Result<X509SubjectPublicKeyInfo<'a>, X509SubjectPublicKeyInfoError> {
+    let contents = element.value();
     let value_offset = element.header().len();
     let value_length = element.value().len();
     let mut fields = decoder
@@ -171,6 +179,7 @@ pub fn decode_x509_subject_public_key_info<'a>(
     }
 
     Ok(X509SubjectPublicKeyInfo {
+        contents,
         algorithm,
         subject_public_key,
     })

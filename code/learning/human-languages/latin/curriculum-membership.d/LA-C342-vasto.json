@@ -1,0 +1,11 @@
+{
+  "id": "LA-C342-vasto",
+  "pathSegment": "LA-PATH-342-CLADES",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-342-CLADES",
+      "order": 3
+    }
+  ]
+}

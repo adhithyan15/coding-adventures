@@ -1,0 +1,11 @@
+{
+  "id": "LA-C427-statio",
+  "pathSegment": "LA-PATH-427-MANSIO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-427-MANSIO",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-R288-bigger-and-how-long",
+  "pathSegment": "LA-PATH-288-COMPARATIO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-288-COMPARATIO",
+      "order": 2
+    }
+  ]
+}

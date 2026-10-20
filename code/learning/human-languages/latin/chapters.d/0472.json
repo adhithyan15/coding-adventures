@@ -1,0 +1,19 @@
+{
+  "chapter": 472,
+  "title": "Distaff, Spindle, Web on the loom, To spin, Wool-working",
+  "label": "ch:la-distaff-spindle-web-on-the-loom-to-spin-wool-working",
+  "canDo": "I can talk about spinning and weaving at home: the distaff, the spindle, the web on the loom, spinning, and wool-working.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C472-lanificium",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 472: I can talk about spinning and weaving at home: the distaff, the spindle, the web on the loom, spinning, and wool-working.",
+    "assesses": [
+      "LA-LEX-C472-COLUS-03",
+      "LA-LEX-C472-COLUS-04",
+      "LA-LEX-C472-COLUS-05"
+    ]
+  }
+}

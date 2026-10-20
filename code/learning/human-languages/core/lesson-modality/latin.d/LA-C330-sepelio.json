@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C330-sepelio",
+    "language": "latin",
+    "chapter": 330,
+    "sequence": 17800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce8e19993a488c44"
+  },
+  "findings": []
+}

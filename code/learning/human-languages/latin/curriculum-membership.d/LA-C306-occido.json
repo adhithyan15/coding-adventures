@@ -1,0 +1,11 @@
+{
+  "id": "LA-C306-occido",
+  "pathSegment": "LA-PATH-306-CAEDES",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-306-CAEDES",
+      "order": 4
+    }
+  ]
+}

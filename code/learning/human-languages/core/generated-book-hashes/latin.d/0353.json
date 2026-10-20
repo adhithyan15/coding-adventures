@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 353,
+  "sourceHash": "fnv1a64:bb9e377daa117f4c",
+  "lessonIds": [
+    "LA-C353-ferveo",
+    "LA-C353-caccabus",
+    "LA-C353-elixus",
+    "LA-C353-spuma",
+    "LA-C353-despumo"
+  ],
+  "tex": "latin/book/chapters/ch353-aqua-fervet.tex"
+}

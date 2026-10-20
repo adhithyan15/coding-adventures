@@ -1,0 +1,11 @@
+{
+  "id": "LA-C507-arrogantia",
+  "pathSegment": "LA-PATH-507-SUPB",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-507-SUPB",
+      "order": 2
+    }
+  ]
+}

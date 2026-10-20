@@ -1,0 +1,19 @@
+{
+  "chapter": 298,
+  "title": "Quid ēvēnit",
+  "label": "ch:la-quid-evenit",
+  "canDo": "I can say what happened and what came of it: to turn out, to become or happen, to arise, to come along and the next day.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-R298-review-291-298",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 298: I can say what happened and what came of it: to turn out, to become or happen, to arise, to come along and the next day.",
+    "assesses": [
+      "LA-LEX-C298-EVENIO-03",
+      "LA-LEX-C298-EVENIO-04",
+      "LA-LEX-C298-EVENIO-05"
+    ]
+  }
+}

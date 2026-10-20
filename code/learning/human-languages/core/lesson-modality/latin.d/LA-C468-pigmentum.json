@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C468-pigmentum",
+    "language": "latin",
+    "chapter": 468,
+    "sequence": 24930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1ad2eecff1f3bae3"
+  },
+  "findings": []
+}

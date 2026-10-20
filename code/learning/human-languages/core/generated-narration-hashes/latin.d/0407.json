@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 407,
+  "sourceHash": "fnv1a64:ed4509ec99e721cb",
+  "lessonIds": [
+    "LA-C407-scientia",
+    "LA-C407-intellegentia",
+    "LA-C407-doctrina",
+    "LA-C407-inscitia",
+    "LA-C407-imitor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch407.txt",
+  "json": "latin/narration/ch407.json",
+  "textHash": "fnv1a64:0a9e85e24d5bae0a",
+  "jsonHash": "fnv1a64:95db7c2fa140fc0a",
+  "findings": []
+}

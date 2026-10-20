@@ -1,0 +1,11 @@
+{
+  "id": "LA-C475-messor",
+  "pathSegment": "LA-PATH-475-MESSIS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-475-MESSIS",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 447,
+  "sourceHash": "fnv1a64:5581d1644b25ccbc",
+  "lessonIds": [
+    "LA-C447-cimex",
+    "LA-C447-mordeo",
+    "LA-C447-scalpo",
+    "LA-C447-insomnis",
+    "LA-C447-cubo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch447.txt",
+  "json": "latin/narration/ch447.json",
+  "textHash": "fnv1a64:83a624ae24376bf5",
+  "jsonHash": "fnv1a64:97c6f83bfb38826b",
+  "findings": []
+}

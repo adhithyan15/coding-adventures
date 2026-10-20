@@ -1,0 +1,11 @@
+{
+  "id": "LA-C354-torreo",
+  "pathSegment": "LA-PATH-354-ASSUS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-354-ASSUS",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C426-pulverulentus",
+    "language": "latin",
+    "chapter": 426,
+    "sequence": 22750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:962cfa4387da4bd8"
+  },
+  "findings": []
+}

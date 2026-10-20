@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 326,
+  "sourceHash": "fnv1a64:854c354069437a8d",
+  "lessonIds": [
+    "LA-C326-adulescentia",
+    "LA-C326-iuventus",
+    "LA-C326-senectus",
+    "LA-C326-orbus",
+    "LA-C326-pupillus"
+  ],
+  "tex": "latin/book/chapters/ch326-aetates.tex"
+}

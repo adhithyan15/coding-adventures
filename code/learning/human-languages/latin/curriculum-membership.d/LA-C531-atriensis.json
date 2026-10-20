@@ -1,0 +1,11 @@
+{
+  "id": "LA-C531-atriensis",
+  "pathSegment": "LA-PATH-531-IANI",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-531-IANI",
+      "order": 0
+    }
+  ]
+}

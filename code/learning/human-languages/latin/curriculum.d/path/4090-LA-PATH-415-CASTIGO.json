@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-415-CASTIGO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "LA-EXT-415-CASTIGO"
+  ],
+  "after": []
+}

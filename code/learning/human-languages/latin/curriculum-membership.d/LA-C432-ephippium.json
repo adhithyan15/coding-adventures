@@ -1,0 +1,11 @@
+{
+  "id": "LA-C432-ephippium",
+  "pathSegment": "LA-PATH-432-EQUITO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-432-EQUITO",
+      "order": 1
+    }
+  ]
+}

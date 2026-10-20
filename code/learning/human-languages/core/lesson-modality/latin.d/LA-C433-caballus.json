@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C433-caballus",
+    "language": "latin",
+    "chapter": 433,
+    "sequence": 23120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:37e00ac425f42da7"
+  },
+  "findings": []
+}

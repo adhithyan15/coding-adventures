@@ -1,0 +1,11 @@
+{
+  "id": "LA-C480-rupes",
+  "pathSegment": "LA-PATH-480-RUPES",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-480-RUPES",
+      "order": 0
+    }
+  ]
+}

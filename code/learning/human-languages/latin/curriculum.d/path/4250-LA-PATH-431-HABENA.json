@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-431-HABENA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "LA-EXT-431-HABENA"
+  ],
+  "after": []
+}

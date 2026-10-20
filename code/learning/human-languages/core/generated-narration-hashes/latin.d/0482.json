@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 482,
+  "sourceHash": "fnv1a64:3f1e744154f6f8f5",
+  "lessonIds": [
+    "LA-C482-amnis",
+    "LA-C482-torrens",
+    "LA-C482-confluens",
+    "LA-C482-fluo",
+    "LA-C482-transnato"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch482.txt",
+  "json": "latin/narration/ch482.json",
+  "textHash": "fnv1a64:aab6675ccd024373",
+  "jsonHash": "fnv1a64:61383857ae68877a",
+  "findings": []
+}

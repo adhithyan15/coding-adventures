@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 505,
+  "title": "Mercy and kindness",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f3bbf244cac3be5d",
+  "lessons": [
+    {
+      "id": "LA-C505-clemens",
+      "sequence": 26820,
+      "title": "clēmēns, clēmentis — merciful, mild",
+      "headword": "clēmēns, clēmentis",
+      "romanization": "clēmēns, clēmentis",
+      "gloss": "merciful, mild",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ad5b9e81f8f45caa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to pretend, then the Latin for to hide."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: clēmēns, clēmentis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "clēmēns, clēmentis — \"merciful, mild\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Rēx clēmēns captīvīs ignōscit. The merciful king pardons the prisoners."
+            },
+            {
+              "kind": "speech",
+              "text": "One ending; ablative usually clēmentī. Of a ruler or a judge: gentle in punishing. English clement."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "clēmēns is a native Latin adjective; Lewis & Short calls its origin doubtful, so it is not settled. English clement and inclement come from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "clēmēns, clēmentis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *clēmēns, clēmentis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "clēmēns, clēmentis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *clēmēns, clēmentis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with clēmēns, clēmentis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *clēmēns, clēmentis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to pretend, then the Latin for to hide, then say clēmēns, clēmentis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to pretend, then the Latin for to hide, then say *clēmēns, clēmentis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does clēmēns, clēmentis mean? (\"Merciful, mild\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C505-clementia",
+      "sequence": 26830,
+      "title": "clēmentia, clēmentiae — mercy, clemency",
+      "headword": "clēmentia, clēmentiae",
+      "romanization": "clēmentia, clēmentiae",
+      "gloss": "mercy, clemency",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eedaf15f9dc784d3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to hide, then the Latin for merciful."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: clēmentia, clēmentiae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "clēmentia, clēmentiae — \"mercy, clemency\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Victor clēmentiam hostibus ostendit. The victor shows mercy to the enemy."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, first declension. A virtue of rulers: mercy toward those in your power."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "clēmentia is built on clēmēns \"merciful\" (Lewis & Short). English clemency comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "clēmentia, clēmentiae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *clēmentia, clēmentiae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "clēmentia, clēmentiae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *clēmentia, clēmentiae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with clēmentia, clēmentiae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *clēmentia, clēmentiae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to hide, then the Latin for merciful, then say clēmentia, clēmentiae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to hide, then the Latin for merciful, then say *clēmentia, clēmentiae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does clēmentia, clēmentiae mean? (\"Mercy, clemency\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C505-benignitas",
+      "sequence": 26840,
+      "title": "benignitās, benignitātis — kindness, generosity",
+      "headword": "benignitās, benignitātis",
+      "romanization": "benignitās, benignitātis",
+      "gloss": "kindness, generosity",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9c78a5888ebddf39",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for merciful, then the Latin for mercy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: benignitās, benignitātis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "benignitās, benignitātis — \"kindness, generosity\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Benignitās hospitis nōs dēlectat. Our host's kindness delights us."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, third declension, from benignus — kind. English benignity."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "benignitās is built on benignus \"kind\", which Lewis & Short and EtymDB explain as bonus or bene \"good, well\" with genus \"kind\": of a good kind. English benign comes from benignus."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "benignitās, benignitātis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *benignitās, benignitātis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "benignitās, benignitātis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *benignitās, benignitātis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with benignitās, benignitātis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *benignitās, benignitātis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for merciful, then the Latin for mercy, then say benignitās, benignitātis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for merciful, then the Latin for mercy, then say *benignitās, benignitātis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does benignitās, benignitātis mean? (\"Kindness, generosity\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C505-benevolus",
+      "sequence": 26850,
+      "title": "benevolus, benevola, benevolum — kindly, well-wishing",
+      "headword": "benevolus, benevola, benevolum",
+      "romanization": "benevolus, benevola, benevolum",
+      "gloss": "kindly, well-wishing",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3d8b7009344ee61b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for mercy, then the Latin for kindness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: benevolus, benevola, benevolum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "benevolus, benevola, benevolum — \"kindly, well-wishing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Vīcīnus benevolus nōbīs semper adest. Our kindly neighbour is always there for us."
+            },
+            {
+              "kind": "speech",
+              "text": "bene 'well' + volō 'to wish'. Often of a friend's goodwill."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "benevolus is built on bene \"well\" and volō \"to wish\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "benevolus, benevola, benevolum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *benevolus, benevola, benevolum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "benevolus, benevola, benevolum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *benevolus, benevola, benevolum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with benevolus, benevola, benevolum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *benevolus, benevola, benevolum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for mercy, then the Latin for kindness, then say benevolus, benevola, benevolum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for mercy, then the Latin for kindness, then say *benevolus, benevola, benevolum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does benevolus, benevola, benevolum mean? (\"Kindly, well-wishing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C505-benevolentia",
+      "sequence": 26860,
+      "title": "benevolentia, benevolentiae — goodwill, kindness",
+      "headword": "benevolentia, benevolentiae",
+      "romanization": "benevolentia, benevolentiae",
+      "gloss": "goodwill, kindness",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5175cd44191618f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for kindness, then the Latin for kindly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: benevolentia, benevolentiae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "benevolentia, benevolentiae — \"goodwill, kindness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sine benevolentiā nūlla amīcitia est. Without goodwill there is no friendship."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, first declension, from benevolus. English benevolence."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "benevolentia is built on benevolus \"kindly, well-wishing\" (Lewis & Short). English benevolence comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "benevolentia, benevolentiae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *benevolentia, benevolentiae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "benevolentia, benevolentiae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *benevolentia, benevolentiae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with benevolentia, benevolentiae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *benevolentia, benevolentiae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for kindness, then the Latin for kindly, then say benevolentia, benevolentiae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for kindness, then the Latin for kindly, then say *benevolentia, benevolentiae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does benevolentia, benevolentiae mean? (\"Goodwill, kindness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

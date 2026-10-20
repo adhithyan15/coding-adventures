@@ -1,0 +1,11 @@
+{
+  "id": "LA-C427-viaticum",
+  "pathSegment": "LA-PATH-427-MANSIO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-427-MANSIO",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C384-ambitio",
+  "pathSegment": "LA-PATH-384-SUFFRAGIUM",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-384-SUFFRAGIUM",
+      "order": 3
+    }
+  ]
+}

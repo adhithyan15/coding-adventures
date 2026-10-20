@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 517,
+  "sourceHash": "fnv1a64:54d8dac4cd52191e",
+  "lessonIds": [
+    "LA-C517-vena",
+    "LA-C517-nervus",
+    "LA-C517-pellis",
+    "LA-C517-sudor",
+    "LA-C517-pulsus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch517.txt",
+  "json": "latin/narration/ch517.json",
+  "textHash": "fnv1a64:4050f8ea9539ae6f",
+  "jsonHash": "fnv1a64:7570501d4f76941d",
+  "findings": []
+}

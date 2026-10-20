@@ -1,0 +1,11 @@
+{
+  "id": "LA-C422-abundo",
+  "pathSegment": "LA-PATH-422-DIVITIAE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-422-DIVITIAE",
+      "order": 4
+    }
+  ]
+}

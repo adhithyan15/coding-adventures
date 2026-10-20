@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C485-imber",
+    "language": "latin",
+    "chapter": 485,
+    "sequence": 25770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf86ec98df6ca419"
+  },
+  "findings": []
+}

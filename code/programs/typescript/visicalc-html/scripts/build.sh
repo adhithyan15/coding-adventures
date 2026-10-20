@@ -1,27 +1,20 @@
 #!/usr/bin/env bash
 #
-# build.sh — regenerate the FormulaBar HTML fragment from the Mosaic
-# pipeline (mosaic-compile --backend html).
+# build.sh — compile VisiCalc's FormulaBar and Grid to HTML and write them
+# into index.html.
 #
-# Per the VisiCalc cross-backend demo plan (Phase 2 — VC2-html):
-# this is the simplest possible cross-backend demo — open `index.html`
-# in a browser and see VisiCalc.
-#
-# Today we only compile FormulaBar through the pipeline. The Grid
-# fragment is hand-written in index.html as a static HTML <table>
-# placeholder, because the `Grid` built-in primitive isn't yet wired
-# into the mosaic-emit-html pipeline (only the React emitter knows
-# how to lower it). When the HTML Grid emitter lands, this script
-# gains a second `mosaic-compile --backend html ...` line for Grid
-# and index.html switches to including `build/Grid.html` instead of
-# its hand-written placeholder.
+# Per the VisiCalc cross-backend demo plan (Phase 2 — VC2-html): open
+# `index.html` in a browser and see VisiCalc, no server. The page embeds every
+# compiled variant (FormulaBar × {desktop, touch} × {dark, light}, Grid ×
+# {dark, light}) as a `<template>`; scripts/sync-templates.py writes them.
+# They used to be pasted in by hand, so the page carried whatever the emitter
+# produced the last time someone pasted.
 #
 # Usage:
 #   cd code/programs/typescript/visicalc-html
-#   bash scripts/build.sh
-#
-# Output:
-#   code/programs/typescript/visicalc-html/build/FormulaBar.html
+#   bash scripts/build.sh           # compile into build/, then update index.html
+#   bash scripts/build.sh --check   # compile into a temp dir; fail if index.html
+#                                   # is stale (CI: BUILD_mac_and_linux)
 #
 # Open `code/programs/typescript/visicalc-html/index.html` in any browser to view.
 
@@ -42,7 +35,14 @@ echo "Building mosaic-compile..."
 (cd "$REPO_ROOT/code/packages/rust" && cargo build -p mosaic-compile)
 
 SRC="$REPO_ROOT/code/programs/mosaic/visicalc"
-OUT_DIR="$DEMO_DIR/build"
+CHECK=0
+if [ "${1:-}" = "--check" ]; then
+  CHECK=1
+  OUT_DIR="$(mktemp -d)"
+  trap 'rm -rf "$OUT_DIR"' EXIT
+else
+  OUT_DIR="$DEMO_DIR/build"
+fi
 mkdir -p "$OUT_DIR"
 
 # UI30/UI-G multi-variant matrix. The FormulaBar is generated across the full
@@ -103,6 +103,12 @@ for theme in dark light; do
 done
 # Back-compat alias for the pre-switcher filename.
 cp "$OUT_DIR/Grid.dark.html" "$OUT_DIR/Grid.html"
+
+if ((CHECK)); then
+  python3 "$SCRIPT_DIR/sync-templates.py" "$OUT_DIR" "$DEMO_DIR/index.html" --check
+  exit 0
+fi
+python3 "$SCRIPT_DIR/sync-templates.py" "$OUT_DIR" "$DEMO_DIR/index.html"
 
 echo "Done. Generated:"
 ls -la "$OUT_DIR"

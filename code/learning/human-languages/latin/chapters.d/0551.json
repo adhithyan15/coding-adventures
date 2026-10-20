@@ -1,0 +1,19 @@
+{
+  "chapter": 551,
+  "title": "Book boxes and tablets",
+  "label": "ch:la-book-boxes-and-tablets",
+  "canDo": "I can talk about writing materials and replying to letters.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C551-rescribo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 551: I can talk about writing materials and replying to letters.",
+    "assesses": [
+      "LA-LEX-C551-CAPS-03",
+      "LA-LEX-C551-CAPS-04",
+      "LA-LEX-C551-CAPS-05"
+    ]
+  }
+}

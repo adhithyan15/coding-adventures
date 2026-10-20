@@ -108,12 +108,18 @@ const INFO_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../
 const ZENUML_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/zenuml-11.16.1-corpus.json"));
 
 #[test]
-fn pinned_zenuml_subset_corpus_lowers_to_sequence_ir() {
+fn zenuml_full_status_is_backed_by_the_complete_documented_corpus() {
     let corpus: Value = serde_json::from_str(ZENUML_CORPUS).expect("zenuml corpus must be JSON");
     assert_eq!(corpus["upstream_version"].as_str(), Some("11.16.1"));
-    for fixture in corpus["fixtures"].as_array().expect("fixture array") {
-        let result = parse_zenuml(fixture["source"].as_str().expect("fixture source"));
-        assert_eq!(result.is_ok(), fixture["compatible"].as_bool().unwrap(), "fixture {:?}", fixture["name"]);
+    assert_eq!(
+        corpus["scope"].as_str(),
+        Some("complete documented mermaid@11.16.1 ZenUML syntax corpus")
+    );
+    let valid = corpus["valid"].as_array().expect("valid fixture array");
+    assert_eq!(valid.len(), 16, "every upstream documentation example must stay pinned");
+    for fixture in valid.iter().chain(corpus["extensions"].as_array().expect("extension fixture array")) {
+        parse_zenuml(fixture["source"].as_str().expect("fixture source"))
+            .unwrap_or_else(|error| panic!("fixture {:?} failed: {error}", fixture["id"]));
     }
 }
 

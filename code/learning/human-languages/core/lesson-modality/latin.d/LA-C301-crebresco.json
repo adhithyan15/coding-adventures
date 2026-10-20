@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C301-crebresco",
+    "language": "latin",
+    "chapter": 301,
+    "sequence": 16340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8cac8067e855c20a"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 341,
+  "title": "Obsidiō",
+  "label": "ch:la-obsidio",
+  "canDo": "I can tell how a town was besieged: to besiege, the siege, to attack, to take by storm and the battering ram.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C341-aries",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 341: I can tell how a town was besieged: to besiege, the siege, to attack, to take by storm and the battering ram.",
+    "assesses": [
+      "LA-LEX-C341-OBSIDIO-03",
+      "LA-LEX-C341-OBSIDIO-04",
+      "LA-LEX-C341-OBSIDIO-05"
+    ]
+  }
+}

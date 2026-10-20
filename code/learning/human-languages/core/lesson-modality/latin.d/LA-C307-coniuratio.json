@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C307-coniuratio",
+    "language": "latin",
+    "chapter": 307,
+    "sequence": 16650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cc583e770fb98fa6"
+  },
+  "findings": []
+}

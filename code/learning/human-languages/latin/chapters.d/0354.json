@@ -1,0 +1,19 @@
+{
+  "chapter": 354,
+  "title": "Assum et frīctum",
+  "label": "ch:la-assum-et-frictum",
+  "canDo": "I can describe roasting and frying: roasted, a sausage, the gridiron, to fry and to toast.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-R354-review-347-354",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 354: I can describe roasting and frying: roasted, a sausage, the gridiron, to fry and to toast.",
+    "assesses": [
+      "LA-LEX-C354-ASSUS-03",
+      "LA-LEX-C354-ASSUS-04",
+      "LA-LEX-C354-ASSUS-05"
+    ]
+  }
+}

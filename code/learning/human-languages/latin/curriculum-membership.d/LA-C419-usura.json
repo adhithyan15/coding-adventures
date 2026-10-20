@@ -1,0 +1,11 @@
+{
+  "id": "LA-C419-usura",
+  "pathSegment": "LA-PATH-419-PERSOLVO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-419-PERSOLVO",
+      "order": 1
+    }
+  ]
+}

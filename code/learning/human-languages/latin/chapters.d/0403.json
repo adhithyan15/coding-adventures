@@ -1,0 +1,19 @@
+{
+  "chapter": 403,
+  "title": "Learned and Unlearned",
+  "label": "ch:la-learned-and-unlearned",
+  "canDo": "I can call someone learned or unlearned, educated or knowing, and say that someone lacks experience.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "LA-C403-imperitus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 403: I can call someone learned or unlearned, educated or knowing, and say that someone lacks experience.",
+    "assesses": [
+      "LA-LEX-C403-DOCTUS-03",
+      "LA-LEX-C403-DOCTUS-04",
+      "LA-LEX-C403-DOCTUS-05"
+    ]
+  }
+}

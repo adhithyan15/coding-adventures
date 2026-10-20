@@ -1,0 +1,11 @@
+{
+  "id": "LA-C519-olfacio",
+  "pathSegment": "LA-PATH-519-SENS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-519-SENS",
+      "order": 3
+    }
+  ]
+}

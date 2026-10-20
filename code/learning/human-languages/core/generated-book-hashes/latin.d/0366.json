@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 366,
+  "sourceHash": "fnv1a64:583f6882da98811c",
+  "lessonIds": [
+    "LA-C366-videlicet",
+    "LA-C366-nimirum",
+    "LA-C366-atqui",
+    "LA-C366-proinde",
+    "LA-C366-idcirco"
+  ],
+  "tex": "latin/book/chapters/ch366-evidently-and-yet-so-then.tex"
+}

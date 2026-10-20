@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C553-pessulus",
+    "language": "latin",
+    "chapter": 553,
+    "sequence": 29290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:05b75913a2b9a870"
+  },
+  "findings": []
+}

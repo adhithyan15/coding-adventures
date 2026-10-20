@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:b30161d83e1e7733",
+  "lessonIds": [
+    "LA-C311-damno",
+    "LA-C311-absolvo",
+    "LA-C311-nocens",
+    "LA-C311-innocens",
+    "LA-C311-culpa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch311.txt",
+  "json": "latin/narration/ch311.json",
+  "textHash": "fnv1a64:ca1fe7b2adf4d076",
+  "jsonHash": "fnv1a64:86c0af1fcd34c494",
+  "findings": []
+}

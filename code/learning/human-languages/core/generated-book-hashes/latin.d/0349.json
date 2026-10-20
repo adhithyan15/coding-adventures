@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 349,
+  "sourceHash": "fnv1a64:f1f4a4f1a91485e5",
+  "lessonIds": [
+    "LA-C349-fabulor",
+    "LA-C349-aio",
+    "LA-C349-mirabilis",
+    "LA-C349-incredibilis",
+    "LA-C349-commentum"
+  ],
+  "tex": "latin/book/chapters/ch349-fabulae-mirae.tex"
+}

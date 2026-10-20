@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-391-ETIAMSI",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "LA-EXT-391-ETIAMSI"
+  ],
+  "after": []
+}

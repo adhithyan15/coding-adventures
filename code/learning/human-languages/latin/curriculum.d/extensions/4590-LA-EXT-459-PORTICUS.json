@@ -1,0 +1,8 @@
+{
+  "id": "LA-EXT-459-PORTICUS",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe the public buildings of a town: a colonnade, a temple, a shrine, the sacred boundary, and putting buildings up.",
+  "prerequisites": []
+}

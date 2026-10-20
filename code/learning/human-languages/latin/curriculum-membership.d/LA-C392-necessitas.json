@@ -1,0 +1,11 @@
+{
+  "id": "LA-C392-necessitas",
+  "pathSegment": "LA-PATH-392-CAVEO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-392-CAVEO",
+      "order": 2
+    }
+  ]
+}

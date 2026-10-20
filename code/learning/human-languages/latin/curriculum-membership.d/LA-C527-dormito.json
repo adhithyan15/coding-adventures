@@ -1,0 +1,11 @@
+{
+  "id": "LA-C527-dormito",
+  "pathSegment": "LA-PATH-527-REQU",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-527-REQU",
+      "order": 2
+    }
+  ]
+}

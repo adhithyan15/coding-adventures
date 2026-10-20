@@ -50,7 +50,12 @@ it("pins Latin lesson-content budgets", () =>
     // 1171 -> 1307: the last Latin A2 vocabulary tranche, chapters 255-280.
     // 130 word lessons (thirty-five verbs) and two reviews per run of at most
     // nine chapters. No idiom, sense or culture claim. Latin attains A2 here.
-    lessons: 1307,
+    // 1307 -> 1345: chapters 281-290, the B1 core that realizes all five B1
+    // spine nodes (both pasts, reasons, travel, experience, the subjunctive):
+    // 38 lessons, one reading and one writing, no idiom, sense or culture claim.
+    // 1345 -> 2705: chapters 291-554, the B1 vocabulary: 1,320 word lessons (one
+    // headword each) and 40 spaced reviews. Latin attains B1 here.
+    lessons: 2705,
     idioms: 16,
     senses: 6,
     cultureClaims: 17,
@@ -98,6 +103,9 @@ it("pins Latin's writing ramp, now complete at every level", () => {
     "dictation-transcription",
     "controlled-composition",
     "timed-assessment-production",
+    "connected-composition",
+    // LA-W290-epistula: a six-line letter about a journey, the B1 core's
+    // writing task. A second connected composition, later in sequence.
     "connected-composition",
   ]);
 });

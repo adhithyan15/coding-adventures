@@ -1,0 +1,11 @@
+{
+  "id": "LA-C536-suavis",
+  "pathSegment": "LA-PATH-536-BLAN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-536-BLAN",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C306-pugio",
+    "language": "latin",
+    "chapter": 306,
+    "sequence": 16590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:58f3bfa6c9dc4f4d"
+  },
+  "findings": []
+}

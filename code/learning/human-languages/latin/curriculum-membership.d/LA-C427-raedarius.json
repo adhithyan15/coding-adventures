@@ -1,0 +1,11 @@
+{
+  "id": "LA-C427-raedarius",
+  "pathSegment": "LA-PATH-427-MANSIO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-427-MANSIO",
+      "order": 1
+    }
+  ]
+}

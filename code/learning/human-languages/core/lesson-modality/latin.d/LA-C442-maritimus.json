@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C442-maritimus",
+    "language": "latin",
+    "chapter": 442,
+    "sequence": 23610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7830e407ede21baf"
+  },
+  "findings": []
+}

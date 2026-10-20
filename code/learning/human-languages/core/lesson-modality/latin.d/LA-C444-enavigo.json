@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C444-enavigo",
+    "language": "latin",
+    "chapter": 444,
+    "sequence": 23710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:67d4699ed6b94f53"
+  },
+  "findings": []
+}

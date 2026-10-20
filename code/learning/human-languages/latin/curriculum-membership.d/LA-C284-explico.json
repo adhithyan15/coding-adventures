@@ -1,0 +1,11 @@
+{
+  "id": "LA-C284-explico",
+  "pathSegment": "LA-PATH-284-CONSILIUM",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-284-CONSILIUM",
+      "order": 1
+    }
+  ]
+}

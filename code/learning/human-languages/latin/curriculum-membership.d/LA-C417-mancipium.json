@@ -1,0 +1,11 @@
+{
+  "id": "LA-C417-mancipium",
+  "pathSegment": "LA-PATH-417-POSSESSIO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-417-POSSESSIO",
+      "order": 4
+    }
+  ]
+}

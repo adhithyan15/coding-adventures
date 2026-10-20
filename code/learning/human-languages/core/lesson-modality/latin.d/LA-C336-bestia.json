@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C336-bestia",
+    "language": "latin",
+    "chapter": 336,
+    "sequence": 18140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8d45a6e3461a9e35"
+  },
+  "findings": []
+}

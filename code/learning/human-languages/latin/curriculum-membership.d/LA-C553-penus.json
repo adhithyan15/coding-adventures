@@ -1,0 +1,11 @@
+{
+  "id": "LA-C553-penus",
+  "pathSegment": "LA-PATH-553-LIMN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-553-LIMN",
+      "order": 4
+    }
+  ]
+}

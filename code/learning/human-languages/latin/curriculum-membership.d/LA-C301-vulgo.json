@@ -1,0 +1,11 @@
+{
+  "id": "LA-C301-vulgo",
+  "pathSegment": "LA-PATH-301-SUSURRUS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-301-SUSURRUS",
+      "order": 2
+    }
+  ]
+}

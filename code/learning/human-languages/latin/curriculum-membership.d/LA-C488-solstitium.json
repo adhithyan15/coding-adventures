@@ -1,0 +1,11 @@
+{
+  "id": "LA-C488-solstitium",
+  "pathSegment": "LA-PATH-488-BRUMA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-488-BRUMA",
+      "order": 1
+    }
+  ]
+}

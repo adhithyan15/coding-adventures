@@ -1,0 +1,14 @@
+{
+  "language": "latin",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:d9c601b54fd3551a",
+  "lessonIds": [
+    "LA-C330-funus",
+    "LA-C330-sepelio",
+    "LA-C330-sepultura",
+    "LA-C330-rogus",
+    "LA-C330-exsequiae",
+    "LA-R330-review-323-330"
+  ],
+  "tex": "latin/book/chapters/ch330-funus.tex"
+}
