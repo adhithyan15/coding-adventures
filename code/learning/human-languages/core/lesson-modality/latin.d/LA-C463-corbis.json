@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C463-corbis",
+    "language": "latin",
+    "chapter": 463,
+    "sequence": 24680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ba7b6b921468432"
+  },
+  "findings": []
+}

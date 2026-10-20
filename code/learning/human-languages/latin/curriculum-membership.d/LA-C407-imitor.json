@@ -1,0 +1,11 @@
+{
+  "id": "LA-C407-imitor",
+  "pathSegment": "LA-PATH-407-SCIENTIA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-407-SCIENTIA",
+      "order": 4
+    }
+  ]
+}

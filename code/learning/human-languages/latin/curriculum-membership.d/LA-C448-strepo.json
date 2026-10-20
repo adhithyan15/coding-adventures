@@ -1,0 +1,11 @@
+{
+  "id": "LA-C448-strepo",
+  "pathSegment": "LA-PATH-448-STERTO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-448-STERTO",
+      "order": 1
+    }
+  ]
+}

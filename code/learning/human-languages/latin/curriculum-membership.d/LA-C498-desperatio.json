@@ -1,0 +1,11 @@
+{
+  "id": "LA-C498-desperatio",
+  "pathSegment": "LA-PATH-498-SPES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-498-SPES",
+      "order": 1
+    }
+  ]
+}

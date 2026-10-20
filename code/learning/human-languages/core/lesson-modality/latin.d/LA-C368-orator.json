@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C368-orator",
+    "language": "latin",
+    "chapter": 368,
+    "sequence": 19760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fd66d989028b30d6"
+  },
+  "findings": []
+}

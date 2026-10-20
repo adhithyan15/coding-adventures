@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-356-APPONO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-356-APPONO"
+  ],
+  "after": []
+}

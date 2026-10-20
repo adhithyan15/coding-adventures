@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 500,
+  "title": "Desire and envy",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:72802ad4b0618df2",
+  "lessons": [
+    {
+      "id": "LA-C500-cupido",
+      "sequence": 26560,
+      "title": "cupīdō, cupīdinis — desire, longing",
+      "headword": "cupīdō, cupīdinis",
+      "romanization": "cupīdō, cupīdinis",
+      "gloss": "desire, longing",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:243b6b01914fb991",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to amuse, then the Latin for to please."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: cupīdō, cupīdinis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cupīdō, cupīdinis — \"desire, longing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Cupīdō pecūniae multōs hominēs malōs facit. Desire for money makes many people bad."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine in prose, third declension; as the god of love it is masculine. Built on cupiō."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cupīdō is built on cupiō \"to desire\" (EtymDB; Lewis & Short); cupiditās, already known, comes from the same verb, and English cupidity from that."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cupīdō, cupīdinis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cupīdō, cupīdinis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cupīdō, cupīdinis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cupīdō, cupīdinis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with cupīdō, cupīdinis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *cupīdō, cupīdinis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to amuse, then the Latin for to please, then say cupīdō, cupīdinis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to amuse, then the Latin for to please, then say *cupīdō, cupīdinis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does cupīdō, cupīdinis mean? (\"Desire, longing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C500-cupidus",
+      "sequence": 26570,
+      "title": "cupidus, cupida, cupidum — eager, desirous",
+      "headword": "cupidus, cupida, cupidum",
+      "romanization": "cupidus, cupida, cupidum",
+      "gloss": "eager, desirous",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c6f9aaffdbda2e05",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to please, then the Latin for desire."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: cupidus, cupida, cupidum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cupidus, cupida, cupidum — \"eager, desirous\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Discipulus cupidus litterārum est. The pupil is eager for learning."
+            },
+            {
+              "kind": "speech",
+              "text": "With the genitive: cupidus pecūniae — greedy for money."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cupidus is built on cupiō \"to desire\" with the adjective ending -idus (Lewis & Short; EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cupidus, cupida, cupidum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cupidus, cupida, cupidum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cupidus, cupida, cupidum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cupidus, cupida, cupidum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with cupidus, cupida, cupidum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *cupidus, cupida, cupidum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to please, then the Latin for desire, then say cupidus, cupida, cupidum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to please, then the Latin for desire, then say *cupidus, cupida, cupidum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does cupidus, cupida, cupidum mean? (\"Eager, desirous\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C500-avidus",
+      "sequence": 26580,
+      "title": "avidus, avida, avidum — greedy, eager",
+      "headword": "avidus, avida, avidum",
+      "romanization": "avidus, avida, avidum",
+      "gloss": "greedy, eager",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9dddeef14b314ccb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for desire, then the Latin for eager."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: avidus, avida, avidum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "avidus, avida, avidum — \"greedy, eager\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Canis avidus cibum statim edit. The greedy dog eats the food at once."
+            },
+            {
+              "kind": "speech",
+              "text": "With the genitive: avidus glōriae — hungry for glory. English avid."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "avidus is built on aveō \"to long for\" (Lewis & Short; EtymDB). English avid comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avidus, avida, avidum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avidus, avida, avidum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avidus, avida, avidum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avidus, avida, avidum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with avidus, avida, avidum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *avidus, avida, avidum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for desire, then the Latin for eager, then say avidus, avida, avidum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for desire, then the Latin for eager, then say *avidus, avida, avidum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does avidus, avida, avidum mean? (\"Greedy, eager\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C500-invideo",
+      "sequence": 26590,
+      "title": "invideō, invidēre — to envy, begrudge",
+      "headword": "invideō, invidēre",
+      "romanization": "invideō, invidēre",
+      "gloss": "to envy, begrudge",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ba3ebac99eca8281",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for eager, then the Latin for greedy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: invideō, invidēre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "invideō, invidēre — \"to envy, begrudge\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Soror sorōrī novam stolam invidet. One sister envies the other her new dress."
+            },
+            {
+              "kind": "speech",
+              "text": "invideō, invidēre, invīdī, invīsum, with the dative of the person: tibi invideō — I envy you. Invidia and invidus, already known, come from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "invideō is built on in- \"upon, against\" and videō \"to see\" (Lewis & Short), first \"to cast an evil eye on\". English envy comes from invidia through Old French."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "invideō, invidēre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *invideō, invidēre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "invideō, invidēre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *invideō, invidēre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with invideō, invidēre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *invideō, invidēre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for eager, then the Latin for greedy, then say invideō, invidēre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for eager, then the Latin for greedy, then say *invideō, invidēre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does invideō, invidēre mean? (\"To envy, begrudge\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C500-rivalis",
+      "sequence": 26600,
+      "title": "rīvālis, rīvālis — a rival (in love)",
+      "headword": "rīvālis, rīvālis",
+      "romanization": "rīvālis, rīvālis",
+      "gloss": "a rival (in love)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8652a1a181e6889e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for greedy, then the Latin for to envy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: rīvālis, rīvālis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rīvālis, rīvālis — \"a rival (in love)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Duo iuvenēs eandem puellam amant; rīvālēs sunt. Two young men love the same girl; they are rivals."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine, third declension. First someone who shares a stream with you, then a rival in love. English rival."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rīvālis is built on rīvus \"a stream\" (Lewis & Short; EtymDB): first those who used the same brook, then rivals in love. English rival comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rīvālis, rīvālis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rīvālis, rīvālis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rīvālis, rīvālis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rīvālis, rīvālis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with rīvālis, rīvālis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *rīvālis, rīvālis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for greedy, then the Latin for to envy, then say rīvālis, rīvālis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for greedy, then the Latin for to envy, then say *rīvālis, rīvālis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does rīvālis, rīvālis mean? (\"A rival (in love)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

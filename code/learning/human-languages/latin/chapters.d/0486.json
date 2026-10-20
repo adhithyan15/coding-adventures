@@ -1,0 +1,19 @@
+{
+  "chapter": 486,
+  "title": "Hoarfrost, The cold, To freeze, To be stiff with cold, To feel cold",
+  "label": "ch:la-hoarfrost-the-cold-to-freeze-to-be-stiff-with-cold-to-feel-cold",
+  "canDo": "I can talk about cold weather: hoarfrost, the cold, water freezing, being stiff with cold, and feeling cold.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-R486-review-479-486",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 486: I can talk about cold weather: hoarfrost, the cold, water freezing, being stiff with cold, and feeling cold.",
+    "assesses": [
+      "LA-LEX-C486-PRUINA-03",
+      "LA-LEX-C486-PRUINA-04",
+      "LA-LEX-C486-PRUINA-05"
+    ]
+  }
+}

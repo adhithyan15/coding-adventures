@@ -1,0 +1,19 @@
+{
+  "chapter": 463,
+  "title": "Vegetable grower, Fishmonger, Plaited basket, Wicker basket, Bread basket",
+  "label": "ch:la-vegetable-grower-fishmonger-plaited-basket-wicker-basket-bread-basket",
+  "canDo": "I can talk about market sellers and what they carry things in: the vegetable grower, the fishmonger, and three kinds of basket.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C463-canistrum",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 463: I can talk about market sellers and what they carry things in: the vegetable grower, the fishmonger, and three kinds of basket.",
+    "assesses": [
+      "LA-LEX-C463-HOLITOR-03",
+      "LA-LEX-C463-HOLITOR-04",
+      "LA-LEX-C463-HOLITOR-05"
+    ]
+  }
+}

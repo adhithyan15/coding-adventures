@@ -1,0 +1,8 @@
+{
+  "id": "LA-EXT-358-ASSENSUS",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that I agree or disagree, that we are of one mind, and that a question is in dispute.",
+  "prerequisites": []
+}

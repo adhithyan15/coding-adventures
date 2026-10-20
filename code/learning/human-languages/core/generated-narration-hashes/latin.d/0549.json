@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 549,
+  "sourceHash": "fnv1a64:84f46b2d731bf23f",
+  "lessonIds": [
+    "LA-C549-poema",
+    "LA-C549-epigramma",
+    "LA-C549-versiculus",
+    "LA-C549-recitatio",
+    "LA-C549-auditor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch549.txt",
+  "json": "latin/narration/ch549.json",
+  "textHash": "fnv1a64:ff4f32355c238d53",
+  "jsonHash": "fnv1a64:dc58e2f24b32d223",
+  "findings": []
+}

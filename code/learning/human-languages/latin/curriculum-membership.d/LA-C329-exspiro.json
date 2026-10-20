@@ -1,0 +1,11 @@
+{
+  "id": "LA-C329-exspiro",
+  "pathSegment": "LA-PATH-329-MORS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-329-MORS",
+      "order": 2
+    }
+  ]
+}

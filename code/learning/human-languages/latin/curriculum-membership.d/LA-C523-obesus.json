@@ -1,0 +1,11 @@
+{
+  "id": "LA-C523-obesus",
+  "pathSegment": "LA-PATH-523-ROBU",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-523-ROBU",
+      "order": 1
+    }
+  ]
+}

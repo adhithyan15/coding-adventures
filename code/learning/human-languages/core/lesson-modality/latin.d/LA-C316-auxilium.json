@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C316-auxilium",
+    "language": "latin",
+    "chapter": 316,
+    "sequence": 17120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:994d958e1227f815"
+  },
+  "findings": []
+}

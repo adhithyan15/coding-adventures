@@ -1,0 +1,11 @@
+{
+  "id": "LA-C494-taedet",
+  "pathSegment": "LA-PATH-494-ODI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-494-ODI",
+      "order": 4
+    }
+  ]
+}

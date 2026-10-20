@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C370-dignitas",
+    "language": "latin",
+    "chapter": 370,
+    "sequence": 19870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c00875fe1ccb3be0"
+  },
+  "findings": []
+}

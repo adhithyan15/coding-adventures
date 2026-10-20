@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C434-praesepe",
+    "language": "latin",
+    "chapter": 434,
+    "sequence": 23170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce9c3816f35ca12a"
+  },
+  "findings": []
+}

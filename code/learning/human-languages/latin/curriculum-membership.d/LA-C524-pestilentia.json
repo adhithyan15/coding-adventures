@@ -1,0 +1,11 @@
+{
+  "id": "LA-C524-pestilentia",
+  "pathSegment": "LA-PATH-524-PEST",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-524-PEST",
+      "order": 1
+    }
+  ]
+}

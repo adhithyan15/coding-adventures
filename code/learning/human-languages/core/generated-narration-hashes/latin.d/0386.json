@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 386,
+  "sourceHash": "fnv1a64:b39af3207bbba4d5",
+  "lessonIds": [
+    "LA-C386-societas",
+    "LA-C386-humanitas",
+    "LA-C386-mos",
+    "LA-C386-institutum",
+    "LA-C386-concordia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch386.txt",
+  "json": "latin/narration/ch386.json",
+  "textHash": "fnv1a64:f9827f9a5e8beaf3",
+  "jsonHash": "fnv1a64:d4b43ae33043f5cd",
+  "findings": []
+}

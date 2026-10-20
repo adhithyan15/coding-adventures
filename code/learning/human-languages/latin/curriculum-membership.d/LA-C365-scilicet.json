@@ -1,0 +1,11 @@
+{
+  "id": "LA-C365-scilicet",
+  "pathSegment": "LA-PATH-365-ETENIM",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-365-ETENIM",
+      "order": 4
+    }
+  ]
+}

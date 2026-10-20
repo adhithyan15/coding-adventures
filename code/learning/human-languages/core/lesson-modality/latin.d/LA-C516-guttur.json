@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C516-guttur",
+    "language": "latin",
+    "chapter": 516,
+    "sequence": 27380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5fb6e7760c40a2a0"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 548,
+  "sourceHash": "fnv1a64:24ab25b36e07cd5f",
+  "lessonIds": [
+    "LA-C548-pulchritudo",
+    "LA-C548-speciosus",
+    "LA-C548-elegans",
+    "LA-C548-ornamentum",
+    "LA-C548-deformis"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch548.txt",
+  "json": "latin/narration/ch548.json",
+  "textHash": "fnv1a64:b8b0dacb9883b1b0",
+  "jsonHash": "fnv1a64:d74d5c70d0889d98",
+  "findings": []
+}

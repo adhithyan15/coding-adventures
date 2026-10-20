@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 542,
+  "title": "Oil, walks and the country",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8e02299fa5d8b038",
+  "lessons": [
+    {
+      "id": "LA-C542-strigilis",
+      "sequence": 28710,
+      "title": "strigilis, strigilis — a strigil, scraper",
+      "headword": "strigilis, strigilis",
+      "romanization": "strigilis, strigilis",
+      "gloss": "a strigil, scraper",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:328cf50a1adfdc9e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for the cold room, then the Latin for a pool."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: strigilis, strigilis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "strigilis, strigilis — \"a strigil, scraper\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Servus dorsum dominī strigile pūrgat. The slave cleans his master's back with a scraper."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, third declension. After oil and sweat, bathers scraped their skin clean with this curved tool."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "strigilis is built, Lewis & Short says, on stringō \"to strip, graze\"; EtymDB compares Greek stlengis, so the exact history is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "strigilis, strigilis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *strigilis, strigilis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "strigilis, strigilis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *strigilis, strigilis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with strigilis, strigilis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *strigilis, strigilis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for the cold room, then the Latin for a pool, then say strigilis, strigilis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for the cold room, then the Latin for a pool, then say *strigilis, strigilis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does strigilis, strigilis mean? (\"A strigil, scraper\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C542-unguo",
+      "sequence": 28720,
+      "title": "unguō, unguere — to anoint, rub with oil",
+      "headword": "unguō, unguere",
+      "romanization": "unguō, unguere",
+      "gloss": "to anoint, rub with oil",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5c8025398467c9c3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a pool, then the Latin for a strigil."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: unguō, unguere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "unguō, unguere — \"to anoint, rub with oil\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Post balneum corpus oleō unguimus. After the bath we rub the body with oil."
+            },
+            {
+              "kind": "speech",
+              "text": "unguō, unguere, ūnxī, ūnctum; also spelt ungō. Unguentum, already known, comes from it. English unction."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "unguō is inherited from a Proto-Indo-European root meaning \"to anoint, salve\" (EtymDB). unguentum \"ointment\" comes from it, and English unction and ointment from its family."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unguō, unguere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *unguō, unguere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unguō, unguere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *unguō, unguere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with unguō, unguere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *unguō, unguere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a pool, then the Latin for a strigil, then say unguō, unguere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a pool, then the Latin for a strigil, then say *unguō, unguere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does unguō, unguere mean? (\"To anoint, rub with oil\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C542-ambulatio",
+      "sequence": 28730,
+      "title": "ambulātiō, ambulātiōnis — a walk, stroll",
+      "headword": "ambulātiō, ambulātiōnis",
+      "romanization": "ambulātiō, ambulātiōnis",
+      "gloss": "a walk, stroll",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c2036de091fba1a6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a strigil, then the Latin for to anoint."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ambulātiō, ambulātiōnis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ambulātiō, ambulātiōnis — \"a walk, stroll\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Post cēnam ambulātiōnem in hortō facimus. After dinner we take a walk in the garden."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, third declension, from ambulō. Also a covered walk in a villa."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ambulātiō is the action noun of ambulō \"to walk\" (Lewis & Short; EtymDB). English ambulance and perambulate come from the same verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ambulātiō, ambulātiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ambulātiō, ambulātiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ambulātiō, ambulātiōnis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ambulātiō, ambulātiōnis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ambulātiō, ambulātiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ambulātiō, ambulātiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a strigil, then the Latin for to anoint, then say ambulātiō, ambulātiōnis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a strigil, then the Latin for to anoint, then say *ambulātiō, ambulātiōnis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ambulātiō, ambulātiōnis mean? (\"A walk, stroll\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C542-rusticor",
+      "sequence": 28740,
+      "title": "rūsticor, rūsticārī — to stay in the country",
+      "headword": "rūsticor, rūsticārī",
+      "romanization": "rūsticor, rūsticārī",
+      "gloss": "to stay in the country",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4f8e48d54816a266",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to anoint, then the Latin for a walk."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: rūsticor, rūsticārī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rūsticor, rūsticārī — \"to stay in the country\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Aestāte pater in vīllā rūsticātur. In summer father stays in the country at the villa."
+            },
+            {
+              "kind": "speech",
+              "text": "Deponent: rūsticor, rūsticārī, rūsticātus sum, from rūsticus. English rusticate."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rūsticor is built on rūsticus \"of the country\", from rūs \"countryside\" (Lewis & Short). English rusticate comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rūsticor, rūsticārī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rūsticor, rūsticārī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rūsticor, rūsticārī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rūsticor, rūsticārī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with rūsticor, rūsticārī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *rūsticor, rūsticārī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to anoint, then the Latin for a walk, then say rūsticor, rūsticārī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to anoint, then the Latin for a walk, then say *rūsticor, rūsticārī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does rūsticor, rūsticārī mean? (\"To stay in the country\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C542-amoenus",
+      "sequence": 28750,
+      "title": "amoenus, amoena, amoenum — lovely, pleasant (of places)",
+      "headword": "amoenus, amoena, amoenum",
+      "romanization": "amoenus, amoena, amoenum",
+      "gloss": "lovely, pleasant (of places)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f6ce786a4f8d98f2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a walk, then the Latin for to stay in the country."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: amoenus, amoena, amoenum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "amoenus, amoena, amoenum — \"lovely, pleasant (of places)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Prope rīvum locus amoenus est. There is a lovely spot near the stream."
+            },
+            {
+              "kind": "speech",
+              "text": "Of gardens, groves and views. Locus amoenus — a pleasant place."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "amoenus is a native Latin adjective; Lewis & Short reports links with amō \"to love\" and with a Greek word, but the origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amoenus, amoena, amoenum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amoenus, amoena, amoenum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amoenus, amoena, amoenum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amoenus, amoena, amoenum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with amoenus, amoena, amoenum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *amoenus, amoena, amoenum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a walk, then the Latin for to stay in the country, then say amoenus, amoena, amoenum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a walk, then the Latin for to stay in the country, then say *amoenus, amoena, amoenum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does amoenus, amoena, amoenum mean? (\"Lovely, pleasant (of places)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

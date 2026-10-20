@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 330,
+  "title": "Fūnus",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:d2c6ddc6587658b5",
+  "lessons": [
+    {
+      "id": "LA-C330-funus",
+      "sequence": 17790,
+      "title": "fūnus, fūneris — a funeral; death",
+      "headword": "fūnus, fūneris",
+      "romanization": "fūnus, fūneris",
+      "gloss": "a funeral; death",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b059a2a79c62ad28",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to die, then the Latin for to depart."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: fūnus, fūneris",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fūnus, fūneris — \"a funeral; death\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Fūnus māne per forum dūcēbātur. In the morning the funeral was being led through the forum."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter, 3rd declension. The funerals of great men passed through the forum with music. English funeral."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fūnus is a Latin word whose origin is not settled; Lewis & Short link it, with doubt, with a word for smoke. English funeral comes from its family."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fūnus, fūneris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fūnus, fūneris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fūnus, fūneris, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fūnus, fūneris*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with fūnus, fūneris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *fūnus, fūneris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to die, then the Latin for to depart, then say fūnus, fūneris again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to die, then the Latin for to depart, then say *fūnus, fūneris* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does fūnus, fūneris mean? (\"A funeral; death\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C330-sepelio",
+      "sequence": 17800,
+      "title": "sepeliō, sepelīre — to bury",
+      "headword": "sepeliō, sepelīre",
+      "romanization": "sepeliō, sepelīre",
+      "gloss": "to bury",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ce8e19993a488c44",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to depart, then the Latin for a funeral."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: sepeliō, sepelīre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sepeliō, sepelīre — \"to bury\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mīlitēs sociōs suōs prope viam sepelīvērunt. The soldiers buried their comrades near the road."
+            },
+            {
+              "kind": "speech",
+              "text": "sepeliō, sepelīre, sepelīvī, sepultum. Graves lay outside the city walls, along the roads."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sepeliō is an inherited verb whose earlier origin is not settled (Lewis & Short, EtymDB). English sepulchre belongs to its family."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sepeliō, sepelīre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sepeliō, sepelīre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sepeliō, sepelīre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sepeliō, sepelīre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with sepeliō, sepelīre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *sepeliō, sepelīre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to depart, then the Latin for a funeral, then say sepeliō, sepelīre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to depart, then the Latin for a funeral, then say *sepeliō, sepelīre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does sepeliō, sepelīre mean? (\"To bury\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C330-sepultura",
+      "sequence": 17810,
+      "title": "sepultūra, sepultūrae — burial",
+      "headword": "sepultūra, sepultūrae",
+      "romanization": "sepultūra, sepultūrae",
+      "gloss": "burial",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:779e4826e9817c6b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a funeral, then the Latin for to bury."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: sepultūra, sepultūrae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sepultūra, sepultūrae — \"burial\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sepultūra in sepulcrō familiae facta est. The burial took place in the family tomb."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, from sepultum, the supine of sepeliō. English sepulture."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sepultūra is built on sepultus, the participle of sepeliō, \"to bury\" (EtymDB), with the ending -ūra."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sepultūra, sepultūrae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sepultūra, sepultūrae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sepultūra, sepultūrae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sepultūra, sepultūrae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with sepultūra, sepultūrae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *sepultūra, sepultūrae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a funeral, then the Latin for to bury, then say sepultūra, sepultūrae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a funeral, then the Latin for to bury, then say *sepultūra, sepultūrae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does sepultūra, sepultūrae mean? (\"Burial\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C330-rogus",
+      "sequence": 17820,
+      "title": "rogus, rogī — a funeral pyre",
+      "headword": "rogus, rogī",
+      "romanization": "rogus, rogī",
+      "gloss": "a funeral pyre",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:51c62e6c4786e48d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to bury, then the Latin for burial."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: rogus, rogī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rogus, rogī — \"a funeral pyre\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Fīlius rogum patris accendit. The son lit his father's pyre."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine. The pyre was built of wood outside the walls; the ash was gathered into an urna (taught)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rogus is inherited; EtymDB links it with a Proto-Indo-European root, but the link is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rogus, rogī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rogus, rogī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rogus, rogī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rogus, rogī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with rogus, rogī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *rogus, rogī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to bury, then the Latin for burial, then say rogus, rogī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to bury, then the Latin for burial, then say *rogus, rogī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does rogus, rogī mean? (\"A funeral pyre\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C330-exsequiae",
+      "sequence": 17830,
+      "title": "exsequiae, exsequiārum — a funeral procession, funeral rites",
+      "headword": "exsequiae, exsequiārum",
+      "romanization": "exsequiae, exsequiārum",
+      "gloss": "a funeral procession, funeral rites",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ef179eb3a86a5d00",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for burial, then the Latin for a funeral pyre."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: exsequiae, exsequiārum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "exsequiae, exsequiārum — \"a funeral procession, funeral rites\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Multī cīvēs exsequiās cōnsulis secūtī sunt. Many citizens followed the consul's funeral procession."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, plural: those who follow the body out. English exequies."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "exsequiae is built on exsequor, \"to follow out\" (Lewis & Short), from ex and sequor, \"to follow\": the following of the dead."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "exsequiae, exsequiārum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *exsequiae, exsequiārum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "exsequiae, exsequiārum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *exsequiae, exsequiārum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with exsequiae, exsequiārum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *exsequiae, exsequiārum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for burial, then the Latin for a funeral pyre, then say exsequiae, exsequiārum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for burial, then the Latin for a funeral pyre, then say *exsequiae, exsequiārum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does exsequiae, exsequiārum mean? (\"A funeral procession, funeral rites\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-R330-review-323-330",
+      "sequence": 17840,
+      "title": "Words from chapters 323–330 — a review",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 323-330",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f4b8e9e15a558cf0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Latin for to give birth to and a birth."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to give birth to, a birth, a midwife, to suckle, a nurse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to give birth to, a birth, a midwife, to suckle, a nurse]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a cradle, a boy, infancy, childhood, to bring up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a cradle, a boy, infancy, childhood, to bring up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an amulet, a rattle, a first name, an extra family name, a guardian",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an amulet, a rattle, a first name, an extra family name, a guardian]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "young adulthood, youth, old age, orphaned, a ward",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: young adulthood, youth, old age, orphaned, a ward]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bride-to-be, a betrothal, to promise in marriage, a bride, marriage",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bride-to-be, a betrothal, to promise in marriage, a bride, marriage]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bridal veil, a matron of honour, of a wedding, a married woman, a divorce",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bridal veil, a matron of honour, of a wedding, a married woman, a divorce]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "death, dead, to breathe one's last, to die, to depart",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: death, dead, to breathe one's last, to die, to depart]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a funeral, to bury, burial, a funeral pyre, a funeral procession",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a funeral, to bury, burial, a funeral pyre, a funeral procession]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To give birth to? (pariō, parere.) A birth? (partus, partūs.) A midwife? (obstetrīx, obstetrīcis.) To suckle? (nūtriō, nūtrīre.) A nurse? (nūtrīx, nūtrīcis.) A cradle? (cūnae, cūnārum.) A boy? (puer, puerī.) Infancy? (īnfantia, īnfantiae.) Childhood? (pueritia, pueritiae.) To bring up? (ēducō, ēducāre.) An amulet? (bulla, bullae.) A rattle? (crepundia, crepundiōrum.) A first name? (praenōmen, praenōminis.) An extra family name? (cognōmen, cognōminis.) A guardian? (tūtor, tūtōris.) Young adulthood? (adulēscentia, adulēscentiae.) Youth? (iuventūs, iuventūtis.) Old age? (senectūs, senectūtis.) Orphaned? (orbus, orba, orbum.) A ward? (pūpillus, pūpillī.) A bride-to-be? (spōnsa, spōnsae.) A betrothal? (spōnsālia, spōnsālium.) To promise in marriage? (dēspondeō, dēspondēre.) A bride? (nūpta, nūptae.) Marriage? (mātrimōnium, mātrimōniī.) A bridal veil? (flammeum, flammeī.) A matron of honour? (prōnuba, prōnubae.) Of a wedding? (nūptiālis, nūptiāle.) A married woman? (mātrōna, mātrōnae.) A divorce? (dīvortium, dīvortiī.) Death? (mors, mortis.) Dead? (mortuus, mortua, mortuum.) To breathe one's last? (exspīrō, exspīrāre.) To die? (obeō, obīre.) To depart? (dēcēdō, dēcēdere.) A funeral? (fūnus, fūneris.) To bury? (sepeliō, sepelīre.) Burial? (sepultūra, sepultūrae.) A funeral pyre? (rogus, rogī.) A funeral procession? (exsequiae, exsequiārum.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

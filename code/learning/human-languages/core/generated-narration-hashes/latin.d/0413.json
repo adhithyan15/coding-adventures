@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 413,
+  "sourceHash": "fnv1a64:6e1418fed4fdca57",
+  "lessonIds": [
+    "LA-C413-condemno",
+    "LA-C413-damnatio",
+    "LA-C413-absolutio",
+    "LA-C413-deprecor",
+    "LA-C413-patrocinium"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch413.txt",
+  "json": "latin/narration/ch413.json",
+  "textHash": "fnv1a64:2c1cb33dc26e8677",
+  "jsonHash": "fnv1a64:6f66b4018e29ae6b",
+  "findings": []
+}

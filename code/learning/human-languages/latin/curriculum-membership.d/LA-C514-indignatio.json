@@ -1,0 +1,11 @@
+{
+  "id": "LA-C514-indignatio",
+  "pathSegment": "LA-PATH-514-CONT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-514-CONT",
+      "order": 3
+    }
+  ]
+}

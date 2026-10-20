@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C419-persolvo",
+    "language": "latin",
+    "chapter": 419,
+    "sequence": 22370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:58e0ced9e1b85627"
+  },
+  "findings": []
+}

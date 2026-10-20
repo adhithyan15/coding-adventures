@@ -1,0 +1,11 @@
+{
+  "id": "LA-C308-ius",
+  "pathSegment": "LA-PATH-308-IUDEX",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-308-IUDEX",
+      "order": 4
+    }
+  ]
+}

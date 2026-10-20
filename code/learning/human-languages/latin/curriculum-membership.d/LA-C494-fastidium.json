@@ -1,0 +1,11 @@
+{
+  "id": "LA-C494-fastidium",
+  "pathSegment": "LA-PATH-494-ODI",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-494-ODI",
+      "order": 3
+    }
+  ]
+}

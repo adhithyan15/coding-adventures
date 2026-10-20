@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-343-TRIUMPHUS",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-343-TRIUMPHUS"
+  ],
+  "after": []
+}

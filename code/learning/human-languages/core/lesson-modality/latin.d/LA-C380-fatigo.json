@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C380-fatigo",
+    "language": "latin",
+    "chapter": 380,
+    "sequence": 20410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:53e62bd608363cf4"
+  },
+  "findings": []
+}

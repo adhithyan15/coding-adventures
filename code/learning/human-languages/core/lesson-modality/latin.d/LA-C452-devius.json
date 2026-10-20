@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C452-devius",
+    "language": "latin",
+    "chapter": 452,
+    "sequence": 24090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:054b3d21e3e5e7ac"
+  },
+  "findings": []
+}

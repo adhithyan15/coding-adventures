@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 291,
+  "sourceHash": "fnv1a64:5bdd52dadd2bdb38",
+  "lessonIds": [
+    "LA-C291-primo",
+    "LA-C291-tunc",
+    "LA-C291-antequam",
+    "LA-C291-nondum",
+    "LA-C291-demum"
+  ],
+  "tex": "latin/book/chapters/ch291-primo-tunc-demum.tex"
+}

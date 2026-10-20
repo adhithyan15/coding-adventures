@@ -1,0 +1,19 @@
+{
+  "chapter": 379,
+  "title": "Earning a Living",
+  "label": "ch:la-earning-a-living",
+  "canDo": "I can talk about earning a living, pay, hired men, hard work and care.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C379-diligentia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 379: I can talk about earning a living, pay, hired men, hard work and care.",
+    "assesses": [
+      "LA-LEX-C379-QUAESTUS-03",
+      "LA-LEX-C379-QUAESTUS-04",
+      "LA-LEX-C379-QUAESTUS-05"
+    ]
+  }
+}

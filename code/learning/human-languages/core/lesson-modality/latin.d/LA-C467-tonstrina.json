@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C467-tonstrina",
+    "language": "latin",
+    "chapter": 467,
+    "sequence": 24860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82d8bb9ec91073fb"
+  },
+  "findings": []
+}

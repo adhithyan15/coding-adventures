@@ -1,0 +1,11 @@
+{
+  "id": "LA-C502-facetus",
+  "pathSegment": "LA-PATH-502-IOCU",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-502-IOCU",
+      "order": 4
+    }
+  ]
+}

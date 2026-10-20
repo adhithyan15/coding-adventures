@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 464,
+  "title": "Steelyard, Pair of scales, Scale pan, To weigh out, To weigh carefully",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:522750b25f1ec26f",
+  "lessons": [
+    {
+      "id": "LA-C464-statera",
+      "sequence": 24700,
+      "title": "statēra, statērae — a steelyard, a balance with one arm",
+      "headword": "statēra, statērae",
+      "romanization": "statēra, statērae",
+      "gloss": "a steelyard, a balance with one arm",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cc78c15f2df9b3f2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a wicker basket, then the Latin for a bread basket."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: statēra, statērae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "statēra, statērae — \"a steelyard, a balance with one arm\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Lanius carnem in statērā pōnit. The butcher puts the meat on the steelyard."
+            },
+            {
+              "kind": "speech",
+              "text": "First declension, feminine: statēra, statērae f. A beam hung from a hook, with a weight slid along one arm."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "statēra is usually traced to Greek statēr, a weight and a coin, built on histēmi 'to make stand, to weigh' (EtymDB). Lewis & Short compare Greek stathmē 'rule, balance' instead, so the exact source is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "statēra, statērae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *statēra, statērae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "statēra, statērae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *statēra, statērae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with statēra, statērae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *statēra, statērae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a wicker basket, then the Latin for a bread basket, then say statēra, statērae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a wicker basket, then the Latin for a bread basket, then say *statēra, statērae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does statēra, statērae mean? (\"A steelyard, a balance with one arm\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C464-trutina",
+      "sequence": 24710,
+      "title": "trutina, trutinae — a pair of scales, a balance",
+      "headword": "trutina, trutinae",
+      "romanization": "trutina, trutinae",
+      "gloss": "a pair of scales, a balance",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e594cda84ed118dc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a bread basket, then the Latin for a steelyard."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: trutina, trutinae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "trutina, trutinae — \"a pair of scales, a balance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mercātor aurum in trutinā dīligenter pōnit. The merchant carefully puts the gold on the scales."
+            },
+            {
+              "kind": "speech",
+              "text": "First declension, feminine: trutina, trutinae f. Also figurative: weighing a thing in the mind."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "trutina was borrowed from Greek trytanē 'balance, tongue of a balance' (Lewis & Short). EtymDB lists it without a parent."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "trutina, trutinae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *trutina, trutinae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "trutina, trutinae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *trutina, trutinae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with trutina, trutinae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *trutina, trutinae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a bread basket, then the Latin for a steelyard, then say trutina, trutinae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a bread basket, then the Latin for a steelyard, then say *trutina, trutinae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does trutina, trutinae mean? (\"A pair of scales, a balance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C464-lanx",
+      "sequence": 24720,
+      "title": "lanx, lancis — a scale pan; a dish, a platter",
+      "headword": "lanx, lancis",
+      "romanization": "lanx, lancis",
+      "gloss": "a scale pan; a dish, a platter",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c939870fec4082c2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a steelyard, then the Latin for a pair of scales."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: lanx, lancis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lanx, lancis — \"a scale pan; a dish, a platter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "In ūnā lance merx est, in alterā pondus. In one scale pan there are the goods, in the other the weight."
+            },
+            {
+              "kind": "speech",
+              "text": "Third declension, feminine: lanx, lancis f. English balance comes, through French, from bilanx 'having two pans'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lanx is inherited; Lewis & Short and EtymDB compare Greek lekos 'dish, pan' as a cousin. English balance comes, through French, from Late Latin bilanx 'with two scale pans'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lanx, lancis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lanx, lancis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lanx, lancis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lanx, lancis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with lanx, lancis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *lanx, lancis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a steelyard, then the Latin for a pair of scales, then say lanx, lancis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a steelyard, then the Latin for a pair of scales, then say *lanx, lancis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does lanx, lancis mean? (\"A scale pan; a dish, a platter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C464-appendo",
+      "sequence": 24730,
+      "title": "appendō, appendere — to weigh out; to hang on",
+      "headword": "appendō, appendere",
+      "romanization": "appendō, appendere",
+      "gloss": "to weigh out; to hang on",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d0bd91adcb460c7d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a pair of scales, then the Latin for a scale pan."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: appendō, appendere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "appendō, appendere — \"to weigh out; to hang on\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Pistor pānem appendit et pretium dīcit. The baker weighs out the bread and says the price."
+            },
+            {
+              "kind": "speech",
+              "text": "appendō, appendere, appendī, appēnsum. Money was once weighed, so appendere can also mean to pay. English append and appendix come from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "appendō is built from ad- 'to' and pendō 'to hang, to weigh' (EtymDB; Lewis & Short). English append and appendix come from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "appendō, appendere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *appendō, appendere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "appendō, appendere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *appendō, appendere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with appendō, appendere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *appendō, appendere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a pair of scales, then the Latin for a scale pan, then say appendō, appendere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a pair of scales, then the Latin for a scale pan, then say *appendō, appendere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does appendō, appendere mean? (\"To weigh out; to hang on\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C464-penso",
+      "sequence": 24740,
+      "title": "pēnsō, pēnsāre — to weigh carefully, to weigh out; to ponder",
+      "headword": "pēnsō, pēnsāre",
+      "romanization": "pēnsō, pēnsāre",
+      "gloss": "to weigh carefully, to weigh out; to ponder",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:99f0afc7eedeb465",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a scale pan, then the Latin for to weigh out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: pēnsō, pēnsāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pēnsō, pēnsāre — \"to weigh carefully, to weigh out; to ponder\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mercātor prūdēns mercem pēnsat. A careful merchant weighs the goods."
+            },
+            {
+              "kind": "speech",
+              "text": "pēnsō, pēnsāre, pēnsāvī, pēnsātum, a frequentative of pendō. English pensive comes from it through French penser 'to think'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pēnsō is a frequentative of pendō 'to weigh', made from its participle pēnsus (Lewis & Short). English pensive comes from it through French penser 'to think, to weigh in the mind'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pēnsō, pēnsāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pēnsō, pēnsāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pēnsō, pēnsāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pēnsō, pēnsāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with pēnsō, pēnsāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *pēnsō, pēnsāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a scale pan, then the Latin for to weigh out, then say pēnsō, pēnsāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a scale pan, then the Latin for to weigh out, then say *pēnsō, pēnsāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does pēnsō, pēnsāre mean? (\"To weigh carefully, to weigh out; to ponder\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

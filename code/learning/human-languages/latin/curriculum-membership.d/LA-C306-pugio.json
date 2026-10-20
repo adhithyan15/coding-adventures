@@ -1,0 +1,11 @@
+{
+  "id": "LA-C306-pugio",
+  "pathSegment": "LA-PATH-306-CAEDES",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-306-CAEDES",
+      "order": 3
+    }
+  ]
+}

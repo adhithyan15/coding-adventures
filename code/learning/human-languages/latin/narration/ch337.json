@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 337,
+  "title": "Palma et praemium",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8fe337a677e99e97",
+  "lessons": [
+    {
+      "id": "LA-C337-palma",
+      "sequence": 18150,
+      "title": "palma, palmae — the palm of victory; the palm of the hand; a palm tree",
+      "headword": "palma, palmae",
+      "romanization": "palma, palmae",
+      "gloss": "the palm of victory; the palm of the hand; a palm tree",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2674a3659d3a7fa9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a hunt, then the Latin for a beast."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: palma, palmae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "palma, palmae — \"the palm of victory; the palm of the hand; a palm tree\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Aurīga palmam et corōnam accēpit. The charioteer received the palm and a crown."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine. The flat of the hand, then the palm tree, whose branch was given to winners."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "palma is inherited from a Proto-Indo-European form for \"the flat of the hand\" (EtymDB), matching Greek palamē. The palm tree was named from its hand-like leaves. English palm comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "palma, palmae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *palma, palmae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "palma, palmae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *palma, palmae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with palma, palmae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *palma, palmae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a hunt, then the Latin for a beast, then say palma, palmae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a hunt, then the Latin for a beast, then say *palma, palmae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does palma, palmae mean? (\"The palm of victory; the palm of the hand; a palm tree\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C337-praemium",
+      "sequence": 18160,
+      "title": "praemium, praemiī — a prize, a reward",
+      "headword": "praemium, praemiī",
+      "romanization": "praemium, praemiī",
+      "gloss": "a prize, a reward",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1c492ffd870905bb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a beast, then the Latin for the palm of victory."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: praemium, praemiī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "praemium, praemiī — \"a prize, a reward\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Praemium magnum erat: centum dēnāriī. The prize was large: a hundred denarii."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter. First booty taken before others, then any reward. English premium."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "praemium is built on prae, \"before\", and emō, \"to take, to buy\" (EtymDB, Lewis & Short): what one takes before others. English premium comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "praemium, praemiī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *praemium, praemiī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "praemium, praemiī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *praemium, praemiī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with praemium, praemiī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *praemium, praemiī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a beast, then the Latin for the palm of victory, then say praemium, praemiī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a beast, then the Latin for the palm of victory, then say *praemium, praemiī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does praemium, praemiī mean? (\"A prize, a reward\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C337-certo",
+      "sequence": 18170,
+      "title": "certō, certāre — to compete, to contend",
+      "headword": "certō, certāre",
+      "romanization": "certō, certāre",
+      "gloss": "to compete, to contend",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:19a9224c732be58d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for the palm of victory, then the Latin for a prize."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: certō, certāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "certō, certāre — \"to compete, to contend\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Duo aurīgae dē palmā certābant. Two charioteers were competing for the palm."
+            },
+            {
+              "kind": "speech",
+              "text": "certō, certāre, certāvī, certātum. Do not confuse the adverb certō, 'for certain'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "certō is built on cernō, \"to decide\" (Lewis & Short): to decide something by a contest."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "certō, certāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *certō, certāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "certō, certāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *certō, certāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with certō, certāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *certō, certāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for the palm of victory, then the Latin for a prize, then say certō, certāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for the palm of victory, then the Latin for a prize, then say *certō, certāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does certō, certāre mean? (\"To compete, to contend\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C337-certamen",
+      "sequence": 18180,
+      "title": "certāmen, certāminis — a contest, a struggle",
+      "headword": "certāmen, certāminis",
+      "romanization": "certāmen, certāminis",
+      "gloss": "a contest, a struggle",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c3e6c05c7753f9fe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a prize, then the Latin for to compete."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: certāmen, certāminis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "certāmen, certāminis — \"a contest, a struggle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Certāmen longum et difficile erat. The contest was long and hard."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter, 3rd declension, from certō. Any contest, friendly or hostile."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "certāmen is built on certō, \"to contend\" (Lewis & Short), with the ending -men."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "certāmen, certāminis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *certāmen, certāminis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "certāmen, certāminis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *certāmen, certāminis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with certāmen, certāminis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *certāmen, certāminis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a prize, then the Latin for to compete, then say certāmen, certāminis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a prize, then the Latin for to compete, then say *certāmen, certāminis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does certāmen, certāminis mean? (\"A contest, a struggle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C337-plausus",
+      "sequence": 18190,
+      "title": "plausus, plausūs — applause, clapping",
+      "headword": "plausus, plausūs",
+      "romanization": "plausus, plausūs",
+      "gloss": "applause, clapping",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1d448cdd708fd5c9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to compete, then the Latin for a contest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: plausus, plausūs",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "plausus, plausūs — \"applause, clapping\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Magnus plausus in theātrō erat. There was loud applause in the theatre."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine, 4th declension, from plaudō, 'to clap' (taught). Plays ended with the call plaudite!"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "plausus is built on plaudō, \"to clap\" (Lewis & Short). English applause comes from its compound applaudō."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "plausus, plausūs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *plausus, plausūs*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "plausus, plausūs, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *plausus, plausūs*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with plausus, plausūs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *plausus, plausūs*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to compete, then the Latin for a contest, then say plausus, plausūs again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to compete, then the Latin for a contest, then say *plausus, plausūs* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does plausus, plausūs mean? (\"Applause, clapping\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

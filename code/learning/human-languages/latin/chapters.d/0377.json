@@ -1,0 +1,19 @@
+{
+  "chapter": 377,
+  "title": "Trades of the Town",
+  "label": "ch:la-trades-of-the-town",
+  "canDo": "I can name a fuller, a goldsmith, a carpenter, a mason and a sculptor.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C377-statuarius",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 377: I can name a fuller, a goldsmith, a carpenter, a mason and a sculptor.",
+    "assesses": [
+      "LA-LEX-C377-FULLO-03",
+      "LA-LEX-C377-FULLO-04",
+      "LA-LEX-C377-FULLO-05"
+    ]
+  }
+}

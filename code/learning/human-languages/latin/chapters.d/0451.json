@@ -1,0 +1,19 @@
+{
+  "chapter": 451,
+  "title": "To inquire, To ask around, To ask after, To show, To make known",
+  "label": "ch:la-to-inquire-to-ask-around-to-ask-after-to-show-to-make-known",
+  "canDo": "I can ask the way and be shown it: inquiring, asking around, asking after a place, showing and making known.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C451-indico",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 451: I can ask the way and be shown it: inquiring, asking around, asking after a place, showing and making known.",
+    "assesses": [
+      "LA-LEX-C451-PERCONTOR-03",
+      "LA-LEX-C451-PERCONTOR-04",
+      "LA-LEX-C451-PERCONTOR-05"
+    ]
+  }
+}

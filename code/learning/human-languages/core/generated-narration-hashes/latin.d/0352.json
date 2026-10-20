@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 352,
+  "sourceHash": "fnv1a64:4b48be37eee1fd10",
+  "lessonIds": [
+    "LA-C352-mola",
+    "LA-C352-cribrum",
+    "LA-C352-subigo",
+    "LA-C352-fermentum",
+    "LA-C352-clibanus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch352.txt",
+  "json": "latin/narration/ch352.json",
+  "textHash": "fnv1a64:968bb9c0a43e0d61",
+  "jsonHash": "fnv1a64:d7c74aa22317712c",
+  "findings": []
+}

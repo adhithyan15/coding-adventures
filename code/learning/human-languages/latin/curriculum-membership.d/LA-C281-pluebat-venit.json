@@ -1,0 +1,11 @@
+{
+  "id": "LA-C281-pluebat-venit",
+  "pathSegment": "LA-PATH-281-SCAENA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-281-SCAENA",
+      "order": 3
+    }
+  ]
+}

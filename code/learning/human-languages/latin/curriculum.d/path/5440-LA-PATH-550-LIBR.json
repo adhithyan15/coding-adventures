@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-550-LIBR",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "LA-EXT-550-LIBR"
+  ],
+  "after": []
+}

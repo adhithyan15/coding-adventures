@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 295,
+  "sourceHash": "fnv1a64:9a1216134899e896",
+  "lessonIds": [
+    "LA-C295-noctu",
+    "LA-C295-interdiu",
+    "LA-C295-vesperi",
+    "LA-C295-mature",
+    "LA-C295-dudum"
+  ],
+  "tex": "latin/book/chapters/ch295-noctu-et-interdiu.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 373,
+  "sourceHash": "fnv1a64:7ce5a17159db86e8",
+  "lessonIds": [
+    "LA-C373-effectus",
+    "LA-C373-consequor",
+    "LA-C373-provenio",
+    "LA-C373-succedo",
+    "LA-C373-redundo"
+  ],
+  "tex": "latin/book/chapters/ch373-how-things-turn-out.tex"
+}

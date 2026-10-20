@@ -1,0 +1,11 @@
+{
+  "id": "LA-C293-sensim",
+  "pathSegment": "LA-PATH-293-PAULATIM",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-293-PAULATIM",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 308,
+  "title": "Iūdex et lēx",
+  "label": "ch:la-iudex-et-lex",
+  "canDo": "I can talk about a Roman court: the judge, the trial, to judge, a law and rights.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C308-ius",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 308: I can talk about a Roman court: the judge, the trial, to judge, a law and rights.",
+    "assesses": [
+      "LA-LEX-C308-IUDEX-03",
+      "LA-LEX-C308-IUDEX-04",
+      "LA-LEX-C308-IUDEX-05"
+    ]
+  }
+}

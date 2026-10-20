@@ -1,0 +1,11 @@
+{
+  "id": "LA-C541-tepidarium",
+  "pathSegment": "LA-PATH-541-BALN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-541-BALN",
+      "order": 2
+    }
+  ]
+}

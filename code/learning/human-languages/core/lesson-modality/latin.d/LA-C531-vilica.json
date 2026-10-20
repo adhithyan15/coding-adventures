@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C531-vilica",
+    "language": "latin",
+    "chapter": 531,
+    "sequence": 28190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:39bb1a52f26327d8"
+  },
+  "findings": []
+}

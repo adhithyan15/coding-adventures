@@ -1,0 +1,11 @@
+{
+  "id": "LA-C353-elixus",
+  "pathSegment": "LA-PATH-353-FERVEO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-353-FERVEO",
+      "order": 2
+    }
+  ]
+}

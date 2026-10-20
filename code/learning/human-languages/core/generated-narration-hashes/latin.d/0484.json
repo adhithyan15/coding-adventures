@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 484,
+  "sourceHash": "fnv1a64:81649e9b166d06da",
+  "lessonIds": [
+    "LA-C484-fagus",
+    "LA-C484-abies",
+    "LA-C484-ulmus",
+    "LA-C484-fraxinus",
+    "LA-C484-opacus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch484.txt",
+  "json": "latin/narration/ch484.json",
+  "textHash": "fnv1a64:c77392cba3e9e003",
+  "jsonHash": "fnv1a64:c2c40ee5fd9c730d",
+  "findings": []
+}

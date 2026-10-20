@@ -1,0 +1,11 @@
+{
+  "id": "LA-C401-praeceptor",
+  "pathSegment": "LA-PATH-401-PRAECEPTOR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-401-PRAECEPTOR",
+      "order": 1
+    }
+  ]
+}

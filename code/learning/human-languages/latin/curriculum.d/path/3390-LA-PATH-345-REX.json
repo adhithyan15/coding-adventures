@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-345-REX",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-345-REX"
+  ],
+  "after": []
+}

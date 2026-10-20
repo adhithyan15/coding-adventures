@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 550,
+  "sourceHash": "fnv1a64:9dd970d9e33ce2dc",
+  "lessonIds": [
+    "LA-C550-litteratus",
+    "LA-C550-bibliopola",
+    "LA-C550-lector",
+    "LA-C550-perlego",
+    "LA-C550-evolvo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch550.txt",
+  "json": "latin/narration/ch550.json",
+  "textHash": "fnv1a64:14be27eb9afd078e",
+  "jsonHash": "fnv1a64:159c9c84ccf238fc",
+  "findings": []
+}

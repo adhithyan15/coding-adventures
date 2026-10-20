@@ -1,0 +1,20 @@
+{
+  "chapter": 284,
+  "title": "What You Should Do, and Why",
+  "label": "ch:la-what-you-should-do-and-why",
+  "canDo": "I can give advice with dēbēs, and explain why with quia and quod.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "LA-R284-advice-and-reasons",
+    "kind": "production",
+    "summary": "Complete LA-R284-advice-and-reasons: I can give advice with dēbēs, and explain why with quia and quod.",
+    "assesses": [
+      "LA-GRAMMAR-C284-DEBERE-01",
+      "LA-GRAMMAR-C284-DEBEBAS-02",
+      "LA-GRAMMAR-C284-CAUSA-01",
+      "LA-LEX-C284-QUOD-CAUSA-02"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 400,
+  "title": "Teaching",
+  "label": "ch:la-teaching",
+  "canDo": "I can say that someone teaches, educates, trains and instructs a pupil, and tells him what to do.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "LA-C400-praecipio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 400: I can say that someone teaches, educates, trains and instructs a pupil, and tells him what to do.",
+    "assesses": [
+      "LA-LEX-C400-DOCEO-03",
+      "LA-LEX-C400-DOCEO-04",
+      "LA-LEX-C400-DOCEO-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 456,
+  "title": "Tenant, Townsman, Resident, To live in, Occupant",
+  "label": "ch:la-tenant-townsman-resident-to-live-in-occupant",
+  "canDo": "I can talk about the people who live in a town: a tenant, a townsman, a resident, living in a place, and the occupant of a house.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C456-habitator",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 456: I can talk about the people who live in a town: a tenant, a townsman, a resident, living in a place, and the occupant of a house.",
+    "assesses": [
+      "LA-LEX-C456-INCOLA-03",
+      "LA-LEX-C456-INCOLA-04",
+      "LA-LEX-C456-INCOLA-05"
+    ]
+  }
+}

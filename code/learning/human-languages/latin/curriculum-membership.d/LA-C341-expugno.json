@@ -1,0 +1,11 @@
+{
+  "id": "LA-C341-expugno",
+  "pathSegment": "LA-PATH-341-OBSIDIO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-341-OBSIDIO",
+      "order": 3
+    }
+  ]
+}

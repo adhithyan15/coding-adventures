@@ -1,0 +1,19 @@
+{
+  "chapter": 477,
+  "title": "Livestock, Flock, Herd, To pasture, Pasture",
+  "label": "ch:la-livestock-flock-herd-to-pasture-pasture",
+  "canDo": "I can talk about farm animals and their grazing: livestock, a flock, a herd, putting animals out to pasture, and the pasture.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C477-pascuum",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 477: I can talk about farm animals and their grazing: livestock, a flock, a herd, putting animals out to pasture, and the pasture.",
+    "assesses": [
+      "LA-LEX-C477-PECUS-03",
+      "LA-LEX-C477-PECUS-04",
+      "LA-LEX-C477-PECUS-05"
+    ]
+  }
+}

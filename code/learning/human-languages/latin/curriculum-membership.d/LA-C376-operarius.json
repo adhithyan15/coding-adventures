@@ -1,0 +1,11 @@
+{
+  "id": "LA-C376-operarius",
+  "pathSegment": "LA-PATH-376-OPUS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-376-OPUS",
+      "order": 3
+    }
+  ]
+}

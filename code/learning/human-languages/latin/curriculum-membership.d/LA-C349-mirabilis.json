@@ -1,0 +1,11 @@
+{
+  "id": "LA-C349-mirabilis",
+  "pathSegment": "LA-PATH-349-FABULOR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-349-FABULOR",
+      "order": 2
+    }
+  ]
+}

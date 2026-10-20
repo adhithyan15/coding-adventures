@@ -1,0 +1,11 @@
+{
+  "id": "LA-C282-dum",
+  "pathSegment": "LA-PATH-282-ORDO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-282-ORDO",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C379-laboriosus",
+  "pathSegment": "LA-PATH-379-QUAESTUS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-379-QUAESTUS",
+      "order": 3
+    }
+  ]
+}

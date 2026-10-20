@@ -1,0 +1,11 @@
+{
+  "id": "LA-C498-credulus",
+  "pathSegment": "LA-PATH-498-SPES",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-498-SPES",
+      "order": 4
+    }
+  ]
+}

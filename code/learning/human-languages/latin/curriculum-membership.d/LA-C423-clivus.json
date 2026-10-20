@@ -1,0 +1,11 @@
+{
+  "id": "LA-C423-clivus",
+  "pathSegment": "LA-PATH-423-SEMITA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-423-SEMITA",
+      "order": 3
+    }
+  ]
+}

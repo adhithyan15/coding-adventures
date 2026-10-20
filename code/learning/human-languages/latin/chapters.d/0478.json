@@ -1,0 +1,19 @@
+{
+  "chapter": 478,
+  "title": "Shepherd, Ox-driver, Sheepfold, To shear, To milk",
+  "label": "ch:la-shepherd-ox-driver-sheepfold-to-shear-to-milk",
+  "canDo": "I can talk about the work of herdsmen: the shepherd, the ox-driver, the sheepfold, shearing sheep and milking.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-R478-review-471-478",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 478: I can talk about the work of herdsmen: the shepherd, the ox-driver, the sheepfold, shearing sheep and milking.",
+    "assesses": [
+      "LA-LEX-C478-OPILIO-03",
+      "LA-LEX-C478-OPILIO-04",
+      "LA-LEX-C478-OPILIO-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 509,
+  "sourceHash": "fnv1a64:54ef0b2b822b3dfc",
+  "lessonIds": [
+    "LA-C509-fortitudo",
+    "LA-C509-audacia",
+    "LA-C509-temerarius",
+    "LA-C509-constans",
+    "LA-C509-prudentia"
+  ],
+  "tex": "latin/book/chapters/ch509-courage-and-good-sense.tex"
+}

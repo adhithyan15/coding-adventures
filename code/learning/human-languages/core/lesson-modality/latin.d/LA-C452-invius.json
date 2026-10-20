@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C452-invius",
+    "language": "latin",
+    "chapter": 452,
+    "sequence": 24100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:75aefb979f585d40"
+  },
+  "findings": []
+}

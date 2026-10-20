@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:52e3101a66bd2c99",
+  "lessonIds": [
+    "LA-C325-bulla",
+    "LA-C325-crepundia",
+    "LA-C325-praenomen",
+    "LA-C325-cognomen",
+    "LA-C325-tutor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch325.txt",
+  "json": "latin/narration/ch325.json",
+  "textHash": "fnv1a64:5e7812dfd43a2662",
+  "jsonHash": "fnv1a64:ced4a17986977125",
+  "findings": []
+}

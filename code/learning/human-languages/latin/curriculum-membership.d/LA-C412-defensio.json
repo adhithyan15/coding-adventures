@@ -1,0 +1,11 @@
+{
+  "id": "LA-C412-defensio",
+  "pathSegment": "LA-PATH-412-COGNITIO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-412-COGNITIO",
+      "order": 4
+    }
+  ]
+}

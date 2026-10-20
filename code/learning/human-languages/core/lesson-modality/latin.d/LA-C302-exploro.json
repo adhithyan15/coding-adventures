@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C302-exploro",
+    "language": "latin",
+    "chapter": 302,
+    "sequence": 16380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:946c1cb0aa3d5575"
+  },
+  "findings": []
+}

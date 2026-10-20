@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-470-ASCIA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "LA-EXT-470-ASCIA"
+  ],
+  "after": []
+}

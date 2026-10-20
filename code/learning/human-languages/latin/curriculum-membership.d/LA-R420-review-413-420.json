@@ -1,0 +1,11 @@
+{
+  "id": "LA-R420-review-413-420",
+  "pathSegment": "LA-PATH-420-AUCTIO",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "LA-EXT-420-AUCTIO",
+      "order": 5
+    }
+  ]
+}

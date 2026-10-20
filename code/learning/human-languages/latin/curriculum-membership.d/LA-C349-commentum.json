@@ -1,0 +1,11 @@
+{
+  "id": "LA-C349-commentum",
+  "pathSegment": "LA-PATH-349-FABULOR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-349-FABULOR",
+      "order": 4
+    }
+  ]
+}

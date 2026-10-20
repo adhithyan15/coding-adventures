@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C391-sive",
+    "language": "latin",
+    "chapter": 391,
+    "sequence": 20980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fc5e79c2c530dd5f"
+  },
+  "findings": []
+}

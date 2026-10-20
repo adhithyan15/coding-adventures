@@ -1,0 +1,19 @@
+{
+  "chapter": 373,
+  "title": "How Things Turn Out",
+  "label": "ch:la-how-things-turn-out",
+  "canDo": "I can speak of a result, say what someone achieved and how things turned out, and that blame or credit falls on someone.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C373-redundo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 373: I can speak of a result, say what someone achieved and how things turned out, and that blame or credit falls on someone.",
+    "assesses": [
+      "LA-LEX-C373-EFFECTUS-03",
+      "LA-LEX-C373-EFFECTUS-04",
+      "LA-LEX-C373-EFFECTUS-05"
+    ]
+  }
+}

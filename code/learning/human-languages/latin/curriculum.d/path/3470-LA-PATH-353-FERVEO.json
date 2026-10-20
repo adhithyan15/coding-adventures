@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-353-FERVEO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-353-FERVEO"
+  ],
+  "after": []
+}

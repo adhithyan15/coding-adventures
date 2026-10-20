@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 295,
+  "sourceHash": "fnv1a64:1958b45489f09de4",
+  "lessonIds": [
+    "LA-C295-noctu",
+    "LA-C295-interdiu",
+    "LA-C295-vesperi",
+    "LA-C295-mature",
+    "LA-C295-dudum"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch295.txt",
+  "json": "latin/narration/ch295.json",
+  "textHash": "fnv1a64:65026e58562d1dd1",
+  "jsonHash": "fnv1a64:51df3a9a180f0af0",
+  "findings": []
+}

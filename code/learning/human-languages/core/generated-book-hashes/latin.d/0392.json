@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:aa895720af1bd024",
+  "lessonIds": [
+    "LA-C392-caveo",
+    "LA-C392-cautio",
+    "LA-C392-necessitas",
+    "LA-C392-opportunus",
+    "LA-C392-praecaveo"
+  ],
+  "tex": "latin/book/chapters/ch392-taking-care.tex"
+}

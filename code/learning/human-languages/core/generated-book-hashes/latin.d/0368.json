@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 368,
+  "sourceHash": "fnv1a64:db783de4310fd915",
+  "lessonIds": [
+    "LA-C368-orator",
+    "LA-C368-eloquentia",
+    "LA-C368-disputatio",
+    "LA-C368-dissero",
+    "LA-C368-eloquor"
+  ],
+  "tex": "latin/book/chapters/ch368-the-orator.tex"
+}

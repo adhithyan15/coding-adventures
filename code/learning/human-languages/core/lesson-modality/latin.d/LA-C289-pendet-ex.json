@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C289-pendet-ex",
+    "language": "latin",
+    "chapter": 289,
+    "sequence": 15720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aa184f0e12b8efc6"
+  },
+  "findings": []
+}

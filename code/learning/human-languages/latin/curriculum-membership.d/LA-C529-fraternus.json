@@ -1,0 +1,11 @@
+{
+  "id": "LA-C529-fraternus",
+  "pathSegment": "LA-PATH-529-NOVE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-529-NOVE",
+      "order": 4
+    }
+  ]
+}

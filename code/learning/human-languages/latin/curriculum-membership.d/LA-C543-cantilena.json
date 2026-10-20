@@ -1,0 +1,11 @@
+{
+  "id": "LA-C543-cantilena",
+  "pathSegment": "LA-PATH-543-CANT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-543-CANT",
+      "order": 2
+    }
+  ]
+}
