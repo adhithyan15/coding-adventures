@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C368-au-cas-ou",
+    "language": "french",
+    "chapter": 368,
+    "sequence": 20670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:75c3aef4e5426186"
+  },
+  "findings": []
+}

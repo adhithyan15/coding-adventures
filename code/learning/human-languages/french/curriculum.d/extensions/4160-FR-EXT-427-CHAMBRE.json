@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-427-CHAMBRE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about comfort in a hotel room: the air conditioning, the heating, the radiator, the pillowcase and the bathrobe.",
+  "prerequisites": []
+}

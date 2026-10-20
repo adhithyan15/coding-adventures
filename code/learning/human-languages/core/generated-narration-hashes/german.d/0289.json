@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 289,
+  "sourceHash": "fnv1a64:db6904bf3e62ac6f",
+  "lessonIds": [
+    "GE-C289-ausrutschen",
+    "GE-C289-stolpern",
+    "GE-C289-stuerzen",
+    "GE-C289-sturz",
+    "GE-C289-bluten"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch289.txt",
+  "json": "german/narration/ch289.json",
+  "textHash": "fnv1a64:d91fe3e4ca09fa52",
+  "jsonHash": "fnv1a64:abc171fd9fb889f6",
+  "findings": []
+}

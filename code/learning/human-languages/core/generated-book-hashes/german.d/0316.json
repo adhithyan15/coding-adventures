@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 316,
+  "sourceHash": "fnv1a64:ef5fc3fbf91d5284",
+  "lessonIds": [
+    "GE-C316-erzaehler",
+    "GE-C316-handlung",
+    "GE-C316-figur",
+    "GE-C316-kapitel",
+    "GE-C316-fortsetzung"
+  ],
+  "tex": "german/book/chapters/ch316-wer-erzahlt.tex"
+}

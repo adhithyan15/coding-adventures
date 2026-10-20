@@ -1,0 +1,11 @@
+{
+  "id": "GE-C306-auspacken",
+  "pathSegment": "GE-PATH-306-GLUECKWUNSCH",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-306-GLUECKWUNSCH",
+      "order": 4
+    }
+  ]
+}

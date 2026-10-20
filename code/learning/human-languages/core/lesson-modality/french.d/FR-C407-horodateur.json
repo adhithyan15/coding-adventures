@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C407-horodateur",
+    "language": "french",
+    "chapter": 407,
+    "sequence": 22670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5e52536b00691a4a"
+  },
+  "findings": []
+}

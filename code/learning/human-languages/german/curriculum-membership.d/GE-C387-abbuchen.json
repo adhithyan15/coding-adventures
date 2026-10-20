@@ -1,0 +1,11 @@
+{
+  "id": "GE-C387-abbuchen",
+  "pathSegment": "GE-PATH-387-KONTO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-387-KONTO",
+      "order": 3
+    }
+  ]
+}

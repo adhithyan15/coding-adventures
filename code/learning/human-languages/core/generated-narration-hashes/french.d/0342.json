@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 342,
+  "sourceHash": "fnv1a64:7baf26ce78304f30",
+  "lessonIds": [
+    "FR-C342-evaluer",
+    "FR-C342-juger",
+    "FR-C342-jugement",
+    "FR-C342-subjectif",
+    "FR-C342-impartial"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch342.txt",
+  "json": "french/narration/ch342.json",
+  "textHash": "fnv1a64:445a8d0e62ccc609",
+  "jsonHash": "fnv1a64:485b4f6e24225ef2",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 403,
+  "sourceHash": "fnv1a64:ed1e32c303d0d455",
+  "lessonIds": [
+    "FR-C403-pompe",
+    "FR-C403-gazole",
+    "FR-C403-carburant",
+    "FR-C403-reservoir",
+    "FR-C403-demarrer"
+  ],
+  "tex": "french/book/chapters/ch403-a-la-pompe.tex"
+}

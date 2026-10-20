@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:d35616cccd217594",
+  "lessonIds": [
+    "GE-C360-vorurteil",
+    "GE-C360-toleranz",
+    "GE-C360-minderheit",
+    "GE-C360-diskriminieren",
+    "GE-C360-gleichberechtigung"
+  ],
+  "tex": "german/book/chapters/ch360-vorurteile.tex"
+}

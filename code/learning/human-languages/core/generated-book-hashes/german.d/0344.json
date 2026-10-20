@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:c326f1c03bbdafa4",
+  "lessonIds": [
+    "GE-C344-beeinflussen",
+    "GE-C344-einfluss",
+    "GE-C344-auswirkung",
+    "GE-C344-auswirken",
+    "GE-C344-betreffen"
+  ],
+  "tex": "german/book/chapters/ch344-einfluss-haben.tex"
+}

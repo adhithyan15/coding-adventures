@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C455-plaetschern",
+    "language": "german",
+    "chapter": 455,
+    "sequence": 24450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bc3a9e5c9aa887d0"
+  },
+  "findings": []
+}

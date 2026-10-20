@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 433,
+  "sourceHash": "fnv1a64:2b0352850d528038",
+  "lessonIds": [
+    "FR-C433-acompte",
+    "FR-C433-arrhes",
+    "FR-C433-dedommager",
+    "FR-C433-dedommagement",
+    "FR-C433-indemniser"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch433.txt",
+  "json": "french/narration/ch433.json",
+  "textHash": "fnv1a64:29f8044290c7f23c",
+  "jsonHash": "fnv1a64:abad6c460e4754e8",
+  "findings": []
+}

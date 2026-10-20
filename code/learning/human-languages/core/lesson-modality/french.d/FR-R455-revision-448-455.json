@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-R455-revision-448-455",
+    "language": "french",
+    "chapter": 455,
+    "sequence": 25160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f79a3c196a959e08"
+  },
+  "findings": []
+}

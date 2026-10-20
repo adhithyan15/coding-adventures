@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-415-METRO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can get around town without a car: the stop, the train set on a line, the book of tickets, the tram and the scooter.",
+  "prerequisites": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 487,
+  "sourceHash": "fnv1a64:2e1f6bb7b031c815",
+  "lessonIds": [
+    "GE-C487-hausarzt",
+    "GE-C487-facharzt",
+    "GE-C487-untersuchen",
+    "GE-C487-behandeln",
+    "GE-C487-verschreiben"
+  ],
+  "tex": "german/book/chapters/ch487-beim-hausarzt.tex"
+}

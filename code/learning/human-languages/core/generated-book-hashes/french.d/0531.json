@@ -1,0 +1,15 @@
+{
+  "language": "french",
+  "chapter": 531,
+  "sourceHash": "fnv1a64:38492973c13e8b95",
+  "lessonIds": [
+    "FR-C531-bricolage",
+    "FR-C531-bricoler",
+    "FR-C531-vis",
+    "FR-C531-tournevis",
+    "FR-C531-percer",
+    "FR-R531-revision-530-531",
+    "FR-R531-revision-final-531"
+  ],
+  "tex": "french/book/chapters/ch531-le-bricolage.tex"
+}

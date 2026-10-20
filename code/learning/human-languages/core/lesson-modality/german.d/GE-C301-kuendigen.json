@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C301-kuendigen",
+    "language": "german",
+    "chapter": 301,
+    "sequence": 16490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:886c6837f8e39bf2"
+  },
+  "findings": []
+}

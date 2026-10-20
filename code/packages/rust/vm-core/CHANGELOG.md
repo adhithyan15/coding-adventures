@@ -1,5 +1,22 @@
 # Changelog — vm-core
 
+## [0.27.0] — 2026-10-19 (LANG83 PR1a — standard operation support)
+
+- **LANG83 op support, derived.** New `op_support` module: `op_support(name)` and
+  `op_support_table()` answer [LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)'s per-backend question for every
+  `STANDARD_OPS` entry by asking the VM itself — an Op is `Lowered` iff the
+  standard dispatch table has a handler, a Builtin iff the default
+  `BuiltinRegistry` registers it. No hand-maintained list; PR1b ops are refused
+  with the shared PR1b reason until handlers exist.
+- **Default `print_i64` and `putchar` builtins.** `BuiltinRegistry::new()` now
+  registers the two LANG83 standard output builtins (decimal + `\n`; low byte),
+  writing through the same `std::io::stdout()` handle as `print_str`, so mixed
+  output is one ordered stream and a bare `VMCore` runs BASIC/Oct/ALGOL output
+  without the embedder registering them. Non-integer arguments are
+  `VMError::TypeError`. Embedders that capture output still override them.
+- Tests: declaration completeness, every existing op executed / PR1b refused,
+  default output builtins (4 new unit tests, 1 doctest).
+
 ## [0.26.0] — 2026-08-27 (lisp `equal?` dynamic builtin)
 
 The default builtin registry now exposes `equal?` as the lisp-family spelling

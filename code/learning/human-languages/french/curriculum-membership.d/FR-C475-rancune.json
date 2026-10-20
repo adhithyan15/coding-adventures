@@ -1,0 +1,11 @@
+{
+  "id": "FR-C475-rancune",
+  "pathSegment": "FR-PATH-475-RANCUNE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-475-RANCUNE",
+      "order": 2
+    }
+  ]
+}

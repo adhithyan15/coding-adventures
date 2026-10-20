@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C321-zurueckkehren",
+    "language": "german",
+    "chapter": 321,
+    "sequence": 17560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d0c1bf6b1e309a46"
+  },
+  "findings": []
+}

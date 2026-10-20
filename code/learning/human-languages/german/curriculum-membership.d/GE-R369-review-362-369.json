@@ -1,0 +1,11 @@
+{
+  "id": "GE-R369-review-362-369",
+  "pathSegment": "GE-PATH-369-RISIKO",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-369-RISIKO",
+      "order": 5
+    }
+  ]
+}

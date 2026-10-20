@@ -1,0 +1,11 @@
+{
+  "id": "GE-C502-anbeissen",
+  "pathSegment": "GE-PATH-502-ANGELN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-502-ANGELN",
+      "order": 2
+    }
+  ]
+}

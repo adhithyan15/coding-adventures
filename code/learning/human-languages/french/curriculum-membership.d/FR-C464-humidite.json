@@ -1,0 +1,11 @@
+{
+  "id": "FR-C464-humidite",
+  "pathSegment": "FR-PATH-464-CANICULE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-464-CANICULE",
+      "order": 2
+    }
+  ]
+}

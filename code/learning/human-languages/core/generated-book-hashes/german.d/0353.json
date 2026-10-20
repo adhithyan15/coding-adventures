@@ -1,0 +1,14 @@
+{
+  "language": "german",
+  "chapter": 353,
+  "sourceHash": "fnv1a64:e7d4ba3cbb7a3eda",
+  "lessonIds": [
+    "GE-C353-betrieb",
+    "GE-C353-unternehmen",
+    "GE-C353-abteilung",
+    "GE-C353-vorgesetzte",
+    "GE-C353-leiten",
+    "GE-R353-review-346-353"
+  ],
+  "tex": "german/book/chapters/ch353-im-betrieb.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 485,
+  "title": "Nacken, Ellbogen und Knöchel",
+  "label": "ch:ge-nacken-ellbogen-und-knochel",
+  "canDo": "I can name the joints and describe aches.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C485-huefte",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 485: I can name the joints and describe aches.",
+    "assesses": [
+      "GE-LEX-C485-GELENKE-03",
+      "GE-LEX-C485-GELENKE-04",
+      "GE-LEX-C485-GELENKE-05"
+    ]
+  }
+}

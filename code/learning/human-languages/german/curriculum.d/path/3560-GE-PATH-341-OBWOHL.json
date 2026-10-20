@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-341-OBWOHL",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "GE-EXT-341-OBWOHL"
+  ],
+  "after": []
+}

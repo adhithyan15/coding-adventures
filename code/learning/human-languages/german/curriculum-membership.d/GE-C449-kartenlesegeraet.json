@@ -1,0 +1,11 @@
+{
+  "id": "GE-C449-kartenlesegeraet",
+  "pathSegment": "GE-PATH-449-KASSE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-449-KASSE",
+      "order": 3
+    }
+  ]
+}

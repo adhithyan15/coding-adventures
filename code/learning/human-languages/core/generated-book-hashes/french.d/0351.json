@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:2367c375e46d9b5a",
+  "lessonIds": [
+    "FR-C351-reagir",
+    "FR-C351-reaction",
+    "FR-C351-pretexte",
+    "FR-C351-justifier",
+    "FR-C351-justification"
+  ],
+  "tex": "french/book/chapters/ch351-comment-reagir.tex"
+}

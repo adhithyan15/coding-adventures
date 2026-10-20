@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:4a229ec6c1940caf",
+  "lessonIds": [
+    "GE-C414-anschluss",
+    "GE-C414-nahverkehr",
+    "GE-C414-fernverkehr",
+    "GE-C414-pendeln",
+    "GE-C414-pendler"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch414.txt",
+  "json": "german/narration/ch414.json",
+  "textHash": "fnv1a64:d336f54a76c6d444",
+  "jsonHash": "fnv1a64:32625ca14e047a61",
+  "findings": []
+}

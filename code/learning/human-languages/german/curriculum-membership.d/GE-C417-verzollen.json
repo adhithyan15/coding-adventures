@@ -1,0 +1,11 @@
+{
+  "id": "GE-C417-verzollen",
+  "pathSegment": "GE-PATH-417-ZOLL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-417-ZOLL",
+      "order": 3
+    }
+  ]
+}

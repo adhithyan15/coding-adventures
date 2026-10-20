@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C323-trone",
+    "language": "french",
+    "chapter": 323,
+    "sequence": 18330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:175a60e242095e40"
+  },
+  "findings": []
+}

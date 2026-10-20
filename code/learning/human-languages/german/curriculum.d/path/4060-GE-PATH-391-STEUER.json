@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-391-STEUER",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "GE-EXT-391-STEUER"
+  ],
+  "after": []
+}

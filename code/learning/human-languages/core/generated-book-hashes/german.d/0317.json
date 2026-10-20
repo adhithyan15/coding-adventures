@@ -1,0 +1,14 @@
+{
+  "language": "german",
+  "chapter": 317,
+  "sourceHash": "fnv1a64:e3f33031347fb5e1",
+  "lessonIds": [
+    "GE-C317-erzaehlung",
+    "GE-C317-nacherzaehlen",
+    "GE-C317-vorlesen",
+    "GE-C317-ueberliefern",
+    "GE-C317-schicksal",
+    "GE-R317-review-310-317"
+  ],
+  "tex": "german/book/chapters/ch317-weitererzahlen.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C473-vaniteux",
+  "pathSegment": "FR-PATH-473-ORGUEIL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-473-ORGUEIL",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 438,
+  "sourceHash": "fnv1a64:d9bcc6c041dec75a",
+  "lessonIds": [
+    "GE-C438-altstadt",
+    "GE-C438-kathedrale",
+    "GE-C438-glockenturm",
+    "GE-C438-stadtmauer",
+    "GE-C438-stadttor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch438.txt",
+  "json": "german/narration/ch438.json",
+  "textHash": "fnv1a64:eafae6d3f0efd15c",
+  "jsonHash": "fnv1a64:cf5b0bc5ac99b623",
+  "findings": []
+}

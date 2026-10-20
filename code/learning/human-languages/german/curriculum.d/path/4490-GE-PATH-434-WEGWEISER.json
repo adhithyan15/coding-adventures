@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-434-WEGWEISER",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-434-WEGWEISER"
+  ],
+  "after": []
+}

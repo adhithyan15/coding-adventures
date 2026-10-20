@@ -94,7 +94,7 @@ fn manifest_exposes_the_foundation_contract_and_palette() {
         manifest["package"]["name"].as_str(),
         Some("mosaic-std-foundation")
     );
-    assert_eq!(manifest["package"]["version"].as_str(), Some("0.1.0"));
+    assert_eq!(manifest["package"]["version"].as_str(), Some("0.2.0"));
     assert_eq!(manifest["kernel"]["version"].as_str(), Some("1"));
     assert_eq!(
         manifest["styles"]["token_palette"].as_str(),
@@ -220,7 +220,7 @@ license = "MIT OR Apache-2.0"
 exports = ["Consumer"]
 
 [dependencies]
-mosaic-std-foundation = "0.1.0"
+mosaic-std-foundation = "0.2.0"
 
 [kernel]
 version = "1"

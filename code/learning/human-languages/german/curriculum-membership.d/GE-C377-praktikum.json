@@ -1,0 +1,11 @@
+{
+  "id": "GE-C377-praktikum",
+  "pathSegment": "GE-PATH-377-HOCHSCHULE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-377-HOCHSCHULE",
+      "order": 4
+    }
+  ]
+}

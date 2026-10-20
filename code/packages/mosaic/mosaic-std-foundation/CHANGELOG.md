@@ -1,7 +1,11 @@
 # Changelog
 
-## Unreleased
+## [0.2.0] - Unreleased
 
+- **Breaking: `Surface`'s `children` slot is `items`.** `children` is an
+  `Item` property in Qt Quick and a special prop in React, so a slot by that
+  name collides with the host type the backends generate. `mosaic-std-controls`
+  now depends on 0.2.0.
 - Tests read the backend list from `mosaic_package_artifact_builder::Backend` (`Backend::NATIVE` / `Backend::ALL`) instead of a hand-kept copy, so a backend added to Mosaic is gated here automatically.
 
 ## [0.1.0] - Unreleased

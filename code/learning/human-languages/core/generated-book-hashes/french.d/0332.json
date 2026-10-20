@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 332,
+  "sourceHash": "fnv1a64:9933170f77f0fd9f",
+  "lessonIds": [
+    "FR-C332-passoire",
+    "FR-C332-egoutter",
+    "FR-C332-saupoudrer",
+    "FR-C332-assaisonner",
+    "FR-C332-deguster"
+  ],
+  "tex": "french/book/chapters/ch332-assaisonner.tex"
+}

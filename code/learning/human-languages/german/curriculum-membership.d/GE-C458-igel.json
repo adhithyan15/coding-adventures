@@ -1,0 +1,11 @@
+{
+  "id": "GE-C458-igel",
+  "pathSegment": "GE-PATH-458-WILDTIERE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-458-WILDTIERE",
+      "order": 1
+    }
+  ]
+}

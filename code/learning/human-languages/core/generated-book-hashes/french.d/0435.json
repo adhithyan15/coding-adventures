@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 435,
+  "sourceHash": "fnv1a64:492a86e491068b83",
+  "lessonIds": [
+    "FR-C435-panneau",
+    "FR-C435-fleche",
+    "FR-C435-croisement",
+    "FR-C435-borne",
+    "FR-C435-angle"
+  ],
+  "tex": "french/book/chapters/ch435-les-panneaux.tex"
+}

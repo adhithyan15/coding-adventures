@@ -1,0 +1,11 @@
+{
+  "id": "GE-C389-lohnen",
+  "pathSegment": "GE-PATH-389-LEISTEN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-389-LEISTEN",
+      "order": 1
+    }
+  ]
+}

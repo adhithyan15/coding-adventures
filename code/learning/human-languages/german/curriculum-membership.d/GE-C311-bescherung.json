@@ -1,0 +1,11 @@
+{
+  "id": "GE-C311-bescherung",
+  "pathSegment": "GE-PATH-311-ADVENT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-311-ADVENT",
+      "order": 3
+    }
+  ]
+}

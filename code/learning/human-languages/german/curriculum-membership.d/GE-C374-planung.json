@@ -1,0 +1,11 @@
+{
+  "id": "GE-C374-planung",
+  "pathSegment": "GE-PATH-374-ENTSCHLUSS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-374-ENTSCHLUSS",
+      "order": 4
+    }
+  ]
+}

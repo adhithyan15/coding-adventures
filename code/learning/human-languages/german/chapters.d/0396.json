@@ -1,0 +1,19 @@
+{
+  "chapter": 396,
+  "title": "Am Computer",
+  "label": "ch:ge-am-computer",
+  "canDo": "I can talk about the keyboard and the printer, printing something out, and installing a program.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GE-C396-programm",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 396: I can talk about the keyboard and the printer, printing something out, and installing a program.",
+    "assesses": [
+      "GE-LEX-C396-COMPUTER-03",
+      "GE-LEX-C396-COMPUTER-04",
+      "GE-LEX-C396-COMPUTER-05"
+    ]
+  }
+}

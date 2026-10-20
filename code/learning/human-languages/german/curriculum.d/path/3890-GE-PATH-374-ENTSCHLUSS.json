@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-374-ENTSCHLUSS",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "GE-EXT-374-ENTSCHLUSS"
+  ],
+  "after": []
+}

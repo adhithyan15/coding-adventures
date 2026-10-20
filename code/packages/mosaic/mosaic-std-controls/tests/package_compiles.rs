@@ -45,9 +45,16 @@ fn manifest_exposes_the_core_standard_controls() {
         manifest["dependencies"]["mosaic-pkg-toolkit"].as_str(),
         Some("0.11.0")
     );
+    // The foundation dependency tracks the foundation's own version, read
+    // from its manifest rather than restated here.
+    let foundation: toml::Value = toml::from_str(
+        &std::fs::read_to_string(package_root().join("../mosaic-std-foundation/mosaic-package.toml"))
+            .expect("read the foundation manifest"),
+    )
+    .expect("foundation manifest must parse");
     assert_eq!(
         manifest["dependencies"]["mosaic-std-foundation"].as_str(),
-        Some("0.1.0")
+        foundation["package"]["version"].as_str()
     );
     assert_eq!(
         manifest["styles"]["token_palette"].as_str(),

@@ -1,0 +1,19 @@
+{
+  "chapter": 293,
+  "title": "Es brennt",
+  "label": "ch:ge-es-brennt",
+  "canDo": "I can report a fire: to burn, smoke, a flame, to put out and a forest fire.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-R293-review-286-293",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 293: I can report a fire: to burn, smoke, a flame, to put out and a forest fire.",
+    "assesses": [
+      "GE-LEX-C293-BRENNEN-03",
+      "GE-LEX-C293-BRENNEN-04",
+      "GE-LEX-C293-BRENNEN-05"
+    ]
+  }
+}

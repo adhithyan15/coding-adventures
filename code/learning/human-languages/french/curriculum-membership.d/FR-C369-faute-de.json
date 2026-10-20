@@ -1,0 +1,11 @@
+{
+  "id": "FR-C369-faute-de",
+  "pathSegment": "FR-PATH-369-EVENTUEL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-369-EVENTUEL",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-477-JAMBE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the parts of the leg and foot.",
+  "prerequisites": []
+}

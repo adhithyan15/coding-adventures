@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 390,
+  "sourceHash": "fnv1a64:efe145f7096cc8a6",
+  "lessonIds": [
+    "FR-C390-budget",
+    "FR-C390-revenu",
+    "FR-C390-abonnement",
+    "FR-C390-depense",
+    "FR-C390-cotisation"
+  ],
+  "tex": "french/book/chapters/ch390-les-comptes-de-la-maison.tex"
+}

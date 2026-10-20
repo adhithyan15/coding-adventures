@@ -1,0 +1,11 @@
+{
+  "id": "GE-C430-krabbeln",
+  "pathSegment": "GE-PATH-430-MUECKE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-430-MUECKE",
+      "order": 4
+    }
+  ]
+}

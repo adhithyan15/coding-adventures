@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C507-halbzeit",
+    "language": "german",
+    "chapter": 507,
+    "sequence": 27100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9548b549f9c335c"
+  },
+  "findings": []
+}

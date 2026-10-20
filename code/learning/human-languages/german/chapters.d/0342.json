@@ -1,0 +1,19 @@
+{
+  "chapter": 342,
+  "title": "Ursache und Wirkung",
+  "label": "ch:ge-ursache-und-wirkung",
+  "canDo": "I can talk about causes and effects: say what works, what causes a problem and what sets it off.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C342-ausloeser",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 342: I can talk about causes and effects: say what works, what causes a problem and what sets it off.",
+    "assesses": [
+      "GE-LEX-C342-WIRKUNG-03",
+      "GE-LEX-C342-WIRKUNG-04",
+      "GE-LEX-C342-WIRKUNG-05"
+    ]
+  }
+}

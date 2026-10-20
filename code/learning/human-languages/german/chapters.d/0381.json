@@ -1,0 +1,19 @@
+{
+  "chapter": 381,
+  "title": "Vorschriften",
+  "label": "ch:ge-vorschriften",
+  "canDo": "I can talk about regulations: what is laid down, what we must observe and keep to, and what we are obliged to do.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GE-C381-verpflichtet",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 381: I can talk about regulations: what is laid down, what we must observe and keep to, and what we are obliged to do.",
+    "assesses": [
+      "GE-LEX-C381-VORSCHRIFT-03",
+      "GE-LEX-C381-VORSCHRIFT-04",
+      "GE-LEX-C381-VORSCHRIFT-05"
+    ]
+  }
+}

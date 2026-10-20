@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 403,
+  "sourceHash": "fnv1a64:2c40c90d0ed58c40",
+  "lessonIds": [
+    "GE-C403-anspringen",
+    "GE-C403-batterie",
+    "GE-C403-starthilfe",
+    "GE-C403-abschleppwagen",
+    "GE-C403-mechaniker"
+  ],
+  "tex": "german/book/chapters/ch403-der-motor-springt-nicht-an.tex"
+}

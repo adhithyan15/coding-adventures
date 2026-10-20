@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 389,
+  "sourceHash": "fnv1a64:79a55bdff524ee68",
+  "lessonIds": [
+    "GE-C389-leisten",
+    "GE-C389-lohnen",
+    "GE-C389-finanzieren",
+    "GE-C389-ausgabe",
+    "GE-C389-einnahme"
+  ],
+  "tex": "german/book/chapters/ch389-sich-etwas-leisten.tex"
+}

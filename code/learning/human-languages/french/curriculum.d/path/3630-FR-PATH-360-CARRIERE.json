@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-360-CARRIERE",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "FR-EXT-360-CARRIERE"
+  ],
+  "after": []
+}

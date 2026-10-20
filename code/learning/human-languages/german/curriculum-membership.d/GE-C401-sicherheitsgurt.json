@@ -1,0 +1,11 @@
+{
+  "id": "GE-C401-sicherheitsgurt",
+  "pathSegment": "GE-PATH-401-GURT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-401-GURT",
+      "order": 2
+    }
+  ]
+}

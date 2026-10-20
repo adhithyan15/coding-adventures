@@ -1,0 +1,11 @@
+{
+  "id": "FR-C295-complice",
+  "pathSegment": "FR-PATH-295-AVEUX",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-295-AVEUX",
+      "order": 2
+    }
+  ]
+}

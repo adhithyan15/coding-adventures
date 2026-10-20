@@ -1,0 +1,19 @@
+{
+  "chapter": 496,
+  "title": "Ein Baby im Haus",
+  "label": "ch:ge-ein-baby-im-haus",
+  "canDo": "I can talk about looking after a baby.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C496-schnuller",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 496: I can talk about looking after a baby.",
+    "assesses": [
+      "GE-LEX-C496-BABY-03",
+      "GE-LEX-C496-BABY-04",
+      "GE-LEX-C496-BABY-05"
+    ]
+  }
+}

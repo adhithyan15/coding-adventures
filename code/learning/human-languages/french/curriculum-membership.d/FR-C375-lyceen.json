@@ -1,0 +1,11 @@
+{
+  "id": "FR-C375-lyceen",
+  "pathSegment": "FR-PATH-375-LYCEE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-375-LYCEE",
+      "order": 1
+    }
+  ]
+}

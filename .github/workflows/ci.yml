@@ -636,6 +636,10 @@ jobs:
           # lesson could be filed twice without git ever seeing a collision.
           python3 code/scripts/lessons.py validate
           python3 -m unittest discover -s code/scripts/tests -p 'test_lessons.py'
+          # LANG84 release inventories (`code/grammars/*/releases.csv`): the
+          # common header, date order, predecessor lineage and status claims.
+          python3 code/scripts/release_inventory.py check
+          python3 -m unittest discover -s code/scripts/tests -p 'test_release_inventory.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_forme_spec_map.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_package_parity_report.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_human_language_hot_files.py'

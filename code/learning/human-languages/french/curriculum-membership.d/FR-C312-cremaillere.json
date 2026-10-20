@@ -1,0 +1,11 @@
+{
+  "id": "FR-C312-cremaillere",
+  "pathSegment": "FR-PATH-312-DEMENAGEMENT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-312-DEMENAGEMENT",
+      "order": 2
+    }
+  ]
+}

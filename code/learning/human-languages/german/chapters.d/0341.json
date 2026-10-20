@@ -1,0 +1,19 @@
+{
+  "chapter": 341,
+  "title": "Obwohl es regnet",
+  "label": "ch:ge-obwohl-es-regnet",
+  "canDo": "I can say although, admit a point with zwar … aber, and add a however or an in fact.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C341-tatsaechlich",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 341: I can say although, admit a point with zwar … aber, and add a however or an in fact.",
+    "assesses": [
+      "GE-LEX-C341-OBWOHL-03",
+      "GE-LEX-C341-OBWOHL-04",
+      "GE-LEX-C341-OBWOHL-05"
+    ]
+  }
+}

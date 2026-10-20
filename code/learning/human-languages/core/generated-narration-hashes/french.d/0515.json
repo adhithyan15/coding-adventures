@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 515,
+  "sourceHash": "fnv1a64:c80af629f2f967e2",
+  "lessonIds": [
+    "FR-C515-trac",
+    "FR-C515-replique",
+    "FR-C515-interpreter",
+    "FR-C515-comedien",
+    "FR-C515-applaudissements"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch515.txt",
+  "json": "french/narration/ch515.json",
+  "textHash": "fnv1a64:3b4f4e26a9f0027d",
+  "jsonHash": "fnv1a64:9232c35fdaeac09f",
+  "findings": []
+}

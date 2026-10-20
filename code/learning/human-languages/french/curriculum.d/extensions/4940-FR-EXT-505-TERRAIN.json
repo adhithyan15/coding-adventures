@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-505-TERRAIN",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about what happens during a match.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 528,
+  "sourceHash": "fnv1a64:13ba453a22f6a766",
+  "lessonIds": [
+    "FR-C528-balayer",
+    "FR-C528-epousseter",
+    "FR-C528-frotter",
+    "FR-C528-eponge",
+    "FR-C528-serpilliere"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch528.txt",
+  "json": "french/narration/ch528.json",
+  "textHash": "fnv1a64:203ff2f2d33a6887",
+  "jsonHash": "fnv1a64:221c8ee2391f9d38",
+  "findings": []
+}

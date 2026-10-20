@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C321-fee",
+    "language": "french",
+    "chapter": 321,
+    "sequence": 18220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c632a68e4468da9"
+  },
+  "findings": []
+}

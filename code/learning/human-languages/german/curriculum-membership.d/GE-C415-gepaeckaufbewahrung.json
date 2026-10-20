@@ -1,0 +1,11 @@
+{
+  "id": "GE-C415-gepaeckaufbewahrung",
+  "pathSegment": "GE-PATH-415-SCHLIESSFACH",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-415-SCHLIESSFACH",
+      "order": 1
+    }
+  ]
+}

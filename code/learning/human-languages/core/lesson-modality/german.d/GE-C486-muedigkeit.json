@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C486-muedigkeit",
+    "language": "german",
+    "chapter": 486,
+    "sequence": 26020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:af5a12fb221cb74c"
+  },
+  "findings": []
+}

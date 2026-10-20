@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-286-URTEIL",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GE-EXT-286-URTEIL"
+  ],
+  "after": []
+}

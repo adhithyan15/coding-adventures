@@ -1,0 +1,11 @@
+{
+  "id": "GE-C510-jubel",
+  "pathSegment": "GE-PATH-510-TRIBUENE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-510-TRIBUENE",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C520-devorer",
+  "pathSegment": "FR-PATH-520-LIBRAIRE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-520-LIBRAIRE",
+      "order": 4
+    }
+  ]
+}

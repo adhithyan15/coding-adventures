@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-441-MOBILIER",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-441-MOBILIER"
+  ],
+  "after": []
+}

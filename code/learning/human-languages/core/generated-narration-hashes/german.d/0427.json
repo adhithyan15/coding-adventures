@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 427,
+  "sourceHash": "fnv1a64:4bab9fdcb3eed9a5",
+  "lessonIds": [
+    "GE-C427-klimaanlage",
+    "GE-C427-heizung",
+    "GE-C427-heizkoerper",
+    "GE-C427-aufdrehen",
+    "GE-C427-zudrehen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch427.txt",
+  "json": "german/narration/ch427.json",
+  "textHash": "fnv1a64:36ee85b90c294a3b",
+  "jsonHash": "fnv1a64:6bd2e1c70c5497ff",
+  "findings": []
+}

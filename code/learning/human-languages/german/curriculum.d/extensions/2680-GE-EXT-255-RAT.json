@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-255-RAT",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can give advice with du solltest and man sollte, and explain why in three steps.",
+  "prerequisites": []
+}

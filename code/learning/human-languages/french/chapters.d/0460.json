@@ -1,0 +1,19 @@
+{
+  "chapter": 460,
+  "title": "Le bulletin météo",
+  "label": "ch:fr-le-bulletin-meteo",
+  "canDo": "I can follow a weather report: the weather forecast, the outlook, cloudy, sunny and the thermometer.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C460-thermometre",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 460: I can follow a weather report: the weather forecast, the outlook, cloudy, sunny and the thermometer.",
+    "assesses": [
+      "FR-LEX-C460-METEO-03",
+      "FR-LEX-C460-METEO-04",
+      "FR-LEX-C460-METEO-05"
+    ]
+  }
+}

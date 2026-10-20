@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "german",
+  "chapter": 285,
+  "title": "Der Betrug",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:bc536b6de3af3069",
+  "lessons": [
+    {
+      "id": "GE-C285-betruegen",
+      "sequence": 15670,
+      "title": "betrügen — to cheat, to deceive",
+      "headword": "betrügen",
+      "romanization": "betrügen",
+      "gloss": "to cheat, to deceive",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9eaf144f77f8ad08",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the investigation, then the German for to arrest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: betrügen",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "betrügen — \"to cheat, to deceive\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Der Verkäufer betrog viele alte Leute. The salesman cheated many old people."
+            },
+            {
+              "kind": "speech",
+              "text": "Strong verb: betrog, hat betrogen. Also to be unfaithful: Er betrügt seine Frau."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "betrügen is inherited from Old High German bitriogan, which EtymDB traces to Proto-Germanic bidreuganą \"to betray, to deceive\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "betrügen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *betrügen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "betrügen, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *betrügen*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with betrügen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *betrügen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the investigation, then the German for to arrest, then say betrügen again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the investigation, then the German for to arrest, then say *betrügen* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does betrügen mean? (\"To cheat, to deceive\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C285-betrug",
+      "sequence": 15680,
+      "title": "der Betrug — the fraud, the deception",
+      "headword": "der Betrug",
+      "romanization": "der Betrug",
+      "gloss": "the fraud, the deception",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:45174b2975632437",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to arrest, then the German for to cheat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: der Betrug",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "der Betrug — \"the fraud, the deception\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Der Betrug kam nach einem Jahr ans Licht. The fraud came to light after a year."
+            },
+            {
+              "kind": "speech",
+              "text": "No plural in most uses."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Betrug comes from Middle High German betroc, Old High German bitrog \"delusion\" (EtymDB), from the same root as betrügen."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Betrug",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Betrug*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Betrug, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Betrug*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with der Betrug",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *der Betrug*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to arrest, then the German for to cheat, then say der Betrug again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to arrest, then the German for to cheat, then say *der Betrug* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does der Betrug mean? (\"The fraud, the deception\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C285-betrueger",
+      "sequence": 15690,
+      "title": "der Betrüger — the con man, the fraudster",
+      "headword": "der Betrüger",
+      "romanization": "der Betrüger",
+      "gloss": "the con man, the fraudster",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:50643c5d67f8c164",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to cheat, then the German for the fraud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: der Betrüger",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "der Betrüger — \"the con man, the fraudster\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Der Betrüger rief am Telefon an und wollte Geld. The con man phoned and wanted money."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Betrüger. Feminine die Betrügerin."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Betrüger is built on betrügen \"to cheat\", from Proto-Germanic bidreuganą \"to deceive\" (EtymDB), with the ending -er for a person."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Betrüger",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Betrüger*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Betrüger, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Betrüger*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with der Betrüger",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *der Betrüger*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to cheat, then the German for the fraud, then say der Betrüger again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to cheat, then the German for the fraud, then say *der Betrüger* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does der Betrüger mean? (\"The con man, the fraudster\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C285-faelschen",
+      "sequence": 15700,
+      "title": "fälschen — to forge, to fake",
+      "headword": "fälschen",
+      "romanization": "fälschen",
+      "gloss": "to forge, to fake",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:222bf65e02b7dfd9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the fraud, then the German for the con man."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: fälschen",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fälschen — \"to forge, to fake\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Er fälschte einen Ausweis. He forged an identity card."
+            },
+            {
+              "kind": "speech",
+              "text": "Gefälscht — fake: ein gefälschter Pass."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fälschen comes from Old High German felsken (EtymDB), built on falsch \"false\", which came from Latin falsus, from fallere \"to deceive\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fälschen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fälschen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fälschen, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fälschen*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with fälschen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *fälschen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the fraud, then the German for the con man, then say fälschen again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the fraud, then the German for the con man, then say *fälschen* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does fälschen mean? (\"To forge, to fake\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C285-erpressen",
+      "sequence": 15710,
+      "title": "erpressen — to blackmail, to extort",
+      "headword": "erpressen",
+      "romanization": "erpressen",
+      "gloss": "to blackmail, to extort",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8703fdceddea04ec",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the con man, then the German for to forge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: erpressen",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "erpressen — \"to blackmail, to extort\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ein Unbekannter erpresste die Firma. A stranger blackmailed the company."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on pressen 'to press': to squeeze money out of someone. Die Erpressung — blackmail."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "erpressen is built on pressen \"to press\", Old High German pressōn (EtymDB), from Latin pressāre, built on premere \"to press\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "erpressen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *erpressen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "erpressen, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *erpressen*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with erpressen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *erpressen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the con man, then the German for to forge, then say erpressen again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the con man, then the German for to forge, then say *erpressen* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does erpressen mean? (\"To blackmail, to extort\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-R285-review-278-285",
+      "sequence": 15720,
+      "title": "Words from chapters 278–285 — a review",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 278-285",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6259e9d2223c95dc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the German for to negotiate and the negotiation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to negotiate, the negotiation, the contract, to sign, the conference",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to negotiate, the negotiation, the contract, to sign, the conference]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the event, to occur, to take place, to happen, the incident",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the event, to occur, to take place, to happen, the incident]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the crime, the criminal, the offender, the victim, the crime scene",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the crime, the criminal, the offender, the victim, the crime scene]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to break in, the burglary, the burglar, to pinch, the loot",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to break in, the burglary, the burglar, to pinch, the loot]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to hold up, the hold-up, to rob, to threaten, the weapon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to hold up, the hold-up, to rob, to threaten, the weapon]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the witness, to testify, the statement, to observe, to recount",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the witness, to testify, the statement, to observe, to recount]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the suspicion, suspicious, to investigate, the investigation, to arrest",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the suspicion, suspicious, to investigate, the investigation, to arrest]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to cheat, the fraud, the con man, to forge, to blackmail",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to cheat, the fraud, the con man, to forge, to blackmail]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To negotiate? (verhandeln.) The negotiation? (die Verhandlung.) The contract? (der Vertrag.) To sign? (unterzeichnen.) The conference? (die Konferenz.) The event? (das Ereignis.) To occur? (ereignen.) To take place? (stattfinden.) To happen? (vorkommen.) The incident? (der Vorfall.) The crime? (das Verbrechen.) The criminal? (der Verbrecher.) The offender? (der Täter.) The victim? (das Opfer.) The crime scene? (der Tatort.) To break in? (einbrechen.) The burglary? (der Einbruch.) The burglar? (der Einbrecher.) To pinch? (klauen.) The loot? (die Beute.) To hold up? (überfallen.) The hold-up? (der Überfall.) To rob? (rauben.) To threaten? (bedrohen.) The weapon? (die Waffe.) The witness? (der Zeuge.) To testify? (aussagen.) The statement? (die Aussage.) To observe? (beobachten.) To recount? (schildern.) The suspicion? (der Verdacht.) Suspicious? (verdächtig.) To investigate? (ermitteln.) The investigation? (die Ermittlung.) To arrest? (festnehmen.) To cheat? (betrügen.) The fraud? (der Betrug.) The con man? (der Betrüger.) To forge? (fälschen.) To blackmail? (erpressen.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

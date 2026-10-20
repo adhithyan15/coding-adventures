@@ -1,0 +1,11 @@
+{
+  "id": "GE-C289-stolpern",
+  "pathSegment": "GE-PATH-289-STURZ",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-289-STURZ",
+      "order": 1
+    }
+  ]
+}

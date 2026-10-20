@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C312-kapelle",
+    "language": "german",
+    "chapter": 312,
+    "sequence": 17100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:957a41338baed959"
+  },
+  "findings": []
+}

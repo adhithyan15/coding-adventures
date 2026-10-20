@@ -1,0 +1,11 @@
+{
+  "id": "FR-C272-jadis",
+  "pathSegment": "FR-PATH-272-JADIS",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-272-JADIS",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C502-cadrer",
+  "pathSegment": "FR-PATH-502-PHOTO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-502-PHOTO",
+      "order": 3
+    }
+  ]
+}

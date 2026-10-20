@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C350-beschaeftigen",
+    "language": "german",
+    "chapter": 350,
+    "sequence": 19050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6d18bba2cf587c77"
+  },
+  "findings": []
+}

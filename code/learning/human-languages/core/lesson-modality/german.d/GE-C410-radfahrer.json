@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C410-radfahrer",
+    "language": "german",
+    "chapter": 410,
+    "sequence": 22150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:696133e2f3b14254"
+  },
+  "findings": []
+}

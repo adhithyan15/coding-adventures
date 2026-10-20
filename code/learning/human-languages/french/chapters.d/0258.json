@@ -1,0 +1,25 @@
+{
+  "chapter": 258,
+  "title": "The Scene — c'était, il y avait, il faisait froid",
+  "label": "ch:fr-the-scene",
+  "canDo": "I can paint the scene of a past story with the imparfait, and drop the events into it with the passé composé.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C258-revision-quand",
+    "kind": "production",
+    "summary": "Complete FR-C258-revision-quand: a scene in the imparfait and an event that cuts into it, joined with quand or pendant que.",
+    "assesses": [
+      "FR-GRAM-IMPARFAIT-01",
+      "FR-LEX-CETAIT-01",
+      "FR-LEX-IL-Y-AVAIT-02",
+      "FR-LEX-IL-FAISAIT-01",
+      "FR-GRAM-DECOR-EVENEMENT-01",
+      "FR-GRAM-PENDANT-QUE-02",
+      "FR-GRAM-QUAND-COUPE-01",
+      "FR-ETYMON-IMPARFAIT-AIS-02",
+      "FR-ETYMON-IMPERFECTUS-02"
+    ]
+  }
+}

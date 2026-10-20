@@ -1,0 +1,11 @@
+{
+  "id": "GE-C413-endstation",
+  "pathSegment": "GE-PATH-413-NACHTZUG",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-413-NACHTZUG",
+      "order": 2
+    }
+  ]
+}

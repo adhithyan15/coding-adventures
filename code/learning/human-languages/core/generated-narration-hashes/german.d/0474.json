@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 474,
+  "sourceHash": "fnv1a64:c08ac90ec1057c22",
+  "lessonIds": [
+    "GE-C474-staunen",
+    "GE-C474-erstaunt",
+    "GE-C474-verwirrt",
+    "GE-C474-neugier",
+    "GE-C474-sprachlos"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch474.txt",
+  "json": "german/narration/ch474.json",
+  "textHash": "fnv1a64:2dc8b0f367b0e40c",
+  "jsonHash": "fnv1a64:8334cec4ab85819a",
+  "findings": []
+}

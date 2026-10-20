@@ -1,0 +1,11 @@
+{
+  "id": "FR-C258-il-faisait-froid",
+  "pathSegment": "FR-PATH-258-SCENE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-258-SCENE",
+      "order": 2
+    }
+  ]
+}

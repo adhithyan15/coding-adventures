@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-253-REIHENFOLGE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can tell a short connected story in order with zuerst, dann, danach and schließlich, and read one of about a hundred words.",
+  "prerequisites": []
+}

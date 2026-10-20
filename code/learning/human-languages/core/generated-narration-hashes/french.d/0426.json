@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:58d2750a47fc342b",
+  "lessonIds": [
+    "FR-C426-reception",
+    "FR-C426-receptionniste",
+    "FR-C426-etage",
+    "FR-C426-sejour",
+    "FR-C426-deballer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch426.txt",
+  "json": "french/narration/ch426.json",
+  "textHash": "fnv1a64:5de59cdac575f4cb",
+  "jsonHash": "fnv1a64:2683e9a4c921676b",
+  "findings": []
+}

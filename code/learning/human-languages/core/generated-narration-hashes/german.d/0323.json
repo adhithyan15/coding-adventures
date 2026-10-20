@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:f59df75aec4c8778",
+  "lessonIds": [
+    "GE-C323-schaelen",
+    "GE-C323-hacken",
+    "GE-C323-wuerfeln",
+    "GE-C323-raspeln",
+    "GE-C323-halbieren"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch323.txt",
+  "json": "german/narration/ch323.json",
+  "textHash": "fnv1a64:84dc70a707495eb3",
+  "jsonHash": "fnv1a64:374f9d69557cfc01",
+  "findings": []
+}

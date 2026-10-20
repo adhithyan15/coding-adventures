@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Tests read the backend list from `mosaic_package_artifact_builder::Backend` (`Backend::NATIVE` / `Backend::ALL`) instead of a hand-kept copy, so a backend added to Mosaic is gated here automatically.
+- Depends on `mosaic-std-foundation` 0.2.0 (`Surface`'s `items` slot).
 
 - Fixed two stale acceptance pins that kept main's shard 15 red: the Flutter
   Slider readout is now matched open-ended (`Text(displayValue` — it gained a

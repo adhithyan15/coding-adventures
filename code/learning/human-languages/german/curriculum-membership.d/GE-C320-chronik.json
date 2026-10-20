@@ -1,0 +1,11 @@
+{
+  "id": "GE-C320-chronik",
+  "pathSegment": "GE-PATH-320-MITTELALTER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-320-MITTELALTER",
+      "order": 2
+    }
+  ]
+}

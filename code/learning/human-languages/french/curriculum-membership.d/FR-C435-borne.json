@@ -1,0 +1,11 @@
+{
+  "id": "FR-C435-borne",
+  "pathSegment": "FR-PATH-435-PANNEAUX",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-435-PANNEAUX",
+      "order": 3
+    }
+  ]
+}

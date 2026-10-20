@@ -1,0 +1,11 @@
+{
+  "id": "FR-C431-rouspeter",
+  "pathSegment": "FR-PATH-431-RECLAMATION",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-431-RECLAMATION",
+      "order": 2
+    }
+  ]
+}

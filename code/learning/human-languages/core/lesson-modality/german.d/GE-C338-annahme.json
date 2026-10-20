@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C338-annahme",
+    "language": "german",
+    "chapter": 338,
+    "sequence": 18420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:565cbad38dc1fcf9"
+  },
+  "findings": []
+}

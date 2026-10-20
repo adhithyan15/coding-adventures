@@ -1,0 +1,15 @@
+{
+  "language": "french",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:324d8b10a91ad7ca",
+  "lessonIds": [
+    "FR-C333-levure",
+    "FR-C333-petrir",
+    "FR-C333-rouleau-a-patisserie",
+    "FR-C333-etaler",
+    "FR-C333-demouler",
+    "FR-R333-revision-332-333",
+    "FR-R333-revision-final-333"
+  ],
+  "tex": "french/book/chapters/ch333-faire-du-pain.tex"
+}

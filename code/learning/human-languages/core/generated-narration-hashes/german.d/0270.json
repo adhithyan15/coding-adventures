@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 270,
+  "sourceHash": "fnv1a64:be47b4f7e1e4673a",
+  "lessonIds": [
+    "GE-C270-zoegern",
+    "GE-C270-abwarten",
+    "GE-C270-verzoegern",
+    "GE-C270-verlaufen",
+    "GE-C270-ablauf"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch270.txt",
+  "json": "german/narration/ch270.json",
+  "textHash": "fnv1a64:ce1a0454216cb9fe",
+  "jsonHash": "fnv1a64:788eadb8b6946190",
+  "findings": []
+}

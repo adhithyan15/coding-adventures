@@ -1,0 +1,19 @@
+{
+  "chapter": 468,
+  "title": "Sincères et menteurs",
+  "label": "ch:fr-sinceres-et-menteurs",
+  "canDo": "I can say whether someone is honest, naive or cunning.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C468-mentir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 468: I can say whether someone is honest, naive or cunning.",
+    "assesses": [
+      "FR-LEX-C468-FRANCHISE-03",
+      "FR-LEX-C468-FRANCHISE-04",
+      "FR-LEX-C468-FRANCHISE-05"
+    ]
+  }
+}

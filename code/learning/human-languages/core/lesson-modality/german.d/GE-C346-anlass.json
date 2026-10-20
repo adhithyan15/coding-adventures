@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C346-anlass",
+    "language": "german",
+    "chapter": 346,
+    "sequence": 18860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:22f9cde6d52ba397"
+  },
+  "findings": []
+}

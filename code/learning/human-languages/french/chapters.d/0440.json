@@ -1,0 +1,19 @@
+{
+  "chapter": 440,
+  "title": "Les quartiers",
+  "label": "ch:fr-les-quartiers",
+  "canDo": "I can talk about parts of a town and official buildings: the old suburb, the district, the prefecture, the police station and the barracks.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C440-caserne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 440: I can talk about parts of a town and official buildings: the old suburb, the district, the prefecture, the police station and the barracks.",
+    "assesses": [
+      "FR-LEX-C440-QUARTIERS-03",
+      "FR-LEX-C440-QUARTIERS-04",
+      "FR-LEX-C440-QUARTIERS-05"
+    ]
+  }
+}

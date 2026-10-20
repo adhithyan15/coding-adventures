@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 307,
+  "sourceHash": "fnv1a64:65145429e8324963",
+  "lessonIds": [
+    "FR-C307-degat",
+    "FR-C307-endommager",
+    "FR-C307-assurance",
+    "FR-C307-sinistre",
+    "FR-C307-rayure",
+    "FR-R307-revision-300-307"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch307.txt",
+  "json": "french/narration/ch307.json",
+  "textHash": "fnv1a64:ec88ca0a8b27d9d1",
+  "jsonHash": "fnv1a64:7ee0344ba3e21b9c",
+  "findings": []
+}

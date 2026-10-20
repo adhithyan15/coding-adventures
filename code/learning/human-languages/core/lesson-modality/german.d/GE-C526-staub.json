@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C526-staub",
+    "language": "german",
+    "chapter": 526,
+    "sequence": 28070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:896168c88c57a314"
+  },
+  "findings": []
+}

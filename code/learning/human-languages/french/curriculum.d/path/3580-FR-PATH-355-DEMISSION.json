@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-355-DEMISSION",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "FR-EXT-355-DEMISSION"
+  ],
+  "after": []
+}

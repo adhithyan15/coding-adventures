@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C382-sanction",
+    "language": "french",
+    "chapter": 382,
+    "sequence": 21390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f15ef077c77cf0f9"
+  },
+  "findings": []
+}

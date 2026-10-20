@@ -1,0 +1,19 @@
+{
+  "chapter": 392,
+  "title": "Geräte laden",
+  "label": "ch:ge-gerate-laden",
+  "canDo": "I can talk about devices and appliances, batteries, charging and plugs.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GE-C392-stecker",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 392: I can talk about devices and appliances, batteries, charging and plugs.",
+    "assesses": [
+      "GE-LEX-C392-GERAET-03",
+      "GE-LEX-C392-GERAET-04",
+      "GE-LEX-C392-GERAET-05"
+    ]
+  }
+}

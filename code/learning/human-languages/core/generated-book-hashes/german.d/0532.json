@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 532,
+  "sourceHash": "fnv1a64:f20ffc9de0ea19c1",
+  "lessonIds": [
+    "GE-C532-wohngemeinschaft",
+    "GE-C532-mitbewohner",
+    "GE-C532-hausordnung",
+    "GE-C532-hausmeister",
+    "GE-C532-treppenhaus"
+  ],
+  "tex": "german/book/chapters/ch532-wohnen-in-der-wg.tex"
+}

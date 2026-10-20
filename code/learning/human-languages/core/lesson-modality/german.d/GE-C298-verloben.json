@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C298-verloben",
+    "language": "german",
+    "chapter": 298,
+    "sequence": 16340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4fcd9faa8f508525"
+  },
+  "findings": []
+}

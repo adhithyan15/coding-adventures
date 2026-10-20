@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 394,
+  "sourceHash": "fnv1a64:09e7583622d535b9",
+  "lessonIds": [
+    "FR-C394-benefice",
+    "FR-C394-perte",
+    "FR-C394-faillite",
+    "FR-C394-rembourser",
+    "FR-C394-emprunt"
+  ],
+  "tex": "french/book/chapters/ch394-gagner-et-perdre.tex"
+}

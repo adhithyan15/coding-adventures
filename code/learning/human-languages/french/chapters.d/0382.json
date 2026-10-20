@@ -1,0 +1,19 @@
+{
+  "chapter": 382,
+  "title": "Enfreindre les règles",
+  "label": "ch:fr-enfreindre-les-regles",
+  "canDo": "I can say that someone broke a rule: breaking the law, an offence, transgressing, a penalty and penalising someone.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FR-C382-sanctionner",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 382: I can say that someone broke a rule: breaking the law, an offence, transgressing, a penalty and penalising someone.",
+    "assesses": [
+      "FR-LEX-C382-INFRACTION-03",
+      "FR-LEX-C382-INFRACTION-04",
+      "FR-LEX-C382-INFRACTION-05"
+    ]
+  }
+}

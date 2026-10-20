@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-493-BEBE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-493-BEBE"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 417,
+  "title": "Kontrolle und Zoll",
+  "label": "ch:ge-kontrolle-und-zoll",
+  "canDo": "I can go through security and customs: the security check, searching bags, customs, declaring goods and the passport.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C417-reisepass",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 417: I can go through security and customs: the security check, searching bags, customs, declaring goods and the passport.",
+    "assesses": [
+      "GE-LEX-C417-ZOLL-03",
+      "GE-LEX-C417-ZOLL-04",
+      "GE-LEX-C417-ZOLL-05"
+    ]
+  }
+}

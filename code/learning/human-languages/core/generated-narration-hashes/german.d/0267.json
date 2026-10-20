@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 267,
+  "sourceHash": "fnv1a64:e2d1fa99f43bc6af",
+  "lessonIds": [
+    "GE-C267-dauern",
+    "GE-C267-vergehen",
+    "GE-C267-andauern",
+    "GE-C267-fortsetzen",
+    "GE-C267-unterbrechen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch267.txt",
+  "json": "german/narration/ch267.json",
+  "textHash": "fnv1a64:15aa8b8b6591758b",
+  "jsonHash": "fnv1a64:ab7fce85a364a41d",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-529-RENOVIEREN",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GE-EXT-529-RENOVIEREN"
+  ],
+  "after": []
+}

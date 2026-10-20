@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-452-BRADERIE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-452-BRADERIE"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 472,
+  "sourceHash": "fnv1a64:d62329f1fd981d60",
+  "lessonIds": [
+    "GE-C472-sehnen",
+    "GE-C472-sehnsucht",
+    "GE-C472-einsamkeit",
+    "GE-C472-heimweh",
+    "GE-C472-vermissen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch472.txt",
+  "json": "german/narration/ch472.json",
+  "textHash": "fnv1a64:c749e63dcb057098",
+  "jsonHash": "fnv1a64:514a2ee061ced107",
+  "findings": []
+}

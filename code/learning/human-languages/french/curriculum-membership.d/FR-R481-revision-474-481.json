@@ -1,0 +1,11 @@
+{
+  "id": "FR-R481-revision-474-481",
+  "pathSegment": "FR-PATH-481-ENTORSE",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FR-EXT-481-ENTORSE",
+      "order": 5
+    }
+  ]
+}

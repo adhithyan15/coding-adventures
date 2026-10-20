@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 471,
+  "sourceHash": "fnv1a64:e76d8b9436d45794",
+  "lessonIds": [
+    "FR-C471-deception",
+    "FR-C471-decevoir",
+    "FR-C471-chagrin",
+    "FR-C471-sangloter",
+    "FR-C471-consoler"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch471.txt",
+  "json": "french/narration/ch471.json",
+  "textHash": "fnv1a64:1841045f12557d32",
+  "jsonHash": "fnv1a64:8a38ab1f03cacefe",
+  "findings": []
+}

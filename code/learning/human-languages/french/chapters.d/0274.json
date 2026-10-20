@@ -1,0 +1,19 @@
+{
+  "chapter": 274,
+  "title": "Ce qui est arrivé",
+  "label": "ch:fr-ce-qui-est-arrive",
+  "canDo": "I can say that something occurred, unfolded, took place, came before something else or lasted.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C274-durer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 274: I can say that something occurred, unfolded, took place, came before something else or lasted.",
+    "assesses": [
+      "FR-LEX-C274-SURVENIR-03",
+      "FR-LEX-C274-SURVENIR-04",
+      "FR-LEX-C274-SURVENIR-05"
+    ]
+  }
+}

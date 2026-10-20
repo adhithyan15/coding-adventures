@@ -1,0 +1,11 @@
+{
+  "id": "FR-C366-association",
+  "pathSegment": "FR-PATH-366-BENEVOLAT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-366-BENEVOLAT",
+      "order": 2
+    }
+  ]
+}

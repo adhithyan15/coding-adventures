@@ -1,0 +1,11 @@
+{
+  "id": "GE-C518-leinwand",
+  "pathSegment": "GE-PATH-518-MALEN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-518-MALEN",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C342-ausloesen",
+    "language": "german",
+    "chapter": 342,
+    "sequence": 18640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9d11f5d586fc377c"
+  },
+  "findings": []
+}

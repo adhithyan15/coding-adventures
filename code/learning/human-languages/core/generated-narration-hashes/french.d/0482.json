@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 482,
+  "sourceHash": "fnv1a64:f4101ab206606da8",
+  "lessonIds": [
+    "FR-C482-eternuer",
+    "FR-C482-allergie",
+    "FR-C482-pollen",
+    "FR-C482-demangeaison",
+    "FR-C482-gratter"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch482.txt",
+  "json": "french/narration/ch482.json",
+  "textHash": "fnv1a64:6126c69db87b2f5e",
+  "jsonHash": "fnv1a64:6f5fe5947238f18f",
+  "findings": []
+}

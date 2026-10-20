@@ -1,0 +1,19 @@
+{
+  "chapter": 528,
+  "title": "Faire le ménage",
+  "label": "ch:fr-faire-le-menage",
+  "canDo": "I can talk about cleaning the house.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C528-serpilliere",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 528: I can talk about cleaning the house.",
+    "assesses": [
+      "FR-LEX-C528-MENAGE-03",
+      "FR-LEX-C528-MENAGE-04",
+      "FR-LEX-C528-MENAGE-05"
+    ]
+  }
+}

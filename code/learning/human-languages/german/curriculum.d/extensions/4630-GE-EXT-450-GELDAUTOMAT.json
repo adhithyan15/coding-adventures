@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-450-GELDAUTOMAT",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can deal with money and an account: the cash machine, the PIN, the bank statement, redeeming a voucher and paying out.",
+  "prerequisites": []
+}

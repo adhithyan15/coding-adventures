@@ -1,0 +1,19 @@
+{
+  "chapter": 523,
+  "title": "Une série à suivre",
+  "label": "ch:fr-une-serie-a-suivre",
+  "canDo": "I can talk about a series I am watching.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C523-palpitant",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 523: I can talk about a series I am watching.",
+    "assesses": [
+      "FR-LEX-C523-SERIES-03",
+      "FR-LEX-C523-SERIES-04",
+      "FR-LEX-C523-SERIES-05"
+    ]
+  }
+}

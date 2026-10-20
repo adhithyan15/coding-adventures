@@ -1,0 +1,11 @@
+{
+  "id": "GE-C325-kneten",
+  "pathSegment": "GE-PATH-325-TEIG",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-325-TEIG",
+      "order": 2
+    }
+  ]
+}

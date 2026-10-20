@@ -1,0 +1,11 @@
+{
+  "id": "FR-C427-radiateur",
+  "pathSegment": "FR-PATH-427-CHAMBRE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-427-CHAMBRE",
+      "order": 2
+    }
+  ]
+}

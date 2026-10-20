@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-398-RESEAU",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about being online: the network, the connection, browsing, a link and posting something.",
+  "prerequisites": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-264-DAMALS",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GE-EXT-264-DAMALS"
+  ],
+  "after": []
+}

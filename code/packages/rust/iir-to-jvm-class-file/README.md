@@ -22,6 +22,17 @@ multiple functions with parameters, labels, and comparison operators.  This crat
 bridges that richer world to the JVM class file format without any loss of
 information through a deprecated intermediate.
 
+## Sizing the operand stack
+
+Every method's `max_stack` is measured, not guessed. After a method's bytecode
+is emitted, `compute_max_stack` walks it the way the verifier does. It starts
+at depth 0, applies each opcode's pops and pushes (a `long` or `double` counts
+as two words), follows both arms of every branch, and keeps the maximum depth
+seen. If a branch join disagrees on depth, the stack underflows, or the
+analysis meets an opcode it does not model, lowering fails with
+`IIRJvmError::StackDepthAnalysis` rather than emitting a class the JVM would
+reject.
+
 ## Why IIR → JVM directly?
 
 The JVM is a **stack machine** with a rich type system.  IIR's named variables
@@ -299,3 +310,13 @@ remains and 0 at EOF, without consuming it. The host must share its stream
 with `readLong()J` and `readLine()Ljava/lang/String;`; I/O errors must fail
 rather than report EOF. The LANG matrix supplies this host and executes four
 FLOW-MATIC input/EOF cases, including a zero-filled partial record.
+
+## LANG83 operation support
+
+`iir_to_jvm_class_file::op_support::op_support(name)` (and `OP_SUPPORT`) is this backend's answer,
+`Lowered` or `Refused(reason)`, for every operation in the
+[LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) standard registry
+(`interpreter_ir::op_registry::STANDARD_OPS`). "Lowered" means `lower_iir_to_jvm` emits JVM bytecode for the op. `lang-aot` refuses a
+module that uses a refused op at compile time, with a typed error. The four
+LANG83 PR1b ops (`write_i64`, `i64_div_floor`, `i64_mod_floor`, `trap`) are
+refused until PR1b lowers them.

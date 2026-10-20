@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 399,
+  "sourceHash": "fnv1a64:3d260a0d3bf2013d",
+  "lessonIds": [
+    "GE-C399-lenkrad",
+    "GE-C399-lenken",
+    "GE-C399-bremsen",
+    "GE-C399-bremse",
+    "GE-C399-schalten"
+  ],
+  "tex": "german/book/chapters/ch399-am-steuer.tex"
+}

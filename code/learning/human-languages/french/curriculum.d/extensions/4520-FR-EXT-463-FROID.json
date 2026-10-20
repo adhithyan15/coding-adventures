@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-463-FROID",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about freezing weather: black ice, frost, freezing, thawing and shivering.",
+  "prerequisites": []
+}

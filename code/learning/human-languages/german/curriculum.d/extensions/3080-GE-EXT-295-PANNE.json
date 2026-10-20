@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-295-PANNE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can report a breakdown and damage: a breakdown, the breakdown service, to tow away, to damage and to destroy.",
+  "prerequisites": []
+}

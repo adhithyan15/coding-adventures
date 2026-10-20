@@ -1,0 +1,11 @@
+{
+  "id": "FR-C400-bretelle",
+  "pathSegment": "FR-PATH-400-PERIPH",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-400-PERIPH",
+      "order": 3
+    }
+  ]
+}

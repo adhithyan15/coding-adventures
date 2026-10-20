@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-416-AEROGARE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can check in for a flight: the flight, the airport building, check-in, the hold and boarding.",
+  "prerequisites": []
+}

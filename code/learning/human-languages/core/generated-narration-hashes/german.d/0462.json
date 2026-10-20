@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 462,
+  "sourceHash": "fnv1a64:b8e004a755879c50",
+  "lessonIds": [
+    "GE-C462-unwetter",
+    "GE-C462-aufziehen",
+    "GE-C462-hagel",
+    "GE-C462-hageln",
+    "GE-C462-donnern"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch462.txt",
+  "json": "german/narration/ch462.json",
+  "textHash": "fnv1a64:2e836d6ffdb9a6bf",
+  "jsonHash": "fnv1a64:a47351c2a618bfae",
+  "findings": []
+}

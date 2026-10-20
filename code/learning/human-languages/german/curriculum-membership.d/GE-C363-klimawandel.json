@@ -1,0 +1,11 @@
+{
+  "id": "GE-C363-klimawandel",
+  "pathSegment": "GE-PATH-363-UMWELT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-363-UMWELT",
+      "order": 1
+    }
+  ]
+}

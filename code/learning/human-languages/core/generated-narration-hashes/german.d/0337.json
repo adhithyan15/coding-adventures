@@ -1,0 +1,20 @@
+{
+  "language": "german",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:b996ec563680b4f9",
+  "lessonIds": [
+    "GE-C337-irren",
+    "GE-C337-irrtum",
+    "GE-C337-zweifel",
+    "GE-C337-zweifeln",
+    "GE-C337-bezweifeln",
+    "GE-R337-review-330-337"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "german/narration/ch337.txt",
+  "json": "german/narration/ch337.json",
+  "textHash": "fnv1a64:e0fcea22dcec093f",
+  "jsonHash": "fnv1a64:9d99551d7301b9a2",
+  "findings": []
+}

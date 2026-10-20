@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 410,
+  "sourceHash": "fnv1a64:26c062b13f60794f",
+  "lessonIds": [
+    "GE-C410-auffahrunfall",
+    "GE-C410-auffahren",
+    "GE-C410-schleudern",
+    "GE-C410-fussgaenger",
+    "GE-C410-radfahrer"
+  ],
+  "tex": "german/book/chapters/ch410-ein-kleiner-unfall.tex"
+}

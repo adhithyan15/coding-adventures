@@ -1,0 +1,19 @@
+{
+  "chapter": 326,
+  "title": "Ab in den Ofen",
+  "label": "ch:ge-ab-in-den-ofen",
+  "canDo": "I can describe getting ready to bake: to preheat, to grease, a baking tray, a baking dish and to brown.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C326-braeunen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 326: I can describe getting ready to bake: to preheat, to grease, a baking tray, a baking dish and to brown.",
+    "assesses": [
+      "GE-LEX-C326-VORHEIZEN-03",
+      "GE-LEX-C326-VORHEIZEN-04",
+      "GE-LEX-C326-VORHEIZEN-05"
+    ]
+  }
+}

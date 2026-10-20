@@ -1,0 +1,19 @@
+{
+  "chapter": 532,
+  "title": "Wohnen in der WG",
+  "label": "ch:ge-wohnen-in-der-wg",
+  "canDo": "I can talk about sharing a flat and a building.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C532-treppenhaus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 532: I can talk about sharing a flat and a building.",
+    "assesses": [
+      "GE-LEX-C532-WG-03",
+      "GE-LEX-C532-WG-04",
+      "GE-LEX-C532-WG-05"
+    ]
+  }
+}

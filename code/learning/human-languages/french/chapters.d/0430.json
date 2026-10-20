@@ -1,0 +1,19 @@
+{
+  "chapter": 430,
+  "title": "Bestioles et volets",
+  "label": "ch:fr-bestioles-et-volets",
+  "canDo": "I can complain about bugs and light in a room: the bedbug, the cockroach, the mosquito net, the shutter and the blind.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C430-store",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 430: I can complain about bugs and light in a room: the bedbug, the cockroach, the mosquito net, the shutter and the blind.",
+    "assesses": [
+      "FR-LEX-C430-BESTIOLES-03",
+      "FR-LEX-C430-BESTIOLES-04",
+      "FR-LEX-C430-BESTIOLES-05"
+    ]
+  }
+}

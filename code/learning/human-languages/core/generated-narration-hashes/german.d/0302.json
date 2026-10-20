@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:57df71fe87f0e638",
+  "lessonIds": [
+    "GE-C302-rente",
+    "GE-C302-ruhestand",
+    "GE-C302-rentner",
+    "GE-C302-jubilaeum",
+    "GE-C302-abschied"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch302.txt",
+  "json": "german/narration/ch302.json",
+  "textHash": "fnv1a64:5edf23afcc0222f1",
+  "jsonHash": "fnv1a64:2670d8ad5214b03b",
+  "findings": []
+}

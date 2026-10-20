@@ -1,0 +1,11 @@
+{
+  "id": "GE-C317-nacherzaehlen",
+  "pathSegment": "GE-PATH-317-ERZAEHLUNG",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-317-ERZAEHLUNG",
+      "order": 1
+    }
+  ]
+}

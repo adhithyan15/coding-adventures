@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C402-tanken",
+    "language": "german",
+    "chapter": 402,
+    "sequence": 21700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:64c653d0be65bcbc"
+  },
+  "findings": []
+}

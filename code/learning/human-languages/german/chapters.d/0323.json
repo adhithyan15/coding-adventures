@@ -1,0 +1,19 @@
+{
+  "chapter": 323,
+  "title": "Schälen und schneiden",
+  "label": "ch:ge-schalen-und-schneiden",
+  "canDo": "I can describe getting vegetables ready: to peel, to chop, to dice, to grate and to halve.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C323-halbieren",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 323: I can describe getting vegetables ready: to peel, to chop, to dice, to grate and to halve.",
+    "assesses": [
+      "GE-LEX-C323-SCHAELEN-03",
+      "GE-LEX-C323-SCHAELEN-04",
+      "GE-LEX-C323-SCHAELEN-05"
+    ]
+  }
+}

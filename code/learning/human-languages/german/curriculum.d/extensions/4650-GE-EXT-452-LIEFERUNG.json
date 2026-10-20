@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-452-LIEFERUNG",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can send and return things: the packaging, wrapping up, the cardboard box, delivering and exchanging.",
+  "prerequisites": []
+}

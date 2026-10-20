@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 435,
+  "sourceHash": "fnv1a64:39f1d2280599d0b6",
+  "lessonIds": [
+    "FR-C435-panneau",
+    "FR-C435-fleche",
+    "FR-C435-croisement",
+    "FR-C435-borne",
+    "FR-C435-angle"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch435.txt",
+  "json": "french/narration/ch435.json",
+  "textHash": "fnv1a64:b0d24e6359ac5708",
+  "jsonHash": "fnv1a64:e4332d36359d0039",
+  "findings": []
+}

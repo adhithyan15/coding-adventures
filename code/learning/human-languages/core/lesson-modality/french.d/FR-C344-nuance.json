@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C344-nuance",
+    "language": "french",
+    "chapter": 344,
+    "sequence": 19440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:871632c772f8a214"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 284,
+  "sourceHash": "fnv1a64:d2983f6a3db49913",
+  "lessonIds": [
+    "GE-C284-verdacht",
+    "GE-C284-verdaechtig",
+    "GE-C284-ermitteln",
+    "GE-C284-ermittlung",
+    "GE-C284-festnehmen"
+  ],
+  "tex": "german/book/chapters/ch284-der-verdacht.tex"
+}

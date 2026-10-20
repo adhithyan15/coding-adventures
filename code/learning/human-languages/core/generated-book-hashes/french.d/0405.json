@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:160b84c55933e823",
+  "lessonIds": [
+    "FR-C405-depanner",
+    "FR-C405-depanneuse",
+    "FR-C405-depanneur",
+    "FR-C405-remorquer",
+    "FR-C405-garagiste"
+  ],
+  "tex": "french/book/chapters/ch405-la-depanneuse-arrive.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C471-troesten",
+  "pathSegment": "GE-PATH-471-TROST",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-471-TROST",
+      "order": 3
+    }
+  ]
+}

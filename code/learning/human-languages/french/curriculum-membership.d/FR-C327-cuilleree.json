@@ -1,0 +1,11 @@
+{
+  "id": "FR-C327-cuilleree",
+  "pathSegment": "FR-PATH-327-RECETTE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-327-RECETTE",
+      "order": 3
+    }
+  ]
+}

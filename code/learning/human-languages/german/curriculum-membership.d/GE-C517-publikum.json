@@ -1,0 +1,11 @@
+{
+  "id": "GE-C517-publikum",
+  "pathSegment": "GE-PATH-517-THEATER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-517-THEATER",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C446-cirer",
+    "language": "french",
+    "chapter": 446,
+    "sequence": 24670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7a3b9998fec51430"
+  },
+  "findings": []
+}

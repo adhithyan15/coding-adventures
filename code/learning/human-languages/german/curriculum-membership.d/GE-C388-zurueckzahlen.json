@@ -1,0 +1,11 @@
+{
+  "id": "GE-C388-zurueckzahlen",
+  "pathSegment": "GE-PATH-388-KREDIT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-388-KREDIT",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 451,
+  "sourceHash": "fnv1a64:2913f1cb0e1803e8",
+  "lessonIds": [
+    "GE-C451-reduzieren",
+    "GE-C451-sonderangebot",
+    "GE-C451-schnaeppchen",
+    "GE-C451-feilschen",
+    "GE-C451-flohmarkt"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch451.txt",
+  "json": "german/narration/ch451.json",
+  "textHash": "fnv1a64:3aac125a0621a909",
+  "jsonHash": "fnv1a64:1230c1573f79fd1f",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C486-cauchemar",
+  "pathSegment": "FR-PATH-486-NUITS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-486-NUITS",
+      "order": 2
+    }
+  ]
+}

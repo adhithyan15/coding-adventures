@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C519-denouement",
+    "language": "french",
+    "chapter": 519,
+    "sequence": 28430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3e21682bfb0ab048"
+  },
+  "findings": []
+}

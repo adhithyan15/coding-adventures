@@ -1,0 +1,19 @@
+{
+  "chapter": 503,
+  "title": "Le jardinage",
+  "label": "ch:fr-le-jardinage",
+  "canDo": "I can talk about gardening.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C503-arrosoir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 503: I can talk about gardening.",
+    "assesses": [
+      "FR-LEX-C503-JARDIN-03",
+      "FR-LEX-C503-JARDIN-04",
+      "FR-LEX-C503-JARDIN-05"
+    ]
+  }
+}

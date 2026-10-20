@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-342-WIRKUNG",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "GE-EXT-342-WIRKUNG"
+  ],
+  "after": []
+}

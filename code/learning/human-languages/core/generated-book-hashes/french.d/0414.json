@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:a4ebcf8f901797e0",
+  "lessonIds": [
+    "FR-C414-couchette",
+    "FR-C414-terminus",
+    "FR-C414-consigne",
+    "FR-C414-chariot",
+    "FR-C414-navette"
+  ],
+  "tex": "french/book/chapters/ch414-le-train-de-nuit.tex"
+}

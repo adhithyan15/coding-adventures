@@ -1,0 +1,11 @@
+{
+  "id": "GE-C421-kabine",
+  "pathSegment": "GE-PATH-421-FAEHRE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-421-FAEHRE",
+      "order": 2
+    }
+  ]
+}

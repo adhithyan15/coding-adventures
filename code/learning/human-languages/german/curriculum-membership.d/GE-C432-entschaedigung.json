@@ -1,0 +1,11 @@
+{
+  "id": "GE-C432-entschaedigung",
+  "pathSegment": "GE-PATH-432-ENTSCHAEDIGUNG",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-432-ENTSCHAEDIGUNG",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 421,
+  "sourceHash": "fnv1a64:b967a37a5571cd99",
+  "lessonIds": [
+    "FR-C421-annulation",
+    "FR-C421-remboursement",
+    "FR-C421-confirmer",
+    "FR-C421-decommander",
+    "FR-C421-surreservation"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch421.txt",
+  "json": "french/narration/ch421.json",
+  "textHash": "fnv1a64:eadcaf1c31b9fe5e",
+  "jsonHash": "fnv1a64:531a7ef2585d146e",
+  "findings": []
+}

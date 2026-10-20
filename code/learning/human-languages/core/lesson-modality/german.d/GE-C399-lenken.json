@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C399-lenken",
+    "language": "german",
+    "chapter": 399,
+    "sequence": 21560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9b5434547ce3bc8e"
+  },
+  "findings": []
+}

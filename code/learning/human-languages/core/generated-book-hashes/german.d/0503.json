@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 503,
+  "sourceHash": "fnv1a64:775b698030d2a937",
+  "lessonIds": [
+    "GE-C503-gaertnern",
+    "GE-C503-unkraut",
+    "GE-C503-jaeten",
+    "GE-C503-giesskanne",
+    "GE-C503-kompost"
+  ],
+  "tex": "german/book/chapters/ch503-im-garten.tex"
+}

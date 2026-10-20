@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-335-DEBAT",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "FR-EXT-335-DEBAT"
+  ],
+  "after": []
+}

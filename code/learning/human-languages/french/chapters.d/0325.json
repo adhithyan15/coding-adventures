@@ -1,0 +1,19 @@
+{
+  "chapter": 325,
+  "title": "Les traces du passé",
+  "label": "ch:fr-les-traces-du-passe",
+  "canDo": "I can talk about people who study the past and what they find: the historian, ancestors, heritage, the archaeologist and a dig.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C325-fouille",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 325: I can talk about people who study the past and what they find: the historian, ancestors, heritage, the archaeologist and a dig.",
+    "assesses": [
+      "FR-LEX-C325-PASSE-03",
+      "FR-LEX-C325-PASSE-04",
+      "FR-LEX-C325-PASSE-05"
+    ]
+  }
+}

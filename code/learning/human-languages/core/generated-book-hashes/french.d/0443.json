@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 443,
+  "sourceHash": "fnv1a64:fd781d89047b8623",
+  "lessonIds": [
+    "FR-C443-egout",
+    "FR-C443-caniveau",
+    "FR-C443-deblayer",
+    "FR-C443-saler",
+    "FR-C443-deneiger"
+  ],
+  "tex": "french/book/chapters/ch443-l-hiver-en-ville.tex"
+}

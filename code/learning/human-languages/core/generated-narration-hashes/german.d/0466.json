@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 466,
+  "sourceHash": "fnv1a64:4a9c1948428f8548",
+  "lessonIds": [
+    "GE-C466-eifersucht",
+    "GE-C466-neid",
+    "GE-C466-neidisch",
+    "GE-C466-beneiden",
+    "GE-C466-goennen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch466.txt",
+  "json": "german/narration/ch466.json",
+  "textHash": "fnv1a64:147ce1896d09c987",
+  "jsonHash": "fnv1a64:4179706c3f3414a7",
+  "findings": []
+}

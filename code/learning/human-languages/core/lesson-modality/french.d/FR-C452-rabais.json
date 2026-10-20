@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C452-rabais",
+    "language": "french",
+    "chapter": 452,
+    "sequence": 24970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2f4c597bd3970d37"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 516,
+  "title": "Auf der Bühne",
+  "label": "ch:ge-auf-der-buhne",
+  "canDo": "I can talk about performing on stage.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C516-auftritt",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 516: I can talk about performing on stage.",
+    "assesses": [
+      "GE-LEX-C516-BUEHNE-03",
+      "GE-LEX-C516-BUEHNE-04",
+      "GE-LEX-C516-BUEHNE-05"
+    ]
+  }
+}

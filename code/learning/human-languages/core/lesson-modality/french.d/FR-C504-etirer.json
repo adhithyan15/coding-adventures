@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C504-etirer",
+    "language": "french",
+    "chapter": 504,
+    "sequence": 27660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:264b4f30d794bd50"
+  },
+  "findings": []
+}

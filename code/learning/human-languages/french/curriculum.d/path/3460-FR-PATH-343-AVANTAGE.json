@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-343-AVANTAGE",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "FR-EXT-343-AVANTAGE"
+  ],
+  "after": []
+}

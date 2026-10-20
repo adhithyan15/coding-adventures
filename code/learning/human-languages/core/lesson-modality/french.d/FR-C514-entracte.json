@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C514-entracte",
+    "language": "french",
+    "chapter": 514,
+    "sequence": 28200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a16f26ab82d97eb9"
+  },
+  "findings": []
+}

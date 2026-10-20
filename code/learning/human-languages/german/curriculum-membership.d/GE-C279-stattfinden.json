@@ -1,0 +1,11 @@
+{
+  "id": "GE-C279-stattfinden",
+  "pathSegment": "GE-PATH-279-EREIGNIS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-279-EREIGNIS",
+      "order": 2
+    }
+  ]
+}

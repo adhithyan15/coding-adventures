@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C530-rincer",
+    "language": "french",
+    "chapter": 530,
+    "sequence": 29000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ff5c4d45d3b87dcc"
+  },
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-258-SCENE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can paint the scene of a past story with the imparfait, and drop the events into it with the passé composé.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C469-humeur",
+  "pathSegment": "FR-PATH-469-HUMEUR",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-469-HUMEUR",
+      "order": 0
+    }
+  ]
+}

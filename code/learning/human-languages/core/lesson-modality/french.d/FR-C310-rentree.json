@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C310-rentree",
+    "language": "french",
+    "chapter": 310,
+    "sequence": 17680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3ebc39e201b1e6b9"
+  },
+  "findings": []
+}

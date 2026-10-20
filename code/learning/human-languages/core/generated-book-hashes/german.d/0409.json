@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 409,
+  "sourceHash": "fnv1a64:d67e297ad1c2b19d",
+  "lessonIds": [
+    "GE-C409-baustelle",
+    "GE-C409-umleitung",
+    "GE-C409-umleiten",
+    "GE-C409-sperren",
+    "GE-C409-raststaette"
+  ],
+  "tex": "german/book/chapters/ch409-bauarbeiten.tex"
+}

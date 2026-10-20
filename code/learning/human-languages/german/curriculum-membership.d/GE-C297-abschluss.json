@@ -1,0 +1,11 @@
+{
+  "id": "GE-C297-abschluss",
+  "pathSegment": "GE-PATH-297-AUFWACHSEN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-297-AUFWACHSEN",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-380-NORME",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "FR-EXT-380-NORME"
+  ],
+  "after": []
+}

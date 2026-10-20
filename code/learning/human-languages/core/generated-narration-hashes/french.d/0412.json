@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 412,
+  "sourceHash": "fnv1a64:735f6f95010a80aa",
+  "lessonIds": [
+    "FR-C412-guichet",
+    "FR-C412-tarif",
+    "FR-C412-trajet",
+    "FR-C412-forfait",
+    "FR-C412-valider"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch412.txt",
+  "json": "french/narration/ch412.json",
+  "textHash": "fnv1a64:5fdf18d7763097c8",
+  "jsonHash": "fnv1a64:d0417d435db3b438",
+  "findings": []
+}

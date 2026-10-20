@@ -1,0 +1,11 @@
+{
+  "id": "GE-C279-ereignen",
+  "pathSegment": "GE-PATH-279-EREIGNIS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-279-EREIGNIS",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 361,
+  "title": "Trop de travail",
+  "label": "ch:fr-trop-de-travail",
+  "canDo": "I can say I am stressed or worn out and talk about being effective, efficiency and productivity.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C361-productivite",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 361: I can say I am stressed or worn out and talk about being effective, efficiency and productivity.",
+    "assesses": [
+      "FR-LEX-C361-STRESS-03",
+      "FR-LEX-C361-STRESS-04",
+      "FR-LEX-C361-STRESS-05"
+    ]
+  }
+}

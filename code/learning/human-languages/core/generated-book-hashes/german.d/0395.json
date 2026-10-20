@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 395,
+  "sourceHash": "fnv1a64:10fd6d50a10e46f7",
+  "lessonIds": [
+    "GE-C395-passwort",
+    "GE-C395-einloggen",
+    "GE-C395-zugang",
+    "GE-C395-datenschutz",
+    "GE-C395-verschluesseln"
+  ],
+  "tex": "german/book/chapters/ch395-sicher-im-netz.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C272-journalist",
+    "language": "german",
+    "chapter": 272,
+    "sequence": 15040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ab8d43b9fe61fc25"
+  },
+  "findings": []
+}

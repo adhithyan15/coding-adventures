@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 457,
+  "sourceHash": "fnv1a64:6361d55eb4c4ff22",
+  "lessonIds": [
+    "GE-C457-duene",
+    "GE-C457-ebbe",
+    "GE-C457-flut",
+    "GE-C457-bucht",
+    "GE-C457-muschel"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch457.txt",
+  "json": "german/narration/ch457.json",
+  "textHash": "fnv1a64:02aba70b75ca15e2",
+  "jsonHash": "fnv1a64:2c97045ba3575749",
+  "findings": []
+}

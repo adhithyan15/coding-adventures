@@ -1,0 +1,11 @@
+{
+  "id": "FR-C297-exces-de-vitesse",
+  "pathSegment": "FR-PATH-297-ROUTE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-297-ROUTE",
+      "order": 2
+    }
+  ]
+}

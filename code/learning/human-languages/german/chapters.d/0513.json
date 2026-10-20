@@ -1,0 +1,19 @@
+{
+  "chapter": 513,
+  "title": "Klavier und Geige",
+  "label": "ch:ge-klavier-und-geige",
+  "canDo": "I can talk about musical instruments.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-R513-review-506-513",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 513: I can talk about musical instruments.",
+    "assesses": [
+      "GE-LEX-C513-INSTRUMENTE-03",
+      "GE-LEX-C513-INSTRUMENTE-04",
+      "GE-LEX-C513-INSTRUMENTE-05"
+    ]
+  }
+}

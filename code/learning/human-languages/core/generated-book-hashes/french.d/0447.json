@@ -1,0 +1,14 @@
+{
+  "language": "french",
+  "chapter": 447,
+  "sourceHash": "fnv1a64:8042f32874a24154",
+  "lessonIds": [
+    "FR-C447-pressing",
+    "FR-C447-laverie",
+    "FR-C447-detacher",
+    "FR-C447-teindre",
+    "FR-C447-retoucher",
+    "FR-R447-revision-440-447"
+  ],
+  "tex": "french/book/chapters/ch447-au-pressing.tex"
+}

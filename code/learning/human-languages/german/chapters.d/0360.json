@@ -1,0 +1,19 @@
+{
+  "chapter": 360,
+  "title": "Vorurteile",
+  "label": "ch:ge-vorurteile",
+  "canDo": "I can talk about prejudice and tolerance, minorities, discrimination and equal rights.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C360-gleichberechtigung",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 360: I can talk about prejudice and tolerance, minorities, discrimination and equal rights.",
+    "assesses": [
+      "GE-LEX-C360-VORURTEIL-03",
+      "GE-LEX-C360-VORURTEIL-04",
+      "GE-LEX-C360-VORURTEIL-05"
+    ]
+  }
+}

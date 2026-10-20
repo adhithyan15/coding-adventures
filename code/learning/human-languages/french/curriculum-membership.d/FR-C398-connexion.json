@@ -1,0 +1,11 @@
+{
+  "id": "FR-C398-connexion",
+  "pathSegment": "FR-PATH-398-RESEAU",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-398-RESEAU",
+      "order": 1
+    }
+  ]
+}

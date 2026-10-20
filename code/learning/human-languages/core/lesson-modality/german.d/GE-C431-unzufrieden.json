@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C431-unzufrieden",
+    "language": "german",
+    "chapter": 431,
+    "sequence": 23230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4c2416a2b45489e6"
+  },
+  "findings": []
+}

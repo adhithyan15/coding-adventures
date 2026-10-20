@@ -1,0 +1,11 @@
+{
+  "id": "FR-C484-secouriste",
+  "pathSegment": "FR-PATH-484-URGENCES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-484-URGENCES",
+      "order": 1
+    }
+  ]
+}
