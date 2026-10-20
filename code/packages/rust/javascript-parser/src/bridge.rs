@@ -3768,7 +3768,7 @@ fn convert_primary_token(t: &Token, ctx: &GrammarASTNode) -> Result<Expression, 
         }
         TokenType::String => {
             let raw = t.value.clone();
-            let value = unquote_string(&raw);
+            let value = decode_string_escapes(&raw);
             return Ok(Expression::StringLiteral(StringLiteral { cv: t.cv.clone(), value, raw }));
         }
         TokenType::Name => {
@@ -3994,7 +3994,7 @@ fn convert_property_key(node: &GrammarASTNode) -> Result<PropertyKey, BridgeErro
     //                                      // object at runtime.
     //
     // We now switch on `t.type_`, exactly mirroring `convert_primary_token`, and
-    // decode string keys through `unquote_string` so the key's `value` holds the
+    // decode string keys through `decode_string_escapes` so the key's `value` holds the
     // real property name. The quote-vs-bare *emission* choice is then made
     // soundly in the emitter (`emit_property_key`), which only drops the quotes
     // when the decoded name is a valid identifier (and never for `__proto__`).
@@ -4017,7 +4017,7 @@ fn convert_property_key(node: &GrammarASTNode) -> Result<PropertyKey, BridgeErro
             match t.type_ {
                 TokenType::String => {
                     let raw = t.value.clone();
-                    let value = unquote_string(&raw);
+                    let value = decode_string_escapes(&raw);
                     return Ok(PropertyKey::StringLiteral(
                         coding_adventures_javascript_ast::expression::StringLiteral { cv: None, value, raw },
                     ));
@@ -4079,16 +4079,29 @@ fn parse_js_number(s: &str) -> Result<f64, ()> {
     cleaned.parse::<f64>().map_err(|_| ())
 }
 
-/// Strip the surrounding quotes and unescape the content of a JS string token.
-/// Returns the unescaped content (e.g. `"hello\nworld"` → `hello` + newline + `world`).
-fn unquote_string(raw: &str) -> String {
-    let s = if (raw.starts_with('"') && raw.ends_with('"'))
-        || (raw.starts_with('\'') && raw.ends_with('\''))
-    {
-        &raw[1..raw.len() - 1]
-    } else {
-        raw
-    };
+/// Decode the escape sequences in the interior of a JS string token.
+/// Returns the unescaped content (e.g. `hello\nworld` → `hello` + newline + `world`).
+///
+/// The input is the token's `value` **as the GrammarLexer delivers it**, and the
+/// GrammarLexer has already stripped the surrounding quotes (every `*STRING`
+/// token whose match is quoted loses its delimiters — see the lesson
+/// "GrammarLexer strips quotes from string capture groups"). So this function
+/// must NOT strip quotes itself:
+///
+/// ```text
+///   source       token value   old (stripped again)       now
+///   ----------   -----------   ------------------------   -----
+///   '"'          "             raw[1..0] → PANIC          "
+///   "'"          '             raw[1..0] → PANIC          '
+///   '"abc"'      "abc"         abc   (value miscompile)   "abc"
+///   ""           (empty)       (empty)                    (empty)
+/// ```
+///
+/// A one-character interior that happens to be a quote both "starts and ends"
+/// with that quote, so the old re-strip sliced `raw[1..0]` and panicked; a
+/// longer interior wrapped in matching quotes silently lost them. Neither shape
+/// can ever be a legitimately-quoted token here, so the strip is gone outright.
+fn decode_string_escapes(s: &str) -> String {
     let mut result = String::with_capacity(s.len());
     let mut chars = s.chars().peekable();
     while let Some(c) = chars.next() {
@@ -5389,6 +5402,66 @@ mod tests {
                     other => panic!("expected StringLiteral({want:?}) for {src}, got {other:?}"),
                 },
                 other => panic!("expected an ExpressionStatement for {src}, got {other:?}"),
+            }
+        }
+    }
+
+    /// Regression: the GrammarLexer already strips a STRING token's quotes, so
+    /// the bridge used to strip them a SECOND time. A one-character interior
+    /// that is itself a quote (`'"'` → token value `"`) both starts and ends
+    /// with `"`, so the old code sliced `raw[1..0]` and panicked ("byte range
+    /// starts at 1 but ends at 0"); a longer quote-wrapped interior (`'"abc"'`)
+    /// silently lost its quotes. Each case must decode to the true value.
+    #[test]
+    fn quote_only_and_quote_wrapped_strings_decode_without_panicking() {
+        use coding_adventures_javascript_ast::statement::TaggedStatement;
+        for (src, want) in [
+            ("'\"';", "\""),           // '"'
+            ("\"'\";", "'"),           // "'"
+            ("\"\\\"\";", "\""),       // "\""
+            ("'\\'';", "'"),           // '\''
+            ("\"\";", ""),             // ""
+            ("'';", ""),               // ''
+            ("'\"abc\"';", "\"abc\""), // '"abc"' keeps its inner quotes
+            ("\"'x'\";", "'x'"),       // "'x'" keeps its inner quotes
+        ] {
+            let p = bridge_ok(src);
+            match &p.body[0] {
+                ProgramItem::Statement(Statement::Tagged(
+                    TaggedStatement::ExpressionStatement(es),
+                )) => match &es.expression {
+                    Expression::StringLiteral(s) => assert_eq!(s.value, want, "for {src}"),
+                    other => panic!("expected StringLiteral for {src}, got {other:?}"),
+                },
+                other => panic!("expected an ExpressionStatement for {src}, got {other:?}"),
+            }
+        }
+        // The same decode path backs quoted object keys.
+        for (src, want) in [("({'\"': 1});", "\""), ("({\"'\": 1});", "'"), ("({\"\": 1});", "")] {
+            match first_object_key(src) {
+                PropertyKey::StringLiteral(s) => assert_eq!(s.value, want, "for {src}"),
+                other => panic!("expected StringLiteral key for {src}, got {other:?}"),
+            }
+        }
+    }
+
+    /// The exact reproduction from the differential check: an older edition
+    /// (whose lexer decodes escapes itself) must return `Ok`, not panic, for
+    /// every quote-only string in both quote styles.
+    #[test]
+    fn quote_only_strings_parse_in_every_edition() {
+        for &version in EsVersion::ALL {
+            for src in [
+                "console.log('\"');",
+                "console.log(\"'\");",
+                "console.log(\"\\\"\");",
+                "console.log('\\'');",
+                "console.log('');",
+            ] {
+                assert!(
+                    crate::parse_javascript_program(src, version).is_ok(),
+                    "{src} failed to parse under {version:?}"
+                );
             }
         }
     }
