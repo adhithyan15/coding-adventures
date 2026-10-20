@@ -1,5 +1,19 @@
 # Changelog — grammar-tools (Rust program)
 
+## Unreleased
+
+### Added
+- LANG84 phase 4a: inventory-driven, deduplicating versioned families.
+  `generate-rust-compiled-grammars perl` reads the release list from
+  `code/grammars/perl/releases.csv` (columns found by header name; unsafe,
+  duplicate or unknown-status rows refused), compiles every non-pending pair,
+  and emits one module per distinct grammar (`g_<12 hex of SHA-256>` of the
+  generated code with comment lines dropped and `line_number` zeroed). Output
+  exports `INVENTORY_RELEASES`, `SUPPORTED_RELEASES`, a release → module
+  `match`, and `unversioned_*()` instead of a `""` release. Perl's 117 checked
+  pairs become 5 token and 2 parser tables.
+- Depends on the in-repo `sha256` crate for the module names.
+
 ## [2.1.0] - 2026-03-26
 
 ### Added
