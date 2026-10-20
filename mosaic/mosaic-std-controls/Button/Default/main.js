@@ -53,7 +53,14 @@ root.addEventListener("keydown", event => {
   if (target === null || !root.contains(target)) {
     return;
   }
-  if (event.key === "Enter" && target.dataset.onCommit) {
+  // A field whose commit key is `mod+Enter` (a multi-line text area, where
+  // bare Enter is a line break) commits on Ctrl+Enter or Cmd+Enter only.
+  const commitChord = target.dataset.commitKey === "mod+Enter";
+  if (event.key === "Enter" && target.dataset.onCommit
+      && (!commitChord || event.ctrlKey || event.metaKey)) {
+    if (commitChord) {
+      event.preventDefault();
+    }
     void dispatchMosaicEvent(target.dataset.onCommit, target);
   }
   if (event.key === "Escape" && target.dataset.onCancel) {

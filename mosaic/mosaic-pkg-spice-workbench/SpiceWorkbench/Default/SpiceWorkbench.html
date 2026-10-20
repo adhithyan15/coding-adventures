@@ -8,7 +8,8 @@
     <div style="display: flex; flex-direction: column; gap: 6px">
       <span style="font-size: 12px; font-weight: bold; color: #475569">{{netlistLabel}}</span>
       <!-- emit "onNetlistChange" dropped: HTML is static -->
-      <textarea placeholder="{{netlistPlaceholder}}" data-on-change="onNetlistChange" style="min-height: 240px; background: #ffffff; color: #0f172a; border-width: 1px; border-color: #cbd5e1; border-radius: 4px; padding: 10px; font-family: monospace">{{netlistText}}</textarea>
+      <!-- emit "onRun" dropped: HTML is static -->
+      <textarea placeholder="{{netlistPlaceholder}}" data-on-change="onNetlistChange" data-on-commit="onRun" data-commit-key="mod+Enter" style="min-height: 240px; background: #ffffff; color: #0f172a; border-width: 1px; border-color: #cbd5e1; border-radius: 4px; padding: 10px; font-family: monospace">{{netlistText}}</textarea>
       <div style="display: flex; flex-direction: row; gap: 8px">
         <!-- emit "onInspect" dropped: HTML is static -->
         <button data-on-click="onInspect" style="background: #e0f2fe; color: #075985; border-width: 1px; border-color: #7dd3fc; border-radius: 4px; padding: 8px">{{inspectLabel}}</button>

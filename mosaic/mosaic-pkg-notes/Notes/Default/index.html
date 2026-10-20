@@ -32,7 +32,8 @@
               <!-- emit "onTitleChange" dropped: HTML is static -->
               <input type="text" value="{{titleValue}}" placeholder="Title" data-on-change="onTitleChange" style="padding: 10px; border-radius: 6px; background: #ffffff; color: #2b2723; border-width: 1px; border-color: #e6ded3; font-size: 14px; font-weight: bold">
               <!-- emit "onBodyChange" dropped: HTML is static -->
-              <textarea placeholder="Write something…" data-on-change="onBodyChange" style="width: 100%; min-height: 200px; padding: 10px; border-radius: 6px; background: #ffffff; color: #2b2723; border-width: 1px; border-color: #e6ded3; font-size: 13px">{{bodyValue}}</textarea>
+              <!-- emit "onSave" dropped: HTML is static -->
+              <textarea placeholder="Write something…" data-on-change="onBodyChange" data-on-commit="onSave" data-commit-key="mod+Enter" style="width: 100%; min-height: 200px; padding: 10px; border-radius: 6px; background: #ffffff; color: #2b2723; border-width: 1px; border-color: #e6ded3; font-size: 13px">{{bodyValue}}</textarea>
               <!-- emit "onTaskNameChange" dropped: HTML is static -->
               <input type="text" value="{{taskNameValue}}" placeholder="Attach to task (optional)" data-on-change="onTaskNameChange" style="padding: 10px; border-radius: 6px; background: #ffffff; color: #6a625a; border-width: 1px; border-color: #e6ded3; font-size: 13px">
               <div style="display: flex; flex-direction: row; gap: 8px">
