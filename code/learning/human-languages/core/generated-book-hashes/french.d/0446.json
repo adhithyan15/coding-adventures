@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 446,
+  "sourceHash": "fnv1a64:db350100bdfb3b4e",
+  "lessonIds": [
+    "FR-C446-cordonnier",
+    "FR-C446-ressemeler",
+    "FR-C446-cirer",
+    "FR-C446-serrurier",
+    "FR-C446-recoudre"
+  ],
+  "tex": "french/book/chapters/ch446-chez-le-cordonnier.tex"
+}

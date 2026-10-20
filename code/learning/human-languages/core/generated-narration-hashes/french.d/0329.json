@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 329,
+  "sourceHash": "fnv1a64:38c34379aecb3960",
+  "lessonIds": [
+    "FR-C329-saladier",
+    "FR-C329-verser",
+    "FR-C329-battre",
+    "FR-C329-fouet",
+    "FR-C329-fouetter"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch329.txt",
+  "json": "french/narration/ch329.json",
+  "textHash": "fnv1a64:57d226e841883d9d",
+  "jsonHash": "fnv1a64:cef24e6ad8f4033c",
+  "findings": []
+}

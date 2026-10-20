@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 348,
+  "sourceHash": "fnv1a64:d50414ded68549d1",
+  "lessonIds": [
+    "GE-C348-verantwortung",
+    "GE-C348-verantwortlich",
+    "GE-C348-rechtfertigen",
+    "GE-C348-ausrede",
+    "GE-C348-deswegen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch348.txt",
+  "json": "german/narration/ch348.json",
+  "textHash": "fnv1a64:fc92b5a0d3da0dad",
+  "jsonHash": "fnv1a64:f4b9bb84ce10aed5",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 290,
+  "sourceHash": "fnv1a64:058ca11d1d4415c1",
+  "lessonIds": [
+    "GE-C290-bewusstlos",
+    "GE-C290-ohnmaechtig",
+    "GE-C290-bewusstsein",
+    "GE-C290-ersticken",
+    "GE-C290-ertrinken"
+  ],
+  "tex": "german/book/chapters/ch290-bewusstlos.tex"
+}

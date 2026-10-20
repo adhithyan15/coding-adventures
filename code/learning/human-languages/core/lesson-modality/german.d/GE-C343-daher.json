@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C343-daher",
+    "language": "german",
+    "chapter": 343,
+    "sequence": 18700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:520f92d848720fb4"
+  },
+  "findings": []
+}

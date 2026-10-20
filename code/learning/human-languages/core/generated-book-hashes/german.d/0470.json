@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 470,
+  "sourceHash": "fnv1a64:395f5e511f2065b0",
+  "lessonIds": [
+    "GE-C470-geduld",
+    "GE-C470-gelassen",
+    "GE-C470-beruhigen",
+    "GE-C470-aufregung",
+    "GE-C470-zappeln"
+  ],
+  "tex": "german/book/chapters/ch470-geduld-und-gelassenheit.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C507-tournoi",
+    "language": "french",
+    "chapter": 507,
+    "sequence": 27800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cdcae60f0b06fed0"
+  },
+  "findings": []
+}

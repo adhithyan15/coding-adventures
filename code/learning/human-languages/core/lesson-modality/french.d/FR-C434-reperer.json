@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C434-reperer",
+    "language": "french",
+    "chapter": 434,
+    "sequence": 24060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5a7c79885e348772"
+  },
+  "findings": []
+}

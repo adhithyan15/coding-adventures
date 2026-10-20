@@ -1,0 +1,11 @@
+{
+  "id": "FR-C296-braqueur",
+  "pathSegment": "FR-PATH-296-BRAQUAGE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-296-BRAQUAGE",
+      "order": 1
+    }
+  ]
+}

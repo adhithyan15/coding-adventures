@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C444-baumarkt",
+    "language": "german",
+    "chapter": 444,
+    "sequence": 23850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:039b3d42a1e69d13"
+  },
+  "findings": []
+}

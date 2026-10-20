@@ -1,0 +1,11 @@
+{
+  "id": "FR-C363-banderole",
+  "pathSegment": "FR-PATH-363-MANIFESTATION",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-363-MANIFESTATION",
+      "order": 3
+    }
+  ]
+}

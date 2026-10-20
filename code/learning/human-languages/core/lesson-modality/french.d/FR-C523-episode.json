@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C523-episode",
+    "language": "french",
+    "chapter": 523,
+    "sequence": 28620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:850d4d939030918c"
+  },
+  "findings": []
+}

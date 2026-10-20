@@ -1,0 +1,11 @@
+{
+  "id": "FR-C269-au-moment-ou",
+  "pathSegment": "FR-PATH-269-QUAND",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-269-QUAND",
+      "order": 2
+    }
+  ]
+}

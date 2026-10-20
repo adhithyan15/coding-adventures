@@ -1,0 +1,11 @@
+{
+  "id": "FR-C286-bilan",
+  "pathSegment": "FR-PATH-286-CHIFFRES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-286-CHIFFRES",
+      "order": 1
+    }
+  ]
+}

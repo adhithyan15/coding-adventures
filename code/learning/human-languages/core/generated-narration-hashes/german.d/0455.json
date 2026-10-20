@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 455,
+  "sourceHash": "fnv1a64:302ea82aeac8bf49",
+  "lessonIds": [
+    "GE-C455-wasserfall",
+    "GE-C455-sumpf",
+    "GE-C455-tuempel",
+    "GE-C455-plaetschern",
+    "GE-C455-fliessen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch455.txt",
+  "json": "german/narration/ch455.json",
+  "textHash": "fnv1a64:dac5f5f5f9152210",
+  "jsonHash": "fnv1a64:f77294a0734ecb4b",
+  "findings": []
+}

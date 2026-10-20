@@ -1,0 +1,11 @@
+{
+  "id": "FR-C465-inondation",
+  "pathSegment": "FR-PATH-465-TEMPETE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-465-TEMPETE",
+      "order": 1
+    }
+  ]
+}

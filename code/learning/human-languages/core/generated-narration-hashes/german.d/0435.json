@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 435,
+  "sourceHash": "fnv1a64:30731020f75aea0a",
+  "lessonIds": [
+    "GE-C435-abkuerzung",
+    "GE-C435-abkuerzen",
+    "GE-C435-umweg",
+    "GE-C435-umkehren",
+    "GE-C435-verfahren"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch435.txt",
+  "json": "german/narration/ch435.json",
+  "textHash": "fnv1a64:c57c823c23559046",
+  "jsonHash": "fnv1a64:bf3e49263673c3cd",
+  "findings": []
+}

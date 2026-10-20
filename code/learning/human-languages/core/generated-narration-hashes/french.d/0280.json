@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 280,
+  "sourceHash": "fnv1a64:9d203353ad1cfc18",
+  "lessonIds": [
+    "FR-C280-journal-televise",
+    "FR-C280-presentateur",
+    "FR-C280-telespectateur",
+    "FR-C280-auditeur",
+    "FR-C280-micro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch280.txt",
+  "json": "french/narration/ch280.json",
+  "textHash": "fnv1a64:d46608ee686256d6",
+  "jsonHash": "fnv1a64:ed8de36be9390b5e",
+  "findings": []
+}

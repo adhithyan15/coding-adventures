@@ -1,0 +1,19 @@
+{
+  "chapter": 514,
+  "title": "Au théâtre",
+  "label": "ch:fr-au-theatre",
+  "canDo": "I can talk about a theatre company and a show.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C514-entracte",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 514: I can talk about a theatre company and a show.",
+    "assesses": [
+      "FR-LEX-C514-THEATRE-03",
+      "FR-LEX-C514-THEATRE-04",
+      "FR-LEX-C514-THEATRE-05"
+    ]
+  }
+}

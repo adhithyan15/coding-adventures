@@ -1,0 +1,19 @@
+{
+  "chapter": 469,
+  "title": "Enttäuscht und erleichtert",
+  "label": "ch:ge-enttauscht-und-erleichtert",
+  "canDo": "I can talk about disappointment and relief.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C469-seufzen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 469: I can talk about disappointment and relief.",
+    "assesses": [
+      "GE-LEX-C469-ENTTAEUSCHUNG-03",
+      "GE-LEX-C469-ENTTAEUSCHUNG-04",
+      "GE-LEX-C469-ENTTAEUSCHUNG-05"
+    ]
+  }
+}

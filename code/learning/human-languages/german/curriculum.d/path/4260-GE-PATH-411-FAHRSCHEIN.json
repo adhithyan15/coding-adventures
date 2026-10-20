@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-411-FAHRSCHEIN",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-411-FAHRSCHEIN"
+  ],
+  "after": []
+}

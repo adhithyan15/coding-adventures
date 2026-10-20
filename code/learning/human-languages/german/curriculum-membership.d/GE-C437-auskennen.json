@@ -1,0 +1,11 @@
+{
+  "id": "GE-C437-auskennen",
+  "pathSegment": "GE-PATH-437-BUMMELN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-437-BUMMELN",
+      "order": 4
+    }
+  ]
+}

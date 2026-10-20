@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-298-CHOC",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-298-CHOC"
+  ],
+  "after": []
+}

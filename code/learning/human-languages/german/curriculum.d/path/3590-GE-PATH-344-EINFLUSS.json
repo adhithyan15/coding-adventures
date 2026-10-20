@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-344-EINFLUSS",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "GE-EXT-344-EINFLUSS"
+  ],
+  "after": []
+}

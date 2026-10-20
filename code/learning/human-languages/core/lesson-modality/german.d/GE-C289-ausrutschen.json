@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C289-ausrutschen",
+    "language": "german",
+    "chapter": 289,
+    "sequence": 15880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cb71a0d643f38798"
+  },
+  "findings": []
+}

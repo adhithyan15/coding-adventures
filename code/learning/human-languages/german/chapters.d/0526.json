@@ -1,0 +1,19 @@
+{
+  "chapter": 526,
+  "title": "Wischen und fegen",
+  "label": "ch:ge-wischen-und-fegen",
+  "canDo": "I can talk about cleaning the house.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C526-lappen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 526: I can talk about cleaning the house.",
+    "assesses": [
+      "GE-LEX-C526-PUTZEN-03",
+      "GE-LEX-C526-PUTZEN-04",
+      "GE-LEX-C526-PUTZEN-05"
+    ]
+  }
+}

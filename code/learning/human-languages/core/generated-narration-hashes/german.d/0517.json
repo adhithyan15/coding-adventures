@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 517,
+  "sourceHash": "fnv1a64:4d102b2e7b057586",
+  "lessonIds": [
+    "GE-C517-schauspieler",
+    "GE-C517-regisseur",
+    "GE-C517-publikum",
+    "GE-C517-klatschen",
+    "GE-C517-applaus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch517.txt",
+  "json": "german/narration/ch517.json",
+  "textHash": "fnv1a64:0c83ef203bd4e484",
+  "jsonHash": "fnv1a64:68e82e0bdd699d04",
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-428-FUITE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can report a bathroom problem: the leak, the tap, the washbasin, dripping and unblocking.",
+  "prerequisites": []
+}

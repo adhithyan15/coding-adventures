@@ -1,0 +1,11 @@
+{
+  "id": "FR-C417-douanier",
+  "pathSegment": "FR-PATH-417-DOUANE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-417-DOUANE",
+      "order": 0
+    }
+  ]
+}

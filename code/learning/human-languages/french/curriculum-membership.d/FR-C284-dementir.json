@@ -1,0 +1,11 @@
+{
+  "id": "FR-C284-dementir",
+  "pathSegment": "FR-PATH-284-RAPPORTER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-284-RAPPORTER",
+      "order": 2
+    }
+  ]
+}

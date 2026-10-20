@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 327,
+  "sourceHash": "fnv1a64:c5b7bf89993e0a80",
+  "lessonIds": [
+    "GE-C327-koecheln",
+    "GE-C327-aufkochen",
+    "GE-C327-duensten",
+    "GE-C327-anbraten",
+    "GE-C327-deckel"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch327.txt",
+  "json": "german/narration/ch327.json",
+  "textHash": "fnv1a64:2d44558ab0172bfd",
+  "jsonHash": "fnv1a64:eae1c2f5930a89b7",
+  "findings": []
+}

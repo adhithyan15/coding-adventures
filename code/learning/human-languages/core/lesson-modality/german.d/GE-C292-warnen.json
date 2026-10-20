@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C292-warnen",
+    "language": "german",
+    "chapter": 292,
+    "sequence": 16030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:43738a24cde7734c"
+  },
+  "findings": []
+}

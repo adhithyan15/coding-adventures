@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-496-COUTURE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-496-COUTURE"
+  ],
+  "after": []
+}

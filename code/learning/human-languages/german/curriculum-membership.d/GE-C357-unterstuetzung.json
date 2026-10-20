@@ -1,0 +1,11 @@
+{
+  "id": "GE-C357-unterstuetzung",
+  "pathSegment": "GE-PATH-357-GEWERKSCHAFT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-357-GEWERKSCHAFT",
+      "order": 4
+    }
+  ]
+}

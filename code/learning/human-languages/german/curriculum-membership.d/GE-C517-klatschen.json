@@ -1,0 +1,11 @@
+{
+  "id": "GE-C517-klatschen",
+  "pathSegment": "GE-PATH-517-THEATER",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-517-THEATER",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 289,
+  "sourceHash": "fnv1a64:c174deeb8c7e699f",
+  "lessonIds": [
+    "FR-C289-agression",
+    "FR-C289-agresser",
+    "FR-C289-agresseur",
+    "FR-C289-menacer",
+    "FR-C289-menace"
+  ],
+  "tex": "french/book/chapters/ch289-une-agression.tex"
+}

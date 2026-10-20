@@ -1,0 +1,19 @@
+{
+  "chapter": 416,
+  "title": "À l'aérogare",
+  "label": "ch:fr-a-l-aerogare",
+  "canDo": "I can check in for a flight: the flight, the airport building, check-in, the hold and boarding.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C416-embarquement",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 416: I can check in for a flight: the flight, the airport building, check-in, the hold and boarding.",
+    "assesses": [
+      "FR-LEX-C416-AEROGARE-03",
+      "FR-LEX-C416-AEROGARE-04",
+      "FR-LEX-C416-AEROGARE-05"
+    ]
+  }
+}

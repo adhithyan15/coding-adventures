@@ -1,0 +1,11 @@
+{
+  "id": "FR-C455-gravir",
+  "pathSegment": "FR-PATH-455-RANDONNEE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-455-RANDONNEE",
+      "order": 3
+    }
+  ]
+}

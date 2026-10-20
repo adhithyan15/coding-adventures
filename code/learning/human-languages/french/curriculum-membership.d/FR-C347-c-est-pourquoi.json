@@ -1,0 +1,11 @@
+{
+  "id": "FR-C347-c-est-pourquoi",
+  "pathSegment": "FR-PATH-347-PUISQUE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-347-PUISQUE",
+      "order": 4
+    }
+  ]
+}

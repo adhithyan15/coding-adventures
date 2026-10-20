@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 519,
+  "sourceHash": "fnv1a64:2ec5e47a52e3ff5b",
+  "lessonIds": [
+    "GE-C519-galerie",
+    "GE-C519-ausstellen",
+    "GE-C519-skulptur",
+    "GE-C519-bildhauer",
+    "GE-C519-kunstwerk"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch519.txt",
+  "json": "german/narration/ch519.json",
+  "textHash": "fnv1a64:b5f906f26e0f4c1b",
+  "jsonHash": "fnv1a64:f6de76b6b20c2fa2",
+  "findings": []
+}

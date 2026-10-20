@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C336-contredire",
+    "language": "french",
+    "chapter": 336,
+    "sequence": 19040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0e77b63b39d56716"
+  },
+  "findings": []
+}

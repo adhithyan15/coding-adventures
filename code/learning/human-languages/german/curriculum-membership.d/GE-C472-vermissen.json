@@ -1,0 +1,11 @@
+{
+  "id": "GE-C472-vermissen",
+  "pathSegment": "GE-PATH-472-SEHNSUCHT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-472-SEHNSUCHT",
+      "order": 4
+    }
+  ]
+}

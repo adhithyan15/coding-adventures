@@ -1,0 +1,20 @@
+{
+  "language": "german",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:33393977b4b76a0e",
+  "lessonIds": [
+    "GE-C405-kofferraum",
+    "GE-C405-motorhaube",
+    "GE-C405-kratzer",
+    "GE-C405-delle",
+    "GE-C405-verbeulen",
+    "GE-R405-review-398-405"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "german/narration/ch405.txt",
+  "json": "german/narration/ch405.json",
+  "textHash": "fnv1a64:6cabf8df97bb6b61",
+  "jsonHash": "fnv1a64:7b0d1e5437f42903",
+  "findings": []
+}

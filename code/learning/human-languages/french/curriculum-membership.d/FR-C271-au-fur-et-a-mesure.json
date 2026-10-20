@@ -1,0 +1,11 @@
+{
+  "id": "FR-C271-au-fur-et-a-mesure",
+  "pathSegment": "FR-PATH-271-PEU",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-271-PEU",
+      "order": 2
+    }
+  ]
+}

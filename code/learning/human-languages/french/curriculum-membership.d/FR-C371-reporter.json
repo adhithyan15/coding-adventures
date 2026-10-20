@@ -1,0 +1,11 @@
+{
+  "id": "FR-C371-reporter",
+  "pathSegment": "FR-PATH-371-ANNULER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-371-ANNULER",
+      "order": 1
+    }
+  ]
+}

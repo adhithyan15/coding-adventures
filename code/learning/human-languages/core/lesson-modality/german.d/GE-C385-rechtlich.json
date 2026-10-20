@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C385-rechtlich",
+    "language": "german",
+    "chapter": 385,
+    "sequence": 20840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ba2fe867f01a25e9"
+  },
+  "findings": []
+}

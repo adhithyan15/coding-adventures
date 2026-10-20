@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-277-STREIK",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GE-EXT-277-STREIK"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C477-leichtsinnig",
+  "pathSegment": "GE-PATH-477-MUT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-477-MUT",
+      "order": 3
+    }
+  ]
+}

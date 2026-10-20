@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-472-SEHNSUCHT",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GE-EXT-472-SEHNSUCHT"
+  ],
+  "after": []
+}

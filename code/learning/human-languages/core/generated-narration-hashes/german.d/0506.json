@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 506,
+  "sourceHash": "fnv1a64:6b576709f96b5312",
+  "lessonIds": [
+    "GE-C506-torwart",
+    "GE-C506-stuermer",
+    "GE-C506-verteidiger",
+    "GE-C506-schiedsrichter",
+    "GE-C506-pfeifen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch506.txt",
+  "json": "german/narration/ch506.json",
+  "textHash": "fnv1a64:89f8ceccf349f4ee",
+  "jsonHash": "fnv1a64:b899f46fe1305bf3",
+  "findings": []
+}

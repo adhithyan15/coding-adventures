@@ -1,0 +1,19 @@
+{
+  "chapter": 478,
+  "title": "Reue und Verzeihung",
+  "label": "ch:ge-reue-und-verzeihung",
+  "canDo": "I can talk about regret, hurt feelings and forgiving.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C478-kraenken",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 478: I can talk about regret, hurt feelings and forgiving.",
+    "assesses": [
+      "GE-LEX-C478-REUE-03",
+      "GE-LEX-C478-REUE-04",
+      "GE-LEX-C478-REUE-05"
+    ]
+  }
+}

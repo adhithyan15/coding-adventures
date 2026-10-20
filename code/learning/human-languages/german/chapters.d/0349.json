@@ -1,0 +1,19 @@
+{
+  "chapter": 349,
+  "title": "Eine Stelle suchen",
+  "label": "ch:ge-eine-stelle-suchen",
+  "canDo": "I can read a job advertisement, talk about a job interview and say what I am able to do.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C349-beherrschen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 349: I can read a job advertisement, talk about a job interview and say what I am able to do.",
+    "assesses": [
+      "GE-LEX-C349-STELLE-03",
+      "GE-LEX-C349-STELLE-04",
+      "GE-LEX-C349-STELLE-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 476,
+  "title": "Stur und launisch",
+  "label": "ch:ge-stur-und-launisch",
+  "canDo": "I can describe difficult characters.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C476-empfindlich",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 476: I can describe difficult characters.",
+    "assesses": [
+      "GE-LEX-C476-LAUNISCH-03",
+      "GE-LEX-C476-LAUNISCH-04",
+      "GE-LEX-C476-LAUNISCH-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 514,
+  "sourceHash": "fnv1a64:df7a6824859c210f",
+  "lessonIds": [
+    "GE-C514-melodie",
+    "GE-C514-rhythmus",
+    "GE-C514-takt",
+    "GE-C514-strophe",
+    "GE-C514-summen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch514.txt",
+  "json": "german/narration/ch514.json",
+  "textHash": "fnv1a64:3376ead9c882e02d",
+  "jsonHash": "fnv1a64:0d3eadbf4c3f39f4",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 302,
+  "title": "Au feu !",
+  "label": "ch:fr-au-feu",
+  "canDo": "I can describe a fire and a blast: the blaze, the extinguisher, an explosion, blowing up and a spark.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C302-etincelle",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 302: I can describe a fire and a blast: the blaze, the extinguisher, an explosion, blowing up and a spark.",
+    "assesses": [
+      "FR-LEX-C302-INCENDIE-03",
+      "FR-LEX-C302-INCENDIE-04",
+      "FR-LEX-C302-INCENDIE-05"
+    ]
+  }
+}

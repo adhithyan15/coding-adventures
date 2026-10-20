@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:55b5a9ca8ea42524",
+  "lessonIds": [
+    "FR-C400-peripherique",
+    "FR-C400-peripherie",
+    "FR-C400-echangeur",
+    "FR-C400-bretelle",
+    "FR-C400-bifurquer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch400.txt",
+  "json": "french/narration/ch400.json",
+  "textHash": "fnv1a64:92a4d723e4804d0f",
+  "jsonHash": "fnv1a64:b0acdcab8ed0ade7",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:b80d317dc9ab1386",
+  "lessonIds": [
+    "GE-C351-teilzeit",
+    "GE-C351-vollzeit",
+    "GE-C351-schicht",
+    "GE-C351-ueberstunde",
+    "GE-C351-feierabend"
+  ],
+  "tex": "german/book/chapters/ch351-die-arbeitszeit.tex"
+}

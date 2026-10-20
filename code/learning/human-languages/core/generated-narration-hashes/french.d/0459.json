@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 459,
+  "sourceHash": "fnv1a64:6f7203a479e4c97e",
+  "lessonIds": [
+    "FR-C459-ecureuil",
+    "FR-C459-herisson",
+    "FR-C459-sanglier",
+    "FR-C459-cerf",
+    "FR-C459-biche"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch459.txt",
+  "json": "french/narration/ch459.json",
+  "textHash": "fnv1a64:0d059ca5e6d22a2e",
+  "jsonHash": "fnv1a64:a89e8f6ad0888a09",
+  "findings": []
+}

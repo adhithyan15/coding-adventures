@@ -1,0 +1,11 @@
+{
+  "id": "GE-C339-hinweisen",
+  "pathSegment": "GE-PATH-339-HINWEIS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-339-HINWEIS",
+      "order": 1
+    }
+  ]
+}

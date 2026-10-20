@@ -1,0 +1,11 @@
+{
+  "id": "GE-C447-uhrmacher",
+  "pathSegment": "GE-PATH-447-FRISEUR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-447-FRISEUR",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 281,
+  "sourceHash": "fnv1a64:f2ded13e5de2332b",
+  "lessonIds": [
+    "FR-C281-reportage",
+    "FR-C281-envoye-special",
+    "FR-C281-correspondant",
+    "FR-C281-depeche",
+    "FR-C281-agence-de-presse"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch281.txt",
+  "json": "french/narration/ch281.json",
+  "textHash": "fnv1a64:ce15c86b356bb22e",
+  "jsonHash": "fnv1a64:ca066afb14c02615",
+  "findings": []
+}

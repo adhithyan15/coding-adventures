@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-356-CHOMAGE",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "FR-EXT-356-CHOMAGE"
+  ],
+  "after": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-521-AUTEURS",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-521-AUTEURS"
+  ],
+  "after": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-457-KUESTE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-457-KUESTE"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 268,
+  "sourceHash": "fnv1a64:943c784a65e33c6b",
+  "lessonIds": [
+    "FR-C268-tout-d-abord",
+    "FR-C268-en-premier-lieu",
+    "FR-C268-par-la-suite",
+    "FR-C268-en-dernier-lieu",
+    "FR-C268-pour-finir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch268.txt",
+  "json": "french/narration/ch268.json",
+  "textHash": "fnv1a64:d3830308bbaf8350",
+  "jsonHash": "fnv1a64:c09f4e8ecc227588",
+  "findings": []
+}

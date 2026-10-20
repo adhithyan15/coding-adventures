@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 368,
+  "sourceHash": "fnv1a64:3cb6e92e309e8646",
+  "lessonIds": [
+    "FR-C368-a-condition-que",
+    "FR-C368-pourvu-que",
+    "FR-C368-a-moins-que",
+    "FR-C368-au-cas-ou",
+    "FR-C368-sinon"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch368.txt",
+  "json": "french/narration/ch368.json",
+  "textHash": "fnv1a64:b346aaab1868b735",
+  "jsonHash": "fnv1a64:df4bfe26cf295b3b",
+  "findings": []
+}

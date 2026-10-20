@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C475-angeber",
+    "language": "german",
+    "chapter": 475,
+    "sequence": 25480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f131f90b2c220ad8"
+  },
+  "findings": []
+}

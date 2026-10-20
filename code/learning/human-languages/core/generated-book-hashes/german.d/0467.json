@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 467,
+  "sourceHash": "fnv1a64:41b1e19120615517",
+  "lessonIds": [
+    "GE-C467-scham",
+    "GE-C467-schaemen",
+    "GE-C467-verlegen",
+    "GE-C467-verlegenheit",
+    "GE-C467-erroeten"
+  ],
+  "tex": "german/book/chapters/ch467-scham-und-verlegenheit.tex"
+}

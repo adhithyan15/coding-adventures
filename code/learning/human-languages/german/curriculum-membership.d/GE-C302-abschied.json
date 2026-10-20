@@ -1,0 +1,11 @@
+{
+  "id": "GE-C302-abschied",
+  "pathSegment": "GE-PATH-302-RUHESTAND",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-302-RUHESTAND",
+      "order": 4
+    }
+  ]
+}

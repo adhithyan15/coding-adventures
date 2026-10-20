@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-453-EMBALLAGE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can send things: the packaging, wrapping, the delivery man, the cardboard box and registered post.",
+  "prerequisites": []
+}

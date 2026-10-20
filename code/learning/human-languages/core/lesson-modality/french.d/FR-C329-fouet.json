@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C329-fouet",
+    "language": "french",
+    "chapter": 329,
+    "sequence": 18650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:acfc3afe22438d38"
+  },
+  "findings": []
+}

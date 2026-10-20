@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-439-CLOCHERS",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-439-CLOCHERS"
+  ],
+  "after": []
+}

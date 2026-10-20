@@ -1,0 +1,20 @@
+{
+  "language": "german",
+  "chapter": 529,
+  "sourceHash": "fnv1a64:6d8edb17bce36a7f",
+  "lessonIds": [
+    "GE-C529-renovieren",
+    "GE-C529-tapete",
+    "GE-C529-tapezieren",
+    "GE-C529-fliese",
+    "GE-C529-dachboden",
+    "GE-R529-review-522-529"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "german/narration/ch529.txt",
+  "json": "german/narration/ch529.json",
+  "textHash": "fnv1a64:fd0de7ee3a27d605",
+  "jsonHash": "fnv1a64:9062984f13967193",
+  "findings": []
+}

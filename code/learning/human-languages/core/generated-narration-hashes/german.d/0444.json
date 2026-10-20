@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 444,
+  "sourceHash": "fnv1a64:af42dbce6485dd9b",
+  "lessonIds": [
+    "GE-C444-baumarkt",
+    "GE-C444-schreibwarengeschaeft",
+    "GE-C444-buchhandlung",
+    "GE-C444-blumenladen",
+    "GE-C444-kleben"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch444.txt",
+  "json": "german/narration/ch444.json",
+  "textHash": "fnv1a64:fb677fc75fd05fd2",
+  "jsonHash": "fnv1a64:c90259c78fed6837",
+  "findings": []
+}

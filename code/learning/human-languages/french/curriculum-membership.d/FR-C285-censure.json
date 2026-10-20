@@ -1,0 +1,11 @@
+{
+  "id": "FR-C285-censure",
+  "pathSegment": "FR-PATH-285-RUMEUR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-285-RUMEUR",
+      "order": 3
+    }
+  ]
+}

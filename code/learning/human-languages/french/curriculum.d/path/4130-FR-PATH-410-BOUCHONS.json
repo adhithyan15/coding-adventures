@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-410-BOUCHONS",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-410-BOUCHONS"
+  ],
+  "after": []
+}

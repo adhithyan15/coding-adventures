@@ -1,0 +1,11 @@
+{
+  "id": "GE-C322-schuessel",
+  "pathSegment": "GE-PATH-322-ZUTAT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-322-ZUTAT",
+      "order": 4
+    }
+  ]
+}

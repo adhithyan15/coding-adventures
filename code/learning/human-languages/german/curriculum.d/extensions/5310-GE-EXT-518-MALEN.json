@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-518-MALEN",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about painting.",
+  "prerequisites": []
+}

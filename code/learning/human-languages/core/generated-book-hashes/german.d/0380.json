@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 380,
+  "sourceHash": "fnv1a64:0be11229bc9a0fc2",
+  "lessonIds": [
+    "GE-C380-zulassung",
+    "GE-C380-zulassen",
+    "GE-C380-stipendium",
+    "GE-C380-anmeldung",
+    "GE-C380-abmelden"
+  ],
+  "tex": "german/book/chapters/ch380-anmelden-und-zugelassen-werden.tex"
+}

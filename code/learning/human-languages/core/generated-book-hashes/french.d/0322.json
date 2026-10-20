@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 322,
+  "sourceHash": "fnv1a64:d417242b80223e81",
+  "lessonIds": [
+    "FR-C322-recit",
+    "FR-C322-narrer",
+    "FR-C322-legende",
+    "FR-C322-mythe",
+    "FR-C322-morale"
+  ],
+  "tex": "french/book/chapters/ch322-le-recit.tex"
+}

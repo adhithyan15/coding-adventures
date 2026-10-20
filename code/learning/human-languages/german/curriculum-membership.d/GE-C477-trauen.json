@@ -1,0 +1,11 @@
+{
+  "id": "GE-C477-trauen",
+  "pathSegment": "GE-PATH-477-MUT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-477-MUT",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 433,
+  "sourceHash": "fnv1a64:90f56a77d9061d42",
+  "lessonIds": [
+    "FR-C433-acompte",
+    "FR-C433-arrhes",
+    "FR-C433-dedommager",
+    "FR-C433-dedommagement",
+    "FR-C433-indemniser"
+  ],
+  "tex": "french/book/chapters/ch433-etre-dedommage.tex"
+}

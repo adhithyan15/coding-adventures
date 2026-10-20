@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 423,
+  "sourceHash": "fnv1a64:151f97331d11c55d",
+  "lessonIds": [
+    "FR-C423-croisiere",
+    "FR-C423-accoster",
+    "FR-C423-tanguer",
+    "FR-C423-chavirer",
+    "FR-C423-deriver",
+    "FR-R423-revision-416-423"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch423.txt",
+  "json": "french/narration/ch423.json",
+  "textHash": "fnv1a64:fad0907c63124dd1",
+  "jsonHash": "fnv1a64:200585fe9eedf7e5",
+  "findings": []
+}

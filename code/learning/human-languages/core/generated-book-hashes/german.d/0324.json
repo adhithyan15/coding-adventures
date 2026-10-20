@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:d1dedae9a35b2326",
+  "lessonIds": [
+    "GE-C324-ruehren",
+    "GE-C324-umruehren",
+    "GE-C324-verquirlen",
+    "GE-C324-aufschlagen",
+    "GE-C324-schneebesen"
+  ],
+  "tex": "german/book/chapters/ch324-ruhren.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C448-paeckchen",
+    "language": "german",
+    "chapter": 448,
+    "sequence": 24090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38cfcd64b4a4ddfd"
+  },
+  "findings": []
+}

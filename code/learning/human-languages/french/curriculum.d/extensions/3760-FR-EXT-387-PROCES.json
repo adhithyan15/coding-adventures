@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-387-PROCES",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a trial: the defence, the verdict, and whether someone is guilty or innocent.",
+  "prerequisites": []
+}

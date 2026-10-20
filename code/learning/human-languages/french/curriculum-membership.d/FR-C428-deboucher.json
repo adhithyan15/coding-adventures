@@ -1,0 +1,11 @@
+{
+  "id": "FR-C428-deboucher",
+  "pathSegment": "FR-PATH-428-FUITE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-428-FUITE",
+      "order": 4
+    }
+  ]
+}

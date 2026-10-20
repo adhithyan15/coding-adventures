@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 493,
+  "sourceHash": "fnv1a64:5d63282d83c7b14e",
+  "lessonIds": [
+    "FR-C493-grossesse",
+    "FR-C493-accoucher",
+    "FR-C493-nourrisson",
+    "FR-C493-biberon",
+    "FR-C493-bercer"
+  ],
+  "tex": "french/book/chapters/ch493-la-premiere-annee.tex"
+}

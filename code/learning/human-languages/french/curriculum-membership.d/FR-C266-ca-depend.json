@@ -1,0 +1,11 @@
+{
+  "id": "FR-C266-ca-depend",
+  "pathSegment": "FR-PATH-266-SI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-266-SI",
+      "order": 2
+    }
+  ]
+}

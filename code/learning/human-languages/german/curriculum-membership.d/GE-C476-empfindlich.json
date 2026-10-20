@@ -1,0 +1,11 @@
+{
+  "id": "GE-C476-empfindlich",
+  "pathSegment": "GE-PATH-476-LAUNISCH",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-476-LAUNISCH",
+      "order": 4
+    }
+  ]
+}

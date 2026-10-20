@@ -1,0 +1,11 @@
+{
+  "id": "GE-C470-zappeln",
+  "pathSegment": "GE-PATH-470-GEDULD",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-470-GEDULD",
+      "order": 4
+    }
+  ]
+}

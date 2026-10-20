@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "french",
+  "chapter": 521,
+  "title": "Auteurs et lecteurs",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:f617b0aa4256ef5b",
+  "lessons": [
+    {
+      "id": "FR-C521-lecteur",
+      "sequence": 28510,
+      "title": "le lecteur — reader; player (for discs)",
+      "headword": "le lecteur",
+      "romanization": "le lecteur",
+      "gloss": "reader; player (for discs)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:832ffaaf74a2927a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for paperback, then the French for to devour."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: le lecteur",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le lecteur — \"reader; player (for discs)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ce journal a beaucoup de lecteurs jeunes. This newspaper has a lot of young readers."
+            },
+            {
+              "kind": "speech",
+              "text": "A woman is la lectrice. Un lecteur de DVD — a DVD player."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le lecteur is a learned borrowing from Latin lēctor \"a reader\" (EtymDB), from legere \"to gather, to read\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le lecteur",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le lecteur*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le lecteur, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le lecteur*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with le lecteur",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *le lecteur*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for paperback, then the French for to devour, then say le lecteur again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for paperback, then the French for to devour, then say *le lecteur* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does le lecteur mean? (\"Reader; player (for discs)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C521-narrateur",
+      "sequence": 28520,
+      "title": "le narrateur — narrator",
+      "headword": "le narrateur",
+      "romanization": "le narrateur",
+      "gloss": "narrator",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:868ff10846471675",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for to devour, then the French for reader."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: le narrateur",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le narrateur — \"narrator\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Dans ce roman, le narrateur est un enfant. In this novel the narrator is a child."
+            },
+            {
+              "kind": "speech",
+              "text": "A woman is la narratrice."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le narrateur is a learned borrowing from Latin narrātor \"a storyteller\" (EtymDB), from narrāre \"to tell\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le narrateur",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le narrateur*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le narrateur, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le narrateur*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with le narrateur",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *le narrateur*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for to devour, then the French for reader, then say le narrateur again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for to devour, then the French for reader, then say *le narrateur* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does le narrateur mean? (\"Narrator\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C521-heros",
+      "sequence": 28530,
+      "title": "le héros — hero; main character",
+      "headword": "le héros",
+      "romanization": "le héros",
+      "gloss": "hero; main character",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e6c3bf7fb998fc9e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for reader, then the French for narrator."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: le héros",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le héros — \"hero; main character\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Le héros du livre est un vieux marin. The hero of the book is an old sailor."
+            },
+            {
+              "kind": "speech",
+              "text": "The h is aspirated: le héros, les héros with no liaison."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le héros comes from Latin hērōs, a borrowing from Greek hḗrōs \"a demigod, a hero\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le héros",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le héros*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le héros, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le héros*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with le héros",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *le héros*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for reader, then the French for narrator, then say le héros again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for reader, then the French for narrator, then say *le héros* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does le héros mean? (\"Hero; main character\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C521-dedicace",
+      "sequence": 28540,
+      "title": "la dédicace — signed message, inscription (in a book); dedication",
+      "headword": "la dédicace",
+      "romanization": "la dédicace",
+      "gloss": "signed message, inscription (in a book); dedication",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ee71d16541754740",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for narrator, then the French for hero."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la dédicace",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la dédicace — \"signed message, inscription (in a book); dedication\"."
+            },
+            {
+              "kind": "speech",
+              "text": "L'auteur a écrit une dédicace dans mon livre. The author wrote an inscription in my book."
+            },
+            {
+              "kind": "speech",
+              "text": "Une séance de dédicaces — a book signing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la dédicace is a learned borrowing from Latin dēdicātiō \"a consecration\", from dēdicāre \"to dedicate\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la dédicace",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la dédicace*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la dédicace, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la dédicace*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la dédicace",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la dédicace*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for narrator, then the French for hero, then say la dédicace again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for narrator, then the French for hero, then say *la dédicace* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la dédicace mean? (\"Signed message, inscription (in a book); dedication\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C521-dedicacer",
+      "sequence": 28550,
+      "title": "dédicacer — to sign (a book for someone)",
+      "headword": "dédicacer",
+      "romanization": "dédicacer",
+      "gloss": "to sign (a book for someone)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:78c20ce93702b683",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for hero, then the French for signed message."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dédicacer",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dédicacer — \"to sign (a book for someone)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "L'écrivain dédicace ses livres à la librairie samedi. The writer is signing his books at the bookshop on Saturday."
+            },
+            {
+              "kind": "speech",
+              "text": "Spelling: nous dédicaçons."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dédicacer is built on dédicace, a learned borrowing from Latin dēdicātiō, from dēdicāre \"to dedicate\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dédicacer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dédicacer*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dédicacer, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dédicacer*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dédicacer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dédicacer*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for hero, then the French for signed message, then say dédicacer again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for hero, then the French for signed message, then say *dédicacer* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dédicacer mean? (\"To sign (a book for someone)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-R521-revision-514-521",
+      "sequence": 28560,
+      "title": "Retour sur les chapitres 514–521",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 514-521",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:84262682a4d335f8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the French for (theatre) company and wings."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "(theatre) company, wings, set, costume, interval",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: (theatre) company, wings, set, costume, interval]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stage fright, line, to perform, actor, applause",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: stage fright, line, to perform, actor, applause]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paintbrush, canvas, watercolour, easel, to sketch",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: paintbrush, canvas, watercolour, easel, to sketch]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sculpture, to sculpt, clay, marble, sculptor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: sculpture, to sculpt, clay, marble, sculptor]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "exhibition, private view, gallery, work, to put in a frame",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: exhibition, private view, gallery, work, to put in a frame]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "novelist, plot, ending, twist, gripping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: novelist, plot, ending, twist, gripping]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bookseller, section, to leaf through, paperback, to devour",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: bookseller, section, to leaf through, paperback, to devour]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "reader, narrator, hero, signed message, to sign",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: reader, narrator, hero, signed message, to sign]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "(theatre) company? (la troupe.) Wings? (les coulisses.) Set? (le décor.) Costume? (le costume.) Interval? (l'entracte.) Stage fright? (le trac.) Line? (la réplique.) To perform? (interpréter.) Actor? (le comédien.) Applause? (les applaudissements.) Paintbrush? (le pinceau.) Canvas? (la toile.) Watercolour? (l'aquarelle.) Easel? (le chevalet.) To sketch? (esquisser.) Sculpture? (la sculpture.) To sculpt? (sculpter.) Clay? (l'argile.) Marble? (le marbre.) Sculptor? (le sculpteur.) Exhibition? (l'exposition.) Private view? (le vernissage.) Gallery? (la galerie.) Work? (l'œuvre.) To put in a frame? (encadrer.) Novelist? (le romancier.) Plot? (l'intrigue.) Ending? (le dénouement.) Twist? (le rebondissement.) Gripping? (captivant.) Bookseller? (le libraire.) Section? (le rayon.) To leaf through? (feuilleter.) Paperback? (le livre de poche.) To devour? (dévorer.) Reader? (le lecteur.) Narrator? (le narrateur.) Hero? (le héros.) Signed message? (la dédicace.) To sign? (dédicacer.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

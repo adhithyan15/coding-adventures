@@ -1,0 +1,11 @@
+{
+  "id": "FR-C401-deraper",
+  "pathSegment": "FR-PATH-401-CONDUITE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-401-CONDUITE",
+      "order": 2
+    }
+  ]
+}

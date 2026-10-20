@@ -1,0 +1,11 @@
+{
+  "id": "GE-C296-geburt",
+  "pathSegment": "GE-PATH-296-GEBURT",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-296-GEBURT",
+      "order": 0
+    }
+  ]
+}

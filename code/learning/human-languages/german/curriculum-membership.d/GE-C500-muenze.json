@@ -1,0 +1,11 @@
+{
+  "id": "GE-C500-muenze",
+  "pathSegment": "GE-PATH-500-SAMMELN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-500-SAMMELN",
+      "order": 1
+    }
+  ]
+}

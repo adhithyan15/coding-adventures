@@ -1,0 +1,11 @@
+{
+  "id": "GE-C404-warndreieck",
+  "pathSegment": "GE-PATH-404-REIFEN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-404-REIFEN",
+      "order": 4
+    }
+  ]
+}

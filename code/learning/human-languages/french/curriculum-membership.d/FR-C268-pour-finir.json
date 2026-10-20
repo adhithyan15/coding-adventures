@@ -1,0 +1,11 @@
+{
+  "id": "FR-C268-pour-finir",
+  "pathSegment": "FR-PATH-268-ORDRE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-268-ORDRE",
+      "order": 4
+    }
+  ]
+}

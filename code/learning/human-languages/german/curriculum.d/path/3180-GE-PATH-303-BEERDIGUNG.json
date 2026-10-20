@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-303-BEERDIGUNG",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GE-EXT-303-BEERDIGUNG"
+  ],
+  "after": []
+}

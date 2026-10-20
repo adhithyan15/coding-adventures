@@ -1,0 +1,11 @@
+{
+  "id": "FR-C427-peignoir",
+  "pathSegment": "FR-PATH-427-CHAMBRE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-427-CHAMBRE",
+      "order": 4
+    }
+  ]
+}

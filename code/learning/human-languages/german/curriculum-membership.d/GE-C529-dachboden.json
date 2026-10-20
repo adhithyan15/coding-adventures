@@ -1,0 +1,11 @@
+{
+  "id": "GE-C529-dachboden",
+  "pathSegment": "GE-PATH-529-RENOVIEREN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-529-RENOVIEREN",
+      "order": 4
+    }
+  ]
+}

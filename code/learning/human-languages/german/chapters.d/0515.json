@@ -1,0 +1,19 @@
+{
+  "chapter": 515,
+  "title": "Chor und Orchester",
+  "label": "ch:ge-chor-und-orchester",
+  "canDo": "I can talk about choirs, orchestras and composers.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C515-komponieren",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 515: I can talk about choirs, orchestras and composers.",
+    "assesses": [
+      "GE-LEX-C515-CHOR-03",
+      "GE-LEX-C515-CHOR-04",
+      "GE-LEX-C515-CHOR-05"
+    ]
+  }
+}

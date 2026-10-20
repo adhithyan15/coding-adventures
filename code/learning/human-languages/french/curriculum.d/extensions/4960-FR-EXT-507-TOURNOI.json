@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-507-TOURNOI",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about tournaments and winners.",
+  "prerequisites": []
+}

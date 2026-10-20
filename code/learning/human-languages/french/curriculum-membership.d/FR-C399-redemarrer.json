@@ -1,0 +1,11 @@
+{
+  "id": "FR-C399-redemarrer",
+  "pathSegment": "FR-PATH-399-PANNE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-399-PANNE",
+      "order": 3
+    }
+  ]
+}

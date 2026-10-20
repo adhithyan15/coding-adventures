@@ -1,0 +1,11 @@
+{
+  "id": "FR-C317-defiler",
+  "pathSegment": "FR-PATH-317-CARNAVAL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-317-CARNAVAL",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C334-zustimmung",
+  "pathSegment": "GE-PATH-334-ZUSTIMMEN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-334-ZUSTIMMEN",
+      "order": 1
+    }
+  ]
+}

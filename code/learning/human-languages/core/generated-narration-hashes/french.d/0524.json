@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 524,
+  "sourceHash": "fnv1a64:8cf9a58e6740c3bf",
+  "lessonIds": [
+    "FR-C524-version-originale",
+    "FR-C524-projeter",
+    "FR-C524-doublage",
+    "FR-C524-realisateur",
+    "FR-C524-tournage"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch524.txt",
+  "json": "french/narration/ch524.json",
+  "textHash": "fnv1a64:ed5ac6236f22a63c",
+  "jsonHash": "fnv1a64:4775b3bab4822be2",
+  "findings": []
+}

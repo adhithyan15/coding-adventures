@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C367-supposer",
+    "language": "french",
+    "chapter": 367,
+    "sequence": 20590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3f8d549ba5c3045e"
+  },
+  "findings": []
+}

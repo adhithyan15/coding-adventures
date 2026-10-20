@@ -1,0 +1,11 @@
+{
+  "id": "FR-C413-wagon",
+  "pathSegment": "FR-PATH-413-QUAI",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-413-QUAI",
+      "order": 3
+    }
+  ]
+}

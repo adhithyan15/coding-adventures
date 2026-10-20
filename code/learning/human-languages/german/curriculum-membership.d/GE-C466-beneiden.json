@@ -1,0 +1,11 @@
+{
+  "id": "GE-C466-beneiden",
+  "pathSegment": "GE-PATH-466-NEID",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-466-NEID",
+      "order": 3
+    }
+  ]
+}

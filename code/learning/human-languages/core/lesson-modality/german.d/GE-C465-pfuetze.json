@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C465-pfuetze",
+    "language": "german",
+    "chapter": 465,
+    "sequence": 24970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f10b414c3033777f"
+  },
+  "findings": []
+}

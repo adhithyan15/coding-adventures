@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C494-creche",
+    "language": "french",
+    "chapter": 494,
+    "sequence": 27170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5717cb9390a34382"
+  },
+  "findings": []
+}

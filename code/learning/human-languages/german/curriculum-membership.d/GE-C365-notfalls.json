@@ -1,0 +1,11 @@
+{
+  "id": "GE-C365-notfalls",
+  "pathSegment": "GE-PATH-365-ESSEIDENN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-365-ESSEIDENN",
+      "order": 4
+    }
+  ]
+}

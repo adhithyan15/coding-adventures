@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 332,
+  "sourceHash": "fnv1a64:aae641f34ed6ad02",
+  "lessonIds": [
+    "FR-C332-passoire",
+    "FR-C332-egoutter",
+    "FR-C332-saupoudrer",
+    "FR-C332-assaisonner",
+    "FR-C332-deguster"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch332.txt",
+  "json": "french/narration/ch332.json",
+  "textHash": "fnv1a64:a7047d6bcd819b1a",
+  "jsonHash": "fnv1a64:84769309192e3b1f",
+  "findings": []
+}

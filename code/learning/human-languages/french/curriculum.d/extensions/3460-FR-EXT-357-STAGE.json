@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-357-STAGE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about a first job: an internship, an intern, an apprentice, an apprenticeship and the employer.",
+  "prerequisites": []
+}

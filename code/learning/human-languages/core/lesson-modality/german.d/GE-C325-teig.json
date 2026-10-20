@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C325-teig",
+    "language": "german",
+    "chapter": 325,
+    "sequence": 17720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:33e2c97b067d24fe"
+  },
+  "findings": []
+}

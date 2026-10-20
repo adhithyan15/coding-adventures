@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 511,
+  "sourceHash": "fnv1a64:e7ed031f06bebbf0",
+  "lessonIds": [
+    "FR-C511-flute",
+    "FR-C511-violoncelle",
+    "FR-C511-trompette",
+    "FR-C511-accordeon",
+    "FR-C511-accorder"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch511.txt",
+  "json": "french/narration/ch511.json",
+  "textHash": "fnv1a64:15bd2bc69a6a9ee5",
+  "jsonHash": "fnv1a64:126952197e511742",
+  "findings": []
+}

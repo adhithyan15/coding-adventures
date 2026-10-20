@@ -1,0 +1,19 @@
+{
+  "chapter": 298,
+  "title": "Die Verlobung",
+  "label": "ch:ge-die-verlobung",
+  "canDo": "I can tell how two people decide to marry: to get engaged, an engagement, the bride, the bridegroom and the bride and groom.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C298-brautpaar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 298: I can tell how two people decide to marry: to get engaged, an engagement, the bride, the bridegroom and the bride and groom.",
+    "assesses": [
+      "GE-LEX-C298-VERLOBUNG-03",
+      "GE-LEX-C298-VERLOBUNG-04",
+      "GE-LEX-C298-VERLOBUNG-05"
+    ]
+  }
+}

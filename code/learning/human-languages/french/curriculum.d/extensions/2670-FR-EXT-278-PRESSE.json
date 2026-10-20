@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-278-PRESSE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about the news and the papers: current events, the press, daily and weekly papers, and their subscribers.",
+  "prerequisites": []
+}

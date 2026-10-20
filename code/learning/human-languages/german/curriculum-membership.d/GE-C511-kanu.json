@@ -1,0 +1,11 @@
+{
+  "id": "GE-C511-kanu",
+  "pathSegment": "GE-PATH-511-WASSERSPORT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-511-WASSERSPORT",
+      "order": 4
+    }
+  ]
+}

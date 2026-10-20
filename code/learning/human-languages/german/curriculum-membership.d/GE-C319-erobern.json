@@ -1,0 +1,11 @@
+{
+  "id": "GE-C319-erobern",
+  "pathSegment": "GE-PATH-319-KAISER",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-319-KAISER",
+      "order": 3
+    }
+  ]
+}

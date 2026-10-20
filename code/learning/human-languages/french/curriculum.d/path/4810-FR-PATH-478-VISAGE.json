@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-478-VISAGE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-478-VISAGE"
+  ],
+  "after": []
+}

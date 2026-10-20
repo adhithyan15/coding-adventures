@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 509,
+  "sourceHash": "fnv1a64:1bba42a4c335d16e",
+  "lessonIds": [
+    "FR-C509-plonger",
+    "FR-C509-plongeon",
+    "FR-C509-maillot-de-bain",
+    "FR-C509-brasse",
+    "FR-C509-ramer"
+  ],
+  "tex": "french/book/chapters/ch509-dans-l-eau.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 466,
+  "title": "Timides et sociables",
+  "label": "ch:fr-timides-et-sociables",
+  "canDo": "I can describe how shy or outgoing someone is.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C466-taquiner",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 466: I can describe how shy or outgoing someone is.",
+    "assesses": [
+      "FR-LEX-C466-TIMIDITE-03",
+      "FR-LEX-C466-TIMIDITE-04",
+      "FR-LEX-C466-TIMIDITE-05"
+    ]
+  }
+}

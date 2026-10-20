@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:9b6928bf679320a3",
+  "lessonIds": [
+    "FR-C512-chorale",
+    "FR-C512-fredonner",
+    "FR-C512-siffloter",
+    "FR-C512-refrain",
+    "FR-C512-melodie"
+  ],
+  "tex": "french/book/chapters/ch512-chanter-juste.tex"
+}

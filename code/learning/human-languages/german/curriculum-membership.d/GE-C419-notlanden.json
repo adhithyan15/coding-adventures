@@ -1,0 +1,11 @@
+{
+  "id": "GE-C419-notlanden",
+  "pathSegment": "GE-PATH-419-ZWISCHENLANDUNG",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-419-ZWISCHENLANDUNG",
+      "order": 4
+    }
+  ]
+}

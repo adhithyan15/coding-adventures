@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 331,
+  "sourceHash": "fnv1a64:a09db59ded6f84de",
+  "lessonIds": [
+    "GE-C331-ueberzeugen",
+    "GE-C331-ueberzeugend",
+    "GE-C331-ueberzeugung",
+    "GE-C331-ueberreden",
+    "GE-C331-argumentieren"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch331.txt",
+  "json": "german/narration/ch331.json",
+  "textHash": "fnv1a64:a3392b3c9d78f483",
+  "jsonHash": "fnv1a64:60ad2a03c93f4720",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 434,
+  "sourceHash": "fnv1a64:17e8f278ee672d90",
+  "lessonIds": [
+    "GE-C434-wegweiser",
+    "GE-C434-schild",
+    "GE-C434-pfeil",
+    "GE-C434-abzweigung",
+    "GE-C434-abzweigen"
+  ],
+  "tex": "german/book/chapters/ch434-den-schildern-nach.tex"
+}

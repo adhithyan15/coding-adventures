@@ -1,0 +1,11 @@
+{
+  "id": "FR-C516-aquarelle",
+  "pathSegment": "FR-PATH-516-PEINTURE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-516-PEINTURE",
+      "order": 2
+    }
+  ]
+}

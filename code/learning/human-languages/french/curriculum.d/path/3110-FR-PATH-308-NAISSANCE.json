@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-308-NAISSANCE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-308-NAISSANCE"
+  ],
+  "after": []
+}

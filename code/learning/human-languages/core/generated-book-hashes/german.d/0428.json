@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 428,
+  "sourceHash": "fnv1a64:9a972b2ef06aa779",
+  "lessonIds": [
+    "GE-C428-abfluss",
+    "GE-C428-verstopfen",
+    "GE-C428-tropfen",
+    "GE-C428-undicht",
+    "GE-C428-klempner"
+  ],
+  "tex": "german/book/chapters/ch428-arger-im-bad.tex"
+}

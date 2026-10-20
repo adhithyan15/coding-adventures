@@ -1,0 +1,11 @@
+{
+  "id": "FR-C360-competence",
+  "pathSegment": "FR-PATH-360-CARRIERE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-360-CARRIERE",
+      "order": 3
+    }
+  ]
+}

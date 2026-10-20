@@ -1,0 +1,11 @@
+{
+  "id": "GE-C473-grinsen",
+  "pathSegment": "GE-PATH-473-KICHERN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-473-KICHERN",
+      "order": 1
+    }
+  ]
+}

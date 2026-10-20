@@ -1,0 +1,11 @@
+{
+  "id": "GE-C307-gastgeber",
+  "pathSegment": "GE-PATH-307-GASTGEBER",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-307-GASTGEBER",
+      "order": 0
+    }
+  ]
+}

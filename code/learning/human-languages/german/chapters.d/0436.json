@@ -1,0 +1,19 @@
+{
+  "chapter": 436,
+  "title": "Kleine und große Straßen",
+  "label": "ch:ge-kleine-und-gro-e-stra-en",
+  "canDo": "I can describe streets: the lane, the dead end, the avenue, the one-way street and the passer-by.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C436-passant",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 436: I can describe streets: the lane, the dead end, the avenue, the one-way street and the passer-by.",
+    "assesses": [
+      "GE-LEX-C436-GASSE-03",
+      "GE-LEX-C436-GASSE-04",
+      "GE-LEX-C436-GASSE-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C479-bosse",
+    "language": "french",
+    "chapter": 479,
+    "sequence": 26400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f2b2bb144835cb16"
+  },
+  "findings": []
+}

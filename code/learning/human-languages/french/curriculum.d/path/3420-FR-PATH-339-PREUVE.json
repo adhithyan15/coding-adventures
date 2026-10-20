@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-339-PREUVE",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "FR-EXT-339-PREUVE"
+  ],
+  "after": []
+}

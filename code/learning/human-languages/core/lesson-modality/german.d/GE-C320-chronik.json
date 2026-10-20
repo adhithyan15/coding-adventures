@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C320-chronik",
+    "language": "german",
+    "chapter": 320,
+    "sequence": 17490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9655f8545495e779"
+  },
+  "findings": []
+}

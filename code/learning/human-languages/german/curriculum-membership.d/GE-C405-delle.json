@@ -1,0 +1,11 @@
+{
+  "id": "GE-C405-delle",
+  "pathSegment": "GE-PATH-405-DELLE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-405-DELLE",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 513,
+  "sourceHash": "fnv1a64:6eb12e689979783f",
+  "lessonIds": [
+    "FR-C513-orchestre",
+    "FR-C513-chef-d-orchestre",
+    "FR-C513-partition",
+    "FR-C513-repetition",
+    "FR-C513-improviser",
+    "FR-R513-revision-506-513"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch513.txt",
+  "json": "french/narration/ch513.json",
+  "textHash": "fnv1a64:42f91a7fff1deb20",
+  "jsonHash": "fnv1a64:f37026900fa42273",
+  "findings": []
+}

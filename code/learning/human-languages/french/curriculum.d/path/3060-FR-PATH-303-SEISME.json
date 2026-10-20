@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-303-SEISME",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-303-SEISME"
+  ],
+  "after": []
+}

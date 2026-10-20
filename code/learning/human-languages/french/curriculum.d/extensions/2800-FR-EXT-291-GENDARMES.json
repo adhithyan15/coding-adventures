@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-291-GENDARMES",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about the police on patrol: the gendarme, the gendarmerie, patrolling, a patrol and a squad.",
+  "prerequisites": []
+}

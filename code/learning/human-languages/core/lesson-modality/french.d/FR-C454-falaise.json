@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C454-falaise",
+    "language": "french",
+    "chapter": 454,
+    "sequence": 25060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fe5510eb62d26e7c"
+  },
+  "findings": []
+}

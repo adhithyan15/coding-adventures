@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C516-auftreten",
+    "language": "german",
+    "chapter": 516,
+    "sequence": 27590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2361a3a98d25ff7f"
+  },
+  "findings": []
+}

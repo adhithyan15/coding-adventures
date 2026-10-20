@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-485-GUERIR",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about getting better after an illness.",
+  "prerequisites": []
+}

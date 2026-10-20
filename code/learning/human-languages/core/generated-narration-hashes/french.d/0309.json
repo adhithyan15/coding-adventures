@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 309,
+  "sourceHash": "fnv1a64:3d2896d41f4715be",
+  "lessonIds": [
+    "FR-C309-maternite",
+    "FR-C309-bapteme",
+    "FR-C309-baptiser",
+    "FR-C309-poussette",
+    "FR-C309-enfance"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch309.txt",
+  "json": "french/narration/ch309.json",
+  "textHash": "fnv1a64:5ab896f0a5ac5b10",
+  "jsonHash": "fnv1a64:feb92c2ec023645f",
+  "findings": []
+}

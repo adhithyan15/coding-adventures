@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 481,
+  "sourceHash": "fnv1a64:d80e0f8c799c9695",
+  "lessonIds": [
+    "FR-C481-entorse",
+    "FR-C481-tordre",
+    "FR-C481-enfler",
+    "FR-C481-attelle",
+    "FR-C481-kine",
+    "FR-R481-revision-474-481"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch481.txt",
+  "json": "french/narration/ch481.json",
+  "textHash": "fnv1a64:fba7616c970e3430",
+  "jsonHash": "fnv1a64:62d6d37f54e0aca4",
+  "findings": []
+}

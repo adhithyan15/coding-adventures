@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C497-loben",
+    "language": "german",
+    "chapter": 497,
+    "sequence": 26600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8d301ae340bec6e0"
+  },
+  "findings": []
+}

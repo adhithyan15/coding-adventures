@@ -1,0 +1,11 @@
+{
+  "id": "FR-C470-soulagement",
+  "pathSegment": "FR-PATH-470-FRAYEUR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-470-FRAYEUR",
+      "order": 3
+    }
+  ]
+}

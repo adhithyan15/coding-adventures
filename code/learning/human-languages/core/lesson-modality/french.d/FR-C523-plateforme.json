@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C523-plateforme",
+    "language": "french",
+    "chapter": 523,
+    "sequence": 28650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:50c47fb1a6e62de7"
+  },
+  "findings": []
+}

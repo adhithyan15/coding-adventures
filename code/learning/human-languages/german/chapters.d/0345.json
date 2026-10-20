@@ -1,0 +1,19 @@
+{
+  "chapter": 345,
+  "title": "Zusammenhänge",
+  "label": "ch:ge-zusammenhange",
+  "canDo": "I can say that two things are connected, give proof and back up a claim.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GE-R345-review-338-345",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 345: I can say that two things are connected, give proof and back up a claim.",
+    "assesses": [
+      "GE-LEX-C345-ZUSAMMENHANG-03",
+      "GE-LEX-C345-ZUSAMMENHANG-04",
+      "GE-LEX-C345-ZUSAMMENHANG-05"
+    ]
+  }
+}

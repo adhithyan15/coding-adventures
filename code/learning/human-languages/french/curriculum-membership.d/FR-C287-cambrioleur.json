@@ -1,0 +1,11 @@
+{
+  "id": "FR-C287-cambrioleur",
+  "pathSegment": "FR-PATH-287-CAMBRIOLAGE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-287-CAMBRIOLAGE",
+      "order": 1
+    }
+  ]
+}

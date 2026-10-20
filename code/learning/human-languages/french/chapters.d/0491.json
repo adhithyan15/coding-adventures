@@ -1,0 +1,19 @@
+{
+  "chapter": 491,
+  "title": "Quand ça se termine",
+  "label": "ch:fr-quand-ca-se-termine",
+  "canDo": "I can talk about breaking up and separating.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C491-rupture",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 491: I can talk about breaking up and separating.",
+    "assesses": [
+      "FR-LEX-C491-RUPTURE-03",
+      "FR-LEX-C491-RUPTURE-04",
+      "FR-LEX-C491-RUPTURE-05"
+    ]
+  }
+}

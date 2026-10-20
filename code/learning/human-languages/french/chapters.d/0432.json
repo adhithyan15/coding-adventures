@@ -1,0 +1,19 @@
+{
+  "chapter": 432,
+  "title": "Parler au gérant",
+  "label": "ch:fr-parler-au-gerant",
+  "canDo": "I can take a problem to the manager: the manager, the inconvenience, reporting a problem, the cleaning and something faulty.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C432-defectueux",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 432: I can take a problem to the manager: the manager, the inconvenience, reporting a problem, the cleaning and something faulty.",
+    "assesses": [
+      "FR-LEX-C432-GERANT-03",
+      "FR-LEX-C432-GERANT-04",
+      "FR-LEX-C432-GERANT-05"
+    ]
+  }
+}

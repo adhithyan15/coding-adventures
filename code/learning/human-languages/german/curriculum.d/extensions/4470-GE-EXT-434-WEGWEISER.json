@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-434-WEGWEISER",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can follow signs: the signpost, the sign, the arrow, the turning and branching off.",
+  "prerequisites": []
+}

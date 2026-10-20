@@ -1,0 +1,19 @@
+{
+  "chapter": 261,
+  "title": "Would — würde, hätte, wäre, and Six Lines",
+  "label": "ch:ge-would",
+  "canDo": "I can say what would happen with würde, hätte, wäre and könnte, and write six connected lines about a trip that end on a condition.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GE-W261-sechs-zeilen",
+    "kind": "task",
+    "summary": "Complete GE-W261-sechs-zeilen: six lines to one reader about a trip, events in order in the past, a reason, a feeling, and a last line with wenn and the Konjunktiv II.",
+    "assesses": [
+      "GE-GRAMMAR-WUERDE-INFINITIV-01",
+      "GE-GRAMMAR-WENN-IRREAL-01",
+      "GE-LEX-ICH-HAETTE-GERN-01"
+    ]
+  }
+}

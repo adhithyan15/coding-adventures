@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 282,
+  "sourceHash": "fnv1a64:1d0ad77c77845f3b",
+  "lessonIds": [
+    "GE-C282-ueberfallen",
+    "GE-C282-ueberfall",
+    "GE-C282-rauben",
+    "GE-C282-bedrohen",
+    "GE-C282-waffe"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch282.txt",
+  "json": "german/narration/ch282.json",
+  "textHash": "fnv1a64:3edf490460f0c8fe",
+  "jsonHash": "fnv1a64:08ad62345669890a",
+  "findings": []
+}

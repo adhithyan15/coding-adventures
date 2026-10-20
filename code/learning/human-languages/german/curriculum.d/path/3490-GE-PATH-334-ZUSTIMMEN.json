@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-334-ZUSTIMMEN",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "GE-EXT-334-ZUSTIMMEN"
+  ],
+  "after": []
+}

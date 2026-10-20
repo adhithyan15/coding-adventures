@@ -1,0 +1,11 @@
+{
+  "id": "GE-C293-loeschen",
+  "pathSegment": "GE-PATH-293-BRENNEN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-293-BRENNEN",
+      "order": 3
+    }
+  ]
+}

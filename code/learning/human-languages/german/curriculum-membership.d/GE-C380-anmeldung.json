@@ -1,0 +1,11 @@
+{
+  "id": "GE-C380-anmeldung",
+  "pathSegment": "GE-PATH-380-ZULASSUNG",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-380-ZULASSUNG",
+      "order": 3
+    }
+  ]
+}

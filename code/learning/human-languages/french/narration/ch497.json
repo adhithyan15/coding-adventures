@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "french",
+  "chapter": 497,
+  "title": "Une journée de pêche",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:a108d9abd0c47800",
+  "lessons": [
+    {
+      "id": "FR-C497-canne-a-peche",
+      "sequence": 27280,
+      "title": "la canne à pêche — fishing rod",
+      "headword": "la canne à pêche",
+      "romanization": "la canne à pêche",
+      "gloss": "fishing rod",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:20da141ab2fb9866",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for to embroider, then the French for sewing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la canne à pêche",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la canne à pêche — \"fishing rod\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mon oncle m'a offert une canne à pêche. My uncle gave me a fishing rod."
+            },
+            {
+              "kind": "speech",
+              "text": "La canne alone is a walking stick."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la canne à pêche joins canne \"cane, rod\", from Latin canna \"a reed\", and pêche \"fishing\", built on pêcher, from Latin piscārī \"to fish\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la canne à pêche",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la canne à pêche*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la canne à pêche, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la canne à pêche*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la canne à pêche",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la canne à pêche*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for to embroider, then the French for sewing, then say la canne à pêche again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for to embroider, then the French for sewing, then say *la canne à pêche* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la canne à pêche mean? (\"Fishing rod\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C497-hamecon",
+      "sequence": 27290,
+      "title": "l'hameçon — fish hook",
+      "headword": "l'hameçon",
+      "romanization": "l'hameçon",
+      "gloss": "fish hook",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:23eaae4de266b554",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for sewing, then the French for fishing rod."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: l'hameçon",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "l'hameçon — \"fish hook\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Le poisson a mordu à l'hameçon. The fish took the hook."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine. Mordre à l'hameçon is also to fall for a trick."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "l'hameçon comes from Old French ameçon, built on a Vulgar Latin form of Latin hāmus \"a hook\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'hameçon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'hameçon*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'hameçon, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'hameçon*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with l'hameçon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *l'hameçon*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for sewing, then the French for fishing rod, then say l'hameçon again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for sewing, then the French for fishing rod, then say *l'hameçon* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does l'hameçon mean? (\"Fish hook\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C497-appat",
+      "sequence": 27300,
+      "title": "l'appât — bait",
+      "headword": "l'appât",
+      "romanization": "l'appât",
+      "gloss": "bait",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:077d0790aa324e0a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for fishing rod, then the French for fish hook."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: l'appât",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "l'appât — \"bait\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Il utilise des vers comme appât. He uses worms as bait."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine. The verb is appâter \"to lure\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "l'appât is built on appâter (EtymDB), from à and Old French past \"food\", which goes back to Latin pāstus \"feeding\", from pāscere \"to feed\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'appât",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'appât*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'appât, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'appât*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with l'appât",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *l'appât*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for fishing rod, then the French for fish hook, then say l'appât again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for fishing rod, then the French for fish hook, then say *l'appât* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does l'appât mean? (\"Bait\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C497-pecher",
+      "sequence": 27310,
+      "title": "pêcher — to fish; to catch (fish)",
+      "headword": "pêcher",
+      "romanization": "pêcher",
+      "gloss": "to fish; to catch (fish)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4df94aba6e4c2e4c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for fish hook, then the French for bait."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: pêcher",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pêcher — \"to fish; to catch (fish)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Le dimanche, nous allons pêcher au bord du lac. On Sundays we go fishing by the lake."
+            },
+            {
+              "kind": "speech",
+              "text": "Do not mix it up with pécher \"to sin\" or le pêcher, the peach tree."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pêcher is inherited, through Old French peschier, from Vulgar Latin piscāre (EtymDB), a form of Latin piscārī \"to fish\", from piscis \"fish\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pêcher",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pêcher*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pêcher, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pêcher*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with pêcher",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *pêcher*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for fish hook, then the French for bait, then say pêcher again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for fish hook, then the French for bait, then say *pêcher* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does pêcher mean? (\"To fish; to catch (fish)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C497-pecheur",
+      "sequence": 27320,
+      "title": "le pêcheur — fisherman, angler",
+      "headword": "le pêcheur",
+      "romanization": "le pêcheur",
+      "gloss": "fisherman, angler",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5c4df8a5086003b8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for bait, then the French for to fish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: le pêcheur",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le pêcheur — \"fisherman, angler\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Le pêcheur attend depuis le lever du soleil. The angler has been waiting since sunrise."
+            },
+            {
+              "kind": "speech",
+              "text": "A woman is la pêcheuse. Do not mix it up with le pécheur \"sinner\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le pêcheur is inherited from Latin piscātor \"a fisherman\", from piscārī \"to fish\", from piscis \"fish\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le pêcheur",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le pêcheur*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le pêcheur, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le pêcheur*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with le pêcheur",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *le pêcheur*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for bait, then the French for to fish, then say le pêcheur again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for bait, then the French for to fish, then say *le pêcheur* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does le pêcheur mean? (\"Fisherman, angler\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-R497-revision-490-497",
+      "sequence": 27330,
+      "title": "Retour sur les chapitres 490–497",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 490-497",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a2597dda2ffce344",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the French for godfather and godmother."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "godfather, godmother, godson, eldest, younger",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: godfather, godmother, godson, eldest, younger]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "spouse, to separate, separation, to break up, break-up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: spouse, to separate, separation, to break up, break-up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "blended, to adopt, adoption, siblings, large family",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: blended, to adopt, adoption, siblings, large family]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pregnancy, to give birth, infant, baby's bottle, to rock",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: pregnancy, to give birth, infant, baby's bottle, to rock]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to bring up, to spoil, punishment, to disobey, day nursery",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to bring up, to spoil, punishment, to disobey, day nursery]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "quarrel, to mix up, to deceive, to betray, betrayal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: quarrel, to mix up, to deceive, to betray, betrayal]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to sew, to knit, ball, to embroider, sewing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to sew, to knit, ball, to embroider, sewing]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fishing rod, fish hook, bait, to fish, fisherman",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: fishing rod, fish hook, bait, to fish, fisherman]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Godfather? (le parrain.) Godmother? (la marraine.) Godson? (le filleul.) Eldest? (l'aîné.) Younger? (le cadet.) Spouse? (le conjoint.) To separate? (séparer.) Separation? (la séparation.) To break up? (rompre.) Break-up? (la rupture.) Blended? (recomposé.) To adopt? (adopter.) Adoption? (l'adoption.) Siblings? (la fratrie.) Large family? (la famille nombreuse.) Pregnancy? (la grossesse.) To give birth? (accoucher.) Infant? (le nourrisson.) Baby's bottle? (le biberon.) To rock? (bercer.) To bring up? (élever.) To spoil? (gâter.) Punishment? (la punition.) To disobey? (désobéir.) Day nursery? (la crèche.) Quarrel? (la dispute.) To mix up? (brouiller.) To deceive? (tromper.) To betray? (trahir.) Betrayal? (la trahison.) To sew? (coudre.) To knit? (tricoter.) Ball? (la pelote.) To embroider? (broder.) Sewing? (la couture.) Fishing rod? (la canne à pêche.) Fish hook? (l'hameçon.) Bait? (l'appât.) To fish? (pêcher.) Fisherman? (le pêcheur.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 304,
+  "title": "Au bord de l'eau",
+  "label": "ch:fr-au-bord-de-l-eau",
+  "canDo": "I can talk about danger in the water: drowning, a rescuer, a lifebuoy and a lifeguard.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C304-maitre-nageur",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 304: I can talk about danger in the water: drowning, a rescuer, a lifebuoy and a lifeguard.",
+    "assesses": [
+      "FR-LEX-C304-NOYADE-03",
+      "FR-LEX-C304-NOYADE-04",
+      "FR-LEX-C304-NOYADE-05"
+    ]
+  }
+}

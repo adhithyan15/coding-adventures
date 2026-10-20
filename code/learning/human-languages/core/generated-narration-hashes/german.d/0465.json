@@ -1,0 +1,21 @@
+{
+  "language": "german",
+  "chapter": 465,
+  "sourceHash": "fnv1a64:d62f4fcd763c94ba",
+  "lessonIds": [
+    "GE-C465-sturm",
+    "GE-C465-boee",
+    "GE-C465-orkan",
+    "GE-C465-ueberschwemmen",
+    "GE-C465-pfuetze",
+    "GE-R465-review-462-465",
+    "GE-R465-review-final-465"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "german/narration/ch465.txt",
+  "json": "german/narration/ch465.json",
+  "textHash": "fnv1a64:4e9e24375e196d88",
+  "jsonHash": "fnv1a64:bf0d2a1254ce7fcb",
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-260-OPINION",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can give an opinion with je pense que and à mon avis, and point a reason forward with donc or alors.",
+  "prerequisites": []
+}

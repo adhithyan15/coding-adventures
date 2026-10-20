@@ -1,7 +1,8 @@
 # Changelog
 
-## 2026-10-19
+## Unreleased
 
+- Depends on `mosaic-pkg-grid` 0.3.0, whose Cell and Column load on Qt again.
 - `tests/web_demos_are_current.rs` runs the VisiCalc web demos' `--check`
   scripts and the HTML demo's infinite-grid smoke test, so a change to this
   package, to `mosaic-compile` or to `spreadsheet-wasm` that leaves the demos'

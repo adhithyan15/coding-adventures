@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 295,
+  "sourceHash": "fnv1a64:7d029a24baa1b1cc",
+  "lessonIds": [
+    "GE-C295-panne",
+    "GE-C295-pannendienst",
+    "GE-C295-abschleppen",
+    "GE-C295-beschaedigen",
+    "GE-C295-zerstoeren"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch295.txt",
+  "json": "german/narration/ch295.json",
+  "textHash": "fnv1a64:166b91f70a91384f",
+  "jsonHash": "fnv1a64:a715a10f2dd3ce58",
+  "findings": []
+}

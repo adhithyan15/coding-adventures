@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:0942197cae73ca21",
+  "lessonIds": [
+    "FR-C525-zapper",
+    "FR-C525-telecommande",
+    "FR-C525-emission",
+    "FR-C525-documentaire",
+    "FR-C525-rediffuser"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch525.txt",
+  "json": "french/narration/ch525.json",
+  "textHash": "fnv1a64:6ab08fd2597a758b",
+  "jsonHash": "fnv1a64:2c89e365b57309ac",
+  "findings": []
+}

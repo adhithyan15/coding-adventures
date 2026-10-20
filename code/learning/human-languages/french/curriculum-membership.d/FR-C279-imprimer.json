@@ -1,0 +1,11 @@
+{
+  "id": "FR-C279-imprimer",
+  "pathSegment": "FR-PATH-279-REDIGER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-279-REDIGER",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 280,
+  "title": "Le journal télévisé",
+  "label": "ch:fr-le-journal-televise",
+  "canDo": "I can talk about the news on television and radio: the TV news, the presenter, the viewers, the listeners and the microphone.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C280-micro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 280: I can talk about the news on television and radio: the TV news, the presenter, the viewers, the listeners and the microphone.",
+    "assesses": [
+      "FR-LEX-C280-TELE-03",
+      "FR-LEX-C280-TELE-04",
+      "FR-LEX-C280-TELE-05"
+    ]
+  }
+}

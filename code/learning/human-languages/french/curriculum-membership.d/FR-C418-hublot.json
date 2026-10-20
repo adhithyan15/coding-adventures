@@ -1,0 +1,11 @@
+{
+  "id": "FR-C418-hublot",
+  "pathSegment": "FR-PATH-418-BORD",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-418-BORD",
+      "order": 3
+    }
+  ]
+}

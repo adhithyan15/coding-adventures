@@ -1,0 +1,11 @@
+{
+  "id": "FR-C424-nuitee",
+  "pathSegment": "FR-PATH-424-HEBERGEMENT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-424-HEBERGEMENT",
+      "order": 2
+    }
+  ]
+}

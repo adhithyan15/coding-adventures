@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-273-VEILLE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can place an event the day before or the day after another, two days later, and say lately or soon.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 431,
+  "title": "On n'est pas content",
+  "label": "ch:fr-on-n-est-pas-content",
+  "canDo": "I can complain: the complaint, demanding, grumbling, disturbing someone and being unhappy.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-R431-revision-424-431",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 431: I can complain: the complaint, demanding, grumbling, disturbing someone and being unhappy.",
+    "assesses": [
+      "FR-LEX-C431-RECLAMATION-03",
+      "FR-LEX-C431-RECLAMATION-04",
+      "FR-LEX-C431-RECLAMATION-05"
+    ]
+  }
+}

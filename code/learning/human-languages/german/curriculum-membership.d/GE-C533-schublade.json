@@ -1,0 +1,11 @@
+{
+  "id": "GE-C533-schublade",
+  "pathSegment": "GE-PATH-533-GEMUETLICH",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-533-GEMUETLICH",
+      "order": 2
+    }
+  ]
+}

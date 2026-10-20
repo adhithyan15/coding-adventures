@@ -1,0 +1,11 @@
+{
+  "id": "GE-C280-verbrecher",
+  "pathSegment": "GE-PATH-280-VERBRECHEN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-280-VERBRECHEN",
+      "order": 1
+    }
+  ]
+}

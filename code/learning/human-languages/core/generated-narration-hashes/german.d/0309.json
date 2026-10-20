@@ -1,0 +1,20 @@
+{
+  "language": "german",
+  "chapter": 309,
+  "sourceHash": "fnv1a64:f846041a56f59098",
+  "lessonIds": [
+    "GE-C309-schmuecken",
+    "GE-C309-girlande",
+    "GE-C309-aufhaengen",
+    "GE-C309-luftballon",
+    "GE-C309-feuerwerk",
+    "GE-R309-review-302-309"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "german/narration/ch309.txt",
+  "json": "german/narration/ch309.json",
+  "textHash": "fnv1a64:fac64a2655edf2eb",
+  "jsonHash": "fnv1a64:495189a931e30874",
+  "findings": []
+}

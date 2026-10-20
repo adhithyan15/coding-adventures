@@ -5,6 +5,20 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.6.0] — 2026-10-19 (LANG83 PR1a — standard operation support)
+
+- **LANG83 op support.** New `op_support` module (`OP_SUPPORT`, `op_support`).
+  `Lowered` means `GenericCirJit` compiles the op to JIT bytecode — integer
+  `add sub mul div neg`, the `cmp_*` family, and `print_i64`/`putchar` via
+  `CALL_BUILTIN` to the embedder-registered handler. Ops that only run because
+  `JITCore` falls back to the vm-core interpreter (`mod`, strings, `f64` math,
+  conversions, `print_str`) are declared `Refused(INTERPRETER_TIER_ONLY)`, so
+  interpreter fallback cannot masquerade as JIT support ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)). PR1b ops are
+  refused.
+- `declared_support_matches_what_generic_jit_compiles` builds a one-op function
+  per registry entry, specialises it and asks `GenericCirJit` to compile it, so
+  every row is checked against the real compiler rather than restated.
+
 ## [0.5.1] — 2026-08-02
 
 ### Fixed — compiled boolean procedures preserve their runtime type

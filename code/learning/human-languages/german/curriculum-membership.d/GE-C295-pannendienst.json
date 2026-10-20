@@ -1,0 +1,11 @@
+{
+  "id": "GE-C295-pannendienst",
+  "pathSegment": "GE-PATH-295-PANNE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-295-PANNE",
+      "order": 1
+    }
+  ]
+}

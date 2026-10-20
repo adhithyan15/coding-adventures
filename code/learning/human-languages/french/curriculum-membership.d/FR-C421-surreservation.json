@@ -1,0 +1,11 @@
+{
+  "id": "FR-C421-surreservation",
+  "pathSegment": "FR-PATH-421-ANNULATION",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-421-ANNULATION",
+      "order": 4
+    }
+  ]
+}

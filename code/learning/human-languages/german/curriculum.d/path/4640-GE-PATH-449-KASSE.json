@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-449-KASSE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-449-KASSE"
+  ],
+  "after": []
+}

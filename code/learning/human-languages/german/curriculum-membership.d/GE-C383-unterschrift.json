@@ -1,0 +1,11 @@
+{
+  "id": "GE-C383-unterschrift",
+  "pathSegment": "GE-PATH-383-ANTRAG",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-383-ANTRAG",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 486,
+  "sourceHash": "fnv1a64:d48cb0550fca7245",
+  "lessonIds": [
+    "FR-C486-insomnie",
+    "FR-C486-ronfler",
+    "FR-C486-cauchemar",
+    "FR-C486-bailler",
+    "FR-C486-sieste"
+  ],
+  "tex": "french/book/chapters/ch486-nuits-agitees.tex"
+}

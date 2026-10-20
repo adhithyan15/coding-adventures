@@ -1,0 +1,11 @@
+{
+  "id": "GE-C469-seufzen",
+  "pathSegment": "GE-PATH-469-ENTTAEUSCHUNG",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-469-ENTTAEUSCHUNG",
+      "order": 4
+    }
+  ]
+}

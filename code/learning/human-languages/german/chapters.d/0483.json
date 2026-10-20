@@ -1,0 +1,19 @@
+{
+  "chapter": 483,
+  "title": "Gips und Krücken",
+  "label": "ch:ge-gips-und-krucken",
+  "canDo": "I can talk about broken bones and healing.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C483-heilen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 483: I can talk about broken bones and healing.",
+    "assesses": [
+      "GE-LEX-C483-GIPS-03",
+      "GE-LEX-C483-GIPS-04",
+      "GE-LEX-C483-GIPS-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 269,
+  "sourceHash": "fnv1a64:e068c8773d9ee275",
+  "lessonIds": [
+    "FR-C269-lorsque",
+    "FR-C269-des-que",
+    "FR-C269-au-moment-ou",
+    "FR-C269-aussitot",
+    "FR-C269-tandis-que"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch269.txt",
+  "json": "french/narration/ch269.json",
+  "textHash": "fnv1a64:d5f2ecece4042a22",
+  "jsonHash": "fnv1a64:93ace62c5d2cce2a",
+  "findings": []
+}

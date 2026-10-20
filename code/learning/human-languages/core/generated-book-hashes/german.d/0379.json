@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 379,
+  "sourceHash": "fnv1a64:bd705c4fa3783f58",
+  "lessonIds": [
+    "GE-C379-bewerten",
+    "GE-C379-bewertung",
+    "GE-C379-benoten",
+    "GE-C379-nachholen",
+    "GE-C379-korrigieren"
+  ],
+  "tex": "german/book/chapters/ch379-noten-und-bewertungen.tex"
+}

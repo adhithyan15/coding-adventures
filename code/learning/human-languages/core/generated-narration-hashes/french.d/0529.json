@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 529,
+  "sourceHash": "fnv1a64:63aa3e7819b8b1fc",
+  "lessonIds": [
+    "FR-C529-nappe",
+    "FR-C529-couvert",
+    "FR-C529-debarrasser",
+    "FR-C529-louche",
+    "FR-C529-couvercle",
+    "FR-R529-revision-522-529"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch529.txt",
+  "json": "french/narration/ch529.json",
+  "textHash": "fnv1a64:6c49f828daf1cffe",
+  "jsonHash": "fnv1a64:7969c6376aa6af57",
+  "findings": []
+}

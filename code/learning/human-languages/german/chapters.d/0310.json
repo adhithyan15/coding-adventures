@@ -1,0 +1,19 @@
+{
+  "chapter": 310,
+  "title": "Karneval",
+  "label": "ch:ge-karneval",
+  "canDo": "I can talk about carnival: carnival, Fasching, a costume, to dress up and a custom.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C310-brauch",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 310: I can talk about carnival: carnival, Fasching, a costume, to dress up and a custom.",
+    "assesses": [
+      "GE-LEX-C310-KARNEVAL-03",
+      "GE-LEX-C310-KARNEVAL-04",
+      "GE-LEX-C310-KARNEVAL-05"
+    ]
+  }
+}

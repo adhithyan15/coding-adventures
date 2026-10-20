@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-261-KONJUNKTIV",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "GE-EXT-261-KONJUNKTIV"
+  ],
+  "after": []
+}

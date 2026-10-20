@@ -1,0 +1,11 @@
+{
+  "id": "GE-C454-wanderung",
+  "pathSegment": "GE-PATH-454-WANDERUNG",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-454-WANDERUNG",
+      "order": 0
+    }
+  ]
+}

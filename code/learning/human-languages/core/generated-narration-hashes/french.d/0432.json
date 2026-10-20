@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 432,
+  "sourceHash": "fnv1a64:8c3aad6b411d139e",
+  "lessonIds": [
+    "FR-C432-gerant",
+    "FR-C432-desagrement",
+    "FR-C432-signaler",
+    "FR-C432-menage",
+    "FR-C432-defectueux"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch432.txt",
+  "json": "french/narration/ch432.json",
+  "textHash": "fnv1a64:89814005ef3788e3",
+  "jsonHash": "fnv1a64:8282c579ffe9a147",
+  "findings": []
+}

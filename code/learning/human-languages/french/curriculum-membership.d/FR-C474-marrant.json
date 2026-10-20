@@ -1,0 +1,11 @@
+{
+  "id": "FR-C474-marrant",
+  "pathSegment": "FR-PATH-474-GAIETE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-474-GAIETE",
+      "order": 3
+    }
+  ]
+}

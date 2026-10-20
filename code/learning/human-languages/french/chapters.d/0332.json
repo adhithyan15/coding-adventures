@@ -1,0 +1,19 @@
+{
+  "chapter": 332,
+  "title": "Assaisonner",
+  "label": "ch:fr-assaisonner",
+  "canDo": "I can describe finishing a dish: the colander, draining, sprinkling, seasoning and tasting.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C332-deguster",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 332: I can describe finishing a dish: the colander, draining, sprinkling, seasoning and tasting.",
+    "assesses": [
+      "FR-LEX-C332-ASSAISONNER-03",
+      "FR-LEX-C332-ASSAISONNER-04",
+      "FR-LEX-C332-ASSAISONNER-05"
+    ]
+  }
+}

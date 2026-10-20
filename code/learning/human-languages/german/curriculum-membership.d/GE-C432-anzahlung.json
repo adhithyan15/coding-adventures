@@ -1,0 +1,11 @@
+{
+  "id": "GE-C432-anzahlung",
+  "pathSegment": "GE-PATH-432-ENTSCHAEDIGUNG",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-432-ENTSCHAEDIGUNG",
+      "order": 2
+    }
+  ]
+}

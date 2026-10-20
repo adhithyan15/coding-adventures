@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C403-gazole",
+    "language": "french",
+    "chapter": 403,
+    "sequence": 22460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8b4df9a94ba40448"
+  },
+  "findings": []
+}

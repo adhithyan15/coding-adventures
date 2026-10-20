@@ -1,0 +1,11 @@
+{
+  "id": "FR-C435-angle",
+  "pathSegment": "FR-PATH-435-PANNEAUX",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-435-PANNEAUX",
+      "order": 4
+    }
+  ]
+}

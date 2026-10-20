@@ -1,0 +1,11 @@
+{
+  "id": "GE-R489-review-482-489",
+  "pathSegment": "GE-PATH-489-VERWANDTE",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-489-VERWANDTE",
+      "order": 5
+    }
+  ]
+}

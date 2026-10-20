@@ -1,0 +1,11 @@
+{
+  "id": "FR-C523-saison",
+  "pathSegment": "FR-PATH-523-SERIES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-523-SERIES",
+      "order": 1
+    }
+  ]
+}

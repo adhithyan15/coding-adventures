@@ -1,0 +1,11 @@
+{
+  "id": "GE-C432-unannehmlichkeit",
+  "pathSegment": "GE-PATH-432-ENTSCHAEDIGUNG",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-432-ENTSCHAEDIGUNG",
+      "order": 1
+    }
+  ]
+}

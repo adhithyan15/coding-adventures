@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 407,
+  "sourceHash": "fnv1a64:6b3f91c23b657ce1",
+  "lessonIds": [
+    "GE-C407-rasen",
+    "GE-C407-blitzer",
+    "GE-C407-erwischen",
+    "GE-C407-bussgeld",
+    "GE-C407-strafzettel"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch407.txt",
+  "json": "german/narration/ch407.json",
+  "textHash": "fnv1a64:aed719d99157c941",
+  "jsonHash": "fnv1a64:b74b969f33a2db59",
+  "findings": []
+}

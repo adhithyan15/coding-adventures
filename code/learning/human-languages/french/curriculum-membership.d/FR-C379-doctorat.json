@@ -1,0 +1,11 @@
+{
+  "id": "FR-C379-doctorat",
+  "pathSegment": "FR-PATH-379-DIPLOME",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-379-DIPLOME",
+      "order": 3
+    }
+  ]
+}

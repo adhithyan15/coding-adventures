@@ -1,0 +1,20 @@
+{
+  "chapter": 257,
+  "title": "At the Station — hin und zurück, den Zug verpasst",
+  "label": "ch:ge-at-the-station",
+  "canDo": "I can buy a ticket one way or there and back, and report a problem such as a missed train.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C257-review",
+    "kind": "production",
+    "summary": "Complete GE-C257-review: buy a return ticket to a city, then report a missed train and ask what to do next.",
+    "assesses": [
+      "GE-LEX-HIN-UND-ZURUECK-01",
+      "GE-GRAMMAR-FAHRKARTE-NACH-02",
+      "GE-LEX-ZUG-VERPASST-01",
+      "GE-GRAMMAR-PROBLEM-MELDEN-02"
+    ]
+  }
+}

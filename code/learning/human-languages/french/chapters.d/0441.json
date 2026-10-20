@@ -1,0 +1,19 @@
+{
+  "chapter": 441,
+  "title": "Dans la rue",
+  "label": "ch:fr-dans-la-rue",
+  "canDo": "I can describe things in a street: the bench, the street lamp, the old lamp post, the kiosk and the cobblestones.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C441-pave",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 441: I can describe things in a street: the bench, the street lamp, the old lamp post, the kiosk and the cobblestones.",
+    "assesses": [
+      "FR-LEX-C441-MOBILIER-03",
+      "FR-LEX-C441-MOBILIER-04",
+      "FR-LEX-C441-MOBILIER-05"
+    ]
+  }
+}

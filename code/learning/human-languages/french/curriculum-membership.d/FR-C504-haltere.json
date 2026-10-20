@@ -1,0 +1,11 @@
+{
+  "id": "FR-C504-haltere",
+  "pathSegment": "FR-PATH-504-GYM",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-504-GYM",
+      "order": 1
+    }
+  ]
+}

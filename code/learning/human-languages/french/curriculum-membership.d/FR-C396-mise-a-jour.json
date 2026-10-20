@@ -1,0 +1,11 @@
+{
+  "id": "FR-C396-mise-a-jour",
+  "pathSegment": "FR-PATH-396-LOGICIEL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-396-LOGICIEL",
+      "order": 4
+    }
+  ]
+}

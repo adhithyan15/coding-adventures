@@ -1,0 +1,19 @@
+{
+  "chapter": 301,
+  "title": "L'alerte",
+  "label": "ch:fr-l-alerte",
+  "canDo": "I can describe raising the alarm: an alert, alerting people, a defibrillator, an emergency exit and clearing a building.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C301-evacuer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 301: I can describe raising the alarm: an alert, alerting people, a defibrillator, an emergency exit and clearing a building.",
+    "assesses": [
+      "FR-LEX-C301-ALERTE-03",
+      "FR-LEX-C301-ALERTE-04",
+      "FR-LEX-C301-ALERTE-05"
+    ]
+  }
+}

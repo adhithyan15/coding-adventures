@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 258,
+  "sourceHash": "fnv1a64:f87774c8e0c99782",
+  "lessonIds": [
+    "FR-C258-parlais",
+    "FR-C258-cetait",
+    "FR-C258-il-faisait-froid",
+    "FR-C258-dormais-dormi",
+    "FR-C258-pendant-que",
+    "FR-C258-revision-quand"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch258.txt",
+  "json": "french/narration/ch258.json",
+  "textHash": "fnv1a64:fe5611b80d3312cc",
+  "jsonHash": "fnv1a64:75ad578ed8298e05",
+  "findings": []
+}

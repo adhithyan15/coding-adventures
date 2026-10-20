@@ -1,0 +1,11 @@
+{
+  "id": "FR-C388-condamner",
+  "pathSegment": "FR-PATH-388-PEINE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-388-PEINE",
+      "order": 1
+    }
+  ]
+}

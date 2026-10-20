@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-454-WANDERUNG",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about a hike: the hike, the trail, climbing up, climbing down and stopping for a rest.",
+  "prerequisites": []
+}
