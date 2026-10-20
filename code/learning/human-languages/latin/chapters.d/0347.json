@@ -1,0 +1,19 @@
+{
+  "chapter": 347,
+  "title": "Mōnstra et hērōēs",
+  "label": "ch:la-monstra-et-heroes",
+  "canDo": "I can talk about the creatures of myth: a monster, a giant, a hero, a nymph and the fleece.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C347-vellus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 347: I can talk about the creatures of myth: a monster, a giant, a hero, a nymph and the fleece.",
+    "assesses": [
+      "LA-LEX-C347-MONSTRUM-03",
+      "LA-LEX-C347-MONSTRUM-04",
+      "LA-LEX-C347-MONSTRUM-05"
+    ]
+  }
+}

@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 551,
+  "title": "Book boxes and tablets",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5e05a340f22666f2",
+  "lessons": [
+    {
+      "id": "LA-C551-capsa",
+      "sequence": 29170,
+      "title": "capsa, capsae — a book box",
+      "headword": "capsa, capsae",
+      "romanization": "capsa, capsae",
+      "gloss": "a book box",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:794f1a0c2e79c777",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to read through, then the Latin for to unroll."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: capsa, capsae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "capsa, capsae — \"a book box\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Puer librōs in capsā portat. The boy carries his books in a book box."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, first declension, from capiō — to hold. English case, a box, comes from it through French."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "capsa is built on capiō \"to take, hold\" (Lewis & Short; EtymDB). English case \"box\" comes from it through French, and capsule from its diminutive."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "capsa, capsae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *capsa, capsae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "capsa, capsae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *capsa, capsae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with capsa, capsae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *capsa, capsae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to read through, then the Latin for to unroll, then say capsa, capsae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to read through, then the Latin for to unroll, then say *capsa, capsae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does capsa, capsae mean? (\"A book box\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C551-scrinium",
+      "sequence": 29180,
+      "title": "scrīnium, scrīniī — a writing case, chest for papers",
+      "headword": "scrīnium, scrīniī",
+      "romanization": "scrīnium, scrīniī",
+      "gloss": "a writing case, chest for papers",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:34f4a06315a6288c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to unroll, then the Latin for a book box."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: scrīnium, scrīniī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "scrīnium, scrīniī — \"a writing case, chest for papers\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Epistulās in scrīniō servō. I keep the letters in a writing case."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter, second declension. A round box for book-rolls and letters."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "scrīnium is a native Latin noun; Lewis & Short links it with scrībō \"to write\", but EtymDB traces it to a root meaning \"to cut\", so the origin is not settled. English shrine comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "scrīnium, scrīniī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *scrīnium, scrīniī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "scrīnium, scrīniī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *scrīnium, scrīniī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with scrīnium, scrīniī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *scrīnium, scrīniī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to unroll, then the Latin for a book box, then say scrīnium, scrīniī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to unroll, then the Latin for a book box, then say *scrīnium, scrīniī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does scrīnium, scrīniī mean? (\"A writing case, chest for papers\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C551-membrana",
+      "sequence": 29190,
+      "title": "membrāna, membrānae — parchment; skin",
+      "headword": "membrāna, membrānae",
+      "romanization": "membrāna, membrānae",
+      "gloss": "parchment; skin",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0356792de69371c7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a book box, then the Latin for a writing case."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: membrāna, membrānae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "membrāna, membrānae — \"parchment; skin\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Poēta versūs in membrānā scrībit. The poet writes the verses on parchment."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, first declension, from membrum. Thin skin, then parchment for writing. English membrane."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "membrāna is built on membrum \"limb\" (Lewis & Short; EtymDB): the skin over the limbs, then parchment. English membrane comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "membrāna, membrānae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *membrāna, membrānae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "membrāna, membrānae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *membrāna, membrānae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with membrāna, membrānae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *membrāna, membrānae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a book box, then the Latin for a writing case, then say membrāna, membrānae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a book box, then the Latin for a writing case, then say *membrāna, membrānae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does membrāna, membrānae mean? (\"Parchment; skin\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C551-pugillares",
+      "sequence": 29200,
+      "title": "pugillārēs, pugillārium — writing tablets",
+      "headword": "pugillārēs, pugillārium",
+      "romanization": "pugillārēs, pugillārium",
+      "gloss": "writing tablets",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:88a920728cb56d4a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a writing case, then the Latin for parchment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: pugillārēs, pugillārium",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pugillārēs, pugillārium — \"writing tablets\"."
+            },
+            {
+              "kind": "speech",
+              "text": "In pugillāribus pauca verba scrībit. He writes a few words on his writing tablets."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine, third declension, plural. Small wax tablets that fitted in the hand, from pugillus — a little fist."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pugillārēs is built on pugillus \"a little fist, handful\", from pugnus \"fist\" (Lewis & Short): tablets held in the hand."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pugillārēs, pugillārium",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pugillārēs, pugillārium*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pugillārēs, pugillārium, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pugillārēs, pugillārium*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with pugillārēs, pugillārium",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *pugillārēs, pugillārium*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a writing case, then the Latin for parchment, then say pugillārēs, pugillārium again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a writing case, then the Latin for parchment, then say *pugillārēs, pugillārium* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does pugillārēs, pugillārium mean? (\"Writing tablets\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C551-rescribo",
+      "sequence": 29210,
+      "title": "rescrībō, rescrībere — to write back, reply",
+      "headword": "rescrībō, rescrībere",
+      "romanization": "rescrībō, rescrībere",
+      "gloss": "to write back, reply",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e68ebc66221e51d7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for parchment, then the Latin for writing tablets."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: rescrībō, rescrībere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rescrībō, rescrībere — \"to write back, reply\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Epistulam tuam accēpī et statim rescrībō. I have received your letter and I am writing back at once."
+            },
+            {
+              "kind": "speech",
+              "text": "rescrībō, rescrībere, rescrīpsī, rescrīptum. An emperor's written answer was a rescrīptum."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rescrībō is built on re- \"back\" and scrībō \"to write\" (Lewis & Short). English rescript comes from its participle."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rescrībō, rescrībere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rescrībō, rescrībere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rescrībō, rescrībere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rescrībō, rescrībere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with rescrībō, rescrībere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *rescrībō, rescrībere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for parchment, then the Latin for writing tablets, then say rescrībō, rescrībere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for parchment, then the Latin for writing tablets, then say *rescrībō, rescrībere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does rescrībō, rescrībere mean? (\"To write back, reply\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

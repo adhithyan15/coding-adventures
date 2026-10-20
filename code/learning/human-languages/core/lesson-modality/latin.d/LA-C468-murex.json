@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C468-murex",
+    "language": "latin",
+    "chapter": 468,
+    "sequence": 24910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2a7c9bf450f1070c"
+  },
+  "findings": []
+}

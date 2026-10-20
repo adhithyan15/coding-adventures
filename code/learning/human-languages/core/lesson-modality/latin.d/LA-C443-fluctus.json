@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C443-fluctus",
+    "language": "latin",
+    "chapter": 443,
+    "sequence": 23630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d460d2c73f1e27c4"
+  },
+  "findings": []
+}

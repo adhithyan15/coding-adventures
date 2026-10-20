@@ -1,0 +1,11 @@
+{
+  "id": "LA-C440-nauseo",
+  "pathSegment": "LA-PATH-440-FLUCTUO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-440-FLUCTUO",
+      "order": 1
+    }
+  ]
+}

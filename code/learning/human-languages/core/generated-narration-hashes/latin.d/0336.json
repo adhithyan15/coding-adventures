@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:80c2aeb36c0f57f9",
+  "lessonIds": [
+    "LA-C336-gladiator",
+    "LA-C336-lanista",
+    "LA-C336-munus",
+    "LA-C336-venatio",
+    "LA-C336-bestia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch336.txt",
+  "json": "latin/narration/ch336.json",
+  "textHash": "fnv1a64:4bb020e793067c6d",
+  "jsonHash": "fnv1a64:f5ab90db76d11249",
+  "findings": []
+}

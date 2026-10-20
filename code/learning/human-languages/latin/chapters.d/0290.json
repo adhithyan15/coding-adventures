@@ -1,0 +1,18 @@
+{
+  "chapter": 290,
+  "title": "Would",
+  "label": "ch:la-would",
+  "canDo": "I can say politely what I would like, and what would happen if something that is not true were true, and write a short letter that uses it.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "LA-W290-epistula",
+    "kind": "production",
+    "summary": "Complete LA-W290-epistula: I can say politely what I would like, and what would happen if something that is not true were true, and write a short letter that uses it.",
+    "assesses": [
+      "LA-GRAMMAR-C290-SUBIUNCTIVUS-01",
+      "LA-GRAMMAR-C290-IRREALIS-01"
+    ]
+  }
+}

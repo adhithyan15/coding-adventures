@@ -1,0 +1,19 @@
+{
+  "chapter": 524,
+  "title": "Plague and swelling",
+  "label": "ch:la-plague-and-swelling",
+  "canDo": "I can talk about plague, infection and swelling.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C524-tumeo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 524: I can talk about plague, infection and swelling.",
+    "assesses": [
+      "LA-LEX-C524-PEST-03",
+      "LA-LEX-C524-PEST-04",
+      "LA-LEX-C524-PEST-05"
+    ]
+  }
+}

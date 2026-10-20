@@ -1,0 +1,11 @@
+{
+  "id": "LA-R286-by-sea",
+  "pathSegment": "LA-PATH-286-NAVIS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-286-NAVIS",
+      "order": 3
+    }
+  ]
+}

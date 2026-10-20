@@ -1,0 +1,11 @@
+{
+  "id": "LA-C322-custos",
+  "pathSegment": "LA-PATH-322-FUGA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-322-FUGA",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 306,
+  "title": "Caedēs",
+  "label": "ch:la-caedes",
+  "canDo": "I can talk about violent crime: slaughter, a murderer, an assassin, a dagger and to kill.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-R306-review-299-306",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 306: I can talk about violent crime: slaughter, a murderer, an assassin, a dagger and to kill.",
+    "assesses": [
+      "LA-LEX-C306-CAEDES-03",
+      "LA-LEX-C306-CAEDES-04",
+      "LA-LEX-C306-CAEDES-05"
+    ]
+  }
+}

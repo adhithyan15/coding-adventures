@@ -1,0 +1,19 @@
+{
+  "chapter": 474,
+  "title": "To plough, Furrow, Ploughshare, Ploughman, To harrow",
+  "label": "ch:la-to-plough-furrow-ploughshare-ploughman-to-harrow",
+  "canDo": "I can talk about ploughing: ploughing a field, the furrow, the ploughshare, the ploughman and harrowing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C474-occo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 474: I can talk about ploughing: ploughing a field, the furrow, the ploughshare, the ploughman and harrowing.",
+    "assesses": [
+      "LA-LEX-C474-ARO-03",
+      "LA-LEX-C474-ARO-04",
+      "LA-LEX-C474-ARO-05"
+    ]
+  }
+}

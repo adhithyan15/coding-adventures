@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 533,
+  "sourceHash": "fnv1a64:97fb0c8b7457d24e",
+  "lessonIds": [
+    "LA-C533-familiaris",
+    "LA-C533-familiaritas",
+    "LA-C533-necessitudo",
+    "LA-C533-diligo",
+    "LA-C533-amabilis"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch533.txt",
+  "json": "latin/narration/ch533.json",
+  "textHash": "fnv1a64:b29d6f08abdcd406",
+  "jsonHash": "fnv1a64:b1739d52d0e91921",
+  "findings": []
+}

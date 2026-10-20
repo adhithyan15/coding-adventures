@@ -2283,7 +2283,21 @@ jobs:
           elif [ "$RUNNER_OS" = "macOS" ]; then
             brew install qpdf
           else
-            choco install qpdf -y --no-progress
+            # The community Chocolatey feed answers 504 often enough to fail
+            # a required job outright, and when it does choco installs
+            # "0/0 packages" and EXITS 0, so its status says nothing. Judge
+            # by the result instead: retry until qpdf is actually on PATH,
+            # three attempts with a growing pause. A feed that stays down
+            # still fails below, at `qpdf --version`, naming qpdf -- loud,
+            # not skipped.
+            for attempt in 1 2 3; do
+              choco install qpdf -y --no-progress || true
+              if command -v qpdf >/dev/null 2>&1; then break; fi
+              if [ "$attempt" -lt 3 ]; then
+                echo "choco attempt $attempt did not install qpdf; retrying in $((attempt * 30))s"
+                sleep $((attempt * 30))
+              fi
+            done
           fi
           qpdf --version
 

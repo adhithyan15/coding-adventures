@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 328,
+  "sourceHash": "fnv1a64:d3ab3ab97a764c56",
+  "lessonIds": [
+    "LA-C328-flammeum",
+    "LA-C328-pronuba",
+    "LA-C328-nuptialis",
+    "LA-C328-matrona",
+    "LA-C328-divortium"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch328.txt",
+  "json": "latin/narration/ch328.json",
+  "textHash": "fnv1a64:b033300474902886",
+  "jsonHash": "fnv1a64:76610f9b6ffb9c1b",
+  "findings": []
+}

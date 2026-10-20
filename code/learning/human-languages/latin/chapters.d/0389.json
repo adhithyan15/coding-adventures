@@ -1,0 +1,19 @@
+{
+  "chapter": 389,
+  "title": "Duty and Freedom",
+  "label": "ch:la-duty-and-freedom",
+  "canDo": "I can talk about slavery and setting a slave free, about duty to the gods and to family, a burden and obedience.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C389-obsequium",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 389: I can talk about slavery and setting a slave free, about duty to the gods and to family, a burden and obedience.",
+    "assesses": [
+      "LA-LEX-C389-SERVITUS-03",
+      "LA-LEX-C389-SERVITUS-04",
+      "LA-LEX-C389-SERVITUS-05"
+    ]
+  }
+}

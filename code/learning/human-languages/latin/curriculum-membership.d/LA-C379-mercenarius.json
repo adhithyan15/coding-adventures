@@ -1,0 +1,11 @@
+{
+  "id": "LA-C379-mercenarius",
+  "pathSegment": "LA-PATH-379-QUAESTUS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-379-QUAESTUS",
+      "order": 2
+    }
+  ]
+}

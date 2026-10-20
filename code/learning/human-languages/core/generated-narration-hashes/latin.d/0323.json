@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:bf74b9756e24122b",
+  "lessonIds": [
+    "LA-C323-pario",
+    "LA-C323-partus",
+    "LA-C323-obstetrix",
+    "LA-C323-nutrio",
+    "LA-C323-nutrix"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch323.txt",
+  "json": "latin/narration/ch323.json",
+  "textHash": "fnv1a64:233ba64534c5ce31",
+  "jsonHash": "fnv1a64:c090f8eec8f969e6",
+  "findings": []
+}

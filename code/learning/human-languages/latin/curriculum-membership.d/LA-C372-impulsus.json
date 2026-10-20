@@ -1,0 +1,11 @@
+{
+  "id": "LA-C372-impulsus",
+  "pathSegment": "LA-PATH-372-AUCTOR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-372-AUCTOR",
+      "order": 1
+    }
+  ]
+}

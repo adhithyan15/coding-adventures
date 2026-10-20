@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C410-promulgo",
+    "language": "latin",
+    "chapter": 410,
+    "sequence": 21920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d207177493d96bd1"
+  },
+  "findings": []
+}

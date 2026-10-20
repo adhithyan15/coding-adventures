@@ -1,0 +1,19 @@
+{
+  "chapter": 392,
+  "title": "Taking Care",
+  "label": "ch:la-taking-care",
+  "canDo": "I can say that I am on my guard and take precautions, and talk about a guarantee, a necessity and a good moment.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "LA-C392-praecaveo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 392: I can say that I am on my guard and take precautions, and talk about a guarantee, a necessity and a good moment.",
+    "assesses": [
+      "LA-LEX-C392-CAVEO-03",
+      "LA-LEX-C392-CAVEO-04",
+      "LA-LEX-C392-CAVEO-05"
+    ]
+  }
+}

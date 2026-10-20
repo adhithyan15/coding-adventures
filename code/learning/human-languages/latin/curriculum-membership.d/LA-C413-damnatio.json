@@ -1,0 +1,11 @@
+{
+  "id": "LA-C413-damnatio",
+  "pathSegment": "LA-PATH-413-CONDEMNO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-413-CONDEMNO",
+      "order": 1
+    }
+  ]
+}

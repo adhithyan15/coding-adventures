@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C356-appono",
+    "language": "latin",
+    "chapter": 356,
+    "sequence": 19130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:02efcd256ef73767"
+  },
+  "findings": []
+}

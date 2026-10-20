@@ -1,0 +1,19 @@
+{
+  "chapter": 297,
+  "title": "Incipere et fīnīre",
+  "label": "ch:la-incipere-et-finire",
+  "canDo": "I can say that an action began, was finished, was completed or was broken off.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C297-intermitto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 297: I can say that an action began, was finished, was completed or was broken off.",
+    "assesses": [
+      "LA-LEX-C297-INCIPIO-03",
+      "LA-LEX-C297-INCIPIO-04",
+      "LA-LEX-C297-INCIPIO-05"
+    ]
+  }
+}

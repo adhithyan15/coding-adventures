@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 390,
+  "sourceHash": "fnv1a64:a94613244376b116",
+  "lessonIds": [
+    "LA-C390-condicio",
+    "LA-C390-sin",
+    "LA-C390-dummodo",
+    "LA-C390-modo",
+    "LA-C390-quamvis"
+  ],
+  "tex": "latin/book/chapters/ch390-on-one-condition.tex"
+}

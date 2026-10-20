@@ -1,0 +1,19 @@
+{
+  "chapter": 457,
+  "title": "Block of flats, Upper room, Storey, Timber, Beam",
+  "label": "ch:la-block-of-flats-upper-room-storey-timber-beam",
+  "canDo": "I can describe a block of flats: the block itself, an upper room, a storey, timbers and beams.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C457-trabs",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 457: I can describe a block of flats: the block itself, an upper room, a storey, timbers and beams.",
+    "assesses": [
+      "LA-LEX-C457-INSULA-03",
+      "LA-LEX-C457-INSULA-04",
+      "LA-LEX-C457-INSULA-05"
+    ]
+  }
+}

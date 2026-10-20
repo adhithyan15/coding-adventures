@@ -1,0 +1,11 @@
+{
+  "id": "LA-C351-seco",
+  "pathSegment": "LA-PATH-351-CONCIDO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-351-CONCIDO",
+      "order": 1
+    }
+  ]
+}

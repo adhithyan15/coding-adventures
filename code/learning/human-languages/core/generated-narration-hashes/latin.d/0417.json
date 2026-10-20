@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:d3e380ff3ab366e9",
+  "lessonIds": [
+    "LA-C417-possessio",
+    "LA-C417-proprius",
+    "LA-C417-alienus",
+    "LA-C417-dominium",
+    "LA-C417-mancipium"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch417.txt",
+  "json": "latin/narration/ch417.json",
+  "textHash": "fnv1a64:dc0857f01449e951",
+  "jsonHash": "fnv1a64:d7017f0b303e4de1",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 465,
+  "title": "Peck, Pint, By weight, Quarter-as, Money-changer",
+  "label": "ch:la-peck-pint-by-weight-quarter-as-money-changer",
+  "canDo": "I can talk about measures and money: a peck, a pint, things sold by weight, a small coin, and the money-changer.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C465-nummularius",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 465: I can talk about measures and money: a peck, a pint, things sold by weight, a small coin, and the money-changer.",
+    "assesses": [
+      "LA-LEX-C465-MODIUS-03",
+      "LA-LEX-C465-MODIUS-04",
+      "LA-LEX-C465-MODIUS-05"
+    ]
+  }
+}

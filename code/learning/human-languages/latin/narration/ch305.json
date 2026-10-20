@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 305,
+  "title": "Scelus et fraus",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:db6903d0debbe2c0",
+  "lessons": [
+    {
+      "id": "LA-C305-scelus",
+      "sequence": 16510,
+      "title": "scelus, sceleris — a crime, a wicked deed",
+      "headword": "scelus, sceleris",
+      "romanization": "scelus, sceleris",
+      "gloss": "a crime, a wicked deed",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:94f830fb73b9293c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to catch, then the Latin for to seize."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: scelus, sceleris",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "scelus, sceleris — \"a crime, a wicked deed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Omnēs cīvēs dē hōc scelere loquēbantur. All the citizens were talking about this crime."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter, 3rd declension. The strongest word for a wrong: a crime that also offends the gods."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "scelus is an inherited word whose origin is not settled; Lewis & Short compare a Sanskrit root meaning \"to stumble\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "scelus, sceleris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *scelus, sceleris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "scelus, sceleris, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *scelus, sceleris*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with scelus, sceleris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *scelus, sceleris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to catch, then the Latin for to seize, then say scelus, sceleris again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to catch, then the Latin for to seize, then say *scelus, sceleris* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does scelus, sceleris mean? (\"A crime, a wicked deed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C305-facinus",
+      "sequence": 16520,
+      "title": "facinus, facinoris — a deed; a bad deed",
+      "headword": "facinus, facinoris",
+      "romanization": "facinus, facinoris",
+      "gloss": "a deed; a bad deed",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e29970d5a7c8b769",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to seize, then the Latin for a crime."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: facinus, facinoris",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "facinus, facinoris — \"a deed; a bad deed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Facinus audāx erat, sed nōn turpe. It was a daring deed, but not a shameful one."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter, 3rd declension, from faciō. Alone it often means a crime; praised, a fine deed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "facinus is built on faciō, \"to do, to make\" (EtymDB): a thing done, and very often a wicked thing done."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "facinus, facinoris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *facinus, facinoris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "facinus, facinoris, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *facinus, facinoris*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with facinus, facinoris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *facinus, facinoris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to seize, then the Latin for a crime, then say facinus, facinoris again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to seize, then the Latin for a crime, then say *facinus, facinoris* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does facinus, facinoris mean? (\"A deed; a bad deed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C305-sceleratus",
+      "sequence": 16530,
+      "title": "scelerātus, scelerāta, scelerātum — wicked, criminal",
+      "headword": "scelerātus, scelerāta, scelerātum",
+      "romanization": "scelerātus, scelerāta, scelerātum",
+      "gloss": "wicked, criminal",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:232d9b2a8afa8b4b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a crime, then the Latin for a deed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: scelerātus, scelerāta, scelerātum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "scelerātus, scelerāta, scelerātum — \"wicked, criminal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ille vir scelerātus patrem suum fefellit. That wicked man deceived his own father."
+            },
+            {
+              "kind": "speech",
+              "text": "The past participle of scelerō, 'to stain with crime', used as an adjective."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "scelerātus is the participle of scelerō, \"to pollute with crime\", built on scelus, \"crime\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "scelerātus, scelerāta, scelerātum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *scelerātus, scelerāta, scelerātum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "scelerātus, scelerāta, scelerātum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *scelerātus, scelerāta, scelerātum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with scelerātus, scelerāta, scelerātum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *scelerātus, scelerāta, scelerātum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a crime, then the Latin for a deed, then say scelerātus, scelerāta, scelerātum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a crime, then the Latin for a deed, then say *scelerātus, scelerāta, scelerātum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does scelerātus, scelerāta, scelerātum mean? (\"Wicked, criminal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C305-fraus",
+      "sequence": 16540,
+      "title": "fraus, fraudis — fraud, deceit; harm",
+      "headword": "fraus, fraudis",
+      "romanization": "fraus, fraudis",
+      "gloss": "fraud, deceit; harm",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9abe52ee4f6fbd6a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a deed, then the Latin for wicked."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: fraus, fraudis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fraus, fraudis — \"fraud, deceit; harm\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mercātor fraude multam pecūniam accēpit. The merchant got a lot of money by fraud."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, 3rd declension. In old law also 'harm': sine fraude, without loss. English fraud."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fraus is an inherited word whose earlier origin is not settled (Lewis & Short, EtymDB). English fraud comes from it through French."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fraus, fraudis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fraus, fraudis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fraus, fraudis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fraus, fraudis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with fraus, fraudis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *fraus, fraudis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a deed, then the Latin for wicked, then say fraus, fraudis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a deed, then the Latin for wicked, then say *fraus, fraudis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does fraus, fraudis mean? (\"Fraud, deceit; harm\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C305-dolus",
+      "sequence": 16550,
+      "title": "dolus, dolī — a trick, cunning",
+      "headword": "dolus, dolī",
+      "romanization": "dolus, dolī",
+      "gloss": "a trick, cunning",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9adeec03e524a0fe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for wicked, then the Latin for fraud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dolus, dolī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dolus, dolī — \"a trick, cunning\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Hostēs dolum parāvērunt, sed dux eum animadvertit. The enemy prepared a trick, but the leader noticed it."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine, 2nd declension. The wooden horse was the most famous dolus of the old stories."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dolus matches Greek dolos, \"bait, trick\"; EtymDB lists it as taken from Greek, while Lewis & Short treat the two as cousins."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dolus, dolī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dolus, dolī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dolus, dolī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dolus, dolī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dolus, dolī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dolus, dolī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for wicked, then the Latin for fraud, then say dolus, dolī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for wicked, then the Latin for fraud, then say *dolus, dolī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dolus, dolī mean? (\"A trick, cunning\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

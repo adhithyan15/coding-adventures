@@ -1,0 +1,11 @@
+{
+  "id": "LA-C486-algeo",
+  "pathSegment": "LA-PATH-486-PRUINA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-486-PRUINA",
+      "order": 4
+    }
+  ]
+}

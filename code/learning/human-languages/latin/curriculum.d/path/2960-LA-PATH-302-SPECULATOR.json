@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-302-SPECULATOR",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-302-SPECULATOR"
+  ],
+  "after": []
+}

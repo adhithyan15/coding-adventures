@@ -1,0 +1,19 @@
+{
+  "chapter": 466,
+  "title": "Corn supply, Dearness, Cheapness, To value, To be sold",
+  "label": "ch:la-corn-supply-dearness-cheapness-to-value-to-be-sold",
+  "canDo": "I can talk about prices: the corn supply, high prices and low prices, valuing goods and things being sold.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C466-veneo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 466: I can talk about prices: the corn supply, high prices and low prices, valuing goods and things being sold.",
+    "assesses": [
+      "LA-LEX-C466-ANNONA-03",
+      "LA-LEX-C466-ANNONA-04",
+      "LA-LEX-C466-ANNONA-05"
+    ]
+  }
+}

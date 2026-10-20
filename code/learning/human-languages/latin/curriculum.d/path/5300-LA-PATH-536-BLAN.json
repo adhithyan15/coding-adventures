@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-536-BLAN",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "LA-EXT-536-BLAN"
+  ],
+  "after": []
+}

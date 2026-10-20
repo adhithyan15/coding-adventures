@@ -1,0 +1,11 @@
+{
+  "id": "LA-C420-auctio",
+  "pathSegment": "LA-PATH-420-AUCTIO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-420-AUCTIO",
+      "order": 1
+    }
+  ]
+}

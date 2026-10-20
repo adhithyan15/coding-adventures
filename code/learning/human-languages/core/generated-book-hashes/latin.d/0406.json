@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 406,
+  "sourceHash": "fnv1a64:f8111d4019e9fcbb",
+  "lessonIds": [
+    "LA-C406-ingeniosus",
+    "LA-C406-attentus",
+    "LA-C406-tardus",
+    "LA-C406-sedulus",
+    "LA-C406-neglegens"
+  ],
+  "tex": "latin/book/chapters/ch406-good-and-bad-pupils.tex"
+}

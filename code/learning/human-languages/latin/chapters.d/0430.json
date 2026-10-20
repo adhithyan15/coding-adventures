@@ -1,0 +1,19 @@
+{
+  "chapter": 430,
+  "title": "Cart pole, Wheel hub, Drag shoe, To yoke, To unyoke",
+  "label": "ch:la-cart-pole-wheel-hub-drag-shoe-to-yoke-to-unyoke",
+  "canDo": "I can talk about the parts of a cart and harnessing it: the pole, the hub, the drag shoe, yoking and unyoking.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-R430-review-423-430",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 430: I can talk about the parts of a cart and harnessing it: the pole, the hub, the drag shoe, yoking and unyoking.",
+    "assesses": [
+      "LA-LEX-C430-TEMO-03",
+      "LA-LEX-C430-TEMO-04",
+      "LA-LEX-C430-TEMO-05"
+    ]
+  }
+}

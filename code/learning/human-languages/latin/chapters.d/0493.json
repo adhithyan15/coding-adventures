@@ -1,0 +1,19 @@
+{
+  "chapter": 493,
+  "title": "Anger and indignation",
+  "label": "ch:la-anger-and-indignation",
+  "canDo": "I can talk about anger and indignation.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C493-indignor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 493: I can talk about anger and indignation.",
+    "assesses": [
+      "LA-LEX-C493-IRA-03",
+      "LA-LEX-C493-IRA-04",
+      "LA-LEX-C493-IRA-05"
+    ]
+  }
+}

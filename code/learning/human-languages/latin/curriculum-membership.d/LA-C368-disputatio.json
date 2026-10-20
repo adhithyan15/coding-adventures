@@ -1,0 +1,11 @@
+{
+  "id": "LA-C368-disputatio",
+  "pathSegment": "LA-PATH-368-ORATOR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-368-ORATOR",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C362-redarguo",
+    "language": "latin",
+    "chapter": 362,
+    "sequence": 19470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9e33bf998487de1e"
+  },
+  "findings": []
+}

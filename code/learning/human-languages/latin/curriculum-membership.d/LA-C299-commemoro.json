@@ -1,0 +1,11 @@
+{
+  "id": "LA-C299-commemoro",
+  "pathSegment": "LA-PATH-299-NARRATIO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-299-NARRATIO",
+      "order": 1
+    }
+  ]
+}

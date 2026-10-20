@@ -1,0 +1,11 @@
+{
+  "id": "LA-C433-caballus",
+  "pathSegment": "LA-PATH-433-IUMENTUM",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-433-IUMENTUM",
+      "order": 1
+    }
+  ]
+}

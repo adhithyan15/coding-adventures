@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C493-indignus",
+    "language": "latin",
+    "chapter": 493,
+    "sequence": 26230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6ab40ef0463729e6"
+  },
+  "findings": []
+}

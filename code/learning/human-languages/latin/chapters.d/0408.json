@@ -1,0 +1,19 @@
+{
+  "chapter": 408,
+  "title": "Mistakes and the Cane",
+  "label": "ch:la-mistakes-and-the-cane",
+  "canDo": "I can talk about a mistake in a text and a fault, the cane and the lash, and say that a pupil got a beating.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "LA-C408-vapulo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 408: I can talk about a mistake in a text and a fault, the cane and the lash, and say that a pupil got a beating.",
+    "assesses": [
+      "LA-LEX-C408-MENDUM-03",
+      "LA-LEX-C408-MENDUM-04",
+      "LA-LEX-C408-MENDUM-05"
+    ]
+  }
+}

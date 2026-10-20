@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 439,
+  "sourceHash": "fnv1a64:7b47ed27d86e16ba",
+  "lessonIds": [
+    "LA-C439-appello",
+    "LA-C439-egredior",
+    "LA-C439-subduco",
+    "LA-C439-deduco",
+    "LA-C439-navigabilis"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch439.txt",
+  "json": "latin/narration/ch439.json",
+  "textHash": "fnv1a64:2dac3c5171d68a2f",
+  "jsonHash": "fnv1a64:f5e74eee44582d67",
+  "findings": []
+}

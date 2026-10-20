@@ -1,0 +1,11 @@
+{
+  "id": "LA-C383-magistratus",
+  "pathSegment": "LA-PATH-383-MAGISTRATUS",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-383-MAGISTRATUS",
+      "order": 0
+    }
+  ]
+}

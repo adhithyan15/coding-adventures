@@ -1,0 +1,11 @@
+{
+  "id": "LA-C338-legio",
+  "pathSegment": "LA-PATH-338-LEGIO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-338-LEGIO",
+      "order": 0
+    }
+  ]
+}

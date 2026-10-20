@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 443,
+  "sourceHash": "fnv1a64:abe5bce1259e5891",
+  "lessonIds": [
+    "LA-C443-syrtis",
+    "LA-C443-fluctus",
+    "LA-C443-vadum",
+    "LA-C443-fretum",
+    "LA-C443-praetervehor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch443.txt",
+  "json": "latin/narration/ch443.json",
+  "textHash": "fnv1a64:30587e37b248d18a",
+  "jsonHash": "fnv1a64:6d87fd326958698c",
+  "findings": []
+}

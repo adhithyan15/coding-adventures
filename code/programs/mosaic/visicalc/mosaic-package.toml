@@ -8,7 +8,7 @@ license = "MIT"
 exports = ["VisiCalc", "VisiCalcStartup"]
 
 [dependencies]
-mosaic-pkg-grid = "0.2.0"
+mosaic-pkg-grid = "0.3.0"
 
 [kernel]
 version = "1"

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C296-initium",
+    "language": "latin",
+    "chapter": 296,
+    "sequence": 16050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d6465100209337f"
+  },
+  "findings": []
+}

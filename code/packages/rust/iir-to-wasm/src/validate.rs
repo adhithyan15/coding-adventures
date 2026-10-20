@@ -165,7 +165,8 @@ pub(crate) const CALL_BUILTIN_SUPPORTED_NAMES: &[&str] =
     // `pair?` lowers to `ref.test $LispyPair` (is this lisp value a cons cell?),
     // the lisp `not` to `i32.eqz` (boolean negation), and `equal?` (McCarthy
     // `EQ` on atoms) to unbox-both-and-`i32.eq`. `ATOM x` = `not(pair? x)`.
-    &["putchar", "getchar", "print_i64", "input_i64", "input_more", "input_str", "pair?", "not", "equal?"];
+    // `write_i64` (LANG83 PR1b) lowers to `env.__write_i64(i64)`: decimal, no newline.
+    &["putchar", "getchar", "print_i64", "write_i64", "input_i64", "input_more", "input_str", "pair?", "not", "equal?"];
 
 // ---------------------------------------------------------------------------
 // validate_for_wasm
@@ -263,6 +264,23 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
                      Phase 4 to downgrade to call_builtin form before lowering to WASM",
                     func.name, instr.op
                 ));
+                continue;
+            }
+
+            // ── Check 2.6: LANG83 `trap` names a registered kind ─────────────
+            //
+            // `trap` carries a kind *literal* (`Operand::Str`) from the closed
+            // table in `interpreter_ir::exception_kind`; it lowers to
+            // `env.__trap(<stable id>)`, so an unregistered kind has no id.
+            if instr.op == "trap" {
+                let ok = matches!(instr.srcs.as_slice(),
+                    [interpreter_ir::Operand::Str(k)] if interpreter_ir::exception_kind::is_registered_trap_kind(k));
+                if !ok {
+                    errors.push(format!(
+                        "InvalidTrap: function {:?}, trap requires srcs = [Operand::Str(registered trap kind)], got {:?}",
+                        func.name, instr.srcs
+                    ));
+                }
                 continue;
             }
 

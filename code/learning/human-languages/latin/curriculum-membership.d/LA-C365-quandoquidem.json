@@ -1,0 +1,11 @@
+{
+  "id": "LA-C365-quandoquidem",
+  "pathSegment": "LA-PATH-365-ETENIM",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-365-ETENIM",
+      "order": 0
+    }
+  ]
+}

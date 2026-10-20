@@ -1,0 +1,11 @@
+{
+  "id": "LA-C321-tumultus",
+  "pathSegment": "LA-PATH-321-MINAE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-321-MINAE",
+      "order": 3
+    }
+  ]
+}

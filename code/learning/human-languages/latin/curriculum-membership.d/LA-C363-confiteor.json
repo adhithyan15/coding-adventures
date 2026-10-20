@@ -1,0 +1,11 @@
+{
+  "id": "LA-C363-confiteor",
+  "pathSegment": "LA-PATH-363-CONCEDO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-363-CONCEDO",
+      "order": 2
+    }
+  ]
+}

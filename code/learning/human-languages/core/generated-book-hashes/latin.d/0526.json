@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 526,
+  "sourceHash": "fnv1a64:5da456724ffe6dd5",
+  "lessonIds": [
+    "LA-C526-sano",
+    "LA-C526-medeor",
+    "LA-C526-convalesco",
+    "LA-C526-recreo",
+    "LA-C526-potio"
+  ],
+  "tex": "latin/book/chapters/ch526-healing.tex"
+}

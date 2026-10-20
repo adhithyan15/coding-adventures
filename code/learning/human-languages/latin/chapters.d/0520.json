@@ -1,0 +1,19 @@
+{
+  "chapter": 520,
+  "title": "Breathing",
+  "label": "ch:la-breathing",
+  "canDo": "I can describe panting, sobbing, yawning and sneezing.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-R520-review-513-520",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 520: I can describe panting, sobbing, yawning and sneezing.",
+    "assesses": [
+      "LA-LEX-C520-SPIR-03",
+      "LA-LEX-C520-SPIR-04",
+      "LA-LEX-C520-SPIR-05"
+    ]
+  }
+}

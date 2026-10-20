@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-535-AMAN",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "LA-EXT-535-AMAN"
+  ],
+  "after": []
+}

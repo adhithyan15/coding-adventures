@@ -1,0 +1,11 @@
+{
+  "id": "LA-C391-alioqui",
+  "pathSegment": "LA-PATH-391-ETIAMSI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-391-ETIAMSI",
+      "order": 2
+    }
+  ]
+}

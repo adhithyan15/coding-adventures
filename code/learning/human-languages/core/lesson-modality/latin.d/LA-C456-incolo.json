@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C456-incolo",
+    "language": "latin",
+    "chapter": 456,
+    "sequence": 24320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0153ba9f414c815c"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C486-gelo",
+    "language": "latin",
+    "chapter": 486,
+    "sequence": 25840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:73e6b8f0a8303a94"
+  },
+  "findings": []
+}

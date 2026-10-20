@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 476,
+  "sourceHash": "fnv1a64:b631b5ae3d89b400",
+  "lessonIds": [
+    "LA-C476-trituro",
+    "LA-C476-ventilo",
+    "LA-C476-palea",
+    "LA-C476-stipula",
+    "LA-C476-horreum"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch476.txt",
+  "json": "latin/narration/ch476.json",
+  "textHash": "fnv1a64:abbd459414fac932",
+  "jsonHash": "fnv1a64:39f44f42a1829a53",
+  "findings": []
+}

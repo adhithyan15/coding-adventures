@@ -1,0 +1,11 @@
+{
+  "id": "LA-C463-canistrum",
+  "pathSegment": "LA-PATH-463-HOLITOR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-463-HOLITOR",
+      "order": 4
+    }
+  ]
+}

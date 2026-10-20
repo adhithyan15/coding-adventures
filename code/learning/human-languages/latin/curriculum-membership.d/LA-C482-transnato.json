@@ -1,0 +1,11 @@
+{
+  "id": "LA-C482-transnato",
+  "pathSegment": "LA-PATH-482-AMNIS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-482-AMNIS",
+      "order": 4
+    }
+  ]
+}

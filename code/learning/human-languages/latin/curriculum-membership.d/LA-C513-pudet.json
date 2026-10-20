@@ -1,0 +1,11 @@
+{
+  "id": "LA-C513-pudet",
+  "pathSegment": "LA-PATH-513-MISE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-513-MISE",
+      "order": 3
+    }
+  ]
+}

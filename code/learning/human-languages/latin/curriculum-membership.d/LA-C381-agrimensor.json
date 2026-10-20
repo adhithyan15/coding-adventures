@@ -1,0 +1,11 @@
+{
+  "id": "LA-C381-agrimensor",
+  "pathSegment": "LA-PATH-381-CAUSIDICUS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-381-CAUSIDICUS",
+      "order": 4
+    }
+  ]
+}

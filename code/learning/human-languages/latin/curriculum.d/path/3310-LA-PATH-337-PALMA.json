@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-337-PALMA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-337-PALMA"
+  ],
+  "after": []
+}

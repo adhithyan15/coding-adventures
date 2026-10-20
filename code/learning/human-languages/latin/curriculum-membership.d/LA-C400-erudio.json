@@ -1,0 +1,11 @@
+{
+  "id": "LA-C400-erudio",
+  "pathSegment": "LA-PATH-400-DOCEO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-400-DOCEO",
+      "order": 1
+    }
+  ]
+}

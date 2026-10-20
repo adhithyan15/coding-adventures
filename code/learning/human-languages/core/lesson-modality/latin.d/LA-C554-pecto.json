@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C554-pecto",
+    "language": "latin",
+    "chapter": 554,
+    "sequence": 29370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3319b9db78b280d6"
+  },
+  "findings": []
+}

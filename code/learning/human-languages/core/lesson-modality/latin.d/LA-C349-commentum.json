@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C349-commentum",
+    "language": "latin",
+    "chapter": 349,
+    "sequence": 18810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:136331e997c9815b"
+  },
+  "findings": []
+}

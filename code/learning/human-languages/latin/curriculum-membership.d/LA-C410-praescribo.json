@@ -1,0 +1,11 @@
+{
+  "id": "LA-C410-praescribo",
+  "pathSegment": "LA-PATH-410-ROGATIO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-410-ROGATIO",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C395-dilatio",
+  "pathSegment": "LA-PATH-395-DIFFERO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-395-DIFFERO",
+      "order": 3
+    }
+  ]
+}

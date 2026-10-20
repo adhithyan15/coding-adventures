@@ -1,0 +1,11 @@
+{
+  "id": "LA-C325-praenomen",
+  "pathSegment": "LA-PATH-325-BULLA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-325-BULLA",
+      "order": 2
+    }
+  ]
+}

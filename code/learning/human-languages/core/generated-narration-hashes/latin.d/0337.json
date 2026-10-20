@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:8fe337a677e99e97",
+  "lessonIds": [
+    "LA-C337-palma",
+    "LA-C337-praemium",
+    "LA-C337-certo",
+    "LA-C337-certamen",
+    "LA-C337-plausus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch337.txt",
+  "json": "latin/narration/ch337.json",
+  "textHash": "fnv1a64:543fe49ddb0382eb",
+  "jsonHash": "fnv1a64:7cf542c1ba220a99",
+  "findings": []
+}

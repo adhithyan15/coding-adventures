@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C361-confirmo",
+    "language": "latin",
+    "chapter": 361,
+    "sequence": 19440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5542d74bf14a66b6"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:70439abbbed219f4",
+  "lessonIds": [
+    "LA-C501-commoveo",
+    "LA-C501-afficio",
+    "LA-C501-affectus",
+    "LA-C501-tranquillus",
+    "LA-C501-securus"
+  ],
+  "tex": "latin/book/chapters/ch501-moods-and-feelings.tex"
+}

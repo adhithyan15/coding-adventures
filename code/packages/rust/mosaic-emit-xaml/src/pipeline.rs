@@ -11714,10 +11714,20 @@ fn emit_host_input(
 
     // onCommit / onCancel → merged KeyDown handler keyed on Enter / Escape.
     // A multiline TextBox (`AcceptsReturn`) spends Enter on a line break, so
-    // it has no commit key; every backend agrees on that (#15930).
+    // its commit key is UI25 §4's Ctrl+Enter instead. Windows has no Cmd
+    // key; Ctrl+Enter is its native "submit this text box" chord.
+    //
+    //   field       | commit branch condition
+    //   ------------+--------------------------------------------------------
+    //   single-line | e.Key == Enter
+    //   multiline   | e.Key == Enter && Control is down; then e.Handled = true
+    //
+    // `KeyRoutedEventArgs` carries no modifier state, so the branch asks the
+    // input thread's keyboard. Marking the event handled keeps the chord from
+    // also inserting a line break.
     let multiline = find_prop_keyword(node, "multiline") == Some("true");
     let commit = match find_prop_value(node, "onCommit") {
-        Some(LayoutPropValue::EmitRef(e)) if !multiline => Some(e.clone()),
+        Some(LayoutPropValue::EmitRef(e)) => Some(e.clone()),
         _ => None,
     };
     let cancel = match find_prop_value(node, "onCancel") {
@@ -11734,9 +11744,15 @@ fn emit_host_input(
         if let Some(emit) = &commit {
             let case = kebab_to_pascal_case(&strip_on_prefix(emit));
             let args = host_input_event_args(ctx, emit, "tb.Text")?;
-            body.push_str(&format!(
-                "        if (e.Key == Windows.System.VirtualKey.Enter)\n        {{\n            Dispatch?.Invoke(this, new {event_union}.{case}({args}));\n        }}\n"
-            ));
+            if multiline {
+                body.push_str(&format!(
+                    "        if (e.Key == Windows.System.VirtualKey.Enter && Microsoft.UI.Input.InputKeyboardSource.GetKeyStateForCurrentThread(Windows.System.VirtualKey.Control).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down))\n        {{\n            e.Handled = true;\n            Dispatch?.Invoke(this, new {event_union}.{case}({args}));\n        }}\n"
+                ));
+            } else {
+                body.push_str(&format!(
+                    "        if (e.Key == Windows.System.VirtualKey.Enter)\n        {{\n            Dispatch?.Invoke(this, new {event_union}.{case}({args}));\n        }}\n"
+                ));
+            }
         }
         if let Some(emit) = &cancel {
             let case = kebab_to_pascal_case(&strip_on_prefix(emit));
@@ -19249,19 +19265,22 @@ mod tests {
         );
     }
 
-    /// #15930 — a multiline TextBox spends Enter on a line break, so the
-    /// merged KeyDown handler carries no Enter-to-commit branch; Escape
-    /// still cancels. Every backend lowers a multiline field this way.
+    /// UI25 §4 — a multiline TextBox spends Enter on a line break, so its
+    /// commit key is Ctrl+Enter: the PreviewKeyDown branch requires the
+    /// Control key down and marks the event handled, so the chord never
+    /// reaches the text. Bare Enter never commits; Escape still cancels.
     #[test]
-    fn multiline_host_input_does_not_commit_on_enter() {
+    fn multiline_host_input_commits_on_ctrl_enter() {
         let c = component(
             "Foo",
             vec![],
-            vec![emit("onSave", vec![]), emit("onDiscard", vec![])],
+            vec![
+                emit("onSave", vec![param("value", EmitPayloadType::Text)]),
+                emit("onDiscard", vec![]),
+            ],
         );
-        let l = layout_with_root(
-            "Foo",
-            host_input_node(
+        for tag in ["HostInput", "Input"] {
+            let mut node = host_input_node(
                 None,
                 vec![
                     LayoutProp {
@@ -19277,12 +19296,23 @@ mod tests {
                         value: LayoutPropValue::EmitRef("onDiscard".to_string()),
                     },
                 ],
-            ),
-        );
-        let r = compile(&c, &l, &empty_style("Foo"));
-        let cb = &r.code_behind;
-        assert!(!cb.contains("VirtualKey.Enter"), "got:\n{cb}");
-        assert!(cb.contains("VirtualKey.Escape"), "got:\n{cb}");
+            );
+            node.tag = tag.to_string();
+            let r = compile(&c, &layout_with_root("Foo", node), &empty_style("Foo"));
+            let cb = &r.code_behind;
+            assert!(
+                cb.contains(
+                    "if (e.Key == Windows.System.VirtualKey.Enter && Microsoft.UI.Input.InputKeyboardSource.GetKeyStateForCurrentThread(Windows.System.VirtualKey.Control).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down))\n        {\n            e.Handled = true;\n            Dispatch?.Invoke(this, new FooEvent.Save(tb.Text));\n        }"
+                ),
+                "{tag}: a TextBox commits on Ctrl+Enter, got:\n{cb}"
+            );
+            assert!(
+                !cb.contains("if (e.Key == Windows.System.VirtualKey.Enter)\n"),
+                "{tag}: bare Enter must stay a line break:\n{cb}"
+            );
+            assert!(cb.contains("VirtualKey.Escape"), "{tag}: got:\n{cb}");
+            assert!(r.xaml.contains("PreviewKeyDown=\""), "{tag}: got:\n{}", r.xaml);
+        }
     }
 
     #[test]
@@ -28543,6 +28573,23 @@ mod colour_keyword_tests {
 mod projection_identity_tests {
     use super::*;
 
+    /// A scratch-name nonce that is unique for every call in this process.
+    ///
+    /// The clock alone is not: macOS reports `SystemTime` in whole microseconds,
+    /// so two tests running in parallel threads could read the same "nanos" and
+    /// be handed the same directory, each seeing the other's files (this made
+    /// `compose_fixtures` fail about one run in five). The counter makes every
+    /// call distinct; the clock keeps names from a previous run apart.
+    fn unique_nonce() -> String {
+        static NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+        let n = NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+        let nanos = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .expect("system clock after epoch")
+            .as_nanos();
+        format!("{nanos}-{n}")
+    }
+
     #[test]
     fn retained_projections_execute_data_and_owner_updates() {
         use std::{fs, process::Command};
@@ -28578,8 +28625,8 @@ mod projection_identity_tests {
             }], nested_projections: vec![],
         };
         let dir = std::env::temp_dir().join(format!("mosaic-identity-{}-{}", std::process::id(),
-            std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_nanos()));
-        fs::create_dir_all(&dir).unwrap();
+            unique_nonce()));
+        fs::create_dir(&dir).unwrap();
         for name in ["Directory.Build.props", "Directory.Build.targets"] { fs::write(dir.join(name), "<Project />").unwrap(); }
         fs::write(dir.join("Probe.csproj"), "<Project Sdk=\"Microsoft.NET.Sdk\"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net9.0</TargetFramework><Nullable>enable</Nullable><ImplicitUsings>enable</ImplicitUsings></PropertyGroup></Project>").unwrap();
         let options = EmitOptions::default();

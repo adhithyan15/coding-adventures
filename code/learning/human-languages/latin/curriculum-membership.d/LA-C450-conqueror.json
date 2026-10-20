@@ -1,0 +1,11 @@
+{
+  "id": "LA-C450-conqueror",
+  "pathSegment": "LA-PATH-450-QUERELA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-450-QUERELA",
+      "order": 1
+    }
+  ]
+}

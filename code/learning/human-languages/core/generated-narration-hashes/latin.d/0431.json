@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 431,
+  "sourceHash": "fnv1a64:df7602337f160b20",
+  "lessonIds": [
+    "LA-C431-habena",
+    "LA-C431-lorum",
+    "LA-C431-frenum",
+    "LA-C431-freno",
+    "LA-C431-scutica"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch431.txt",
+  "json": "latin/narration/ch431.json",
+  "textHash": "fnv1a64:8aab362d0ec8ecd8",
+  "jsonHash": "fnv1a64:1755252a20107f7f",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 541,
+  "sourceHash": "fnv1a64:755dcec8664db150",
+  "lessonIds": [
+    "LA-C541-balneator",
+    "LA-C541-caldarium",
+    "LA-C541-tepidarium",
+    "LA-C541-frigidarium",
+    "LA-C541-piscina"
+  ],
+  "tex": "latin/book/chapters/ch541-at-the-baths.tex"
+}

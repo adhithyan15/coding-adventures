@@ -1,0 +1,11 @@
+{
+  "id": "LA-C401-condiscipulus",
+  "pathSegment": "LA-PATH-401-PRAECEPTOR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-401-PRAECEPTOR",
+      "order": 4
+    }
+  ]
+}

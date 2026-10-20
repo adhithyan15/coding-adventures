@@ -157,7 +157,7 @@ use crate::codegen::{
     I32_OR, I32_REM_S, I32_REM_U, I32_SHL, I32_SHR_S, I32_SHR_U, I32_SUB, I32_XOR, I64_ADD,
     I64_AND, I64_DIV_S, I64_DIV_U, I64_EQ, I64_GE_S, I64_GE_U, I64_GT_S, I64_GT_U, I64_LE_S, I64_LT_S,
     I64_MUL, I64_NE, I64_OR, I64_REM_S, I64_REM_U, I64_SHL, I64_SHR_S, I64_SHR_U, I64_SUB,
-    I64_XOR, IF, LOOP, RETURN, UNREACHABLE,
+    I64_XOR, I64_EQZ, IF, LOOP, RETURN, UNREACHABLE,
 };
 use crate::validate::validate_for_wasm;
 
@@ -1294,6 +1294,24 @@ fn has_control_flow(fn_: &IIRFunction) -> bool {
 // Instruction code generation
 // ---------------------------------------------------------------------------
 
+/// Host imports for the LANG83 PR1b operations, when the module uses them.
+///
+/// | Field | Import | Signature | Used by |
+/// |-------|--------|-----------|---------|
+/// | `write_i64` | `env.__write_i64` | `(i64) -> ()` | `call_builtin "write_i64"` (decimal, no newline) |
+/// | `trap` | `env.__trap` | `(i32) -> ()` | `trap "<kind>"`, and the defined traps of `i64_div_floor` / `i64_mod_floor` |
+///
+/// `env.__trap` receives the stable `exception_kind::trap_kind_id`. Its call is
+/// always followed by `unreachable`, so the module traps even if a host's
+/// `__trap` returns; a host that wants the kind (the conformance harness) reads
+/// it from the argument before the `unreachable` fires. Output imports write
+/// synchronously into the host's stream, so nothing needs flushing first.
+#[derive(Debug, Clone, Copy, Default)]
+struct Lang83Imports {
+    write_i64: Option<u32>,
+    trap: Option<u32>,
+}
+
 /// Emit WASM bytes for a single IIR instruction.
 ///
 /// This is the heart of the backend.  The function pattern-matches on `op`
@@ -1398,6 +1416,7 @@ fn emit_instr(
     // memory grows via `memory.grow` instead of silently running off the end
     // of the module's single declared page.
     ensure_capacity_fn_idx: Option<u32>,
+    lang83: Lang83Imports,
 ) -> Result<(), IIRWasmError> {
     // Helper closures to resolve variable names.
     let get_reg = |var: &str| -> Result<u32, IIRWasmError> {
@@ -3352,6 +3371,112 @@ fn emit_instr(
             code.extend(encode_local_set(dest_slot));
         }
 
+        // ── LANG83 PR1b: `trap "<kind>"` ─────────────────────────────────────
+        //
+        //   i32.const <kind id> ; call $env.__trap ; unreachable
+        //
+        // `unreachable` makes the rest of the block stack-polymorphic, so any
+        // IIR after the trap (the function's trailing `ret`) still validates.
+        "trap" => {
+            let id = match instr.srcs.as_slice() {
+                [Operand::Str(kind)] => interpreter_ir::exception_kind::trap_kind_id(kind),
+                _ => None,
+            }
+            .ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: format!("trap requires srcs = [Operand::Str(registered trap kind)], got {:?}", instr.srcs),
+            })?;
+            emit_lang83_trap(code, lang83, id, fn_name)?;
+        }
+
+        // ── LANG83 PR1b: `i64_div_floor` / `i64_mod_floor` ───────────────────
+        //
+        // WASM's `i64.div_s` itself traps on a zero divisor and on MIN / -1,
+        // but as an anonymous WASM trap with no kind, so both edges are tested
+        // first and routed to `env.__trap` with LANG83's kind:
+        //
+        //   local.get b ; i64.eqz ; if ; <trap Trap.DivZero> ; end
+        //   div: (a == MIN) & (b == -1) ; if ; <trap Trap.Overflow> ; end
+        //
+        // Then (no scratch locals needed — the remainder is recomputed, which
+        // is cheaper than widening the locals section):
+        //
+        //   adj = (a rem_s b != 0) & ((a rem_s b) ^ b < 0)
+        //   div: dest = (a div_s b) - extend_u(adj)
+        //   mod: dest = (a rem_s b) + select(b, 0, adj)
+        //
+        // `i64.rem_s` of MIN by -1 is defined as 0 in WASM (no trap), which is
+        // exactly LANG83's `MIN mod -1`.
+        "i64_div_floor" | "i64_mod_floor" => {
+            use interpreter_ir::exception_kind::{trap_kind_id, TRAP_DIV_ZERO, TRAP_OVERFLOW};
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: format!("{} must have a dest", instr.op),
+            })?;
+            let rd = get_reg(dest)?;
+            let ra = get_src_reg(&instr.srcs, 0, reg_map, fn_name)?;
+            let rb = get_src_reg(&instr.srcs, 1, reg_map, fn_name)?;
+            if !(slot_is_i64(ra) && slot_is_i64(rb) && slot_is_i64(rd)) {
+                return Err(IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: format!("{} operates on i64 operands and an i64 dest", instr.op),
+                });
+            }
+            let want_mod = instr.op == "i64_mod_floor";
+            // b == 0 → Trap.DivZero
+            code.extend(encode_local_get(rb));
+            code.push(I64_EQZ);
+            code.push(IF);
+            code.push(BLOCK_EMPTY);
+            emit_lang83_trap(code, lang83, trap_kind_id(TRAP_DIV_ZERO).expect("built-in kind"), fn_name)?;
+            code.push(END);
+            if !want_mod {
+                // a == MIN && b == -1 → Trap.Overflow
+                code.extend(encode_local_get(ra));
+                code.extend(encode_i64_const(i64::MIN));
+                code.push(I64_EQ);
+                code.extend(encode_local_get(rb));
+                code.extend(encode_i64_const(-1));
+                code.push(I64_EQ);
+                code.push(I32_AND);
+                code.push(IF);
+                code.push(BLOCK_EMPTY);
+                emit_lang83_trap(code, lang83, trap_kind_id(TRAP_OVERFLOW).expect("built-in kind"), fn_name)?;
+                code.push(END);
+            }
+            // The truncating result: q (div) or r (mod).
+            code.extend(encode_local_get(ra));
+            code.extend(encode_local_get(rb));
+            code.push(if want_mod { I64_REM_S } else { I64_DIV_S });
+            if want_mod {
+                // select(b, 0, adj)
+                code.extend(encode_local_get(rb));
+                code.extend(encode_i64_const(0));
+            }
+            // adj = (r != 0) & ((r ^ b) < 0), an i32 0/1.
+            code.extend(encode_local_get(ra));
+            code.extend(encode_local_get(rb));
+            code.push(I64_REM_S);
+            code.extend(encode_i64_const(0));
+            code.push(I64_NE);
+            code.extend(encode_local_get(ra));
+            code.extend(encode_local_get(rb));
+            code.push(I64_REM_S);
+            code.extend(encode_local_get(rb));
+            code.push(I64_XOR);
+            code.extend(encode_i64_const(0));
+            code.push(I64_LT_S);
+            code.push(I32_AND);
+            if want_mod {
+                code.push(WASM_SELECT);
+                code.push(I64_ADD);
+            } else {
+                code.push(WASM_I64_EXTEND_I32_U);
+                code.push(I64_SUB);
+            }
+            code.extend(encode_local_set(rd));
+        }
+
         // ── io_out → call $__print_i64 ────────────────────────────────────────
         //
         // `io_out Var("%val")`
@@ -3951,6 +4076,20 @@ fn emit_instr(
                 // - srcs[0] = Var("print_i64")
                 // - srcs[1] = Var(val)
                 // - dest    = None (void)
+                // LANG83 PR1b `write_i64` → `env.__write_i64(i64)`: decimal, no
+                // newline. An i32-slot argument is sign-extended first.
+                "write_i64" => {
+                    let val_slot = get_src_reg(&instr.srcs, 1, reg_map, fn_name)?;
+                    let fn_idx = lang83.write_i64.ok_or_else(|| IIRWasmError::UnsupportedOp {
+                        function: fn_name.to_string(),
+                        op: "call_builtin \"write_i64\": no env.__write_i64 import registered (internal error)".to_string(),
+                    })?;
+                    code.extend(encode_local_get(val_slot));
+                    if !slot_is_i64(val_slot) {
+                        code.push(WASM_I64_EXTEND_I32_S);
+                    }
+                    code.extend(encode_call(fn_idx));
+                }
                 "print_i64" => {
                     let val_var = match instr.srcs.get(1) {
                         Some(Operand::Var(v)) => v.as_str(),
@@ -4083,6 +4222,30 @@ fn emit_instr(
 /// the register map.  Immediate operands (Int/Float/Bool) cannot serve as
 /// direct source operands for binary instructions — the front-end is expected
 /// to have lowered them through a `const` instruction first.
+/// `select` (0x1B): pop `c: i32`, `v2`, `v1`; push `v1` if `c != 0` else `v2`.
+const WASM_SELECT: u8 = 0x1B;
+/// `i64.extend_i32_u` (0xAD).
+const WASM_I64_EXTEND_I32_U: u8 = 0xAD;
+/// `i64.extend_i32_s` (0xAC).
+const WASM_I64_EXTEND_I32_S: u8 = 0xAC;
+
+/// `i32.const <kind_id>; call $env.__trap; unreachable` (LANG83 PR1b).
+fn emit_lang83_trap(
+    code: &mut Vec<u8>,
+    lang83: Lang83Imports,
+    kind_id: u32,
+    fn_name: &str,
+) -> Result<(), IIRWasmError> {
+    let fn_idx = lang83.trap.ok_or_else(|| IIRWasmError::UnsupportedOp {
+        function: fn_name.to_string(),
+        op: "trap: no env.__trap import registered (internal error)".to_string(),
+    })?;
+    code.extend(encode_i32_const(kind_id as i32));
+    code.extend(encode_call(fn_idx));
+    code.push(UNREACHABLE);
+    Ok(())
+}
+
 fn get_src_reg(
     srcs: &[Operand],
     idx: usize,
@@ -4160,6 +4323,7 @@ fn lower_function(
     str_eq_fn_idx: Option<u32>,
     str_cmp_fn_idx: Option<u32>,
     ensure_capacity_fn_idx: Option<u32>,
+    lang83: Lang83Imports,
 ) -> Result<FunctionBody, IIRWasmError> {
     let param_count = fn_.params.len() as u32;
     let reg_map = build_register_map(fn_);
@@ -4281,6 +4445,7 @@ fn lower_function(
                     str_eq_fn_idx,
                     str_cmp_fn_idx,
                     ensure_capacity_fn_idx,
+                    lang83,
                 )?;
             }
 
@@ -4375,6 +4540,7 @@ fn lower_function(
                 str_eq_fn_idx,
                 str_cmp_fn_idx,
                 ensure_capacity_fn_idx,
+                lang83,
             )?;
         }
     }
@@ -5566,6 +5732,25 @@ pub fn lower_iir_to_wasm(
     let pow_fn_idx: Option<u32> = if uses_f64_pow {
         let i = next_import_idx; next_import_idx += 1; Some(i)
     } else { None };
+    // LANG83 PR1b imports, appended after every older import so no existing
+    // index moves:  12. env.__write_i64  13. env.__trap
+    let lang83_uses_write_i64 = module.functions.iter().flat_map(|f| &f.instructions).any(|i| {
+        i.op == "call_builtin" && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == "write_i64")
+    });
+    let lang83_uses_trap = module
+        .functions
+        .iter()
+        .flat_map(|f| &f.instructions)
+        .any(|i| matches!(i.op.as_str(), "trap" | "i64_div_floor" | "i64_mod_floor"));
+    let mut lang83 = Lang83Imports::default();
+    if lang83_uses_write_i64 {
+        lang83.write_i64 = Some(next_import_idx);
+        next_import_idx += 1;
+    }
+    if lang83_uses_trap {
+        lang83.trap = Some(next_import_idx);
+        next_import_idx += 1;
+    }
     let fn_idx_base: u32 = next_import_idx;
 
     let fn_map: HashMap<String, u32> = module
@@ -5869,6 +6054,29 @@ pub fn lower_iir_to_wasm(
             type_info: ImportTypeInfo::Function(type_idx),
         });
     }
+    if lang83.write_i64.is_some() {
+        // env.__write_i64(i64) -> ()  — LANG83 PR1b: decimal, no newline.
+        let type_idx = types.len() as u32 + struct_type_offset;
+        types.push(FuncType { params: vec![ValueType::I64], results: vec![] });
+        host_imports.push(Import {
+            module_name: "env".to_string(),
+            name: "__write_i64".to_string(),
+            kind: ExternalKind::Function,
+            type_info: ImportTypeInfo::Function(type_idx),
+        });
+    }
+    if lang83.trap.is_some() {
+        // env.__trap(i32 kind_id) -> ()  — LANG83 PR1b; always followed by
+        // `unreachable` at the call site.
+        let type_idx = types.len() as u32 + struct_type_offset;
+        types.push(FuncType { params: vec![ValueType::I32], results: vec![] });
+        host_imports.push(Import {
+            module_name: "env".to_string(),
+            name: "__trap".to_string(),
+            kind: ExternalKind::Function,
+            type_info: ImportTypeInfo::Function(type_idx),
+        });
+    }
 
     // Build WASM Global entries. Integer/array globals keep the historical
     // mutable i64 representation; strings and floats retain their native type.
@@ -5943,6 +6151,7 @@ pub fn lower_iir_to_wasm(
             sin_fn_idx, cos_fn_idx, ln_fn_idx, exp_fn_idx,
             atan_fn_idx, tan_fn_idx,
             pow_fn_idx, str_eq_fn_idx, str_cmp_fn_idx, ensure_capacity_fn_idx,
+            lang83,
         )?;
         code.push(body);
     }

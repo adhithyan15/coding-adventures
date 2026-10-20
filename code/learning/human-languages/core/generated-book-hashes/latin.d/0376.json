@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 376,
+  "sourceHash": "fnv1a64:30d6d4b1f6b6e61a",
+  "lessonIds": [
+    "LA-C376-opus",
+    "LA-C376-opifex",
+    "LA-C376-artifex",
+    "LA-C376-operarius",
+    "LA-C376-operor"
+  ],
+  "tex": "latin/book/chapters/ch376-work-and-workers.tex"
+}

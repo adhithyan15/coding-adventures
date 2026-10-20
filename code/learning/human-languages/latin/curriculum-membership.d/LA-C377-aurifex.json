@@ -1,0 +1,11 @@
+{
+  "id": "LA-C377-aurifex",
+  "pathSegment": "LA-PATH-377-FULLO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-377-FULLO",
+      "order": 1
+    }
+  ]
+}

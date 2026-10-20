@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 453,
+  "sourceHash": "fnv1a64:3d1af53e69ddbab1",
+  "lessonIds": [
+    "LA-C453-ductor",
+    "LA-C453-gnarus",
+    "LA-C453-prosequor",
+    "LA-C453-reperio",
+    "LA-C453-vestigo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch453.txt",
+  "json": "latin/narration/ch453.json",
+  "textHash": "fnv1a64:74873a6e63810230",
+  "jsonHash": "fnv1a64:7bd44b185022fe96",
+  "findings": []
+}

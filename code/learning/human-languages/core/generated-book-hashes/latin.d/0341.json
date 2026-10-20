@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:2cc36e8043b81011",
+  "lessonIds": [
+    "LA-C341-obsideo",
+    "LA-C341-obsidio",
+    "LA-C341-oppugno",
+    "LA-C341-expugno",
+    "LA-C341-aries"
+  ],
+  "tex": "latin/book/chapters/ch341-obsidio.tex"
+}

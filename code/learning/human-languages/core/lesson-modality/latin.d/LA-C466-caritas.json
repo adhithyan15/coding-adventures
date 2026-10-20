@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C466-caritas",
+    "language": "latin",
+    "chapter": 466,
+    "sequence": 24810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3b0c2d30b09a7cc9"
+  },
+  "findings": []
+}

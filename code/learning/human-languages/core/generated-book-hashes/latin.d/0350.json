@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:e5007f8779db0368",
+  "lessonIds": [
+    "LA-C350-obsono",
+    "LA-C350-obsonium",
+    "LA-C350-abluo",
+    "LA-C350-tergeo",
+    "LA-C350-cultellus"
+  ],
+  "tex": "latin/book/chapters/ch350-in-macello.tex"
+}

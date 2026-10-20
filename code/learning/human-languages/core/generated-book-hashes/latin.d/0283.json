@@ -1,0 +1,12 @@
+{
+  "language": "latin",
+  "chapter": 283,
+  "sourceHash": "fnv1a64:2a42080bf3952ac8",
+  "lessonIds": [
+    "LA-C283-puto",
+    "LA-C283-mea-sententia",
+    "LA-C283-ergo",
+    "LA-R283-what-i-think"
+  ],
+  "tex": "latin/book/chapters/ch283-what-i-think.tex"
+}

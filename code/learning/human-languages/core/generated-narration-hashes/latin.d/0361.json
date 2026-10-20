@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 361,
+  "sourceHash": "fnv1a64:435651a6336d91e6",
+  "lessonIds": [
+    "LA-C361-argumentum",
+    "LA-C361-exemplum",
+    "LA-C361-documentum",
+    "LA-C361-demonstro",
+    "LA-C361-confirmo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch361.txt",
+  "json": "latin/narration/ch361.json",
+  "textHash": "fnv1a64:1eb823f2458ae41b",
+  "jsonHash": "fnv1a64:fbafeb5ec0889fa9",
+  "findings": []
+}

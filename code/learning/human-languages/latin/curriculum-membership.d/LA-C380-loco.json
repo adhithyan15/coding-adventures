@@ -1,0 +1,11 @@
+{
+  "id": "LA-C380-loco",
+  "pathSegment": "LA-PATH-380-CONDUCO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-380-CONDUCO",
+      "order": 1
+    }
+  ]
+}

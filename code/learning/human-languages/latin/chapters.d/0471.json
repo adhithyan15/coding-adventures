@@ -1,0 +1,19 @@
+{
+  "chapter": 471,
+  "title": "Lathe, To turn on a lathe, To polish, To sharpen, Stonecutter",
+  "label": "ch:la-lathe-to-turn-on-a-lathe-to-polish-to-sharpen-stonecutter",
+  "canDo": "I can talk about finishing work in a workshop: the lathe, turning wood, polishing, sharpening tools, and the stonecutter.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C471-lapicida",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 471: I can talk about finishing work in a workshop: the lathe, turning wood, polishing, sharpening tools, and the stonecutter.",
+    "assesses": [
+      "LA-LEX-C471-TORNUS-03",
+      "LA-LEX-C471-TORNUS-04",
+      "LA-LEX-C471-TORNUS-05"
+    ]
+  }
+}

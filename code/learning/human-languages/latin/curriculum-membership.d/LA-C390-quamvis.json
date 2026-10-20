@@ -1,0 +1,11 @@
+{
+  "id": "LA-C390-quamvis",
+  "pathSegment": "LA-PATH-390-CONDICIO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-390-CONDICIO",
+      "order": 4
+    }
+  ]
+}

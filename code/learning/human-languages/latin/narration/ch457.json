@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 457,
+  "title": "Block of flats, Upper room, Storey, Timber, Beam",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:24e1ab755f4eb505",
+  "lessons": [
+    {
+      "id": "LA-C457-insula",
+      "sequence": 24340,
+      "title": "īnsula, īnsulae — a block of flats, an apartment house; an island",
+      "headword": "īnsula, īnsulae",
+      "romanization": "īnsula, īnsulae",
+      "gloss": "a block of flats, an apartment house; an island",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7625ac631b60bd50",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to live in, then the Latin for an occupant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: īnsula, īnsulae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "īnsula, īnsulae — \"a block of flats, an apartment house; an island\"."
+            },
+            {
+              "kind": "speech",
+              "text": "In urbe multī pauperēs in īnsulīs altīs habitant. In the city many poor people live in tall blocks of flats."
+            },
+            {
+              "kind": "speech",
+              "text": "First declension, feminine: īnsula, īnsulae f. First an island, then a block of rented flats standing alone like an island among streets. English isle and insulate come from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of īnsula is not settled: Lewis & Short offer a doubtful analysis as in- + sul-, and EtymDB gives no older parent. English isle comes from it through French, and insulate and peninsula from Latin."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "īnsula, īnsulae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *īnsula, īnsulae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "īnsula, īnsulae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *īnsula, īnsulae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with īnsula, īnsulae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *īnsula, īnsulae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to live in, then the Latin for an occupant, then say īnsula, īnsulae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to live in, then the Latin for an occupant, then say *īnsula, īnsulae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does īnsula, īnsulae mean? (\"A block of flats, an apartment house; an island\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C457-cenaculum",
+      "sequence": 24350,
+      "title": "cēnāculum, cēnāculī — an upper room, a garret, a flat on an upper floor",
+      "headword": "cēnāculum, cēnāculī",
+      "romanization": "cēnāculum, cēnāculī",
+      "gloss": "an upper room, a garret, a flat on an upper floor",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:253676f1c1878b45",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for an occupant, then the Latin for a block of flats."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: cēnāculum, cēnāculī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cēnāculum, cēnāculī — \"an upper room, a garret, a flat on an upper floor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Poēta pauper in cēnāculō sub tēgulīs habitat. The poor poet lives in a garret under the roof tiles."
+            },
+            {
+              "kind": "speech",
+              "text": "Second declension, neuter: cēnāculum, cēnāculī n. First a dining room, which in old houses was upstairs, then any upper room."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cēnāculum is built on cēna 'dinner' with the suffix -culum 'place for' (EtymDB; Lewis & Short): a dining room, which was upstairs, and so an upper room."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cēnāculum, cēnāculī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cēnāculum, cēnāculī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cēnāculum, cēnāculī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cēnāculum, cēnāculī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with cēnāculum, cēnāculī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *cēnāculum, cēnāculī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for an occupant, then the Latin for a block of flats, then say cēnāculum, cēnāculī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for an occupant, then the Latin for a block of flats, then say *cēnāculum, cēnāculī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does cēnāculum, cēnāculī mean? (\"An upper room, a garret, a flat on an upper floor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C457-contignatio",
+      "sequence": 24360,
+      "title": "contignātiō, contignātiōnis — a storey, a floor (of beams and boards)",
+      "headword": "contignātiō, contignātiōnis",
+      "romanization": "contignātiō, contignātiōnis",
+      "gloss": "a storey, a floor (of beams and boards)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:abe952d914679dfe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a block of flats, then the Latin for an upper room."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: contignātiō, contignātiōnis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "contignātiō, contignātiōnis — \"a storey, a floor (of beams and boards)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Īnsula alta est: sex contignātiōnēs habet. The block of flats is tall: it has six storeys."
+            },
+            {
+              "kind": "speech",
+              "text": "Third declension, feminine: contignātiō, contignātiōnis f. A floor laid on joists, so one storey of a building."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "contignātiō is built on contignō 'to join with beams', from con- and tignum 'beam, timber' (EtymDB; Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "contignātiō, contignātiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *contignātiō, contignātiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "contignātiō, contignātiōnis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *contignātiō, contignātiōnis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with contignātiō, contignātiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *contignātiō, contignātiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a block of flats, then the Latin for an upper room, then say contignātiō, contignātiōnis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a block of flats, then the Latin for an upper room, then say *contignātiō, contignātiōnis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does contignātiō, contignātiōnis mean? (\"A storey, a floor (of beams and boards)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C457-tignum",
+      "sequence": 24370,
+      "title": "tignum, tignī — a timber, a log for building; building material",
+      "headword": "tignum, tignī",
+      "romanization": "tignum, tignī",
+      "gloss": "a timber, a log for building; building material",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:08abcab2295efaa1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for an upper room, then the Latin for a storey."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: tignum, tignī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tignum, tignī — \"a timber, a log for building; building material\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Fabrī tigna in plaustrō ad īnsulam novam vehunt. The workmen carry timbers on a wagon to the new block of flats."
+            },
+            {
+              "kind": "speech",
+              "text": "Second declension, neuter: tignum, tignī n. Wood for building, cut and ready."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tignum is inherited from Proto-Italic tegnom (EtymDB), which EtymDB traces to a PIE word for a pole or stake, with English stake as a cousin. Lewis & Short connect it instead with the root of texō 'to build', so the deeper source is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tignum, tignī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tignum, tignī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tignum, tignī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tignum, tignī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with tignum, tignī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *tignum, tignī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for an upper room, then the Latin for a storey, then say tignum, tignī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for an upper room, then the Latin for a storey, then say *tignum, tignī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does tignum, tignī mean? (\"A timber, a log for building; building material\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C457-trabs",
+      "sequence": 24380,
+      "title": "trabs, trabis — a beam, a timber; (in poetry) a ship",
+      "headword": "trabs, trabis",
+      "romanization": "trabs, trabis",
+      "gloss": "a beam, a timber; (in poetry) a ship",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:58dbd901731a6f8d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a storey, then the Latin for a timber."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: trabs, trabis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "trabs, trabis — \"a beam, a timber; (in poetry) a ship\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Magnae trabēs in tēctō templī sunt. There are great beams in the roof of the temple."
+            },
+            {
+              "kind": "speech",
+              "text": "Third declension, feminine: trabs, trabis f. Bigger than a tignum. English architrave comes, through Italian trave, from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "trabs is inherited from PIE treb- 'wooden beam' (EtymDB), and EtymDB lists English thorp 'village' as a cousin. English architrave comes from it through Italian trave."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "trabs, trabis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *trabs, trabis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "trabs, trabis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *trabs, trabis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with trabs, trabis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *trabs, trabis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a storey, then the Latin for a timber, then say trabs, trabis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a storey, then the Latin for a timber, then say *trabs, trabis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does trabs, trabis mean? (\"A beam, a timber; (in poetry) a ship\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

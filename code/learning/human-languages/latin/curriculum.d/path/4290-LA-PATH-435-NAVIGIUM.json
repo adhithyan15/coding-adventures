@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-435-NAVIGIUM",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "LA-EXT-435-NAVIGIUM"
+  ],
+  "after": []
+}

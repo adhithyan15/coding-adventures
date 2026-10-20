@@ -1,0 +1,11 @@
+{
+  "id": "LA-R422-review-421-422",
+  "pathSegment": "LA-PATH-422-DIVITIAE",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "LA-EXT-422-DIVITIAE",
+      "order": 5
+    }
+  ]
+}

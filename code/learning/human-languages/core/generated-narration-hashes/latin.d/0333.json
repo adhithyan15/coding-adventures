@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:a9f3b11e5c2b1a8a",
+  "lessonIds": [
+    "LA-C333-festus",
+    "LA-C333-sollemnis",
+    "LA-C333-pompa",
+    "LA-C333-epulae",
+    "LA-C333-epulor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch333.txt",
+  "json": "latin/narration/ch333.json",
+  "textHash": "fnv1a64:76dab2e7695e6c5d",
+  "jsonHash": "fnv1a64:350b875de9a9e471",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C418-fenus",
+  "pathSegment": "LA-PATH-418-AESALIENUM",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-418-AESALIENUM",
+      "order": 3
+    }
+  ]
+}

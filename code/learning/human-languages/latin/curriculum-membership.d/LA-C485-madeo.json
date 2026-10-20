@@ -1,0 +1,11 @@
+{
+  "id": "LA-C485-madeo",
+  "pathSegment": "LA-PATH-485-IMBER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-485-IMBER",
+      "order": 1
+    }
+  ]
+}

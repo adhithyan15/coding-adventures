@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C300-mandatum",
+    "language": "latin",
+    "chapter": 300,
+    "sequence": 16280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:004715ff1c098680"
+  },
+  "findings": []
+}

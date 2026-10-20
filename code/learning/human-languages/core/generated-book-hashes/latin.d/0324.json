@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:520d55cda63afee4",
+  "lessonIds": [
+    "LA-C324-cunae",
+    "LA-C324-puer",
+    "LA-C324-infantia",
+    "LA-C324-pueritia",
+    "LA-C324-educo"
+  ],
+  "tex": "latin/book/chapters/ch324-puer-et-pueritia.tex"
+}

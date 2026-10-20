@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:a0a6796c1e6562ea",
+  "lessonIds": [
+    "LA-C304-effringo",
+    "LA-C304-claustrum",
+    "LA-C304-rapio",
+    "LA-C304-deprehendo",
+    "LA-C304-comprehendo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch304.txt",
+  "json": "latin/narration/ch304.json",
+  "textHash": "fnv1a64:b41fa3dcc67f9478",
+  "jsonHash": "fnv1a64:758ae88eb40817ee",
+  "findings": []
+}

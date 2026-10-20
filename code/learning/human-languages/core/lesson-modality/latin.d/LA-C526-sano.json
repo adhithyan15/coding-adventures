@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C526-sano",
+    "language": "latin",
+    "chapter": 526,
+    "sequence": 27890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:19994a23fe27392b"
+  },
+  "findings": []
+}

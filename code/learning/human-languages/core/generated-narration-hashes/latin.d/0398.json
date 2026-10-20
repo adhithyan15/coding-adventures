@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 398,
+  "sourceHash": "fnv1a64:564634e55d5bc27f",
+  "lessonIds": [
+    "LA-C398-violo",
+    "LA-C398-praesto",
+    "LA-C398-obligo",
+    "LA-C398-ratus",
+    "LA-C398-irritus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch398.txt",
+  "json": "latin/narration/ch398.json",
+  "textHash": "fnv1a64:1e079a780c8cacf9",
+  "jsonHash": "fnv1a64:23c72d9f33308ecb",
+  "findings": []
+}

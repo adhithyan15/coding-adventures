@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- **Breaking (0.2.0): the `body` slot is `body-text`.** A slot becomes a member
+  of every backend's generated type, and on SwiftUI `let body: String` collides
+  with `View.body`: the Card did not compile there (2 errors from
+  `swiftc -typecheck`), and nothing type-checked it. It now does, with 0 errors.
 - Added a light-theme stylesheet (`Card.light.msl`) mirroring the dark theme's structure with a light palette. Selected at build time via `mosaic-compile pkg --theme light` (the style analogue of the layout `--variant`).
 
 

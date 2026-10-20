@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-365-ETENIM",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "LA-EXT-365-ETENIM"
+  ],
+  "after": []
+}

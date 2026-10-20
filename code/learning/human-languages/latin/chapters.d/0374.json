@@ -1,0 +1,19 @@
+{
+  "chapter": 374,
+  "title": "Harm and Help",
+  "label": "ch:la-harm-and-help",
+  "canDo": "I can say that something harms or helps, does damage, stands in the way of a plan or upsets someone.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C374-perturbo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 374: I can say that something harms or helps, does damage, stands in the way of a plan or upsets someone.",
+    "assesses": [
+      "LA-LEX-C374-NOCEO-03",
+      "LA-LEX-C374-NOCEO-04",
+      "LA-LEX-C374-NOCEO-05"
+    ]
+  }
+}

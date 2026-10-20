@@ -1,0 +1,11 @@
+{
+  "id": "LA-C532-vindicta",
+  "pathSegment": "LA-PATH-532-LIBT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-532-LIBT",
+      "order": 2
+    }
+  ]
+}

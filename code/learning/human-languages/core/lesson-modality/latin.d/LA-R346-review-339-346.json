@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-R346-review-339-346",
+    "language": "latin",
+    "chapter": 346,
+    "sequence": 18660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:93d13c67b6eda241"
+  },
+  "findings": []
+}

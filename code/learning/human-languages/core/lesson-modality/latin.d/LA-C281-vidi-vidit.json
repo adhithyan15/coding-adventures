@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C281-vidi-vidit",
+    "language": "latin",
+    "chapter": 281,
+    "sequence": 15400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9516e8e9785b12b8"
+  },
+  "findings": []
+}

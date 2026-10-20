@@ -1,0 +1,11 @@
+{
+  "id": "LA-C475-spica",
+  "pathSegment": "LA-PATH-475-MESSIS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-475-MESSIS",
+      "order": 3
+    }
+  ]
+}

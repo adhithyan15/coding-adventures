@@ -1,0 +1,11 @@
+{
+  "id": "LA-C412-interrogo",
+  "pathSegment": "LA-PATH-412-COGNITIO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-412-COGNITIO",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-485-IMBER",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "LA-EXT-485-IMBER"
+  ],
+  "after": []
+}
