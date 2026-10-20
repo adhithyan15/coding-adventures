@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 436,
+  "sourceHash": "fnv1a64:4bd05f691b40e009",
+  "lessonIds": [
+    "RU-C436-vozvrat",
+    "RU-C436-trebovat",
+    "RU-C436-vozmushchatsya",
+    "RU-C436-ustranyat",
+    "RU-C436-kvitantsiya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch436.txt",
+  "json": "russian/narration/ch436.json",
+  "textHash": "fnv1a64:947bb571f32d0b51",
+  "jsonHash": "fnv1a64:7d3f8f71e8e287bf",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-345-SPRAVEDLIVO",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "RU-EXT-345-SPRAVEDLIVO"
+  ],
+  "after": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-311-PRAZDNOVAT",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-311-PRAZDNOVAT"
+  ],
+  "after": []
+}

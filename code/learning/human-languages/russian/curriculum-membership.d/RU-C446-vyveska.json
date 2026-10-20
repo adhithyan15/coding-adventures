@@ -1,0 +1,11 @@
+{
+  "id": "RU-C446-vyveska",
+  "pathSegment": "RU-PATH-446-VITRINA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-446-VITRINA",
+      "order": 1
+    }
+  ]
+}

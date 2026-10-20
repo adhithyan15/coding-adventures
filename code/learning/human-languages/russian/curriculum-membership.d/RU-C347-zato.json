@@ -1,0 +1,11 @@
+{
+  "id": "RU-C347-zato",
+  "pathSegment": "RU-PATH-347-ODNAKO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-347-ODNAKO",
+      "order": 1
+    }
+  ]
+}

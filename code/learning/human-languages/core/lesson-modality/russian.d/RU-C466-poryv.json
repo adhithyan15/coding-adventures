@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C466-poryv",
+    "language": "russian",
+    "chapter": 466,
+    "sequence": 26440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cb8fa743816df1c3"
+  },
+  "findings": []
+}

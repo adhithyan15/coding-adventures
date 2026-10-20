@@ -1,0 +1,11 @@
+{
+  "id": "RU-R500-review-493-500",
+  "pathSegment": "RU-PATH-500-KNITTING",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "RU-EXT-500-KNITTING",
+      "order": 5
+    }
+  ]
+}

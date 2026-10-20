@@ -1,0 +1,11 @@
+{
+  "id": "RU-C418-konechnaya",
+  "pathSegment": "RU-PATH-418-PERESADKA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-418-PERESADKA",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C315-zastolye",
+  "pathSegment": "RU-PATH-315-UGOSHCHENIYE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-315-UGOSHCHENIYE",
+      "order": 2
+    }
+  ]
+}

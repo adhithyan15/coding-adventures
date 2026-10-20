@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-419-REGISTRATSIYA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can check in for a flight: check-in, checking in, the flight, hand luggage and the boarding pass.",
+  "prerequisites": []
+}

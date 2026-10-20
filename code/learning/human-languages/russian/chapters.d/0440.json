@@ -1,0 +1,19 @@
+{
+  "chapter": 440,
+  "title": "Crossing the street",
+  "label": "ch:ru-crossing-the-street",
+  "canDo": "I can talk about crossings and walks: a crossing, crossing over, the embankment, the boulevard and an avenue of trees.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C440-alleya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 440: I can talk about crossings and walks: a crossing, crossing over, the embankment, the boulevard and an avenue of trees.",
+    "assesses": [
+      "RU-LEX-C440-PEREKHOD-03",
+      "RU-LEX-C440-PEREKHOD-04",
+      "RU-LEX-C440-PEREKHOD-05"
+    ]
+  }
+}

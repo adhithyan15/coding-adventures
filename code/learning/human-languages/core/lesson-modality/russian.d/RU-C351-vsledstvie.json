@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C351-vsledstvie",
+    "language": "russian",
+    "chapter": 351,
+    "sequence": 20540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:42e2d6e9431a9f77"
+  },
+  "findings": []
+}

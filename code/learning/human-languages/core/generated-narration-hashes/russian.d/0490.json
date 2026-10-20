@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 490,
+  "sourceHash": "fnv1a64:a4f378bc100ef407",
+  "lessonIds": [
+    "RU-C490-vyzdoravlivat",
+    "RU-C490-vyzdorovleniye",
+    "RU-C490-popravlyatsya",
+    "RU-C490-glotat",
+    "RU-C490-sirop"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch490.txt",
+  "json": "russian/narration/ch490.json",
+  "textHash": "fnv1a64:de2a82732694ae61",
+  "jsonHash": "fnv1a64:09905d5d14b84553",
+  "findings": []
+}

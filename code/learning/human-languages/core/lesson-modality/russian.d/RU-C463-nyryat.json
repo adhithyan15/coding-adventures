@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C463-nyryat",
+    "language": "russian",
+    "chapter": 463,
+    "sequence": 26310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:02cb3ddde0c38298"
+  },
+  "findings": []
+}

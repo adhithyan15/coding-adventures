@@ -1,0 +1,19 @@
+{
+  "chapter": 485,
+  "title": "Feeling Sick and Faint",
+  "label": "ch:ru-feeling-sick-and-faint",
+  "canDo": "I can describe feeling sick, dizzy and faint.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C485-znobit",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 485: I can describe feeling sick, dizzy and faint.",
+    "assesses": [
+      "RU-LEX-C485-NAUSEA-03",
+      "RU-LEX-C485-NAUSEA-04",
+      "RU-LEX-C485-NAUSEA-05"
+    ]
+  }
+}

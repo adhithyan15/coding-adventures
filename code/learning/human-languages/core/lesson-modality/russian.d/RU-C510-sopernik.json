@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C510-sopernik",
+    "language": "russian",
+    "chapter": 510,
+    "sequence": 28720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:05f2f6fccd9dae8d"
+  },
+  "findings": []
+}

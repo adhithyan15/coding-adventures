@@ -1,0 +1,11 @@
+{
+  "id": "RU-C525-rifma",
+  "pathSegment": "RU-PATH-525-POETRY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-525-POETRY",
+      "order": 2
+    }
+  ]
+}

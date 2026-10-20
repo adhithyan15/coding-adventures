@@ -1,0 +1,11 @@
+{
+  "id": "RU-C327-nakhodka",
+  "pathSegment": "RU-PATH-327-KLAD",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-327-KLAD",
+      "order": 2
+    }
+  ]
+}

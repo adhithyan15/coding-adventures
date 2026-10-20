@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C410-stolknoveniye",
+    "language": "russian",
+    "chapter": 410,
+    "sequence": 23550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9f5fcb1060e85ade"
+  },
+  "findings": []
+}

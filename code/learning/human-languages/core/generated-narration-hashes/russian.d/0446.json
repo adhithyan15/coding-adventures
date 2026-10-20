@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 446,
+  "sourceHash": "fnv1a64:f945f797acad48c9",
+  "lessonIds": [
+    "RU-C446-skver",
+    "RU-C446-vyveska",
+    "RU-C446-vitrina",
+    "RU-C446-vodostok",
+    "RU-C446-laryok"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch446.txt",
+  "json": "russian/narration/ch446.json",
+  "textHash": "fnv1a64:16adb9dccb978130",
+  "jsonHash": "fnv1a64:a8cb785e7f87c617",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:461eb99889d86bea",
+  "lessonIds": [
+    "RU-C502-glina",
+    "RU-C502-plastilin",
+    "RU-C502-gonchar",
+    "RU-C502-masterit",
+    "RU-C502-podelka"
+  ],
+  "tex": "russian/book/chapters/ch502-clay-and-crafts.tex"
+}

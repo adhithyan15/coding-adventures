@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 412,
+  "title": "Pedestrians and cyclists",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3d63c6dfcc3bba5f",
+  "lessons": [
+    {
+      "id": "RU-C412-peshekhod",
+      "sequence": 23660,
+      "title": "пешеход (peshekhód) — a pedestrian",
+      "headword": "пешеход",
+      "romanization": "peshekhód",
+      "gloss": "a pedestrian",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:123073bbeb6498f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to drop off, then the Russian for to fasten one's seat belt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: пешеход",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "пешеход (peshekhód) — \"a pedestrian\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Водитель остановился, и пешеход перешёл улицу. Vodítel ostanovílsya, i peshekhód pereshyól úlitsu. The driver stopped, and the pedestrian crossed the street."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine; built on пешком — on foot."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "пешеход (peshekhód) is built from пеш- 'on foot', as in пешком, and ход 'a going', which is inherited from Proto-Slavic xodŭ 'motion' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "peshekhód",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *peshekhód*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "peshekhód, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *peshekhód*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with peshekhód",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *peshekhód*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to drop off, then the Russian for to fasten one's seat belt, then say peshekhód again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to drop off, then the Russian for to fasten one's seat belt, then say *peshekhód* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does пешеход (peshekhód) mean? (\"A pedestrian\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C412-velosipedist",
+      "sequence": 23670,
+      "title": "велосипедист (velosipedíst) — a cyclist",
+      "headword": "велосипедист",
+      "romanization": "velosipedíst",
+      "gloss": "a cyclist",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1168f55d50a7f826",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to fasten one's seat belt, then the Russian for a pedestrian."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: велосипедист",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "велосипедист (velosipedíst) — \"a cyclist\"."
+            },
+            {
+              "kind": "speech",
+              "text": "В парке много велосипедистов. V párke mnógo velosipedístov. There are a lot of cyclists in the park."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine велосипедистка."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "велосипедист (velosipedíst) is built on велосипед 'a bicycle' with the ending -ист. Велосипед was borrowed from French vélocipède, from Latin vēlōx 'swift' and pēs 'foot' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "velosipedíst",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *velosipedíst*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "velosipedíst, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *velosipedíst*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with velosipedíst",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *velosipedíst*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to fasten one's seat belt, then the Russian for a pedestrian, then say velosipedíst again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to fasten one's seat belt, then the Russian for a pedestrian, then say *velosipedíst* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does велосипедист (velosipedíst) mean? (\"A cyclist\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C412-ustupat",
+      "sequence": 23680,
+      "title": "уступать (ustupát) — to give way; to give up (a seat)",
+      "headword": "уступать",
+      "romanization": "ustupát",
+      "gloss": "to give way; to give up (a seat)",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ccdec907f34844eb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a pedestrian, then the Russian for a cyclist."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: уступать",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "уступать (ustupát) — \"to give way; to give up (a seat)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "В автобусе молодёжь уступает место пожилым. V avtóbuse molodyózh ustupáyet mésto pozhilým. On the bus young people give up their seats to the elderly."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; perfective уступить (уступлю, уступишь). Takes the dative of the person: уступить дорогу пешеходу."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "уступать (ustupát) is built from у- 'away' and ступать 'to step': to step aside for someone. EtymDB lists ступать without a deeper source."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ustupát",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ustupát*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ustupát, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ustupát*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ustupát",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ustupát*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a pedestrian, then the Russian for a cyclist, then say ustupát again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a pedestrian, then the Russian for a cyclist, then say *ustupát* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does уступать (ustupát) mean? (\"To give way; to give up (a seat)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C412-propuskat",
+      "sequence": 23690,
+      "title": "пропускать (propuskát) — to let through; to miss (a bus, a lesson)",
+      "headword": "пропускать",
+      "romanization": "propuskát",
+      "gloss": "to let through; to miss (a bus, a lesson)",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:07dd58df4ea8e535",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a cyclist, then the Russian for to give way."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: пропускать",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "пропускать (propuskát) — \"to let through; to miss (a bus, a lesson)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Водитель останавливается и пропускает велосипедиста. Vodítel ostanávlivayetsya i propuskáyet velosipedísta. The driver stops and lets the cyclist through."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; the perfective is пропустить (пропущу, пропустишь). Пропустить автобус — to miss the bus."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "пропускать (propuskát) is built from про- 'through' and пускать 'to let go, to allow' (EtymDB lists пускать with that sense)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "propuskát",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *propuskát*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "propuskát, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *propuskát*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with propuskát",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *propuskát*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a cyclist, then the Russian for to give way, then say propuskát again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a cyclist, then the Russian for to give way, then say *propuskát* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does пропускать (propuskát) mean? (\"To let through; to miss (a bus, a lesson)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C412-razmetka",
+      "sequence": 23700,
+      "title": "разметка (razmétka) — road markings",
+      "headword": "разметка",
+      "romanization": "razmétka",
+      "gloss": "road markings",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:61b42b8a576deed0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to give way, then the Russian for to let through."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: разметка",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "разметка (razmétka) — \"road markings\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Зимой разметки на дороге почти не видно. Zimóy razmétki na doróge pochtí ne vídno. In winter the road markings are hard to make out."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine and singular for all the lines: дорожная разметка (razmétka)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "разметка (razmétka) is built on разметить 'to mark out', from раз- and метить 'to mark', the root also found in замечать 'to notice'. EtymDB does not list the word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "razmétka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *razmétka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "razmétka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *razmétka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with razmétka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *razmétka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to give way, then the Russian for to let through, then say razmétka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to give way, then the Russian for to let through, then say *razmétka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does разметка (razmétka) mean? (\"Road markings\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

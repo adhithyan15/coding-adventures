@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C345-nespravedlivyy",
+    "language": "russian",
+    "chapter": 345,
+    "sequence": 20220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0b2ecab4696ec75"
+  },
+  "findings": []
+}

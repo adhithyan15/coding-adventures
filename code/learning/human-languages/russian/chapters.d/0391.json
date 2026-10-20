@@ -1,0 +1,19 @@
+{
+  "chapter": 391,
+  "title": "Laws of the land",
+  "label": "ch:ru-laws-of-the-land",
+  "canDo": "I can talk about legislation, a constitution and citizenship, legal help, and a restriction.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "RU-C391-ogranichenie",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 391: I can talk about legislation, a constitution and citizenship, legal help, and a restriction.",
+    "assesses": [
+      "RU-LEX-C391-ZAKONODATELSTVO-03",
+      "RU-LEX-C391-ZAKONODATELSTVO-04",
+      "RU-LEX-C391-ZAKONODATELSTVO-05"
+    ]
+  }
+}

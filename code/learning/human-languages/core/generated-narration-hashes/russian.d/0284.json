@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 284,
+  "sourceHash": "fnv1a64:92c0572a243ddd91",
+  "lessonIds": [
+    "RU-C284-intervyu",
+    "RU-C284-opros",
+    "RU-C284-redaktor",
+    "RU-C284-kommentirovat",
+    "RU-C284-tsitirovat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch284.txt",
+  "json": "russian/narration/ch284.json",
+  "textHash": "fnv1a64:f1c2ba4183553960",
+  "jsonHash": "fnv1a64:7ef50f51e0385b28",
+  "findings": []
+}

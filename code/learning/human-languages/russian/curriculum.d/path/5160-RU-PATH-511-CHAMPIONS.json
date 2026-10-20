@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-511-CHAMPIONS",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "RU-EXT-511-CHAMPIONS"
+  ],
+  "after": []
+}

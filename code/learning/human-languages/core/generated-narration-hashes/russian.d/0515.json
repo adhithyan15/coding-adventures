@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 515,
+  "sourceHash": "fnv1a64:0a5b41d66191a922",
+  "lessonIds": [
+    "RU-C515-royal",
+    "RU-C515-violonchel",
+    "RU-C515-fleyta",
+    "RU-C515-struna",
+    "RU-C515-nastraivat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch515.txt",
+  "json": "russian/narration/ch515.json",
+  "textHash": "fnv1a64:1c6d7c02424b7e51",
+  "jsonHash": "fnv1a64:fba45ed88abbcdf0",
+  "findings": []
+}

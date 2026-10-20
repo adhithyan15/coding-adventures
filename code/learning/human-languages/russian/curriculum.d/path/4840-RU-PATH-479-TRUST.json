@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-479-TRUST",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "RU-EXT-479-TRUST"
+  ],
+  "after": []
+}

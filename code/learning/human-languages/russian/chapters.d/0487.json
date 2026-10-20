@@ -1,0 +1,19 @@
+{
+  "chapter": 487,
+  "title": "Rashes and Jabs",
+  "label": "ch:ru-rashes-and-jabs",
+  "canDo": "I can talk about rashes, itching and catching things.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C487-zarazhatsya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 487: I can talk about rashes, itching and catching things.",
+    "assesses": [
+      "RU-LEX-C487-RASH-03",
+      "RU-LEX-C487-RASH-04",
+      "RU-LEX-C487-RASH-05"
+    ]
+  }
+}

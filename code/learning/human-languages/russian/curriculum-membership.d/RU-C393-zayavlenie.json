@@ -1,0 +1,11 @@
+{
+  "id": "RU-C393-zayavlenie",
+  "pathSegment": "RU-PATH-393-DOKUMENTY",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-393-DOKUMENTY",
+      "order": 0
+    }
+  ]
+}

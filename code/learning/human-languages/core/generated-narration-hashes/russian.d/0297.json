@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 297,
+  "sourceHash": "fnv1a64:e6c1548cd190f89f",
+  "lessonIds": [
+    "RU-C297-travma",
+    "RU-C297-ushib",
+    "RU-C297-soznaniye",
+    "RU-C297-postradat",
+    "RU-C297-ranit"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch297.txt",
+  "json": "russian/narration/ch297.json",
+  "textHash": "fnv1a64:8255c37991dc85d8",
+  "jsonHash": "fnv1a64:1a540a325d4e0cad",
+  "findings": []
+}

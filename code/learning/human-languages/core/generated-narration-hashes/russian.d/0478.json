@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 478,
+  "sourceHash": "fnv1a64:51e56ff549266d4b",
+  "lessonIds": [
+    "RU-C478-upryamyy",
+    "RU-C478-upryamstvo",
+    "RU-C478-kapriznyy",
+    "RU-C478-kapriznichat",
+    "RU-C478-vorchat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch478.txt",
+  "json": "russian/narration/ch478.json",
+  "textHash": "fnv1a64:48d450f50758708f",
+  "jsonHash": "fnv1a64:733833dc6534b2eb",
+  "findings": []
+}

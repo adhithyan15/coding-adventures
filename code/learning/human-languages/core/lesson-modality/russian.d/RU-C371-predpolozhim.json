@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C371-predpolozhim",
+    "language": "russian",
+    "chapter": 371,
+    "sequence": 21560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6b6425dcebd4653d"
+  },
+  "findings": []
+}

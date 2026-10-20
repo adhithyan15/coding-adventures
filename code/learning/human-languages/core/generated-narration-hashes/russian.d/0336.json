@@ -1,0 +1,21 @@
+{
+  "language": "russian",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:701ae06036cb3d19",
+  "lessonIds": [
+    "RU-C336-dobavlyat",
+    "RU-C336-vykladyvat",
+    "RU-C336-varyonyy",
+    "RU-C336-zharenyy",
+    "RU-C336-vynimat",
+    "RU-R336-review-335-336",
+    "RU-R336-review-final-336"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "russian/narration/ch336.txt",
+  "json": "russian/narration/ch336.json",
+  "textHash": "fnv1a64:50610adf7643f409",
+  "jsonHash": "fnv1a64:9651ff215e7a4976",
+  "findings": []
+}

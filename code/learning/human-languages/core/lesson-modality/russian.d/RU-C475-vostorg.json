@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C475-vostorg",
+    "language": "russian",
+    "chapter": 475,
+    "sequence": 26900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3bd603e7987a663f"
+  },
+  "findings": []
+}

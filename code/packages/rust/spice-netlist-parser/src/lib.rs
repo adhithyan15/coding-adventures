@@ -4,14 +4,14 @@ use std::{
 };
 
 use spice_engine::{
-    ac_sweep, dc_op_with_options, dc_sweep, dc_sweep_2d, format_deck_table_json,
-    mosfet_from_model_card, noise_ac, normalize_model_card, run_deck, sens_dc, tf,
-    transient_with_method, AcPoint, AdaptiveTransientOptions, Bjt, BjtPolarity, Capacitor, Cccs,
-    Ccvs, Circuit, Complex, CurrentSource, DcOpOptions, DcResult, DcSweepPoint, Diode, Element,
-    ExpWaveform, Inductor, Jfet, JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType,
-    MutualInductor, NoiseResult, PulseWaveform, PwlWaveform, Resistor, SensResult, SinWaveform,
-    SpiceError, TfResult, TransientMethod, TransientPoint, TransmissionLine, Vccs, Vcvs,
-    VoltageSource, Waveform,
+    ac_sweep, circuit_at_temperature, dc_op_with_options, dc_sweep, dc_sweep_2d,
+    format_deck_table_json, mosfet_from_model_card, noise_ac, normalize_model_card, run_deck,
+    sens_dc, tf, transient_with_method, AcPoint, AdaptiveTransientOptions, Bjt, BjtPolarity,
+    Capacitor, Cccs, Ccvs, Circuit, Complex, CurrentSource, DcOpOptions, DcResult, DcSweepPoint,
+    Diode, Element, ExpWaveform, Inductor, Jfet, JfetPolarity, Mosfet, MosfetLevel1Params,
+    MosfetType, MutualInductor, NoiseResult, PulseWaveform, PwlWaveform, Resistor, SensResult,
+    SinWaveform, SpiceError, TfResult, TransientMethod, TransientPoint, TransmissionLine, Vccs,
+    Vcvs, VoltageSource, Waveform,
 };
 
 const OXIDE_PERMITTIVITY: f64 = 3.453_133e-11;
@@ -435,6 +435,7 @@ pub struct AnalysisExecutionResult {
     pub kind: AnalysisKind,
     pub analysis: RunnableAnalysis,
     pub result: AnalysisResult,
+    pub temperature_kelvin: Option<f64>,
 }
 
 #[derive(Debug, Copy, Clone, PartialEq)]
@@ -459,6 +460,7 @@ pub struct SelectedAnalysisOutput {
     pub kind: AnalysisKind,
     pub probes: Vec<OutputProbe>,
     pub rows: Vec<SelectedOutputRow>,
+    pub temperature_kelvin: Option<f64>,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -469,6 +471,7 @@ pub struct MeasureResult {
     pub operation: MeasureOperation,
     pub probe: OutputProbe,
     pub value: f64,
+    pub temperature_kelvin: Option<f64>,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -792,6 +795,26 @@ impl ParsedNetlist {
         self.operating_temperature_kelvin(temperature_index, default_temperature_kelvin)
     }
 
+    pub fn analysis_temperatures_kelvin(&self) -> Result<Vec<Option<f64>>, NetlistParseError> {
+        let temperatures = self
+            .temp_cards()
+            .into_iter()
+            .flat_map(|card| card.temperatures_celsius.iter().map(|value| value + 273.15))
+            .collect::<Vec<_>>();
+        if temperatures.is_empty() {
+            return Ok(vec![None]);
+        }
+        if temperatures
+            .iter()
+            .any(|temperature| !temperature.is_finite() || *temperature <= 0.0)
+        {
+            return Err(NetlistParseError::new(
+                ".temp values must convert to finite positive Kelvin temperatures",
+            ));
+        }
+        Ok(temperatures.into_iter().map(Some).collect())
+    }
+
     pub fn analysis_plan(&self) -> Vec<AnalysisPlanStep> {
         build_analysis_plan(self)
     }
@@ -1021,18 +1044,26 @@ pub fn build_analysis_plan(parsed: &ParsedNetlist) -> Vec<AnalysisPlanStep> {
 pub fn run_analysis_plan(
     parsed: &ParsedNetlist,
 ) -> Result<Vec<AnalysisExecutionResult>, AnalysisExecutionError> {
-    build_analysis_plan(parsed)
-        .into_iter()
-        .map(|step| {
-            let result = execute_analysis_step(parsed, &step)?;
-            Ok(AnalysisExecutionResult {
+    let plan = build_analysis_plan(parsed);
+    let mut results = Vec::new();
+    for temperature_kelvin in parsed.analysis_temperatures_kelvin()? {
+        let circuit = match temperature_kelvin {
+            Some(temperature) => {
+                circuit_at_temperature(&parsed.circuit, temperature, 300.15, 1.11)?
+            }
+            None => parsed.circuit.clone(),
+        };
+        for step in &plan {
+            results.push(AnalysisExecutionResult {
                 index: step.index,
                 kind: step.kind,
-                analysis: step.analysis,
-                result,
-            })
-        })
-        .collect()
+                analysis: step.analysis.clone(),
+                result: execute_analysis_step(parsed, step, &circuit, temperature_kelvin)?,
+                temperature_kelvin,
+            });
+        }
+    }
+    Ok(results)
 }
 
 pub fn run_netlist(text: &str) -> Result<Vec<AnalysisExecutionResult>, AnalysisExecutionError> {
@@ -1040,28 +1071,39 @@ pub fn run_netlist(text: &str) -> Result<Vec<AnalysisExecutionResult>, AnalysisE
     run_analysis_plan(&parsed)
 }
 
-pub const CLI_RESULT_SCHEMA_VERSION: u32 = 1;
+pub const CLI_RESULT_SCHEMA_VERSION: u32 = 2;
 pub const CLI_INSPECTION_SCHEMA_VERSION: u32 = 1;
 pub const CLI_ERROR_CODE: &str = "SPICE_CLI_ERROR";
 
 pub fn run_netlist_json(text: &str) -> Result<String, AnalysisExecutionError> {
     let parsed = parse_netlist(text)?;
-    let execution = run_deck(&parsed.circuit, text)?;
     let parser_results = run_analysis_plan(&parsed)?;
     let outputs = select_outputs(&parsed, &parser_results)?;
     let measures = measure_results(&parsed, &parser_results)?;
-    let analyses = execution
-        .executions
-        .iter()
-        .enumerate()
-        .map(|(index, item)| {
-            serde_json::json!({
-                "index": index,
-                "kind": item.plan.analysis,
+    let plan = build_analysis_plan(&parsed);
+    let mut analyses = Vec::new();
+    for temperature_kelvin in parsed.analysis_temperatures_kelvin()? {
+        let circuit = match temperature_kelvin {
+            Some(temperature) => {
+                circuit_at_temperature(&parsed.circuit, temperature, 300.15, 1.11)?
+            }
+            None => parsed.circuit.clone(),
+        };
+        let execution = run_deck(&circuit, text)?;
+        if execution.executions.len() != plan.len() {
+            return Err(AnalysisExecutionError::Netlist(NetlistParseError::new(
+                "deck execution plan did not match the parser analysis plan",
+            )));
+        }
+        for (step, item) in plan.iter().zip(&execution.executions) {
+            analyses.push(serde_json::json!({
+                "index": step.index,
+                "kind": format!("{:?}", step.kind).to_ascii_lowercase(),
+                "temperatureKelvin": temperature_kelvin,
                 "records": cli_table_records(&item.plan.analysis, &item.table),
-            })
-        })
-        .collect::<Vec<_>>();
+            }));
+        }
+    }
     Ok(format!(
         "{}\n",
         serde_json::to_string(&serde_json::json!({
@@ -1143,6 +1185,7 @@ fn cli_output_artifacts(outputs: &[SelectedAnalysisOutput]) -> Vec<serde_json::V
             serde_json::json!({
                 "analysisIndex": output.index,
                 "analysis": format!("{:?}", output.kind).to_ascii_lowercase(),
+                "temperatureKelvin": output.temperature_kelvin,
                 "probes": output.probes.iter().map(cli_probe_text).collect::<Vec<_>>(),
                 "records": records,
             })
@@ -1153,14 +1196,17 @@ fn cli_output_artifacts(outputs: &[SelectedAnalysisOutput]) -> Vec<serde_json::V
 fn cli_measure_artifacts(measures: &[MeasureResult]) -> Vec<serde_json::Value> {
     measures
         .iter()
-        .map(|measure| serde_json::json!({
-            "analysisIndex": measure.analysis_index,
-            "analysis": measure.analysis,
-            "name": measure.name,
-            "operation": format!("{:?}", measure.operation).to_ascii_lowercase(),
-            "probe": cli_probe_text(&measure.probe),
-            "value": measure.value,
-        }))
+        .map(|measure| {
+            serde_json::json!({
+                "analysisIndex": measure.analysis_index,
+                "analysis": measure.analysis,
+                "name": measure.name,
+                "operation": format!("{:?}", measure.operation).to_ascii_lowercase(),
+                "probe": cli_probe_text(&measure.probe),
+                "value": measure.value,
+                "temperatureKelvin": measure.temperature_kelvin,
+            })
+        })
         .collect()
 }
 
@@ -1206,6 +1252,7 @@ pub fn select_outputs(
             kind: result.kind,
             rows: selected_output_rows(result, &probes)?,
             probes,
+            temperature_kelvin: result.temperature_kelvin,
         });
     }
     Ok(selected)
@@ -1215,21 +1262,37 @@ pub fn measure_results(
     parsed: &ParsedNetlist,
     results: &[AnalysisExecutionResult],
 ) -> Result<Vec<MeasureResult>, NetlistParseError> {
-    parsed
-        .measure_cards()
-        .into_iter()
-        .map(|card| {
-            let execution = find_measure_execution_result(card, results)?;
-            Ok(MeasureResult {
+    let mut measured = Vec::new();
+    for card in parsed.measure_cards() {
+        let mut temperatures = Vec::new();
+        let matching = results
+            .iter()
+            .filter(|result| analysis_name_matches(&card.analysis, result.kind))
+            .filter(|result| {
+                if temperatures.contains(&result.temperature_kelvin) {
+                    false
+                } else {
+                    temperatures.push(result.temperature_kelvin);
+                    true
+                }
+            })
+            .collect::<Vec<_>>();
+        if matching.is_empty() {
+            find_measure_execution_result(card, results)?;
+        }
+        for execution in matching {
+            measured.push(MeasureResult {
                 analysis_index: execution.index,
                 analysis: card.analysis.clone(),
                 name: card.name.clone(),
                 operation: card.operation,
                 probe: card.probe.clone(),
                 value: evaluate_measure(card, execution)?,
-            })
-        })
-        .collect()
+                temperature_kelvin: execution.temperature_kelvin,
+            });
+        }
+    }
+    Ok(measured)
 }
 
 fn analysis_plan_step(index: usize, analysis: &Analysis) -> Option<AnalysisPlanStep> {
@@ -1253,10 +1316,12 @@ fn analysis_plan_step(index: usize, analysis: &Analysis) -> Option<AnalysisPlanS
 fn execute_analysis_step(
     parsed: &ParsedNetlist,
     step: &AnalysisPlanStep,
+    circuit: &Circuit,
+    temperature_kelvin: Option<f64>,
 ) -> Result<AnalysisResult, AnalysisExecutionError> {
     match &step.analysis {
         RunnableAnalysis::Op(_) => Ok(AnalysisResult::Op(dc_op_with_options(
-            &parsed.circuit,
+            circuit,
             parsed.dc_op_options()?,
         )?)),
         RunnableAnalysis::Tran(card) => {
@@ -1264,7 +1329,7 @@ fn execute_analysis_step(
                 .transient_method(Some(card))?
                 .unwrap_or(TransientMethod::Euler);
             Ok(AnalysisResult::Tran(transient_with_method(
-                &parsed.circuit,
+                circuit,
                 card.time_step,
                 card.stop_time,
                 method,
@@ -1282,7 +1347,7 @@ fn execute_analysis_step(
                     )));
                 };
                 dc_sweep_2d(
-                    &parsed.circuit,
+                    circuit,
                     &card.source_name,
                     card.start,
                     card.stop,
@@ -1293,35 +1358,32 @@ fn execute_analysis_step(
                     step,
                 )?
             }
-            None => dc_sweep(
-                &parsed.circuit,
-                &card.source_name,
-                card.start,
-                card.stop,
-                card.step,
-            )?,
+            None => dc_sweep(circuit, &card.source_name, card.start, card.stop, card.step)?,
         })),
         RunnableAnalysis::Ac(card) => Ok(AnalysisResult::Ac(ac_sweep(
-            &parsed.circuit,
+            circuit,
             card.start_hz,
             card.stop_hz,
             executable_ac_points_per_decade(card)?,
         )?)),
         RunnableAnalysis::Tf(card) => Ok(AnalysisResult::Tf(tf(
-            &parsed.circuit,
+            circuit,
             &card.output_node,
             &card.input_source,
         )?)),
-        RunnableAnalysis::Sens(card) => Ok(AnalysisResult::Sens(sens_dc(
-            &parsed.circuit,
-            &card.output_node,
-        )?)),
+        RunnableAnalysis::Sens(card) => {
+            Ok(AnalysisResult::Sens(sens_dc(circuit, &card.output_node)?))
+        }
         RunnableAnalysis::Noise(card) => Ok(AnalysisResult::Noise(noise_ac(
-            &parsed.circuit,
+            circuit,
             &card.output_node,
             &card.input_source,
             &card.frequencies_hz,
-            card.temperature,
+            if card.temperature_is_explicit {
+                card.temperature
+            } else {
+                temperature_kelvin.unwrap_or(card.temperature)
+            },
         )?)),
     }
 }
@@ -1524,10 +1586,16 @@ fn evaluate_measure(
             card.name
         )));
     }
-    if card.operation == MeasureOperation::Find {
-        if execution.kind == AnalysisKind::Op && card.at.is_none() {
-            return Ok(measure_numeric_value(samples[0].value));
+    if execution.kind == AnalysisKind::Op && card.operation == MeasureOperation::Find {
+        if card.at.is_some() && card.at != Some(0.0) {
+            return Err(NetlistParseError::new(format!(
+                ".measure {:?} operating-point FIND AT must be 0",
+                card.name
+            )));
         }
+        return Ok(measure_numeric_value(samples[0].value));
+    }
+    if card.operation == MeasureOperation::Find {
         let Some(at) = card.at else {
             return Err(NetlistParseError::new(format!(
                 ".measure {:?} FIND requires AT=<value>",

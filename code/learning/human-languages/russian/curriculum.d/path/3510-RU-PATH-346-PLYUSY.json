@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-346-PLYUSY",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "RU-EXT-346-PLYUSY"
+  ],
+  "after": []
+}

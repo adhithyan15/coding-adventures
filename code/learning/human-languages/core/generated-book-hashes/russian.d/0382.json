@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:df88e785a69046c3",
+  "lessonIds": [
+    "RU-C382-provalit",
+    "RU-C382-peresdavat",
+    "RU-C382-peresdacha",
+    "RU-C382-podgotovka",
+    "RU-C382-gotovitsya"
+  ],
+  "tex": "russian/book/chapters/ch382-failing-and-retaking.tex"
+}

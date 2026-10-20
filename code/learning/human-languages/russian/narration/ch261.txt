@@ -1,0 +1,155 @@
+Russian, chapter 261: The Past, Seen Two Ways.
+4 lessons. All 4 can be done entirely by ear.
+
+
+Lesson 1 of 4.
+читал, читала, читали (chitál, chitála, chitáli) — the past, and who did it.
+
+Warm-up.
+[pause 2 seconds]
+Say "recently" and "yesterday". (Nedávno. Vcherá.) The first came with one past sentence: Nedávno ya chitál knígu. This lesson takes that -л apart.
+
+Grammar Lens: -ть becomes -л.
+Drop the infinitive's -ть and put -л in its place: читать, читал; работать, работал. The past has no endings for I or you. It changes for who did it: -л for a man, -ла for a woman, -ло for a neuter noun.
+Вчера я читал. — vcherá ya chitál — Yesterday I read; a man says it. Вчера я читала. — vcherá ya chitála — the same, from a woman. Мама работала, а папа читал. — máma rabótala, a pápa chitál — Mum was working and Dad was reading.
+Папа ends in -а and still takes -л: a father is a man.
+
+Grammar Lens: -ли for more than one.
+For more than one, gender drops away: -ли. Мы гуляли в парке. — my gulyáli v párke — We went for a walk in the park. The polite вы takes -ли even for one person: Вы читали? — vy chitáli?
+
+Grammar Lens: был, была, было, были.
+Быть is silent in the present, but its past follows the same pattern: был (byl), была (bylá), было (býlo), были (býli). The stress moves to the end for a woman.
+Я была в музее. — ya bylá v muzéye — I was at the museum.
+
+The word, taken apart.
+By the usual historical account, the -л form was once a describing word, "having read", said beside a present form of быть: Old Russian čitalŭ jesmĭ. The helping verb wore away and the describing word stayed, so the past still agrees like an adjective. Быть goes back to Proto-Indo-European bʰuH-, "to become" (EtymDB 2.1); English be comes from the same root.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: Vcherá ya chitál, then Vcherá ya chitála]
+[pause 8 seconds for the answer]
+[your turn — say: Máma rabótala, a pápa chitál.]
+[pause 8 seconds for the answer]
+[your turn — say: My gulyáli v párke.]
+[pause 8 seconds for the answer]
+[your turn — say: byl, bylá, býlo, býli]
+[pause 8 seconds for the answer]
+[your turn — answer: Gde ty byl vcherá? Ya byl or Ya bylá, and a place]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What replaces -ть in the past? (-л.) What does a woman add? (-а: читала.) More than one person, or polite вы? (-ли.) "She was at the museum"? (Она была в музее.)
+
+
+Lesson 2 of 4.
+читал or прочитал — the reading, and the book read through.
+
+Warm-up.
+[pause 2 seconds]
+Name the partners you met with the first verbs: читать, прочитать; писать, написать. One is the doing, the other the deed done. In the present only the doing is used. In the past both are, and the choice decides the story.
+
+Grammar Lens: the doing, or the deed done.
+Вчера я читал книгу. — vcherá ya chitál knígu — Yesterday I was reading a book. Вчера я прочитал книгу. — vcherá ya prochitál knígu — Yesterday I read the book, to the end.
+The imperfective shows the reading going on, and says nothing about the last page. The perfective sees the deed whole: finished, with a result. The book is read.
+
+Grammar Lens: a habit, and a bare fact.
+The imperfective has two more jobs. A habit: Я часто читал газету. — ya chásto chitál gazétu — I often read the paper. And the bare fact that something happened at all:
+— Ты читал эту книгу? — Да, читал. — ty chitál étu knígu? da, chitál — Have you read this book? Yes, I have.
+
+Why it's said this way: more pairs.
+Мы посмотрели фильм. — my posmotréli film — We watched the film, all of it. Я писал сообщение, но не написал. — ya pisál soobshchéniye, no ne napisál — I was writing a message, but did not get it written.
+
+The word, taken apart.
+Russian grammar calls aspect вид, "a look, a view", which EtymDB 2.1 takes through Proto-Slavic vidŭ to PIE weyd-, "to see, to know": the root of видеть and of English wit. Two aspects, two views of one deed: from inside, while it goes on, or from outside, whole. The prefix про- means "through": прочитать, to read through.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: Vcherá ya chitál knígu. The reading went on]
+[pause 8 seconds for the answer]
+[your turn — say: Vcherá ya prochitál knígu. The book is finished]
+[pause 8 seconds for the answer]
+[your turn — say: Ya chásto chitál gazétu. A habit]
+[pause 8 seconds for the answer]
+[your turn — answer: Ty chitál étu knígu? Da, chitál or Net, ne chitál]
+[pause 8 seconds for the answer]
+[your turn — say: My posmotréli film.]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+"I finished the book": which verb? (Прочитал.) "I often read the paper"? (Читал, a habit.) What does Russian call aspect? (Вид, a view.)
+
+
+Lesson 3 of 4.
+когда and пока — the scene, and what cut into it.
+
+Warm-up.
+[pause 2 seconds]
+Say "yesterday I was reading a book", then "yesterday I read the book to the end". (Vcherá ya chitál knígu. Vcherá ya prochitál knígu.)
+[pause 1 second]
+And the hinge from the present: kogdá ya chitáyu, ya dúmayu. In the past, the aspect on each side tells how the halves fit.
+
+Grammar Lens: one going on, one cutting in.
+Когда я читал, позвонил брат. — kogdá ya chitál, pozvoníl brat — When I was reading, my brother rang.
+The reading is imperfective: it was going on. Позвонил, the perfective of звонить, is one call that cut into it.
+Put a perfective on both sides and the events come one after the other:
+Когда я прочитал книгу, я позвонил брату. — kogdá ya prochitál knígu, ya pozvoníl brátu — When I had finished the book, I rang my brother.
+First the book was finished, then the call. Брату is брат with -у: a man you ring takes that ending, and Mum would be маме.
+
+Grammar Lens: пока, for two things at once.
+The goodbye пока has a second job: "while, for as long as". Inside a story it usually takes the imperfective, and it lays two scenes side by side:
+Пока я читал, брат спал. — poká ya chitál, brat spal — While I was reading, my brother was asleep.
+Neither half is finished; both went on through the same hour. Когда я читал, брат спал says it too; пока stresses the stretch of time, and its other half may be one deed inside it: Пока я читал, позвонил брат.
+
+The word, taken apart.
+пока is по- with an old pronoun meaning "which, what kind", the ancestor of какой, on the question-root PIE kʷo- of как and of English who and when. By the usual account "for as long as" is its old sense, and the goodbye, "for now", grew out of it in the twentieth century. Когда comes off the same root.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: Kogdá ya chitál, pozvoníl brat. One call cut in]
+[pause 8 seconds for the answer]
+[your turn — say: Kogdá ya prochitál knígu, ya pozvoníl brátu. One after the other]
+[pause 8 seconds for the answer]
+[your turn — say: Poká ya chitál, brat spal. Two at once]
+[pause 8 seconds for the answer]
+[your turn — say: a woman's version: Poká ya chitála, brat spal.]
+[pause 8 seconds for the answer]
+[your turn — say: one of your own: Poká ya …, …, two things that went on together]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which word puts two scenes side by side? (Пока.) "When I was reading, my brother rang": which verb is perfective? (Позвонил, the call that cut in.) Perfective on both sides of когда: at once, or one after the other? (One after the other.)
+
+
+Lesson 4 of 4.
+Review — what went on, and what got done.
+
+Warm-up.
+[pause 2 seconds]
+Say "I was at the museum", as a man, then as a woman. (Ya byl v muzéye. Ya bylá v muzéye.) Then "we were at the museum". (My býli v muzéye.)
+
+What you've built.
+Three lessons, and Russian can now look back. The past swaps the infinitive's -ть for -л, agreeing with who did it. Nearly every verb in it shows one of two views: the imperfective for what went on, again and again or at all; the perfective for one deed done, with a result. Пока lays two scenes side by side; когда with a perfective marks the moment that cut in, or the next step.
+[pause 2 seconds]
+One evening, told both ways:
+Пока мама ужинала, папа смотрел фильм. — poká máma úzhinala, pápa smotrél film — While Mum was having dinner, Dad was watching a film. Когда мама поужинала, она позвонила бабушке. — kogdá máma poúzhinala, oná pozvoníla bábushke — When Mum had finished her dinner, she rang Grandma.
+The first pair went on together. The second pair came one after the other, each one finished: поужинала is the perfective of ужинать, made with по-.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: Poká máma úzhinala, pápa smotrél film.]
+[pause 8 seconds for the answer]
+[your turn — say: Kogdá ya chitál, pozvoníl brat.]
+[pause 8 seconds for the answer]
+[your turn — say: Kogdá my posmotréli film, my pozvoníli máme.]
+[pause 8 seconds for the answer]
+[your turn — answer: Ty chitál étu knígu? Da, chitál.]
+[pause 8 seconds for the answer]
+[your turn — say: your own evening: one thing that went on, with poká, and one that got done]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+"She was reading"? (Она читала.) "We watched the film to the end"? (Мы посмотрели фильм.) Two scenes at once: which word? (Пока.)

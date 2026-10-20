@@ -1,0 +1,11 @@
+{
+  "id": "RU-C395-vkladyvat",
+  "pathSegment": "RU-PATH-395-SBEREZHENIYA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-395-SBEREZHENIYA",
+      "order": 1
+    }
+  ]
+}

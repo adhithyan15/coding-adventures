@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:479c803fc2eb4c0a",
+  "lessonIds": [
+    "RU-C343-kritikovat",
+    "RU-C343-kritika",
+    "RU-C343-odobryat",
+    "RU-C343-osuzhdat",
+    "RU-C343-uprekat"
+  ],
+  "tex": "russian/book/chapters/ch343-criticising-and-approving.tex"
+}

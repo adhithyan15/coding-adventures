@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-409-POLOMKA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can get help after a breakdown: the breakdown, the tow truck, towing, the jack and the car repair shop.",
+  "prerequisites": []
+}

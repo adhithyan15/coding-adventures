@@ -90,14 +90,14 @@ Standing owner directions remain in force:
 map), pass (optimization behavior), build (modules, chunks, externs, maps,
 reports) and operational (deterministic on Linux, macOS and Windows).
 
-The differential ladder (`tests/diff/ladder_*`, 57 rungs × 3 levels, #15837)
+The differential ladder (`tests/diff/ladder_*`, 58 rungs × 3 levels, #15837)
 measures agreement with the pinned oracle:
 
 | Level | Rungs agreeing |
 |---|---:|
-| `WHITESPACE_ONLY` | 54 / 57 |
-| `SIMPLE` | 34 / 57 |
-| `ADVANCED` | 24 / 57 |
+| `WHITESPACE_ONLY` | 55 / 58 |
+| `SIMPLE` | 36 / 58 |
+| `ADVANCED` | 24 / 58 |
 
 WHITESPACE_ONLY is strong. SIMPLE is real but partial. ADVANCED is mostly
 scaffolding: the pass slots exist, but most of the transformations that define
@@ -137,8 +137,8 @@ Ranking:
 
 | # | ID | Item | Acceptance | Status |
 |---:|---|---|---|---|
-| 1 | #16008 | A top-level binding shadowed by a `for`-head binding is deleted, so the output throws a `ReferenceError`. | A ladder rung or regression test that fails before the fix; the output runs. | Ready |
-| 2 | #16009 | Stack overflow (SIGABRT) on a long binary-expression chain, about 60 KB of input. | Parsing, the passes and emit stay iterative or bounded, and the hostile input compiles or fails cleanly with a diagnostic. | Ready |
+| 1 | #16008 | A top-level binding shadowed by a `for`-head binding is deleted, so the output throws a `ReferenceError`. | A ladder rung or regression test that fails before the fix; the output runs. | In review — #17829 |
+| 2 | #16009 | Stack overflow (SIGABRT) on a long binary-expression chain, about 60 KB of input. | Parsing, the passes and emit stay iterative or bounded, and the hostile input compiles or fails cleanly with a diagnostic. | In review |
 | 3 | #15939 | `cargo clippy -- -D warnings` can't pass: `Cargo.toml` allows a lint that clippy 0.1.94 doesn't know. | Strict clippy passes on `closurec`. | Ready |
 | 4 | #15942 | Add a ladder rung for an array spread before an index read, the gap the CLOC28 miscompile slipped through. | The rung is committed and agrees at every level. | Ready |
 | 5 | CCR-078 #15863 | At SIMPLE, closurec propagates a const that upstream keeps. This output has never been validated. | Either match upstream, or record the divergence as intentional with runtime-equivalence evidence. | Ready |
@@ -231,3 +231,4 @@ Add one line per selection or merge.
 |---|---|
 | 2026-10-19 | Backlog reset. #17288 closed; lexer intervals salvaged as #17803. Provenance is no longer a gate. Next: #16008. |
 | 2026-10-19 | Owner decided CCR-075: refuse what Closure refuses. Added to Q0 as rank 5.5. |
+| 2026-10-19 | Selected #16008 (PR #17829) and #16009 (bounded chains, CLOC42). |

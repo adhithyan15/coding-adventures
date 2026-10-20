@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-445-FONAR",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "RU-EXT-445-FONAR"
+  ],
+  "after": []
+}

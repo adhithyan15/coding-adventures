@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 400,
+  "title": "Staying safe online",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:8094100273e70de4",
+  "lessons": [
+    {
+      "id": "RU-C400-parol",
+      "sequence": 23020,
+      "title": "пароль (paról) — a password",
+      "headword": "пароль",
+      "romanization": "paról",
+      "gloss": "a password",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a6bf522835d5c335",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a web browser, then the Russian for a search engine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: пароль",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "пароль (paról) — \"a password\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Я забыл пароль от почты. Ya zabýl paról ot póchty. I have forgotten my email password."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine. Пароль от + genitive — the password for."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "пароль (paról) was borrowed from French parole \"a word, a word of honour\" (EtymDB), which is usually traced to Latin parabola \"a comparison\" (Lewis & Short), later \"a saying\": first the word a sentry asks for."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paról",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paról*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paról, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paról*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with paról",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *paról*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a web browser, then the Russian for a search engine, then say paról again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a web browser, then the Russian for a search engine, then say *paról* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does пароль (paról) mean? (\"A password\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C400-bezopasnost",
+      "sequence": 23030,
+      "title": "безопасность (bezopásnost) — safety, security",
+      "headword": "безопасность",
+      "romanization": "bezopásnost",
+      "gloss": "safety, security",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:657ba9ca5933de6c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a search engine, then the Russian for a password."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: безопасность",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "безопасность (bezopásnost) — \"safety, security\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Безопасность детей — главное. Bezopásnost detéy — glávnoye. Children’s safety comes first."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine. В безопасности — safe. Built on опасный, dangerous."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "безопасность (bezopásnost) is built from без \"without\" and опасность \"danger\", from опасный, which is built on опасаться \"to be wary\", from пасти \"to guard\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bezopásnost",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bezopásnost*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bezopásnost, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bezopásnost*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with bezopásnost",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *bezopásnost*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a search engine, then the Russian for a password, then say bezopásnost again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a search engine, then the Russian for a password, then say *bezopásnost* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does безопасность (bezopásnost) mean? (\"Safety, security\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C400-khaker",
+      "sequence": 23040,
+      "title": "хакер (kháker) — a hacker",
+      "headword": "хакер",
+      "romanization": "kháker",
+      "gloss": "a hacker",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c072e5ea441f4a28",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a password, then the Russian for safety."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: хакер",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "хакер (kháker) — \"a hacker\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Хакер украл данные клиентов. Kháker ukrál dánnyye kliyéntov. A hacker stole the customers’ data."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine. From English hacker."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "хакер (kháker) was borrowed from English hacker (EtymDB), keeping the English stress on the first syllable."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kháker",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kháker*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kháker, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kháker*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with kháker",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *kháker*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a password, then the Russian for safety, then say kháker again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a password, then the Russian for safety, then say *kháker* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does хакер (kháker) mean? (\"A hacker\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C400-vzlamyvat",
+      "sequence": 23050,
+      "title": "взламывать (vzlámyvat) — to break into, to hack",
+      "headword": "взламывать",
+      "romanization": "vzlámyvat",
+      "gloss": "to break into, to hack",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c9501863b62da1f7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for safety, then the Russian for a hacker."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: взламывать",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "взламывать (vzlámyvat) — \"to break into, to hack\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Кто-то взломал мою почту. Kto-to vzlomál moyú póchtu. Someone has hacked my email."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; perfective взломать. Of doors and of accounts alike."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "взламывать (vzlámyvat) is built from вз- and ломать \"to break\", inherited from Proto-Slavic lomiti; the о turns to а in the imperfective."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vzlámyvat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vzlámyvat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vzlámyvat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vzlámyvat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with vzlámyvat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *vzlámyvat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for safety, then the Russian for a hacker, then say vzlámyvat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for safety, then the Russian for a hacker, then say *vzlámyvat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does взламывать (vzlámyvat) mean? (\"To break into, to hack\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C400-virus",
+      "sequence": 23060,
+      "title": "вирус (vírus) — a virus",
+      "headword": "вирус",
+      "romanization": "vírus",
+      "gloss": "a virus",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b68517ae68dfb88c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a hacker, then the Russian for to break into."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: вирус",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "вирус (vírus) — \"a virus\"."
+            },
+            {
+              "kind": "speech",
+              "text": "На компьютере вирус. Na kompyútere vírus. There is a virus on the computer."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine. For computers and for illness alike."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "вирус (vírus) is usually traced to Latin vīrus \"slime, poison\" (Lewis & Short); the computer sense came through English."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vírus",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vírus*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vírus, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vírus*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with vírus",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *vírus*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a hacker, then the Russian for to break into, then say vírus again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a hacker, then the Russian for to break into, then say *vírus* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does вирус (vírus) mean? (\"A virus\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-R400-review-393-400",
+      "sequence": 23070,
+      "title": "Words from chapters 393–400 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 393-400",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:48bd5119d13bee8f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Russian for an application and to submit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an application, to submit, a notary, a power of attorney, a will",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an application, to submit, a notary, a power of attorney, a will]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a debt, a loan, to lend, to give back, a per cent",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a debt, a loan, to lend, to give back, a per cent]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "savings, to invest, a deposit, cost, a budget",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: savings, to invest, a deposit, cost, a budget]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to go up in price, to get cheaper, inflation, an exchange rate, an exchange",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to go up in price, to get cheaper, inflation, an exchange rate, an exchange]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to pay for, a payment, free, paid, profitable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to pay for, a payment, free, paid, profitable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rent, to rent, a mortgage, to insure, insurance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: rent, to rent, a mortgage, to insure, insurance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a network, a website, a link, a web browser, a search engine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a network, a website, a link, a web browser, a search engine]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a password, safety, a hacker, to break into, a virus",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a password, safety, a hacker, to break into, a virus]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An application? (заявление.) To submit? (подавать.) A notary? (нотариус.) A power of attorney? (доверенность.) A will? (завещание.) A debt? (долг.) A loan? (кредит.) To lend? (одалживать.) To give back? (возвращать.) A per cent? (процент.) Savings? (сбережения.) To invest? (вкладывать.) A deposit? (вклад.) Cost? (стоимость.) A budget? (бюджет.) To go up in price? (дорожать.) To get cheaper? (дешеветь.) Inflation? (инфляция.) An exchange rate? (курс.) An exchange? (обмен.) To pay for? (оплачивать.) A payment? (платёж.) Free? (бесплатный.) Paid? (платный.) Profitable? (выгодный.) Rent? (аренда.) To rent? (арендовать.) A mortgage? (ипотека.) To insure? (страховать.) Insurance? (страховка.) A network? (сеть.) A website? (сайт.) A link? (ссылка.) A web browser? (браузер.) A search engine? (поисковик.) A password? (пароль (paról).) Safety? (безопасность (bezopásnost).) A hacker? (хакер (kháker).) To break into? (взламывать (vzlámyvat).) A virus? (вирус (vírus).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

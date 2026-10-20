@@ -1,0 +1,19 @@
+{
+  "chapter": 404,
+  "title": "Under the bonnet",
+  "label": "ch:ru-under-the-bonnet",
+  "canDo": "I can talk about what is under the bonnet: the engine, the battery, starting the car and an engine that stalls.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C404-glokhnut",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 404: I can talk about what is under the bonnet: the engine, the battery, starting the car and an engine that stalls.",
+    "assesses": [
+      "RU-LEX-C404-KAPOT-03",
+      "RU-LEX-C404-KAPOT-04",
+      "RU-LEX-C404-KAPOT-05"
+    ]
+  }
+}

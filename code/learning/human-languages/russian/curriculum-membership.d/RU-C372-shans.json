@@ -1,0 +1,11 @@
+{
+  "id": "RU-C372-shans",
+  "pathSegment": "RU-PATH-372-VEROYATNO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-372-VEROYATNO",
+      "order": 3
+    }
+  ]
+}

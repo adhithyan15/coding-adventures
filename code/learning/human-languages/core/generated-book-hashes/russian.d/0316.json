@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 316,
+  "sourceHash": "fnv1a64:5ad8092cf0741c5e",
+  "lessonIds": [
+    "RU-C316-karnaval",
+    "RU-C316-maskarad",
+    "RU-C316-parad",
+    "RU-C316-shestviye",
+    "RU-C316-yarmarka"
+  ],
+  "tex": "russian/book/chapters/ch316-carnival-and-parade.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 398,
+  "sourceHash": "fnv1a64:c2640b9e6c5c88c8",
+  "lessonIds": [
+    "RU-C398-arenda",
+    "RU-C398-arendovat",
+    "RU-C398-ipoteka",
+    "RU-C398-strakhovat",
+    "RU-C398-strakhovka"
+  ],
+  "tex": "russian/book/chapters/ch398-renting-and-insurance.tex"
+}

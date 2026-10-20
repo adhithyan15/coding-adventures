@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 463,
+  "sourceHash": "fnv1a64:7abc02a8e0139613",
+  "lessonIds": [
+    "RU-C463-priliv",
+    "RU-C463-otliv",
+    "RU-C463-bukhta",
+    "RU-C463-rakushka",
+    "RU-C463-nyryat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch463.txt",
+  "json": "russian/narration/ch463.json",
+  "textHash": "fnv1a64:5a401fc9b828f337",
+  "jsonHash": "fnv1a64:9a37d0c0f1847668",
+  "findings": []
+}

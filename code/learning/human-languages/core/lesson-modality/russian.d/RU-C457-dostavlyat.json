@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C457-dostavlyat",
+    "language": "russian",
+    "chapter": 457,
+    "sequence": 25990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:483e8c095c66a652"
+  },
+  "findings": []
+}

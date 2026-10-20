@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 408,
+  "sourceHash": "fnv1a64:2fdbae486eae367a",
+  "lessonIds": [
+    "RU-C408-skorost",
+    "RU-C408-prevyshat",
+    "RU-C408-inspektor",
+    "RU-C408-prava",
+    "RU-C408-shtrafovat"
+  ],
+  "tex": "russian/book/chapters/ch408-speeding-and-fines.tex"
+}

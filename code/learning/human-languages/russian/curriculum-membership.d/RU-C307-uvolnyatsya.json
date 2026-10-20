@@ -1,0 +1,11 @@
+{
+  "id": "RU-C307-uvolnyatsya",
+  "pathSegment": "RU-PATH-307-RAZVOD",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-307-RAZVOD",
+      "order": 3
+    }
+  ]
+}

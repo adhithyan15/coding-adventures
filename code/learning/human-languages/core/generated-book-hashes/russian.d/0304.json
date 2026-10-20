@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:18cba365566a4f2a",
+  "lessonIds": [
+    "RU-C304-detstvo",
+    "RU-C304-yunost",
+    "RU-C304-molodost",
+    "RU-C304-starost",
+    "RU-C304-vzroslet"
+  ],
+  "tex": "russian/book/chapters/ch304-stages-of-life.tex"
+}

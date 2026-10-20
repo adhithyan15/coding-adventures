@@ -1,0 +1,20 @@
+{
+  "language": "russian",
+  "chapter": 492,
+  "sourceHash": "fnv1a64:a5cebdb958b0228f",
+  "lessonIds": [
+    "RU-C492-otchim",
+    "RU-C492-machekha",
+    "RU-C492-svodnyy",
+    "RU-C492-bliznetsy",
+    "RU-C492-dvoyurodnyy",
+    "RU-R492-review-485-492"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "russian/narration/ch492.txt",
+  "json": "russian/narration/ch492.json",
+  "textHash": "fnv1a64:57e477f3085b2e41",
+  "jsonHash": "fnv1a64:b1132c7b36af9867",
+  "findings": []
+}

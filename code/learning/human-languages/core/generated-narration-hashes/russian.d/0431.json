@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 431,
+  "sourceHash": "fnv1a64:21499d5233afad9c",
+  "lessonIds": [
+    "RU-C431-konditsioner",
+    "RU-C431-obogrevatel",
+    "RU-C431-skvoznyak",
+    "RU-C431-provetrivat",
+    "RU-C431-sushit"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch431.txt",
+  "json": "russian/narration/ch431.json",
+  "textHash": "fnv1a64:cc7373baac06df65",
+  "jsonHash": "fnv1a64:9eb09097e04bbc9e",
+  "findings": []
+}

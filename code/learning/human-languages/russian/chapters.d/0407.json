@@ -1,0 +1,19 @@
+{
+  "chapter": 407,
+  "title": "Overtaking and turning",
+  "label": "ch:ru-overtaking-and-turning",
+  "canDo": "I can describe moves on the road: overtaking, changing lanes, turning off, turning round and the hard shoulder.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C407-obochina",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 407: I can describe moves on the road: overtaking, changing lanes, turning off, turning round and the hard shoulder.",
+    "assesses": [
+      "RU-LEX-C407-OBGON-03",
+      "RU-LEX-C407-OBGON-04",
+      "RU-LEX-C407-OBGON-05"
+    ]
+  }
+}

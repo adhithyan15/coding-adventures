@@ -34,9 +34,28 @@ use std::collections::VecDeque;
 use lexer::token::{Token, TokenType};
 use state_machine::transducer::{EffectfulInput, EffectfulStateMachine};
 
+mod _grammar;
 mod lex_state;
 mod machine;
 mod oracle;
+
+/// LANG84 per-release token tables, generated from
+/// `code/grammars/ruby/ruby<release>.tokens` by
+/// `grammar-tools generate-rust-compiled-grammars ruby`.
+///
+/// This is the grammar-driven replacement for the hand-written lexer above,
+/// built up one slice at a time (LANG84 "Ruby: port the lexer to
+/// ruby<release>.tokens"). Slice R0 covers numbers, names, variables,
+/// keywords, operators, comments and statement separators; see
+/// `code/grammars/ruby/README.md`. The state-machine lexer in this crate is
+/// untouched and still serves every existing caller.
+///
+/// `token_grammar(release)` answers for an exact inventory release ID only.
+/// It never picks a neighbouring release (LANG84 C4); `ruby-parser`'s release
+/// API turns `None` into a typed error.
+pub mod releases {
+    pub use crate::_grammar::{grammar_class, token_grammar, SUPPORTED_RELEASES};
+}
 
 pub use lex_state::LexState;
 pub use machine::ERA_VERSIONS;
@@ -4556,5 +4575,28 @@ mod tests {
             "expected unterminated_backtick diagnostic, got {:?}",
             diags
         );
+    }
+}
+
+#[cfg(test)]
+mod release_table_tests {
+    use super::releases::{grammar_class, token_grammar, SUPPORTED_RELEASES};
+
+    #[test]
+    fn every_supported_release_has_a_token_table_and_a_class() {
+        assert!(!SUPPORTED_RELEASES.is_empty());
+        for release in SUPPORTED_RELEASES {
+            let grammar = token_grammar(release).expect(release);
+            assert!(!grammar.definitions.is_empty(), "{release}");
+            assert!(grammar_class(release).unwrap().starts_with("g_"), "{release}");
+        }
+    }
+
+    #[test]
+    fn unknown_or_unpaired_releases_have_no_table() {
+        for release in ["", "3.3", "2.7.8", "ruby-3.3.6", "3.3.6 "] {
+            assert!(token_grammar(release).is_none(), "{release:?}");
+            assert!(grammar_class(release).is_none(), "{release:?}");
+        }
     }
 }

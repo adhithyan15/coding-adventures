@@ -1,0 +1,11 @@
+{
+  "id": "RU-C305-pokoleniye",
+  "pathSegment": "RU-PATH-305-VOSPITYVAT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-305-VOSPITYVAT",
+      "order": 4
+    }
+  ]
+}

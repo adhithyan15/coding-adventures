@@ -847,6 +847,9 @@ function safeHref(value) {
 
 "##,
     );
+    if layout_has_focusable(&layout.root) {
+        out.push_str(FOCUS_KEEPER_JS);
+    }
 
     // 3. Class opener.
     writeln!(out, "class {class_name} extends HTMLElement {{").unwrap();
@@ -1053,6 +1056,12 @@ fn emit_render(
     // The HTML tree is one flat string for now (no per-line indentation
     // inside the template literal — keeps the output compact and avoids
     // surprising whitespace inside `<span>` and `<div>` text content).
+    // `_render` replaces the whole shadow tree, destroying whichever control
+    // had focus; see `FOCUS_KEEPER_JS`.
+    let keeps_focus = layout_has_focusable(layout_root);
+    if keeps_focus {
+        writeln!(out, "    const mosaicFocus = mosaicCaptureFocus(this.shadowRoot);").unwrap();
+    }
     writeln!(out, "    this.shadowRoot.innerHTML = `{html}`;").unwrap();
     if has_font_size_tree(layout_root) {
         out.push_str(r#"    for (const element of this.shadowRoot.querySelectorAll('[data-mosaic-font-size-slot]')) {
@@ -1067,9 +1076,99 @@ fn emit_render(
     for line in ctx.post_script_lines {
         writeln!(out, "    {line}").unwrap();
     }
+    if keeps_focus {
+        writeln!(out, "    mosaicRestoreFocus(this.shadowRoot, mosaicFocus);").unwrap();
+    }
     writeln!(out, "  }}").unwrap();
     Ok(out)
 }
+
+/// Does the tree hold a control that can have focus? Gates the
+/// `FOCUS_KEEPER_JS` helpers so a static component's output is unchanged.
+fn layout_has_focusable(node: &LayoutNode) -> bool {
+    matches!(
+        node.tag.as_str(),
+        "HostInput"
+            | "Input"
+            | "HostNumberInput"
+            | "HostButton"
+            | "HostCheckbox"
+            | "HostRadio"
+            | "HostSlider"
+            | "HostLink"
+            | "HostSelect"
+    ) || node.children.iter().any(layout_has_focusable)
+}
+
+/// `_render` rebuilds `shadowRoot.innerHTML` on every attribute change, which
+/// destroys the focused control. A controlled field whose host echoes each
+/// keystroke back as an attribute therefore lost focus after one character,
+/// and a keyboard user who pressed a button that changed a slot was sent
+/// back to the top of the page. These helpers find the same control again
+/// by what it is (tag, accessible name, inline event handlers) and which of
+/// the matching controls it was, then restore focus, caret and scroll. A
+/// child-index path would land on a different control once an `If` or
+/// `For` changed the tree above it.
+///
+/// Focus is restored only when the number of matching controls is
+/// unchanged: after a row is added or removed, "the third Delete button"
+/// may belong to another record, and no focus is safer than the wrong one.
+/// Rows reordered without a change in number still restore by position; a
+/// per-row accessible name (part of the signature) tells such rows apart, so
+/// only identically labelled controls in a re-sorted list remain, until `For`
+/// rows carry a stable key.
+/// Lookup is by tag name rather than a selector (the HTML parser accepts
+/// tag names that are not valid selectors), and both helpers swallow their
+/// own errors, so they can skip a restore but never stop a render.
+const FOCUS_KEEPER_JS: &str = r##"const MOSAIC_FOCUS_SIGNATURE = ["aria-label", "name", "placeholder", "oninput", "onchange", "onkeydown", "onclick"];
+
+function mosaicFocusSignature(element) {
+  return [element.tagName, ...MOSAIC_FOCUS_SIGNATURE.map(name => element.getAttribute(name) ?? "")].join("\u0000");
+}
+
+function mosaicFocusTwins(root, name, signature) {
+  return [...root.querySelectorAll("*")].filter(element => element.localName === name && mosaicFocusSignature(element) === signature);
+}
+
+function mosaicCaptureFocus(root) {
+  try {
+    const active = root.activeElement;
+    if (!active) return null;
+    const signature = mosaicFocusSignature(active);
+    const twins = mosaicFocusTwins(root, active.localName, signature);
+    const state = { signature, name: active.localName, occurrence: twins.indexOf(active), count: twins.length, scrollTop: active.scrollTop };
+    if (typeof active.selectionStart === "number") {
+      state.selection = [active.selectionStart, active.selectionEnd, active.selectionDirection];
+    }
+    return state;
+  } catch {
+    return null;
+  }
+}
+
+function mosaicRestoreFocus(root, state) {
+  if (state === null || state.occurrence < 0) return;
+  try {
+    const twins = mosaicFocusTwins(root, state.name, state.signature);
+    if (twins.length !== state.count) return;
+    const element = twins[state.occurrence];
+    if (element === undefined) return;
+    element.focus({ preventScroll: true });
+    if (state.selection !== undefined && typeof element.setSelectionRange === "function") {
+      const length = String(element.value ?? "").length;
+      try {
+        element.setSelectionRange(Math.min(state.selection[0], length), Math.min(state.selection[1], length), state.selection[2]);
+      } catch {
+        // Some input types (number, email) refuse a selection; focus is enough.
+      }
+    }
+    element.scrollTop = state.scrollTop;
+  } catch {
+    // Restoring focus is a courtesy; it must never break a render.
+  }
+}
+
+"##;
 
 /// Emit one signal-like instance method for an emit declaration.
 ///
@@ -1705,7 +1804,8 @@ fn layout_value_to_js_expr(v: &LayoutPropValue) -> String {
 /// - `placeholder: slot: x` → `placeholder="${escapeHtmlAttribute(x)}"`
 /// - `read-only: slot: x` → `${x ? 'readonly' : ''}` (template-literal attr presence)
 /// - `read-only: true`    → `readonly`
-/// - `onChange: emit: onX` → `onchange="this.getRootNode().host.dispatch({type:'x', value:event.target.value})"`
+/// - `onChange: emit: onX` → `oninput="if(!event.isComposing)…dispatch({type:'x', value:event.target.value})"`
+///   plus `oncompositionend` (per keystroke; the payload is the emit's declared field)
 /// - `onCommit: emit: onX` + `onCancel: emit: onY` → merged `onkeydown` handler
 ///   (Enter commits a single-line field, Ctrl/Cmd+Enter a `<textarea>`)
 ///
@@ -1794,13 +1894,19 @@ fn emit_host_input(
         }
     }
 
-    // onchange — wraps `event.target.value` into the dispatch payload.
+    // oninput — wraps `event.target.value` into the dispatch payload.
     if let Some(emit_name) = find_emit_ref(node, "onChange") {
         let type_field = to_camel_case_first_lower(&strip_on_prefix(emit_name));
         if is_safe_identifier(&type_field) {
+            // Every keystroke, as UI25 specifies (`_render` keeps focus, so a
+            // host that echoes the value back no longer steals it), carrying
+            // the payload the emit declares. An IME composition is sent once,
+            // when it ends: a re-render mid-word would cancel it.
             let payload = text_field_payload(ctx, emit_name, ",value:event.target.value");
+            let dispatch =
+                format!("this.getRootNode().host.dispatch({{type:'{type_field}'{payload}}})");
             attrs.push_str(&format!(
-                r#" onchange="this.getRootNode().host.dispatch({{type:'{type_field}'{payload}}})""#
+                r#" oninput="if(!event.isComposing){dispatch}" oncompositionend="{dispatch}""#
             ));
         }
     }
@@ -5234,13 +5340,18 @@ mod tests {
             "missing placeholder attribute, got:\n{}",
             r.output
         );
+        // onChange fires per keystroke (UI25), and an IME composition once,
+        // when it ends.
         assert!(
             r.output.contains(
-                r#"onchange="this.getRootNode().host.dispatch({type:'change',value:event.target.value})""#
+                r#"oninput="if(!event.isComposing)this.getRootNode().host.dispatch({type:'change',value:event.target.value})""#
+            ) && r.output.contains(
+                r#"oncompositionend="this.getRootNode().host.dispatch({type:'change',value:event.target.value})""#
             ),
-            "missing or wrong onchange wiring, got:\n{}",
+            "missing or wrong oninput wiring, got:\n{}",
             r.output
         );
+        assert!(!r.output.contains(" onchange="), "onChange is not blur-time: {}", r.output);
         assert!(
             r.output.contains("event.key==='Enter'"),
             "missing Enter-key check for onCommit, got:\n{}",
@@ -5498,8 +5609,31 @@ mod tests {
             ),
         );
         let out = from_pipeline(&m, &l, &empty_style("Btn")).unwrap().output;
-        assert!(!out.contains("aria-label"), "unexpected aria-label in:\n{out}");
+        // The focus-keeper helper names `aria-label` in its own code, so look
+        // only at the rendered button.
+        let button = &out[out.find("<button").expect("a button")..];
+        let button = &button[..button.find('>').unwrap()];
+        assert!(!button.contains("aria-label"), "unexpected aria-label in:\n{button}");
         assert!(!out.contains("alert(1)"), "unsafe name reached output:\n{out}");
+    }
+
+    /// `_render` replaces the shadow tree, so a component with a focusable
+    /// control captures focus before and restores it after; a static one
+    /// carries no helper at all.
+    #[test]
+    fn render_keeps_focus_only_where_a_control_can_hold_it() {
+        let m = component("X", vec![], vec![]);
+        let interactive = root_layout("X", leaf("HostInput"));
+        let out = from_pipeline(&m, &interactive, &empty_style("X")).unwrap().output;
+        let capture = out.find("const mosaicFocus = mosaicCaptureFocus(this.shadowRoot);").expect("capture");
+        let assign = out.find("this.shadowRoot.innerHTML = `").expect("assign");
+        let restore = out.find("mosaicRestoreFocus(this.shadowRoot, mosaicFocus);").expect("restore");
+        assert!(capture < assign && assign < restore, "{out}");
+        assert_eq!(out.matches("function mosaicRestoreFocus(root, state)").count(), 1, "{out}");
+
+        let text_only = root_layout("X", leaf("Text"));
+        let out = from_pipeline(&m, &text_only, &empty_style("X")).unwrap().output;
+        assert!(!out.contains("mosaicFocus"), "{out}");
     }
 
     // -------- K4: HostButton with literal label + onTap → onclick --------
@@ -8514,7 +8648,7 @@ mod tests {
 
         let single = field(false, "onEdit", "onSave");
         assert!(
-            single.contains("onchange=\"this.getRootNode().host.dispatch({type:'edit',draftText:event.target.value})\""),
+            single.contains("oninput=\"if(!event.isComposing)this.getRootNode().host.dispatch({type:'edit',draftText:event.target.value})\" oncompositionend=\"this.getRootNode().host.dispatch({type:'edit',draftText:event.target.value})\""),
             "onChange uses the declared field name:\n{single}"
         );
         assert!(
@@ -8524,7 +8658,7 @@ mod tests {
 
         let multi = field(true, "onPing", "onSave");
         assert!(
-            multi.contains("onchange=\"this.getRootNode().host.dispatch({type:'ping'})\""),
+            multi.contains("oninput=\"if(!event.isComposing)this.getRootNode().host.dispatch({type:'ping'})\" oncompositionend=\"this.getRootNode().host.dispatch({type:'ping'})\""),
             "a void onChange carries nothing:\n{multi}"
         );
         assert!(

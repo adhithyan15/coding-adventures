@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C276-etap",
+    "language": "russian",
+    "chapter": 276,
+    "sequence": 16670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fbbc1d24a91cc47b"
+  },
+  "findings": []
+}

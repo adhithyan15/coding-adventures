@@ -1,0 +1,11 @@
+{
+  "id": "RU-C470-styd",
+  "pathSegment": "RU-PATH-470-SHAME",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-470-SHAME",
+      "order": 0
+    }
+  ]
+}

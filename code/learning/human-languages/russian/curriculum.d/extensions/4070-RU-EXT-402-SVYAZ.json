@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-402-SVYAZ",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can connect a device, charge my phone, message a friend and forward a letter.",
+  "prerequisites": []
+}

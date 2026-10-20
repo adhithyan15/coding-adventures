@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:554f64f9a632e210",
+  "lessonIds": [
+    "RU-C385-obrazovanie",
+    "RU-C385-dissertaciya",
+    "RU-C385-kafedra",
+    "RU-C385-bakalavr",
+    "RU-C385-magistr"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch385.txt",
+  "json": "russian/narration/ch385.json",
+  "textHash": "fnv1a64:1c319ab43a5331b3",
+  "jsonHash": "fnv1a64:a36b4967c7a6769a",
+  "findings": []
+}

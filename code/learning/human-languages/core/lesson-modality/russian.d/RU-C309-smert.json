@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C309-smert",
+    "language": "russian",
+    "chapter": 309,
+    "sequence": 18360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:06fe52971bb247e7"
+  },
+  "findings": []
+}

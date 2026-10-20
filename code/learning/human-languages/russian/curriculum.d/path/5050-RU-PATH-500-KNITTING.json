@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-500-KNITTING",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "RU-EXT-500-KNITTING"
+  ],
+  "after": []
+}

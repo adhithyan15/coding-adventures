@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 388,
+  "sourceHash": "fnv1a64:8bad9ecae139d54a",
+  "lessonIds": [
+    "RU-C388-zakon",
+    "RU-C388-zakonnyy",
+    "RU-C388-nezakonnyy",
+    "RU-C388-narushat",
+    "RU-C388-narushenie"
+  ],
+  "tex": "russian/book/chapters/ch388-the-law.tex"
+}

@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-485-NAUSEA",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "RU-EXT-485-NAUSEA"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C353-ukhudshat",
+  "pathSegment": "RU-PATH-353-USHCHERB",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-353-USHCHERB",
+      "order": 4
+    }
+  ]
+}

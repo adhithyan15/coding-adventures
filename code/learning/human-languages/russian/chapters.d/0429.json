@@ -1,0 +1,19 @@
+{
+  "chapter": 429,
+  "title": "Checking in and out",
+  "label": "ch:ru-checking-in-and-out",
+  "canDo": "I can check in and out: the receptionist, checking in, checking out, the deposit and extending a stay.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C429-prodlevat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 429: I can check in and out: the receptionist, checking in, checking out, the deposit and extending a stay.",
+    "assesses": [
+      "RU-LEX-C429-ZASELENIYE-03",
+      "RU-LEX-C429-ZASELENIYE-04",
+      "RU-LEX-C429-ZASELENIYE-05"
+    ]
+  }
+}

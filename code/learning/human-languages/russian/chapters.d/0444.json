@@ -1,0 +1,19 @@
+{
+  "chapter": 444,
+  "title": "The old town",
+  "label": "ch:ru-the-old-town",
+  "canDo": "I can name the buildings of an old town: the town hall, the cathedral, the bell tower, the fortress and the city hall.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C444-meriya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 444: I can name the buildings of an old town: the town hall, the cathedral, the bell tower, the fortress and the city hall.",
+    "assesses": [
+      "RU-LEX-C444-RATUSHA-03",
+      "RU-LEX-C444-RATUSHA-04",
+      "RU-LEX-C444-RATUSHA-05"
+    ]
+  }
+}

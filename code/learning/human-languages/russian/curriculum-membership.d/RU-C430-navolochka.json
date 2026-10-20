@@ -1,0 +1,11 @@
+{
+  "id": "RU-C430-navolochka",
+  "pathSegment": "RU-PATH-430-POSTEL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-430-POSTEL",
+      "order": 2
+    }
+  ]
+}

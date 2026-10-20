@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C408-skorost",
+    "language": "russian",
+    "chapter": 408,
+    "sequence": 23450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3e625b8087b1c463"
+  },
+  "findings": []
+}

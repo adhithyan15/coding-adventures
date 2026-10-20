@@ -1,0 +1,11 @@
+{
+  "id": "RU-C316-parad",
+  "pathSegment": "RU-PATH-316-KARNAVAL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-316-KARNAVAL",
+      "order": 2
+    }
+  ]
+}

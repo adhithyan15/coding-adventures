@@ -1,7 +1,8 @@
 # LANG83 — IIR standard operation registry and backend lowering contract
 
-**Status:** Draft, 2026-10-19. Contract slice (PR1a) and first op family on
-all nine backends (PR1b, see "PR1b — what landed") under LANG78.
+**Status:** Draft, 2026-10-19. Contract slice (PR1a), first op family on
+all nine backends (PR1b, see "PR1b — what landed") and the overflow-checked
+arithmetic family (PR4, see "PR4 — the overflow family") under LANG78.
 
 ## Why this exists
 
@@ -78,7 +79,8 @@ family that prefix dispatches.
 `Exists` = lowered by the standard backends today and registered in PR1a.
 `PR1b` = registered in PR1a and lowered by **every** backend since PR1b
 (`introduced_by: "LANG83 PR1b"`; the shared `NOT_YET_LOWERED_PR1B` reason is
-no longer used by any backend). `Later` = planned; enters the
+no longer used by any backend). `PR4` = registered *and* lowered by every
+backend in the same slice (`introduced_by: "LANG83 PR4"`). `Later` = planned; enters the
 registry before any frontend emits it. `Unregistered` = exists in IIR today but
 is not yet in the registry (it keeps working exactly as before; the registry
 does not gate it).
@@ -89,8 +91,9 @@ does not gate it).
 | | `div` `mod` | Op | Exists | Truncating. Zero divisor and `MIN / -1` are **backend-dependent** today (see "Legacy edge behaviour"). |
 | | `neg` | Op | Exists | Wrapping negation. |
 | | `i64_div_floor` `i64_mod_floor` | Op | PR1b | Floor division / modulo (Python `//` `%`, Ruby `/` `%`). `b == 0` → `Trap.DivZero`; `MIN / -1` → `Trap.Overflow` for div, `0` for mod. |
-| | `i64_div_trunc` `i64_mod_trunc` | Op | Later | Truncating with *defined* traps (the legacy `div`/`mod` with the edges fixed). |
-| | `i64_add_ovf` `i64_sub_ovf` `i64_mul_ovf` `i64_neg_ovf` | Op | Later | Overflow → `Trap.Overflow` (bignum promotion is a frontend decision made by catching it). |
+| | `i64_div_trunc` `i64_mod_trunc` | Op | Later | Truncating with *defined* traps (the legacy `div`/`mod` with the edges fixed). Not part of PR4: no frontend needs them yet (Python and Ruby divide with the floor ops). |
+| | `i64_add_ovf` `i64_sub_ovf` `i64_mul_ovf` | Op | PR4 | Exact `a + b`, `a - b`, `a * b`; a result outside `[i64::MIN, i64::MAX]` → `Trap.Overflow` (bignum promotion is a frontend decision made by catching it, once traps are catchable). |
+| | `i64_neg_ovf` | Op | PR4 | Exact `-a`; only `-i64::MIN` overflows → `Trap.Overflow`. |
 | | `i64_pow` | Op | Later | Integer power (a `pow` builtin exists on four backends only and is unregistered). |
 | | `and` `or` `xor` `not` `shl` `shr` | Op | Unregistered | Bitwise; LLVM lacks `shl`/`shr` and the generic JIT lacks all six. Registered in a follow-up with honest per-backend declarations. |
 | Comparison | `cmp_eq` `cmp_ne` `cmp_lt` `cmp_le` `cmp_gt` `cmp_ge` | Op | Exists | 0/1 (or `bool`) result. |
@@ -178,7 +181,7 @@ tell a LANG83 trap from another error checks the atom against the closed table.
 | `Trap.Null` | 2 | `unbox` of null |
 | `Trap.DivZero` | 3 | integer division by zero |
 | `Trap.ConvRange` | 4 | `real_to_int_*` of a non-finite / out-of-range value |
-| `Trap.Overflow` | 5 | `i64_div_floor` `MIN / -1`; later the `*_ovf` family |
+| `Trap.Overflow` | 5 | `i64_div_floor` `MIN / -1`; the PR4 `i64_*_ovf` family |
 | `Trap.User` | 6 | a frontend's explicit abort (`die`, `raise` without a class, …) |
 
 The ids are what native backends pass to the runtime (`mov edi, id; call
@@ -196,13 +199,15 @@ kind.
   plus the pre-registry trap sites (`array_get`, `array_set`, `unbox`).
 - `trap_kinds(op)` — the kinds an op may raise (from the registry).
 - `is_terminator(op)` — `jmp`, `ret`, `ret_void`, `throw`, `trap`.
-- `has_side_effects` now includes `trap`, `i64_div_floor` and `i64_mod_floor`,
-  so a dead-code pass must keep them even when their result is unused (a
-  removed trapping divide would change observable behaviour).
+- `has_side_effects` now includes `trap`, `i64_div_floor` and `i64_mod_floor`
+  (and, since PR4, the four `i64_*_ovf` ops), so a dead-code pass must keep
+  them even when their result is unused (a removed trapping divide or add
+  would change observable behaviour).
   **Divergence kept deliberately in PR1a:** the legacy `div`/`mod` are *not*
   added to `has_side_effects`, because the existing optimisers rely on them
   being pure and their trap behaviour is backend-dependent anyway.
-- `is_value_producing` includes `i64_div_floor` and `i64_mod_floor`.
+- `is_value_producing` includes `i64_div_floor` and `i64_mod_floor` (and
+  every other registry Op with a dest, so the PR4 ops with no edit).
 - `is_known_op` accepts every registry entry of kind Op (this also makes the
   long-standing `f64_*` ops "known" to the module validator; they were already
   emitted by ALGOL and lowered everywhere).
@@ -378,8 +383,11 @@ fail. This was checked by mutation.
 - **PR2 — Ruby frontend** on these ops (`rb_int_div` = `i64_div_floor`, `puts`
   = `print_i64`, `StdoutThenTrap` rows).
 - **PR3 — Perl** (`print` = `write_i64`).
-- **PR4 — overflow family. PR5 — strings. PR6 — floats + Python/JavaScript
-  formatting.**
+- **PR4 — overflow family** (`i64_add_ovf`, `i64_sub_ovf`, `i64_mul_ovf`,
+  `i64_neg_ovf`), registered and lowered on all nine backends in one slice;
+  see "PR4 — the overflow family". `i64_div_trunc` / `i64_mod_trunc` stay
+  `Later`.
+- **PR5 — strings. PR6 — floats + Python/JavaScript formatting.**
 
 ## PR1b — what landed
 
@@ -432,6 +440,103 @@ the opcodes it uses. AArch64 is structural: each expected word comes from
 hosts do not yet provide `write_i64`/`__trap`. No language row emits a PR1b op
 yet. LANG83 PR2 (Ruby), the first that does, ports `StdoutThenTrap` and those
 host imports.
+
+## PR4 — the overflow family
+
+Python's and Ruby's integers are unbounded. A frontend that keeps small
+integers in an `i64` needs to know, *exactly*, when an operation leaves the
+`i64` range, so it can promote to a bignum (later, by catching the trap) or
+report an error. PR4 adds the four checked operations that make that
+observable on every backend:
+
+| Op | Result | Traps `Trap.Overflow` when |
+| --- | --- | --- |
+| `i64_add_ovf a, b` | `a + b` | the exact sum is outside `[MIN, MAX]` |
+| `i64_sub_ovf a, b` | `a - b` | the exact difference is outside the range |
+| `i64_mul_ovf a, b` | `a * b` | the exact product is outside the range (`MIN * -1` included) |
+| `i64_neg_ovf a` | `-a` | `a == MIN` |
+
+They are type-first (`i64_add_ovf`, never `add_ovf`): the native backends and
+the generic JIT dispatch on `add_`, `sub_`, `mul_` and `neg_` prefixes, and an
+`add_ovf` would be lowered as a *wrapping* add with a nonsense type suffix. The
+registry test `names_avoid_dispatch_prefixes` already lists `add_ovf` and
+`neg_ovf` as names it must reject. They pass through `jit_core::specialise`
+unchanged (it type-suffixes only the classic `add`/`sub`/`mul`/`neg`).
+
+No other trap kind is possible, and no operand edge is undefined, so the
+registry entries list `may_trap: [Trap.Overflow]`. Like the PR1b ops they are
+side-effecting (`has_side_effects`, `CIRInstr::is_pure` → impure), so
+dead-code elimination keeps an unused checked add whose only observable effect
+is its trap, and they are wide-model evidence for
+`concretize_scalar_any_for_jvm` (an op *defined* on i64 must not be narrowed to
+`int`). That evidence is now derived from the registry — every Op with an
+`i64` operand type — instead of a hand-kept name list.
+
+### Shared lowering shape
+
+"Detect, then trap; never let a wrapped value escape." Each backend computes
+the overflow condition with whatever its target offers, branches to the same
+trap sequence PR1b established (flush, report the kind, terminate), and only
+then writes the destination. A destination that aliases an operand
+(`x = i64_add_ovf x, y`) is therefore safe everywhere: the operands are read
+before the store.
+
+| Backend | `i64_add_ovf` / `i64_sub_ovf` | `i64_mul_ovf` | `i64_neg_ovf` |
+| --- | --- | --- | --- |
+| x86-64 | `add`/`sub r64` sets OF; `jno` over the trap | `imul r64, r64` sets OF exactly when the signed 128-bit product does not fit; `jno` | `neg r64` sets OF only for `MIN`; `jno` |
+| AArch64 | `adds`/`subs` set V; `b.vc` over the trap | `mul` (low half) + `smulh` (high half); `cmp hi, lo, asr #63`; `b.eq` over the trap | `negs` (= `subs xd, xzr, xm`) sets V only for `MIN`; `b.vc` |
+| LLVM | `@llvm.sadd.with.overflow.i64` / `@llvm.ssub.with.overflow.i64`; `extractvalue` the flag; `br` to a trap block | `@llvm.smul.with.overflow.i64` | `@llvm.ssub.with.overflow.i64(0, a)` |
+| WASM | no flag: sign test `((a ^ r) & (b ^ r)) < 0` for add, `((a ^ b) & (a ^ r)) < 0` for sub, with `r` recomputed (no scratch local) | no wide multiply: `a == -1 && b == MIN` → trap; else `a != 0 && (a * b) / a != b` → trap | `a == MIN` → trap; else `0 - a` |
+| JVM | the WASM sign test on `long`, `ifge` over the trap | the WASM guards with `lmul`/`ldiv` | `lcmp` against `MIN` |
+| CLR (textual) | the WASM sign test on `int64`, `bge` over the trap | the WASM guards (the `-1 × MIN` guard also keeps `div` from throwing) | `bne.un` against `MIN` |
+| BEAM | exact bignum `+`/`-` (`gc_bif2`), then `is_lt` range checks against `MIN` and `MAX` | exact bignum `*`, same range checks | `0 - a`, same range checks |
+| VM | `checked_add` / `checked_sub` / `checked_mul` / `checked_neg` → `VMError::Trap { kind: "Trap.Overflow" }` | | |
+| JIT | `ADD_OVF_I64` / `SUB_OVF_I64` / `MUL_OVF_I64` / `NEG_OVF_I64` bytecodes (`checked_*`); error slot `trap: Trap.Overflow`, drained by `JITCore` | | |
+
+Why the multiply guard is exact on WASM/JVM/CLR: if no overflow happened, the
+wrapped product `p` equals `a * b`, so `p / a == b`. If it did, `p` differs
+from `a * b` by a non-zero multiple of 2^64, which is larger than `|a|`, so
+`p / a` cannot truncate back to `b`. The one product whose check would itself
+overflow (`p = MIN`, divided by `a = -1`) is exactly the `-1 × MIN` case, which
+is tested first.
+
+**Divergences from the PR4 plan, and why.**
+
+- *JVM:* the plan allowed `Math.addExact` / `subtractExact` /
+  `multiplyExact` / `negateExact`. They throw `ArithmeticException`: no kind,
+  and no `System.out` flush. Turning that into the LANG83 trap needs an
+  exception-table entry, which `iir-to-jvm-class-file` does not emit. So PR4
+  pre-checks, exactly as PR1b's floor division does. It needs no JDK 9+
+  method (`Math.multiplyHigh`), so the class still runs on every JVM the
+  backend targets.
+- *CLR:* the plan allowed `add.ovf` / `sub.ovf` / `mul.ovf`, which throw
+  `System.OverflowException`. Mapping that to the kind needs a `.try`/`catch`
+  region, which the textual path has never emitted, and CoreCLR is stricter
+  about protected-region stack shape than `ilasm` (Perl 4a). With no local
+  `dotnet`, PR4 uses the branch-around shape PR1b already proved in CI. The
+  observable result is identical: `Console.Out.Flush()`, then
+  `System.Exception("Trap.Overflow")`.
+- The binary CLR path (`lower_iir_to_cil`, the 32-bit simulator) refuses the
+  PR4 ops with a typed `UnsupportedOp`, like the PR1b ops. `op_support`
+  describes the textual path (§2).
+
+### Conformance cases
+
+`op_conformance` gains, for each op, cases at the edges of the range: `MAX + 0`,
+`MAX - 1 + 1`, `MIN + (-1)`, `MAX + 1`, `MIN - 1`, `MAX - (-1)`, `MIN - 0`,
+`MIN * 1`, `MIN * -1`, `-1 * MIN`, `2^32 * 2^31` (= `2^63`, one past `MAX`),
+`-2^32 * 2^31` (= `MIN`, which fits), `3_037_000_500²` (just past `MAX`),
+`neg MIN`, `neg MAX`, `neg 0`. Every trapping case prints first and then traps
+(`Expect::StdoutThenTrap`), and one case discards its result (DCE must keep it).
+One case uses no `print_i64`: it writes with `putchar` only, so the JVM narrowing
+pass is actually exercised. The gate `pr4_ops_are_lowered_on_every_backend`
+pins that every backend lowers all four.
+
+Local evidence and its limits are those of PR1b: native x86-64, LLVM (clang),
+WASM, JVM, VM and JIT execute every case. CLR, BEAM and AArch64 are structural
+locally (IL text, BEAM instruction streams, and AArch64 words compared against
+`aarch64-encoder`'s own encodings, which gains `adds`, `subs`, `negs`, `smulh`
+and `cmp … asr #imm` for this PR), and execute in CI.
 
 ## What PR1a deliberately does not do
 
