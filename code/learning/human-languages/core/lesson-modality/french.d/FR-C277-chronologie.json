@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C277-chronologie",
+    "language": "french",
+    "chapter": 277,
+    "sequence": 15980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:14c42f1d5056e023"
+  },
+  "findings": []
+}

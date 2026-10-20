@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-420-ESCALE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-420-ESCALE"
+  ],
+  "after": []
+}

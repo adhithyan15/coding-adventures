@@ -1,0 +1,11 @@
+{
+  "id": "FR-C461-bruiner",
+  "pathSegment": "FR-PATH-461-BRUINE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-461-BRUINE",
+      "order": 1
+    }
+  ]
+}

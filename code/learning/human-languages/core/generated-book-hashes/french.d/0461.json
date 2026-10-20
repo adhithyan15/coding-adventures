@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 461,
+  "sourceHash": "fnv1a64:f5666a7b5c5b899a",
+  "lessonIds": [
+    "FR-C461-bruine",
+    "FR-C461-bruiner",
+    "FR-C461-averse",
+    "FR-C461-eclaircie",
+    "FR-C461-degager"
+  ],
+  "tex": "french/book/chapters/ch461-bruine-et-averses.tex"
+}

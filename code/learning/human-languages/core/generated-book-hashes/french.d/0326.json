@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 326,
+  "sourceHash": "fnv1a64:fe60ecdd9f278069",
+  "lessonIds": [
+    "FR-C326-liberer",
+    "FR-C326-liberation",
+    "FR-C326-resister",
+    "FR-C326-resistance",
+    "FR-C326-commemorer"
+  ],
+  "tex": "french/book/chapters/ch326-la-liberation.tex"
+}

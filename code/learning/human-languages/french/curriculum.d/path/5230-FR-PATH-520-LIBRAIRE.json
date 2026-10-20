@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-520-LIBRAIRE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-520-LIBRAIRE"
+  ],
+  "after": []
+}

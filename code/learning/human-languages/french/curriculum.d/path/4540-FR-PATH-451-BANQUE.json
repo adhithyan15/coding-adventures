@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-451-BANQUE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-451-BANQUE"
+  ],
+  "after": []
+}

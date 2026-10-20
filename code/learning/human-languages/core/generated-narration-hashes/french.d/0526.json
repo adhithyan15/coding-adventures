@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 526,
+  "sourceHash": "fnv1a64:8b34168c0ddf9540",
+  "lessonIds": [
+    "FR-C526-machine-a-laver",
+    "FR-C526-essorer",
+    "FR-C526-etendre",
+    "FR-C526-pince-a-linge",
+    "FR-C526-cintre"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch526.txt",
+  "json": "french/narration/ch526.json",
+  "textHash": "fnv1a64:fdd9d15323c49f9d",
+  "jsonHash": "fnv1a64:491aedf0b9e3b439",
+  "findings": []
+}

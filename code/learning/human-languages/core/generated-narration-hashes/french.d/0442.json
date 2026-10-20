@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 442,
+  "sourceHash": "fnv1a64:cf533856b09fc688",
+  "lessonIds": [
+    "FR-C442-facade",
+    "FR-C442-vitrine",
+    "FR-C442-enseigne",
+    "FR-C442-gouttiere",
+    "FR-C442-halle"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch442.txt",
+  "json": "french/narration/ch442.json",
+  "textHash": "fnv1a64:5271cd578d1dce1e",
+  "jsonHash": "fnv1a64:d7d7a09a76378bfc",
+  "findings": []
+}

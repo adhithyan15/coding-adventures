@@ -1,0 +1,11 @@
+{
+  "id": "FR-C524-realisateur",
+  "pathSegment": "FR-PATH-524-CINEMA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-524-CINEMA",
+      "order": 3
+    }
+  ]
+}

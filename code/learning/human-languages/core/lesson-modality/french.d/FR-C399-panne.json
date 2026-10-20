@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C399-panne",
+    "language": "french",
+    "chapter": 399,
+    "sequence": 22230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f747e995abf347a5"
+  },
+  "findings": []
+}

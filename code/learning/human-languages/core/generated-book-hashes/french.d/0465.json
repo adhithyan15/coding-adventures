@@ -1,0 +1,15 @@
+{
+  "language": "french",
+  "chapter": 465,
+  "sourceHash": "fnv1a64:45c0d3d97f2a2ae2",
+  "lessonIds": [
+    "FR-C465-tempete",
+    "FR-C465-inondation",
+    "FR-C465-inonder",
+    "FR-C465-deborder",
+    "FR-C465-flaque",
+    "FR-R465-revision-464-465",
+    "FR-R465-revision-final-465"
+  ],
+  "tex": "french/book/chapters/ch465-tempete-et-inondations.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C305-naufrage",
+    "language": "french",
+    "chapter": 305,
+    "sequence": 17390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:43134ab1d0a77c60"
+  },
+  "findings": []
+}

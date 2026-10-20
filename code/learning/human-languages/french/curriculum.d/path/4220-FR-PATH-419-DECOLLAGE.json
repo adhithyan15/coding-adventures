@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-419-DECOLLAGE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-419-DECOLLAGE"
+  ],
+  "after": []
+}

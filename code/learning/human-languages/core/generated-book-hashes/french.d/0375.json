@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:c330c90fde8fb5d6",
+  "lessonIds": [
+    "FR-C375-lycee",
+    "FR-C375-lyceen",
+    "FR-C375-frequenter",
+    "FR-C375-bulletin",
+    "FR-C375-proviseur"
+  ],
+  "tex": "french/book/chapters/ch375-au-lycee.tex"
+}

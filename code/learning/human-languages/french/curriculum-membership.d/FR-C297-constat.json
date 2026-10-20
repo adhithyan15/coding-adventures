@@ -1,0 +1,11 @@
+{
+  "id": "FR-C297-constat",
+  "pathSegment": "FR-PATH-297-ROUTE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-297-ROUTE",
+      "order": 3
+    }
+  ]
+}

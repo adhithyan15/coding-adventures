@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C411-heurter",
+    "language": "french",
+    "chapter": 411,
+    "sequence": 22870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d56e75e07f0bf532"
+  },
+  "findings": []
+}

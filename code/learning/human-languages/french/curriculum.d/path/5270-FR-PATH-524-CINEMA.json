@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-524-CINEMA",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-524-CINEMA"
+  ],
+  "after": []
+}

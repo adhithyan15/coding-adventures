@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C288-escroc",
+    "language": "french",
+    "chapter": 288,
+    "sequence": 16540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:683651d50e8a3790"
+  },
+  "findings": []
+}

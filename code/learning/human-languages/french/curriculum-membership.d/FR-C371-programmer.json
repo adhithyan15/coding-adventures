@@ -1,0 +1,11 @@
+{
+  "id": "FR-C371-programmer",
+  "pathSegment": "FR-PATH-371-ANNULER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-371-ANNULER",
+      "order": 4
+    }
+  ]
+}

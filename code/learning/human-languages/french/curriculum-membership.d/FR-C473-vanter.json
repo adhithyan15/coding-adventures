@@ -1,0 +1,11 @@
+{
+  "id": "FR-C473-vanter",
+  "pathSegment": "FR-PATH-473-ORGUEIL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-473-ORGUEIL",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-372-RISQUE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can weigh a risk: say something is chancy or unlikely, talk about the probability, and accept a cost.",
+  "prerequisites": []
+}

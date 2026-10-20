@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C332-passoire",
+    "language": "french",
+    "chapter": 332,
+    "sequence": 18780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ae1599115c6226c0"
+  },
+  "findings": []
+}

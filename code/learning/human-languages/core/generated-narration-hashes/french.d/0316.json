@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 316,
+  "sourceHash": "fnv1a64:fd2228acdbc433f3",
+  "lessonIds": [
+    "FR-C316-celebrer",
+    "FR-C316-celebration",
+    "FR-C316-cortege",
+    "FR-C316-fanfare",
+    "FR-C316-jour-ferie"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch316.txt",
+  "json": "french/narration/ch316.json",
+  "textHash": "fnv1a64:3aafe4f0101f65e1",
+  "jsonHash": "fnv1a64:4be340548ff54d82",
+  "findings": []
+}

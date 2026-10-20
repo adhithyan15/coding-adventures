@@ -1,0 +1,19 @@
+{
+  "chapter": 447,
+  "title": "Au pressing",
+  "label": "ch:fr-au-pressing",
+  "canDo": "I can get clothes cleaned and altered: the dry cleaner, the launderette, removing stains, dyeing and altering.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-R447-revision-440-447",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 447: I can get clothes cleaned and altered: the dry cleaner, the launderette, removing stains, dyeing and altering.",
+    "assesses": [
+      "FR-LEX-C447-PRESSING-03",
+      "FR-LEX-C447-PRESSING-04",
+      "FR-LEX-C447-PRESSING-05"
+    ]
+  }
+}

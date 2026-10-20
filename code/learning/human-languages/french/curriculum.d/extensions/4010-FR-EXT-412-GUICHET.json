@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-412-GUICHET",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can buy a ticket at the counter: the ticket office, the price list, the journey, the flat-rate pass and validating the ticket.",
+  "prerequisites": []
+}

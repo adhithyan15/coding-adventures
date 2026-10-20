@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 487,
+  "sourceHash": "fnv1a64:61b570a25427053d",
+  "lessonIds": [
+    "FR-C487-amoureux",
+    "FR-C487-coup-de-foudre",
+    "FR-C487-draguer",
+    "FR-C487-tendresse",
+    "FR-C487-caresser"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch487.txt",
+  "json": "french/narration/ch487.json",
+  "textHash": "fnv1a64:d02c01188fb82f03",
+  "jsonHash": "fnv1a64:5709f253130a7ab9",
+  "findings": []
+}

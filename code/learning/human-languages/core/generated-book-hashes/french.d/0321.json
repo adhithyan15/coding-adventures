@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:cf4a080e4772676c",
+  "lessonIds": [
+    "FR-C321-il-etait-une-fois",
+    "FR-C321-fee",
+    "FR-C321-sorciere",
+    "FR-C321-dragon",
+    "FR-C321-fable"
+  ],
+  "tex": "french/book/chapters/ch321-il-etait-une-fois.tex"
+}

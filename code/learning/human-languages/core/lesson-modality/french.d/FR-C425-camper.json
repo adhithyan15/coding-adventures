@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C425-camper",
+    "language": "french",
+    "chapter": 425,
+    "sequence": 23610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f36d3e9f7cd77028"
+  },
+  "findings": []
+}

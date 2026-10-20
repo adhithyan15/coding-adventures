@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C415-carnet",
+    "language": "french",
+    "chapter": 415,
+    "sequence": 23080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4875ac67c940102c"
+  },
+  "findings": []
+}

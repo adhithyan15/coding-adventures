@@ -1,0 +1,11 @@
+{
+  "id": "FR-C293-alibi",
+  "pathSegment": "FR-PATH-293-MYSTERE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-293-MYSTERE",
+      "order": 3
+    }
+  ]
+}

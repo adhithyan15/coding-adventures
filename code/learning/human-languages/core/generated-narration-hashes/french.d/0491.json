@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 491,
+  "sourceHash": "fnv1a64:414d8dac83ab44d4",
+  "lessonIds": [
+    "FR-C491-conjoint",
+    "FR-C491-separer",
+    "FR-C491-separation",
+    "FR-C491-rompre",
+    "FR-C491-rupture"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch491.txt",
+  "json": "french/narration/ch491.json",
+  "textHash": "fnv1a64:5c9ba3c14cf02087",
+  "jsonHash": "fnv1a64:b82ef8be02a99a35",
+  "findings": []
+}

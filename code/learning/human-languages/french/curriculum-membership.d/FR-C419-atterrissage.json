@@ -1,0 +1,11 @@
+{
+  "id": "FR-C419-atterrissage",
+  "pathSegment": "FR-PATH-419-DECOLLAGE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-419-DECOLLAGE",
+      "order": 2
+    }
+  ]
+}

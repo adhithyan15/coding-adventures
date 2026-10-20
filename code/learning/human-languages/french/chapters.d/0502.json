@@ -1,0 +1,19 @@
+{
+  "chapter": 502,
+  "title": "Prendre des photos",
+  "label": "ch:fr-prendre-des-photos",
+  "canDo": "I can talk about taking good photos.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C502-trepied",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 502: I can talk about taking good photos.",
+    "assesses": [
+      "FR-LEX-C502-PHOTO-03",
+      "FR-LEX-C502-PHOTO-04",
+      "FR-LEX-C502-PHOTO-05"
+    ]
+  }
+}

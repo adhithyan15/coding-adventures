@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C383-eligible",
+    "language": "french",
+    "chapter": 383,
+    "sequence": 21430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1e91929f5c4a8d9b"
+  },
+  "findings": []
+}

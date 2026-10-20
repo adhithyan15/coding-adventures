@@ -1,0 +1,19 @@
+{
+  "chapter": 368,
+  "title": "À une condition",
+  "label": "ch:fr-a-une-condition",
+  "canDo": "I can set a condition: provided that, as long as, unless, in case, or else — with the right mood after each.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FR-C368-sinon",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 368: I can set a condition: provided that, as long as, unless, in case, or else — with the right mood after each.",
+    "assesses": [
+      "FR-LEX-C368-CONDITION-03",
+      "FR-LEX-C368-CONDITION-04",
+      "FR-LEX-C368-CONDITION-05"
+    ]
+  }
+}

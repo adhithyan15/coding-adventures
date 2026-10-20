@@ -1,0 +1,19 @@
+{
+  "chapter": 378,
+  "title": "Examens et résultats",
+  "label": "ch:fr-examens-et-resultats",
+  "canDo": "I can talk about passing or failing: failing an exam, repeating a year, a competitive exam, the average mark and a resit.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FR-C378-rattrapage",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 378: I can talk about passing or failing: failing an exam, repeating a year, a competitive exam, the average mark and a resit.",
+    "assesses": [
+      "FR-LEX-C378-ECHOUER-03",
+      "FR-LEX-C378-ECHOUER-04",
+      "FR-LEX-C378-ECHOUER-05"
+    ]
+  }
+}

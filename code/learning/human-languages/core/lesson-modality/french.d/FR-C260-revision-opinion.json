@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C260-revision-opinion",
+    "language": "french",
+    "chapter": 260,
+    "sequence": 15220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e67eb5d0c8d258d6"
+  },
+  "findings": []
+}

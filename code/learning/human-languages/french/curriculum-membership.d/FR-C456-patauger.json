@@ -1,0 +1,11 @@
+{
+  "id": "FR-C456-patauger",
+  "pathSegment": "FR-PATH-456-RUISSEAU",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-456-RUISSEAU",
+      "order": 3
+    }
+  ]
+}

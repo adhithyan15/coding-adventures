@@ -1,0 +1,18 @@
+{
+  "language": "french",
+  "chapter": 259,
+  "sourceHash": "fnv1a64:f922b7c55a7af8d5",
+  "lessonIds": [
+    "FR-C259-dabord",
+    "FR-C259-raconter",
+    "FR-C259-lecture",
+    "FR-C259-revision-histoire"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 2,
+  "text": "french/narration/ch259.txt",
+  "json": "french/narration/ch259.json",
+  "textHash": "fnv1a64:7e3486f93b1c4082",
+  "jsonHash": "fnv1a64:3d03eee1c4932310",
+  "findings": []
+}

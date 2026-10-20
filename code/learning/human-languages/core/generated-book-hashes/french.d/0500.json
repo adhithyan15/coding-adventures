@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:d0acb66d2f5be5b9",
+  "lessonIds": [
+    "FR-C500-belote",
+    "FR-C500-distribuer",
+    "FR-C500-parier",
+    "FR-C500-pari",
+    "FR-C500-hasard"
+  ],
+  "tex": "french/book/chapters/ch500-cartes-et-paris.tex"
+}

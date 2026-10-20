@@ -1,0 +1,11 @@
+{
+  "id": "FR-C361-efficace",
+  "pathSegment": "FR-PATH-361-STRESS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-361-STRESS",
+      "order": 2
+    }
+  ]
+}

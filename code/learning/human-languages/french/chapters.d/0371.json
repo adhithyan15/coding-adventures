@@ -1,0 +1,19 @@
+{
+  "chapter": 371,
+  "title": "Changement de programme",
+  "label": "ch:fr-changement-de-programme",
+  "canDo": "I can change a plan: cancel it, put it off, say it is temporary or final, and schedule something new.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FR-C371-programmer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 371: I can change a plan: cancel it, put it off, say it is temporary or final, and schedule something new.",
+    "assesses": [
+      "FR-LEX-C371-ANNULER-03",
+      "FR-LEX-C371-ANNULER-04",
+      "FR-LEX-C371-ANNULER-05"
+    ]
+  }
+}

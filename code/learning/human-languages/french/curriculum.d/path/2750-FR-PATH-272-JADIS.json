@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-272-JADIS",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-272-JADIS"
+  ],
+  "after": []
+}

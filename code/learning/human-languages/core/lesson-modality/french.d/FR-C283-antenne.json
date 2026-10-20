@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C283-antenne",
+    "language": "french",
+    "chapter": 283,
+    "sequence": 16300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e6fb1a8649fe4f41"
+  },
+  "findings": []
+}

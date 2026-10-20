@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C268-pour-finir",
+    "language": "french",
+    "chapter": 268,
+    "sequence": 15540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7a0148d1b2d0798a"
+  },
+  "findings": []
+}

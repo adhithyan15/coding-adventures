@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-365-PAUVRETE",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "FR-EXT-365-PAUVRETE"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C380-reglement",
+  "pathSegment": "FR-PATH-380-NORME",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-380-NORME",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C483-vertige",
+  "pathSegment": "FR-PATH-483-NAUSEE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-483-NAUSEE",
+      "order": 3
+    }
+  ]
+}

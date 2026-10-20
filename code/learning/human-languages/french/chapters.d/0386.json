@@ -1,0 +1,19 @@
+{
+  "chapter": 386,
+  "title": "Les accusations",
+  "label": "ch:fr-les-accusations",
+  "canDo": "I can say who is accused of what: an accusation, a thief, a formal complaint and a minor offence.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FR-C386-delit",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 386: I can say who is accused of what: an accusation, a thief, a formal complaint and a minor offence.",
+    "assesses": [
+      "FR-LEX-C386-ACCUSER-03",
+      "FR-LEX-C386-ACCUSER-04",
+      "FR-LEX-C386-ACCUSER-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 484,
+  "sourceHash": "fnv1a64:a5fc7549e18716ca",
+  "lessonIds": [
+    "FR-C484-ambulance",
+    "FR-C484-secouriste",
+    "FR-C484-brancard",
+    "FR-C484-piqure",
+    "FR-C484-salle-d-attente"
+  ],
+  "tex": "french/book/chapters/ch484-aux-urgences.tex"
+}

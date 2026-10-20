@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-R407-revision-400-407",
+    "language": "french",
+    "chapter": 407,
+    "sequence": 22700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fee0d308415dca7f"
+  },
+  "findings": []
+}

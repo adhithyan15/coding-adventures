@@ -1,0 +1,11 @@
+{
+  "id": "FR-C520-feuilleter",
+  "pathSegment": "FR-PATH-520-LIBRAIRE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-520-LIBRAIRE",
+      "order": 2
+    }
+  ]
+}

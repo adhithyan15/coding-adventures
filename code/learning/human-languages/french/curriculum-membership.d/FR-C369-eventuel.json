@@ -1,0 +1,11 @@
+{
+  "id": "FR-C369-eventuel",
+  "pathSegment": "FR-PATH-369-EVENTUEL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-369-EVENTUEL",
+      "order": 1
+    }
+  ]
+}

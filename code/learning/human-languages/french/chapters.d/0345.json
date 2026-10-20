@@ -1,0 +1,19 @@
+{
+  "chapter": 345,
+  "title": "Pour ou contre",
+  "label": "ch:fr-pour-ou-contre",
+  "canDo": "I can say who is for or against an idea: approve or disapprove, name a supporter and an opponent, and argue a case.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C345-argumenter",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 345: I can say who is for or against an idea: approve or disapprove, name a supporter and an opponent, and argue a case.",
+    "assesses": [
+      "FR-LEX-C345-PARTISAN-03",
+      "FR-LEX-C345-PARTISAN-04",
+      "FR-LEX-C345-PARTISAN-05"
+    ]
+  }
+}

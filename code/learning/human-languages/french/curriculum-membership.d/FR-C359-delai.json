@@ -1,0 +1,11 @@
+{
+  "id": "FR-C359-delai",
+  "pathSegment": "FR-PATH-359-TACHE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-359-TACHE",
+      "order": 2
+    }
+  ]
+}

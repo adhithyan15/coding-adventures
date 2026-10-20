@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-281-REPORTAGE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about reporting from the field: a report, a special correspondent, a correspondent, a wire story and a news agency.",
+  "prerequisites": []
+}

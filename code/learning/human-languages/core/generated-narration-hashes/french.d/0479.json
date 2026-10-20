@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 479,
+  "sourceHash": "fnv1a64:23c17a89890ff450",
+  "lessonIds": [
+    "FR-C479-blesser",
+    "FR-C479-coupure",
+    "FR-C479-egratignure",
+    "FR-C479-brulure",
+    "FR-C479-bosse"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch479.txt",
+  "json": "french/narration/ch479.json",
+  "textHash": "fnv1a64:90f8c4f2ad351e93",
+  "jsonHash": "fnv1a64:1e48bae568d55860",
+  "findings": []
+}

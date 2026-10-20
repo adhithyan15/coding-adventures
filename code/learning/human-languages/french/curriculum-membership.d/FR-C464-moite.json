@@ -1,0 +1,11 @@
+{
+  "id": "FR-C464-moite",
+  "pathSegment": "FR-PATH-464-CANICULE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-464-CANICULE",
+      "order": 3
+    }
+  ]
+}

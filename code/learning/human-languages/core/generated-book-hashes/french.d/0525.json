@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:35e27209ed1d13e2",
+  "lessonIds": [
+    "FR-C525-zapper",
+    "FR-C525-telecommande",
+    "FR-C525-emission",
+    "FR-C525-documentaire",
+    "FR-C525-rediffuser"
+  ],
+  "tex": "french/book/chapters/ch525-devant-l-ecran.tex"
+}

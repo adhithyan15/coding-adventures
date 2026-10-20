@@ -1,0 +1,11 @@
+{
+  "id": "FR-C527-accrocher",
+  "pathSegment": "FR-PATH-527-REPASSAGE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-527-REPASSAGE",
+      "order": 4
+    }
+  ]
+}

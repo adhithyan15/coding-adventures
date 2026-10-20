@@ -1,0 +1,11 @@
+{
+  "id": "FR-C466-sociable",
+  "pathSegment": "FR-PATH-466-TIMIDITE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-466-TIMIDITE",
+      "order": 1
+    }
+  ]
+}

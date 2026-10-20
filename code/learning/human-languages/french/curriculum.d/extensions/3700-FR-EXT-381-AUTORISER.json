@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-381-AUTORISER",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what is authorised or tolerated, talk about permission and tolerance, and say what someone demands.",
+  "prerequisites": []
+}

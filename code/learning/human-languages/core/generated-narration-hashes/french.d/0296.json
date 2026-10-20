@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 296,
+  "sourceHash": "fnv1a64:890359a7a04bb128",
+  "lessonIds": [
+    "FR-C296-braquage",
+    "FR-C296-braqueur",
+    "FR-C296-otage",
+    "FR-C296-rancon",
+    "FR-C296-echapper"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch296.txt",
+  "json": "french/narration/ch296.json",
+  "textHash": "fnv1a64:1d9c45e5fe2d4f49",
+  "jsonHash": "fnv1a64:e63193af2d133af6",
+  "findings": []
+}

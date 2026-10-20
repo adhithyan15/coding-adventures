@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-359-TACHE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe my place at work: an executive, my tasks, a deadline, an extension and a delivery.",
+  "prerequisites": []
+}

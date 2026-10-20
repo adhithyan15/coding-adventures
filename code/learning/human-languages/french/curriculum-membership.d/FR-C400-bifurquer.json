@@ -1,0 +1,11 @@
+{
+  "id": "FR-C400-bifurquer",
+  "pathSegment": "FR-PATH-400-PERIPH",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-400-PERIPH",
+      "order": 4
+    }
+  ]
+}

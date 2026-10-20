@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-481-ENTORSE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-481-ENTORSE"
+  ],
+  "after": []
+}

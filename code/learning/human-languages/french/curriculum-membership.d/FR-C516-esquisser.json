@@ -1,0 +1,11 @@
+{
+  "id": "FR-C516-esquisser",
+  "pathSegment": "FR-PATH-516-PEINTURE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-516-PEINTURE",
+      "order": 4
+    }
+  ]
+}

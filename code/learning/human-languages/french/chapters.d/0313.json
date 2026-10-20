@@ -1,0 +1,19 @@
+{
+  "chapter": 313,
+  "title": "La retraite",
+  "label": "ch:fr-la-retraite",
+  "canDo": "I can talk about later life: retirement, retired people, old age, going into hospital and a death.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C313-deces",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 313: I can talk about later life: retirement, retired people, old age, going into hospital and a death.",
+    "assesses": [
+      "FR-LEX-C313-RETRAITE-03",
+      "FR-LEX-C313-RETRAITE-04",
+      "FR-LEX-C313-RETRAITE-05"
+    ]
+  }
+}

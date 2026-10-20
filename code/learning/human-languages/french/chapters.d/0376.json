@@ -1,0 +1,19 @@
+{
+  "chapter": 376,
+  "title": "À l'université",
+  "label": "ch:fr-a-l-universite",
+  "canDo": "I can talk about starting university: the faculty, enrolling, enrolment, the semester and the lecture hall.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FR-C376-amphitheatre",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 376: I can talk about starting university: the faculty, enrolling, enrolment, the semester and the lecture hall.",
+    "assesses": [
+      "FR-LEX-C376-FAC-03",
+      "FR-LEX-C376-FAC-04",
+      "FR-LEX-C376-FAC-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-378-ECHOUER",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "FR-EXT-378-ECHOUER"
+  ],
+  "after": []
+}

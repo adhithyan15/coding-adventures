@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 361,
+  "sourceHash": "fnv1a64:f8e103d4e60a818b",
+  "lessonIds": [
+    "FR-C361-stresse",
+    "FR-C361-epuise",
+    "FR-C361-efficace",
+    "FR-C361-efficacite",
+    "FR-C361-productivite"
+  ],
+  "tex": "french/book/chapters/ch361-trop-de-travail.tex"
+}

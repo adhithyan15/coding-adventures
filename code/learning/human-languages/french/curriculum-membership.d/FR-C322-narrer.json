@@ -1,0 +1,11 @@
+{
+  "id": "FR-C322-narrer",
+  "pathSegment": "FR-PATH-322-RECIT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-322-RECIT",
+      "order": 1
+    }
+  ]
+}

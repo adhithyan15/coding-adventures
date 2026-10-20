@@ -1,0 +1,11 @@
+{
+  "id": "FR-C442-facade",
+  "pathSegment": "FR-PATH-442-FACADES",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-442-FACADES",
+      "order": 0
+    }
+  ]
+}

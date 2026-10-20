@@ -1,0 +1,11 @@
+{
+  "id": "FR-C494-desobeir",
+  "pathSegment": "FR-PATH-494-EDUCATION",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-494-EDUCATION",
+      "order": 3
+    }
+  ]
+}

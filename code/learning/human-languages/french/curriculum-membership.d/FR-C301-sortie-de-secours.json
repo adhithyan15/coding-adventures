@@ -1,0 +1,11 @@
+{
+  "id": "FR-C301-sortie-de-secours",
+  "pathSegment": "FR-PATH-301-ALERTE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-301-ALERTE",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C342-juger",
+    "language": "french",
+    "chapter": 342,
+    "sequence": 19320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eb33999ab19b8a88"
+  },
+  "findings": []
+}

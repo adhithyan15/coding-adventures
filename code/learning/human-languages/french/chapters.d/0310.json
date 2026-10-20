@@ -1,0 +1,19 @@
+{
+  "chapter": 310,
+  "title": "La jeunesse",
+  "label": "ch:fr-la-jeunesse",
+  "canDo": "I can talk about growing up: adolescence, teenagers, youth, the start of the school year and coming of age.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C310-majeur",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 310: I can talk about growing up: adolescence, teenagers, youth, the start of the school year and coming of age.",
+    "assesses": [
+      "FR-LEX-C310-JEUNESSE-03",
+      "FR-LEX-C310-JEUNESSE-04",
+      "FR-LEX-C310-JEUNESSE-05"
+    ]
+  }
+}

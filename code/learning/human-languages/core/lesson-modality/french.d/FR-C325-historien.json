@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C325-historien",
+    "language": "french",
+    "chapter": 325,
+    "sequence": 18420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:438fd2ffaf08c625"
+  },
+  "findings": []
+}

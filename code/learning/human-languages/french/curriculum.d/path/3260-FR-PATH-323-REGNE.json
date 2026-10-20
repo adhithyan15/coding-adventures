@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-323-REGNE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-323-REGNE"
+  ],
+  "after": []
+}

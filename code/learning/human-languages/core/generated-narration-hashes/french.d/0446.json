@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 446,
+  "sourceHash": "fnv1a64:66f73599b811ef75",
+  "lessonIds": [
+    "FR-C446-cordonnier",
+    "FR-C446-ressemeler",
+    "FR-C446-cirer",
+    "FR-C446-serrurier",
+    "FR-C446-recoudre"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch446.txt",
+  "json": "french/narration/ch446.json",
+  "textHash": "fnv1a64:d680c19e5f231488",
+  "jsonHash": "fnv1a64:1a02b04e8ed3b62e",
+  "findings": []
+}

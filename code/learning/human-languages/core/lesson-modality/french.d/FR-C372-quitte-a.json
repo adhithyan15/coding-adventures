@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C372-quitte-a",
+    "language": "french",
+    "chapter": 372,
+    "sequence": 20880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5bea0271aaabd3eb"
+  },
+  "findings": []
+}

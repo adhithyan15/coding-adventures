@@ -1,0 +1,19 @@
+{
+  "chapter": 439,
+  "title": "Clochers et remparts",
+  "label": "ch:fr-clochers-et-remparts",
+  "canDo": "I can talk about the old buildings of a town: the cathedral, the basilica, the bell tower, the belfry and the town walls.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-R439-revision-432-439",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 439: I can talk about the old buildings of a town: the cathedral, the basilica, the bell tower, the belfry and the town walls.",
+    "assesses": [
+      "FR-LEX-C439-CLOCHERS-03",
+      "FR-LEX-C439-CLOCHERS-04",
+      "FR-LEX-C439-CLOCHERS-05"
+    ]
+  }
+}

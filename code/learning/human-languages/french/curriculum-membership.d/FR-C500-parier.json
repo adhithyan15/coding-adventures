@@ -1,0 +1,11 @@
+{
+  "id": "FR-C500-parier",
+  "pathSegment": "FR-PATH-500-CARTES",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-500-CARTES",
+      "order": 2
+    }
+  ]
+}

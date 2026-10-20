@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-302-INCENDIE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-302-INCENDIE"
+  ],
+  "after": []
+}

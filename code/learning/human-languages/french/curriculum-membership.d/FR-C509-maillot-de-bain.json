@@ -1,0 +1,11 @@
+{
+  "id": "FR-C509-maillot-de-bain",
+  "pathSegment": "FR-PATH-509-EAU",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-509-EAU",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C346-decouler",
+    "language": "french",
+    "chapter": 346,
+    "sequence": 19550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c6e2ef3bccad9a0b"
+  },
+  "findings": []
+}

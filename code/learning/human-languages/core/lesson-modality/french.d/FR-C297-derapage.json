@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C297-derapage",
+    "language": "french",
+    "chapter": 297,
+    "sequence": 17020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:89093f89d5f0931c"
+  },
+  "findings": []
+}

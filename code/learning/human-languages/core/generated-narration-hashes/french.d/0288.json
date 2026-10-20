@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 288,
+  "sourceHash": "fnv1a64:cea6d0df4cc29484",
+  "lessonIds": [
+    "FR-C288-pickpocket",
+    "FR-C288-arnaque",
+    "FR-C288-escroc",
+    "FR-C288-escroquer",
+    "FR-C288-escroquerie"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch288.txt",
+  "json": "french/narration/ch288.json",
+  "textHash": "fnv1a64:ed4abde03711b3d6",
+  "jsonHash": "fnv1a64:abb70f711f98de5b",
+  "findings": []
+}

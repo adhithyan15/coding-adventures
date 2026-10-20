@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 317,
+  "sourceHash": "fnv1a64:73f725055f907109",
+  "lessonIds": [
+    "FR-C317-defile",
+    "FR-C317-defiler",
+    "FR-C317-carnaval",
+    "FR-C317-char",
+    "FR-C317-deguiser"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch317.txt",
+  "json": "french/narration/ch317.json",
+  "textHash": "fnv1a64:100e39ef2998f26f",
+  "jsonHash": "fnv1a64:07c38e7d1e140f79",
+  "findings": []
+}

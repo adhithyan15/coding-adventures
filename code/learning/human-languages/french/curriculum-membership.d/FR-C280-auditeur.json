@@ -1,0 +1,11 @@
+{
+  "id": "FR-C280-auditeur",
+  "pathSegment": "FR-PATH-280-TELE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-280-TELE",
+      "order": 3
+    }
+  ]
+}

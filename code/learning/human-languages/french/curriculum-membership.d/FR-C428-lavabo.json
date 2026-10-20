@@ -1,0 +1,11 @@
+{
+  "id": "FR-C428-lavabo",
+  "pathSegment": "FR-PATH-428-FUITE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-428-FUITE",
+      "order": 2
+    }
+  ]
+}

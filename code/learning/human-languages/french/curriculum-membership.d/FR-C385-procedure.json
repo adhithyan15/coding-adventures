@@ -1,0 +1,11 @@
+{
+  "id": "FR-C385-procedure",
+  "pathSegment": "FR-PATH-385-DEMARCHE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-385-DEMARCHE",
+      "order": 2
+    }
+  ]
+}

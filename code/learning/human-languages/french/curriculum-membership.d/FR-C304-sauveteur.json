@@ -1,0 +1,11 @@
+{
+  "id": "FR-C304-sauveteur",
+  "pathSegment": "FR-PATH-304-NOYADE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-304-NOYADE",
+      "order": 2
+    }
+  ]
+}

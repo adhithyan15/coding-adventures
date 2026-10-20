@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:6340f591bd676424",
+  "lessonIds": [
+    "FR-C375-lycee",
+    "FR-C375-lyceen",
+    "FR-C375-frequenter",
+    "FR-C375-bulletin",
+    "FR-C375-proviseur"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch375.txt",
+  "json": "french/narration/ch375.json",
+  "textHash": "fnv1a64:a1cd219defc08284",
+  "jsonHash": "fnv1a64:c273ade74270d53f",
+  "findings": []
+}

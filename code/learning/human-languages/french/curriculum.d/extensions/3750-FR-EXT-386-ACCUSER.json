@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-386-ACCUSER",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say who is accused of what: an accusation, a thief, a formal complaint and a minor offence.",
+  "prerequisites": []
+}

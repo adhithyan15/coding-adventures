@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C484-brancard",
+    "language": "french",
+    "chapter": 484,
+    "sequence": 26640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:336278cb9faa7230"
+  },
+  "findings": []
+}

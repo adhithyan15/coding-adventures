@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C458-dune",
+    "language": "french",
+    "chapter": 458,
+    "sequence": 25270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bdc3ff62fe75e26d"
+  },
+  "findings": []
+}

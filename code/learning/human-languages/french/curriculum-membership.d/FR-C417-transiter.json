@@ -1,0 +1,11 @@
+{
+  "id": "FR-C417-transiter",
+  "pathSegment": "FR-PATH-417-DOUANE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-417-DOUANE",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-318-ARTIFICE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-318-ARTIFICE"
+  ],
+  "after": []
+}

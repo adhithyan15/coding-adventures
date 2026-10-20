@@ -1,0 +1,11 @@
+{
+  "id": "FR-C286-statistique",
+  "pathSegment": "FR-PATH-286-CHIFFRES",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-286-CHIFFRES",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:c13af1bb867efa08",
+  "lessonIds": [
+    "FR-C500-belote",
+    "FR-C500-distribuer",
+    "FR-C500-parier",
+    "FR-C500-pari",
+    "FR-C500-hasard"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch500.txt",
+  "json": "french/narration/ch500.json",
+  "textHash": "fnv1a64:883cbcf3ee8fe6e2",
+  "jsonHash": "fnv1a64:4f242eb515b74fb5",
+  "findings": []
+}

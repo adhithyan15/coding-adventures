@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-353-REMEDE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say how to fix a situation: find a remedy, put it right, soften it or make up for it, or say it got worse.",
+  "prerequisites": []
+}

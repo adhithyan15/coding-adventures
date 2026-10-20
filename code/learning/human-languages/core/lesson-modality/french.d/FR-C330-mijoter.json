@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C330-mijoter",
+    "language": "french",
+    "chapter": 330,
+    "sequence": 18700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:10cc2b62feacad96"
+  },
+  "findings": []
+}

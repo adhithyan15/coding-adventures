@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 358,
+  "sourceHash": "fnv1a64:6dfa7ee902ac86a2",
+  "lessonIds": [
+    "FR-C358-syndicat",
+    "FR-C358-greve",
+    "FR-C358-greviste",
+    "FR-C358-salarie",
+    "FR-C358-heures-supplementaires"
+  ],
+  "tex": "french/book/chapters/ch358-la-greve.tex"
+}

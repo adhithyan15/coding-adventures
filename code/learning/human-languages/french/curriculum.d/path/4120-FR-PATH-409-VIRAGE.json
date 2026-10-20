@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-409-VIRAGE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-409-VIRAGE"
+  ],
+  "after": []
+}

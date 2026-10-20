@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-417-DOUANE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-417-DOUANE"
+  ],
+  "after": []
+}

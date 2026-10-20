@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:f501297bcf5fad29",
+  "lessonIds": [
+    "FR-C346-causer",
+    "FR-C346-provoquer",
+    "FR-C346-consequence",
+    "FR-C346-entrainer",
+    "FR-C346-decouler"
+  ],
+  "tex": "french/book/chapters/ch346-causes-et-consequences.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 486,
+  "sourceHash": "fnv1a64:982a35a7379288bb",
+  "lessonIds": [
+    "FR-C486-insomnie",
+    "FR-C486-ronfler",
+    "FR-C486-cauchemar",
+    "FR-C486-bailler",
+    "FR-C486-sieste"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch486.txt",
+  "json": "french/narration/ch486.json",
+  "textHash": "fnv1a64:92374682a7706ac2",
+  "jsonHash": "fnv1a64:ebc85f315daeb770",
+  "findings": []
+}

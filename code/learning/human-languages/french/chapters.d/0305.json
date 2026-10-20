@@ -1,0 +1,19 @@
+{
+  "chapter": 305,
+  "title": "Les rescapés",
+  "label": "ch:fr-les-rescapes",
+  "canDo": "I can tell the story of a disaster at sea or in the air: a shipwreck, a crash, survivors, surviving and a catastrophe.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C305-catastrophe",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 305: I can tell the story of a disaster at sea or in the air: a shipwreck, a crash, survivors, surviving and a catastrophe.",
+    "assesses": [
+      "FR-LEX-C305-NAUFRAGE-03",
+      "FR-LEX-C305-NAUFRAGE-04",
+      "FR-LEX-C305-NAUFRAGE-05"
+    ]
+  }
+}

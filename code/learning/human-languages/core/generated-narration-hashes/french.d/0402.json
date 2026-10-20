@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 402,
+  "sourceHash": "fnv1a64:8ae6b7a2eca72958",
+  "lessonIds": [
+    "FR-C402-pare-brise",
+    "FR-C402-retroviseur",
+    "FR-C402-klaxon",
+    "FR-C402-klaxonner",
+    "FR-C402-embuer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch402.txt",
+  "json": "french/narration/ch402.json",
+  "textHash": "fnv1a64:e62aebbe7d915f35",
+  "jsonHash": "fnv1a64:008dc97cd6ec67b9",
+  "findings": []
+}

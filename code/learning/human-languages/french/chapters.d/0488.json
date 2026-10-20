@@ -1,0 +1,19 @@
+{
+  "chapter": 488,
+  "title": "Câlins et confidences",
+  "label": "ch:fr-calins-et-confidences",
+  "canDo": "I can talk about closeness and sharing secrets.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C488-confier",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 488: I can talk about closeness and sharing secrets.",
+    "assesses": [
+      "FR-LEX-C488-CALINS-03",
+      "FR-LEX-C488-CALINS-04",
+      "FR-LEX-C488-CALINS-05"
+    ]
+  }
+}

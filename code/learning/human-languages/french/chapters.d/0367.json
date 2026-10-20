@@ -1,0 +1,19 @@
+{
+  "chapter": 367,
+  "title": "Supposons",
+  "label": "ch:fr-supposons",
+  "canDo": "I can make a hypothesis: suppose or presume something, and say an explanation is plausible.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FR-C367-supposition",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 367: I can make a hypothesis: suppose or presume something, and say an explanation is plausible.",
+    "assesses": [
+      "FR-LEX-C367-HYPOTHESE-03",
+      "FR-LEX-C367-HYPOTHESE-04",
+      "FR-LEX-C367-HYPOTHESE-05"
+    ]
+  }
+}

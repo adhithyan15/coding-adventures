@@ -1,0 +1,11 @@
+{
+  "id": "FR-C360-formation",
+  "pathSegment": "FR-PATH-360-CARRIERE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-360-CARRIERE",
+      "order": 4
+    }
+  ]
+}

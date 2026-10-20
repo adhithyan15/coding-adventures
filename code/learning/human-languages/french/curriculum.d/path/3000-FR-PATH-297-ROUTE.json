@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-297-ROUTE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-297-ROUTE"
+  ],
+  "after": []
+}

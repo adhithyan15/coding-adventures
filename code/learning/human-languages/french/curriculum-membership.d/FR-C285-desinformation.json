@@ -1,0 +1,11 @@
+{
+  "id": "FR-C285-desinformation",
+  "pathSegment": "FR-PATH-285-RUMEUR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-285-RUMEUR",
+      "order": 2
+    }
+  ]
+}

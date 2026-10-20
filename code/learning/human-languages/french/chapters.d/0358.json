@@ -1,0 +1,19 @@
+{
+  "chapter": 358,
+  "title": "La grève",
+  "label": "ch:fr-la-greve",
+  "canDo": "I can talk about workers' rights: the union, a strike, strikers, employees and overtime.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C358-heures-supplementaires",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 358: I can talk about workers' rights: the union, a strike, strikers, employees and overtime.",
+    "assesses": [
+      "FR-LEX-C358-GREVE-03",
+      "FR-LEX-C358-GREVE-04",
+      "FR-LEX-C358-GREVE-05"
+    ]
+  }
+}

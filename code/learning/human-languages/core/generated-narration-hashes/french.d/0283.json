@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 283,
+  "sourceHash": "fnv1a64:3733a92efd7d21b6",
+  "lessonIds": [
+    "FR-C283-diffuser",
+    "FR-C283-diffusion",
+    "FR-C283-filmer",
+    "FR-C283-interviewer",
+    "FR-C283-antenne",
+    "FR-R283-revision-276-283"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch283.txt",
+  "json": "french/narration/ch283.json",
+  "textHash": "fnv1a64:bdb5f7c1b21e846f",
+  "jsonHash": "fnv1a64:701cc2a7955e8412",
+  "findings": []
+}

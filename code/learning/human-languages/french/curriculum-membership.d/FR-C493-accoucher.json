@@ -1,0 +1,11 @@
+{
+  "id": "FR-C493-accoucher",
+  "pathSegment": "FR-PATH-493-BEBE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-493-BEBE",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:4ca9c83b247a4dfc",
+  "lessonIds": [
+    "FR-C411-percuter",
+    "FR-C411-heurter",
+    "FR-C411-pieton",
+    "FR-C411-cycliste",
+    "FR-C411-constater"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch411.txt",
+  "json": "french/narration/ch411.json",
+  "textHash": "fnv1a64:02e52a6b8d1f01f2",
+  "jsonHash": "fnv1a64:c591f19a0b7b9033",
+  "findings": []
+}

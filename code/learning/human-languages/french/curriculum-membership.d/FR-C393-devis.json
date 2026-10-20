@@ -1,0 +1,11 @@
+{
+  "id": "FR-C393-devis",
+  "pathSegment": "FR-PATH-393-GARANTIE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-393-GARANTIE",
+      "order": 2
+    }
+  ]
+}

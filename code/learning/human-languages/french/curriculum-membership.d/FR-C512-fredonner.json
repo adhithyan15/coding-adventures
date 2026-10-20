@@ -1,0 +1,11 @@
+{
+  "id": "FR-C512-fredonner",
+  "pathSegment": "FR-PATH-512-CHANT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-512-CHANT",
+      "order": 1
+    }
+  ]
+}

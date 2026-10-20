@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C364-justice",
+    "language": "french",
+    "chapter": 364,
+    "sequence": 20430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c00d7e9842b16705"
+  },
+  "findings": []
+}

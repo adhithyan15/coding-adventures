@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C275-ecouler",
+    "language": "french",
+    "chapter": 275,
+    "sequence": 15850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:70c9df60d3c3b45f"
+  },
+  "findings": []
+}
