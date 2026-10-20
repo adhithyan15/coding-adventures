@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-382-INFRACTION",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that someone broke a rule: breaking the law, an offence, transgressing, a penalty and penalising someone.",
+  "prerequisites": []
+}

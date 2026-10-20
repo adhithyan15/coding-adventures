@@ -1,0 +1,21 @@
+{
+  "language": "french",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:0b307fa057be8ece",
+  "lessonIds": [
+    "FR-C333-levure",
+    "FR-C333-petrir",
+    "FR-C333-rouleau-a-patisserie",
+    "FR-C333-etaler",
+    "FR-C333-demouler",
+    "FR-R333-revision-332-333",
+    "FR-R333-revision-final-333"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "french/narration/ch333.txt",
+  "json": "french/narration/ch333.json",
+  "textHash": "fnv1a64:3cc3909d0823bc32",
+  "jsonHash": "fnv1a64:bf534bd0bf048623",
+  "findings": []
+}

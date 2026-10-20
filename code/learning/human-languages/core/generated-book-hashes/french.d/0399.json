@@ -1,0 +1,15 @@
+{
+  "language": "french",
+  "chapter": 399,
+  "sourceHash": "fnv1a64:1d7c5aacf7425635",
+  "lessonIds": [
+    "FR-C399-panne",
+    "FR-C399-planter",
+    "FR-C399-bloquer",
+    "FR-C399-redemarrer",
+    "FR-C399-virus",
+    "FR-R399-revision-398-399",
+    "FR-R399-revision-final-399"
+  ],
+  "tex": "french/book/chapters/ch399-ca-ne-marche-pas.tex"
+}

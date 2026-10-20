@@ -1,0 +1,19 @@
+{
+  "chapter": 520,
+  "title": "Chez le libraire",
+  "label": "ch:fr-chez-le-libraire",
+  "canDo": "I can talk about browsing in a bookshop.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C520-devorer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 520: I can talk about browsing in a bookshop.",
+    "assesses": [
+      "FR-LEX-C520-LIBRAIRE-03",
+      "FR-LEX-C520-LIBRAIRE-04",
+      "FR-LEX-C520-LIBRAIRE-05"
+    ]
+  }
+}

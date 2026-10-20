@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C279-imprimer",
+    "language": "french",
+    "chapter": 279,
+    "sequence": 16080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c5a205883fb8586b"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 392,
+  "title": "À la banque",
+  "label": "ch:fr-a-la-banque",
+  "canDo": "I can handle money at the bank: cash, a cheque, a chequebook, a transfer and taking money out.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FR-C392-retirer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 392: I can handle money at the bank: cash, a cheque, a chequebook, a transfer and taking money out.",
+    "assesses": [
+      "FR-LEX-C392-BANQUE-03",
+      "FR-LEX-C392-BANQUE-04",
+      "FR-LEX-C392-BANQUE-05"
+    ]
+  }
+}

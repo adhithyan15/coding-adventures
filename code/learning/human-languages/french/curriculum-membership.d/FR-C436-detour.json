@@ -1,0 +1,11 @@
+{
+  "id": "FR-C436-detour",
+  "pathSegment": "FR-PATH-436-RACCOURCI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-436-RACCOURCI",
+      "order": 1
+    }
+  ]
+}

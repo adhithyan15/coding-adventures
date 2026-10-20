@@ -1,0 +1,14 @@
+{
+  "language": "french",
+  "chapter": 455,
+  "sourceHash": "fnv1a64:b4cf7dd4a463e63c",
+  "lessonIds": [
+    "FR-C455-randonnee",
+    "FR-C455-randonneur",
+    "FR-C455-pente",
+    "FR-C455-gravir",
+    "FR-C455-trebucher",
+    "FR-R455-revision-448-455"
+  ],
+  "tex": "french/book/chapters/ch455-en-randonnee.tex"
+}

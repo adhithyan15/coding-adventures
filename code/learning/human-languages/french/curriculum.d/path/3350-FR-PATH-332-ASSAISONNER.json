@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-332-ASSAISONNER",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-332-ASSAISONNER"
+  ],
+  "after": []
+}

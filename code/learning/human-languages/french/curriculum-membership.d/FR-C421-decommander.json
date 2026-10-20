@@ -1,0 +1,11 @@
+{
+  "id": "FR-C421-decommander",
+  "pathSegment": "FR-PATH-421-ANNULATION",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-421-ANNULATION",
+      "order": 3
+    }
+  ]
+}

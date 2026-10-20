@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-299-CHUTE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-299-CHUTE"
+  ],
+  "after": []
+}

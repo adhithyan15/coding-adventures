@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-R341-revision-334-341",
+    "language": "french",
+    "chapter": 341,
+    "sequence": 19300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c2b0290435bdd91b"
+  },
+  "findings": []
+}

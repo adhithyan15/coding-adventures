@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C346-consequence",
+    "language": "french",
+    "chapter": 346,
+    "sequence": 19530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:263e299d07a62134"
+  },
+  "findings": []
+}

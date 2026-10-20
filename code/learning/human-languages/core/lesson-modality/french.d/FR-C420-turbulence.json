@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C420-turbulence",
+    "language": "french",
+    "chapter": 420,
+    "sequence": 23320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9bb2dcaf323955aa"
+  },
+  "findings": []
+}

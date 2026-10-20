@@ -1,0 +1,11 @@
+{
+  "id": "FR-C283-diffusion",
+  "pathSegment": "FR-PATH-283-ANTENNE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-283-ANTENNE",
+      "order": 1
+    }
+  ]
+}

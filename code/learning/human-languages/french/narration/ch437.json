@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "french",
+  "chapter": 437,
+  "title": "Petites rues et grandes avenues",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e32eceae3288a2bb",
+  "lessons": [
+    {
+      "id": "FR-C437-impasse",
+      "sequence": 24190,
+      "title": "l'impasse — the dead end; the deadlock",
+      "headword": "l'impasse",
+      "romanization": "l'impasse",
+      "gloss": "the dead end; the deadlock",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bb60568f74c8f78a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for to go round, then the French for to turn back."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: l'impasse",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "l'impasse — \"the dead end; the deadlock\"."
+            },
+            {
+              "kind": "speech",
+              "text": "L'hôtel est au fond d'une impasse calme. The hotel is at the end of a quiet dead end."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun. Figurative: être dans l'impasse — to be at a deadlock."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "impasse is built from in- 'not' and passe, from passer 'to pass' (EtymDB), which goes back to Vulgar Latin passāre, from passus 'a step'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'impasse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'impasse*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'impasse, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'impasse*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with l'impasse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *l'impasse*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for to go round, then the French for to turn back, then say l'impasse again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for to go round, then the French for to turn back, then say *l'impasse* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does l'impasse mean? (\"The dead end; the deadlock\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C437-ruelle",
+      "sequence": 24200,
+      "title": "la ruelle — the alley, the lane",
+      "headword": "la ruelle",
+      "romanization": "la ruelle",
+      "gloss": "the alley, the lane",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:732cc8efea92e1fb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for to turn back, then the French for the dead end."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la ruelle",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la ruelle — \"the alley, the lane\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Nous nous promenons dans les ruelles du vieux quartier. We stroll through the alleys of the old quarter."
+            },
+            {
+              "kind": "speech",
+              "text": "A small rue."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ruelle is a small rue 'street', which is inherited from Latin rūga 'wrinkle, fold' (Lewis & Short). EtymDB lists it without a source."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la ruelle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la ruelle*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la ruelle, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la ruelle*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la ruelle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la ruelle*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for to turn back, then the French for the dead end, then say la ruelle again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for to turn back, then the French for the dead end, then say *la ruelle* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la ruelle mean? (\"The alley, the lane\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C437-avenue",
+      "sequence": 24210,
+      "title": "l'avenue — the avenue",
+      "headword": "l'avenue",
+      "romanization": "l'avenue",
+      "gloss": "the avenue",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:db262da4baa50645",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the dead end, then the French for the alley."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: l'avenue",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "l'avenue — \"the avenue\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Les grands magasins sont sur l'avenue principale. The big shops are on the main avenue."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "avenue is the old feminine past participle of avenir 'to come to' (EtymDB), from Latin advenīre, built on venīre 'to come': the way that leads up to a place."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'avenue",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'avenue*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'avenue, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'avenue*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with l'avenue",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *l'avenue*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the dead end, then the French for the alley, then say l'avenue again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the dead end, then the French for the alley, then say *l'avenue* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does l'avenue mean? (\"The avenue\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C437-boulevard",
+      "sequence": 24220,
+      "title": "le boulevard — the boulevard",
+      "headword": "le boulevard",
+      "romanization": "le boulevard",
+      "gloss": "the boulevard",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9c1d23a6f4adc205",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the alley, then the French for the avenue."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: le boulevard",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le boulevard — \"the boulevard\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Le bus passe par le boulevard qui fait le tour du centre. The bus goes along the boulevard that runs round the centre."
+            },
+            {
+              "kind": "speech",
+              "text": "Often lined with trees."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "boulevard was borrowed from Middle Dutch bolwerc 'bulwark' (EtymDB): first the top of a town wall, later the wide road built where the wall had been."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le boulevard",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le boulevard*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le boulevard, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le boulevard*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with le boulevard",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *le boulevard*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the alley, then the French for the avenue, then say le boulevard again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the alley, then the French for the avenue, then say *le boulevard* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does le boulevard mean? (\"The boulevard\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C437-passant",
+      "sequence": 24230,
+      "title": "le passant — the passer-by",
+      "headword": "le passant",
+      "romanization": "le passant",
+      "gloss": "the passer-by",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b5e9e33af61bc20b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the avenue, then the French for the boulevard."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: le passant",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le passant — \"the passer-by\"."
+            },
+            {
+              "kind": "speech",
+              "text": "J'ai demandé mon chemin à un passant. I asked a passer-by for directions."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine la passante."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "passant is the present participle of passer 'to pass', used as a noun (EtymDB); passer goes back to Vulgar Latin passāre, from passus 'a step'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le passant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le passant*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le passant, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le passant*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with le passant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *le passant*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the avenue, then the French for the boulevard, then say le passant again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the avenue, then the French for the boulevard, then say *le passant* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does le passant mean? (\"The passer-by\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

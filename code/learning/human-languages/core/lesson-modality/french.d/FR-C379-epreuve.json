@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C379-epreuve",
+    "language": "french",
+    "chapter": 379,
+    "sequence": 21210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ca3fa71a281f4d6"
+  },
+  "findings": []
+}

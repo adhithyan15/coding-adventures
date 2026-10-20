@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C299-fouler",
+    "language": "french",
+    "chapter": 299,
+    "sequence": 17090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9224287601bbedd1"
+  },
+  "findings": []
+}

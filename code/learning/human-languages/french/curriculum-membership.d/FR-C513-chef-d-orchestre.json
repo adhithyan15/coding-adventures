@@ -1,0 +1,11 @@
+{
+  "id": "FR-C513-chef-d-orchestre",
+  "pathSegment": "FR-PATH-513-ORCHESTRE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-513-ORCHESTRE",
+      "order": 1
+    }
+  ]
+}

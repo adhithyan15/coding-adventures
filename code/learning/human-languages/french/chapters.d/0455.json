@@ -1,0 +1,19 @@
+{
+  "chapter": 455,
+  "title": "En randonnée",
+  "label": "ch:fr-en-randonnee",
+  "canDo": "I can talk about a hike: the hike, the hiker, the slope, climbing up and stumbling.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-R455-revision-448-455",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 455: I can talk about a hike: the hike, the hiker, the slope, climbing up and stumbling.",
+    "assesses": [
+      "FR-LEX-C455-RANDONNEE-03",
+      "FR-LEX-C455-RANDONNEE-04",
+      "FR-LEX-C455-RANDONNEE-05"
+    ]
+  }
+}

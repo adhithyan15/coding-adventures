@@ -1,0 +1,11 @@
+{
+  "id": "FR-C464-transpirer",
+  "pathSegment": "FR-PATH-464-CANICULE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-464-CANICULE",
+      "order": 4
+    }
+  ]
+}

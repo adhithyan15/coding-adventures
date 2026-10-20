@@ -1,0 +1,11 @@
+{
+  "id": "FR-C346-decouler",
+  "pathSegment": "FR-PATH-346-CONSEQUENCE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-346-CONSEQUENCE",
+      "order": 4
+    }
+  ]
+}

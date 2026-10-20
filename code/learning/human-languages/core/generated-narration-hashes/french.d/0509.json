@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 509,
+  "sourceHash": "fnv1a64:ab507cc6b5e4780c",
+  "lessonIds": [
+    "FR-C509-plonger",
+    "FR-C509-plongeon",
+    "FR-C509-maillot-de-bain",
+    "FR-C509-brasse",
+    "FR-C509-ramer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch509.txt",
+  "json": "french/narration/ch509.json",
+  "textHash": "fnv1a64:098dba1f949e7f0e",
+  "jsonHash": "fnv1a64:6d78b4c54517ff3c",
+  "findings": []
+}

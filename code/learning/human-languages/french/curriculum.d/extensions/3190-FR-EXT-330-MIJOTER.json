@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-330-MIJOTER",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe cooking on the hob: boiling, the boil, a big pot, simmering and the cast-iron pot.",
+  "prerequisites": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-328-COUPER",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-328-COUPER"
+  ],
+  "after": []
+}

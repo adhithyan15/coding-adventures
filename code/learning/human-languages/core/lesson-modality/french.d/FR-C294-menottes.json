@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C294-menottes",
+    "language": "french",
+    "chapter": 294,
+    "sequence": 16850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:933e24c7939080e1"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C288-escroquer",
+  "pathSegment": "FR-PATH-288-ARNAQUE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-288-ARNAQUE",
+      "order": 3
+    }
+  ]
+}

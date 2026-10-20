@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "french",
+  "chapter": 441,
+  "title": "Dans la rue",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2bcf45a1366b70b2",
+  "lessons": [
+    {
+      "id": "FR-C441-banc",
+      "sequence": 24400,
+      "title": "le banc — the bench",
+      "headword": "le banc",
+      "romanization": "le banc",
+      "gloss": "the bench",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0053b9e15ea6c29",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the police station, then the French for the barracks."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: le banc",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le banc — \"the bench\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Deux vieux messieurs lisent sur un banc. Two old men are reading on a bench."
+            },
+            {
+              "kind": "speech",
+              "text": "Un banc de poissons — a shoal of fish."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "banc comes from a Germanic word for 'bench' (EtymDB), and English bench is a cousin."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le banc",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le banc*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le banc, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le banc*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with le banc",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *le banc*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the police station, then the French for the barracks, then say le banc again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the police station, then the French for the barracks, then say *le banc* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does le banc mean? (\"The bench\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C441-lampadaire",
+      "sequence": 24410,
+      "title": "le lampadaire — the street lamp; the floor lamp",
+      "headword": "le lampadaire",
+      "romanization": "le lampadaire",
+      "gloss": "the street lamp; the floor lamp",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dd212265aea17ce0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the barracks, then the French for the bench."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: le lampadaire",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le lampadaire — \"the street lamp; the floor lamp\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Les lampadaires s'allument à six heures. The street lamps come on at six o'clock."
+            },
+            {
+              "kind": "speech",
+              "text": "At home, un lampadaire is a standing lamp."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lampadaire is a learned borrowing from Medieval Latin lampadārium 'candlestick', from lampas, from Greek lampás 'torch' (Lewis & Short). EtymDB does not list it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le lampadaire",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le lampadaire*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le lampadaire, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le lampadaire*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with le lampadaire",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *le lampadaire*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the barracks, then the French for the bench, then say le lampadaire again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the barracks, then the French for the bench, then say *le lampadaire* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does le lampadaire mean? (\"The street lamp; the floor lamp\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C441-reverbere",
+      "sequence": 24420,
+      "title": "le réverbère — the lamp post (old-style)",
+      "headword": "le réverbère",
+      "romanization": "le réverbère",
+      "gloss": "the lamp post (old-style)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:57d127851b116a48",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the bench, then the French for the street lamp."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: le réverbère",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le réverbère — \"the lamp post (old-style)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Dans la vieille rue, il reste quelques réverbères. In the old street a few old lamp posts are still standing."
+            },
+            {
+              "kind": "speech",
+              "text": "Older word, often for old-fashioned lamps."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "réverbère is built on réverbérer 'to reflect', a learned borrowing from Latin reverberāre 'to beat back', from verber 'whip' (Lewis & Short): the old lamps had a mirror that threw back the light."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le réverbère",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le réverbère*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le réverbère, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le réverbère*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with le réverbère",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *le réverbère*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the bench, then the French for the street lamp, then say le réverbère again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the bench, then the French for the street lamp, then say *le réverbère* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does le réverbère mean? (\"The lamp post (old-style)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C441-kiosque",
+      "sequence": 24430,
+      "title": "le kiosque — the kiosk, the newsstand",
+      "headword": "le kiosque",
+      "romanization": "le kiosque",
+      "gloss": "the kiosk, the newsstand",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3c5e8aa8c4a5e046",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the street lamp, then the French for the lamp post."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: le kiosque",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le kiosque — \"the kiosk, the newsstand\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Il achète le journal au kiosque du coin. He buys the paper at the kiosk on the corner."
+            },
+            {
+              "kind": "speech",
+              "text": "Un kiosque à musique — a bandstand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kiosque was borrowed from Turkish köşk 'pavilion', which came from Persian kušk 'palace, portico' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le kiosque",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le kiosque*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le kiosque, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le kiosque*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with le kiosque",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *le kiosque*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the street lamp, then the French for the lamp post, then say le kiosque again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the street lamp, then the French for the lamp post, then say *le kiosque* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does le kiosque mean? (\"The kiosk, the newsstand\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C441-pave",
+      "sequence": 24440,
+      "title": "le pavé — the cobblestone; the paving",
+      "headword": "le pavé",
+      "romanization": "le pavé",
+      "gloss": "the cobblestone; the paving",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8cccd7c5ff5642e4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the lamp post, then the French for the kiosk."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: le pavé",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le pavé — \"the cobblestone; the paving\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Les vélos roulent mal sur les pavés. Bikes do not ride well on the cobbles."
+            },
+            {
+              "kind": "speech",
+              "text": "Un pavé is also a very thick book or a thick steak."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pavé is the past participle of paver 'to pave' (EtymDB), which goes back to Latin pavīre 'to beat the earth flat' (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le pavé",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le pavé*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le pavé, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le pavé*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with le pavé",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *le pavé*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the lamp post, then the French for the kiosk, then say le pavé again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the lamp post, then the French for the kiosk, then say *le pavé* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does le pavé mean? (\"The cobblestone; the paving\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C265-depuis-pendant",
+  "pathSegment": "FR-PATH-265-COMPARER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-265-COMPARER",
+      "order": 1
+    }
+  ]
+}

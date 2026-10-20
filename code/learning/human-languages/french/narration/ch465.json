@@ -1,0 +1,878 @@
+{
+  "version": 1,
+  "language": "french",
+  "chapter": 465,
+  "title": "Tempête et inondations",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:1697a54a693a3c2d",
+  "lessons": [
+    {
+      "id": "FR-C465-tempete",
+      "sequence": 25630,
+      "title": "la tempête — the storm, the gale",
+      "headword": "la tempête",
+      "romanization": "la tempête",
+      "gloss": "the storm, the gale",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a02d6055ecd0a538",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for clammy, then the French for to sweat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la tempête",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la tempête — \"the storm, the gale\"."
+            },
+            {
+              "kind": "speech",
+              "text": "La tempête a fait tomber des arbres sur la route. The storm brought trees down onto the road."
+            },
+            {
+              "kind": "speech",
+              "text": "Stronger than an orage: a lot of wind."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tempête comes from Old French tempeste, from Vulgar Latin tempesta, from Latin tempestās 'weather, storm', built on tempus 'time' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la tempête",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la tempête*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la tempête, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la tempête*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la tempête",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la tempête*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for clammy, then the French for to sweat, then say la tempête again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for clammy, then the French for to sweat, then say *la tempête* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la tempête mean? (\"The storm, the gale\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C465-inondation",
+      "sequence": 25640,
+      "title": "l'inondation — the flood",
+      "headword": "l'inondation",
+      "romanization": "l'inondation",
+      "gloss": "the flood",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0250e6d9d879f71d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for to sweat, then the French for the storm."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: l'inondation",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "l'inondation — \"the flood\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Après l'inondation, la cave était pleine d'eau. After the flood the cellar was full of water."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "inondation is a learned borrowing from Latin inundātiō (EtymDB), from inundāre 'to overflow', built on unda 'wave'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'inondation",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'inondation*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'inondation, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'inondation*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with l'inondation",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *l'inondation*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for to sweat, then the French for the storm, then say l'inondation again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for to sweat, then the French for the storm, then say *l'inondation* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does l'inondation mean? (\"The flood\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C465-inonder",
+      "sequence": 25650,
+      "title": "inonder — to flood",
+      "headword": "inonder",
+      "romanization": "inonder",
+      "gloss": "to flood",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:db98814b87b1d4fe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the storm, then the French for the flood."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: inonder",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "inonder — \"to flood\"."
+            },
+            {
+              "kind": "speech",
+              "text": "La rivière a inondé les champs. The river flooded the fields."
+            },
+            {
+              "kind": "speech",
+              "text": "Figurative: inonder de messages — to flood with messages."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "inonder is a learned borrowing from Latin inundāre 'to overflow' (EtymDB), from unda 'wave'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inonder",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inonder*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inonder, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inonder*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with inonder",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *inonder*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the storm, then the French for the flood, then say inonder again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the storm, then the French for the flood, then say *inonder* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does inonder mean? (\"To flood\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C465-deborder",
+      "sequence": 25660,
+      "title": "déborder — to overflow; to go beyond",
+      "headword": "déborder",
+      "romanization": "déborder",
+      "gloss": "to overflow; to go beyond",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:596c9f3391c1d391",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the flood, then the French for to flood."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: déborder",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "déborder — \"to overflow; to go beyond\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Après trois jours de pluie, le ruisseau déborde. After three days of rain the stream is overflowing."
+            },
+            {
+              "kind": "speech",
+              "text": "Être débordé — to be swamped with work."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "déborder is built from dé- and bord 'edge, side' (EtymDB lists it), which comes from a Frankish word for the side of a ship."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "déborder",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *déborder*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "déborder, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *déborder*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with déborder",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *déborder*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the flood, then the French for to flood, then say déborder again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the flood, then the French for to flood, then say *déborder* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does déborder mean? (\"To overflow; to go beyond\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C465-flaque",
+      "sequence": 25670,
+      "title": "la flaque — the puddle",
+      "headword": "la flaque",
+      "romanization": "la flaque",
+      "gloss": "the puddle",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:78e88df6a2a0eb0a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for to flood, then the French for to overflow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la flaque",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la flaque — \"the puddle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Le bus est passé dans une flaque et m'a mouillé. The bus went through a puddle and got me wet."
+            },
+            {
+              "kind": "speech",
+              "text": "Une flaque d'eau."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "flaque came into French from Picard flaque (EtymDB), a northern dialect word usually linked to flache 'hollow, soft ground'; the deeper origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la flaque",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la flaque*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la flaque, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la flaque*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la flaque",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la flaque*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for to flood, then the French for to overflow, then say la flaque again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for to flood, then the French for to overflow, then say *la flaque* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la flaque mean? (\"The puddle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-R465-revision-464-465",
+      "sequence": 25680,
+      "title": "Ville, commerces, nature et météo",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 464-465",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0fac8c7ce8a023d7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the French for the heatwave and the drought."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the heatwave, the drought, the humidity, clammy, to sweat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the heatwave, the drought, the humidity, clammy, to sweat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the storm, the flood, to flood, to overflow, the puddle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the storm, the flood, to flood, to overflow, the puddle]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The heatwave? (la canicule.) The drought? (la sécheresse.) The humidity? (l'humidité.) Clammy? (moite.) To sweat? (transpirer.) The storm? (la tempête.) The flood? (l'inondation.) To flood? (inonder.) To overflow? (déborder.) The puddle? (la flaque.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-R465-revision-final-465",
+      "sequence": 25690,
+      "title": "Tempête et inondations — once more",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "one more pass over chapter 465",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9332aebb4cc04514",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the French for the storm and the flood."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the storm, the flood, to flood, to overflow, the puddle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the storm, the flood, to flood, to overflow, the puddle]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The storm? (la tempête.) The flood? (l'inondation.) To flood? (inonder.) To overflow? (déborder.) The puddle? (la flaque.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

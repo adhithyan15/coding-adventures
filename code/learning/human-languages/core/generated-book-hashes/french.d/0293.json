@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 293,
+  "sourceHash": "fnv1a64:54d6a177b89a62cc",
+  "lessonIds": [
+    "FR-C293-mystere",
+    "FR-C293-elucider",
+    "FR-C293-prouver",
+    "FR-C293-alibi",
+    "FR-C293-soupcon"
+  ],
+  "tex": "french/book/chapters/ch293-un-mystere.tex"
+}

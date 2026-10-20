@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C266-revision-conditions",
+    "language": "french",
+    "chapter": 266,
+    "sequence": 15410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2ad34500f786aea0"
+  },
+  "findings": []
+}

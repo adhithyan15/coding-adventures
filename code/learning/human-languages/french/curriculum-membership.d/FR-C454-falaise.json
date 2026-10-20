@@ -1,0 +1,11 @@
+{
+  "id": "FR-C454-falaise",
+  "pathSegment": "FR-PATH-454-RELIEF",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-454-RELIEF",
+      "order": 0
+    }
+  ]
+}

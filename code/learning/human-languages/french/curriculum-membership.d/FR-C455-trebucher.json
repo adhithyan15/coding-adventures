@@ -1,0 +1,11 @@
+{
+  "id": "FR-C455-trebucher",
+  "pathSegment": "FR-PATH-455-RANDONNEE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-455-RANDONNEE",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 373,
+  "title": "Si j'ai le temps",
+  "label": "ch:fr-si-j-ai-le-temps",
+  "canDo": "I can say whether I am free, commit to something, say I am flexible, and say what I am considering.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FR-R373-revision-366-373",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 373: I can say whether I am free, commit to something, say I am flexible, and say what I am considering.",
+    "assesses": [
+      "FR-LEX-C373-DISPONIBLE-03",
+      "FR-LEX-C373-DISPONIBLE-04",
+      "FR-LEX-C373-DISPONIBLE-05"
+    ]
+  }
+}

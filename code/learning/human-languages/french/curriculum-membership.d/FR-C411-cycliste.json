@@ -1,0 +1,11 @@
+{
+  "id": "FR-C411-cycliste",
+  "pathSegment": "FR-PATH-411-ACCIDENT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-411-ACCIDENT",
+      "order": 3
+    }
+  ]
+}

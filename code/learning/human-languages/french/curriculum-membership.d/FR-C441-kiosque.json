@@ -1,0 +1,11 @@
+{
+  "id": "FR-C441-kiosque",
+  "pathSegment": "FR-PATH-441-MOBILIER",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-441-MOBILIER",
+      "order": 3
+    }
+  ]
+}

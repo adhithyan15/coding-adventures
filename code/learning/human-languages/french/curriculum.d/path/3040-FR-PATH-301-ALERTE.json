@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-301-ALERTE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-301-ALERTE"
+  ],
+  "after": []
+}

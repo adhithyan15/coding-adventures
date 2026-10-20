@@ -1,0 +1,19 @@
+{
+  "chapter": 383,
+  "title": "Qui peut participer",
+  "label": "ch:fr-qui-peut-participer",
+  "canDo": "I can say who can take part: the requirements and criteria, being eligible, admission, and being left out.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FR-C383-exclure",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 383: I can say who can take part: the requirements and criteria, being eligible, admission, and being left out.",
+    "assesses": [
+      "FR-LEX-C383-CRITERE-03",
+      "FR-LEX-C383-CRITERE-04",
+      "FR-LEX-C383-CRITERE-05"
+    ]
+  }
+}

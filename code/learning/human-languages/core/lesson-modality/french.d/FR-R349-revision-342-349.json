@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-R349-revision-342-349",
+    "language": "french",
+    "chapter": 349,
+    "sequence": 19710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c3d0cfd7800651c0"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-W267-six-lignes",
+  "pathSegment": "FR-PATH-267-CONDITIONNEL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-267-CONDITIONNEL",
+      "order": 3
+    }
+  ]
+}

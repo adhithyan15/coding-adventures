@@ -1,0 +1,19 @@
+{
+  "chapter": 294,
+  "title": "L'arrestation",
+  "label": "ch:fr-l-arrestation",
+  "canDo": "I can describe an arrest: stopping someone, the arrest, handcuffs, police custody and questioning.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C294-interroger",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 294: I can describe an arrest: stopping someone, the arrest, handcuffs, police custody and questioning.",
+    "assesses": [
+      "FR-LEX-C294-ARRESTATION-03",
+      "FR-LEX-C294-ARRESTATION-04",
+      "FR-LEX-C294-ARRESTATION-05"
+    ]
+  }
+}

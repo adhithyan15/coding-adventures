@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 395,
+  "sourceHash": "fnv1a64:1b3ebfb318d576fb",
+  "lessonIds": [
+    "FR-C395-utilisateur",
+    "FR-C395-mot-de-passe",
+    "FR-C395-identifiant",
+    "FR-C395-connecter",
+    "FR-C395-acceder"
+  ],
+  "tex": "french/book/chapters/ch395-mon-compte-en-ligne.tex"
+}

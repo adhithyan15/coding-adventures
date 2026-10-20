@@ -1,0 +1,11 @@
+{
+  "id": "FR-C433-indemniser",
+  "pathSegment": "FR-PATH-433-DEDOMMAGEMENT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-433-DEDOMMAGEMENT",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 505,
+  "sourceHash": "fnv1a64:5b647073fed96263",
+  "lessonIds": [
+    "FR-C505-arbitre",
+    "FR-C505-sifflet",
+    "FR-C505-siffler",
+    "FR-C505-terrain",
+    "FR-C505-marquer",
+    "FR-R505-revision-498-505"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch505.txt",
+  "json": "french/narration/ch505.json",
+  "textHash": "fnv1a64:92a2a49b5b756829",
+  "jsonHash": "fnv1a64:499783c223877a84",
+  "findings": []
+}

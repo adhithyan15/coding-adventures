@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C391-epargne",
+    "language": "french",
+    "chapter": 391,
+    "sequence": 21820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8dcb0a227326496c"
+  },
+  "findings": []
+}

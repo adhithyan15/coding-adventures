@@ -1,0 +1,11 @@
+{
+  "id": "FR-C529-couvert",
+  "pathSegment": "FR-PATH-529-TABLE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-529-TABLE",
+      "order": 1
+    }
+  ]
+}

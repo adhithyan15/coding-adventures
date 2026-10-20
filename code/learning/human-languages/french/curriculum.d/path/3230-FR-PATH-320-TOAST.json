@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-320-TOAST",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-320-TOAST"
+  ],
+  "after": []
+}

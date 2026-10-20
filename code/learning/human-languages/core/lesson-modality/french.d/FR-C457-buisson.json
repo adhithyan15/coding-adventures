@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C457-buisson",
+    "language": "french",
+    "chapter": 457,
+    "sequence": 25230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8be10af5bb9787a3"
+  },
+  "findings": []
+}

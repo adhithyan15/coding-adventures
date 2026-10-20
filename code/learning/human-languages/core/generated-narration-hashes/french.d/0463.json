@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 463,
+  "sourceHash": "fnv1a64:fc086814f57f5fc0",
+  "lessonIds": [
+    "FR-C463-verglas",
+    "FR-C463-givre",
+    "FR-C463-geler",
+    "FR-C463-degeler",
+    "FR-C463-grelotter",
+    "FR-R463-revision-456-463"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch463.txt",
+  "json": "french/narration/ch463.json",
+  "textHash": "fnv1a64:44721dcfc9e744d1",
+  "jsonHash": "fnv1a64:969b9a843a492d55",
+  "findings": []
+}

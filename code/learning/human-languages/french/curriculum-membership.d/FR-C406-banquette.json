@@ -1,0 +1,11 @@
+{
+  "id": "FR-C406-banquette",
+  "pathSegment": "FR-PATH-406-CARROSSERIE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-406-CARROSSERIE",
+      "order": 4
+    }
+  ]
+}

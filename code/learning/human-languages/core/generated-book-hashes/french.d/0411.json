@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:28818a46dfd58a2e",
+  "lessonIds": [
+    "FR-C411-percuter",
+    "FR-C411-heurter",
+    "FR-C411-pieton",
+    "FR-C411-cycliste",
+    "FR-C411-constater"
+  ],
+  "tex": "french/book/chapters/ch411-un-petit-accident.tex"
+}

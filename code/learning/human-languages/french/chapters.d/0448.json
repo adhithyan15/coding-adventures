@@ -1,0 +1,19 @@
+{
+  "chapter": 448,
+  "title": "Coiffeur et opticien",
+  "label": "ch:fr-coiffeur-et-opticien",
+  "canDo": "I can use personal services: the hairdresser, shaving, the optician, the watchmaker and the jeweller.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C448-bijoutier",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 448: I can use personal services: the hairdresser, shaving, the optician, the watchmaker and the jeweller.",
+    "assesses": [
+      "FR-LEX-C448-OPTICIEN-03",
+      "FR-LEX-C448-OPTICIEN-04",
+      "FR-LEX-C448-OPTICIEN-05"
+    ]
+  }
+}

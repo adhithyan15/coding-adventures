@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 468,
+  "sourceHash": "fnv1a64:f1f902868545aa7a",
+  "lessonIds": [
+    "FR-C468-sincere",
+    "FR-C468-menteur",
+    "FR-C468-naif",
+    "FR-C468-ruse",
+    "FR-C468-mentir"
+  ],
+  "tex": "french/book/chapters/ch468-sinceres-et-menteurs.tex"
+}

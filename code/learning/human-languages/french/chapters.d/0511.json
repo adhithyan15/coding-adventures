@@ -1,0 +1,19 @@
+{
+  "chapter": 511,
+  "title": "Instruments de musique",
+  "label": "ch:fr-instruments-de-musique",
+  "canDo": "I can talk about the instrument I play.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C511-accorder",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 511: I can talk about the instrument I play.",
+    "assesses": [
+      "FR-LEX-C511-INSTRUMENTS-03",
+      "FR-LEX-C511-INSTRUMENTS-04",
+      "FR-LEX-C511-INSTRUMENTS-05"
+    ]
+  }
+}

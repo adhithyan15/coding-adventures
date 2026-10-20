@@ -1,0 +1,19 @@
+{
+  "chapter": 403,
+  "title": "À la pompe",
+  "label": "ch:fr-a-la-pompe",
+  "canDo": "I can fill up a car: the pump, diesel, fuel, the tank and starting off again.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C403-demarrer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 403: I can fill up a car: the pump, diesel, fuel, the tank and starting off again.",
+    "assesses": [
+      "FR-LEX-C403-POMPE-03",
+      "FR-LEX-C403-POMPE-04",
+      "FR-LEX-C403-POMPE-05"
+    ]
+  }
+}

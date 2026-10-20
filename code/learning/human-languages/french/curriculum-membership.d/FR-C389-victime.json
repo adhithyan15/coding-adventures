@@ -1,0 +1,11 @@
+{
+  "id": "FR-C389-victime",
+  "pathSegment": "FR-PATH-389-ENQUETE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-389-ENQUETE",
+      "order": 4
+    }
+  ]
+}

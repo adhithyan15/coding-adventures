@@ -1,0 +1,11 @@
+{
+  "id": "FR-C395-connecter",
+  "pathSegment": "FR-PATH-395-COMPTE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-395-COMPTE",
+      "order": 3
+    }
+  ]
+}

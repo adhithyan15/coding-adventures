@@ -1,0 +1,11 @@
+{
+  "id": "FR-C467-paresse",
+  "pathSegment": "FR-PATH-467-DEFAUTS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-467-DEFAUTS",
+      "order": 1
+    }
+  ]
+}

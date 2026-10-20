@@ -1,0 +1,11 @@
+{
+  "id": "FR-C513-repetition",
+  "pathSegment": "FR-PATH-513-ORCHESTRE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-513-ORCHESTRE",
+      "order": 3
+    }
+  ]
+}

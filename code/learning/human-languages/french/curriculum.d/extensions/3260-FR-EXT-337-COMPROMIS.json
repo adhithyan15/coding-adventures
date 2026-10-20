@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-337-COMPROMIS",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can admit someone is right, give way, concede a point and reach a consensus or a compromise.",
+  "prerequisites": []
+}

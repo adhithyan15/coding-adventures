@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C493-nourrisson",
+    "language": "french",
+    "chapter": 493,
+    "sequence": 27100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e231d55ec93d5812"
+  },
+  "findings": []
+}

@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "french",
+  "chapter": 520,
+  "title": "Chez le libraire",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:4adf4038f18a5195",
+  "lessons": [
+    {
+      "id": "FR-C520-libraire",
+      "sequence": 28460,
+      "title": "le libraire — bookseller",
+      "headword": "le libraire",
+      "romanization": "le libraire",
+      "gloss": "bookseller",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:03db0a7f2b7fa21b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for twist, then the French for gripping."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: le libraire",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le libraire — \"bookseller\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Le libraire m'a conseillé un bon roman. The bookseller recommended a good novel to me."
+            },
+            {
+              "kind": "speech",
+              "text": "A woman is la libraire. A library is une bibliothèque."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le libraire is a learned borrowing from Latin librārius \"a copyist, a bookseller\" (EtymDB), from liber \"book\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le libraire",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le libraire*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le libraire, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le libraire*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with le libraire",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *le libraire*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for twist, then the French for gripping, then say le libraire again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for twist, then the French for gripping, then say *le libraire* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does le libraire mean? (\"Bookseller\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C520-rayon",
+      "sequence": 28470,
+      "title": "le rayon — section (of a shop); shelf; ray",
+      "headword": "le rayon",
+      "romanization": "le rayon",
+      "gloss": "section (of a shop); shelf; ray",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8cedf36e1020c3a0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for gripping, then the French for bookseller."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: le rayon",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le rayon — \"section (of a shop); shelf; ray\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Les livres pour enfants sont au rayon du fond. The children's books are in the section at the back."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a ray: un rayon de soleil. That is a different word with the same form."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This rayon, a shelf or a section, comes from Old French ree \"honeycomb\", a word of Germanic origin. Rayon \"a ray\" is a different word, from Latin radius."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le rayon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le rayon*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le rayon, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le rayon*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with le rayon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *le rayon*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for gripping, then the French for bookseller, then say le rayon again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for gripping, then the French for bookseller, then say *le rayon* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does le rayon mean? (\"Section (of a shop); shelf; ray\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C520-feuilleter",
+      "sequence": 28480,
+      "title": "feuilleter — to leaf through",
+      "headword": "feuilleter",
+      "romanization": "feuilleter",
+      "gloss": "to leaf through",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5152c5480d1df114",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for bookseller, then the French for section."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: feuilleter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "feuilleter — \"to leaf through\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Elle feuillette un magazine dans la salle d'attente. She leafs through a magazine in the waiting room."
+            },
+            {
+              "kind": "speech",
+              "text": "Spelling: je feuillette, nous feuilletons."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "feuilleter is built on feuille \"leaf, page\" (EtymDB), inherited from Latin folia, the plural of folium \"a leaf\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "feuilleter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *feuilleter*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "feuilleter, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *feuilleter*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with feuilleter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *feuilleter*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for bookseller, then the French for section, then say feuilleter again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for bookseller, then the French for section, then say *feuilleter* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does feuilleter mean? (\"To leaf through\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C520-livre-de-poche",
+      "sequence": 28490,
+      "title": "le livre de poche — paperback",
+      "headword": "le livre de poche",
+      "romanization": "le livre de poche",
+      "gloss": "paperback",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:52e9e402476bec35",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for section, then the French for to leaf through."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: le livre de poche",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le livre de poche — \"paperback\"."
+            },
+            {
+              "kind": "speech",
+              "text": "J'achète surtout des livres de poche: c'est moins cher. I mostly buy paperbacks: they are cheaper."
+            },
+            {
+              "kind": "speech",
+              "text": "En poche — in paperback."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le livre de poche is \"a pocket book\": livre is inherited from Latin liber \"book\" (Lewis & Short), and poche \"pocket\" is of Frankish origin."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le livre de poche",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le livre de poche*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le livre de poche, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le livre de poche*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with le livre de poche",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *le livre de poche*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for section, then the French for to leaf through, then say le livre de poche again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for section, then the French for to leaf through, then say *le livre de poche* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does le livre de poche mean? (\"Paperback\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C520-devorer",
+      "sequence": 28500,
+      "title": "dévorer — to devour",
+      "headword": "dévorer",
+      "romanization": "dévorer",
+      "gloss": "to devour",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7203eca8fe9e57ca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for to leaf through, then the French for paperback."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dévorer",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dévorer — \"to devour\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ma fille dévore tous les romans de cette série. My daughter devours every novel in this series."
+            },
+            {
+              "kind": "speech",
+              "text": "Of food or books: dévorer un livre — to read it eagerly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dévorer is a learned borrowing from Latin dēvorāre \"to swallow down\", built on vorāre \"to swallow\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dévorer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dévorer*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dévorer, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dévorer*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dévorer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dévorer*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for to leaf through, then the French for paperback, then say dévorer again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for to leaf through, then the French for paperback, then say *dévorer* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dévorer mean? (\"To devour\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

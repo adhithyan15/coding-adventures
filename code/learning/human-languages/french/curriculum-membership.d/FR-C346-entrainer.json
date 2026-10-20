@@ -1,0 +1,11 @@
+{
+  "id": "FR-C346-entrainer",
+  "pathSegment": "FR-PATH-346-CONSEQUENCE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-346-CONSEQUENCE",
+      "order": 3
+    }
+  ]
+}

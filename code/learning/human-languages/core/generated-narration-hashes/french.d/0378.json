@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 378,
+  "sourceHash": "fnv1a64:cca9bc0a10203e07",
+  "lessonIds": [
+    "FR-C378-echouer",
+    "FR-C378-redoubler",
+    "FR-C378-concours",
+    "FR-C378-moyenne",
+    "FR-C378-rattrapage"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch378.txt",
+  "json": "french/narration/ch378.json",
+  "textHash": "fnv1a64:f0a7feee3420a059",
+  "jsonHash": "fnv1a64:92deef9491faed12",
+  "findings": []
+}

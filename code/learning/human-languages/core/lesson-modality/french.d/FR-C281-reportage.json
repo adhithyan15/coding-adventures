@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C281-reportage",
+    "language": "french",
+    "chapter": 281,
+    "sequence": 16160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c5e2ba53ae52be93"
+  },
+  "findings": []
+}

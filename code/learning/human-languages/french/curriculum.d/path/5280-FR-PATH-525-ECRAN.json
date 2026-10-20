@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-525-ECRAN",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-525-ECRAN"
+  ],
+  "after": []
+}

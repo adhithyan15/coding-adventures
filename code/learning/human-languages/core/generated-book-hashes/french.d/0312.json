@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:19d6bb82cc7980b3",
+  "lessonIds": [
+    "FR-C312-demenagement",
+    "FR-C312-emmenager",
+    "FR-C312-cremaillere",
+    "FR-C312-locataire",
+    "FR-C312-bail"
+  ],
+  "tex": "french/book/chapters/ch312-une-nouvelle-maison.tex"
+}

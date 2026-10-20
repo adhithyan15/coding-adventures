@@ -1,0 +1,19 @@
+{
+  "chapter": 489,
+  "title": "Fiançailles et noces",
+  "label": "ch:fr-fiancailles-et-noces",
+  "canDo": "I can talk about engagements and weddings.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-R489-revision-482-489",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 489: I can talk about engagements and weddings.",
+    "assesses": [
+      "FR-LEX-C489-NOCES-03",
+      "FR-LEX-C489-NOCES-04",
+      "FR-LEX-C489-NOCES-05"
+    ]
+  }
+}

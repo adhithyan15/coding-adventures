@@ -1,0 +1,11 @@
+{
+  "id": "FR-C302-extincteur",
+  "pathSegment": "FR-PATH-302-INCENDIE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-302-INCENDIE",
+      "order": 1
+    }
+  ]
+}

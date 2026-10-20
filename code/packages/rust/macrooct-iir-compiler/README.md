@@ -167,6 +167,20 @@ includes:
   `SourceFs`, because containment, symlink, UNC, device-name and
   regular-file checks all live there and nowhere else.
 
+## Input budgets
+
+Every source byte this crate hands to the MacroOct lexer is charged before the
+lexer runs. That covers the primary string, each `@include`d file, and nested
+include frames together. The lexer builds a whole file's tokens at once, and
+the engine only counts tokens after that, so without this charge a dense 8 MB
+file cost about 2 GB of memory before it was rejected. Each non-EOF token
+needs at least one byte, so capping lexed bytes at `tokens_produced - 1` (and
+at `bytes_per_file` / `total_source_bytes`) caps the peak token count. With
+default `Bounds`, one translation unit may lex up to 1,999,999 bytes. The
+in-memory include API also checks unused bundle entries, names, the include
+count and aggregate bytes before building its `MemoryFs`. MacroNib and the C
+dialect enforce the same contract.
+
 ## Spec
 
 [PREP01](../../../specs/PREP01-generic-source-preprocessor.md) §7, slices 1

@@ -1,0 +1,19 @@
+{
+  "chapter": 391,
+  "title": "Mettre de côté",
+  "label": "ch:fr-mettre-de-cote",
+  "canDo": "I can talk about saving and investing: savings, saving money, investing, an investment and the interest rate.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FR-C391-taux",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 391: I can talk about saving and investing: savings, saving money, investing, an investment and the interest rate.",
+    "assesses": [
+      "FR-LEX-C391-EPARGNE-03",
+      "FR-LEX-C391-EPARGNE-04",
+      "FR-LEX-C391-EPARGNE-05"
+    ]
+  }
+}

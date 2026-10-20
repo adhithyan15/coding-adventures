@@ -1,0 +1,11 @@
+{
+  "id": "FR-C420-decalage",
+  "pathSegment": "FR-PATH-420-ESCALE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-420-ESCALE",
+      "order": 3
+    }
+  ]
+}

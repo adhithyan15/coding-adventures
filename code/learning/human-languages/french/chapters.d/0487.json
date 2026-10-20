@@ -1,0 +1,19 @@
+{
+  "chapter": 487,
+  "title": "Amoureux",
+  "label": "ch:fr-amoureux",
+  "canDo": "I can talk about falling in love.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C487-caresser",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 487: I can talk about falling in love.",
+    "assesses": [
+      "FR-LEX-C487-AMOUREUX-03",
+      "FR-LEX-C487-AMOUREUX-04",
+      "FR-LEX-C487-AMOUREUX-05"
+    ]
+  }
+}

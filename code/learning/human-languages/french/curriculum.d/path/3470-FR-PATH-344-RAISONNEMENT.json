@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-344-RAISONNEMENT",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "FR-EXT-344-RAISONNEMENT"
+  ],
+  "after": []
+}

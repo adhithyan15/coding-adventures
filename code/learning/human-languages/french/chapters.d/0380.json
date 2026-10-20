@@ -1,0 +1,19 @@
+{
+  "chapter": 380,
+  "title": "Les règles",
+  "label": "ch:fr-les-regles",
+  "canDo": "I can talk about rules: a standard, the regulations, what is compulsory or optional, and an obligation.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FR-C380-obligation",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 380: I can talk about rules: a standard, the regulations, what is compulsory or optional, and an obligation.",
+    "assesses": [
+      "FR-LEX-C380-NORME-03",
+      "FR-LEX-C380-NORME-04",
+      "FR-LEX-C380-NORME-05"
+    ]
+  }
+}

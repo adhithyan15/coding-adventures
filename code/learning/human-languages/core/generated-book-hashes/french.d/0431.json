@@ -1,0 +1,14 @@
+{
+  "language": "french",
+  "chapter": 431,
+  "sourceHash": "fnv1a64:17b0209c070c8de8",
+  "lessonIds": [
+    "FR-C431-reclamation",
+    "FR-C431-reclamer",
+    "FR-C431-rouspeter",
+    "FR-C431-deranger",
+    "FR-C431-mecontent",
+    "FR-R431-revision-424-431"
+  ],
+  "tex": "french/book/chapters/ch431-on-n-est-pas-content.tex"
+}

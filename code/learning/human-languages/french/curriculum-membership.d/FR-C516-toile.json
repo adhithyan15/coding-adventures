@@ -1,0 +1,11 @@
+{
+  "id": "FR-C516-toile",
+  "pathSegment": "FR-PATH-516-PEINTURE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-516-PEINTURE",
+      "order": 1
+    }
+  ]
+}

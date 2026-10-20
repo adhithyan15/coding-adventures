@@ -1,0 +1,11 @@
+{
+  "id": "FR-C347-etant-donne-que",
+  "pathSegment": "FR-PATH-347-PUISQUE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-347-PUISQUE",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-259-RECIT",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-259-RECIT"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:bb4ffd4ef8dff242",
+  "lessonIds": [
+    "FR-C350-impact",
+    "FR-C350-repercussion",
+    "FR-C350-declencher",
+    "FR-C350-susciter",
+    "FR-C350-motif"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch350.txt",
+  "json": "french/narration/ch350.json",
+  "textHash": "fnv1a64:94c7ae3857fe10a0",
+  "jsonHash": "fnv1a64:d81bd83cade912ad",
+  "findings": []
+}

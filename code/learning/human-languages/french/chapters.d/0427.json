@@ -1,0 +1,19 @@
+{
+  "chapter": 427,
+  "title": "Le confort de la chambre",
+  "label": "ch:fr-le-confort-de-la-chambre",
+  "canDo": "I can talk about comfort in a hotel room: the air conditioning, the heating, the radiator, the pillowcase and the bathrobe.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C427-peignoir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 427: I can talk about comfort in a hotel room: the air conditioning, the heating, the radiator, the pillowcase and the bathrobe.",
+    "assesses": [
+      "FR-LEX-C427-CHAMBRE-03",
+      "FR-LEX-C427-CHAMBRE-04",
+      "FR-LEX-C427-CHAMBRE-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C473-orgueil",
+  "pathSegment": "FR-PATH-473-ORGUEIL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-473-ORGUEIL",
+      "order": 1
+    }
+  ]
+}

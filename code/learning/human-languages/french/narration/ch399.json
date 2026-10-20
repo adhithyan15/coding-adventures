@@ -1,0 +1,878 @@
+{
+  "version": 1,
+  "language": "french",
+  "chapter": 399,
+  "title": "Ça ne marche pas",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:bf58b63078a6eb8c",
+  "lessons": [
+    {
+      "id": "FR-C399-panne",
+      "sequence": 22230,
+      "title": "la panne — the breakdown, the failure",
+      "headword": "la panne",
+      "romanization": "la panne",
+      "gloss": "the breakdown, the failure",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f747e995abf347a5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the link, then the French for to post."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la panne",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la panne — \"the breakdown, the failure\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ma voiture est en panne. My car has broken down."
+            },
+            {
+              "kind": "speech",
+              "text": "Tomber en panne — to break down. Une panne de courant — a power cut."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "panne was first a sailing word, mettre en panne, for stopping a ship by turning its sails. The origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la panne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la panne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la panne, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la panne*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la panne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la panne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the link, then the French for to post, then say la panne again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the link, then the French for to post, then say *la panne* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la panne mean? (\"The breakdown, the failure\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C399-planter",
+      "sequence": 22240,
+      "title": "planter — to crash (of a computer, informal); to plant",
+      "headword": "planter",
+      "romanization": "planter",
+      "gloss": "to crash (of a computer, informal); to plant",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f17efbf8a5310250",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for to post, then the French for the breakdown."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: planter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "planter — \"to crash (of a computer, informal); to plant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mon ordinateur a planté pendant la réunion. My computer crashed during the meeting."
+            },
+            {
+              "kind": "speech",
+              "text": "Informal in this sense. First, to plant: planter un arbre."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "planter is inherited from Latin plantāre \"to plant\" (EtymDB; Lewis & Short), from planta \"a sprout, a cutting\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "planter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *planter*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "planter, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *planter*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with planter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *planter*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for to post, then the French for the breakdown, then say planter again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for to post, then the French for the breakdown, then say *planter* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does planter mean? (\"To crash (of a computer, informal); to plant\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C399-bloquer",
+      "sequence": 22250,
+      "title": "bloquer — to block; to freeze (reflexive, se bloquer)",
+      "headword": "bloquer",
+      "romanization": "bloquer",
+      "gloss": "to block; to freeze (reflexive, se bloquer)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:db829e205727570c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the breakdown, then the French for to crash."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: bloquer",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bloquer — \"to block; to freeze (reflexive, se bloquer)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "L'écran s'est bloqué: rien ne bouge. The screen froze: nothing moves."
+            },
+            {
+              "kind": "speech",
+              "text": "In Belgium, bloquer also means to cram for exams."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bloquer is built on bloc \"a block\", which came through Old French from Middle Dutch blok \"a tree trunk, a log\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bloquer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bloquer*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bloquer, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bloquer*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with bloquer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *bloquer*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the breakdown, then the French for to crash, then say bloquer again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the breakdown, then the French for to crash, then say *bloquer* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does bloquer mean? (\"To block; to freeze (reflexive, se bloquer)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C399-redemarrer",
+      "sequence": 22260,
+      "title": "redémarrer — to restart, to reboot",
+      "headword": "redémarrer",
+      "romanization": "redémarrer",
+      "gloss": "to restart, to reboot",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:83f7178eb589de5b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for to crash, then the French for to block."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: redémarrer",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "redémarrer — \"to restart, to reboot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Si ça ne marche pas, il faut redémarrer l'ordinateur. If it does not work, you have to restart the computer."
+            },
+            {
+              "kind": "speech",
+              "text": "Re- means again: to start again."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "redémarrer is built from re- and démarrer \"to start\", first a sailing word for casting off a moored boat, from dé- and amarrer \"to moor\", a word borrowed from Dutch (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "redémarrer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *redémarrer*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "redémarrer, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *redémarrer*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with redémarrer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *redémarrer*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for to crash, then the French for to block, then say redémarrer again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for to crash, then the French for to block, then say *redémarrer* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does redémarrer mean? (\"To restart, to reboot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C399-virus",
+      "sequence": 22270,
+      "title": "le virus — the virus",
+      "headword": "le virus",
+      "romanization": "le virus",
+      "gloss": "the virus",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a3eefe757ec7a53e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for to block, then the French for to restart."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: le virus",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le virus — \"the virus\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Si tu ouvres ce fichier, tu risques d'attraper un virus. If you open that file, you risk getting a virus."
+            },
+            {
+              "kind": "speech",
+              "text": "For computers and for illness. The s is said."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "virus was taken whole from Latin vīrus \"slime, poison\" (EtymDB; Lewis & Short); the computer sense came from English."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le virus",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le virus*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le virus, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le virus*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with le virus",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *le virus*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for to block, then the French for to restart, then say le virus again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for to block, then the French for to restart, then say *le virus* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does le virus mean? (\"The virus\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-R399-revision-398-399",
+      "sequence": 22280,
+      "title": "Conditions et règles",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 398-399",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:219684b30373f8c7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the French for the network and the connection."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the network, the connection, to browse, the link, to post",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the network, the connection, to browse, the link, to post]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the breakdown, to crash, to block, to restart, the virus",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the breakdown, to crash, to block, to restart, the virus]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The network? (le réseau.) The connection? (la connexion.) To browse? (naviguer.) The link? (le lien.) To post? (publier.) The breakdown? (la panne.) To crash? (planter.) To block? (bloquer.) To restart? (redémarrer.) The virus? (le virus.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-R399-revision-final-399",
+      "sequence": 22290,
+      "title": "Ça ne marche pas — once more",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "one more pass over chapter 399",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1dec27c9cd137a68",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the French for the breakdown and to crash."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the breakdown, to crash, to block, to restart, the virus",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the breakdown, to crash, to block, to restart, the virus]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The breakdown? (la panne.) To crash? (planter.) To block? (bloquer.) To restart? (redémarrer.) The virus? (le virus.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C437-avenue",
+  "pathSegment": "FR-PATH-437-RUELLES",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-437-RUELLES",
+      "order": 2
+    }
+  ]
+}

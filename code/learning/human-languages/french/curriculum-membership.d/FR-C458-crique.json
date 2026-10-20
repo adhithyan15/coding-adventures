@@ -1,0 +1,11 @@
+{
+  "id": "FR-C458-crique",
+  "pathSegment": "FR-PATH-458-LITTORAL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-458-LITTORAL",
+      "order": 2
+    }
+  ]
+}

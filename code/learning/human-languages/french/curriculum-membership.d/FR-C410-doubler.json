@@ -1,0 +1,11 @@
+{
+  "id": "FR-C410-doubler",
+  "pathSegment": "FR-PATH-410-BOUCHONS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-410-BOUCHONS",
+      "order": 4
+    }
+  ]
+}

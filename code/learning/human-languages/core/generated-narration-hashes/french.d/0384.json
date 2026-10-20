@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 384,
+  "sourceHash": "fnv1a64:57ac091288e83453",
+  "lessonIds": [
+    "FR-C384-expirer",
+    "FR-C384-valable",
+    "FR-C384-valide",
+    "FR-C384-renouveler",
+    "FR-C384-renouvellement"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch384.txt",
+  "json": "french/narration/ch384.json",
+  "textHash": "fnv1a64:ee1b2e694d3f7fb0",
+  "jsonHash": "fnv1a64:726b9c37ed2226c0",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C448-horloger",
+  "pathSegment": "FR-PATH-448-OPTICIEN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-448-OPTICIEN",
+      "order": 3
+    }
+  ]
+}

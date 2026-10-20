@@ -1,0 +1,19 @@
+{
+  "chapter": 343,
+  "title": "Le pour et le contre",
+  "label": "ch:fr-le-pour-et-le-contre",
+  "canDo": "I can weigh up pros and cons: name an advantage, a drawback and an aspect, voice a criticism and stress a point.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C343-souligner",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 343: I can weigh up pros and cons: name an advantage, a drawback and an aspect, voice a criticism and stress a point.",
+    "assesses": [
+      "FR-LEX-C343-AVANTAGE-03",
+      "FR-LEX-C343-AVANTAGE-04",
+      "FR-LEX-C343-AVANTAGE-05"
+    ]
+  }
+}

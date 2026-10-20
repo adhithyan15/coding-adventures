@@ -1,0 +1,11 @@
+{
+  "id": "FR-R505-revision-498-505",
+  "pathSegment": "FR-PATH-505-TERRAIN",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FR-EXT-505-TERRAIN",
+      "order": 5
+    }
+  ]
+}

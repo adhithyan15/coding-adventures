@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-420-ESCALE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about bumpy flights and changed times: turbulence, the stopover, jet lag, moving a time and delaying.",
+  "prerequisites": []
+}

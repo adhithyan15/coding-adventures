@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:2f96335554190078",
+  "lessonIds": [
+    "FR-C417-douanier",
+    "FR-C417-declarer",
+    "FR-C417-portique",
+    "FR-C417-fouiller",
+    "FR-C417-transiter"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch417.txt",
+  "json": "french/narration/ch417.json",
+  "textHash": "fnv1a64:3d6f33eb83568830",
+  "jsonHash": "fnv1a64:4e8521ef83ecb9a5",
+  "findings": []
+}

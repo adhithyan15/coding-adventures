@@ -1,0 +1,11 @@
+{
+  "id": "FR-C270-sur-le-coup",
+  "pathSegment": "FR-PATH-270-SOUDAIN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-270-SOUDAIN",
+      "order": 3
+    }
+  ]
+}

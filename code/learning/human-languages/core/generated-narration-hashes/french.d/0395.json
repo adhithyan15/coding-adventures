@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 395,
+  "sourceHash": "fnv1a64:fe040706aedc7b1f",
+  "lessonIds": [
+    "FR-C395-utilisateur",
+    "FR-C395-mot-de-passe",
+    "FR-C395-identifiant",
+    "FR-C395-connecter",
+    "FR-C395-acceder"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch395.txt",
+  "json": "french/narration/ch395.json",
+  "textHash": "fnv1a64:a71795d95c59968a",
+  "jsonHash": "fnv1a64:255e83afac0e9806",
+  "findings": []
+}

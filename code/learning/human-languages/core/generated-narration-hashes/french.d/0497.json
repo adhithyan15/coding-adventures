@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 497,
+  "sourceHash": "fnv1a64:a108d9abd0c47800",
+  "lessonIds": [
+    "FR-C497-canne-a-peche",
+    "FR-C497-hamecon",
+    "FR-C497-appat",
+    "FR-C497-pecher",
+    "FR-C497-pecheur",
+    "FR-R497-revision-490-497"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch497.txt",
+  "json": "french/narration/ch497.json",
+  "textHash": "fnv1a64:df4d90277420ade4",
+  "jsonHash": "fnv1a64:582a8513a5a3759f",
+  "findings": []
+}

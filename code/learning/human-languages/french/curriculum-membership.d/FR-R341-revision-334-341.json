@@ -1,0 +1,11 @@
+{
+  "id": "FR-R341-revision-334-341",
+  "pathSegment": "FR-PATH-341-MALENTENDU",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FR-EXT-341-MALENTENDU",
+      "order": 5
+    }
+  ]
+}

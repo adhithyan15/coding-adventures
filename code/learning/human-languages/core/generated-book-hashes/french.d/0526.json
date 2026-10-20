@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 526,
+  "sourceHash": "fnv1a64:68b40e115bdb89f6",
+  "lessonIds": [
+    "FR-C526-machine-a-laver",
+    "FR-C526-essorer",
+    "FR-C526-etendre",
+    "FR-C526-pince-a-linge",
+    "FR-C526-cintre"
+  ],
+  "tex": "french/book/chapters/ch526-laver-le-linge.tex"
+}

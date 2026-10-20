@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:6e37e9fa07701b4e",
+  "lessonIds": [
+    "FR-C311-fiancer",
+    "FR-C311-demande-en-mariage",
+    "FR-C311-marier",
+    "FR-C311-piece-montee",
+    "FR-C311-dragee"
+  ],
+  "tex": "french/book/chapters/ch311-un-grand-jour.tex"
+}

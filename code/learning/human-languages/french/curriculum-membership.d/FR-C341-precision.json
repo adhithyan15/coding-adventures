@@ -1,0 +1,11 @@
+{
+  "id": "FR-C341-precision",
+  "pathSegment": "FR-PATH-341-MALENTENDU",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-341-MALENTENDU",
+      "order": 3
+    }
+  ]
+}

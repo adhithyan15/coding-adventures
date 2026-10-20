@@ -1,0 +1,11 @@
+{
+  "id": "FR-C511-violoncelle",
+  "pathSegment": "FR-PATH-511-INSTRUMENTS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-511-INSTRUMENTS",
+      "order": 1
+    }
+  ]
+}

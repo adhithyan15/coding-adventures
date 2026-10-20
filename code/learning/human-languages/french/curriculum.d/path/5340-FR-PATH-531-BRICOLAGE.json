@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-531-BRICOLAGE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-531-BRICOLAGE"
+  ],
+  "after": []
+}

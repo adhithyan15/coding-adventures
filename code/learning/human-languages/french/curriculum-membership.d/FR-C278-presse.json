@@ -1,0 +1,11 @@
+{
+  "id": "FR-C278-presse",
+  "pathSegment": "FR-PATH-278-PRESSE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-278-PRESSE",
+      "order": 1
+    }
+  ]
+}

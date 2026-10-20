@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-407-STATIONNEMENT",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-407-STATIONNEMENT"
+  ],
+  "after": []
+}

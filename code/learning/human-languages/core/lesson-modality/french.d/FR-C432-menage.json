@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C432-menage",
+    "language": "french",
+    "chapter": 432,
+    "sequence": 23970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5f5fe92c54147955"
+  },
+  "findings": []
+}

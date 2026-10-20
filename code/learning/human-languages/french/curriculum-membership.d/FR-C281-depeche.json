@@ -1,0 +1,11 @@
+{
+  "id": "FR-C281-depeche",
+  "pathSegment": "FR-PATH-281-REPORTAGE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-281-REPORTAGE",
+      "order": 3
+    }
+  ]
+}

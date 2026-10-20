@@ -1,0 +1,11 @@
+{
+  "id": "FR-C419-decollage",
+  "pathSegment": "FR-PATH-419-DECOLLAGE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-419-DECOLLAGE",
+      "order": 1
+    }
+  ]
+}

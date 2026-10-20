@@ -1,0 +1,19 @@
+{
+  "chapter": 486,
+  "title": "Nuits agitées",
+  "label": "ch:fr-nuits-agitees",
+  "canDo": "I can describe a bad night: sleeplessness, snoring and nightmares.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C486-sieste",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 486: I can describe a bad night: sleeplessness, snoring and nightmares.",
+    "assesses": [
+      "FR-LEX-C486-NUITS-03",
+      "FR-LEX-C486-NUITS-04",
+      "FR-LEX-C486-NUITS-05"
+    ]
+  }
+}

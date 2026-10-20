@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 496,
+  "sourceHash": "fnv1a64:34599bf344d5bffd",
+  "lessonIds": [
+    "FR-C496-coudre",
+    "FR-C496-tricoter",
+    "FR-C496-pelote",
+    "FR-C496-broder",
+    "FR-C496-couture"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch496.txt",
+  "json": "french/narration/ch496.json",
+  "textHash": "fnv1a64:ad6bd0147df40204",
+  "jsonHash": "fnv1a64:aed8c1fb884cec99",
+  "findings": []
+}
