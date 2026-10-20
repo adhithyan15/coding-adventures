@@ -2442,34 +2442,44 @@ pub fn whitespace_only_minify(
         }
     }
 
-    // ---- gap-067: labeled single-statement block flatten ------
-    // `label:{break label}` → `label:break label;`. A labeled
-    // statement whose body is a single-statement block drops the
-    // braces.
+    // ---- gap-067 + CCR-087: labeled single-statement block flatten -
+    // A labeled statement whose body is a block holding ONE statement
+    // drops the braces, and an empty body becomes `;`. Upstream prints a
+    // label's body through `addNonEmptyStatement`, which unwraps such a
+    // block (measured against v20260915, #15924):
     //
-    // PROVABLY-SAFE minimal slice (matches the byte-identity
-    // fixture `minify_label_block_flatten`):
-    //   - the label `IDENT :` must sit at a hard STATEMENT
-    //     boundary — the token before the identifier is `;`, `}`,
-    //     or start-of-stream. `{` is DELIBERATELY EXCLUDED: a `{`
-    //     is ambiguous (block vs object literal), so an inner
-    //     `x:{...}` of an object (`{x:{break:1}}`, whose `x` is
-    //     preceded by the object's `{`) must never be touched.
-    //   - the block body's FIRST token is a COMPLETION keyword:
-    //     `break`/`continue`/`return`/`throw`. These are
-    //     unambiguously STATEMENTS — never an object value, never
-    //     a `let`/`const`/`class`/`function` declaration — which
-    //     proves the `{` is a block and `IDENT:` is a label.
-    //   - the block is a SINGLE statement: no top-level `;`
-    //     separates a second statement (a lone trailing `;`
-    //     before `}` is fine).
+    //   lbl:{break lbl}          →  lbl:break lbl;
+    //   lbl:{a()}                →  lbl:a();
+    //   lbl:{if(a())break lbl}   →  lbl:if(a())break lbl;
+    //   lbl:{}                   →  lbl:;
+    //   lbl:{let x=1}            →  lbl:{let x=1};   (kept: a lone
+    //                                                 declaration needs
+    //                                                 its block)
     //
-    // The `{`/`}` pair is then dropped; the emit loop supplies
-    // the statement-terminating `;`. Multi-statement bodies
-    // (`label:{a();break label}`) and non-completion-keyword
-    // bodies keep their braces. All bracket checks route through
-    // `is_structural_punct` so a literal can never be mistaken
-    // for a delimiter.
+    // PROVABLY-SAFE slice:
+    //   - `IDENT :` must be a label, so it must sit where a STATEMENT
+    //     starts: after `;`, `}`, start-of-stream, or a `{` that follows
+    //     `)`. That `{` always opens a body block (function, method,
+    //     `if`/`for`/`while`/`with`/`catch`), never an object literal. A
+    //     bare `{` is excluded: `{x:{a}}` is an object, and flattening its
+    //     inner `{a}` would corrupt it.
+    //   - The label is never directly inside an `if`/`else`/loop header
+    //     slot (those are preceded by `)`/`else`/`do`, not a boundary), so
+    //     unwrapping an `if` here can't capture an outer `else`.
+    //   - The body is ONE statement. Two shapes qualify:
+    //       (a) gap-067: the first token is `break`/`continue`/`return`/
+    //           `throw`, and no top-level `;` separates a second
+    //           statement. Nested braces are fine (`return{a:1}`).
+    //       (b) CCR-087: no nested `{` at all, the first token isn't a
+    //           declaration keyword (`let`/`const`/`class`/`function`/
+    //           `async`, whose binding the block scopes), and at most one
+    //           top-level `;`, as the body's last token. The ASI splice
+    //           has run, so every statement without a block ends in `;`.
+    //           With no nested `{`, one trailing `;` is one statement.
+    //   - Or the body is empty, which becomes `;`.
+    //
+    // All bracket checks route through `is_structural_punct`, so a
+    // literal can never be mistaken for a delimiter.
     {
         let mut drops: Vec<usize> = Vec::new();
         let mut i = 0;
@@ -2477,88 +2487,96 @@ pub fn whitespace_only_minify(
             let at_stmt_boundary = match i.checked_sub(1).and_then(|k| kept.get(k)) {
                 None => true,
                 Some(p) => {
-                    is_structural_punct(p, ";") || is_structural_punct(p, "}")
+                    is_structural_punct(p, ";")
+                        || is_structural_punct(p, "}")
+                        || (is_structural_punct(p, "{")
+                            && i >= 2
+                            && is_structural_punct(kept[i - 2], ")"))
                 }
             };
-            if at_stmt_boundary
+            if !(at_stmt_boundary
                 && is_plain_identifier(kept[i])
                 && is_structural_punct(kept[i + 1], ":")
-                && is_structural_punct(kept[i + 2], "{")
-                && !is_string_literal(kept[i + 3])
-                && matches!(
-                    kept[i + 3].value.as_str(),
-                    "break" | "continue" | "return" | "throw"
-                )
+                && is_structural_punct(kept[i + 2], "{"))
             {
-                // Depth-scan to the matching `}`, flagging a
-                // statement-separating top-level `;` (one
-                // followed by something other than the `}`).
-                let mut depth: i32 = 1;
-                let mut close: Option<usize> = None;
-                let mut multi = false;
-                let mut j = i + 3;
-                while j < kept.len() {
-                    let t = &kept[j];
-                    if is_structural_punct(t, "{")
-                        || is_structural_punct(t, "(")
-                        || is_structural_punct(t, "[")
-                    {
-                        depth += 1;
-                    } else if is_structural_punct(t, "}") {
-                        depth -= 1;
-                        if depth == 0 {
-                            close = Some(j);
-                            break;
-                        }
-                    } else if is_structural_punct(t, ")")
-                        || is_structural_punct(t, "]")
-                    {
-                        depth -= 1;
-                    } else if depth == 1 && is_structural_punct(t, ";") {
-                        let next_is_close = kept
-                            .get(j + 1)
-                            .map(|n| is_structural_punct(n, "}"))
-                            .unwrap_or(false);
-                        if !next_is_close {
-                            multi = true;
-                        }
-                    }
-                    j += 1;
-                }
-                if let Some(c) = close {
-                    if !multi {
-                        // Drop the opening `{`. The closing `}`
-                        // becomes the statement terminator: if the
-                        // body already ends in a top-level `;`,
-                        // just drop the `}`; otherwise REPLACE the
-                        // `}` in place with a synthetic `;` so the
-                        // flattened statement stays terminated
-                        // (`label:break label` → `label:break
-                        // label;`).
-                        let body_ends_with_semi = c
-                            .checked_sub(1)
-                            .and_then(|k| kept.get(k))
-                            .map(|t| is_structural_punct(t, ";"))
-                            .unwrap_or(false);
-                        drops.push(i + 2); // block `{`
-                        if body_ends_with_semi {
-                            drops.push(c); // block `}`
-                        } else if let Some(semi) = synth_semi.as_ref() {
-                            kept[c] = semi; // `}` → `;`
-                        } else {
-                            // No synthetic `;` available (cannot
-                            // happen — the stream always has a
-                            // token to clone). Bail conservatively.
-                            drops.pop();
-                            i += 1;
-                            continue;
-                        }
-                        i = c + 1;
-                        continue;
-                    }
-                }
+                i += 1;
+                continue;
             }
-            i += 1;
+            let first = kept[i + 3];
+            let completion_first = !is_string_literal(first)
+                && matches!(first.value.as_str(), "break" | "continue" | "return" | "throw");
+            let declaration_first = !is_string_literal(first)
+                && matches!(
+                    first.value.as_str(),
+                    "let" | "const" | "class" | "function" | "async"
+                );
+            // Depth-scan to the matching `}`, counting top-level `;` and
+            // noting whether one separates a second statement, and whether
+            // the body nests a `{`.
+            let mut depth: i32 = 1;
+            let mut close: Option<usize> = None;
+            let mut multi = false;
+            let mut nested_brace = false;
+            let mut top_semis: u32 = 0;
+            let mut j = i + 3;
+            while j < kept.len() {
+                let t = &kept[j];
+                if is_structural_punct(t, "{") {
+                    nested_brace = true;
+                    depth += 1;
+                } else if is_structural_punct(t, "(") || is_structural_punct(t, "[") {
+                    depth += 1;
+                } else if is_structural_punct(t, "}") {
+                    depth -= 1;
+                    if depth == 0 {
+                        close = Some(j);
+                        break;
+                    }
+                } else if is_structural_punct(t, ")") || is_structural_punct(t, "]") {
+                    depth -= 1;
+                } else if depth == 1 && is_structural_punct(t, ";") {
+                    top_semis += 1;
+                    let next_is_close = kept
+                        .get(j + 1)
+                        .map(|n| is_structural_punct(n, "}"))
+                        .unwrap_or(false);
+                    if !next_is_close {
+                        multi = true;
+                    }
+                }
+                j += 1;
+            }
+            let Some(c) = close else {
+                i += 1;
+                continue;
+            };
+            let empty = c == i + 3;
+            let single = !multi
+                && (completion_first
+                    || (!nested_brace && !declaration_first && top_semis <= 1));
+            if !(empty || single) {
+                i += 1;
+                continue;
+            }
+            // Drop the opening `{`. The closing `}` becomes the statement
+            // terminator: if the body already ends in a top-level `;`, just
+            // drop the `}`; otherwise REPLACE the `}` in place with a
+            // synthetic `;` so the flattened statement stays terminated
+            // (`lbl:break lbl` → `lbl:break lbl;`, `lbl:{}` → `lbl:;`).
+            let body_ends_with_semi = !empty && is_structural_punct(kept[c - 1], ";");
+            let Some(semi) = synth_semi.as_ref() else {
+                // No synthetic `;` available (cannot happen: the stream
+                // always has a token to clone). Bail conservatively.
+                i += 1;
+                continue;
+            };
+            drops.push(i + 2); // block `{`
+            if body_ends_with_semi {
+                drops.push(c); // block `}`
+            } else {
+                kept[c] = semi; // `}` → `;`
+            }
+            i = c + 1;
         }
         drops.sort_unstable();
         for &drop_idx in drops.iter().rev() {
@@ -9177,6 +9195,61 @@ mod tests {
     #[test]
     fn gap067_ternary_not_flattened() {
         assert_eq!(minify("a?b:{c};"), "a?b:{c};");
+    }
+
+    // ---- CCR-087 (#15924): any single-statement labeled block -------
+    // Expected strings are upstream v20260915 WHITESPACE_ONLY output.
+
+    /// CCR-087: a single non-declaration statement drops its braces,
+    /// whatever its first token is.
+    #[test]
+    fn ccr087_single_statement_label_body_flattens() {
+        assert_eq!(minify("lbl:{a()}"), "lbl:a();");
+        assert_eq!(minify("lbl:{a();}"), "lbl:a();");
+        assert_eq!(minify("lbl:{var x=1}"), "lbl:var x=1;");
+        assert_eq!(minify("lbl:{if(a())break lbl}"), "lbl:if(a())break lbl;");
+        assert_eq!(minify("lbl:{for(;;)break lbl}"), "lbl:for(;;)break lbl;");
+    }
+
+    /// CCR-087: an empty body becomes `;`, because a label needs a
+    /// statement.
+    #[test]
+    fn ccr087_empty_label_body_becomes_semicolon() {
+        assert_eq!(minify("lbl:{}"), "lbl:;");
+        assert_eq!(minify("lbl:{;}"), "lbl:;");
+    }
+
+    /// CCR-087: a lone declaration keeps the block that scopes it, as
+    /// upstream does.
+    #[test]
+    fn ccr087_declaration_body_keeps_braces() {
+        assert_eq!(minify("lbl:{let x=1}"), "lbl:{let x=1};");
+        assert_eq!(minify("lbl:{const x=1}"), "lbl:{const x=1};");
+        assert_eq!(minify("lbl:{function g(){}}"), "lbl:{function g(){}};");
+        assert_eq!(minify("lbl:{class C{}}"), "lbl:{class C{}};");
+    }
+
+    /// CCR-087: a label at the start of a function body is a statement
+    /// boundary (`{` after `)`).
+    #[test]
+    fn ccr087_label_at_start_of_function_body() {
+        assert_eq!(minify("function f(){lbl:{a()}}"), "function f(){lbl:a()};");
+        assert_eq!(minify("function f(){lbl:{return 1}}"), "function f(){lbl:return 1};");
+    }
+
+    /// CCR-087 non-cases: two statements, and a bare block with no label.
+    #[test]
+    fn ccr087_non_cases_are_unchanged() {
+        assert_eq!(minify("lbl:{a();b()}"), "lbl:{a();b()};");
+        assert_eq!(minify("{a()}"), "{a()};");
+    }
+
+    /// CCR-087 SAFETY: an object nested in an object literal is never a
+    /// labeled block, even when its value is a bare name.
+    #[test]
+    fn ccr087_object_value_is_not_a_label_body() {
+        assert_eq!(minify("x={y:{a}}"), "x={y:{a}};");
+        assert_eq!(minify("f({y:{a}})"), "f({y:{a}});");
     }
 
     // ---- gap-074: loop-body single-statement block flatten ----

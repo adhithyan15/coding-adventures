@@ -4,6 +4,22 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Changed - WHITESPACE_ONLY unwraps a single-statement labeled block (CCR-087, #15924)
+
+`lbl:{a()}` now prints as `lbl:a();` and `lbl:{}` as `lbl:;`, matching
+upstream. The rule:
+
+- Any single statement whose block has no nested `{` loses its braces.
+- A lone `let`/`const`/`class`/`function`/`async function` keeps its block,
+  as upstream does.
+- Two statements, or a bare block with no label, are unchanged.
+- A label at the start of a function or control body is now recognised.
+
+gap-067 had only unwrapped `break`/`continue`/`return`/`throw` bodies.
+`tests/regression_ws_label_block.rs` pins 33 shapes to the jar's bytes. It
+also checks with `node` that those shapes, and 7 shapes deliberately left
+braced, parse. Six unit tests cover the rule.
+
 ### Fixed - long expression chains fail cleanly instead of aborting (#16009, CLOC42)
 
 `console.log(x + x + … + x)` with about 1,000 or more terms used to overflow

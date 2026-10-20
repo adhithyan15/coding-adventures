@@ -1390,6 +1390,48 @@ after a `break` inside a loop is unreachable (`while (c) { break; y(); }` →
 inside switch-case consequents (`is_case_terminator`), so the loop-body `y()`
 survives. Placeholder: `drops_code_after_break_in_loop_block`.
 
+### CCR-087 (#15924) — WHITESPACE_ONLY unwraps a single-statement labeled block
+
+**Resolved (WHITESPACE_ONLY).** Upstream prints a label's body through
+`addNonEmptyStatement`. That drops the braces of a block holding one
+statement, prints an empty block as `;`, and keeps the braces when the one
+statement is a lexical or function declaration. gap-067 had unwrapped only
+bodies starting with `break`/`continue`/`return`/`throw`. It now also
+unwraps:
+
+- any single statement with no nested `{` whose first token isn't
+  `let`/`const`/`class`/`function`/`async`;
+- an empty body, which becomes `;`;
+- a label at the start of a function or control body (a `{` after `)`).
+
+Probes against the v20260915 jar at WHITESPACE_ONLY:
+
+| Input | Upstream | closurec now |
+|---|---|---|
+| `lbl:{a()}` | `lbl:a();` | same |
+| `lbl:{}` | `lbl:;` | same |
+| `lbl:{a();b()}` | `lbl:{a();b()};` | same |
+| `{a()}` | `{a()};` | same |
+| `lbl:{function g(){}}` | `lbl:{function g(){}};` | same |
+| `lbl:{let x=1}` / `const` / `class` / `async function` | braces kept | same |
+| `lbl:{var x=1}` | `lbl:var x=1;` | same |
+| `lbl:{if(a())break lbl}` | `lbl:if(a())break lbl;` | same |
+
+A `break lbl` inside the body is unaffected: the label still names the
+unwrapped statement.
+
+**Still open:**
+
+- **Nested braces and stacked labels.** Upstream also unwraps bodies with a
+  nested `{`, such as `lbl:{a=function(){}}`, `lbl:{{a()}}` and
+  `a:b:{c()}`. From tokens alone closurec can't tell an object literal from
+  a block there, so it keeps the braces. The output is valid, only larger.
+  `tests/regression_ws_label_block.rs` lists these under `KEPT`.
+- **SIMPLE/ADVANCED.** Upstream removes a label nothing breaks to
+  (`lbl:{a()}` → `a();` at SIMPLE) and unwraps the bare block. closurec
+  keeps both (`lbl:{a()};`). That belongs to an AST pass, not to this
+  token-level printer.
+
 ## CLOC12.149 — `FunctionExpression` (function in value position)
 
 **Landed (AST + emitter + passes):** `Expression::FunctionExpression` is now a
