@@ -576255,11 +576255,11 @@
     "taughtPercent": 8
   },
   "rootLedger": {
-    "roots": 23926,
-    "underspent": 22224,
-    "neverSpent": 17006,
+    "roots": 23927,
+    "underspent": 22225,
+    "neverSpent": 17007,
     "payoffDistribution": {
-      "0": 17006,
+      "0": 17007,
       "1": 3695,
       "2": 1523,
       "3": 696,
@@ -576318,7 +576318,7 @@
     "terms": 54,
     "termsUsed": 54,
     "lessonsUsingTerms": 37544,
-    "usesBeforeIntroduction": 70244,
+    "usesBeforeIntroduction": 70245,
     "technicalUsesBeforeIntroduction": 12707,
     "technicalLessons": 8896,
     "worstTerms": [
