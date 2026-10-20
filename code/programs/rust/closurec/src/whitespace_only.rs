@@ -223,19 +223,6 @@ pub fn whitespace_only_minify(
         s
     });
 
-    // CCR-087: the `;` an EMPTY labeled body becomes (`l:{}` → `l:;`). A label
-    // needs a statement, so unlike every other `;`, gap-030 Rule A must not
-    // drop this one before a `}` (`function f(){l:{}}` → `function f(){l:;}`,
-    // never `l:}`). A separate instance so the emit loop can tell it apart by
-    // address, as with `synth_asi_semi`.
-    let synth_label_empty_semi: Option<lexer::token::Token> = tokens.first().map(|t| {
-        let mut s = t.clone();
-        s.value = ";".to_string();
-        s.type_ = lexer::token::TokenType::Semicolon;
-        s.type_name = None;
-        s
-    });
-
     // gap-093 needs a synthetic `(`/`)` pair to WRAP a numeric
     // literal that is the object of a member access — `1 .x` and
     // `1..toString()` must become `(1).x` / `(1).toString()`,
@@ -2457,14 +2444,15 @@ pub fn whitespace_only_minify(
 
     // ---- gap-067 + CCR-087: labeled single-statement block flatten -
     // A labeled statement whose body is a block holding ONE statement
-    // drops the braces, and an empty body becomes `;`. Upstream prints a
-    // label's body through `addNonEmptyStatement`, which unwraps such a
-    // block (measured against v20260915, #15924):
+    // drops the braces. Upstream prints a label's body through
+    // `addNonEmptyStatement`, which unwraps such a block (measured against
+    // v20260915, #15924):
     //
     //   lbl:{break lbl}          →  lbl:break lbl;
     //   lbl:{a()}                →  lbl:a();
     //   lbl:{if(a())break lbl}   →  lbl:if(a())break lbl;
-    //   lbl:{}                   →  lbl:;
+    //   lbl:{}                   →  lbl:{}   (kept; upstream prints
+    //                                         `lbl:;`, see `empty` below)
     //   lbl:{let x=1}            →  lbl:{let x=1};   (kept: a lone
     //                                                 declaration needs
     //                                                 its block)
@@ -2489,7 +2477,7 @@ pub fn whitespace_only_minify(
     //           top-level `;`, as the body's last token. The ASI splice
     //           has run, so every statement without a block ends in `;`.
     //           With no nested `{`, one trailing `;` is one statement.
-    //   - Or the body is empty, which becomes `;`.
+    //   - An empty body keeps its braces (see `empty` below).
     //
     // All bracket checks route through `is_structural_punct`, so a
     // literal can never be mistaken for a delimiter.
@@ -2531,28 +2519,18 @@ pub fn whitespace_only_minify(
                     first.value.as_str(),
                     "let" | "const" | "class" | "function" | "async" | "using" | "await"
                 );
-            // `l:{}` and `l:{;}` are both empty: they become `l:;`.
+            // An EMPTY body (`l:{}`, `l:{;}`) keeps its braces. Upstream prints
+            // `l:;`, but that `;` is the label's whole statement, and several
+            // later passes drop a `;` before `}` (gap-030 Rule A, the
+            // gap-074/079 body flatten, gap-032): `if(x){l:{}}` would end as
+            // `if(x)l:}` (CCR-087 review rounds 1-2). The braces are valid.
             let empty = c == i + 3 || (c == i + 4 && is_structural_punct(kept[i + 3], ";"));
-            let single = !facts.multi
+            let single = !empty
+                && !facts.multi
                 && (completion_first
                     || (!facts.nested_brace && !declaration_first && facts.top_semis <= 1));
-            if !(empty || single) {
+            if !single {
                 i += 1;
-                continue;
-            }
-            if empty {
-                // The body's own `;` (if any) goes, and the `}` becomes the
-                // dedicated `;` that gap-030 Rule A keeps before a `}`.
-                let Some(semi) = synth_label_empty_semi.as_ref() else {
-                    i += 1;
-                    continue;
-                };
-                drops.push(i + 2); // block `{`
-                if c == i + 4 {
-                    drops.push(i + 3); // the lone `;`
-                }
-                kept[c] = semi;
-                i = c + 1;
                 continue;
             }
             // Drop the opening `{`. The closing `}` becomes the statement
@@ -3628,10 +3606,7 @@ pub fn whitespace_only_minify(
         // Rule A: drop `;` directly before `}`, UNLESS the
         // `;` is a body slot (body_position_next), or it ends a `throw`:
         // upstream forces that one (CCR-084, `function f(){throw 1;}`).
-        let keeps_label_statement = synth_label_empty_semi
-            .as_ref()
-            .is_some_and(|semi| std::ptr::eq(tok, semi));
-        if val == ";" && !body_position_next && !throw_terminator[idx] && !keeps_label_statement {
+        if val == ";" && !body_position_next && !throw_terminator[idx] {
             if let Some(next) = kept.get(idx + 1) {
                 if next.value == "}" {
                     // Skip this `;`. We are still at a stmt
@@ -9285,22 +9260,13 @@ mod tests {
         assert_eq!(minify("lbl:{for(;;)break lbl}"), "lbl:for(;;)break lbl;");
     }
 
-    /// CCR-087: an empty body becomes `;`, because a label needs a
-    /// statement.
+    /// CCR-087: an empty body keeps its braces. Upstream prints `l:;`, but
+    /// later passes drop a `;` before `}`, which would leave `l:}`.
     #[test]
-    fn ccr087_empty_label_body_becomes_semicolon() {
-        assert_eq!(minify("lbl:{}"), "lbl:;");
-        assert_eq!(minify("lbl:{;}"), "lbl:;");
-    }
-
-    /// CCR-087 review: an empty body's `;` is the label's statement, so
-    /// gap-030 Rule A must not drop it before an enclosing `}`.
-    #[test]
-    fn ccr087_empty_label_body_keeps_its_semicolon_before_a_brace() {
-        assert_eq!(minify("function f(){l:{}}"), "function f(){l:;};");
-        assert_eq!(minify("function f(){l:{;}}"), "function f(){l:;};");
-        assert_eq!(minify("{x;l:{}}"), "{x;l:;};");
-        assert_eq!(minify("function f(){l:{}m:{}}"), "function f(){l:;m:;};");
+    fn ccr087_empty_label_body_keeps_its_braces() {
+        assert_eq!(minify("lbl:{}"), "lbl:{};");
+        assert_eq!(minify("function f(){l:{}}"), "function f(){l:{}};");
+        assert_eq!(minify("function f(){if(x){l:{}}}"), "function f(){if(x){l:{}}};");
     }
 
     /// CCR-087: a lone declaration keeps the block that scopes it, as

@@ -1400,16 +1400,18 @@ bodies starting with `break`/`continue`/`return`/`throw`. It now also
 unwraps:
 
 - any single statement with no nested `{` whose first token isn't
-  `let`/`const`/`class`/`function`/`async`;
-- an empty body, which becomes `;`;
+  `let`/`const`/`class`/`function`/`async`/`using`/`await`;
 - a label at the start of a function or control body (a `{` after `)`).
+
+Block facts (matching `}`, nested `{`, top-level `;`) come from one linear
+pass (`brace_facts`), so nested labels are never rescanned.
 
 Probes against the v20260915 jar at WHITESPACE_ONLY:
 
 | Input | Upstream | closurec now |
 |---|---|---|
 | `lbl:{a()}` | `lbl:a();` | same |
-| `lbl:{}` | `lbl:;` | same |
+| `lbl:{}` | `lbl:;` | `lbl:{};` (kept, see below) |
 | `lbl:{a();b()}` | `lbl:{a();b()};` | same |
 | `{a()}` | `{a()};` | same |
 | `lbl:{function g(){}}` | `lbl:{function g(){}};` | same |
@@ -1422,6 +1424,12 @@ unwrapped statement.
 
 **Still open:**
 
+- **Empty bodies.** Upstream prints `l:{}` as `l:;`. closurec keeps the
+  braces, because that `;` is the label's whole statement and three later
+  passes drop a `;` before `}`: gap-030 Rule A, the gap-074/079 body
+  flatten, and gap-032. `if(x){l:{}}` would end as `if(x)l:}`, which the
+  security review found. Matching upstream needs one "this `;` is a
+  statement" marker that every `;`-dropping pass honours.
 - **Nested braces and stacked labels.** Upstream also unwraps bodies with a
   nested `{`, such as `lbl:{a=function(){}}`, `lbl:{{a()}}` and
   `a:b:{c()}`. From tokens alone closurec can't tell an object literal from

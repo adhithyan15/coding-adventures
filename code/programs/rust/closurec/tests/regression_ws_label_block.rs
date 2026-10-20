@@ -14,7 +14,7 @@
 //! the test also checks that each output parses.
 //!
 //! `KEPT` lists shapes upstream still unwraps but closurec deliberately
-//! leaves braced: bodies with a nested `{`, and stacked labels. Whether a
+//! leaves braced: empty bodies, bodies with a nested `{`, and stacked labels. Whether a
 //! `{` there is an object or a block can't be told from tokens alone, so
 //! closurec keeps the braces. Their output is valid, only larger.
 
@@ -24,14 +24,12 @@ const BINARY: &str = env!("CARGO_BIN_EXE_closurec");
 
 /// `(source, upstream WHITESPACE_ONLY output)`.
 const CASES: &[(&str, &str)] = &[
-    // The four rows of #15924.
+    // The rows of #15924 (`lbl:{}` is under KEPT).
     ("lbl:{a()}", "lbl:a();"),
-    ("lbl:{}", "lbl:;"),
     ("lbl:{a();b()}", "lbl:{a();b()};"),
     ("{a()}", "{a()};"),
     // More single statements.
     ("lbl:{a();}", "lbl:a();"),
-    ("lbl:{;}", "lbl:;"),
     ("lbl:{var x=1}", "lbl:var x=1;"),
     ("lbl:{x=1}", "lbl:x=1;"),
     ("lbl:{if(a())break lbl}", "lbl:if(a())break lbl;"),
@@ -50,23 +48,6 @@ const CASES: &[(&str, &str)] = &[
     ("function f(){lbl:{return 1}}", "function f(){lbl:return 1};"),
     ("(function(){lbl:{a()}})()", "(function(){lbl:a()})();"),
     ("if(a){y:{b()}}", "if(a)y:b();"),
-    // An empty body's `;` survives before an enclosing `}`: a label needs a
-    // statement (CCR-087 review; `l:}` would not parse).
-    ("function f(){l:{}}", "function f(){l:;};"),
-    ("function f(){l:{;}}", "function f(){l:;};"),
-    ("function f(){x();l:{}}", "function f(){x();l:;};"),
-    ("if(a){x();l:{}}", "if(a){x();l:;};"),
-    ("{x;l:{}}", "{x;l:;};"),
-    ("try{}catch(e){l:{}}", "try{}catch(e){l:;};"),
-    ("switch(x){case 1:x;l:{}}", "switch(x){case 1:x;l:;};"),
-    ("x={m(){l:{}}}", "x={m(){l:;}};"),
-    ("class A{m(){l:{}}}", "class A{m(){l:;}};"),
-    ("class A{static{x;l:{}}}", "class A{static{x;l:;}};"),
-    ("x=function(){l:{}}", "x=function(){l:;};"),
-    ("do{x();l:{}}while(a)", "do{x();l:;}while(a);"),
-    ("if(a)b();else{x;l:{}}", "if(a)b();else{x;l:;};"),
-    ("function f(){l:{}m:{}}", "function f(){l:;m:;};"),
-    ("if(a){l:{}}", "if(a)l:;"),
     // An ordinary `;` before `}` is still dropped.
     ("switch(x){case 1:;}", "switch(x){case 1:};"),
     // A lone declaration keeps its block.
@@ -87,6 +68,33 @@ const CASES: &[(&str, &str)] = &[
 /// Shapes closurec keeps braced although upstream unwraps them. The output
 /// must still parse.
 const KEPT: &[&str] = &[
+    // Empty bodies keep their braces; upstream prints `l:;` (CCR-087
+    // review: later passes would drop that `;` and leave `l:}`).
+    "lbl:{}",
+    "lbl:{;}",
+    "function f(){l:{}}",
+    "function f(){l:{;}}",
+    "function f(){x();l:{}}",
+    "if(a){x();l:{}}",
+    "{x;l:{}}",
+    "try{}catch(e){l:{}}",
+    "switch(x){case 1:x;l:{}}",
+    "x={m(){l:{}}}",
+    "class A{m(){l:{}}}",
+    "class A{static{x;l:{}}}",
+    "x=function(){l:{}}",
+    "do{x();l:{}}while(a)",
+    "if(a)b();else{x;l:{}}",
+    "function f(){l:{}m:{}}",
+    "if(a){l:{}}",
+    "function f(){if(x){l:{}}}",
+    "function f(){while(x){l:{}}}",
+    "{if(x){l:{}}}",
+    "function f(){for(;;){l:{}}}",
+    "function f(){with(o){l:{}}}",
+    "function f(){if(x){l:{;}}}",
+    "switch(a){case 1:if(x){l:{}}}",
+    "async function f(){for await(x of y){l:{}}}",
     "lbl:{a=function(){}}",
     "lbl:{a={}}",
     "lbl:{{a()}}",

@@ -6,28 +6,25 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ### Changed - WHITESPACE_ONLY unwraps a single-statement labeled block (CCR-087, #15924)
 
-`lbl:{a()}` now prints as `lbl:a();` and `lbl:{}` as `lbl:;`, matching
-upstream. The rule:
+`lbl:{a()}` now prints as `lbl:a();`, matching upstream. The rule:
 
 - Any single statement whose block has no nested `{` loses its braces.
-- A lone `let`/`const`/`class`/`function`/`async function` keeps its block,
-  as upstream does.
+- A lone `let`/`const`/`class`/`function`/`async function` (or
+  `using`/`await`) keeps its block, as upstream does.
 - Two statements, or a bare block with no label, are unchanged.
 - A label at the start of a function or control body is now recognised.
 
-gap-067 had only unwrapped `break`/`continue`/`return`/`throw` bodies.
-`tests/regression_ws_label_block.rs` pins 49 shapes to the jar's bytes. It
-also checks with `node` that those shapes, and 7 shapes deliberately left
-braced, parse. Seven unit tests cover the rule.
+gap-067 had only unwrapped `break`/`continue`/`return`/`throw` bodies. Block
+facts come from one linear pass, so 8,000 nested labels take 0.9 s in a
+debug build.
 
-The security review found two problems, both fixed here:
+An empty body (`l:{}`) still keeps its braces, although upstream prints
+`l:;`. The security review showed that the `;` is lost before an enclosing
+`}` in three later passes, which leaves the invalid `l:}`.
 
-- The empty body's `;` is the label's statement, so the rule that drops a
-  `;` before `}` now keeps it (`function f(){l:{}}` →
-  `function f(){l:;};`, not `l:}`).
-- Block facts (matching `}`, nested `{`, top-level `;`) are computed in one
-  linear pass, so nested labels no longer rescan. 8,000 nested labels now
-  take 0.9 s in a debug build, down from 8.3 s.
+`tests/regression_ws_label_block.rs` pins 32 shapes to the jar's bytes. It
+checks with `node` that those shapes, and 32 shapes deliberately left
+braced, parse, and it times the nested case. Six unit tests cover the rule.
 
 ### Fixed - long expression chains fail cleanly instead of aborting (#16009, CLOC42)
 
