@@ -663,7 +663,7 @@ generic `GrammarLexer`/`GrammarParser` build from `ruby3.3.6.tokens` and
 divisor stops the program the LANG83 way: the output so far, then
 `Trap.DivZero`.
 
-Twelve `lang_matrix` rows (each a case of
+Thirteen `lang_matrix` rows (each a case of
 `code/grammars/ruby/corpus/rb-int-puts/`) declare all eight executable
 columns. Four of them are the matrix's first `Expect::StdoutThenTrap` rows,
 which check the output written before the trap *and* the kind each column

@@ -492,7 +492,18 @@ impl<'a> Lowering<'a> {
             )
         })?;
         let register = self.register();
-        self.emit(iir_op, Some(register.clone()), vec![left.operand, right.operand], "i64")?;
+        // `i64::MIN % -1` is the one modulus a machine `rem` cannot compute:
+        // x86 `idiv` raises SIGFPE, LLVM `srem` is undefined, the CLR throws,
+        // and Rust's `%` panics. LANG83 defines `i64_mod_floor` there as 0 and
+        // every PR1b backend guards it, but the compiler already knows the
+        // answer (Ruby's, too: 0), so it emits that constant and no backend
+        // ever sees the edge (security review, LANG84 5a). The operands were
+        // evaluated above, so nothing observable is skipped.
+        if op == BinOp::Mod && (left.known, right.known) == (Some(i128::from(i64::MIN)), Some(-1)) {
+            self.emit("const", Some(register.clone()), vec![Operand::Int(0)], "i64")?;
+        } else {
+            self.emit(iir_op, Some(register.clone()), vec![left.operand, right.operand], "i64")?;
+        }
         Ok(Evaluated {
             operand: Operand::Var(register),
             known,

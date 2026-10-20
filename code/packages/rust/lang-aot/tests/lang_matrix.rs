@@ -7839,6 +7839,8 @@ fn main() { out(1, VALUE); }\n",
     Prog { lang: Language::Ruby, ext: "rb", src: "# a comment\n\nputs(1 +\n  2)\nputs(\n  3,\n  4\n) # trailing comment\nputs 5 \\\n  - 6\n", expect: Expect::Stdout("3\n3\n4\n-1"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
     // Both ends of i64, `MIN % -1 == 0`, `MIN / 1 == MIN`, and a product just under 2^62.
     Prog { lang: Language::Ruby, ext: "rb", src: "puts(9223372036854775807, -9223372036854775807 - 1)\nputs((-9223372036854775807 - 1) % -1)\nputs((-9223372036854775807 - 1) / 1)\nputs(46340 * 46340 * 46340 * 46340)\n", expect: Expect::Stdout("9223372036854775807\n-9223372036854775808\n0\n-9223372036854775808\n4611307862899360000"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // Security review: `i64::MIN % -1` (Ruby: 0) is folded by the compiler, so no machine `rem` faults on it; the neighbouring moduli still lower to `i64_mod_floor`.
+    Prog { lang: Language::Ruby, ext: "rb", src: "puts(1)\nputs((-9223372036854775807 - 1) % -1)\nputs((-9223372036854775807 - 1) % 1, (-9223372036854775807 - 1) % 7)\n", expect: Expect::Stdout("1\n0\n0\n6"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
     // `ZeroDivisionError` after output: `1` is flushed, then `Trap.DivZero`.
     Prog { lang: Language::Ruby, ext: "rb", src: "puts(1)\nputs(2 / 0)\nputs(3)\n", expect: Expect::StdoutThenTrap("1", "Trap.DivZero"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
     // A zero modulus traps too, with nothing printed first.
@@ -12261,9 +12263,9 @@ fn feature_coverage_doc_counts_match_programs_source() {
         // own oracle.
         (Language::MacroOct, 15, 120),
         (Language::FlowMatic, 8, 64),
-        // Ruby: LANG84 phase 5a's twelve rb-int-puts rows (four of them
+        // Ruby: LANG84 phase 5a's thirteen rb-int-puts rows (four of them
         // StdoutThenTrap), all eight columns.
-        (Language::Ruby, 12, 96),
+        (Language::Ruby, 13, 104),
         (Language::Cobol60, 59, 472),
     ];
 

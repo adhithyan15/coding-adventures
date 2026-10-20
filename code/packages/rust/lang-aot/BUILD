@@ -73,7 +73,7 @@ cargo test -p lang-aot --test lang_matrix macrooct -- --nocapture
 # LANG-VM-FEATURE-COVERAGE.md and the corpus could diverge in CI without
 # anything noticing, which is exactly the failure the test was written to stop.
 cargo test -p lang-aot --test lang_matrix feature_coverage_doc_counts_match_programs_source -- --exact
-# LANG84 phase 5a (= LANG83 PR2): Ruby on every backend. The twelve Ruby rows
+# LANG84 phase 5a (= LANG83 PR2): Ruby on every backend. The thirteen Ruby rows
 # also run in the full-corpus aggregate above; these name the Ruby-specific
 # claims so a Ruby regression is reported as one. The oracle compares every
 # expectation with a host ruby 3.3 (skips without one); the corpus test ties

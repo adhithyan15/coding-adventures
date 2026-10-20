@@ -167,7 +167,8 @@ impl fmt::Display for FrontendError {
                 requested,
                 suggestions,
             } => {
-                write!(f, "unknown Ruby release {requested:?}")?;
+                // `requested` is already escaped and bounded by ruby-parser.
+                write!(f, "unknown Ruby release \"{requested}\"")?;
                 if !suggestions.is_empty() {
                     write!(f, " (did you mean {}?)", suggestions.join(", "))?;
                 }

@@ -27,8 +27,8 @@ fn main() {
         Ok(source)
     }) {
         Ok(source) if source.len() <= limit => source,
-        Ok(_) => fail(&format!("{path}: Ruby source exceeds {limit} bytes")),
-        Err(error) => fail(&format!("{path}: {error}")),
+        Ok(_) => fail(&format!("{path:?}: Ruby source exceeds {limit} bytes")),
+        Err(error) => fail(&format!("{path:?}: {error}")),
     };
     match ruby_iir_compiler::run_source_at(&source, release.as_deref()) {
         Ok(output) => {
@@ -37,7 +37,7 @@ fn main() {
                 fail(&format!("trap: {kind}"));
             }
         }
-        Err(error) => fail(&format!("{path}: {error}")),
+        Err(error) => fail(&format!("{path:?}: {error}")),
     }
 }
 

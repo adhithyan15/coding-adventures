@@ -439,7 +439,7 @@ LANG84 phase 5a. `ruby-iir-compiler` emits `i64_div_floor` for `/`,
 `i64_mod_floor` for `%` and `print_i64` for `puts` (plus `putchar 10` for
 `puts()`); the Ruby-named builtins (`rb_int_div`, `rb_puts_int`, …) are gone.
 A zero divisor is a run-time `Trap.DivZero`, as Ruby's `ZeroDivisionError` is,
-not a compile error. `Language::Ruby` has twelve `lang_matrix` rows on all
+not a compile error. `Language::Ruby` has thirteen `lang_matrix` rows on all
 eight executable columns, and `check_module_for` passes on all nine backends.
 
 The matrix now carries the trap data the conformance suite already had:
@@ -456,7 +456,7 @@ The matrix now carries the trap data the conformance suite already had:
   divisor in a second `puts` argument (nothing printed, because Ruby evaluates
   every argument first), and a divisor that is zero only after evaluation.
 
-Local evidence: native x86-64, LLVM, WASM, JVM, VM and JIT executed all 72 of
+Local evidence: native x86-64, LLVM, WASM, JVM, VM and JIT executed all 78 of
 their Ruby cells, 24 of them trapping with the right stdout and kind. CLR and
 BEAM are compile-checked locally and execute in CI.
 

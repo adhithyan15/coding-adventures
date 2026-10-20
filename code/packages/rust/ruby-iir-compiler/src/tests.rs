@@ -127,6 +127,24 @@ fn lowering_uses_lang83_ops_and_no_ruby_named_builtin() {
     }
 }
 
+/// Security review (LANG84 5a): `i64::MIN % -1` never reaches a backend.
+/// The compiler folds that one edge to `const 0` (Ruby's answer), so a
+/// machine `rem` that would fault or panic on it is never emitted, while the
+/// operands are still evaluated.
+#[test]
+fn min_mod_minus_one_is_folded_and_never_emitted() {
+    let source = "puts((-9223372036854775807 - 1) % -1)";
+    assert_eq!(stdout(source), "0\n");
+    let emitted = ops(source);
+    assert!(!emitted.contains(&"i64_mod_floor".to_string()), "{emitted:?}");
+    assert_eq!(emitted.iter().filter(|op| *op == "sub").count(), 1, "{emitted:?}");
+    // Every other modulus still lowers to the LANG83 op.
+    assert!(ops("puts((-9223372036854775807 - 1) % 1, 7 % -1)").contains(&"i64_mod_floor".to_string()));
+    // The reviewer's spelling with a space before `(` is outside the R0
+    // grammar (`puts (1) + 2` is refused there), and is refused cleanly.
+    assert_eq!(error("puts (-9223372036854775807 - 1) % -1").category(), "Parse");
+}
+
 #[test]
 fn every_argument_is_evaluated_before_any_is_printed() {
     let module = compile_source("puts(1 + 2, 3 * 4)", "t").unwrap();

@@ -29,6 +29,15 @@
   before it (LANG84 E6). Write `puts(-7)`. This narrows LANG80's accepted
   set; nothing else LANG80 accepted is lost.
 
+### Security
+- `i64::MIN % -1` is folded to `const 0` (Ruby's answer) instead of emitting
+  `i64_mod_floor`: it is the one modulus a machine `rem` faults on (x86
+  SIGFPE, LLVM UB, a CLR exception, a Rust `%` panic). LANG83's backends
+  guard it too; this keeps the edge out of every backend. Regression corpus
+  case `min_mod_minus_one` and a unit test.
+- Diagnostics escape every caller-supplied text (`rubyvm` prints the path
+  with `{:?}`; `UnknownRelease` no longer double-escapes).
+
 ### Added
 - `compile_source_at(source, release, module_name, &FrontendBudgets)`,
   `compile_cst(ast, release, module_name)` (caller-supplied trees, measured

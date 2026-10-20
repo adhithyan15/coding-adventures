@@ -1009,7 +1009,7 @@ builds (GL over `ruby<release>.tokens`, GP over `ruby<release>.grammar`), and
   run time with `Trap.DivZero` after the earlier output, matching Ruby's
   `ZeroDivisionError`.
 - Stage I is `cargo test -p ruby-iir-compiler --test release_subsets`: the
-  new corpus `code/grammars/ruby/corpus/rb-int-puts` (13 accepted cases, 4 of
+  new corpus `code/grammars/ruby/corpus/rb-int-puts` (14 accepted cases, 4 of
   them trapping, and 9 `.reject` cases, each with a `.cite` oracle record
   from host ruby 3.3.6) on every release whose `iir_status` claims the
   subset. `releases.csv` now claims `iir_status` `rb-int-puts` and profile
@@ -1021,8 +1021,13 @@ builds (GL over `ruby<release>.tokens`, GP over `ruby<release>.grammar`), and
   each claiming release); C5 hostile probes run in a child process
   (`tests/hostile.rs`); `tests/iir_path.rs` fails if the crate calls a legacy
   `ruby-lexer` entry point.
+- Security review: `i64::MIN % -1` (Ruby: 0) is the one modulus a machine
+  `rem` faults on (x86 SIGFPE, LLVM UB, a CLR exception, a Rust panic).
+  LANG83 defines it as 0 and the PR1b backends guard it, but the compiler
+  folds that edge to `const 0` anyway, so no backend sees it; a corpus case
+  and matrix row pin it.
 - lang-aot: `Language::Ruby` (`ruby`/`rb`, `.rb`) on the default release.
-  Twelve `lang_matrix` rows, each a verbatim corpus case, declare all eight
+  Thirteen `lang_matrix` rows, each a verbatim corpus case, declare all eight
   executable columns, and `check_module_for` passes on all nine backends. The
   matrix gained `Expect::StdoutThenTrap` (LANG83's port item): four rows check
   the stdout before the trap and the kind on every column. CLR, BEAM and
