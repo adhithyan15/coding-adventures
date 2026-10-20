@@ -277,6 +277,43 @@ behaviour regressions.  They light up the moment the analyzer's
 body lands and starts populating bindings — no follow-up
 rebase needed.
 
+## Loop scopes for lexical `for` heads (#16008, v0.21.0)
+
+A `for`, `for-in` or `for-of` whose head is a `let` or `const` declaration
+opens its own `ScopeKind::Block` scope under the current scope. The head
+binding is registered there, and the head, the `for` test and update, the
+`for-in`/`for-of` right-hand side and the body are all walked inside it.
+This follows ECMAScript §14.7.4.2 (ForLoopEvaluation) and §14.7.5.6
+(ForIn/OfHeadEvaluation), which give the head its own declarative
+environment.
+
+| Head            | Loop scope | Head binding lives in   |
+|-----------------|------------|-------------------------|
+| `let` / `const` | new Block  | the loop scope          |
+| `var`           | none       | the enclosing function  |
+| expression / ∅  | none       | (nothing is declared)   |
+
+A `{ … }` loop body still opens its own Block scope, nested beneath the loop
+scope.
+
+The right-hand side of `for-in`/`for-of` resolves against the loop scope
+because the spec evaluates it in a TDZ environment that holds the head's
+names: `for (let x of x)` reads the uninitialised loop `x`, never an outer one.
+
+**Why it matters.** Before this, the head binding was registered in the
+enclosing scope beside any outer binding of the same name. In
+
+```js
+var x = 1;
+for (let x of [7]) console.log(x);
+console.log(x);
+```
+
+the read after the loop resolved to the loop's `x`, the outer `var x` looked
+unreferenced, and remove-unused-vars deleted it, so the output threw
+`ReferenceError`. The regression test is
+`code/programs/rust/closurec/tests/regression_for_head_shadow.rs`.
+
 ## Stage delivery — PR map
 
 | Stage      | PR    | Status |

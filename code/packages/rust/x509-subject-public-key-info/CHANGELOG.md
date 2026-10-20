@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Exposed the exact borrowed canonical SubjectPublicKeyInfo sequence contents
+  for trust-anchor identity matching without reparsing.
+
 ## 0.1.0 — 2026-09-20
 
 - Added allocation-free generic RFC 5280 `SubjectPublicKeyInfo` decoding.

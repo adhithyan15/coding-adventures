@@ -1037,7 +1037,7 @@ the upstream fixed 400-by-100 layout and a backend-neutral glyph run reading
 `v11.16.1`. The pinned corpus covers both accepted forms and unsupported
 suffixes, and the native Metal-to-PNG path validates the complete family.
 
-### ZenUML Partial Compatibility
+### ZenUML Full Compatibility
 
 The native ZenUML frontend accepts the documented title, participant ordering,
 aliases, Actor, Boundary, Control, Entity, Database, Collections, Queue, and
@@ -1057,9 +1057,14 @@ participate in activation nesting, and statement semicolon terminators are
 accepted without leaking punctuation into semantic labels. Custom participant
 annotators lower to the backend-neutral participant fallback, while inline
 comments attached to messages lower to Sequence notes without treating URL
-slashes or quoted `//` text as comments. Custom annotator glyphs and the full
-external expression grammar remain unsupported, so ZenUML remains at the
-manifest's `partial` level.
+slashes or quoted `//` text as comments. The pinned syntax corpus contains all
+16 executable ZenUML examples from Mermaid 11.16.1's documentation, and every
+fixture passes grammar validation, semantic lowering, deterministic Sequence
+layout, backend-neutral PaintScene lowering, and native Metal-to-PNG rendering.
+This reaches the manifest's defined `full` level for the pinned Mermaid release.
+The broader moving `@zenuml/core` language remains outside that versioned claim;
+custom annotators use the documented backend-neutral participant fallback rather
+than inventing backend-specific glyphs.
 
 ### Structural Groups
 

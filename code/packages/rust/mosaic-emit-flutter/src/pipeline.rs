@@ -1953,6 +1953,7 @@ fn emit_component(
         || layout_contains_tag(&layout.root, "HostDropTarget");
     let uses_dialog = layout_contains_native_dialog(&layout.root);
     let uses_path = layout_contains_tag(&layout.root, "Path");
+    let uses_multiline_commit = layout_has_multiline_commit(&layout.root);
     // UI85: Flutter has no `gap` argument on Row/Column. The generated
     // helper inserts separators after Dart has evaluated collection-if and
     // collection-for children, so only widgets that actually exist receive
@@ -2007,8 +2008,12 @@ fn emit_component(
         )
         .unwrap();
     }
-    if uses_drag {
+    // `LogicalKeyboardKey` (a text area's commit chords) and the drag
+    // runtime's clipboard/haptics both live in services.
+    if uses_drag || uses_multiline_commit {
         writeln!(out, "import 'package:flutter/services.dart';").unwrap();
+    }
+    if uses_drag {
         writeln!(out, "import 'package:flutter/semantics.dart';").unwrap();
     }
     // A variant takes the component's interface from the default layout's
@@ -2045,6 +2050,9 @@ fn emit_component(
     if layout_contains_tag(&layout.root, "HostInput") || layout_contains_tag(&layout.root, "Input")
     {
         out.push_str(INPUT_CONTROLLER_HELPER);
+    }
+    if uses_multiline_commit {
+        out.push_str(COMMIT_CHORDS_HELPER);
     }
 
     // 3. The widget class itself.
@@ -6264,6 +6272,29 @@ class _MosaicInputControllerState extends State<_MosaicInputController> {
 }
 "#;
 
+/// UI25 §4 — the keys that commit a multi-line text field: Ctrl+Enter
+/// (Windows, Linux) and Cmd+Enter (macOS), on the main and keypad Enter.
+/// Binding both modifiers on every platform is what the other backends do
+/// (`ctrlKey || metaKey`); neither chord means anything else in a TextField.
+const COMMIT_CHORDS_HELPER: &str = r#"
+Map<ShortcutActivator, VoidCallback> _mosaicCommitChords(VoidCallback commit) =>
+    <ShortcutActivator, VoidCallback>{
+      const SingleActivator(LogicalKeyboardKey.enter, control: true): commit,
+      const SingleActivator(LogicalKeyboardKey.enter, meta: true): commit,
+      const SingleActivator(LogicalKeyboardKey.numpadEnter, control: true): commit,
+      const SingleActivator(LogicalKeyboardKey.numpadEnter, meta: true): commit,
+    };
+"#;
+
+/// Does any text field commit from a text area (UI25 §4)? Gates the
+/// `_mosaicCommitChords` helper and the services import it needs.
+fn layout_has_multiline_commit(node: &LayoutNode) -> bool {
+    (matches!(node.tag.as_str(), "HostInput" | "Input")
+        && find_keyword_prop(node, "multiline") == Some("true")
+        && find_emit_ref_prop(node, "onCommit").is_some())
+        || node.children.iter().any(layout_has_multiline_commit)
+}
+
 /// Lower both Input spellings through the shared stateful controller owner.
 fn emit_host_input(
     node: &LayoutNode,
@@ -6344,11 +6375,45 @@ fn emit_host_input(
     } else {
         writeln!(out, "{field_pad}_MosaicInputController(").unwrap();
     }
-    writeln!(
-        out,
-        "{input_pad}  value: {value_expr},\n{input_pad}  builder: (mosaicController) => TextField(\n{input_pad}    controller: mosaicController,"
-    )
-    .unwrap();
+    // UI25 §4 — a text area commits on Ctrl+Enter, or Cmd+Enter on macOS,
+    // from a hardware keyboard: `TextInputAction.newline` never submits, so
+    // `onSubmitted` cannot carry it. The TextField is wrapped in
+    // `CallbackShortcuts`, which sees the chord as the key event travels up
+    // the focus tree from the field. A key event the framework handles is
+    // not delivered to the platform text input, so the chord inserts no
+    // newline; bare Enter is not bound and still breaks the line.
+    //
+    //   field       | builder returns                         | commit fires on
+    //   ------------+-----------------------------------------+-----------------
+    //   single-line | TextField(onSubmitted: ...)             | Enter
+    //   multiline   | CallbackShortcuts(child: TextField(...)) | Ctrl/Cmd+Enter
+    //
+    // The payload reads the controller's live text: it is the field's
+    // current value, exactly what `onSubmitted` hands a single-line commit.
+    let multiline = find_keyword_prop(node, "multiline") == Some("true");
+    let multiline_commit = match find_emit_ref_prop(node, "onCommit").filter(|_| multiline) {
+        Some(emit_name) => {
+            let case = pascalize(&strip_on_prefix(emit_name));
+            validate_emit_name(&case)?;
+            let args = host_input_event_args(emits, emit_name, "mosaicController.text")?;
+            Some(format!("dispatch({component}Event{case}({args}))"))
+        }
+        None => None,
+    };
+    writeln!(out, "{input_pad}  value: {value_expr},").unwrap();
+    // The TextField sits one level deeper inside the shortcut wrapper.
+    let input_pad = if let Some(commit) = &multiline_commit {
+        writeln!(
+            out,
+            "{input_pad}  builder: (mosaicController) => CallbackShortcuts(\n{input_pad}    bindings: _mosaicCommitChords(() => {commit}),\n{input_pad}    child: TextField("
+        )
+        .unwrap();
+        format!("{input_pad}  ")
+    } else {
+        writeln!(out, "{input_pad}  builder: (mosaicController) => TextField(").unwrap();
+        input_pad
+    };
+    writeln!(out, "{input_pad}    controller: mosaicController,").unwrap();
 
     // #15142 -- ONE decoration writer. The hint used to be emitted here on
     // its own and the part style was dropped entirely; both now funnel
@@ -6446,8 +6511,7 @@ fn emit_host_input(
     }
     // `TextInputAction.newline` never submits, so a multiline field's
     // `onSubmitted` would be dead code: Enter is a line break there, on every
-    // backend (#15930). Say so rather than emit a handler that cannot fire.
-    let multiline = find_keyword_prop(node, "multiline") == Some("true");
+    // backend (#15930). Its commit is the shortcut wrapper's instead.
     if let Some(emit_name) = find_emit_ref_prop(node, "onCommit").filter(|_| !multiline) {
         let case = pascalize(&strip_on_prefix(emit_name));
         validate_emit_name(&case)?;
@@ -6458,7 +6522,16 @@ fn emit_host_input(
         )
         .unwrap();
     }
-    writeln!(out, "{input_pad}  ),\n{input_pad})").unwrap();
+    writeln!(out, "{input_pad}  ),").unwrap();
+    // Close the shortcut wrapper and restore the controller's indent.
+    let input_pad = if multiline_commit.is_some() {
+        let outer = input_pad[..input_pad.len() - 2].to_string();
+        writeln!(out, "{outer}  ),").unwrap();
+        outer
+    } else {
+        input_pad
+    };
+    writeln!(out, "{input_pad})").unwrap();
     if accessibility_label.is_some() {
         writeln!(out, "{field_pad})").unwrap();
     }
@@ -14193,6 +14266,64 @@ mod tests {
         assert!(!multi.contains("onSubmitted"), "{multi}");
         let single = make("false");
         assert!(single.contains("onSubmitted: (value) => dispatch(HostEventSave()),"), "{single}");
+        assert!(!single.contains("CallbackShortcuts"), "{single}");
+        assert!(!single.contains("_mosaicCommitChords"), "{single}");
+    }
+
+    /// UI25 §4 — a text area commits on Ctrl+Enter, or Cmd+Enter on macOS,
+    /// from a hardware keyboard. `CallbackShortcuts` around the TextField
+    /// sees the chord on its way up the focus tree, and a handled key event
+    /// never reaches the text input, so the chord adds no newline. A
+    /// text-payload commit carries the controller's current text, as the
+    /// single-line `onSubmitted` carries its submitted value.
+    #[test]
+    fn multiline_host_input_commits_on_ctrl_or_cmd_enter() {
+        let m = component(
+            "Host",
+            vec![slot("v", SlotType::Text, true)],
+            vec![EmitDecl {
+                name: "onSave".into(),
+                params: vec![EmitParam {
+                    name: "value".into(),
+                    r#type: EmitPayloadType::Text,
+                }],
+            }],
+        );
+        for tag in ["HostInput", "Input"] {
+            let props = vec![
+                LayoutProp { name: "value".into(), value: LayoutPropValue::SlotRef("v".into()) },
+                LayoutProp { name: "multiline".into(), value: LayoutPropValue::Keyword("true".into()) },
+                LayoutProp { name: "onCommit".into(), value: LayoutPropValue::EmitRef("onSave".into()) },
+            ];
+            let out = from_pipeline(&m, &layout("Host", node_with(tag, props, vec![])), &empty_style("Host"))
+                .expect("ok")
+                .output;
+            let lines: Vec<&str> = out.lines().map(str::trim).collect();
+            assert!(
+                lines.windows(4).any(|w| w
+                    == [
+                        "builder: (mosaicController) => CallbackShortcuts(",
+                        "bindings: _mosaicCommitChords(() => dispatch(HostEventSave(value: mosaicController.text))),",
+                        "child: TextField(",
+                        "controller: mosaicController,",
+                    ]),
+                "{tag}: {out}"
+            );
+            assert!(!out.contains("onSubmitted"), "{tag}: {out}");
+            for chord in [
+                "SingleActivator(LogicalKeyboardKey.enter, control: true): commit,",
+                "SingleActivator(LogicalKeyboardKey.enter, meta: true): commit,",
+                "SingleActivator(LogicalKeyboardKey.numpadEnter, control: true): commit,",
+                "SingleActivator(LogicalKeyboardKey.numpadEnter, meta: true): commit,",
+            ] {
+                assert_eq!(out.matches(chord).count(), 1, "{tag}: `{chord}` once in {out}");
+            }
+            assert_eq!(
+                out.matches("import 'package:flutter/services.dart';").count(),
+                1,
+                "{tag}: {out}"
+            );
+        }
     }
 
     #[test]

@@ -1,0 +1,12 @@
+[package]
+name = "x509-webpki-root-anchor-selection"
+version = "0.1.0"
+edition = "2021"
+description = "Exact decoded-certificate selection against the reviewed Web PKI root snapshot"
+
+[dependencies]
+x509-certificate = { path = "../x509-certificate" }
+x509-webpki-roots-snapshot = { path = "../x509-webpki-roots-snapshot" }
+
+[dev-dependencies]
+der-asn1 = { path = "../der-asn1" }

@@ -5712,11 +5712,15 @@ model-card parameter, or a UI artifact is not a completion signal.
      non-nested subcircuit divider decks. The release manifest explicitly
      requires those three promised surfaces, and every parser runtime executes
      the shared corpus.
-   - Discovery: `.temp` cards are parsed and engine temperature helpers are
-     available, but generic parser and deck runners do not yet apply `.temp`
-     to ordinary analysis cards. Keep global temperature-deck execution as a
-     dedicated follow-up phase; it requires analysis-result and CLI-contract
-     design rather than a single-card corpus addition.
+   - **Global temperature deck execution** (completed in the cross-language
+     core and CLI-contract slice): `.temp` cards execute every runnable
+     analysis at each source-ordered Celsius value, with the parser applying
+     device temperature before simulation. Analysis, selected-output, and
+     measure artifacts expose `temperatureKelvin` (or `null` for a nominal
+     no-`.temp` deck); the JSON CLI contract is schema version 2. Temperature
+     values must be finite and above absolute zero, while an explicit `.noise`
+     temperature remains the noise-source override. The 41-case core corpus
+     and release manifest now require this surface.
    - Expand deck-owned output compatibility beyond source-order analysis
      execution and stable artifact exports toward nested sweeps, raw-format
      interoperability, and remaining vendor-style output controls.

@@ -1,5 +1,25 @@
 # Changelog
 
+## 2026-10-19 (Key handlers declare `event`)
+
+- `Keys.onEscapePressed` (a text field's `onCancel`) and a native table
+  cell's `Keys.onReturnPressed` / `onEnterPressed` / `onSpacePressed` now take
+  `event` as a declared parameter, `function(event) { ...; event.accepted =
+  true }`. The block form relied on signal-parameter injection, which Qt 6
+  deprecates: every such handler printed "Parameter \"event\" is not
+  declared" at run time. A test helper now fails any `Keys.*` handler that
+  touches `event` without declaring it.
+
+## 2026-10-19 (A TextArea commits on Ctrl/Cmd+Enter)
+
+- A multiline `HostInput` or `Input` with `onCommit` gets
+  `Keys.onPressed: function(event) { ... }` on its `TextArea`: Return or
+  keypad Enter with `ControlModifier | MetaModifier` raises the commit signal
+  (with `text` when it declares a parameter) and accepts the event, so the
+  chord adds no line break (UI25 §4). Qt swaps the two modifiers on macOS, so
+  one test means Ctrl+Enter there and Cmd+Enter on a Mac. Single-line fields
+  keep `onAccepted`.
+
 ## 2026-10-19 (A multiline HostInput is a TextArea)
 
 - `HostInput ( multiline : true )` lowers to Qt Quick Controls' `TextArea`, as
