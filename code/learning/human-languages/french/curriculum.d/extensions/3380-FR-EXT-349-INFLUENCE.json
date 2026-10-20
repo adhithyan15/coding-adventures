@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-349-INFLUENCE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say where something comes from, what it results from, what influences it and what it gives rise to.",
+  "prerequisites": []
+}

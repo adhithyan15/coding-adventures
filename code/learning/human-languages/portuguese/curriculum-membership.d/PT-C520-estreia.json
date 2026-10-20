@@ -1,0 +1,11 @@
+{
+  "id": "PT-C520-estreia",
+  "pathSegment": "PT-PATH-520-TEATRO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-520-TEATRO",
+      "order": 3
+    }
+  ]
+}

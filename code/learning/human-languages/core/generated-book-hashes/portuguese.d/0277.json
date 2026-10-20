@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 277,
+  "sourceHash": "fnv1a64:ccacd7ed1da5ec17",
+  "lessonIds": [
+    "PT-C277-frequentemente",
+    "PT-C277-ocasionalmente",
+    "PT-C277-habitualmente",
+    "PT-C277-diariamente",
+    "PT-C277-previamente"
+  ],
+  "tex": "portuguese/book/chapters/ch277-de-vez-em-quando.tex"
+}

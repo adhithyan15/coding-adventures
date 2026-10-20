@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C448-opticien",
+    "language": "french",
+    "chapter": 448,
+    "sequence": 24780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f51eedd7b22cb424"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 511,
+  "sourceHash": "fnv1a64:1e1fbf23aecb2b39",
+  "lessonIds": [
+    "PT-C511-torneio",
+    "PT-C511-taca",
+    "PT-C511-medalha",
+    "PT-C511-podio",
+    "PT-C511-recorde"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch511.txt",
+  "json": "portuguese/narration/ch511.json",
+  "textHash": "fnv1a64:041335ed876a5d8d",
+  "jsonHash": "fnv1a64:60d9bec0a5f9ca06",
+  "findings": []
+}

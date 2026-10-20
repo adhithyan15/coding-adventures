@@ -1,0 +1,11 @@
+{
+  "id": "PT-C470-humildade",
+  "pathSegment": "PT-PATH-470-MODESTIA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-470-MODESTIA",
+      "order": 1
+    }
+  ]
+}

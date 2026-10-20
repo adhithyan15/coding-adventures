@@ -1,0 +1,11 @@
+{
+  "id": "PT-R506-revisao-499-506",
+  "pathSegment": "PT-PATH-506-AGUA",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PT-EXT-506-AGUA",
+      "order": 5
+    }
+  ]
+}

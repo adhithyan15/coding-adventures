@@ -17,6 +17,16 @@ source-to-source frontends remain separate; any future integration must not
 change the direct language-to-IIR contract. A host runtime may serve as a
 test oracle, but must not execute the compiled program in production.
 
+LANG84 (`LANG84-grammar-driven-versioned-frontends.md`) is the frontend
+contract for these four lines and for every other IIR frontend. Lexing and
+parsing come only from the generic grammar-driven lexer and parser over a
+per-release `<lang><release>.tokens` / `.grammar` pair. The IIR compiler walks
+that parse tree directly; it does not lift it into a typed AST. Every tagged
+release is inventoried in `releases.csv` and selectable without silent
+fallback, and the emitted operations come from LANG83. Where this spec's
+earlier slices describe a typed-AST bridge (JavaScript), a hand-written Ruby
+lexer, or a hard-coded version, LANG84's migration plan supersedes them.
+
 Use one active implementation PR at a time. Interleave this queue with the
 existing LANG VM backlog and PREP01 preprocessor queue, selecting the next
 bounded item after each verified merge.

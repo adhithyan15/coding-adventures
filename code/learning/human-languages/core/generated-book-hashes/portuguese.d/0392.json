@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:fbc27b271bd47d9b",
+  "lessonIds": [
+    "PT-C392-investir",
+    "PT-C392-investimento",
+    "PT-C392-juro",
+    "PT-C392-taxa",
+    "PT-C392-inflacao"
+  ],
+  "tex": "portuguese/book/chapters/ch392-por-o-dinheiro-a-render.tex"
+}

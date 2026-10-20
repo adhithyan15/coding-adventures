@@ -1,0 +1,19 @@
+{
+  "chapter": 513,
+  "title": "L'orchestre",
+  "label": "ch:fr-l-orchestre",
+  "canDo": "I can talk about playing in an orchestra.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-R513-revision-506-513",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 513: I can talk about playing in an orchestra.",
+    "assesses": [
+      "FR-LEX-C513-ORCHESTRE-03",
+      "FR-LEX-C513-ORCHESTRE-04",
+      "FR-LEX-C513-ORCHESTRE-05"
+    ]
+  }
+}

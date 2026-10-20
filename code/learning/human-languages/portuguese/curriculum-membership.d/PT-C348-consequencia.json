@@ -1,0 +1,11 @@
+{
+  "id": "PT-C348-consequencia",
+  "pathSegment": "PT-PATH-348-EFEITO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-348-EFEITO",
+      "order": 4
+    }
+  ]
+}

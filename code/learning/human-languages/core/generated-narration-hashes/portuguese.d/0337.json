@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:38e182ca7080b485",
+  "lessonIds": [
+    "PT-C337-argumentar",
+    "PT-C337-logico",
+    "PT-C337-convincente",
+    "PT-C337-persuadir",
+    "PT-C337-conviccao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch337.txt",
+  "json": "portuguese/narration/ch337.json",
+  "textHash": "fnv1a64:640e74532aa8a16e",
+  "jsonHash": "fnv1a64:582825b68a057dea",
+  "findings": []
+}

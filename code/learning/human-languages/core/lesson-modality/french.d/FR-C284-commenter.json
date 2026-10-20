@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C284-commenter",
+    "language": "french",
+    "chapter": 284,
+    "sequence": 16360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b5698000d34cf823"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 403,
+  "sourceHash": "fnv1a64:0af3a4adab455573",
+  "lessonIds": [
+    "FR-C403-pompe",
+    "FR-C403-gazole",
+    "FR-C403-carburant",
+    "FR-C403-reservoir",
+    "FR-C403-demarrer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch403.txt",
+  "json": "french/narration/ch403.json",
+  "textHash": "fnv1a64:356cb2791ae0bc64",
+  "jsonHash": "fnv1a64:812def259665192b",
+  "findings": []
+}

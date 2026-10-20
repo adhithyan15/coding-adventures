@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 425,
+  "sourceHash": "fnv1a64:966002601964545e",
+  "lessonIds": [
+    "FR-C425-camping",
+    "FR-C425-tente",
+    "FR-C425-sac-de-couchage",
+    "FR-C425-camper",
+    "FR-C425-bivouaquer"
+  ],
+  "tex": "french/book/chapters/ch425-au-camping.tex"
+}

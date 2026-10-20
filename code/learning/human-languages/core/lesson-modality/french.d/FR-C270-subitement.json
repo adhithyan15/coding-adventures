@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C270-subitement",
+    "language": "french",
+    "chapter": 270,
+    "sequence": 15610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca51376c5ca3a17d"
+  },
+  "findings": []
+}

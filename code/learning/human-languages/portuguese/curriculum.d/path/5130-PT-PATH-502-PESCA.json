@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-502-PESCA",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "PT-EXT-502-PESCA"
+  ],
+  "after": []
+}

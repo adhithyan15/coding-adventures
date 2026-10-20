@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 418,
+  "sourceHash": "fnv1a64:6a247f3e92236481",
+  "lessonIds": [
+    "PT-C418-bote",
+    "PT-C418-remo",
+    "PT-C418-remar",
+    "PT-C418-canoa",
+    "PT-C418-barqueiro"
+  ],
+  "tex": "portuguese/book/chapters/ch418-de-barco.tex"
+}

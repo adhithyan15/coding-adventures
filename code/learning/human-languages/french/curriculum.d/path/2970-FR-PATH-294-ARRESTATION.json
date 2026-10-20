@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-294-ARRESTATION",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-294-ARRESTATION"
+  ],
+  "after": []
+}

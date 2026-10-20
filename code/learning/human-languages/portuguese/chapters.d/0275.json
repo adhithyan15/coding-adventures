@@ -1,0 +1,19 @@
+{
+  "chapter": 275,
+  "title": "Ao fim do dia",
+  "label": "ch:pt-ao-fim-do-dia",
+  "canDo": "I can say when in the day something happened: at dawn, late in the afternoon, at nightfall, at twilight, or the day before.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C275-vespera",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 275: I can say when in the day something happened: at dawn, late in the afternoon, at nightfall, at twilight, or the day before.",
+    "assesses": [
+      "PT-LEX-C275-ENTARDECER-03",
+      "PT-LEX-C275-ENTARDECER-04",
+      "PT-LEX-C275-ENTARDECER-05"
+    ]
+  }
+}

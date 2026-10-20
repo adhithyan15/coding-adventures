@@ -1,0 +1,19 @@
+{
+  "chapter": 271,
+  "title": "O que ocorreu",
+  "label": "ch:pt-o-que-ocorreu",
+  "canDo": "I can say that something occurred, took place or came after something else, and name an event.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C271-ocorrencia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 271: I can say that something occurred, took place or came after something else, and name an event.",
+    "assesses": [
+      "PT-LEX-C271-OCORRER-03",
+      "PT-LEX-C271-OCORRER-04",
+      "PT-LEX-C271-OCORRER-05"
+    ]
+  }
+}

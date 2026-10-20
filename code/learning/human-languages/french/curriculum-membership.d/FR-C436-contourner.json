@@ -1,0 +1,11 @@
+{
+  "id": "FR-C436-contourner",
+  "pathSegment": "FR-PATH-436-RACCOURCI",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-436-RACCOURCI",
+      "order": 3
+    }
+  ]
+}

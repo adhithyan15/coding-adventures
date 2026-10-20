@@ -1,0 +1,11 @@
+{
+  "id": "PT-C445-demolir",
+  "pathSegment": "PT-PATH-445-OBRAS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-445-OBRAS",
+      "order": 4
+    }
+  ]
+}

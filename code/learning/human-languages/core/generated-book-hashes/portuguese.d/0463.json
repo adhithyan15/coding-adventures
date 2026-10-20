@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 463,
+  "sourceHash": "fnv1a64:0afcc50bed8d729f",
+  "lessonIds": [
+    "PT-C463-trovoada",
+    "PT-C463-trovejar",
+    "PT-C463-relampejar",
+    "PT-C463-granizo",
+    "PT-C463-aguaceiro"
+  ],
+  "tex": "portuguese/book/chapters/ch463-a-trovoada.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C362-subsidio",
+  "pathSegment": "PT-PATH-362-ORDENADO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-362-ORDENADO",
+      "order": 1
+    }
+  ]
+}

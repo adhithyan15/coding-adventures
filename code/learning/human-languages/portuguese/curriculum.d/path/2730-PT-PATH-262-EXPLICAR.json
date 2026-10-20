@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-262-EXPLICAR",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "PT-EXT-262-EXPLICAR"
+  ],
+  "after": []
+}

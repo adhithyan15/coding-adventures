@@ -1,0 +1,14 @@
+{
+  "language": "french",
+  "chapter": 463,
+  "sourceHash": "fnv1a64:128547cb2e751c5d",
+  "lessonIds": [
+    "FR-C463-verglas",
+    "FR-C463-givre",
+    "FR-C463-geler",
+    "FR-C463-degeler",
+    "FR-C463-grelotter",
+    "FR-R463-revision-456-463"
+  ],
+  "tex": "french/book/chapters/ch463-le-grand-froid.tex"
+}

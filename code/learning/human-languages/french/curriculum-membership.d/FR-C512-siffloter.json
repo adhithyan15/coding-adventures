@@ -1,0 +1,11 @@
+{
+  "id": "FR-C512-siffloter",
+  "pathSegment": "FR-PATH-512-CHANT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-512-CHANT",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-303-CHEIA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-303-CHEIA"
+  ],
+  "after": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-316-CELEBRER",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-316-CELEBRER"
+  ],
+  "after": []
+}

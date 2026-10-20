@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-450-MERCEARIA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can shop for food: the grocer's, the deli, the fruit shop, the wine shop and slicing.",
+  "prerequisites": []
+}

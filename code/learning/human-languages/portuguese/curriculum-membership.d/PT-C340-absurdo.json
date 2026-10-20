@@ -1,0 +1,11 @@
+{
+  "id": "PT-C340-absurdo",
+  "pathSegment": "PT-PATH-340-DUVIDA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-340-DUVIDA",
+      "order": 3
+    }
+  ]
+}

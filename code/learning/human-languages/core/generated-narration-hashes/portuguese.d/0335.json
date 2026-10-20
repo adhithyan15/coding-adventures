@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:0294e8b920b371dc",
+  "lessonIds": [
+    "PT-C335-opiniao",
+    "PT-C335-convencido",
+    "PT-C335-ponto-de-vista",
+    "PT-C335-opinar",
+    "PT-C335-sustentar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch335.txt",
+  "json": "portuguese/narration/ch335.json",
+  "textHash": "fnv1a64:54e9494e402affe2",
+  "jsonHash": "fnv1a64:2e773dc9bf8c2162",
+  "findings": []
+}

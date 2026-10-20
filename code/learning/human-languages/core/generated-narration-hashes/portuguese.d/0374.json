@@ -1,0 +1,20 @@
+{
+  "language": "portuguese",
+  "chapter": 374,
+  "sourceHash": "fnv1a64:3c9a6d8cd2ac9547",
+  "lessonIds": [
+    "PT-C374-intencao",
+    "PT-C374-proposito",
+    "PT-C374-meta",
+    "PT-C374-disponivel",
+    "PT-C374-compromisso",
+    "PT-R374-revisao-367-374"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "portuguese/narration/ch374.txt",
+  "json": "portuguese/narration/ch374.json",
+  "textHash": "fnv1a64:02abd3af4ad92069",
+  "jsonHash": "fnv1a64:78919bee095be13b",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C332-grelhar",
+  "pathSegment": "PT-PATH-332-FRITAR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-332-FRITAR",
+      "order": 3
+    }
+  ]
+}

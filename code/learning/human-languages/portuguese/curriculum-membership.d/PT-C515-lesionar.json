@@ -1,0 +1,11 @@
+{
+  "id": "PT-C515-lesionar",
+  "pathSegment": "PT-PATH-515-LESAO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-515-LESAO",
+      "order": 3
+    }
+  ]
+}

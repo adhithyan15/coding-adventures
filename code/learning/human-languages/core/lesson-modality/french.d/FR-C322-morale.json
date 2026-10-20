@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C322-morale",
+    "language": "french",
+    "chapter": 322,
+    "sequence": 18300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8f078bff88e32f6a"
+  },
+  "findings": []
+}

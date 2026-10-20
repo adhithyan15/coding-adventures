@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 436,
+  "sourceHash": "fnv1a64:4be32a5ba4708f44",
+  "lessonIds": [
+    "PT-C436-indicacoes",
+    "PT-C436-rotunda",
+    "PT-C436-contornar",
+    "PT-C436-entroncamento",
+    "PT-C436-prosseguir"
+  ],
+  "tex": "portuguese/book/chapters/ch436-pedir-indicacoes.tex"
+}

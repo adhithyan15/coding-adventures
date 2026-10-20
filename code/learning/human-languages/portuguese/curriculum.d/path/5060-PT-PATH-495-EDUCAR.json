@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-495-EDUCAR",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "PT-EXT-495-EDUCAR"
+  ],
+  "after": []
+}

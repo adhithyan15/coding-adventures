@@ -1,0 +1,11 @@
+{
+  "id": "PT-C349-dado-que",
+  "pathSegment": "PT-PATH-349-VISTOQUE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-349-VISTOQUE",
+      "order": 1
+    }
+  ]
+}

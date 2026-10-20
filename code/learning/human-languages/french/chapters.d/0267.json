@@ -1,0 +1,19 @@
+{
+  "chapter": 267,
+  "title": "Would — the conditionnel, and Six Lines",
+  "label": "ch:fr-would",
+  "canDo": "I can say what would happen with the conditionnel, and write six connected lines about a journey that end looking forward.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FR-W267-six-lignes",
+    "kind": "task",
+    "summary": "Complete FR-W267-six-lignes: six lines to one reader: the scene in the imparfait, events in order, a reason, and a last line with j'espère, ce serait or si.",
+    "assesses": [
+      "FR-LEX-CE-SERAIT-01",
+      "FR-GRAM-CONDITIONNEL-01",
+      "FR-GRAM-SI-IMPARFAIT-02"
+    ]
+  }
+}

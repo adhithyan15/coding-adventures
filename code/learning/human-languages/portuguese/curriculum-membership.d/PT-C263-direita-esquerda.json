@@ -1,0 +1,11 @@
+{
+  "id": "PT-C263-direita-esquerda",
+  "pathSegment": "PT-PATH-263-CAMINHO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-263-CAMINHO",
+      "order": 1
+    }
+  ]
+}

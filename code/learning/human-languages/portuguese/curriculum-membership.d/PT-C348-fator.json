@@ -1,0 +1,11 @@
+{
+  "id": "PT-C348-fator",
+  "pathSegment": "PT-PATH-348-EFEITO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-348-EFEITO",
+      "order": 3
+    }
+  ]
+}

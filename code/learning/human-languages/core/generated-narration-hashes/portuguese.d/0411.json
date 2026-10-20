@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:b78956ea3dda6ad8",
+  "lessonIds": [
+    "PT-C411-aluguer",
+    "PT-C411-condutor",
+    "PT-C411-matricula",
+    "PT-C411-quilometragem",
+    "PT-C411-franquia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch411.txt",
+  "json": "portuguese/narration/ch411.json",
+  "textHash": "fnv1a64:79912b79d56bd2b3",
+  "jsonHash": "fnv1a64:551f0411ac9e10ee",
+  "findings": []
+}

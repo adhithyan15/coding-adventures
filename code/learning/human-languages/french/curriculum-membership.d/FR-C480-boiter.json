@@ -1,0 +1,11 @@
+{
+  "id": "FR-C480-boiter",
+  "pathSegment": "FR-PATH-480-PLATRE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-480-PLATRE",
+      "order": 3
+    }
+  ]
+}

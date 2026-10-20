@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 486,
+  "sourceHash": "fnv1a64:19ba1a60048f539a",
+  "lessonIds": [
+    "PT-C486-termometro",
+    "PT-C486-vacina",
+    "PT-C486-injecao",
+    "PT-C486-entorse",
+    "PT-C486-ligadura"
+  ],
+  "tex": "portuguese/book/chapters/ch486-vacinas-e-ligaduras.tex"
+}

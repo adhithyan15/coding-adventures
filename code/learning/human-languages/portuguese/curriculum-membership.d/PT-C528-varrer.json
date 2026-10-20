@@ -1,0 +1,11 @@
+{
+  "id": "PT-C528-varrer",
+  "pathSegment": "PT-PATH-528-LIMPEZA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-528-LIMPEZA",
+      "order": 2
+    }
+  ]
+}

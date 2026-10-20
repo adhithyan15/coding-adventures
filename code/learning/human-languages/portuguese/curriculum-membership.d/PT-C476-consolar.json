@@ -1,0 +1,11 @@
+{
+  "id": "PT-C476-consolar",
+  "pathSegment": "PT-PATH-476-DESILUSAO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-476-DESILUSAO",
+      "order": 3
+    }
+  ]
+}

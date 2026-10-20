@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:ea9c9b8139641db6",
+  "lessonIds": [
+    "FR-C385-bureaucratie",
+    "FR-C385-demarche",
+    "FR-C385-procedure",
+    "FR-C385-certificat",
+    "FR-C385-attestation"
+  ],
+  "tex": "french/book/chapters/ch385-la-paperasse.tex"
+}

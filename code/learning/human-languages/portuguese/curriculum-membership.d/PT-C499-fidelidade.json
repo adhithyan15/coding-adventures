@@ -1,0 +1,11 @@
+{
+  "id": "PT-C499-fidelidade",
+  "pathSegment": "PT-PATH-499-GRATIDAO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-499-GRATIDAO",
+      "order": 4
+    }
+  ]
+}

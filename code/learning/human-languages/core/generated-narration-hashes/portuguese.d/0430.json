@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 430,
+  "sourceHash": "fnv1a64:9bddd88e6ac7d292",
+  "lessonIds": [
+    "PT-C430-pingar",
+    "PT-C430-ralo",
+    "PT-C430-entupir",
+    "PT-C430-desentupir",
+    "PT-C430-autoclismo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch430.txt",
+  "json": "portuguese/narration/ch430.json",
+  "textHash": "fnv1a64:3f3355dc5f68c660",
+  "jsonHash": "fnv1a64:9810c3396db5b1b0",
+  "findings": []
+}

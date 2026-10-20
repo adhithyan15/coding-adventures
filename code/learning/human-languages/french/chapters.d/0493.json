@@ -1,0 +1,19 @@
+{
+  "chapter": 493,
+  "title": "La première année",
+  "label": "ch:fr-la-premiere-annee",
+  "canDo": "I can talk about pregnancy and a baby's first months.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C493-bercer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 493: I can talk about pregnancy and a baby's first months.",
+    "assesses": [
+      "FR-LEX-C493-BEBE-03",
+      "FR-LEX-C493-BEBE-04",
+      "FR-LEX-C493-BEBE-05"
+    ]
+  }
+}

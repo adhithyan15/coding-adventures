@@ -4,6 +4,8 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+- **A multiline `HostInput` is a `<textarea>` (#15930).** `multiline: true` was read only on the legacy `Input`, so the kernel `HostInput` became a one-line `<input>`. Both now share the text-area lowering. In either, a multiline field has no Enter-to-`onCommit` branch in its `onkeydown`: Enter is a line break there on every backend (UI29 §2.1). Escape still cancels.
+
 - **mosstyle `align` becomes flex alignment (#16932).** `align` is not a CSS property, so `align: center-vertical` reached the inline style verbatim and browsers discarded it. `translate_layout_alias` maps it as html and React do: `center-vertical` → `align-items: center`, `center-horizontal` → `justify-content: center`, `center` → both, `start`/`end` → `flex-start`/`flex-end`, `space-between` → `justify-content: space-between`. Any other value passes through unchanged.
 
 - **`Path` lowers to SVG (UI39, #14686).** `circle`, `line` and `curve` emit the same inert SVG overlay as the html emitter, with paint from the part's style (`background` → fill, `border-color` → stroke, `border-width` → stroke width). Before this, `Path` fell through to `UnknownPrimitive`, so SpiceWorkbench could not compile on Web Components, and MosaicBook carried a waiver for it.

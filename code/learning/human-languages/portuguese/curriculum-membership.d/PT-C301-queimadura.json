@@ -1,0 +1,11 @@
+{
+  "id": "PT-C301-queimadura",
+  "pathSegment": "PT-PATH-301-INCENDIO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-301-INCENDIO",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C512-andebol",
+  "pathSegment": "PT-PATH-512-PAVILHAO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-512-PAVILHAO",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-294-INVESTIGAR",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-294-INVESTIGAR"
+  ],
+  "after": []
+}

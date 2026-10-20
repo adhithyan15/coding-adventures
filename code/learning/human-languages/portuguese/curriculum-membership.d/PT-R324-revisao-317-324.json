@@ -1,0 +1,11 @@
+{
+  "id": "PT-R324-revisao-317-324",
+  "pathSegment": "PT-PATH-324-CONTO",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PT-EXT-324-CONTO",
+      "order": 5
+    }
+  ]
+}

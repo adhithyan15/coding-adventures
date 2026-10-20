@@ -1,0 +1,11 @@
+{
+  "id": "FR-C364-stereotype",
+  "pathSegment": "FR-PATH-364-JUSTICE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-364-JUSTICE",
+      "order": 4
+    }
+  ]
+}

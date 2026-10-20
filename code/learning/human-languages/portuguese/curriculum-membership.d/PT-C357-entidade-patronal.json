@@ -1,0 +1,11 @@
+{
+  "id": "PT-C357-entidade-patronal",
+  "pathSegment": "PT-PATH-357-ESTAGIO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-357-ESTAGIO",
+      "order": 4
+    }
+  ]
+}

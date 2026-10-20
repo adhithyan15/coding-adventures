@@ -1,0 +1,19 @@
+{
+  "chapter": 361,
+  "title": "Trabalho a mais",
+  "label": "ch:pt-trabalho-a-mais",
+  "canDo": "I can talk about too much work: feeling stressed and worn out, overtime, productivity and efficiency.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C361-produtividade",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 361: I can talk about too much work: feeling stressed and worn out, overtime, productivity and efficiency.",
+    "assesses": [
+      "PT-LEX-C361-STRESS-03",
+      "PT-LEX-C361-STRESS-04",
+      "PT-LEX-C361-STRESS-05"
+    ]
+  }
+}

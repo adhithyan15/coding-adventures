@@ -1,0 +1,11 @@
+{
+  "id": "PT-C413-terminal",
+  "pathSegment": "PT-PATH-413-PARAGEM",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-413-PARAGEM",
+      "order": 1
+    }
+  ]
+}

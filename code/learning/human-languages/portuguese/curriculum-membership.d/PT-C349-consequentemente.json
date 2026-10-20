@@ -1,0 +1,11 @@
+{
+  "id": "PT-C349-consequentemente",
+  "pathSegment": "PT-PATH-349-VISTOQUE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-349-VISTOQUE",
+      "order": 3
+    }
+  ]
+}

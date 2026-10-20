@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-486-NUITS",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a bad night: sleeplessness, snoring and nightmares.",
+  "prerequisites": []
+}

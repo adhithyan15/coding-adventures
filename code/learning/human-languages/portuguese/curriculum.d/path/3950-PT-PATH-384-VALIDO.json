@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-384-VALIDO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "PT-EXT-384-VALIDO"
+  ],
+  "after": []
+}

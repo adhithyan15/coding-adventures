@@ -1,0 +1,11 @@
+{
+  "id": "PT-C276-mensal",
+  "pathSegment": "PT-PATH-276-QUINZENA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-276-QUINZENA",
+      "order": 2
+    }
+  ]
+}

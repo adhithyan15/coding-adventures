@@ -1,0 +1,11 @@
+{
+  "id": "PT-C298-libertar",
+  "pathSegment": "PT-PATH-298-RECURSO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-298-RECURSO",
+      "order": 4
+    }
+  ]
+}

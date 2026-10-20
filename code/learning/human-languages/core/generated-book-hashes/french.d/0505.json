@@ -1,0 +1,14 @@
+{
+  "language": "french",
+  "chapter": 505,
+  "sourceHash": "fnv1a64:2e098fd1d04c230f",
+  "lessonIds": [
+    "FR-C505-arbitre",
+    "FR-C505-sifflet",
+    "FR-C505-siffler",
+    "FR-C505-terrain",
+    "FR-C505-marquer",
+    "FR-R505-revision-498-505"
+  ],
+  "tex": "french/book/chapters/ch505-sur-le-terrain.tex"
+}

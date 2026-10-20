@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 309,
+  "sourceHash": "fnv1a64:0ea8667c11f639b6",
+  "lessonIds": [
+    "PT-C309-nascimento",
+    "PT-C309-parto",
+    "PT-C309-gravida",
+    "PT-C309-gravidez",
+    "PT-C309-recem-nascido"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch309.txt",
+  "json": "portuguese/narration/ch309.json",
+  "textHash": "fnv1a64:6891355a44b92015",
+  "jsonHash": "fnv1a64:d1bc19a0ee0ae094",
+  "findings": []
+}

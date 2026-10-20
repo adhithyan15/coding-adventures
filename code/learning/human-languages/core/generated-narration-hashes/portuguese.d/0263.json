@@ -1,0 +1,17 @@
+{
+  "language": "portuguese",
+  "chapter": 263,
+  "sourceHash": "fnv1a64:98e0dfd265f2e6c7",
+  "lessonIds": [
+    "PT-C263-desculpe",
+    "PT-C263-direita-esquerda",
+    "PT-C263-revisao-caminho"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "portuguese/narration/ch263.txt",
+  "json": "portuguese/narration/ch263.json",
+  "textHash": "fnv1a64:b91e976149f4e530",
+  "jsonHash": "fnv1a64:d7524dc9dd876d7a",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C259-estava-a",
+  "pathSegment": "PT-PATH-259-CENA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-259-CENA",
+      "order": 4
+    }
+  ]
+}

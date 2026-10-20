@@ -1,0 +1,11 @@
+{
+  "id": "FR-C297-chauffard",
+  "pathSegment": "FR-PATH-297-ROUTE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-297-ROUTE",
+      "order": 1
+    }
+  ]
+}

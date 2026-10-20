@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 436,
+  "sourceHash": "fnv1a64:e45d7d11c8f2774b",
+  "lessonIds": [
+    "FR-C436-raccourci",
+    "FR-C436-detour",
+    "FR-C436-itineraire",
+    "FR-C436-contourner",
+    "FR-C436-rebrousser"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch436.txt",
+  "json": "french/narration/ch436.json",
+  "textHash": "fnv1a64:742d422616b32780",
+  "jsonHash": "fnv1a64:d3e1e12c8b782a7c",
+  "findings": []
+}

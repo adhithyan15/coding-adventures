@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 270,
+  "sourceHash": "fnv1a64:83fe607c07148dd5",
+  "lessonIds": [
+    "PT-C270-entretanto",
+    "PT-C270-simultaneamente",
+    "PT-C270-assim-que",
+    "PT-C270-logo-que",
+    "PT-C270-subitamente"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch270.txt",
+  "json": "portuguese/narration/ch270.json",
+  "textHash": "fnv1a64:935f4816d2b08a9b",
+  "jsonHash": "fnv1a64:30b188bfa6302714",
+  "findings": []
+}

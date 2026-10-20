@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 355,
+  "sourceHash": "fnv1a64:5acd6854e09112d2",
+  "lessonIds": [
+    "PT-C355-vaga",
+    "PT-C355-curriculo",
+    "PT-C355-candidatura",
+    "PT-C355-candidato",
+    "PT-C355-contratar"
+  ],
+  "tex": "portuguese/book/chapters/ch355-procuro-emprego.tex"
+}

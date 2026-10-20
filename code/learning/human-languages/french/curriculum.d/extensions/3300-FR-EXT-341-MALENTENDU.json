@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-341-MALENTENDU",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can clear up a misunderstanding: clarify, specify, give more details and clear a question up.",
+  "prerequisites": []
+}

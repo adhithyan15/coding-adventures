@@ -1,0 +1,19 @@
+{
+  "chapter": 491,
+  "title": "Namorar",
+  "label": "ch:pt-namorar",
+  "canDo": "I can talk about dating and falling in love.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C491-abracar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 491: I can talk about dating and falling in love.",
+    "assesses": [
+      "PT-LEX-C491-NAMORO-03",
+      "PT-LEX-C491-NAMORO-04",
+      "PT-LEX-C491-NAMORO-05"
+    ]
+  }
+}

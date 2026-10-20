@@ -1,0 +1,11 @@
+{
+  "id": "PT-C384-expirar",
+  "pathSegment": "PT-PATH-384-VALIDO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-384-VALIDO",
+      "order": 2
+    }
+  ]
+}

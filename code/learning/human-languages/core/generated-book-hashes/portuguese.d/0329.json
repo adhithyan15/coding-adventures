@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 329,
+  "sourceHash": "fnv1a64:ead77e270f4ab156",
+  "lessonIds": [
+    "PT-C329-antepassado",
+    "PT-C329-batalha",
+    "PT-C329-invadir",
+    "PT-C329-conquistar",
+    "PT-C329-revolucao"
+  ],
+  "tex": "portuguese/book/chapters/ch329-paginas-da-historia.tex"
+}

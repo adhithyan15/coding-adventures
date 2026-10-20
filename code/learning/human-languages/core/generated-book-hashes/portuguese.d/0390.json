@@ -1,0 +1,14 @@
+{
+  "language": "portuguese",
+  "chapter": 390,
+  "sourceHash": "fnv1a64:069945023b3ac1fd",
+  "lessonIds": [
+    "PT-C390-julgamento",
+    "PT-C390-testemunhar",
+    "PT-C390-culpa",
+    "PT-C390-culpado",
+    "PT-C390-inocente",
+    "PT-R390-revisao-383-390"
+  ],
+  "tex": "portuguese/book/chapters/ch390-culpado-ou-inocente.tex"
+}

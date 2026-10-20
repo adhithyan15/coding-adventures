@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-287-ROUBO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-287-ROUBO"
+  ],
+  "after": []
+}

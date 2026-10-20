@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-276-EPOQUE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-276-EPOQUE"
+  ],
+  "after": []
+}

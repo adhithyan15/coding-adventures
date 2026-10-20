@@ -1,0 +1,11 @@
+{
+  "id": "FR-C378-rattrapage",
+  "pathSegment": "FR-PATH-378-ECHOUER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-378-ECHOUER",
+      "order": 4
+    }
+  ]
+}

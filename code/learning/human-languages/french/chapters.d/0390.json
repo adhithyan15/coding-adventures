@@ -1,0 +1,19 @@
+{
+  "chapter": 390,
+  "title": "Les comptes de la maison",
+  "label": "ch:fr-les-comptes-de-la-maison",
+  "canDo": "I can talk about household money: the budget, income, a subscription, spending and a membership fee.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FR-C390-cotisation",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 390: I can talk about household money: the budget, income, a subscription, spending and a membership fee.",
+    "assesses": [
+      "FR-LEX-C390-BUDGET-03",
+      "FR-LEX-C390-BUDGET-04",
+      "FR-LEX-C390-BUDGET-05"
+    ]
+  }
+}

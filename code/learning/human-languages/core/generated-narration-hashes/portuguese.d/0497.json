@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 497,
+  "sourceHash": "fnv1a64:420080ee37a7e1fe",
+  "lessonIds": [
+    "PT-C497-brigar",
+    "PT-C497-separar",
+    "PT-C497-trair",
+    "PT-C497-traicao",
+    "PT-C497-reconciliar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch497.txt",
+  "json": "portuguese/narration/ch497.json",
+  "textHash": "fnv1a64:c5f4c0f6ed7fedae",
+  "jsonHash": "fnv1a64:d8b230d432a73b75",
+  "findings": []
+}

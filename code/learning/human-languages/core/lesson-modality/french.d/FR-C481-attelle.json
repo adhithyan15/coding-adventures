@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C481-attelle",
+    "language": "french",
+    "chapter": 481,
+    "sequence": 26490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fe156a66ac9aba18"
+  },
+  "findings": []
+}

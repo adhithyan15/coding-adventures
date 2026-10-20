@@ -1,0 +1,11 @@
+{
+  "id": "PT-C486-ligadura",
+  "pathSegment": "PT-PATH-486-LIGADURA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-486-LIGADURA",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C330-cocotte",
+    "language": "french",
+    "chapter": 330,
+    "sequence": 18710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4db91be3f7f7d468"
+  },
+  "findings": []
+}

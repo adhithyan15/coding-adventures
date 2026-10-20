@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 277,
+  "sourceHash": "fnv1a64:0882755b4099fb9b",
+  "lessonIds": [
+    "PT-C277-frequentemente",
+    "PT-C277-ocasionalmente",
+    "PT-C277-habitualmente",
+    "PT-C277-diariamente",
+    "PT-C277-previamente"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch277.txt",
+  "json": "portuguese/narration/ch277.json",
+  "textHash": "fnv1a64:1e476ac3ec16d4fe",
+  "jsonHash": "fnv1a64:afec5d24a19e00a1",
+  "findings": []
+}

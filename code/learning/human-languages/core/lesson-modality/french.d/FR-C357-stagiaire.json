@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C357-stagiaire",
+    "language": "french",
+    "chapter": 357,
+    "sequence": 20080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e84b7cdcad379687"
+  },
+  "findings": []
+}

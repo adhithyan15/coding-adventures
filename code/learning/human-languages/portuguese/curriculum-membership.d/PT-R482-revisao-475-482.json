@@ -1,0 +1,11 @@
+{
+  "id": "PT-R482-revisao-475-482",
+  "pathSegment": "PT-PATH-482-CORPO",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PT-EXT-482-CORPO",
+      "order": 5
+    }
+  ]
+}

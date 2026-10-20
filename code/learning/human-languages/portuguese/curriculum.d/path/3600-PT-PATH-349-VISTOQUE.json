@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-349-VISTOQUE",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "PT-EXT-349-VISTOQUE"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C518-vernissage",
+    "language": "french",
+    "chapter": 518,
+    "sequence": 28370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:22b0fd6b8aa2c381"
+  },
+  "findings": []
+}

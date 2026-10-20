@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 494,
+  "sourceHash": "fnv1a64:e2ed307dce077dbc",
+  "lessonIds": [
+    "PT-C494-fralda",
+    "PT-C494-biberao",
+    "PT-C494-chupeta",
+    "PT-C494-gatinhar",
+    "PT-C494-embalar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch494.txt",
+  "json": "portuguese/narration/ch494.json",
+  "textHash": "fnv1a64:c2f7799f467b6325",
+  "jsonHash": "fnv1a64:4dd37bf504adadaa",
+  "findings": []
+}

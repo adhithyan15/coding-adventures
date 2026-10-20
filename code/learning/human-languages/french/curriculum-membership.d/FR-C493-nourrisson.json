@@ -1,0 +1,11 @@
+{
+  "id": "FR-C493-nourrisson",
+  "pathSegment": "FR-PATH-493-BEBE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-493-BEBE",
+      "order": 2
+    }
+  ]
+}

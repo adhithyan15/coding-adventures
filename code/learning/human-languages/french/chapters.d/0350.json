@@ -1,0 +1,19 @@
+{
+  "chapter": 350,
+  "title": "Les répercussions",
+  "label": "ch:fr-les-repercussions",
+  "canDo": "I can describe the impact of an event, its knock-on effects, what set it off, what it aroused and the motive behind it.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C350-motif",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 350: I can describe the impact of an event, its knock-on effects, what set it off, what it aroused and the motive behind it.",
+    "assesses": [
+      "FR-LEX-C350-IMPACT-03",
+      "FR-LEX-C350-IMPACT-04",
+      "FR-LEX-C350-IMPACT-05"
+    ]
+  }
+}

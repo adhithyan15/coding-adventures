@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C345-critica",
+    "language": "portuguese",
+    "chapter": 345,
+    "sequence": 19740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:330bae2cff3631da"
+  },
+  "findings": []
+}

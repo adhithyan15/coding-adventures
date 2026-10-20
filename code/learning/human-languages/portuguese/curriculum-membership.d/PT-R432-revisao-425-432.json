@@ -1,0 +1,11 @@
+{
+  "id": "PT-R432-revisao-425-432",
+  "pathSegment": "PT-PATH-432-LUZ",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PT-EXT-432-LUZ",
+      "order": 5
+    }
+  ]
+}

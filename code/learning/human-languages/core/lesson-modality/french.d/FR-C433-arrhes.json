@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C433-arrhes",
+    "language": "french",
+    "chapter": 433,
+    "sequence": 24000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3141df779e2e6bb5"
+  },
+  "findings": []
+}

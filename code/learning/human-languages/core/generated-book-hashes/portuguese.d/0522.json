@@ -1,0 +1,14 @@
+{
+  "language": "portuguese",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:eedb4dc1248f3447",
+  "lessonIds": [
+    "PT-C522-exposicao",
+    "PT-C522-galeria",
+    "PT-C522-retrato",
+    "PT-C522-esculpir",
+    "PT-C522-escultor",
+    "PT-R522-revisao-515-522"
+  ],
+  "tex": "portuguese/book/chapters/ch522-na-galeria.tex"
+}

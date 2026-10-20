@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 347,
+  "sourceHash": "fnv1a64:4acde05c2f5a6022",
+  "lessonIds": [
+    "FR-C347-puisque",
+    "FR-C347-etant-donne-que",
+    "FR-C347-vu-que",
+    "FR-C347-par-consequent",
+    "FR-C347-c-est-pourquoi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch347.txt",
+  "json": "french/narration/ch347.json",
+  "textHash": "fnv1a64:808baefec091e082",
+  "jsonHash": "fnv1a64:df7f800770a78944",
+  "findings": []
+}

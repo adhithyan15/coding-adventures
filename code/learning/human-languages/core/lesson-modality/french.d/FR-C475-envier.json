@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C475-envier",
+    "language": "french",
+    "chapter": 475,
+    "sequence": 26170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:35644710043e6118"
+  },
+  "findings": []
+}

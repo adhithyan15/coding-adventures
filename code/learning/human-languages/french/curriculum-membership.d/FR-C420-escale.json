@@ -1,0 +1,11 @@
+{
+  "id": "FR-C420-escale",
+  "pathSegment": "FR-PATH-420-ESCALE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-420-ESCALE",
+      "order": 1
+    }
+  ]
+}

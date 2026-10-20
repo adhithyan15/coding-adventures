@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 338,
+  "sourceHash": "fnv1a64:1bf769e3ce292963",
+  "lessonIds": [
+    "FR-C338-douter",
+    "FR-C338-sceptique",
+    "FR-C338-nier",
+    "FR-C338-absurde",
+    "FR-C338-discutable"
+  ],
+  "tex": "french/book/chapters/ch338-je-n-y-crois-pas.tex"
+}

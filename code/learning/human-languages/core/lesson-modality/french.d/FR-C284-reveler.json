@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C284-reveler",
+    "language": "french",
+    "chapter": 284,
+    "sequence": 16320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cf3e95a876c2e43d"
+  },
+  "findings": []
+}

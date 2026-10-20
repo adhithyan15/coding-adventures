@@ -1,0 +1,19 @@
+{
+  "chapter": 392,
+  "title": "Pôr o dinheiro a render",
+  "label": "ch:pt-por-o-dinheiro-a-render",
+  "canDo": "I can talk about investing: investments, interest, rates and inflation.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "PT-C392-inflacao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 392: I can talk about investing: investments, interest, rates and inflation.",
+    "assesses": [
+      "PT-LEX-C392-INVESTIR-03",
+      "PT-LEX-C392-INVESTIR-04",
+      "PT-LEX-C392-INVESTIR-05"
+    ]
+  }
+}

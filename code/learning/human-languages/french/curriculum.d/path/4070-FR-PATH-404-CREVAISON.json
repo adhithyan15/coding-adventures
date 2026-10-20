@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-404-CREVAISON",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-404-CREVAISON"
+  ],
+  "after": []
+}

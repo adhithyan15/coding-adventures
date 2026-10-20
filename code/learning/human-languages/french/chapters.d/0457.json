@@ -1,0 +1,19 @@
+{
+  "chapter": 457,
+  "title": "Au fond des bois",
+  "label": "ch:fr-au-fond-des-bois",
+  "canDo": "I can describe a wood: the clearing, the bush, the fern, the moss and the bark.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C457-ecorce",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 457: I can describe a wood: the clearing, the bush, the fern, the moss and the bark.",
+    "assesses": [
+      "FR-LEX-C457-BOIS-03",
+      "FR-LEX-C457-BOIS-04",
+      "FR-LEX-C457-BOIS-05"
+    ]
+  }
+}

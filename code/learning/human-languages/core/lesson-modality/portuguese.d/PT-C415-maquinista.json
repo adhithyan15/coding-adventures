@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C415-maquinista",
+    "language": "portuguese",
+    "chapter": 415,
+    "sequence": 23340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:da3a7b70e86af765"
+  },
+  "findings": []
+}

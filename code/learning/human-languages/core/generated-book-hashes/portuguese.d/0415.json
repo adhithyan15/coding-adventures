@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 415,
+  "sourceHash": "fnv1a64:3e39df33c6c0fcba",
+  "lessonIds": [
+    "PT-C415-carruagem",
+    "PT-C415-compartimento",
+    "PT-C415-beliche",
+    "PT-C415-maquinista",
+    "PT-C415-locomotiva"
+  ],
+  "tex": "portuguese/book/chapters/ch415-no-comboio.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 511,
+  "title": "Taças e medalhas",
+  "label": "ch:pt-tacas-e-medalhas",
+  "canDo": "I can talk about tournaments, cups and medals.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C511-recorde",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 511: I can talk about tournaments, cups and medals.",
+    "assesses": [
+      "PT-LEX-C511-TORNEIO-03",
+      "PT-LEX-C511-TORNEIO-04",
+      "PT-LEX-C511-TORNEIO-05"
+    ]
+  }
+}

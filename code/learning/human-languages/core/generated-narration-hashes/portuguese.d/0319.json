@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 319,
+  "sourceHash": "fnv1a64:839519ad79c1d4fe",
+  "lessonIds": [
+    "PT-C319-santo",
+    "PT-C319-marcha",
+    "PT-C319-manjerico",
+    "PT-C319-sardinhada",
+    "PT-C319-bailarico"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch319.txt",
+  "json": "portuguese/narration/ch319.json",
+  "textHash": "fnv1a64:13fd518ff74cc4dd",
+  "jsonHash": "fnv1a64:3ede4381b5b59225",
+  "findings": []
+}

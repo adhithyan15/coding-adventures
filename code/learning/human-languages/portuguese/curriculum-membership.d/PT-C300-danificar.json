@@ -1,0 +1,11 @@
+{
+  "id": "PT-C300-danificar",
+  "pathSegment": "PT-PATH-300-CAPOTAR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-300-CAPOTAR",
+      "order": 3
+    }
+  ]
+}

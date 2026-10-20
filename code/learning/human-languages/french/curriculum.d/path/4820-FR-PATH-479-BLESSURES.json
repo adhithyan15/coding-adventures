@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-479-BLESSURES",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-479-BLESSURES"
+  ],
+  "after": []
+}

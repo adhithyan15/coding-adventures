@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:b335855ee9270e82",
+  "lessonIds": [
+    "PT-C320-costume",
+    "PT-C320-ritual",
+    "PT-C320-cerimonia",
+    "PT-C320-peregrino",
+    "PT-C320-peregrinacao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch320.txt",
+  "json": "portuguese/narration/ch320.json",
+  "textHash": "fnv1a64:cfce8229754645ba",
+  "jsonHash": "fnv1a64:412abde58b8d9f31",
+  "findings": []
+}

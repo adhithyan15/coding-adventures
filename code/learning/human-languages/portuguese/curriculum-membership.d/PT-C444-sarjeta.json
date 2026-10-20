@@ -1,0 +1,11 @@
+{
+  "id": "PT-C444-sarjeta",
+  "pathSegment": "PT-PATH-444-MOBILIARIO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-444-MOBILIARIO",
+      "order": 2
+    }
+  ]
+}

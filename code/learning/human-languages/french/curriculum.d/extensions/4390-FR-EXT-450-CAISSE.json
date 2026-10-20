@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-450-CAISSE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can pay at the till: the cashier, taking money, charging a card, the card machine and cash.",
+  "prerequisites": []
+}

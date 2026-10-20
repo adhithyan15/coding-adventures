@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 457,
+  "sourceHash": "fnv1a64:a9a4509fead385c3",
+  "lessonIds": [
+    "FR-C457-clairiere",
+    "FR-C457-buisson",
+    "FR-C457-fougere",
+    "FR-C457-mousse",
+    "FR-C457-ecorce"
+  ],
+  "tex": "french/book/chapters/ch457-au-fond-des-bois.tex"
+}

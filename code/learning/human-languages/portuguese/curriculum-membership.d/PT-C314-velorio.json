@@ -1,0 +1,11 @@
+{
+  "id": "PT-C314-velorio",
+  "pathSegment": "PT-PATH-314-FALECER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-314-FALECER",
+      "order": 4
+    }
+  ]
+}

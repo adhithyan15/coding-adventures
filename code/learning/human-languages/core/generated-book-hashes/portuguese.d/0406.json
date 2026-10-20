@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 406,
+  "sourceHash": "fnv1a64:a9d5ef6c3cc34c3d",
+  "lessonIds": [
+    "PT-C406-avaria",
+    "PT-C406-avariar",
+    "PT-C406-rebocar",
+    "PT-C406-reboque",
+    "PT-C406-oficina"
+  ],
+  "tex": "portuguese/book/chapters/ch406-a-avaria.tex"
+}

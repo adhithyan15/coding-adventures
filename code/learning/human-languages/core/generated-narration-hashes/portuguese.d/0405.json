@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:0d2cd1a37677ee61",
+  "lessonIds": [
+    "PT-C405-pneu",
+    "PT-C405-furar",
+    "PT-C405-furo",
+    "PT-C405-jante",
+    "PT-C405-triangulo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch405.txt",
+  "json": "portuguese/narration/ch405.json",
+  "textHash": "fnv1a64:823c958857657ce5",
+  "jsonHash": "fnv1a64:7f98aca112ad3e2f",
+  "findings": []
+}

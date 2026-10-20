@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 529,
+  "sourceHash": "fnv1a64:e5b2e3123fe48827",
+  "lessonIds": [
+    "PT-C529-detergente",
+    "PT-C529-estender",
+    "PT-C529-estendal",
+    "PT-C529-mola",
+    "PT-C529-engomar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch529.txt",
+  "json": "portuguese/narration/ch529.json",
+  "textHash": "fnv1a64:d1e7451c15ae0ce6",
+  "jsonHash": "fnv1a64:271d27d7607e60ff",
+  "findings": []
+}

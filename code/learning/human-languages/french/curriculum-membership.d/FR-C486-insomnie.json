@@ -1,0 +1,11 @@
+{
+  "id": "FR-C486-insomnie",
+  "pathSegment": "FR-PATH-486-NUITS",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-486-NUITS",
+      "order": 0
+    }
+  ]
+}

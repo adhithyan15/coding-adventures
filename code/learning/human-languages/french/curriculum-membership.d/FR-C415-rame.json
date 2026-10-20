@@ -1,0 +1,11 @@
+{
+  "id": "FR-C415-rame",
+  "pathSegment": "FR-PATH-415-METRO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-415-METRO",
+      "order": 1
+    }
+  ]
+}

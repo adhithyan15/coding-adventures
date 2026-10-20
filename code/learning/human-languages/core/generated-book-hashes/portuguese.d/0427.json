@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 427,
+  "sourceHash": "fnv1a64:ca80a83c22483785",
+  "lessonIds": [
+    "PT-C427-caucao",
+    "PT-C427-desmarcar",
+    "PT-C427-cancelamento",
+    "PT-C427-antecipar",
+    "PT-C427-remarcar"
+  ],
+  "tex": "portuguese/book/chapters/ch427-reservar-e-desmarcar.tex"
+}

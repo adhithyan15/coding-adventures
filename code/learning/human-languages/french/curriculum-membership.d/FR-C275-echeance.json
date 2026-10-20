@@ -1,0 +1,11 @@
+{
+  "id": "FR-C275-echeance",
+  "pathSegment": "FR-PATH-275-DELAI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-275-DELAI",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C325-archeologue",
+    "language": "french",
+    "chapter": 325,
+    "sequence": 18450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a89b041e750d46cd"
+  },
+  "findings": []
+}

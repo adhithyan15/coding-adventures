@@ -1,0 +1,11 @@
+{
+  "id": "PT-C338-contradizer",
+  "pathSegment": "PT-PATH-338-DESACORDO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-338-DESACORDO",
+      "order": 4
+    }
+  ]
+}

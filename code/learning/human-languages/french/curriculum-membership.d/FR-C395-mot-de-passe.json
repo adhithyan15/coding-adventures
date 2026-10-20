@@ -1,0 +1,11 @@
+{
+  "id": "FR-C395-mot-de-passe",
+  "pathSegment": "FR-PATH-395-COMPTE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-395-COMPTE",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C355-preavis",
+  "pathSegment": "FR-PATH-355-DEMISSION",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-355-DEMISSION",
+      "order": 4
+    }
+  ]
+}

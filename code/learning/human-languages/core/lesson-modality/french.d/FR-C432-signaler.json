@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C432-signaler",
+    "language": "french",
+    "chapter": 432,
+    "sequence": 23960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f702225993e9586e"
+  },
+  "findings": []
+}

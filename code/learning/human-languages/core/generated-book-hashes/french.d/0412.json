@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 412,
+  "sourceHash": "fnv1a64:f6a11c6e9331a351",
+  "lessonIds": [
+    "FR-C412-guichet",
+    "FR-C412-tarif",
+    "FR-C412-trajet",
+    "FR-C412-forfait",
+    "FR-C412-valider"
+  ],
+  "tex": "french/book/chapters/ch412-au-guichet.tex"
+}

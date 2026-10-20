@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 412,
+  "sourceHash": "fnv1a64:354fab14b2b8a987",
+  "lessonIds": [
+    "PT-C412-motorizada",
+    "PT-C412-trotinete",
+    "PT-C412-selim",
+    "PT-C412-pedalar",
+    "PT-C412-parquimetro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch412.txt",
+  "json": "portuguese/narration/ch412.json",
+  "textHash": "fnv1a64:5785145c23dd6387",
+  "jsonHash": "fnv1a64:5d5e3aaa36a6f9b3",
+  "findings": []
+}

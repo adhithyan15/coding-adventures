@@ -139,6 +139,7 @@ def test_shared_release_manifest_freezes_the_berkeley_v1_gate() -> None:
     assert len(core["cases"]) >= gate["minimumCoreCaseCount"]
     assert set(gate["requiredAnalysisKinds"]) <= {case["analysis"] for case in core["cases"]}
     assert set(gate["requiredDeviceKinds"]) <= {case["kind"] for case in core["cases"]}
+    assert set(gate["requiredCoreKinds"]) <= {case["kind"] for case in core["cases"]}
     assert len(syntax["cases"]) >= gate["minimumSyntaxCaseCount"]
     assert set(gate["requiredSyntaxClassifications"]) <= {
         case["classification"] for case in syntax["cases"]

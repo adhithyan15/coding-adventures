@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 329,
+  "sourceHash": "fnv1a64:9f6bf6d8d3413ced",
+  "lessonIds": [
+    "PT-C329-antepassado",
+    "PT-C329-batalha",
+    "PT-C329-invadir",
+    "PT-C329-conquistar",
+    "PT-C329-revolucao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch329.txt",
+  "json": "portuguese/narration/ch329.json",
+  "textHash": "fnv1a64:4a8ee8b25a225180",
+  "jsonHash": "fnv1a64:ee6cfcf4dae3cd9b",
+  "findings": []
+}

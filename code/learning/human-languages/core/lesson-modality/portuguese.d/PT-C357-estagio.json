@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C357-estagio",
+    "language": "portuguese",
+    "chapter": 357,
+    "sequence": 20320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:303e22cde599b2e4"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 425,
+  "sourceHash": "fnv1a64:9d5873c433b12a0c",
+  "lessonIds": [
+    "FR-C425-camping",
+    "FR-C425-tente",
+    "FR-C425-sac-de-couchage",
+    "FR-C425-camper",
+    "FR-C425-bivouaquer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch425.txt",
+  "json": "french/narration/ch425.json",
+  "textHash": "fnv1a64:7857e3ba0feb16d9",
+  "jsonHash": "fnv1a64:05c62df145f9146b",
+  "findings": []
+}

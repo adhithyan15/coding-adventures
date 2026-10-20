@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C519-ensaiar",
+    "language": "portuguese",
+    "chapter": 519,
+    "sequence": 28670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:45880ac05bae2f5d"
+  },
+  "findings": []
+}

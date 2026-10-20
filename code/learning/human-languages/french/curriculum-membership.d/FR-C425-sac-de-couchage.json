@@ -1,0 +1,11 @@
+{
+  "id": "FR-C425-sac-de-couchage",
+  "pathSegment": "FR-PATH-425-CAMPING",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-425-CAMPING",
+      "order": 2
+    }
+  ]
+}

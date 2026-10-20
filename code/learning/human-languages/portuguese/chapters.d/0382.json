@@ -1,0 +1,19 @@
+{
+  "chapter": 382,
+  "title": "Pode-se ou não",
+  "label": "ch:pt-pode-se-ou-nao",
+  "canDo": "I can say what is forbidden, tolerated or authorised, and talk about breaking a rule.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "PT-R382-revisao-375-382",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 382: I can say what is forbidden, tolerated or authorised, and talk about breaking a rule.",
+    "assesses": [
+      "PT-LEX-C382-PROIBIDO-03",
+      "PT-LEX-C382-PROIBIDO-04",
+      "PT-LEX-C382-PROIBIDO-05"
+    ]
+  }
+}

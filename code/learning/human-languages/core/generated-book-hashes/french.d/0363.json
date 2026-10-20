@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 363,
+  "sourceHash": "fnv1a64:b57f9f29112c179f",
+  "lessonIds": [
+    "FR-C363-manifestation",
+    "FR-C363-manifester",
+    "FR-C363-manifestant",
+    "FR-C363-banderole",
+    "FR-C363-protester"
+  ],
+  "tex": "french/book/chapters/ch363-dans-la-rue.tex"
+}

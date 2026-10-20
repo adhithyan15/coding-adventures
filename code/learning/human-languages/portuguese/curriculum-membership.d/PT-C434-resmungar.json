@@ -1,0 +1,11 @@
+{
+  "id": "PT-C434-resmungar",
+  "pathSegment": "PT-PATH-434-RECLAMACAO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-434-RECLAMACAO",
+      "order": 2
+    }
+  ]
+}

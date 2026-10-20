@@ -1,0 +1,398 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "profile": {
+      "const": "core-text-v1"
+    },
+    "opcodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "enum": [
+              "LOAD_IMM",
+              "LOAD_ADDR",
+              "LOAD_BYTE",
+              "STORE_BYTE",
+              "LOAD_WORD",
+              "STORE_WORD",
+              "ADD",
+              "ADD_IMM",
+              "SUB",
+              "AND",
+              "AND_IMM",
+              "CMP_EQ",
+              "CMP_NE",
+              "CMP_LT",
+              "CMP_GT",
+              "LABEL",
+              "JUMP",
+              "BRANCH_Z",
+              "BRANCH_NZ",
+              "CALL",
+              "RET",
+              "SYSCALL",
+              "HALT",
+              "NOP",
+              "COMMENT"
+            ]
+          },
+          "category": {
+            "enum": [
+              "constants",
+              "memory",
+              "arithmetic",
+              "comparison",
+              "control_flow",
+              "system",
+              "meta"
+            ]
+          },
+          "operands": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "register",
+                "immediate",
+                "label",
+                "text",
+                "register|immediate"
+              ]
+            },
+            "maxItems": 3
+          }
+        },
+        "required": [
+          "name",
+          "category",
+          "operands"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 25,
+      "minItems": 25
+    },
+    "programs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[A-Za-z_][A-Za-z0-9_]{0,63}$"
+          },
+          "program": {
+            "$ref": "#/$defs/program"
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 65536
+          }
+        },
+        "required": [
+          "name",
+          "program",
+          "text"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 128
+    },
+    "invalid_programs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[A-Za-z_][A-Za-z0-9_]{0,63}$"
+          },
+          "program": {
+            "description": "Deliberately malformed typed program; semantic oracle must reject it."
+          }
+        },
+        "required": [
+          "name",
+          "program"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 128
+    },
+    "invalid_texts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[A-Za-z_][A-Za-z0-9_]{0,63}$"
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 65536
+          }
+        },
+        "required": [
+          "name",
+          "text"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 128
+    },
+    "id_sequences": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[A-Za-z_][A-Za-z0-9_]{0,63}$"
+          },
+          "start": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 256
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2147483647
+            },
+            "maxItems": 256
+          },
+          "next": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483648
+          }
+        },
+        "required": [
+          "name",
+          "start",
+          "count",
+          "values",
+          "next"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 128
+    }
+  },
+  "required": [
+    "schema_version",
+    "profile",
+    "opcodes",
+    "programs",
+    "invalid_programs",
+    "invalid_texts",
+    "id_sequences"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "BF03 core-text-v1 corpus",
+  "$comment": "Schema is structural. Literal roster/opcode matrix, exact numeric token rules, per-op roles, ID uniqueness/sentinels, labels/comments, byte/work budgets and canonical text are independently enforced by compiler_ir_conformance.py.",
+  "$defs": {
+    "operand": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "register"
+            },
+            "index": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 65535
+            }
+          },
+          "required": [
+            "kind",
+            "index"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "immediate"
+            },
+            "value": {
+              "type": "integer",
+              "minimum": -2147483648,
+              "maximum": 2147483647
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "label"
+            },
+            "name": {
+              "type": "string",
+              "pattern": "^[A-Za-z_][A-Za-z0-9_]{0,63}$",
+              "not": {
+                "pattern": "^v[0-9]+$"
+              }
+            }
+          },
+          "required": [
+            "kind",
+            "name"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "text"
+            },
+            "value": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256,
+              "pattern": "^[ -~]+$"
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "program": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "const": 1
+        },
+        "entry": {
+          "type": "string",
+          "pattern": "^[A-Za-z_][A-Za-z0-9_]{0,63}$",
+          "not": {
+            "pattern": "^v[0-9]+$"
+          }
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string",
+                "pattern": "^[A-Za-z_][A-Za-z0-9_]{0,63}$",
+                "not": {
+                  "pattern": "^v[0-9]+$"
+                }
+              },
+              "size": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 65535
+              },
+              "init": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 255
+              }
+            },
+            "required": [
+              "label",
+              "size",
+              "init"
+            ],
+            "additionalProperties": false
+          },
+          "maxItems": 32
+        },
+        "instructions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "op": {
+                "enum": [
+                  "LOAD_IMM",
+                  "LOAD_ADDR",
+                  "LOAD_BYTE",
+                  "STORE_BYTE",
+                  "LOAD_WORD",
+                  "STORE_WORD",
+                  "ADD",
+                  "ADD_IMM",
+                  "SUB",
+                  "AND",
+                  "AND_IMM",
+                  "CMP_EQ",
+                  "CMP_NE",
+                  "CMP_LT",
+                  "CMP_GT",
+                  "LABEL",
+                  "JUMP",
+                  "BRANCH_Z",
+                  "BRANCH_NZ",
+                  "CALL",
+                  "RET",
+                  "SYSCALL",
+                  "HALT",
+                  "NOP",
+                  "COMMENT"
+                ]
+              },
+              "operands": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/operand"
+                },
+                "maxItems": 3
+              },
+              "id": {
+                "type": "integer",
+                "minimum": -1,
+                "maximum": 2147483647
+              }
+            },
+            "required": [
+              "op",
+              "operands",
+              "id"
+            ],
+            "additionalProperties": false
+          },
+          "maxItems": 256
+        }
+      },
+      "required": [
+        "version",
+        "entry",
+        "data",
+        "instructions"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

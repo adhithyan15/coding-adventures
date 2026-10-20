@@ -1,0 +1,11 @@
+{
+  "id": "PT-C523-romancista",
+  "pathSegment": "PT-PATH-523-LIVROS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-523-LIVROS",
+      "order": 1
+    }
+  ]
+}

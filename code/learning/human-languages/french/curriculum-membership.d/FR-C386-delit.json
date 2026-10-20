@@ -1,0 +1,11 @@
+{
+  "id": "FR-C386-delit",
+  "pathSegment": "FR-PATH-386-ACCUSER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-386-ACCUSER",
+      "order": 4
+    }
+  ]
+}

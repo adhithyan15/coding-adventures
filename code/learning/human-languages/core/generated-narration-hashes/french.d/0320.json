@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:423f2b119dad3c6c",
+  "lessonIds": [
+    "FR-C320-trinquer",
+    "FR-C320-toast",
+    "FR-C320-souhaiter",
+    "FR-C320-bougie",
+    "FR-C320-voeu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch320.txt",
+  "json": "french/narration/ch320.json",
+  "textHash": "fnv1a64:fe0f540ceff85092",
+  "jsonHash": "fnv1a64:bd00db6973f09c32",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C402-derrapar",
+  "pathSegment": "PT-PATH-402-VOLANTE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-402-VOLANTE",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C509-avancado",
+  "pathSegment": "PT-PATH-509-BALIZA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-509-BALIZA",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C286-hausse",
+  "pathSegment": "FR-PATH-286-CHIFFRES",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-286-CHIFFRES",
+      "order": 2
+    }
+  ]
+}

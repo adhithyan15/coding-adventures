@@ -1,0 +1,11 @@
+{
+  "id": "PT-C301-explosao",
+  "pathSegment": "PT-PATH-301-INCENDIO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-301-INCENDIO",
+      "order": 1
+    }
+  ]
+}

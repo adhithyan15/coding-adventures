@@ -1,0 +1,19 @@
+{
+  "chapter": 394,
+  "title": "Garantias e reembolsos",
+  "label": "ch:pt-garantias-e-reembolsos",
+  "canDo": "I can talk about warranties, refunds and credit when I buy something.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "PT-C394-credito",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 394: I can talk about warranties, refunds and credit when I buy something.",
+    "assesses": [
+      "PT-LEX-C394-GARANTIA-03",
+      "PT-LEX-C394-GARANTIA-04",
+      "PT-LEX-C394-GARANTIA-05"
+    ]
+  }
+}

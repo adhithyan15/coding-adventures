@@ -1,0 +1,11 @@
+{
+  "id": "PT-C430-autoclismo",
+  "pathSegment": "PT-PATH-430-BANHO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-430-BANHO",
+      "order": 4
+    }
+  ]
+}

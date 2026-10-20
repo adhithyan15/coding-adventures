@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C446-padroeiro",
+    "language": "portuguese",
+    "chapter": 446,
+    "sequence": 24930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eb5d45d0e1ccdf29"
+  },
+  "findings": []
+}

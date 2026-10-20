@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 431,
+  "sourceHash": "fnv1a64:ca94d5f8843f0795",
+  "lessonIds": [
+    "PT-C431-radiador",
+    "PT-C431-aquecedor",
+    "PT-C431-esquentador",
+    "PT-C431-termostato",
+    "PT-C431-arejar"
+  ],
+  "tex": "portuguese/book/chapters/ch431-calor-e-frio-no-quarto.tex"
+}

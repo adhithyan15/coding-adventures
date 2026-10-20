@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "portuguese",
+  "chapter": 350,
+  "title": "De onde vem",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:a36b24dc7c30e79a",
+  "lessons": [
+    {
+      "id": "PT-C350-origem",
+      "sequence": 19960,
+      "title": "a origem — the origin",
+      "headword": "a origem",
+      "romanization": "a origem",
+      "gloss": "the origin",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fc44f574165089c4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for consequently, then the Portuguese for due to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: a origem",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a origem — \"the origin\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ninguém sabe a origem desta tradição. Nobody knows the origin of this tradition."
+            },
+            {
+              "kind": "speech",
+              "text": "Ter origem em — to originate in. De origem portuguesa — of Portuguese origin."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "origem is a learned borrowing from Latin orīgō, orīginis \"beginning, source, descent\" (EtymDB), built on orīrī \"to rise, to arise\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a origem",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a origem*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a origem, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a origem*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with a origem",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *a origem*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for consequently, then the Portuguese for due to, then say a origem again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for consequently, then the Portuguese for due to, then say *a origem* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does a origem mean? (\"The origin\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C350-derivar",
+      "sequence": 19970,
+      "title": "derivar — to derive, to come from",
+      "headword": "derivar",
+      "romanization": "derivar",
+      "gloss": "to derive, to come from",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bcd4e127529e692a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for due to, then the Portuguese for the origin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: derivar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "derivar — \"to derive, to come from\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Muitas palavras portuguesas derivam do latim. Many Portuguese words come from Latin."
+            },
+            {
+              "kind": "speech",
+              "text": "Derivar de — to come from."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "derivar is a learned borrowing from Latin dērīvāre \"to lead or draw off a liquid\" (EtymDB, Lewis & Short), built from dē and rīvus \"a stream\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "derivar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *derivar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "derivar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *derivar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with derivar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *derivar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for due to, then the Portuguese for the origin, then say derivar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for due to, then the Portuguese for the origin, then say *derivar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does derivar mean? (\"To derive, to come from\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C350-resultar",
+      "sequence": 19980,
+      "title": "resultar — to result; to work out",
+      "headword": "resultar",
+      "romanization": "resultar",
+      "gloss": "to result; to work out",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:57889753f83971d6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for the origin, then the Portuguese for to derive."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: resultar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "resultar — \"to result; to work out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "O acidente resultou de um erro do motorista. The accident resulted from the driver's mistake."
+            },
+            {
+              "kind": "speech",
+              "text": "Resultar de — to result from; resultar em — to lead to. Also to work: o plano resultou."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "resultar comes from Medieval Latin resultāre (EtymDB), Latin resultāre \"to spring or leap back, to rebound\" (Lewis & Short), built on saltāre \"to jump\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "resultar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *resultar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "resultar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *resultar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with resultar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *resultar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for the origin, then the Portuguese for to derive, then say resultar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for the origin, then the Portuguese for to derive, then say *resultar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does resultar mean? (\"To result; to work out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C350-originar",
+      "sequence": 19990,
+      "title": "originar — to give rise to, to cause",
+      "headword": "originar",
+      "romanization": "originar",
+      "gloss": "to give rise to, to cause",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cb825ae1f53f1343",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for to derive, then the Portuguese for to result."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: originar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "originar — \"to give rise to, to cause\"."
+            },
+            {
+              "kind": "speech",
+              "text": "A tempestade originou cortes de luz em toda a região. The storm caused power cuts across the whole region."
+            },
+            {
+              "kind": "speech",
+              "text": "Originar-se — to originate."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "originar is built on origem \"origin\", from Latin orīgō, orīginis \"beginning, source\", on orīrī \"to rise\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "originar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *originar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "originar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *originar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with originar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *originar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for to derive, then the Portuguese for to result, then say originar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for to derive, then the Portuguese for to result, then say *originar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does originar mean? (\"To give rise to, to cause\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C350-gracas-a",
+      "sequence": 20000,
+      "title": "graças a — thanks to",
+      "headword": "graças a",
+      "romanization": "graças a",
+      "gloss": "thanks to",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e2eb6cec466dbb89",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for to result, then the Portuguese for to give rise to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: graças a",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "graças a — \"thanks to\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Graças a ti, cheguei a horas. Thanks to you, I arrived on time."
+            },
+            {
+              "kind": "speech",
+              "text": "For good results; for bad ones Portuguese says por causa de."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "graças a is built on graça \"grace, favour\", inherited from Latin grātia \"favour, gratitude, thanks\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "graças a",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *graças a*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "graças a, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *graças a*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with graças a",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *graças a*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for to result, then the Portuguese for to give rise to, then say graças a again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for to result, then the Portuguese for to give rise to, then say *graças a* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does graças a mean? (\"Thanks to\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-R350-revisao-343-350",
+      "sequence": 20010,
+      "title": "Revisão dos capítulos 343–350",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 343-350",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dea57c3654ba9508",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Portuguese for the misunderstanding and to clarify."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the misunderstanding, to clarify, the clarification, to stress, to point out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the misunderstanding, to clarify, the clarification, to stress, to point out]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to evaluate, the judgement, to judge, objective, subjective",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to evaluate, the judgement, to judge, objective, subjective]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the advantage, the disadvantage, the aspect, the criticism, to weigh up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the advantage, the disadvantage, the aspect, the criticism, to weigh up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the reasoning, to deduce, to conclude, the conclusion, the criterion",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the reasoning, to deduce, to conclude, the conclusion, the criterion]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the controversy, controversial, to dispute, to rebut, relevant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the controversy, controversial, to dispute, to rebut, relevant]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the effect, to bring about, to cause, the factor, the consequence",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the effect, to bring about, to cause, the factor, the consequence]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "since, given that, seeing as, consequently, due to",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: since, given that, seeing as, consequently, due to]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the origin, to derive, to result, to give rise to, thanks to",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the origin, to derive, to result, to give rise to, thanks to]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The misunderstanding? (o equívoco.) To clarify? (esclarecer.) The clarification? (o esclarecimento.) To stress? (sublinhar.) To point out? (salientar.) To evaluate? (avaliar.) The judgement? (o juízo.) To judge? (julgar.) Objective? (objetivo.) Subjective? (subjetivo.) The advantage? (a vantagem.) The disadvantage? (a desvantagem.) The aspect? (o aspeto.) The criticism? (a crítica.) To weigh up? (ponderar.) The reasoning? (o raciocínio.) To deduce? (deduzir.) To conclude? (concluir.) The conclusion? (a conclusão.) The criterion? (o critério.) The controversy? (a polémica.) Controversial? (polémico.) To dispute? (contestar.) To rebut? (rebater.) Relevant? (relevante.) The effect? (o efeito.) To bring about? (provocar.) To cause? (causar.) The factor? (o fator.) The consequence? (a consequência.) Since? (visto que.) Given that? (dado que.) Seeing as? (uma vez que.) Consequently? (consequentemente.) Due to? (devido a.) The origin? (a origem.) To derive? (derivar.) To result? (resultar.) To give rise to? (originar.) Thanks to? (graças a.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

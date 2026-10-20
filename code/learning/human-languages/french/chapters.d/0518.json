@@ -1,0 +1,19 @@
+{
+  "chapter": 518,
+  "title": "Une exposition",
+  "label": "ch:fr-une-exposition",
+  "canDo": "I can talk about going to an exhibition.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C518-encadrer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 518: I can talk about going to an exhibition.",
+    "assesses": [
+      "FR-LEX-C518-EXPOSITION-03",
+      "FR-LEX-C518-EXPOSITION-04",
+      "FR-LEX-C518-EXPOSITION-05"
+    ]
+  }
+}

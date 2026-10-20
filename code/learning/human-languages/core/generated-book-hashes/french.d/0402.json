@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 402,
+  "sourceHash": "fnv1a64:c5e3dd71a570a4af",
+  "lessonIds": [
+    "FR-C402-pare-brise",
+    "FR-C402-retroviseur",
+    "FR-C402-klaxon",
+    "FR-C402-klaxonner",
+    "FR-C402-embuer"
+  ],
+  "tex": "french/book/chapters/ch402-bien-voir-la-route.tex"
+}

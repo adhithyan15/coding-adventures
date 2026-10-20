@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 437,
+  "sourceHash": "fnv1a64:907e6b06931e3a9e",
+  "lessonIds": [
+    "PT-C437-avenida",
+    "PT-C437-travessa",
+    "PT-C437-beco",
+    "PT-C437-viela",
+    "PT-C437-bifurcacao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch437.txt",
+  "json": "portuguese/narration/ch437.json",
+  "textHash": "fnv1a64:77e5177475bf215f",
+  "jsonHash": "fnv1a64:612f1743180dcac0",
+  "findings": []
+}

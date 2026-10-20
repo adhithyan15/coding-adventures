@@ -1,0 +1,11 @@
+{
+  "id": "FR-C364-injuste",
+  "pathSegment": "FR-PATH-364-JUSTICE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-364-JUSTICE",
+      "order": 1
+    }
+  ]
+}

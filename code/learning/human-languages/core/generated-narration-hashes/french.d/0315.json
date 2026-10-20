@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:afb241601f7f39fb",
+  "lessonIds": [
+    "FR-C315-tombe",
+    "FR-C315-deuil",
+    "FR-C315-testament",
+    "FR-C315-heriter",
+    "FR-C315-heritage",
+    "FR-R315-revision-308-315"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch315.txt",
+  "json": "french/narration/ch315.json",
+  "textHash": "fnv1a64:c469936b42425bdf",
+  "jsonHash": "fnv1a64:bd6e112fc129a548",
+  "findings": []
+}

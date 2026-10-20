@@ -1,0 +1,11 @@
+{
+  "id": "FR-C409-phare",
+  "pathSegment": "FR-PATH-409-VIRAGE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-409-VIRAGE",
+      "order": 1
+    }
+  ]
+}

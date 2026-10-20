@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-300-CAPOTAR",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that a car overturned after hard braking, and talk about the damage.",
+  "prerequisites": []
+}

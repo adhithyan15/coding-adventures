@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C293-mystere",
+    "language": "french",
+    "chapter": 293,
+    "sequence": 16780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e8ee157bc6ae9461"
+  },
+  "findings": []
+}

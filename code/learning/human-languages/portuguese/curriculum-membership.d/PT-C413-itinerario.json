@@ -1,0 +1,11 @@
+{
+  "id": "PT-C413-itinerario",
+  "pathSegment": "PT-PATH-413-PARAGEM",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-413-PARAGEM",
+      "order": 3
+    }
+  ]
+}

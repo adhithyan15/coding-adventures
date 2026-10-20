@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:af0874ba2160488f",
+  "lessonIds": [
+    "FR-C512-chorale",
+    "FR-C512-fredonner",
+    "FR-C512-siffloter",
+    "FR-C512-refrain",
+    "FR-C512-melodie"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch512.txt",
+  "json": "french/narration/ch512.json",
+  "textHash": "fnv1a64:ca57b9eb571ed3cc",
+  "jsonHash": "fnv1a64:3861c2e91d258769",
+  "findings": []
+}

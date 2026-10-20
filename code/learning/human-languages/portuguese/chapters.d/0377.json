@@ -1,0 +1,19 @@
+{
+  "chapter": 377,
+  "title": "Estudar a fundo",
+  "label": "ch:pt-estudar-a-fundo",
+  "canDo": "I can talk about higher study: lecturers, supervisors, grants, master's degrees and doctorates.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "PT-C377-doutoramento",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 377: I can talk about higher study: lecturers, supervisors, grants, master's degrees and doctorates.",
+    "assesses": [
+      "PT-LEX-C377-DOCENTE-03",
+      "PT-LEX-C377-DOCENTE-04",
+      "PT-LEX-C377-DOCENTE-05"
+    ]
+  }
+}

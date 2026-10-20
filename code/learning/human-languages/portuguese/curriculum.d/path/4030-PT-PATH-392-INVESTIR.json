@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-392-INVESTIR",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "PT-EXT-392-INVESTIR"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C267-depende",
+  "pathSegment": "PT-PATH-267-SE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-267-SE",
+      "order": 2
+    }
+  ]
+}

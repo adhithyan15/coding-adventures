@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C520-livre-de-poche",
+    "language": "french",
+    "chapter": 520,
+    "sequence": 28490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:52e9e402476bec35"
+  },
+  "findings": []
+}

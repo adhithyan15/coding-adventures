@@ -1,0 +1,11 @@
+{
+  "id": "PT-R316-revisao-309-316",
+  "pathSegment": "PT-PATH-316-HERANCA",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PT-EXT-316-HERANCA",
+      "order": 5
+    }
+  ]
+}

@@ -6444,7 +6444,11 @@ fn emit_host_input(
         )
         .unwrap();
     }
-    if let Some(emit_name) = find_emit_ref_prop(node, "onCommit") {
+    // `TextInputAction.newline` never submits, so a multiline field's
+    // `onSubmitted` would be dead code: Enter is a line break there, on every
+    // backend (#15930). Say so rather than emit a handler that cannot fire.
+    let multiline = find_keyword_prop(node, "multiline") == Some("true");
+    if let Some(emit_name) = find_emit_ref_prop(node, "onCommit").filter(|_| !multiline) {
         let case = pascalize(&strip_on_prefix(emit_name));
         validate_emit_name(&case)?;
         let args = host_input_event_args(emits, emit_name, "value")?;
@@ -14062,6 +14066,34 @@ mod tests {
             "Input must not take the unresolved-component path, got:\n{out}"
         );
         assert!(out.contains("TextField"), "got:\n{out}");
+    }
+
+    /// #15930 — the kernel `HostInput` grows into a text area too, and with
+    /// `TextInputAction.newline` an `onSubmitted` handler could never fire,
+    /// so a multiline field emits none: Enter is a line break, as everywhere.
+    #[test]
+    fn multiline_host_input_is_a_text_area_without_a_dead_submit_handler() {
+        let m = component(
+            "Host",
+            vec![slot("v", SlotType::Text, true)],
+            vec![EmitDecl { name: "onSave".into(), params: vec![] }],
+        );
+        let make = |multiline: &str| {
+            let props = vec![
+                LayoutProp { name: "value".into(), value: LayoutPropValue::SlotRef("v".into()) },
+                LayoutProp { name: "multiline".into(), value: LayoutPropValue::Keyword(multiline.into()) },
+                LayoutProp { name: "onCommit".into(), value: LayoutPropValue::EmitRef("onSave".into()) },
+            ];
+            from_pipeline(&m, &layout("Host", node_with("HostInput", props, vec![])), &empty_style("Host"))
+                .expect("ok")
+                .output
+        };
+        let multi = make("true");
+        assert!(multi.contains("textInputAction: TextInputAction.newline,"), "{multi}");
+        assert!(multi.contains("maxLines: null,"), "{multi}");
+        assert!(!multi.contains("onSubmitted"), "{multi}");
+        let single = make("false");
+        assert!(single.contains("onSubmitted: (value) => dispatch(HostEventSave()),"), "{single}");
     }
 
     #[test]

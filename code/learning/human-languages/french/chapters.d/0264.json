@@ -1,0 +1,20 @@
+{
+  "chapter": 264,
+  "title": "How It Felt — j'étais content, j'espère",
+  "label": "ch:fr-how-it-felt",
+  "canDo": "I can say how an experience felt, with the feeling as scene, and say what I hope and dream of doing next.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C264-revision-sentiments",
+    "kind": "production",
+    "summary": "Complete FR-C264-revision-sentiments: how a journey felt, and what you hope to do next.",
+    "assesses": [
+      "FR-GRAM-SENTIMENT-ETAIS-01",
+      "FR-GRAM-ESPERER-INFINITIF-01",
+      "FR-GRAM-CONTENT-DE-02",
+      "FR-GRAM-MON-REVE-02"
+    ]
+  }
+}

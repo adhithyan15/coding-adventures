@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 503,
+  "sourceHash": "fnv1a64:86568787c95c462c",
+  "lessonIds": [
+    "FR-C503-jardinage",
+    "FR-C503-jardiner",
+    "FR-C503-semer",
+    "FR-C503-arroser",
+    "FR-C503-arrosoir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch503.txt",
+  "json": "french/narration/ch503.json",
+  "textHash": "fnv1a64:72b1f5653cfce0c3",
+  "jsonHash": "fnv1a64:e69bf00094824eb3",
+  "findings": []
+}

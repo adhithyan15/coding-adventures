@@ -1,0 +1,14 @@
+{
+  "language": "french",
+  "chapter": 473,
+  "sourceHash": "fnv1a64:70823dbaa0b62e74",
+  "lessonIds": [
+    "FR-C473-fierte",
+    "FR-C473-orgueil",
+    "FR-C473-vaniteux",
+    "FR-C473-modeste",
+    "FR-C473-vanter",
+    "FR-R473-revision-466-473"
+  ],
+  "tex": "french/book/chapters/ch473-fierte-et-modestie.tex"
+}

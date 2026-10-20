@@ -1,0 +1,14 @@
+{
+  "language": "french",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:ace34cf6c460f460",
+  "lessonIds": [
+    "FR-C315-tombe",
+    "FR-C315-deuil",
+    "FR-C315-testament",
+    "FR-C315-heriter",
+    "FR-C315-heritage",
+    "FR-R315-revision-308-315"
+  ],
+  "tex": "french/book/chapters/ch315-le-deuil.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:5a5df4414dd4904e",
+  "lessonIds": [
+    "PT-C346-raciocinio",
+    "PT-C346-deduzir",
+    "PT-C346-concluir",
+    "PT-C346-conclusao",
+    "PT-C346-criterio"
+  ],
+  "tex": "portuguese/book/chapters/ch346-pensar-com-logica.tex"
+}

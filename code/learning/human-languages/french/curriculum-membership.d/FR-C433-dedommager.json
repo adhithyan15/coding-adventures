@@ -1,0 +1,11 @@
+{
+  "id": "FR-C433-dedommager",
+  "pathSegment": "FR-PATH-433-DEDOMMAGEMENT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-433-DEDOMMAGEMENT",
+      "order": 2
+    }
+  ]
+}

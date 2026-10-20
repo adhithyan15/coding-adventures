@@ -1,0 +1,11 @@
+{
+  "id": "FR-C442-gouttiere",
+  "pathSegment": "FR-PATH-442-FACADES",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-442-FACADES",
+      "order": 3
+    }
+  ]
+}

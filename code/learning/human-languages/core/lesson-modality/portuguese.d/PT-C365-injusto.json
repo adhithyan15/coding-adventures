@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C365-injusto",
+    "language": "portuguese",
+    "chapter": 365,
+    "sequence": 20740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0ea2d3a691f00ea0"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 497,
+  "title": "Brigas e reconciliações",
+  "label": "ch:pt-brigas-e-reconciliacoes",
+  "canDo": "I can talk about quarrels, break-ups and making up.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C497-reconciliar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 497: I can talk about quarrels, break-ups and making up.",
+    "assesses": [
+      "PT-LEX-C497-SEPARACAO-03",
+      "PT-LEX-C497-SEPARACAO-04",
+      "PT-LEX-C497-SEPARACAO-05"
+    ]
+  }
+}

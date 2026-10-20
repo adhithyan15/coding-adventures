@@ -1,0 +1,11 @@
+{
+  "id": "PT-C397-atualizar",
+  "pathSegment": "PT-PATH-397-INSTALAR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-397-INSTALAR",
+      "order": 4
+    }
+  ]
+}

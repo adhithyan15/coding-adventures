@@ -1,0 +1,11 @@
+{
+  "id": "FR-C291-brigade",
+  "pathSegment": "FR-PATH-291-GENDARMES",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-291-GENDARMES",
+      "order": 4
+    }
+  ]
+}

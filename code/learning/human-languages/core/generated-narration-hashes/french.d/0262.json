@@ -1,0 +1,17 @@
+{
+  "language": "french",
+  "chapter": 262,
+  "sourceHash": "fnv1a64:c087ed11055f3a75",
+  "lessonIds": [
+    "FR-C262-excusez-moi",
+    "FR-C262-tout-droit",
+    "FR-C262-revision-chemin"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "french/narration/ch262.txt",
+  "json": "french/narration/ch262.json",
+  "textHash": "fnv1a64:2b6cb6bbbfe55f6f",
+  "jsonHash": "fnv1a64:373cb8e5e28309a8",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-364-JUSTICE",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "FR-EXT-364-JUSTICE"
+  ],
+  "after": []
+}

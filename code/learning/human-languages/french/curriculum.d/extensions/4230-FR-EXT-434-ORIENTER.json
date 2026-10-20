@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-434-ORIENTER",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can find my bearings: getting oriented, the compass, spotting a landmark, the landmark itself and getting lost.",
+  "prerequisites": []
+}

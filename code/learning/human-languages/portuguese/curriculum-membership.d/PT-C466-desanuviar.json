@@ -1,0 +1,11 @@
+{
+  "id": "PT-C466-desanuviar",
+  "pathSegment": "PT-PATH-466-CHUVA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-466-CHUVA",
+      "order": 1
+    }
+  ]
+}

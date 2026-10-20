@@ -1,0 +1,19 @@
+{
+  "chapter": 368,
+  "title": "Suponhamos",
+  "label": "ch:pt-suponhamos",
+  "canDo": "I can make suppositions and hypotheses, presume something and say whether an idea is plausible.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "PT-C368-plausivel",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 368: I can make suppositions and hypotheses, presume something and say whether an idea is plausible.",
+    "assesses": [
+      "PT-LEX-C368-HIPOTESE-03",
+      "PT-LEX-C368-HIPOTESE-04",
+      "PT-LEX-C368-HIPOTESE-05"
+    ]
+  }
+}

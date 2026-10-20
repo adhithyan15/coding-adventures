@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 281,
+  "sourceHash": "fnv1a64:1346b912533fb64d",
+  "lessonIds": [
+    "PT-C281-facto",
+    "PT-C281-relatar",
+    "PT-C281-relato",
+    "PT-C281-relatorio",
+    "PT-C281-noticiar"
+  ],
+  "tex": "portuguese/book/chapters/ch281-os-factos.tex"
+}

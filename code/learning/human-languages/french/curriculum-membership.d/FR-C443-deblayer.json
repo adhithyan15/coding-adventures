@@ -1,0 +1,11 @@
+{
+  "id": "FR-C443-deblayer",
+  "pathSegment": "FR-PATH-443-HIVER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-443-HIVER",
+      "order": 2
+    }
+  ]
+}

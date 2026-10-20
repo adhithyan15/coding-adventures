@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C402-pedal",
+    "language": "portuguese",
+    "chapter": 402,
+    "sequence": 22670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:11b57f3bbcf8b059"
+  },
+  "findings": []
+}

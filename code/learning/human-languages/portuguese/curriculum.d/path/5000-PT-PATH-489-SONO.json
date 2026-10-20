@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-489-SONO",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "PT-EXT-489-SONO"
+  ],
+  "after": []
+}

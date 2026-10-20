@@ -1,0 +1,11 @@
+{
+  "id": "FR-C442-enseigne",
+  "pathSegment": "FR-PATH-442-FACADES",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-442-FACADES",
+      "order": 2
+    }
+  ]
+}

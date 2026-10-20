@@ -1,0 +1,11 @@
+{
+  "id": "FR-C259-lecture",
+  "pathSegment": "FR-PATH-259-RECIT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-259-RECIT",
+      "order": 2
+    }
+  ]
+}

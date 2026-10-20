@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C492-recompose",
+    "language": "french",
+    "chapter": 492,
+    "sequence": 27030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f8101e33c4bb7f39"
+  },
+  "findings": []
+}

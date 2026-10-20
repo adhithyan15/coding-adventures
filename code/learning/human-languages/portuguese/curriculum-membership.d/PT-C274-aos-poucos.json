@@ -1,0 +1,11 @@
+{
+  "id": "PT-C274-aos-poucos",
+  "pathSegment": "PT-PATH-274-OUTRORA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-274-OUTRORA",
+      "order": 4
+    }
+  ]
+}

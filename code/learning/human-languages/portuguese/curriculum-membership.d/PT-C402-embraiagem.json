@@ -1,0 +1,11 @@
+{
+  "id": "PT-C402-embraiagem",
+  "pathSegment": "PT-PATH-402-VOLANTE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-402-VOLANTE",
+      "order": 3
+    }
+  ]
+}

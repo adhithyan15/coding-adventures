@@ -1,0 +1,11 @@
+{
+  "id": "PT-C512-ginastica",
+  "pathSegment": "PT-PATH-512-PAVILHAO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-512-PAVILHAO",
+      "order": 4
+    }
+  ]
+}

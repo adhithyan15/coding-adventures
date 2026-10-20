@@ -1,0 +1,19 @@
+{
+  "chapter": 320,
+  "title": "À votre santé !",
+  "label": "ch:fr-a-votre-sante",
+  "canDo": "I can raise a glass and make wishes: clinking glasses, a toast, wishing, candles and a wish.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C320-voeu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 320: I can raise a glass and make wishes: clinking glasses, a toast, wishing, candles and a wish.",
+    "assesses": [
+      "FR-LEX-C320-TOAST-03",
+      "FR-LEX-C320-TOAST-04",
+      "FR-LEX-C320-TOAST-05"
+    ]
+  }
+}

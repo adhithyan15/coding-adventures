@@ -1,0 +1,19 @@
+{
+  "chapter": 374,
+  "title": "O que quero fazer",
+  "label": "ch:pt-o-que-quero-fazer",
+  "canDo": "I can talk about my intentions, purposes and goals, my commitments, and when I am available.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "PT-R374-revisao-367-374",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 374: I can talk about my intentions, purposes and goals, my commitments, and when I am available.",
+    "assesses": [
+      "PT-LEX-C374-INTENCAO-03",
+      "PT-LEX-C374-INTENCAO-04",
+      "PT-LEX-C374-INTENCAO-05"
+    ]
+  }
+}

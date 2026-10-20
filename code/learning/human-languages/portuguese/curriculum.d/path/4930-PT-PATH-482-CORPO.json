@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-482-CORPO",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "PT-EXT-482-CORPO"
+  ],
+  "after": []
+}

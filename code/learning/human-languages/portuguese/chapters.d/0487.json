@@ -1,0 +1,19 @@
+{
+  "chapter": 487,
+  "title": "Na consulta",
+  "label": "ch:pt-na-consulta",
+  "canDo": "I can describe symptoms, tests and treatment at the doctor.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C487-tratamento",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 487: I can describe symptoms, tests and treatment at the doctor.",
+    "assesses": [
+      "PT-LEX-C487-CONSULTA-03",
+      "PT-LEX-C487-CONSULTA-04",
+      "PT-LEX-C487-CONSULTA-05"
+    ]
+  }
+}

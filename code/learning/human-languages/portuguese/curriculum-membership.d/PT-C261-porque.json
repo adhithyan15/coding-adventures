@@ -1,0 +1,11 @@
+{
+  "id": "PT-C261-porque",
+  "pathSegment": "PT-PATH-261-OPINIAO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-261-OPINIAO",
+      "order": 1
+    }
+  ]
+}

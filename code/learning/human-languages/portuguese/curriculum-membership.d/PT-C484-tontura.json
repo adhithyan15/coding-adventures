@@ -1,0 +1,11 @@
+{
+  "id": "PT-C484-tontura",
+  "pathSegment": "PT-PATH-484-ENXAQUECA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-484-ENXAQUECA",
+      "order": 2
+    }
+  ]
+}

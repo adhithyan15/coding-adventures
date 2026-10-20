@@ -1,0 +1,19 @@
+{
+  "chapter": 372,
+  "title": "Mudança de planos",
+  "label": "ch:pt-mudanca-de-planos",
+  "canDo": "I can change plans: cancel or postpone, say whether something is provisional or final, and be flexible.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "PT-C372-flexivel",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 372: I can change plans: cancel or postpone, say whether something is provisional or final, and be flexible.",
+    "assesses": [
+      "PT-LEX-C372-PLANOS-03",
+      "PT-LEX-C372-PLANOS-04",
+      "PT-LEX-C372-PLANOS-05"
+    ]
+  }
+}

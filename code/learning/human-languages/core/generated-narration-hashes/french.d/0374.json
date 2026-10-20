@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 374,
+  "sourceHash": "fnv1a64:2c6b47087e1511c4",
+  "lessonIds": [
+    "FR-C374-but",
+    "FR-C374-intention",
+    "FR-C374-objectif",
+    "FR-C374-resolution",
+    "FR-C374-viser"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch374.txt",
+  "json": "french/narration/ch374.json",
+  "textHash": "fnv1a64:cb54841f5302d979",
+  "jsonHash": "fnv1a64:bc5a49b8ce8c44ea",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 433,
+  "sourceHash": "fnv1a64:11862c2d264a8d48",
+  "lessonIds": [
+    "PT-C433-algazarra",
+    "PT-C433-ranger",
+    "PT-C433-barata",
+    "PT-C433-bolor",
+    "PT-C433-sujidade"
+  ],
+  "tex": "portuguese/book/chapters/ch433-barulho-e-sujidade.tex"
+}

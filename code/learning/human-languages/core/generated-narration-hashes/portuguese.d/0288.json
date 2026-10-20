@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 288,
+  "sourceHash": "fnv1a64:e6f9db4ed73fe564",
+  "lessonIds": [
+    "PT-C288-assalto",
+    "PT-C288-assaltar",
+    "PT-C288-assaltante",
+    "PT-C288-arrombar",
+    "PT-C288-arrombamento"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch288.txt",
+  "json": "portuguese/narration/ch288.json",
+  "textHash": "fnv1a64:d92c4f8488eaac64",
+  "jsonHash": "fnv1a64:a8e92349760723db",
+  "findings": []
+}

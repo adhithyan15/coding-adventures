@@ -1,0 +1,11 @@
+{
+  "id": "PT-C321-disfarcar",
+  "pathSegment": "PT-PATH-321-CARNAVAL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-321-CARNAVAL",
+      "order": 4
+    }
+  ]
+}

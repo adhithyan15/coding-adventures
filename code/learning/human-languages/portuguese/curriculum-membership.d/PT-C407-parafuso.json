@@ -1,0 +1,11 @@
+{
+  "id": "PT-C407-parafuso",
+  "pathSegment": "PT-PATH-407-CAPO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-407-CAPO",
+      "order": 3
+    }
+  ]
+}

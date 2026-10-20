@@ -1,0 +1,20 @@
+{
+  "chapter": 263,
+  "title": "Desculpe, Como Se Vai Para --- Asking the Way",
+  "label": "ch:pt-asking-the-way",
+  "canDo": "I can stop a stranger politely, ask the way to a place, and follow an answer with à direita, à esquerda and em frente.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C263-revisao-caminho",
+    "kind": "production",
+    "summary": "Complete PT-C263-revisao-caminho: ask the way, follow the answer, check it back and thank.",
+    "assesses": [
+      "PT-LEX-DESCULPE-01",
+      "PT-GRAMMAR-COMO-SE-VAI-02",
+      "PT-LEX-DIREITA-ESQUERDA-01",
+      "PT-GRAMMAR-VIRE-A-DIREITA-02"
+    ]
+  }
+}

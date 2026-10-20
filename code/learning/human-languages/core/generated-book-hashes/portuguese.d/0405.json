@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:7082026a990aa35d",
+  "lessonIds": [
+    "PT-C405-pneu",
+    "PT-C405-furar",
+    "PT-C405-furo",
+    "PT-C405-jante",
+    "PT-C405-triangulo"
+  ],
+  "tex": "portuguese/book/chapters/ch405-um-pneu-furado.tex"
+}

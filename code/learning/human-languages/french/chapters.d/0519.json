@@ -1,0 +1,19 @@
+{
+  "chapter": 519,
+  "title": "Un bon roman",
+  "label": "ch:fr-un-bon-roman",
+  "canDo": "I can describe the plot of a novel.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C519-captivant",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 519: I can describe the plot of a novel.",
+    "assesses": [
+      "FR-LEX-C519-ROMAN-03",
+      "FR-LEX-C519-ROMAN-04",
+      "FR-LEX-C519-ROMAN-05"
+    ]
+  }
+}

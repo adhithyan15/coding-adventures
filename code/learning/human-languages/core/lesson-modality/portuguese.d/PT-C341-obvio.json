@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C341-obvio",
+    "language": "portuguese",
+    "chapter": 341,
+    "sequence": 19520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:926f5846006603fd"
+  },
+  "findings": []
+}

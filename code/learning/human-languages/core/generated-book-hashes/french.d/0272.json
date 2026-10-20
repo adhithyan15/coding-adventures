@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 272,
+  "sourceHash": "fnv1a64:f98ff5a74f9596c3",
+  "lessonIds": [
+    "FR-C272-jadis",
+    "FR-C272-naguere",
+    "FR-C272-auparavant",
+    "FR-C272-jusqu-alors",
+    "FR-C272-depuis-lors"
+  ],
+  "tex": "french/book/chapters/ch272-jadis-et-naguere.tex"
+}

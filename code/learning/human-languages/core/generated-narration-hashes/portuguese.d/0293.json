@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 293,
+  "sourceHash": "fnv1a64:ba5ed68b77eee18a",
+  "lessonIds": [
+    "PT-C293-agente",
+    "PT-C293-patrulha",
+    "PT-C293-patrulhar",
+    "PT-C293-vigiar",
+    "PT-C293-vigilancia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch293.txt",
+  "json": "portuguese/narration/ch293.json",
+  "textHash": "fnv1a64:07f1328a367440c4",
+  "jsonHash": "fnv1a64:d050a7dbdd1343fc",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 278,
+  "sourceHash": "fnv1a64:9c4e2f28345fce6f",
+  "lessonIds": [
+    "PT-C278-noticiario",
+    "PT-C278-telejornal",
+    "PT-C278-apresentador",
+    "PT-C278-em-direto",
+    "PT-C278-transmissao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch278.txt",
+  "json": "portuguese/narration/ch278.json",
+  "textHash": "fnv1a64:3e2474d86163e378",
+  "jsonHash": "fnv1a64:40653da9bd7468c0",
+  "findings": []
+}

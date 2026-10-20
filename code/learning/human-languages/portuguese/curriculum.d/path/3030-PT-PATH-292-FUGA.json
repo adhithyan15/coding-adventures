@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-292-FUGA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-292-FUGA"
+  ],
+  "after": []
+}

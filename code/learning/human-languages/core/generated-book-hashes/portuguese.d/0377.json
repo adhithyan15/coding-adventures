@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 377,
+  "sourceHash": "fnv1a64:d6f627637e9ed84e",
+  "lessonIds": [
+    "PT-C377-docente",
+    "PT-C377-orientador",
+    "PT-C377-bolsa-de-estudo",
+    "PT-C377-mestrado",
+    "PT-C377-doutoramento"
+  ],
+  "tex": "portuguese/book/chapters/ch377-estudar-a-fundo.tex"
+}

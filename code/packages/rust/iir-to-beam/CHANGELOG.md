@@ -1,5 +1,23 @@
 # Changelog — iir-to-beam
 
+## Unreleased - reserve heap for string literals
+
+`str_const` now emits `test_heap` for two words per byte before the
+`put_list` chain that builds the literal, and parks live variables in their
+Y slots around it, because a reservation may collect (`str_const` joins the
+other GC points in `live_across`). Before this, every string literal wrote
+2 x len words past whatever an earlier `test_heap` had reserved. It was the
+same omission BEAM10 fixed in `alloc_array` and `array_set`. Whether the
+overrun reached the stack depended on how full the heap was. On main's CI it
+aborted erl with `erl_gc.c, line 775: Overrun stack and heap` in lang-aot's
+`b11_str_3d` on one Linux shard, twice in a row (PR #17759), and never on
+macOS. An empty literal is plain nil and still reserves nothing.
+
+New tests: the reservation precedes the first `put_list` and covers every
+cell; an empty literal emits no reservation; and a real-`erl` stress test of
+3,000 literals with an integer live across them. Without the fix the stress
+test crashes the emulator deterministically on macOS too.
+
 ## Unreleased - BEAM13: root intermediate imported-call values
 
 ETS-backed `array_set` now saves the table identifier in an initialized Y

@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-478-SOLIDAO",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "PT-EXT-478-SOLIDAO"
+  ],
+  "after": []
+}

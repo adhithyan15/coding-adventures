@@ -1,0 +1,19 @@
+{
+  "chapter": 290,
+  "title": "Le crime",
+  "label": "ch:fr-le-crime",
+  "canDo": "I can talk about serious crime: a crime, a criminal, a murder, a young offender and crime in general.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C290-delinquance",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 290: I can talk about serious crime: a crime, a criminal, a murder, a young offender and crime in general.",
+    "assesses": [
+      "FR-LEX-C290-CRIME-03",
+      "FR-LEX-C290-CRIME-04",
+      "FR-LEX-C290-CRIME-05"
+    ]
+  }
+}

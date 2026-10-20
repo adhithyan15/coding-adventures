@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 435,
+  "sourceHash": "fnv1a64:94ce041c3ae854b0",
+  "lessonIds": [
+    "PT-C435-orientar",
+    "PT-C435-bussola",
+    "PT-C435-desorientado",
+    "PT-C435-roteiro",
+    "PT-C435-localizar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch435.txt",
+  "json": "portuguese/narration/ch435.json",
+  "textHash": "fnv1a64:f9a230b4dbb4305b",
+  "jsonHash": "fnv1a64:a2e52c1efceabb82",
+  "findings": []
+}

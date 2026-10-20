@@ -1,0 +1,11 @@
+{
+  "id": "FR-C303-decombres",
+  "pathSegment": "FR-PATH-303-SEISME",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-303-SEISME",
+      "order": 4
+    }
+  ]
+}

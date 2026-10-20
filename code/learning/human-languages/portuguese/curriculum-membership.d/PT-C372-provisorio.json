@@ -1,0 +1,11 @@
+{
+  "id": "PT-C372-provisorio",
+  "pathSegment": "PT-PATH-372-PLANOS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-372-PLANOS",
+      "order": 2
+    }
+  ]
+}

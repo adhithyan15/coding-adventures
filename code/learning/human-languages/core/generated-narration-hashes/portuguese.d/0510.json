@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:29a5f882583371c6",
+  "lessonIds": [
+    "PT-C510-empatar",
+    "PT-C510-empate",
+    "PT-C510-adversario",
+    "PT-C510-derrotar",
+    "PT-C510-eliminar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch510.txt",
+  "json": "portuguese/narration/ch510.json",
+  "textHash": "fnv1a64:e8799090a35979b6",
+  "jsonHash": "fnv1a64:998c87dace80dfd6",
+  "findings": []
+}

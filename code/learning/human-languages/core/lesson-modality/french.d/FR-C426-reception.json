@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C426-reception",
+    "language": "french",
+    "chapter": 426,
+    "sequence": 23630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7bb78b0486bbc2e5"
+  },
+  "findings": []
+}

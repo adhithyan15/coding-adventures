@@ -1,0 +1,19 @@
+{
+  "chapter": 477,
+  "title": "De la hanche au talon",
+  "label": "ch:fr-de-la-hanche-au-talon",
+  "canDo": "I can name the parts of the leg and foot.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C477-hanche",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 477: I can name the parts of the leg and foot.",
+    "assesses": [
+      "FR-LEX-C477-JAMBE-03",
+      "FR-LEX-C477-JAMBE-04",
+      "FR-LEX-C477-JAMBE-05"
+    ]
+  }
+}

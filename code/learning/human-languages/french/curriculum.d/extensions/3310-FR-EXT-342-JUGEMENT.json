@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-342-JUGEMENT",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can evaluate something, judge it, give a judgement and say whether a view is subjective or impartial.",
+  "prerequisites": []
+}

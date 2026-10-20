@@ -1,0 +1,11 @@
+{
+  "id": "FR-C424-sejourner",
+  "pathSegment": "FR-PATH-424-HEBERGEMENT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-424-HEBERGEMENT",
+      "order": 4
+    }
+  ]
+}

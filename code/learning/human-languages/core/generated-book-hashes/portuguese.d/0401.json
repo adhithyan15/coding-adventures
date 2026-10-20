@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 401,
+  "sourceHash": "fnv1a64:a5accfdcf20f0635",
+  "lessonIds": [
+    "PT-C401-faixa",
+    "PT-C401-berma",
+    "PT-C401-separador",
+    "PT-C401-no",
+    "PT-C401-acelerar"
+  ],
+  "tex": "portuguese/book/chapters/ch401-na-autoestrada.tex"
+}

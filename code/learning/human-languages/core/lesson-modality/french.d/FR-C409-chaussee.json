@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C409-chaussee",
+    "language": "french",
+    "chapter": 409,
+    "sequence": 22790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b571871462edb79b"
+  },
+  "findings": []
+}

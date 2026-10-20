@@ -1,0 +1,11 @@
+{
+  "id": "PT-C523-marcador",
+  "pathSegment": "PT-PATH-523-LIVROS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-523-LIVROS",
+      "order": 4
+    }
+  ]
+}

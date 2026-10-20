@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-441-PRACA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-441-PRACA"
+  ],
+  "after": []
+}

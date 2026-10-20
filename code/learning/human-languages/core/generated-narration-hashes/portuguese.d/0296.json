@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 296,
+  "sourceHash": "fnv1a64:9feeba7f832da025",
+  "lessonIds": [
+    "PT-C296-algemas",
+    "PT-C296-algemar",
+    "PT-C296-prender",
+    "PT-C296-preso",
+    "PT-C296-cela"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch296.txt",
+  "json": "portuguese/narration/ch296.json",
+  "textHash": "fnv1a64:2e3ab6f63d9b73c0",
+  "jsonHash": "fnv1a64:5e361c87f175a4c9",
+  "findings": []
+}

@@ -1,0 +1,23 @@
+{
+  "chapter": 260,
+  "title": "First, Then, In the End --- A Story Told in Order",
+  "label": "ch:pt-a-story-told-in-order",
+  "canDo": "I can tell a short connected story in order with primeiro, depois and no fim, and read one of about a hundred words.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C260-revisao-historia",
+    "kind": "production",
+    "summary": "Complete PT-C260-revisao-historia: retell the reading's journey aloud, choosing scene or event for every verb.",
+    "assesses": [
+      "PT-GRAMMAR-DEPOIS-ORDEM-01",
+      "PT-GRAMMAR-NO-FIM-02",
+      "PT-ETYMON-DEPOIS-03",
+      "PT-GRAMMAR-HISTORIA-EM-ORDEM-01",
+      "PT-LEX-MAS-02",
+      "PT-ETYMON-CONTAR-03",
+      "PT-SKILL-READ-NARRATIVE-01"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-277-ETAPE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-277-ETAPE"
+  ],
+  "after": []
+}

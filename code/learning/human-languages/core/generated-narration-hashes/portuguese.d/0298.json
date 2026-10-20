@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 298,
+  "sourceHash": "fnv1a64:88c9c6650e31be46",
+  "lessonIds": [
+    "PT-C298-veredicto",
+    "PT-C298-recorrer",
+    "PT-C298-recurso",
+    "PT-C298-recluso",
+    "PT-C298-libertar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch298.txt",
+  "json": "portuguese/narration/ch298.json",
+  "textHash": "fnv1a64:176cba57dbedb35a",
+  "jsonHash": "fnv1a64:15a72daf1c45b095",
+  "findings": []
+}

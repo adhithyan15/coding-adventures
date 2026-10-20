@@ -1,0 +1,19 @@
+{
+  "chapter": 342,
+  "title": "Évaluer et juger",
+  "label": "ch:fr-evaluer-et-juger",
+  "canDo": "I can evaluate something, judge it, give a judgement and say whether a view is subjective or impartial.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C342-impartial",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 342: I can evaluate something, judge it, give a judgement and say whether a view is subjective or impartial.",
+    "assesses": [
+      "FR-LEX-C342-JUGEMENT-03",
+      "FR-LEX-C342-JUGEMENT-04",
+      "FR-LEX-C342-JUGEMENT-05"
+    ]
+  }
+}

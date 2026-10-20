@@ -1,0 +1,11 @@
+{
+  "id": "PT-C386-licito",
+  "pathSegment": "PT-PATH-386-ACUSACAO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-386-ACUSACAO",
+      "order": 3
+    }
+  ]
+}

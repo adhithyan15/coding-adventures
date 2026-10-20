@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C527-froisse",
+    "language": "french",
+    "chapter": 527,
+    "sequence": 28830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:59695bc29e9d71c0"
+  },
+  "findings": []
+}

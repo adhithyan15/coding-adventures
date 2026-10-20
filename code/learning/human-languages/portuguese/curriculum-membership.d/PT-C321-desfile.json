@@ -1,0 +1,11 @@
+{
+  "id": "PT-C321-desfile",
+  "pathSegment": "PT-PATH-321-CARNAVAL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-321-CARNAVAL",
+      "order": 1
+    }
+  ]
+}

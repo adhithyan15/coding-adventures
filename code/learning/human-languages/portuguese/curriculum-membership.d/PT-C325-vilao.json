@@ -1,0 +1,11 @@
+{
+  "id": "PT-C325-vilao",
+  "pathSegment": "PT-PATH-325-HEROI",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-325-HEROI",
+      "order": 3
+    }
+  ]
+}

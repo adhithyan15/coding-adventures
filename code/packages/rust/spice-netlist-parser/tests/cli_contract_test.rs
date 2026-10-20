@@ -234,6 +234,9 @@ fn shared_release_manifest_freezes_the_berkeley_v1_gate() {
     for required in gate["requiredDeviceKinds"].as_array().unwrap() {
         assert!(devices.contains(required.as_str().unwrap()));
     }
+    for required in gate["requiredCoreKinds"].as_array().unwrap() {
+        assert!(devices.contains(required.as_str().unwrap()));
+    }
     assert!(
         syntax["cases"].as_array().unwrap().len()
             >= gate["minimumSyntaxCaseCount"].as_u64().unwrap() as usize

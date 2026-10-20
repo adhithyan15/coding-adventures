@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-472-ESPERTO",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "PT-EXT-472-ESPERTO"
+  ],
+  "after": []
+}

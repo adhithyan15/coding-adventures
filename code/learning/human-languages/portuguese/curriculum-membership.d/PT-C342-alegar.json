@@ -1,0 +1,11 @@
+{
+  "id": "PT-C342-alegar",
+  "pathSegment": "PT-PATH-342-AFIRMAR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-342-AFIRMAR",
+      "order": 4
+    }
+  ]
+}

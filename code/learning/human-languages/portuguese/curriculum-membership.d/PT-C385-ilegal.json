@@ -1,0 +1,11 @@
+{
+  "id": "PT-C385-ilegal",
+  "pathSegment": "PT-PATH-385-BUROCRACIA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-385-BUROCRACIA",
+      "order": 4
+    }
+  ]
+}

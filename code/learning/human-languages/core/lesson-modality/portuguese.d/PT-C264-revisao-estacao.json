@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C264-revisao-estacao",
+    "language": "portuguese",
+    "chapter": 264,
+    "sequence": 15620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f72996e496995f86"
+  },
+  "findings": []
+}

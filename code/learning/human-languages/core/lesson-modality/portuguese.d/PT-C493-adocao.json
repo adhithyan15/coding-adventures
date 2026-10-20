@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C493-adocao",
+    "language": "portuguese",
+    "chapter": 493,
+    "sequence": 27370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2dd0de82d0bb05f0"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C527-realizador",
+    "language": "portuguese",
+    "chapter": 527,
+    "sequence": 29070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cef216656a4af7cd"
+  },
+  "findings": []
+}

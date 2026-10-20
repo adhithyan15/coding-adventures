@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 353,
+  "sourceHash": "fnv1a64:a7d77348aecf0be0",
+  "lessonIds": [
+    "PT-C353-obstaculo",
+    "PT-C353-desafio",
+    "PT-C353-impedir",
+    "PT-C353-dificultar",
+    "PT-C353-favorecer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch353.txt",
+  "json": "portuguese/narration/ch353.json",
+  "textHash": "fnv1a64:2b81b5a372f20868",
+  "jsonHash": "fnv1a64:fdda7f60bc43ebc8",
+  "findings": []
+}

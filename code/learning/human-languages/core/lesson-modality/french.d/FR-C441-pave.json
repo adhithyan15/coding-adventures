@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C441-pave",
+    "language": "french",
+    "chapter": 441,
+    "sequence": 24440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8cccd7c5ff5642e4"
+  },
+  "findings": []
+}

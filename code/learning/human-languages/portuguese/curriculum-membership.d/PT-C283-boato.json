@@ -1,0 +1,11 @@
+{
+  "id": "PT-C283-boato",
+  "pathSegment": "PT-PATH-283-BOATO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-283-BOATO",
+      "order": 0
+    }
+  ]
+}

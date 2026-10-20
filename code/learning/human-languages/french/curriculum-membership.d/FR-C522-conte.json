@@ -1,0 +1,11 @@
+{
+  "id": "FR-C522-conte",
+  "pathSegment": "FR-PATH-522-GENRES",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-522-GENRES",
+      "order": 4
+    }
+  ]
+}

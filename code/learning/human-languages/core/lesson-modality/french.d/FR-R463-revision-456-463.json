@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-R463-revision-456-463",
+    "language": "french",
+    "chapter": 463,
+    "sequence": 25570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1f1c0dfd2f7c2663"
+  },
+  "findings": []
+}

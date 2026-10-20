@@ -1,0 +1,11 @@
+{
+  "id": "PT-C347-relevante",
+  "pathSegment": "PT-PATH-347-POLEMICA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-347-POLEMICA",
+      "order": 4
+    }
+  ]
+}

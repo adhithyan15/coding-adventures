@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 378,
+  "sourceHash": "fnv1a64:172c1ad4a2207dad",
+  "lessonIds": [
+    "FR-C378-echouer",
+    "FR-C378-redoubler",
+    "FR-C378-concours",
+    "FR-C378-moyenne",
+    "FR-C378-rattrapage"
+  ],
+  "tex": "french/book/chapters/ch378-examens-et-resultats.tex"
+}

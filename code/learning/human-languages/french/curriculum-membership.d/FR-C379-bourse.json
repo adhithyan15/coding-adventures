@@ -1,0 +1,11 @@
+{
+  "id": "FR-C379-bourse",
+  "pathSegment": "FR-PATH-379-DIPLOME",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-379-DIPLOME",
+      "order": 4
+    }
+  ]
+}

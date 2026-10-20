@@ -1,0 +1,11 @@
+{
+  "id": "PT-C439-sudoeste",
+  "pathSegment": "PT-PATH-439-CARDEAIS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-439-CARDEAIS",
+      "order": 3
+    }
+  ]
+}

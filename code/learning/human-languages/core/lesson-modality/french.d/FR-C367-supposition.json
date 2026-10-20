@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C367-supposition",
+    "language": "french",
+    "chapter": 367,
+    "sequence": 20630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:627a1e24fd347afd"
+  },
+  "findings": []
+}

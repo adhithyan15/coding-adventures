@@ -1,0 +1,11 @@
+{
+  "id": "PT-C273-sucessao",
+  "pathSegment": "PT-PATH-273-ETAPA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-273-ETAPA",
+      "order": 3
+    }
+  ]
+}

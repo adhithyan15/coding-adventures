@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-264-SENTIMENTS",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-264-SENTIMENTS"
+  ],
+  "after": []
+}

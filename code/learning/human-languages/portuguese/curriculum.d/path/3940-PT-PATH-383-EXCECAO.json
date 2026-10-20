@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-383-EXCECAO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "PT-EXT-383-EXCECAO"
+  ],
+  "after": []
+}

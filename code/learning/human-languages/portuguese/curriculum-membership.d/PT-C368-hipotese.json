@@ -1,0 +1,11 @@
+{
+  "id": "PT-C368-hipotese",
+  "pathSegment": "PT-PATH-368-HIPOTESE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-368-HIPOTESE",
+      "order": 2
+    }
+  ]
+}

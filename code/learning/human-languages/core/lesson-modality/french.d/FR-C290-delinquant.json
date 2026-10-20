@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C290-delinquant",
+    "language": "french",
+    "chapter": 290,
+    "sequence": 16650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:48403ce48759fe8c"
+  },
+  "findings": []
+}

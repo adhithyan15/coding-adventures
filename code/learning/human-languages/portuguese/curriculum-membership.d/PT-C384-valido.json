@@ -1,0 +1,11 @@
+{
+  "id": "PT-C384-valido",
+  "pathSegment": "PT-PATH-384-VALIDO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-384-VALIDO",
+      "order": 0
+    }
+  ]
+}

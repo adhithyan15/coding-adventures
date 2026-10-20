@@ -6,6 +6,13 @@ the package follows semantic versioning.
 
 ## [Unreleased]
 
+### Changed
+
+- Documentation only: the layout comment and README no longer say the kernel
+  `HostInput` is single-line. It takes `multiline: true` on every backend
+  since #15930, so `notes-body-input` can move off the legacy `Input` when it
+  retires (U29-X1). The generated output is unchanged.
+
 ### Added
 
 - `elevation: raised;` on the `notes-row-on` (selected note row) part
