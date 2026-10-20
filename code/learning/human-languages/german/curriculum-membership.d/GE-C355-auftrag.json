@@ -1,0 +1,11 @@
+{
+  "id": "GE-C355-auftrag",
+  "pathSegment": "GE-PATH-355-PROJEKT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-355-PROJEKT",
+      "order": 1
+    }
+  ]
+}

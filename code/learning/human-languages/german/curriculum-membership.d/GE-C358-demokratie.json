@@ -1,0 +1,11 @@
+{
+  "id": "GE-C358-demokratie",
+  "pathSegment": "GE-PATH-358-GESELLSCHAFT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-358-GESELLSCHAFT",
+      "order": 1
+    }
+  ]
+}

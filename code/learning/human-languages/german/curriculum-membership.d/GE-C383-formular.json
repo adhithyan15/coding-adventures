@@ -1,0 +1,11 @@
+{
+  "id": "GE-C383-formular",
+  "pathSegment": "GE-PATH-383-ANTRAG",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-383-ANTRAG",
+      "order": 3
+    }
+  ]
+}

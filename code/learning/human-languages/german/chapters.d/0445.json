@@ -1,0 +1,19 @@
+{
+  "chapter": 445,
+  "title": "Schuhe und Schlüssel",
+  "label": "ch:ge-schuhe-und-schlussel",
+  "canDo": "I can get shoes and locks seen to: the cobbler, resoling, polishing, the locksmith and unlocking.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-R445-review-438-445",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 445: I can get shoes and locks seen to: the cobbler, resoling, polishing, the locksmith and unlocking.",
+    "assesses": [
+      "GE-LEX-C445-SCHUSTER-03",
+      "GE-LEX-C445-SCHUSTER-04",
+      "GE-LEX-C445-SCHUSTER-05"
+    ]
+  }
+}

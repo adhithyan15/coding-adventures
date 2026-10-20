@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 264,
+  "sourceHash": "fnv1a64:b6ece98ec75b7597",
+  "lessonIds": [
+    "GE-C264-damals",
+    "GE-C264-einst",
+    "GE-C264-neulich",
+    "GE-C264-kuerzlich",
+    "GE-C264-vorgestern"
+  ],
+  "tex": "german/book/chapters/ch264-damals-und-neulich.tex"
+}

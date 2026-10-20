@@ -1,0 +1,19 @@
+{
+  "chapter": 385,
+  "title": "Regeln und Ausnahmen",
+  "label": "ch:ge-regeln-und-ausnahmen",
+  "canDo": "I can talk about rules and exceptions, what the law lays down, and punishment.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GE-R385-review-378-385",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 385: I can talk about rules and exceptions, what the law lays down, and punishment.",
+    "assesses": [
+      "GE-LEX-C385-AUSNAHME-03",
+      "GE-LEX-C385-AUSNAHME-04",
+      "GE-LEX-C385-AUSNAHME-05"
+    ]
+  }
+}

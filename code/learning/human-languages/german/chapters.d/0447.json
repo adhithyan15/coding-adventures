@@ -1,0 +1,19 @@
+{
+  "chapter": 447,
+  "title": "Friseur und Optiker",
+  "label": "ch:ge-friseur-und-optiker",
+  "canDo": "I can use personal services: the hairdresser, blow-drying, the optician, the watchmaker and the jeweller.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C447-juwelier",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 447: I can use personal services: the hairdresser, blow-drying, the optician, the watchmaker and the jeweller.",
+    "assesses": [
+      "GE-LEX-C447-FRISEUR-03",
+      "GE-LEX-C447-FRISEUR-04",
+      "GE-LEX-C447-FRISEUR-05"
+    ]
+  }
+}

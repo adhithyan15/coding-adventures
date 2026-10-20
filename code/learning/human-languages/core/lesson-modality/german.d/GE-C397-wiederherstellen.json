@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C397-wiederherstellen",
+    "language": "german",
+    "chapter": 397,
+    "sequence": 21460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:057143f7a733f4a1"
+  },
+  "findings": []
+}

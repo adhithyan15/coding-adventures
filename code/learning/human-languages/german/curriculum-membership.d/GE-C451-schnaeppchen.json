@@ -1,0 +1,11 @@
+{
+  "id": "GE-C451-schnaeppchen",
+  "pathSegment": "GE-PATH-451-SCHNAEPPCHEN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-451-SCHNAEPPCHEN",
+      "order": 2
+    }
+  ]
+}

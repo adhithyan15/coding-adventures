@@ -12,6 +12,18 @@
 //! | `"assert_eq"` | Panics if `args[0] != args[1]`; returns `Null` |
 //! | `"print"` | Prints all args to stdout with a trailing newline; returns `Null` |
 //! | `"print_str"` | Prints one string to stdout with no implicit newline; returns `Null` |
+//! | `"print_i64"` | Prints one integer in decimal **plus `\n`** to stdout (LANG83 standard builtin) |
+//! | `"putchar"` | Writes the low byte of one integer to stdout (LANG83 standard builtin) |
+//!
+//! ## One ordered output stream (LANG83)
+//!
+//! `print_str`, `print_i64` and `putchar` all write through the **same**
+//! `std::io::stdout()` handle, in call order, so a program that mixes them sees
+//! one ordered byte stream — never "all the integers, then all the bytes". An
+//! embedder that wants to capture output re-registers all three names with
+//! closures that append to *one* shared buffer (the `lang-aot` matrix harness
+//! does exactly that); registering separate buffers per builtin and choosing
+//! between them afterwards is the bug LANG83 removed.
 //!
 //! # Example
 //!
@@ -122,6 +134,36 @@ impl BuiltinRegistry {
             io::stdout()
                 .flush()
                 .map_err(|e| VMError::Custom(format!("print_str flush failed: {e}")))?;
+            Ok(Value::Null)
+        });
+
+        // print_i64 — LANG83 standard output builtin: decimal value + "\n".
+        // Before LANG83 every embedder had to register this itself, so a bare
+        // `VMCore` failed any BASIC/Oct/ALGOL program with UnknownOpcode.
+        reg.register("print_i64", |args| {
+            let n = args.first().and_then(Value::as_i64).ok_or_else(|| VMError::TypeError {
+                expected: "integer".into(),
+                actual: args.first().map(Value::iir_type_name).unwrap_or("missing").into(),
+                context: "print_i64".into(),
+            })?;
+            let mut out = io::stdout();
+            writeln!(out, "{n}")
+                .and_then(|()| out.flush())
+                .map_err(|e| VMError::Custom(format!("print_i64 write failed: {e}")))?;
+            Ok(Value::Null)
+        });
+
+        // putchar — LANG83 standard output builtin: the low byte of an integer.
+        reg.register("putchar", |args| {
+            let n = args.first().and_then(Value::as_i64).ok_or_else(|| VMError::TypeError {
+                expected: "integer".into(),
+                actual: args.first().map(Value::iir_type_name).unwrap_or("missing").into(),
+                context: "putchar".into(),
+            })?;
+            let mut out = io::stdout();
+            out.write_all(&[(n & 0xFF) as u8])
+                .and_then(|()| out.flush())
+                .map_err(|e| VMError::Custom(format!("putchar write failed: {e}")))?;
             Ok(Value::Null)
         });
 
@@ -295,6 +337,23 @@ mod tests {
             Ok(Value::Int(n * 2))
         });
         assert_eq!(reg.call("double", &[Value::Int(21)]).unwrap(), Value::Int(42));
+    }
+
+    #[test]
+    fn lang83_output_builtins_are_registered_by_default() {
+        let reg = BuiltinRegistry::new();
+        assert!(reg.has("print_i64"));
+        assert!(reg.has("putchar"));
+        // Non-integers are clean type errors, never a panic or a silent 0.
+        for name in ["print_i64", "putchar"] {
+            let err = reg.call(name, &[Value::Str("x".into())]).unwrap_err();
+            assert!(matches!(err, VMError::TypeError { .. }), "{name}");
+            let err = reg.call(name, &[]).unwrap_err();
+            assert!(matches!(err, VMError::TypeError { .. }), "{name}");
+        }
+        // The happy path writes to the process stdout and returns Null.
+        assert_eq!(reg.call("print_i64", &[Value::Int(7)]).unwrap(), Value::Null);
+        assert_eq!(reg.call("putchar", &[Value::Int(0x10A)]).unwrap(), Value::Null);
     }
 
     #[test]

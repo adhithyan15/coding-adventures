@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 442,
+  "sourceHash": "fnv1a64:303521ea97cdf1ed",
+  "lessonIds": [
+    "GE-C442-glatteis",
+    "GE-C442-raeumen",
+    "GE-C442-streuen",
+    "GE-C442-schneepflug",
+    "GE-C442-rutschen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch442.txt",
+  "json": "german/narration/ch442.json",
+  "textHash": "fnv1a64:c5582e0613b137db",
+  "jsonHash": "fnv1a64:6fbc4cf742de07a9",
+  "findings": []
+}

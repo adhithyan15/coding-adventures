@@ -1,0 +1,11 @@
+{
+  "id": "GE-C343-daher",
+  "pathSegment": "GE-PATH-343-KONSEQUENZ",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-343-KONSEQUENZ",
+      "order": 4
+    }
+  ]
+}

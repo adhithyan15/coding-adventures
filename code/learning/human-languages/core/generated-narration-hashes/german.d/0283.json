@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 283,
+  "sourceHash": "fnv1a64:9cd710b708c4a126",
+  "lessonIds": [
+    "GE-C283-zeuge",
+    "GE-C283-aussagen",
+    "GE-C283-aussage",
+    "GE-C283-beobachten",
+    "GE-C283-schildern"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch283.txt",
+  "json": "german/narration/ch283.json",
+  "textHash": "fnv1a64:61b2cfd1bfa55e5e",
+  "jsonHash": "fnv1a64:a062f92c0ba9a8e4",
+  "findings": []
+}

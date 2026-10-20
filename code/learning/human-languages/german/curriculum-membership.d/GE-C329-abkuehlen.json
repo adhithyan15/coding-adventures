@@ -1,0 +1,11 @@
+{
+  "id": "GE-C329-abkuehlen",
+  "pathSegment": "GE-PATH-329-ANRICHTEN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-329-ANRICHTEN",
+      "order": 3
+    }
+  ]
+}

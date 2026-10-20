@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C263-nachdem",
+    "language": "german",
+    "chapter": 263,
+    "sequence": 14550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9d8c8ff1b21874ee"
+  },
+  "findings": []
+}

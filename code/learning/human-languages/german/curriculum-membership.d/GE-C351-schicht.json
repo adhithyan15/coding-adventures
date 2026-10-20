@@ -1,0 +1,11 @@
+{
+  "id": "GE-C351-schicht",
+  "pathSegment": "GE-PATH-351-ARBEITSZEIT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-351-ARBEITSZEIT",
+      "order": 2
+    }
+  ]
+}

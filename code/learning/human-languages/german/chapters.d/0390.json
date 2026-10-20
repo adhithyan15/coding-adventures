@@ -1,0 +1,19 @@
+{
+  "chapter": 390,
+  "title": "Nicht verschwenden",
+  "label": "ch:ge-nicht-verschwenden",
+  "canDo": "I can talk about wasting money, good value, wealth and payment.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GE-C390-zahlung",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 390: I can talk about wasting money, good value, wealth and payment.",
+    "assesses": [
+      "GE-LEX-C390-VERSCHWENDUNG-03",
+      "GE-LEX-C390-VERSCHWENDUNG-04",
+      "GE-LEX-C390-VERSCHWENDUNG-05"
+    ]
+  }
+}

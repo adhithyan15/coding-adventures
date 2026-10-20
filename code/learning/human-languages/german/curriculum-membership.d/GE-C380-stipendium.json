@@ -1,0 +1,11 @@
+{
+  "id": "GE-C380-stipendium",
+  "pathSegment": "GE-PATH-380-ZULASSUNG",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-380-ZULASSUNG",
+      "order": 2
+    }
+  ]
+}

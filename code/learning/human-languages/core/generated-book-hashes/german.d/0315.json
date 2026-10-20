@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:52d58475cce8ce17",
+  "lessonIds": [
+    "GE-C315-ritter",
+    "GE-C315-koenig",
+    "GE-C315-prinzessin",
+    "GE-C315-riese",
+    "GE-C315-zwerg"
+  ],
+  "tex": "german/book/chapters/ch315-ritter-und-riesen.tex"
+}

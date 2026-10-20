@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C410-schleudern",
+    "language": "german",
+    "chapter": 410,
+    "sequence": 22130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:59128bd024e8c7d5"
+  },
+  "findings": []
+}

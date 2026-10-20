@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-383-ANTRAG",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can deal with an authority: make an application, fill in a form and sign it.",
+  "prerequisites": []
+}

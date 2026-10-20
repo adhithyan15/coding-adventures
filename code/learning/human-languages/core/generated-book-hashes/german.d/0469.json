@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 469,
+  "sourceHash": "fnv1a64:a75f923a5535efdd",
+  "lessonIds": [
+    "GE-C469-enttaeuschen",
+    "GE-C469-enttaeuschung",
+    "GE-C469-erleichterung",
+    "GE-C469-aufatmen",
+    "GE-C469-seufzen"
+  ],
+  "tex": "german/book/chapters/ch469-enttauscht-und-erleichtert.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 504,
+  "title": "Säen und umgraben",
+  "label": "ch:ge-saen-und-umgraben",
+  "canDo": "I can talk about growing things.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C504-ernte",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 504: I can talk about growing things.",
+    "assesses": [
+      "GE-LEX-C504-SAEEN-03",
+      "GE-LEX-C504-SAEEN-04",
+      "GE-LEX-C504-SAEEN-05"
+    ]
+  }
+}

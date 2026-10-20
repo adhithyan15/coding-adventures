@@ -1,0 +1,19 @@
+{
+  "chapter": 335,
+  "title": "Die Diskussion",
+  "label": "ch:ge-die-diskussion",
+  "canDo": "I can take part in a discussion or a debate, make a proposal and stress what matters.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C335-betonen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 335: I can take part in a discussion or a debate, make a proposal and stress what matters.",
+    "assesses": [
+      "GE-LEX-C335-DISKUSSION-03",
+      "GE-LEX-C335-DISKUSSION-04",
+      "GE-LEX-C335-DISKUSSION-05"
+    ]
+  }
+}

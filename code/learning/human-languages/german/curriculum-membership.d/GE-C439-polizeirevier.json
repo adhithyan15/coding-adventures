@@ -1,0 +1,11 @@
+{
+  "id": "GE-C439-polizeirevier",
+  "pathSegment": "GE-PATH-439-VIERTEL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-439-VIERTEL",
+      "order": 3
+    }
+  ]
+}

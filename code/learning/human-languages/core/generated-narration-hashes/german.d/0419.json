@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 419,
+  "sourceHash": "fnv1a64:a555c1eb5b413a80",
+  "lessonIds": [
+    "GE-C419-zwischenlandung",
+    "GE-C419-zeitverschiebung",
+    "GE-C419-verspaeten",
+    "GE-C419-festsitzen",
+    "GE-C419-notlanden"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch419.txt",
+  "json": "german/narration/ch419.json",
+  "textHash": "fnv1a64:5e9766cf0f84bc25",
+  "jsonHash": "fnv1a64:234c2091ef4f1c60",
+  "findings": []
+}

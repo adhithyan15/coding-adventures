@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:7b64654ded5ba8f3",
+  "lessonIds": [
+    "GE-C400-scheinwerfer",
+    "GE-C400-windschutzscheibe",
+    "GE-C400-scheibenwischer",
+    "GE-C400-rueckspiegel",
+    "GE-C400-blinken"
+  ],
+  "tex": "german/book/chapters/ch400-freie-sicht.tex"
+}

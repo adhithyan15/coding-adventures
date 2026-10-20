@@ -1,0 +1,19 @@
+{
+  "chapter": 438,
+  "title": "Die alte Stadt",
+  "label": "ch:ge-die-alte-stadt",
+  "canDo": "I can talk about the old part of a town: the old town, the cathedral, the bell tower, the town wall and the town gate.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C438-stadttor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 438: I can talk about the old part of a town: the old town, the cathedral, the bell tower, the town wall and the town gate.",
+    "assesses": [
+      "GE-LEX-C438-ALTSTADT-03",
+      "GE-LEX-C438-ALTSTADT-04",
+      "GE-LEX-C438-ALTSTADT-05"
+    ]
+  }
+}

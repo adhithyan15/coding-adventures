@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-337-IRRTUM",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "GE-EXT-337-IRRTUM"
+  ],
+  "after": []
+}

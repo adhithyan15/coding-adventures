@@ -1,0 +1,11 @@
+{
+  "id": "GE-C442-schneepflug",
+  "pathSegment": "GE-PATH-442-GLATTEIS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-442-GLATTEIS",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 298,
+  "sourceHash": "fnv1a64:66f439898d9eb144",
+  "lessonIds": [
+    "GE-C298-verloben",
+    "GE-C298-verlobung",
+    "GE-C298-braut",
+    "GE-C298-braeutigam",
+    "GE-C298-brautpaar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch298.txt",
+  "json": "german/narration/ch298.json",
+  "textHash": "fnv1a64:68898df0ab40a122",
+  "jsonHash": "fnv1a64:471775b408a94652",
+  "findings": []
+}

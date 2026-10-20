@@ -1,0 +1,11 @@
+{
+  "id": "GE-C327-deckel",
+  "pathSegment": "GE-PATH-327-KOECHELN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-327-KOECHELN",
+      "order": 4
+    }
+  ]
+}

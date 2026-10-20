@@ -1,0 +1,19 @@
+{
+  "chapter": 297,
+  "title": "Aufwachsen",
+  "label": "ch:ge-aufwachsen",
+  "canDo": "I can tell how someone grew up: to grow up, starting school, the school-leaving exam, a degree and a move.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C297-umzug",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 297: I can tell how someone grew up: to grow up, starting school, the school-leaving exam, a degree and a move.",
+    "assesses": [
+      "GE-LEX-C297-AUFWACHSEN-03",
+      "GE-LEX-C297-AUFWACHSEN-04",
+      "GE-LEX-C297-AUFWACHSEN-05"
+    ]
+  }
+}

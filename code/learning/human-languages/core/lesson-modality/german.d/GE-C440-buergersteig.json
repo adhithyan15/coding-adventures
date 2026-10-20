@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C440-buergersteig",
+    "language": "german",
+    "chapter": 440,
+    "sequence": 23650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b2fc45b5d2ac3faa"
+  },
+  "findings": []
+}

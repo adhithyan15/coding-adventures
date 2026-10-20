@@ -1,0 +1,20 @@
+{
+  "language": "german",
+  "chapter": 437,
+  "sourceHash": "fnv1a64:013169d20e3ce7d7",
+  "lessonIds": [
+    "GE-C437-bummeln",
+    "GE-C437-schlendern",
+    "GE-C437-erkundigen",
+    "GE-C437-auskunft",
+    "GE-C437-auskennen",
+    "GE-R437-review-430-437"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "german/narration/ch437.txt",
+  "json": "german/narration/ch437.json",
+  "textHash": "fnv1a64:35485c914a220222",
+  "jsonHash": "fnv1a64:74ec131b852c4768",
+  "findings": []
+}

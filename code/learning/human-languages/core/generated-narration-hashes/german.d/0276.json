@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 276,
+  "sourceHash": "fnv1a64:a312cf82245d3080",
+  "lessonIds": [
+    "GE-C276-umfrage",
+    "GE-C276-statistik",
+    "GE-C276-anteil",
+    "GE-C276-zunehmen",
+    "GE-C276-sinken"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch276.txt",
+  "json": "german/narration/ch276.json",
+  "textHash": "fnv1a64:7017f045179d6d0a",
+  "jsonHash": "fnv1a64:3b4ea936eab61fff",
+  "findings": []
+}

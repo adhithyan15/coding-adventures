@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 480,
+  "sourceHash": "fnv1a64:53230a8b8fa6aa4f",
+  "lessonIds": [
+    "GE-C480-uebelkeit",
+    "GE-C480-uebergeben",
+    "GE-C480-durchfall",
+    "GE-C480-schwindlig",
+    "GE-C480-kreislauf"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch480.txt",
+  "json": "german/narration/ch480.json",
+  "textHash": "fnv1a64:8fc6990db8f47073",
+  "jsonHash": "fnv1a64:7812dc42d3220fc4",
+  "findings": []
+}

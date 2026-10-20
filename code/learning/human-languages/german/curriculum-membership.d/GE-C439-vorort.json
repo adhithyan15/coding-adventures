@@ -1,0 +1,11 @@
+{
+  "id": "GE-C439-vorort",
+  "pathSegment": "GE-PATH-439-VIERTEL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-439-VIERTEL",
+      "order": 2
+    }
+  ]
+}

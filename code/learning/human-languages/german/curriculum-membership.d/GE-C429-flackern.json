@@ -1,0 +1,11 @@
+{
+  "id": "GE-C429-flackern",
+  "pathSegment": "GE-PATH-429-SCHIMMEL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-429-SCHIMMEL",
+      "order": 1
+    }
+  ]
+}

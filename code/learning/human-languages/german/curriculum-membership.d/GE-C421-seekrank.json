@@ -1,0 +1,11 @@
+{
+  "id": "GE-C421-seekrank",
+  "pathSegment": "GE-PATH-421-FAEHRE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-421-FAEHRE",
+      "order": 4
+    }
+  ]
+}

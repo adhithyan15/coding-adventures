@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 423,
+  "sourceHash": "fnv1a64:9d4db091729da4fe",
+  "lessonIds": [
+    "GE-C423-anker",
+    "GE-C423-ankern",
+    "GE-C423-leuchtturm",
+    "GE-C423-matrose",
+    "GE-C423-kentern"
+  ],
+  "tex": "german/book/chapters/ch423-im-hafen.tex"
+}

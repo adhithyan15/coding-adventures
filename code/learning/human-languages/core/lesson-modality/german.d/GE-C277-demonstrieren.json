@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C277-demonstrieren",
+    "language": "german",
+    "chapter": 277,
+    "sequence": 15290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d30608d65a9c4a5"
+  },
+  "findings": []
+}

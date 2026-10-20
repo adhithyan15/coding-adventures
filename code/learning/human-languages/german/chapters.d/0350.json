@@ -1,0 +1,19 @@
+{
+  "chapter": 350,
+  "title": "Arbeitgeber und Arbeitnehmer",
+  "label": "ch:ge-arbeitgeber-und-arbeitnehmer",
+  "canDo": "I can talk about employers and employees, hiring, and contracts with an end date.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C350-befristet",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 350: I can talk about employers and employees, hiring, and contracts with an end date.",
+    "assesses": [
+      "GE-LEX-C350-ARBEITGEBER-03",
+      "GE-LEX-C350-ARBEITGEBER-04",
+      "GE-LEX-C350-ARBEITGEBER-05"
+    ]
+  }
+}

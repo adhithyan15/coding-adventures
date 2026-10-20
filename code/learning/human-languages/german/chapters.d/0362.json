@@ -1,0 +1,19 @@
+{
+  "chapter": 362,
+  "title": "Freiwillig helfen",
+  "label": "ch:ge-freiwillig-helfen",
+  "canDo": "I can talk about voluntary work, donating and getting involved.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C362-engagieren",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 362: I can talk about voluntary work, donating and getting involved.",
+    "assesses": [
+      "GE-LEX-C362-EHRENAMT-03",
+      "GE-LEX-C362-EHRENAMT-04",
+      "GE-LEX-C362-EHRENAMT-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 475,
+  "sourceHash": "fnv1a64:1764db328dab660d",
+  "lessonIds": [
+    "GE-C475-prahlen",
+    "GE-C475-angeben",
+    "GE-C475-angeber",
+    "GE-C475-bescheiden",
+    "GE-C475-eitel"
+  ],
+  "tex": "german/book/chapters/ch475-angeber-und-bescheidene.tex"
+}

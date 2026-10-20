@@ -1,0 +1,11 @@
+{
+  "id": "GE-C295-abschleppen",
+  "pathSegment": "GE-PATH-295-PANNE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-295-PANNE",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C353-leiten",
+    "language": "german",
+    "chapter": 353,
+    "sequence": 19210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a2b9b62f6a681c2"
+  },
+  "findings": []
+}

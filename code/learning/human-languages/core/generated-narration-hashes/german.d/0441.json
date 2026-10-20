@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:a8193b994aa7f29c",
+  "lessonIds": [
+    "GE-C441-fassade",
+    "GE-C441-schaufenster",
+    "GE-C441-dachrinne",
+    "GE-C441-markthalle",
+    "GE-C441-saeule"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch441.txt",
+  "json": "german/narration/ch441.json",
+  "textHash": "fnv1a64:ef482cf44c71f3b2",
+  "jsonHash": "fnv1a64:fac8ead3960903d3",
+  "findings": []
+}

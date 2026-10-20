@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-278-VERHANDELN",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GE-EXT-278-VERHANDELN"
+  ],
+  "after": []
+}

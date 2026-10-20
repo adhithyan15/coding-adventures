@@ -1,0 +1,11 @@
+{
+  "id": "GE-C394-hochladen",
+  "pathSegment": "GE-PATH-394-INTERNET",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-394-INTERNET",
+      "order": 0
+    }
+  ]
+}

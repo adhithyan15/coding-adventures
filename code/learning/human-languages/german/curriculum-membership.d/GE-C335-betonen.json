@@ -1,0 +1,11 @@
+{
+  "id": "GE-C335-betonen",
+  "pathSegment": "GE-PATH-335-DISKUSSION",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-335-DISKUSSION",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 272,
+  "sourceHash": "fnv1a64:19c81dceb4c38573",
+  "lessonIds": [
+    "GE-C272-sendung",
+    "GE-C272-rundfunk",
+    "GE-C272-presse",
+    "GE-C272-journalist",
+    "GE-C272-titelseite"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch272.txt",
+  "json": "german/narration/ch272.json",
+  "textHash": "fnv1a64:c4d591faa2de92cc",
+  "jsonHash": "fnv1a64:9bc35a7714afba4b",
+  "findings": []
+}

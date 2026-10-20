@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 399,
+  "sourceHash": "fnv1a64:e75ffd983d07ccb3",
+  "lessonIds": [
+    "GE-C399-lenkrad",
+    "GE-C399-lenken",
+    "GE-C399-bremsen",
+    "GE-C399-bremse",
+    "GE-C399-schalten"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch399.txt",
+  "json": "german/narration/ch399.json",
+  "textHash": "fnv1a64:00c9c0f3d071a11b",
+  "jsonHash": "fnv1a64:b8f56297f313434f",
+  "findings": []
+}

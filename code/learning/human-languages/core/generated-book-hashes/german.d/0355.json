@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 355,
+  "sourceHash": "fnv1a64:9088711f7e29b800",
+  "lessonIds": [
+    "GE-C355-projekt",
+    "GE-C355-auftrag",
+    "GE-C355-zusammenarbeiten",
+    "GE-C355-zusammenarbeit",
+    "GE-C355-organisieren"
+  ],
+  "tex": "german/book/chapters/ch355-ein-projekt.tex"
+}

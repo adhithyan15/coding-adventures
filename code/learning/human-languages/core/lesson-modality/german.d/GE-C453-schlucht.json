@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C453-schlucht",
+    "language": "german",
+    "chapter": 453,
+    "sequence": 24350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b69e60ef0977d267"
+  },
+  "findings": []
+}

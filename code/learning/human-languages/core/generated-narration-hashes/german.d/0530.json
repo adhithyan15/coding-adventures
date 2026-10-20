@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 530,
+  "sourceHash": "fnv1a64:f536475aa6dc337e",
+  "lessonIds": [
+    "GE-C530-kaemmen",
+    "GE-C530-gurgeln",
+    "GE-C530-schminken",
+    "GE-C530-bademantel",
+    "GE-C530-schlafanzug"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch530.txt",
+  "json": "german/narration/ch530.json",
+  "textHash": "fnv1a64:40550e1cbae6d0c8",
+  "jsonHash": "fnv1a64:b89bd93e63058925",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C523-zappen",
+  "pathSegment": "GE-PATH-523-FERNSEHEN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-523-FERNSEHEN",
+      "order": 1
+    }
+  ]
+}

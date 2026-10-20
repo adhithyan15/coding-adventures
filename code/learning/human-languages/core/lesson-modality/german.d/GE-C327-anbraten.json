@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C327-anbraten",
+    "language": "german",
+    "chapter": 327,
+    "sequence": 17860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5e8ebc2089eed3c6"
+  },
+  "findings": []
+}

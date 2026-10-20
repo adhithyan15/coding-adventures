@@ -1,0 +1,19 @@
+{
+  "chapter": 448,
+  "title": "Briefe und Päckchen",
+  "label": "ch:ge-briefe-und-packchen",
+  "canDo": "I can send things by post: putting a stamp on, sending, posting a letter, the small parcel and registered post.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C448-einschreiben",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 448: I can send things by post: putting a stamp on, sending, posting a letter, the small parcel and registered post.",
+    "assesses": [
+      "GE-LEX-C448-POST-03",
+      "GE-LEX-C448-POST-04",
+      "GE-LEX-C448-POST-05"
+    ]
+  }
+}

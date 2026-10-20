@@ -1,0 +1,11 @@
+{
+  "id": "GE-C270-zoegern",
+  "pathSegment": "GE-PATH-270-ABWARTEN",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-270-ABWARTEN",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 505,
+  "title": "Trainieren",
+  "label": "ch:ge-trainieren",
+  "canDo": "I can talk about training and fitness.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-R505-review-498-505",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 505: I can talk about training and fitness.",
+    "assesses": [
+      "GE-LEX-C505-TRAINING-03",
+      "GE-LEX-C505-TRAINING-04",
+      "GE-LEX-C505-TRAINING-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C532-wohngemeinschaft",
+  "pathSegment": "GE-PATH-532-WG",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-532-WG",
+      "order": 0
+    }
+  ]
+}

@@ -75,6 +75,11 @@ use std::collections::HashMap;
 
 use aarch64_encoder::{Assembler, Cond, EncodeError, ExternalReloc, LabelId, Reg};
 pub use aarch64_encoder::ExternalReloc as Reloc;
+
+/// LANG83: this backend's declaration for every standard operation (see the
+/// module docs and `code/specs/LANG83-iir-standard-operation-registry.md`).
+pub mod op_support;
+pub use op_support::{op_support, OP_SUPPORT};
 use gc_core::{StackMapBuilder, StackMapRecord};
 use jit_core::backend::{Backend, FunctionContext};
 use jit_core::cir::{CIRInstr, CIROperand};

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 516,
+  "sourceHash": "fnv1a64:594f71aea92d166f",
+  "lessonIds": [
+    "GE-C516-buehne",
+    "GE-C516-proben",
+    "GE-C516-lampenfieber",
+    "GE-C516-auftreten",
+    "GE-C516-auftritt"
+  ],
+  "tex": "german/book/chapters/ch516-auf-der-buhne.tex"
+}

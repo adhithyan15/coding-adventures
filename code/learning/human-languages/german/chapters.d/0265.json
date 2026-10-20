@@ -1,0 +1,19 @@
+{
+  "chapter": 265,
+  "title": "Inzwischen",
+  "label": "ch:ge-inzwischen",
+  "canDo": "I can say what happened in the meantime and up to now: meanwhile, by now, in the meantime, so far and long ago.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C265-laengst",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 265: I can say what happened in the meantime and up to now: meanwhile, by now, in the meantime, so far and long ago.",
+    "assesses": [
+      "GE-LEX-C265-INZWISCHEN-03",
+      "GE-LEX-C265-INZWISCHEN-04",
+      "GE-LEX-C265-INZWISCHEN-05"
+    ]
+  }
+}

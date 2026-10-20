@@ -1,0 +1,19 @@
+{
+  "chapter": 280,
+  "title": "Das Verbrechen",
+  "label": "ch:ge-das-verbrechen",
+  "canDo": "I can talk about a crime: a crime, a criminal, an offender, a victim and the crime scene.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C280-tatort",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 280: I can talk about a crime: a crime, a criminal, an offender, a victim and the crime scene.",
+    "assesses": [
+      "GE-LEX-C280-VERBRECHEN-03",
+      "GE-LEX-C280-VERBRECHEN-04",
+      "GE-LEX-C280-VERBRECHEN-05"
+    ]
+  }
+}

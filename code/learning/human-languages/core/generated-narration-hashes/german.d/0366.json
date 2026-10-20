@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 366,
+  "sourceHash": "fnv1a64:9776d8c597a93385",
+  "lessonIds": [
+    "GE-C366-hypothese",
+    "GE-C366-theoretisch",
+    "GE-C366-unter-umstaenden",
+    "GE-C366-gegebenenfalls",
+    "GE-C366-wenigstens"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch366.txt",
+  "json": "german/narration/ch366.json",
+  "textHash": "fnv1a64:4c5e9c9c18a83350",
+  "jsonHash": "fnv1a64:4f58d4236251ca0d",
+  "findings": []
+}

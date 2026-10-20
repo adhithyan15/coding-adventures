@@ -55,6 +55,11 @@ pub mod codegen;
 pub mod lower;
 pub mod validate;
 
+/// LANG83: this backend's declaration for every standard operation (see the
+/// module docs and `code/specs/LANG83-iir-standard-operation-registry.md`).
+pub mod op_support;
+pub use op_support::{op_support, OP_SUPPORT};
+
 // ── Public re-exports ─────────────────────────────────────────────────────────
 
 pub use validate::validate_for_beam;

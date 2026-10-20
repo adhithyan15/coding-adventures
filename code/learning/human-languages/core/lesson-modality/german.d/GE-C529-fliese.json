@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C529-fliese",
+    "language": "german",
+    "chapter": 529,
+    "sequence": 28250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2b74c82bb5b2cc62"
+  },
+  "findings": []
+}

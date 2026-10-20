@@ -6354,8 +6354,8 @@ fn emit_host_input(
     // its own and the part style was dropped entirely; both now funnel
     // through `host_input_decoration_arg`, because `decoration:` is a named
     // argument and a second one is a Dart compile error.
-    let hint = find_string_prop(node, "placeholder");
-    if let Some(decoration) = host_input_decoration_arg(node, part_styles, hint) {
+    let hint = host_input_hint_expr(node)?;
+    if let Some(decoration) = host_input_decoration_arg(node, part_styles, hint.as_deref()) {
         writeln!(
             out,
             "{input_pad}  decoration: InputDecoration({decoration}),"
@@ -6539,6 +6539,34 @@ fn inherits_enclosing_font(node: &LayoutNode, part_styles: &HashMap<String, Stri
     })
 }
 
+/// A text field's `placeholder` as the Dart expression `hintText:` takes,
+/// for `HostInput` and the legacy `Input` alike.
+///
+/// | authored form          | `hintText:`                          |
+/// |------------------------|--------------------------------------|
+/// | `placeholder : "Text"` | `"Text"` (escaped)                   |
+/// | `placeholder : 3`      | `"3"`                                |
+/// | `placeholder : slot: s`| `s` (camelCased, validated)          |
+/// | `placeholder : item`   | `item` (a `For` binding, validated)  |
+/// | `placeholder : ( e )`  | `( e )`, verbatim like `a11y-label`  |
+///
+/// This read string literals only, so every slot-bound placeholder (each
+/// toolkit `Input`, the note-type editor's card templates) showed no hint,
+/// and nothing reported the drop.
+fn host_input_hint_expr(node: &LayoutNode) -> Result<Option<String>, PipelineEmitError> {
+    Ok(match find_prop_value(node, "placeholder") {
+        Some(LayoutPropValue::String(text)) => Some(format!("\"{}\"", escape_dart_string(text))),
+        Some(LayoutPropValue::Number(number)) => Some(format!("\"{number}\"")),
+        Some(LayoutPropValue::SlotRef(name)) | Some(LayoutPropValue::Keyword(name)) => {
+            let field = to_camel_case_first_lower(name);
+            validate_slot_or_field_name(&field)?;
+            Some(field)
+        }
+        Some(LayoutPropValue::Expr(expr)) if !expr.trim().is_empty() => Some(expr.clone()),
+        _ => None,
+    })
+}
+
 /// #15142 -- lower a `HostInput`'s part style into its `InputDecoration`.
 ///
 /// Until this existed `emit_host_input` took `_part_styles` and never read
@@ -6549,7 +6577,9 @@ fn inherits_enclosing_font(node: &LayoutNode, part_styles: &HashMap<String, Stri
 /// editing row taller than its display rows, which is #15048.
 ///
 /// Returns the ARGUMENTS for a single `InputDecoration(..)`, hint included,
-/// or `None` when there is nothing to say. It must stay the only producer
+/// or `None` when there is nothing to say. `hint` is already a Dart
+/// expression (see [`host_input_hint_expr`]): a quoted literal or a bound
+/// value. It must stay the only producer
 /// of that argument: `decoration:` is a named parameter, and emitting it
 /// twice is a Dart compile error. The same shape bit the Qt emitter, which
 /// writes `color` from two places onto one `TextInput` (#15155).
@@ -6591,7 +6621,7 @@ fn host_input_decoration_arg(
 
     let mut args: Vec<String> = Vec::new();
     if let Some(hint) = hint {
-        args.push(format!("hintText: \"{}\"", escape_dart_string(hint)));
+        args.push(format!("hintText: {hint}"));
     }
 
     // `isDense` matters as much as the padding itself: without it Material
@@ -11746,6 +11776,75 @@ mod tests {
         assert!(out.contains("value: formula,"));
         assert!(out.contains("controller: mosaicController,"));
         assert!(out.contains("hintText: \"Type a formula\""));
+    }
+
+    /// A bound placeholder is the `InputDecoration`'s `hintText`, for both
+    /// `HostInput` and the legacy `Input`, single- and multi-line. This read
+    /// string literals only, so `placeholder : slot: x` (every toolkit
+    /// `Input`, the note-type editor's card templates) showed no hint, and
+    /// the degradation report said nothing.
+    #[test]
+    fn text_field_bound_placeholder_is_the_hint_text() {
+        let m = component(
+            "X",
+            vec![slot("front-template-placeholder", SlotType::Text, true)],
+            vec![],
+        );
+        for tag in ["HostInput", "Input"] {
+            for multiline in [false, true] {
+                for (value, expected) in [
+                    (
+                        LayoutPropValue::SlotRef("front-template-placeholder".into()),
+                        "hintText: frontTemplatePlaceholder",
+                    ),
+                    (LayoutPropValue::Keyword("hint".into()), "hintText: hint"),
+                    (
+                        LayoutPropValue::Expr("( hints[0] )".into()),
+                        "hintText: ( hints[0] )",
+                    ),
+                ] {
+                    let mut props = vec![LayoutProp {
+                        name: "placeholder".into(),
+                        value,
+                    }];
+                    if multiline {
+                        props.push(LayoutProp {
+                            name: "multiline".into(),
+                            value: LayoutPropValue::Keyword("true".into()),
+                        });
+                    }
+                    let l = layout("X", node_with(tag, props, vec![]));
+                    let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+                    assert!(
+                        out.contains(expected),
+                        "{tag} multiline={multiline}: expected {expected} in:\n{out}"
+                    );
+                }
+            }
+        }
+    }
+
+    /// A slot name that is not a Dart identifier is refused loudly, never
+    /// spliced into the decoration.
+    #[test]
+    fn text_field_placeholder_unsafe_slot_name_is_rejected() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node_with(
+                "HostInput",
+                vec![LayoutProp {
+                    name: "placeholder".into(),
+                    value: LayoutPropValue::SlotRef("x), evil(".into()),
+                }],
+                vec![],
+            ),
+        );
+        let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnsafeSlotName(_)),
+            "got {err:?}"
+        );
     }
 
     #[test]
@@ -19331,7 +19430,7 @@ mod host_input_style_tests {
         let got = host_input_decoration_arg(
             &input_with_part("field"),
             &styles("field", "padding: 10px; background: #14221e"),
-            Some("Enter a value"),
+            Some("\"Enter a value\""),
         )
         .expect("decoration");
         assert!(got.contains("hintText: \"Enter a value\""), "got: {got}");
@@ -19366,7 +19465,7 @@ mod host_input_style_tests {
             None
         );
         assert_eq!(
-            host_input_decoration_arg(&node, &HashMap::new(), Some("Due")).as_deref(),
+            host_input_decoration_arg(&node, &HashMap::new(), Some("\"Due\"")).as_deref(),
             Some("hintText: \"Due\"")
         );
         assert_eq!(host_input_text_style_arg(&node, &HashMap::new()), None);

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C507-unentschieden",
+  "pathSegment": "GE-PATH-507-SPIEL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-507-SPIEL",
+      "order": 3
+    }
+  ]
+}

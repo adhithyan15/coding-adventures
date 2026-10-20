@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C420-stornierung",
+    "language": "german",
+    "chapter": 420,
+    "sequence": 22630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2ca3f456e764f9f2"
+  },
+  "findings": []
+}

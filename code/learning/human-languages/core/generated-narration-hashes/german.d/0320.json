@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:b7e6f2a6015d9161",
+  "lessonIds": [
+    "GE-C320-mittelalter",
+    "GE-C320-antike",
+    "GE-C320-chronik",
+    "GE-C320-vorfahr",
+    "GE-C320-untergang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch320.txt",
+  "json": "german/narration/ch320.json",
+  "textHash": "fnv1a64:bf0e7cbaab52dc8a",
+  "jsonHash": "fnv1a64:bf5e9b3539aae3a3",
+  "findings": []
+}

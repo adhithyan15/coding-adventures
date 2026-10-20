@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 499,
+  "sourceHash": "fnv1a64:14b36385594a38ef",
+  "lessonIds": [
+    "GE-C499-nadel",
+    "GE-C499-faden",
+    "GE-C499-stricken",
+    "GE-C499-haekeln",
+    "GE-C499-sticken"
+  ],
+  "tex": "german/book/chapters/ch499-stricken-und-sticken.tex"
+}

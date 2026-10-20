@@ -1,0 +1,19 @@
+{
+  "chapter": 299,
+  "title": "Die Ehe",
+  "label": "ch:ge-die-ehe",
+  "canDo": "I can talk about marriage: a marriage, a husband, a wife, the wedding ceremony and the registry office.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C299-standesamt",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 299: I can talk about marriage: a marriage, a husband, a wife, the wedding ceremony and the registry office.",
+    "assesses": [
+      "GE-LEX-C299-EHE-03",
+      "GE-LEX-C299-EHE-04",
+      "GE-LEX-C299-EHE-05"
+    ]
+  }
+}

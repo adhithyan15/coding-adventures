@@ -1,0 +1,11 @@
+{
+  "id": "GE-C499-haekeln",
+  "pathSegment": "GE-PATH-499-HANDARBEIT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-499-HANDARBEIT",
+      "order": 3
+    }
+  ]
+}

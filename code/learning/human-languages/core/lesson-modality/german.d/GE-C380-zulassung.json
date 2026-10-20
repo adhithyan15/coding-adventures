@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C380-zulassung",
+    "language": "german",
+    "chapter": 380,
+    "sequence": 20560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:21bec4af2fba6657"
+  },
+  "findings": []
+}

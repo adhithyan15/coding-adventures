@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:0cb05c07b1a1edeb",
+  "lessonIds": [
+    "GE-C508-siegen",
+    "GE-C508-sieger",
+    "GE-C508-verlierer",
+    "GE-C508-gegner",
+    "GE-C508-turnier"
+  ],
+  "tex": "german/book/chapters/ch508-sieger-und-verlierer.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C318-niederlage",
+    "language": "german",
+    "chapter": 318,
+    "sequence": 17410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fa376372d42d1286"
+  },
+  "findings": []
+}

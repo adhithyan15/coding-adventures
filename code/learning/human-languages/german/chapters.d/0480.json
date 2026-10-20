@@ -1,0 +1,19 @@
+{
+  "chapter": 480,
+  "title": "Übel und schwindlig",
+  "label": "ch:ge-ubel-und-schwindlig",
+  "canDo": "I can describe feeling sick and dizzy.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C480-kreislauf",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 480: I can describe feeling sick and dizzy.",
+    "assesses": [
+      "GE-LEX-C480-UEBELKEIT-03",
+      "GE-LEX-C480-UEBELKEIT-04",
+      "GE-LEX-C480-UEBELKEIT-05"
+    ]
+  }
+}

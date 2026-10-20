@@ -1,0 +1,19 @@
+{
+  "chapter": 286,
+  "title": "Vor Gericht",
+  "label": "ch:ge-vor-gericht",
+  "canDo": "I can report a trial: a verdict, a judge, to sentence, guilty and innocent.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C286-unschuldig",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 286: I can report a trial: a verdict, a judge, to sentence, guilty and innocent.",
+    "assesses": [
+      "GE-LEX-C286-URTEIL-03",
+      "GE-LEX-C286-URTEIL-04",
+      "GE-LEX-C286-URTEIL-05"
+    ]
+  }
+}

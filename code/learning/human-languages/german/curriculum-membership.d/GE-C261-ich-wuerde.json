@@ -1,0 +1,11 @@
+{
+  "id": "GE-C261-ich-wuerde",
+  "pathSegment": "GE-PATH-261-KONJUNKTIV",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-261-KONJUNKTIV",
+      "order": 1
+    }
+  ]
+}

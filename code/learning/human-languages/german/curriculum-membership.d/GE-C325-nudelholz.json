@@ -1,0 +1,11 @@
+{
+  "id": "GE-C325-nudelholz",
+  "pathSegment": "GE-PATH-325-TEIG",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-325-TEIG",
+      "order": 4
+    }
+  ]
+}

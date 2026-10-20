@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C451-feilschen",
+    "language": "german",
+    "chapter": 451,
+    "sequence": 24240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:46706183e9659ec4"
+  },
+  "findings": []
+}

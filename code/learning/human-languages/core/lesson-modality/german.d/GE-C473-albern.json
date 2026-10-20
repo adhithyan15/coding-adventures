@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C473-albern",
+    "language": "german",
+    "chapter": 473,
+    "sequence": 25380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d4c70c427e3b0415"
+  },
+  "findings": []
+}

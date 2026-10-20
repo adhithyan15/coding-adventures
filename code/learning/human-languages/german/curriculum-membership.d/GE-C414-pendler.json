@@ -1,0 +1,11 @@
+{
+  "id": "GE-C414-pendler",
+  "pathSegment": "GE-PATH-414-PENDELN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-414-PENDELN",
+      "order": 4
+    }
+  ]
+}

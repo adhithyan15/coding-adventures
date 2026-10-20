@@ -1821,25 +1821,60 @@ fn push_text_field_aria_label(
     node: &LayoutNode,
     attrs: &mut String,
 ) -> Result<(), PipelineEmitError> {
-    if let Some(prop) = node.props.iter().find(|p| p.name == "a11y-label") {
+    push_text_field_text_attr(node, "a11y-label", "aria-label", attrs)
+}
+
+/// Append `placeholder` for a text field. Shared by `HostInput` and the
+/// legacy `Input`, on both the `<input>` and the `<textarea>` shape.
+///
+/// This used to read string literals only, so `placeholder : slot: x` — the
+/// shape every toolkit `Input` and the note-type editor's template fields
+/// use — emitted no placeholder at all, and nothing reported the drop.
+fn push_text_field_placeholder(
+    node: &LayoutNode,
+    attrs: &mut String,
+) -> Result<(), PipelineEmitError> {
+    push_text_field_text_attr(node, "placeholder", "placeholder", attrs)
+}
+
+/// Lower one text-valued layout prop to a JSX attribute. Every shape the
+/// layout compiler produces for a text value reaches the DOM:
+///
+/// | authored form          | emitted                                    |
+/// |------------------------|--------------------------------------------|
+/// | `prop : "Name"`        | ` attr="Name"`, or ` attr={"…"}` if it needs escaping |
+/// | `prop : slot: s`       | ` attr={s}` (camelCased, validated)        |
+/// | `prop : item`          | ` attr={item}` (a `For` binding, validated)|
+/// | `prop : ( e )`         | ` attr={( e )}` (author expression, UI29 §3.3) |
+/// | `prop : 3`             | ` attr={3}`                                |
+///
+/// A slot or binding name that is not a JavaScript identifier is an error,
+/// never spliced into the `{…}` expression.
+fn push_text_field_text_attr(
+    node: &LayoutNode,
+    prop_name: &str,
+    jsx_attr: &str,
+    attrs: &mut String,
+) -> Result<(), PipelineEmitError> {
+    if let Some(prop) = node.props.iter().find(|p| p.name == prop_name) {
         match &prop.value {
             LayoutPropValue::String(value) => {
-                attrs.push_str(&jsx_string_attr("aria-label", value));
+                attrs.push_str(&jsx_string_attr(jsx_attr, value));
             }
             LayoutPropValue::SlotRef(slot) => {
                 let camel = to_camel_case_first_lower(slot);
                 validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
-                attrs.push_str(&format!(" aria-label={{{camel}}}"));
+                attrs.push_str(&format!(" {jsx_attr}={{{camel}}}"));
             }
             LayoutPropValue::Keyword(value) => {
                 validate_slot_or_field_name(value).map_err(PipelineEmitError::UnsafeSlotName)?;
-                attrs.push_str(&format!(" aria-label={{{value}}}"));
+                attrs.push_str(&format!(" {jsx_attr}={{{value}}}"));
             }
             LayoutPropValue::Expr(value) => {
-                attrs.push_str(&format!(" aria-label={{{value}}}"));
+                attrs.push_str(&format!(" {jsx_attr}={{{value}}}"));
             }
             LayoutPropValue::Number(value) => {
-                attrs.push_str(&format!(" aria-label={{{value}}}"));
+                attrs.push_str(&format!(" {jsx_attr}={{{value}}}"));
             }
             LayoutPropValue::EmitRef(_) => {}
         }
@@ -1857,6 +1892,8 @@ fn push_text_field_aria_label(
 /// | `value: slot: x`         | `value={x}` (camelCased)                                 |
 /// | `read-only: slot: x`     | `readOnly={x}` (camelCased)                              |
 /// | `read-only: true`/`false`| `readOnly={true}` / `readOnly={false}`                   |
+/// | `placeholder: "..."`     | `placeholder="..."` (JSX expression form if it needs escaping) |
+/// | `placeholder: slot: x`   | `placeholder={x}` (camelCased)                           |
 /// | `max-length: 100`        | `maxLength={100}`                                        |
 /// | `onChange: emit: onX`    | `onChange={e => dispatch({type: "x", value: e.target.value})}` |
 /// | `onCommit: emit: onX`    | `onKeyDown` handler with an `e.key === "Enter"` branch   |
@@ -1946,12 +1983,10 @@ fn emit_input_jsx(
         }
     }
 
-    // placeholder="text"  — string-literal moslayout prop (post-PR-H).
-    // Escaping: simple strings stay as JSX quoted attributes; strings that
-    // need JavaScript escaping use JSX expression form.
-    if let Some(s) = find_string_prop(node, "placeholder") {
-        attrs.push_str(&jsx_string_attr("placeholder", s));
-    }
+    // placeholder — a literal (`placeholder="..."`, or JSX expression form
+    // when it needs JavaScript escaping) or a bound value
+    // (`placeholder={x}`).
+    push_text_field_placeholder(node, &mut attrs)?;
 
     // aria-label — the authored accessible name (UI29), which this path
     // dropped while HostInput carried it.
@@ -2022,7 +2057,7 @@ fn emit_input_jsx(
 /// | `max-length`    | emits `maxLength={N}`           | **not supported** — userland clamping component owns this |
 /// | `value` slot    | `value={x}`                     | `value={x}` (same)          |
 /// | `read-only`     | `readOnly={x}` / literal        | `readOnly={x}` / literal (same) |
-/// | `placeholder`   | `placeholder="..."`             | `placeholder="..."` (same)  |
+/// | `placeholder`   | `placeholder="..."` / `{x}`     | `placeholder="..."` / `{x}` (same) |
 /// | `onChange`      | `onChange={e => dispatch(...)}` | identical                   |
 /// | `onCommit`      | merged into `onKeyDown` Enter   | identical                   |
 /// | `onCancel`      | merged into `onKeyDown` Escape  | identical                   |
@@ -2117,10 +2152,10 @@ fn emit_host_input_jsx(
         }
     }
 
-    // placeholder="text" — string-literal moslayout prop.
-    if let Some(s) = find_string_prop(node, "placeholder") {
-        attrs.push_str(&jsx_string_attr("placeholder", s));
-    }
+    // placeholder — a literal (`placeholder="..."`, or JSX expression form
+    // when it needs JavaScript escaping) or a bound value
+    // (`placeholder={x}`).
+    push_text_field_placeholder(node, &mut attrs)?;
 
     if find_keyword_prop(node, "auto-focus") == Some("true") {
         attrs.push_str(" autoFocus");
@@ -8530,6 +8565,102 @@ mod tests {
             "expected expression-form placeholder attr, got:\n{}",
             result.output
         );
+    }
+
+    /// A slot-bound `placeholder` is a JSX expression attribute naming the
+    /// camelCased prop, on both shapes of the field. This path read only
+    /// string literals, so `placeholder : slot: front-template-placeholder`
+    /// (mosaic-pkg-note-type-editor) emitted no placeholder at all, and the
+    /// degradation report said nothing.
+    #[test]
+    fn host_input_placeholder_slot_ref_binds_to_placeholder_expression() {
+        for multiline in [false, true] {
+            let m = component(
+                "X",
+                vec![slot("front-template-placeholder", SlotType::Text, true)],
+                vec![],
+            );
+            let mut props = vec![LayoutProp {
+                name: "placeholder".to_string(),
+                value: LayoutPropValue::SlotRef("front-template-placeholder".to_string()),
+            }];
+            if multiline {
+                props.push(LayoutProp {
+                    name: "multiline".to_string(),
+                    value: LayoutPropValue::Keyword("true".to_string()),
+                });
+            }
+            let result = from_pipeline(&m, &host_input_layout(props), &empty_style("X")).unwrap();
+            assert!(
+                result.output.contains(" placeholder={frontTemplatePlaceholder}"),
+                "multiline={multiline}: expected placeholder={{frontTemplatePlaceholder}}, got:\n{}",
+                result.output
+            );
+        }
+    }
+
+    /// A loop binding (`placeholder : hint` inside `For ( as: hint )`) and a
+    /// parenthesised expression reach the attribute the same way `value` and
+    /// `a11y-label` do.
+    #[test]
+    fn host_input_placeholder_binding_and_expression_are_expression_attrs() {
+        let m = component("X", vec![], vec![]);
+        let l = host_input_layout(vec![LayoutProp {
+            name: "placeholder".to_string(),
+            value: LayoutPropValue::Keyword("hint".to_string()),
+        }]);
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(out.contains(" placeholder={hint}"), "got:\n{out}");
+
+        let l = host_input_layout(vec![LayoutProp {
+            name: "placeholder".to_string(),
+            value: LayoutPropValue::Expr("( hints[0] )".to_string()),
+        }]);
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(out.contains(" placeholder={( hints[0] )}"), "got:\n{out}");
+    }
+
+    /// A slot name that would not be a JavaScript identifier is refused
+    /// loudly instead of being spliced into the JSX expression.
+    #[test]
+    fn host_input_placeholder_unsafe_slot_name_is_rejected() {
+        let m = component("X", vec![], vec![]);
+        let l = host_input_layout(vec![LayoutProp {
+            name: "placeholder".to_string(),
+            value: LayoutPropValue::SlotRef("x}{alert(1)".to_string()),
+        }]);
+        let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+        assert!(matches!(err, PipelineEmitError::UnsafeSlotName(_)), "got {err:?}");
+    }
+
+    /// The legacy `Input` shares the lowering: `placeholder : slot: x` binds
+    /// on the `<input>` and on the `<textarea>` (mosaic-pkg-spice-workbench's
+    /// netlist editor is a multiline `Input` with a slot placeholder).
+    #[test]
+    fn input_placeholder_slot_ref_binds_to_placeholder_expression() {
+        for multiline in [false, true] {
+            let m = component(
+                "X",
+                vec![slot("netlist-placeholder", SlotType::Text, true)],
+                vec![],
+            );
+            let mut props = vec![LayoutProp {
+                name: "placeholder".to_string(),
+                value: LayoutPropValue::SlotRef("netlist-placeholder".to_string()),
+            }];
+            if multiline {
+                props.push(LayoutProp {
+                    name: "multiline".to_string(),
+                    value: LayoutPropValue::Keyword("true".to_string()),
+                });
+            }
+            let result = from_pipeline(&m, &input_layout(props), &empty_style("X")).unwrap();
+            assert!(
+                result.output.contains(" placeholder={netlistPlaceholder}"),
+                "multiline={multiline}: expected placeholder={{netlistPlaceholder}}, got:\n{}",
+                result.output
+            );
+        }
     }
 
     #[test]

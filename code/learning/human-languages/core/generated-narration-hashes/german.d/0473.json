@@ -1,0 +1,20 @@
+{
+  "language": "german",
+  "chapter": 473,
+  "sourceHash": "fnv1a64:106915a945ca311b",
+  "lessonIds": [
+    "GE-C473-kichern",
+    "GE-C473-grinsen",
+    "GE-C473-schmunzeln",
+    "GE-C473-albern",
+    "GE-C473-kitzeln",
+    "GE-R473-review-466-473"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "german/narration/ch473.txt",
+  "json": "german/narration/ch473.json",
+  "textHash": "fnv1a64:d123e72ad1d3b58f",
+  "jsonHash": "fnv1a64:ac43f48ffb70eaea",
+  "findings": []
+}

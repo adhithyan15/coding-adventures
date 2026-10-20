@@ -1,0 +1,11 @@
+{
+  "id": "GE-C268-frist",
+  "pathSegment": "GE-PATH-268-AUGENBLICK",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-268-AUGENBLICK",
+      "order": 4
+    }
+  ]
+}

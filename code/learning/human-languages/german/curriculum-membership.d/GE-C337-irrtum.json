@@ -1,0 +1,11 @@
+{
+  "id": "GE-C337-irrtum",
+  "pathSegment": "GE-PATH-337-IRRTUM",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-337-IRRTUM",
+      "order": 1
+    }
+  ]
+}

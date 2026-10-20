@@ -1,0 +1,19 @@
+{
+  "chapter": 441,
+  "title": "Häuser und Läden",
+  "label": "ch:ge-hauser-und-laden",
+  "canDo": "I can describe the fronts of buildings: the façade, the shop window, the gutter, the covered market and the pillar.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C441-saeule",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 441: I can describe the fronts of buildings: the façade, the shop window, the gutter, the covered market and the pillar.",
+    "assesses": [
+      "GE-LEX-C441-FASSADE-03",
+      "GE-LEX-C441-FASSADE-04",
+      "GE-LEX-C441-FASSADE-05"
+    ]
+  }
+}

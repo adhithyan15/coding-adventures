@@ -1,0 +1,11 @@
+{
+  "id": "GE-C427-heizkoerper",
+  "pathSegment": "GE-PATH-427-KLIMA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-427-KLIMA",
+      "order": 2
+    }
+  ]
+}

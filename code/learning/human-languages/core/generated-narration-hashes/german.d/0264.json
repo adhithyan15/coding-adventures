@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 264,
+  "sourceHash": "fnv1a64:68e0c65fc63d6c67",
+  "lessonIds": [
+    "GE-C264-damals",
+    "GE-C264-einst",
+    "GE-C264-neulich",
+    "GE-C264-kuerzlich",
+    "GE-C264-vorgestern"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch264.txt",
+  "json": "german/narration/ch264.json",
+  "textHash": "fnv1a64:f7202b2ae653c5ff",
+  "jsonHash": "fnv1a64:32e20cba6c7ea2b4",
+  "findings": []
+}

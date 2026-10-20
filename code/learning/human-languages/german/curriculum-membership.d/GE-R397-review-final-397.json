@@ -1,0 +1,11 @@
+{
+  "id": "GE-R397-review-final-397",
+  "pathSegment": "GE-PATH-397-ABSTURZ",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "GE-EXT-397-ABSTURZ",
+      "order": 6
+    }
+  ]
+}

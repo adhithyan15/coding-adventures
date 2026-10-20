@@ -1,0 +1,11 @@
+{
+  "id": "GE-R345-review-338-345",
+  "pathSegment": "GE-PATH-345-ZUSAMMENHANG",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-345-ZUSAMMENHANG",
+      "order": 5
+    }
+  ]
+}

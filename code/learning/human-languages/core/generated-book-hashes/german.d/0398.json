@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 398,
+  "sourceHash": "fnv1a64:2cc7046a3f05f3f2",
+  "lessonIds": [
+    "GE-C398-landstrasse",
+    "GE-C398-ausfahrt",
+    "GE-C398-auffahrt",
+    "GE-C398-kreisverkehr",
+    "GE-C398-abbiegen"
+  ],
+  "tex": "german/book/chapters/ch398-uber-land.tex"
+}

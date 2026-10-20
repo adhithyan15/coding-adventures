@@ -1,0 +1,19 @@
+{
+  "chapter": 514,
+  "title": "Melodie und Rhythmus",
+  "label": "ch:ge-melodie-und-rhythmus",
+  "canDo": "I can talk about tunes, rhythm and songs.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C514-summen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 514: I can talk about tunes, rhythm and songs.",
+    "assesses": [
+      "GE-LEX-C514-MELODIE-03",
+      "GE-LEX-C514-MELODIE-04",
+      "GE-LEX-C514-MELODIE-05"
+    ]
+  }
+}

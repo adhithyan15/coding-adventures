@@ -1,0 +1,11 @@
+{
+  "id": "GE-C481-kratzen",
+  "pathSegment": "GE-PATH-481-ALLERGIE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-481-ALLERGIE",
+      "order": 3
+    }
+  ]
+}

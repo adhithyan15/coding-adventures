@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 270,
+  "sourceHash": "fnv1a64:c2d7f3a8b2c54484",
+  "lessonIds": [
+    "GE-C270-zoegern",
+    "GE-C270-abwarten",
+    "GE-C270-verzoegern",
+    "GE-C270-verlaufen",
+    "GE-C270-ablauf"
+  ],
+  "tex": "german/book/chapters/ch270-abwarten.tex"
+}

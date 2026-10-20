@@ -1,0 +1,19 @@
+{
+  "chapter": 351,
+  "title": "Die Arbeitszeit",
+  "label": "ch:ge-die-arbeitszeit",
+  "canDo": "I can talk about working hours: part-time and full-time, shifts, overtime and the end of the working day.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C351-feierabend",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 351: I can talk about working hours: part-time and full-time, shifts, overtime and the end of the working day.",
+    "assesses": [
+      "GE-LEX-C351-ARBEITSZEIT-03",
+      "GE-LEX-C351-ARBEITSZEIT-04",
+      "GE-LEX-C351-ARBEITSZEIT-05"
+    ]
+  }
+}

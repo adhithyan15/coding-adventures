@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-306-GLUECKWUNSCH",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GE-EXT-306-GLUECKWUNSCH"
+  ],
+  "after": []
+}

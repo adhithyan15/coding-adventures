@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 425,
+  "sourceHash": "fnv1a64:6537ed7c0057aaa2",
+  "lessonIds": [
+    "GE-C425-campingplatz",
+    "GE-C425-wohnwagen",
+    "GE-C425-wohnmobil",
+    "GE-C425-aufbauen",
+    "GE-C425-abbauen"
+  ],
+  "tex": "german/book/chapters/ch425-auf-dem-campingplatz.tex"
+}
