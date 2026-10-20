@@ -109,6 +109,12 @@ so its inner `break` exited the loop and `d()` never ran. The fix is in
 `closure-pass-dce`. `tests/regression_switch_collapse_break.rs` runs both
 shapes under node at SIMPLE and ADVANCED.
 
+### Fixed - dead code after a top-level `throw` is dropped (CCR-086, #15923)
+
+`throw 1;console.log(1);` now compiles to `throw 1;` at SIMPLE and ADVANCED,
+as upstream does. The fix is in `closure-pass-dce`.
+`tests/regression_toplevel_throw.rs` pins five rows captured from the jar.
+
 ### Fixed locally - verified Windows publication policies (CV02)
 
 Create prepared directories and files with atomically protected current-user

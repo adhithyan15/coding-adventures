@@ -2,6 +2,22 @@
 
 ## [Unreleased]
 
+### Fixed - drop the dead tail after a top-level `throw` (CCR-086, #15923)
+
+`dce_program` now truncates a program's tail after a top-level terminator,
+as `dce_block_statement` does inside blocks, with the same hoisting guard. A
+tail holding any declaration or compound statement is kept whole. This
+matches upstream:
+
+- `throw 1;console.log(1);` → `throw 1;`
+- `throw 1;debugger;` → `throw 1;`, which closes the CCR-053 residual
+- `{throw 1;console.log(1);}` → `throw 1;`
+
+Upstream hoists a dead `var` (`throw 1;var z=1;` → `var z;throw 1;`); that gap
+is shared with CCR-082 and still open.
+
+Three new unit tests cover this.
+
 ### Fixed - a nested `break` keeps its switch (#17842)
 
 The constant-discriminant switch collapse stripped only the case's *trailing*
