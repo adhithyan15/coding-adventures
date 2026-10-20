@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-376-OPUS",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "LA-EXT-376-OPUS"
+  ],
+  "after": []
+}

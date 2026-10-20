@@ -1,0 +1,11 @@
+{
+  "id": "LA-C379-diligentia",
+  "pathSegment": "LA-PATH-379-QUAESTUS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-379-QUAESTUS",
+      "order": 4
+    }
+  ]
+}

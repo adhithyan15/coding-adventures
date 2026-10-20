@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 508,
+  "title": "Laziness and energy",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2101fda49487ef3e",
+  "lessons": [
+    {
+      "id": "LA-C508-ignavia",
+      "sequence": 26970,
+      "title": "ignāvia, ignāviae — cowardice; laziness",
+      "headword": "ignāvia, ignāviae",
+      "romanization": "ignāvia, ignāviae",
+      "gloss": "cowardice; laziness",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:47f6d88b5da5dbf1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for insolent, then the Latin for boastfulness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ignāvia, ignāviae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ignāvia, ignāviae — \"cowardice; laziness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ignāvia mīlitum ducem īrātum facit. The soldiers' cowardice makes the general angry."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, first declension, from ignāvus — lazy, cowardly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ignāvia is built on ignāvus \"idle, cowardly\", from in- \"not\" and old gnāvus \"busy, active\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ignāvia, ignāviae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ignāvia, ignāviae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ignāvia, ignāviae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ignāvia, ignāviae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ignāvia, ignāviae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ignāvia, ignāviae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for insolent, then the Latin for boastfulness, then say ignāvia, ignāviae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for insolent, then the Latin for boastfulness, then say *ignāvia, ignāviae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ignāvia, ignāviae mean? (\"Cowardice; laziness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C508-pigritia",
+      "sequence": 26980,
+      "title": "pigritia, pigritiae — sloth, laziness",
+      "headword": "pigritia, pigritiae",
+      "romanization": "pigritia, pigritiae",
+      "gloss": "sloth, laziness",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9f6f58e9c692c10a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for boastfulness, then the Latin for cowardice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: pigritia, pigritiae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pigritia, pigritiae — \"sloth, laziness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Propter pigritiam servus nihil facit. Because of his laziness the slave does nothing."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, first declension, from piger — lazy."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pigritia is built on piger \"lazy, slow\" (Lewis & Short; EtymDB), which EtymDB links with pigeō \"to feel annoyance\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pigritia, pigritiae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pigritia, pigritiae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pigritia, pigritiae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pigritia, pigritiae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with pigritia, pigritiae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *pigritia, pigritiae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for boastfulness, then the Latin for cowardice, then say pigritia, pigritiae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for boastfulness, then the Latin for cowardice, then say *pigritia, pigritiae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does pigritia, pigritiae mean? (\"Sloth, laziness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C508-segnis",
+      "sequence": 26990,
+      "title": "segnis, segne — sluggish, slow",
+      "headword": "segnis, segne",
+      "romanization": "segnis, segne",
+      "gloss": "sluggish, slow",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:58eaec67af0e39c3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for cowardice, then the Latin for sloth."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: segnis, segne",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "segnis, segne — \"sluggish, slow\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Asinus segnis lentē ambulat. The sluggish donkey walks slowly."
+            },
+            {
+              "kind": "speech",
+              "text": "Two endings. Nōn segniter — not slackly, with energy."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "segnis is a native Latin adjective; Lewis & Short reports that it is commonly linked with sequor \"to follow\", but the origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "segnis, segne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *segnis, segne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "segnis, segne, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *segnis, segne*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with segnis, segne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *segnis, segne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for cowardice, then the Latin for sloth, then say segnis, segne again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for cowardice, then the Latin for sloth, then say *segnis, segne* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does segnis, segne mean? (\"Sluggish, slow\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C508-strenuus",
+      "sequence": 27000,
+      "title": "strēnuus, strēnua, strēnuum — vigorous, active",
+      "headword": "strēnuus, strēnua, strēnuum",
+      "romanization": "strēnuus, strēnua, strēnuum",
+      "gloss": "vigorous, active",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f95c5f2b3ca8841e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for sloth, then the Latin for sluggish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: strēnuus, strēnua, strēnuum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "strēnuus, strēnua, strēnuum — \"vigorous, active\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Agricola strēnuus ā prīmā lūce labōrat. The vigorous farmer works from first light."
+            },
+            {
+              "kind": "speech",
+              "text": "Brisk and energetic, in work or in war. English strenuous."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "strēnuus is a native Latin adjective; Lewis & Short and EtymDB compare Greek stereos \"firm, hard\", but the link is not settled. English strenuous comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "strēnuus, strēnua, strēnuum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *strēnuus, strēnua, strēnuum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "strēnuus, strēnua, strēnuum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *strēnuus, strēnua, strēnuum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with strēnuus, strēnua, strēnuum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *strēnuus, strēnua, strēnuum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for sloth, then the Latin for sluggish, then say strēnuus, strēnua, strēnuum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for sloth, then the Latin for sluggish, then say *strēnuus, strēnua, strēnuum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does strēnuus, strēnua, strēnuum mean? (\"Vigorous, active\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C508-assiduus",
+      "sequence": 27010,
+      "title": "assiduus, assidua, assiduum — diligent, unremitting",
+      "headword": "assiduus, assidua, assiduum",
+      "romanization": "assiduus, assidua, assiduum",
+      "gloss": "diligent, unremitting",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1b0cff9ea61494dd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for sluggish, then the Latin for vigorous."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: assiduus, assidua, assiduum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "assiduus, assidua, assiduum — \"diligent, unremitting\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Discipulus assiduus semper in scholā est. The diligent pupil is always at school."
+            },
+            {
+              "kind": "speech",
+              "text": "From assideō — to sit beside: someone who stays at the task. English assiduous."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "assiduus is built on assideō \"to sit beside\", from ad- and sedeō \"to sit\" (Lewis & Short; EtymDB). English assiduous comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "assiduus, assidua, assiduum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *assiduus, assidua, assiduum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "assiduus, assidua, assiduum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *assiduus, assidua, assiduum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with assiduus, assidua, assiduum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *assiduus, assidua, assiduum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for sluggish, then the Latin for vigorous, then say assiduus, assidua, assiduum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for sluggish, then the Latin for vigorous, then say *assiduus, assidua, assiduum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does assiduus, assidua, assiduum mean? (\"Diligent, unremitting\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

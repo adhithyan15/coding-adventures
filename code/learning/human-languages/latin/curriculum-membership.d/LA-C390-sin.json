@@ -1,0 +1,11 @@
+{
+  "id": "LA-C390-sin",
+  "pathSegment": "LA-PATH-390-CONDICIO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-390-CONDICIO",
+      "order": 1
+    }
+  ]
+}

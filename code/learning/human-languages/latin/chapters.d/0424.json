@@ -1,0 +1,19 @@
+{
+  "chapter": 424,
+  "title": "Crossroads, Fork in the road, Bend, Winding, To bend",
+  "label": "ch:la-crossroads-fork-in-the-road-bend-winding-to-bend",
+  "canDo": "I can talk about where roads meet and turn: a crossroads, a fork, a bend, a winding stretch, and bending a way.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C424-flecto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 424: I can talk about where roads meet and turn: a crossroads, a fork, a bend, a winding stretch, and bending a way.",
+    "assesses": [
+      "LA-LEX-C424-COMPITUM-03",
+      "LA-LEX-C424-COMPITUM-04",
+      "LA-LEX-C424-COMPITUM-05"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "LA-EXT-457-INSULA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a block of flats: the block itself, an upper room, a storey, timbers and beams.",
+  "prerequisites": []
+}

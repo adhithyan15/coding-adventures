@@ -1,0 +1,11 @@
+{
+  "id": "LA-C508-strenuus",
+  "pathSegment": "LA-PATH-508-IGNA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-508-IGNA",
+      "order": 3
+    }
+  ]
+}

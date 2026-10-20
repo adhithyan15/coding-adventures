@@ -1,0 +1,11 @@
+{
+  "id": "LA-C386-humanitas",
+  "pathSegment": "LA-PATH-386-SOCIETAS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-386-SOCIETAS",
+      "order": 1
+    }
+  ]
+}

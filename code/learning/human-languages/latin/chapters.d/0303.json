@@ -1,0 +1,19 @@
+{
+  "chapter": 303,
+  "title": "Fūrtum",
+  "label": "ch:la-furtum",
+  "canDo": "I can talk about theft and robbery: a theft, highway robbery, a mugger, a robber and the loot.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C303-praeda",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 303: I can talk about theft and robbery: a theft, highway robbery, a mugger, a robber and the loot.",
+    "assesses": [
+      "LA-LEX-C303-FURTUM-03",
+      "LA-LEX-C303-FURTUM-04",
+      "LA-LEX-C303-FURTUM-05"
+    ]
+  }
+}

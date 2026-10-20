@@ -1,0 +1,19 @@
+{
+  "chapter": 470,
+  "title": "Adze, Drill, Plane, File, To hew",
+  "label": "ch:la-adze-drill-plane-file-to-hew",
+  "canDo": "I can name a carpenter's tools: an adze, a drill, a plane and a file, and talk about hewing wood.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-R470-review-463-470",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 470: I can name a carpenter's tools: an adze, a drill, a plane and a file, and talk about hewing wood.",
+    "assesses": [
+      "LA-LEX-C470-ASCIA-03",
+      "LA-LEX-C470-ASCIA-04",
+      "LA-LEX-C470-ASCIA-05"
+    ]
+  }
+}

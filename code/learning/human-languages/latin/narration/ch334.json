@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 334,
+  "title": "Sacrificium",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2ac2c02168fc48b6",
+  "lessons": [
+    {
+      "id": "LA-C334-sacerdos",
+      "sequence": 18000,
+      "title": "sacerdōs, sacerdōtis — a priest, a priestess",
+      "headword": "sacerdōs, sacerdōtis",
+      "romanization": "sacerdōs, sacerdōtis",
+      "gloss": "a priest, a priestess",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5f431af9c26840ff",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a feast, then the Latin for to feast."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: sacerdōs, sacerdōtis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sacerdōs, sacerdōtis — \"a priest, a priestess\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sacerdōs ante āram stābat. The priest was standing before the altar."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine or feminine, 3rd declension, from sacer, 'holy'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sacerdōs is built on sacer, \"holy\" (EtymDB), with a second part whose origin is not settled: one who performs holy things."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sacerdōs, sacerdōtis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sacerdōs, sacerdōtis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sacerdōs, sacerdōtis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sacerdōs, sacerdōtis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with sacerdōs, sacerdōtis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *sacerdōs, sacerdōtis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a feast, then the Latin for to feast, then say sacerdōs, sacerdōtis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a feast, then the Latin for to feast, then say *sacerdōs, sacerdōtis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does sacerdōs, sacerdōtis mean? (\"A priest, a priestess\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C334-victima",
+      "sequence": 18010,
+      "title": "victima, victimae — a sacrificial animal, a victim",
+      "headword": "victima, victimae",
+      "romanization": "victima, victimae",
+      "gloss": "a sacrificial animal, a victim",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:22001807335357a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to feast, then the Latin for a priest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: victima, victimae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "victima, victimae — \"a sacrificial animal, a victim\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Victima alba ad āram ducta est. A white victim was led to the altar."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine. A larger animal for sacrifice, such as an ox. English victim."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "victima is a Latin word whose origin is not settled; Lewis & Short suggest, with doubt, a root seen in vigeō, \"to be strong\". English victim comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "victima, victimae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *victima, victimae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "victima, victimae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *victima, victimae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with victima, victimae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *victima, victimae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to feast, then the Latin for a priest, then say victima, victimae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to feast, then the Latin for a priest, then say *victima, victimae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does victima, victimae mean? (\"A sacrificial animal, a victim\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C334-immolo",
+      "sequence": 18020,
+      "title": "immolō, immolāre — to sacrifice",
+      "headword": "immolō, immolāre",
+      "romanization": "immolō, immolāre",
+      "gloss": "to sacrifice",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0bf5f9f865a6385c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a priest, then the Latin for a sacrificial animal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: immolō, immolāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "immolō, immolāre — \"to sacrifice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sacerdōs taurum deae immolāvit. The priest sacrificed a bull to the goddess."
+            },
+            {
+              "kind": "speech",
+              "text": "immolō, immolāre, immolāvī, immolātum: first, to sprinkle the victim with salted grain."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "immolō is built on mola, \"meal, salted grain\", with in- (Lewis & Short): to sprinkle the victim with sacred meal before the sacrifice."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "immolō, immolāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *immolō, immolāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "immolō, immolāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *immolō, immolāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with immolō, immolāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *immolō, immolāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a priest, then the Latin for a sacrificial animal, then say immolō, immolāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a priest, then the Latin for a sacrificial animal, then say *immolō, immolāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does immolō, immolāre mean? (\"To sacrifice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C334-voveo",
+      "sequence": 18030,
+      "title": "voveō, vovēre — to vow, to promise solemnly",
+      "headword": "voveō, vovēre",
+      "romanization": "voveō, vovēre",
+      "gloss": "to vow, to promise solemnly",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c410cada1ccfccf8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a sacrificial animal, then the Latin for to sacrifice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: voveō, vovēre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "voveō, vovēre — \"to vow, to promise solemnly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Dux deae templum novum vōvit. The general vowed a new temple to the goddess."
+            },
+            {
+              "kind": "speech",
+              "text": "voveō, vovēre, perfect vōvī: short o in the present, long in the perfect and in its noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "voveō is inherited; EtymDB traces it to a Proto-Indo-European root meaning \"to vow\", though Lewis & Short call the origin doubtful. English vow and vote come from its noun vōtum."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "voveō, vovēre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *voveō, vovēre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "voveō, vovēre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *voveō, vovēre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with voveō, vovēre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *voveō, vovēre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a sacrificial animal, then the Latin for to sacrifice, then say voveō, vovēre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a sacrificial animal, then the Latin for to sacrifice, then say *voveō, vovēre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does voveō, vovēre mean? (\"To vow, to promise solemnly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C334-votum",
+      "sequence": 18040,
+      "title": "vōtum, vōtī — a vow; a wish",
+      "headword": "vōtum, vōtī",
+      "romanization": "vōtum, vōtī",
+      "gloss": "a vow; a wish",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:98ce0273235ab48d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to sacrifice, then the Latin for to vow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: vōtum, vōtī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vōtum, vōtī — \"a vow; a wish\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Post naufragium nautae vōtum solvērunt. After the shipwreck the sailors fulfilled their vow."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter, from voveō. Vōtum solvere: to keep a vow. English vote and vow."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vōtum is built on voveō, \"to vow\" (EtymDB): a thing vowed. English vote comes from it, and vow through French."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vōtum, vōtī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vōtum, vōtī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vōtum, vōtī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vōtum, vōtī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with vōtum, vōtī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *vōtum, vōtī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to sacrifice, then the Latin for to vow, then say vōtum, vōtī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to sacrifice, then the Latin for to vow, then say *vōtum, vōtī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does vōtum, vōtī mean? (\"A vow; a wish\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

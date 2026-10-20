@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C482-amnis",
+    "language": "latin",
+    "chapter": 482,
+    "sequence": 25620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cc61086c1f7f44e7"
+  },
+  "findings": []
+}

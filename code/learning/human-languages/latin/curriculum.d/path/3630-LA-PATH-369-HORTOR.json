@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-369-HORTOR",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "LA-EXT-369-HORTOR"
+  ],
+  "after": []
+}

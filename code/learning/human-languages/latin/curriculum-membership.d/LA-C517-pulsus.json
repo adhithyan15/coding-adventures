@@ -1,0 +1,11 @@
+{
+  "id": "LA-C517-pulsus",
+  "pathSegment": "LA-PATH-517-VENA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-517-VENA",
+      "order": 4
+    }
+  ]
+}

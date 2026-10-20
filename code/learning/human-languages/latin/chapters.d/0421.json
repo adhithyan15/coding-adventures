@@ -1,0 +1,19 @@
+{
+  "chapter": 421,
+  "title": "Trade",
+  "label": "ch:la-trade",
+  "canDo": "I can talk about trade and doing business, the market day, customs duty and making a profit.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "LA-C421-lucror",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 421: I can talk about trade and doing business, the market day, customs duty and making a profit.",
+    "assesses": [
+      "LA-LEX-C421-COMMERCIUM-03",
+      "LA-LEX-C421-COMMERCIUM-04",
+      "LA-LEX-C421-COMMERCIUM-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-484-FAGUS",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "LA-EXT-484-FAGUS"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C426-defatigo",
+  "pathSegment": "LA-PATH-426-LUTULENTUS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-426-LUTULENTUS",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:c5da7684952108eb",
+  "lessonIds": [
+    "LA-C400-doceo",
+    "LA-C400-erudio",
+    "LA-C400-instituo",
+    "LA-C400-instruo",
+    "LA-C400-praecipio"
+  ],
+  "tex": "latin/book/chapters/ch400-teaching.tex"
+}

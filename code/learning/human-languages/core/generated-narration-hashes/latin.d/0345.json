@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:3bb09d3da338ae6f",
+  "lessonIds": [
+    "LA-C345-rex",
+    "LA-C345-regno",
+    "LA-C345-tyrannus",
+    "LA-C345-plebs",
+    "LA-C345-dictator"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch345.txt",
+  "json": "latin/narration/ch345.json",
+  "textHash": "fnv1a64:281c3ee74b486330",
+  "jsonHash": "fnv1a64:9984a9b7274e3dbe",
+  "findings": []
+}

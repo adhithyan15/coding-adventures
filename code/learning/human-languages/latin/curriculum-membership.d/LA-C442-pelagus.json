@@ -1,0 +1,11 @@
+{
+  "id": "LA-C442-pelagus",
+  "pathSegment": "LA-PATH-442-SALUM",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-442-SALUM",
+      "order": 1
+    }
+  ]
+}

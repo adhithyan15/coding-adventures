@@ -1,0 +1,19 @@
+{
+  "chapter": 517,
+  "title": "Inside the body",
+  "label": "ch:la-inside-the-body",
+  "canDo": "I can talk about veins, sinews, skin and sweat.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C517-pulsus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 517: I can talk about veins, sinews, skin and sweat.",
+    "assesses": [
+      "LA-LEX-C517-VENA-03",
+      "LA-LEX-C517-VENA-04",
+      "LA-LEX-C517-VENA-05"
+    ]
+  }
+}

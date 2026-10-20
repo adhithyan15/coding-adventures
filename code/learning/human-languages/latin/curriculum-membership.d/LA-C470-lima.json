@@ -1,0 +1,11 @@
+{
+  "id": "LA-C470-lima",
+  "pathSegment": "LA-PATH-470-ASCIA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-470-ASCIA",
+      "order": 3
+    }
+  ]
+}

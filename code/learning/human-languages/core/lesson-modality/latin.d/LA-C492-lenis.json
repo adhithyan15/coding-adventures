@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C492-lenis",
+    "language": "latin",
+    "chapter": 492,
+    "sequence": 26180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c92d52285e1e5d8"
+  },
+  "findings": []
+}

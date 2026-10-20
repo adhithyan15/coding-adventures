@@ -1,0 +1,8 @@
+{
+  "id": "LA-EXT-519-SENS",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about sight, hearing, touch and smell.",
+  "prerequisites": []
+}

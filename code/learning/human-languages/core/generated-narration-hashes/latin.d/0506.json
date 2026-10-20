@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 506,
+  "sourceHash": "fnv1a64:4def5638bbb4c481",
+  "lessonIds": [
+    "LA-C506-comis",
+    "LA-C506-comitas",
+    "LA-C506-urbanitas",
+    "LA-C506-rusticitas",
+    "LA-C506-liberalitas"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch506.txt",
+  "json": "latin/narration/ch506.json",
+  "textHash": "fnv1a64:68d7ddfe7209ec3b",
+  "jsonHash": "fnv1a64:7e2d4def01bec37b",
+  "findings": []
+}

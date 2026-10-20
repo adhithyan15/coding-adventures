@@ -1,0 +1,21 @@
+{
+  "chapter": 283,
+  "title": "What I Think",
+  "label": "ch:la-what-i-think",
+  "canDo": "I can say what I think, with putō and an accusative and infinitive, and draw a conclusion with ergō.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "LA-R283-what-i-think",
+    "kind": "production",
+    "summary": "Complete LA-R283-what-i-think: I can say what I think, with putō and an accusative and infinitive, and draw a conclusion with ergō.",
+    "assesses": [
+      "LA-LEX-C283-PUTO-01",
+      "LA-GRAMMAR-C283-ACC-INF-02",
+      "LA-LEX-C283-MEA-SENTENTIA-01",
+      "LA-LEX-C283-MIHI-VIDETUR-02",
+      "LA-LEX-C283-ERGO-01"
+    ]
+  }
+}

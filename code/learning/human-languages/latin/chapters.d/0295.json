@@ -1,0 +1,19 @@
+{
+  "chapter": 295,
+  "title": "Noctū et interdiū",
+  "label": "ch:la-noctu-et-interdiu",
+  "canDo": "I can say when in the day things happened: by night, by day, in the evening, early and a while ago.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C295-dudum",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 295: I can say when in the day things happened: by night, by day, in the evening, early and a while ago.",
+    "assesses": [
+      "LA-LEX-C295-NOCTU-03",
+      "LA-LEX-C295-NOCTU-04",
+      "LA-LEX-C295-NOCTU-05"
+    ]
+  }
+}

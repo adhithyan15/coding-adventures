@@ -1,0 +1,11 @@
+{
+  "id": "LA-C362-redarguo",
+  "pathSegment": "LA-PATH-362-REFELLO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-362-REFELLO",
+      "order": 2
+    }
+  ]
+}

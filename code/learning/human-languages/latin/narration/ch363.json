@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 363,
+  "title": "Granting and Denying",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:58f656d68bfc0f66",
+  "lessons": [
+    {
+      "id": "LA-C363-concedo",
+      "sequence": 19500,
+      "title": "concēdō, concēdere — to grant, to concede; to give way",
+      "headword": "concēdō, concēdere",
+      "romanization": "concēdō, concēdere",
+      "gloss": "to grant, to concede; to give way",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:db2c7a5f9f8f0a70",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to prove wrong, then the Latin for a guess."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: concēdō, concēdere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "concēdō, concēdere — \"to grant, to concede; to give way\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Hoc tibi concēdō, sed nōn omnia. I grant you this, but not everything."
+            },
+            {
+              "kind": "speech",
+              "text": "concēdō, concēdere, concessī, concessum. Dative of the person, accusative of the point: hoc tibi concēdō. English concede and concession."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "concēdō is built from con- and cēdō \"to go, to yield\" (Lewis & Short): to step aside for someone. English concede comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "concēdō, concēdere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *concēdō, concēdere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "concēdō, concēdere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *concēdō, concēdere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with concēdō, concēdere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *concēdō, concēdere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to prove wrong, then the Latin for a guess, then say concēdō, concēdere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to prove wrong, then the Latin for a guess, then say *concēdō, concēdere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does concēdō, concēdere mean? (\"To grant, to concede; to give way\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C363-denego",
+      "sequence": 19510,
+      "title": "dēnegō, dēnegāre — to deny flatly; to refuse",
+      "headword": "dēnegō, dēnegāre",
+      "romanization": "dēnegō, dēnegāre",
+      "gloss": "to deny flatly; to refuse",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:effa58f7e0135be4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a guess, then the Latin for to grant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dēnegō, dēnegāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēnegō, dēnegāre — \"to deny flatly; to refuse\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Pater mihi pecūniam dēnegāvit. Father refused me the money."
+            },
+            {
+              "kind": "speech",
+              "text": "dēnegō, dēnegāre, dēnegāvī, dēnegātum. Stronger than negō: a firm no. English deny comes through French from dēnegāre."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēnegō is built from dē- and negō \"to say no\" (EtymDB; Lewis & Short). English deny comes from it through Old French."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēnegō, dēnegāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēnegō, dēnegāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēnegō, dēnegāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēnegō, dēnegāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dēnegō, dēnegāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dēnegō, dēnegāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a guess, then the Latin for to grant, then say dēnegō, dēnegāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a guess, then the Latin for to grant, then say *dēnegō, dēnegāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dēnegō, dēnegāre mean? (\"To deny flatly; to refuse\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C363-confiteor",
+      "sequence": 19520,
+      "title": "cōnfiteor, cōnfitērī — to confess, to admit",
+      "headword": "cōnfiteor, cōnfitērī",
+      "romanization": "cōnfiteor, cōnfitērī",
+      "gloss": "to confess, to admit",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0f339dee519acaf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to grant, then the Latin for to deny flatly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: cōnfiteor, cōnfitērī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cōnfiteor, cōnfitērī — \"to confess, to admit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Culpam meam cōnfiteor. I admit my fault."
+            },
+            {
+              "kind": "speech",
+              "text": "Deponent: cōnfiteor, cōnfitērī, cōnfessus sum. A fuller form of fateor, to admit. English confess."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cōnfiteor is built from con- and fateor \"to admit\" (EtymDB; Lewis & Short), the vowel weakened inside the compound. English confess comes from its participle cōnfessus."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cōnfiteor, cōnfitērī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cōnfiteor, cōnfitērī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cōnfiteor, cōnfitērī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cōnfiteor, cōnfitērī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with cōnfiteor, cōnfitērī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *cōnfiteor, cōnfitērī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to grant, then the Latin for to deny flatly, then say cōnfiteor, cōnfitērī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to grant, then the Latin for to deny flatly, then say *cōnfiteor, cōnfitērī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does cōnfiteor, cōnfitērī mean? (\"To confess, to admit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C363-obicio",
+      "sequence": 19530,
+      "title": "obiciō, obicere — to throw in the way; to throw in someone's face",
+      "headword": "obiciō, obicere",
+      "romanization": "obiciō, obicere",
+      "gloss": "to throw in the way; to throw in someone's face",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7cff52c468679ec1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to deny flatly, then the Latin for to confess."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: obiciō, obicere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "obiciō, obicere — \"to throw in the way; to throw in someone's face\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Multī eī stultitiam obiciunt. Many people reproach him with folly."
+            },
+            {
+              "kind": "speech",
+              "text": "obiciō, obicere, obiēcī, obiectum: dative of the person, accusative of the charge. English object and objection."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "obiciō is built from ob \"in the way\" and iaciō \"to throw\" (EtymDB; Lewis & Short). English object comes from its participle obiectum."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "obiciō, obicere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *obiciō, obicere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "obiciō, obicere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *obiciō, obicere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with obiciō, obicere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *obiciō, obicere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to deny flatly, then the Latin for to confess, then say obiciō, obicere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to deny flatly, then the Latin for to confess, then say *obiciō, obicere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does obiciō, obicere mean? (\"To throw in the way; to throw in someone's face\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C363-contendo",
+      "sequence": 19540,
+      "title": "contendō, contendere — to insist, to maintain; to strive; to hurry",
+      "headword": "contendō, contendere",
+      "romanization": "contendō, contendere",
+      "gloss": "to insist, to maintain; to strive; to hurry",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f695f1337b006489",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to confess, then the Latin for to throw in the way."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: contendō, contendere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "contendō, contendere — \"to insist, to maintain; to strive; to hurry\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Contendit sē innocentem esse. He insists that he is innocent."
+            },
+            {
+              "kind": "speech",
+              "text": "contendō, contendere, contendī, contentum. With the accusative and infinitive, to insist; with ad, to hurry to a place. English contend."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "contendō is built from con- and tendō \"to stretch\" (EtymDB; Lewis & Short): to stretch every nerve, for a goal or for a claim. English contend comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "contendō, contendere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *contendō, contendere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "contendō, contendere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *contendō, contendere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with contendō, contendere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *contendō, contendere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to confess, then the Latin for to throw in the way, then say contendō, contendere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to confess, then the Latin for to throw in the way, then say *contendō, contendere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does contendō, contendere mean? (\"To insist, to maintain; to strive; to hurry\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

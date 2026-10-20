@@ -1,0 +1,11 @@
+{
+  "id": "LA-C453-gnarus",
+  "pathSegment": "LA-PATH-453-PERITUS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-453-PERITUS",
+      "order": 1
+    }
+  ]
+}

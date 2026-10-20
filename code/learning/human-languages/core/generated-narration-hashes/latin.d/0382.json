@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:862a2869bb421ce5",
+  "lessonIds": [
+    "LA-C382-senator",
+    "LA-C382-patricius",
+    "LA-C382-plebeius",
+    "LA-C382-nobilis",
+    "LA-C382-popularis"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch382.txt",
+  "json": "latin/narration/ch382.json",
+  "textHash": "fnv1a64:0423323a39f04216",
+  "jsonHash": "fnv1a64:68ad622b8d4053b5",
+  "findings": []
+}

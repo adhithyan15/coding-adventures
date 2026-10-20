@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:bb4661202beffedc",
+  "lessonIds": [
+    "LA-C335-auriga",
+    "LA-C335-quadrigae",
+    "LA-C335-meta",
+    "LA-C335-factio",
+    "LA-C335-circensis"
+  ],
+  "tex": "latin/book/chapters/ch335-ludi-circenses.tex"
+}

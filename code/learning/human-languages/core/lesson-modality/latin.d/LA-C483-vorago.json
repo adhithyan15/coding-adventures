@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C483-vorago",
+    "language": "latin",
+    "chapter": 483,
+    "sequence": 25690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:27949110cb447432"
+  },
+  "findings": []
+}

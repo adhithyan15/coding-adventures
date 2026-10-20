@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C331-monumentum",
+    "language": "latin",
+    "chapter": 331,
+    "sequence": 17880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:087bb4e9cb051303"
+  },
+  "findings": []
+}

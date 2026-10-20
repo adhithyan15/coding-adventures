@@ -1,0 +1,19 @@
+{
+  "chapter": 407,
+  "title": "Knowing and Not Knowing",
+  "label": "ch:la-knowing-and-not-knowing",
+  "canDo": "I can talk about knowledge, understanding, learning and ignorance, and say that someone imitates a model.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "LA-C407-imitor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 407: I can talk about knowledge, understanding, learning and ignorance, and say that someone imitates a model.",
+    "assesses": [
+      "LA-LEX-C407-SCIENTIA-03",
+      "LA-LEX-C407-SCIENTIA-04",
+      "LA-LEX-C407-SCIENTIA-05"
+    ]
+  }
+}

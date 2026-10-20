@@ -1,0 +1,11 @@
+{
+  "id": "LA-C329-decedo",
+  "pathSegment": "LA-PATH-329-MORS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-329-MORS",
+      "order": 4
+    }
+  ]
+}

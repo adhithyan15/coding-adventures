@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-552-DOMI",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "LA-EXT-552-DOMI"
+  ],
+  "after": []
+}

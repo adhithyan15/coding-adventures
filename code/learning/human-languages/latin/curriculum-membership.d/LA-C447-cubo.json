@@ -1,0 +1,11 @@
+{
+  "id": "LA-C447-cubo",
+  "pathSegment": "LA-PATH-447-CIMEX",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-447-CIMEX",
+      "order": 4
+    }
+  ]
+}

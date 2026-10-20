@@ -1,0 +1,11 @@
+{
+  "id": "LA-C535-procus",
+  "pathSegment": "LA-PATH-535-AMAN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-535-AMAN",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-525-TUSS",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "LA-EXT-525-TUSS"
+  ],
+  "after": []
+}

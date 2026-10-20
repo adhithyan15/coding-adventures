@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:36593afb7e1d11bd",
+  "lessonIds": [
+    "LA-C324-cunae",
+    "LA-C324-puer",
+    "LA-C324-infantia",
+    "LA-C324-pueritia",
+    "LA-C324-educo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch324.txt",
+  "json": "latin/narration/ch324.json",
+  "textHash": "fnv1a64:0a685fee6becd4da",
+  "jsonHash": "fnv1a64:0211ca3a4e538c8c",
+  "findings": []
+}

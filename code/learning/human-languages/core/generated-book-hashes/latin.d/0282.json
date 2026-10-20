@@ -1,0 +1,12 @@
+{
+  "language": "latin",
+  "chapter": 282,
+  "sourceHash": "fnv1a64:b8f8fda6eb005d9b",
+  "lessonIds": [
+    "LA-C282-primum-deinde",
+    "LA-C282-dum",
+    "LA-C282-lectio",
+    "LA-R282-a-story-in-order"
+  ],
+  "tex": "latin/book/chapters/ch282-a-story-in-order.tex"
+}

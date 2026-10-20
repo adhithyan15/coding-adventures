@@ -1,0 +1,11 @@
+{
+  "id": "LA-C335-meta",
+  "pathSegment": "LA-PATH-335-AURIGA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-335-AURIGA",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 429,
+  "title": "Wagon, Light gig, War chariot, Covered carriage, Travelling coach",
+  "label": "ch:la-wagon-light-gig-war-chariot-covered-carriage-travelling-coach",
+  "canDo": "I can name Roman vehicles: a wagon, a light gig, a two-wheeled chariot, a covered carriage and a travelling coach.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C429-carruca",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 429: I can name Roman vehicles: a wagon, a light gig, a two-wheeled chariot, a covered carriage and a travelling coach.",
+    "assesses": [
+      "LA-LEX-C429-CARRUS-03",
+      "LA-LEX-C429-CARRUS-04",
+      "LA-LEX-C429-CARRUS-05"
+    ]
+  }
+}

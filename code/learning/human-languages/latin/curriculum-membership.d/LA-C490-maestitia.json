@@ -1,0 +1,11 @@
+{
+  "id": "LA-C490-maestitia",
+  "pathSegment": "LA-PATH-490-MAER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-490-MAER",
+      "order": 1
+    }
+  ]
+}

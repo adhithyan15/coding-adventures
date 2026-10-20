@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C350-tergeo",
+    "language": "latin",
+    "chapter": 350,
+    "sequence": 18850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aa37b239984adbab"
+  },
+  "findings": []
+}

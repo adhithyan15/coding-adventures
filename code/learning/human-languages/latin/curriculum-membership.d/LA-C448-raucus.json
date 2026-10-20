@@ -1,0 +1,11 @@
+{
+  "id": "LA-C448-raucus",
+  "pathSegment": "LA-PATH-448-STERTO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-448-STERTO",
+      "order": 4
+    }
+  ]
+}

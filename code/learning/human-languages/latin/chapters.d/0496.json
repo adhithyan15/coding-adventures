@@ -1,0 +1,19 @@
+{
+  "chapter": 496,
+  "title": "Fear and dread",
+  "label": "ch:la-fear-and-dread",
+  "canDo": "I can describe fear and dreadful things.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-R496-review-489-496",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 496: I can describe fear and dreadful things.",
+    "assesses": [
+      "LA-LEX-C496-PAV-03",
+      "LA-LEX-C496-PAV-04",
+      "LA-LEX-C496-PAV-05"
+    ]
+  }
+}

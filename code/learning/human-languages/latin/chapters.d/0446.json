@@ -1,0 +1,19 @@
+{
+  "chapter": 446,
+  "title": "Little bed, Straw bedding, Mat, Pillow, Blanket",
+  "label": "ch:la-little-bed-straw-bedding-mat-pillow-blanket",
+  "canDo": "I can describe a bed for the night: a little bed, straw bedding, a mat, a pillow and a blanket.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-R446-review-439-446",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 446: I can describe a bed for the night: a little bed, straw bedding, a mat, a pillow and a blanket.",
+    "assesses": [
+      "LA-LEX-C446-LECTULUS-03",
+      "LA-LEX-C446-LECTULUS-04",
+      "LA-LEX-C446-LECTULUS-05"
+    ]
+  }
+}

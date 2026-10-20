@@ -4,6 +4,33 @@ All notable changes to the `task-app-web` host are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Changed — the host's stylesheet colours are generated, not copied
+
+`src/theme.ts` used to spell out eight colours from `TaskApp.{light,dark}.msl`
+by hand: the page ground, the startup text, alert and font, and the ring and
+board accents. Each copy carried the comment "if the .msl changes, change it
+here too". Nothing enforced that, so a re-tinted `app-shell` would have left the
+ground and the startup screen in the old colour without any error.
+
+The colours now come from `src/theme-tokens.generated.ts`. The task-app
+package's `cargo test` writes that module from the stylesheets, using the real
+mosstyle front end, and fails while it is stale. To regenerate:
+`UPDATE_TASK_APP_HOST_TOKENS=1 cargo test --test host_theme_tokens`.
+`theme.ts` no longer contains a stylesheet colour. The one colour it still
+authors is the board's `review` accent, which the stylesheet has no part for.
+
+`theme.test.ts` now reads its expected colours from the same tokens instead of
+repeating the hex values. It pins which stylesheet colour each host surface uses,
+and it now covers `startupChrome` and `applyThemeGround`.
+
+### Fixed — theme tests pass on Node 25
+
+Node 25 enables its own Web Storage by default. Without `--localstorage-file`,
+Node's global `localStorage` is a stub with no `setItem`, and it shadows
+jsdom's. Three theme-persistence tests failed on Node 25 even though they pass on
+CI's Node 22. `vitest.config.ts` now runs with `--no-experimental-webstorage`.
+The full suite passes (74/74) on both Node 25.9 and Node 22.
+
 ### Fixed — the Web Components lifecycle test has a timeout it fits in
 
 The "drives create, complete, restore, and delete through the emitted

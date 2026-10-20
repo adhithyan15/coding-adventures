@@ -1,0 +1,11 @@
+{
+  "id": "LA-C478-bubulcus",
+  "pathSegment": "LA-PATH-478-OPILIO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-478-OPILIO",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C553-pessulus",
+  "pathSegment": "LA-PATH-553-LIMN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-553-LIMN",
+      "order": 1
+    }
+  ]
+}

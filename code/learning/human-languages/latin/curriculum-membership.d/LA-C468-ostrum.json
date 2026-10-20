@@ -1,0 +1,11 @@
+{
+  "id": "LA-C468-ostrum",
+  "pathSegment": "LA-PATH-468-TINGO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-468-TINGO",
+      "order": 2
+    }
+  ]
+}

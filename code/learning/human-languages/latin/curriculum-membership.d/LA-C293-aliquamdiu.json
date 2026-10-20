@@ -1,0 +1,11 @@
+{
+  "id": "LA-C293-aliquamdiu",
+  "pathSegment": "LA-PATH-293-PAULATIM",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-293-PAULATIM",
+      "order": 4
+    }
+  ]
+}

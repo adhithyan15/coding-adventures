@@ -1,0 +1,11 @@
+{
+  "id": "LA-C452-ambages",
+  "pathSegment": "LA-PATH-452-ABERRO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-452-ABERRO",
+      "order": 3
+    }
+  ]
+}

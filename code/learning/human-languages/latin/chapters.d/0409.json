@@ -1,0 +1,19 @@
+{
+  "chapter": 409,
+  "title": "Edicts and Rules",
+  "label": "ch:la-edicts-and-rules",
+  "canDo": "I can talk about an edict, a decree and a rule, and say that something is lawful or allowed.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "LA-C409-licitus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 409: I can talk about an edict, a decree and a rule, and say that something is lawful or allowed.",
+    "assesses": [
+      "LA-LEX-C409-EDICTUM-03",
+      "LA-LEX-C409-EDICTUM-04",
+      "LA-LEX-C409-EDICTUM-05"
+    ]
+  }
+}

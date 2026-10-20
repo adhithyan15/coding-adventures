@@ -1,0 +1,11 @@
+{
+  "id": "LA-C445-stabularius",
+  "pathSegment": "LA-PATH-445-DEVERTICULUM",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-445-DEVERTICULUM",
+      "order": 3
+    }
+  ]
+}

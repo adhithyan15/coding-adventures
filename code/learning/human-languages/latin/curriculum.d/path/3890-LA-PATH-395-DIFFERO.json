@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-395-DIFFERO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "LA-EXT-395-DIFFERO"
+  ],
+  "after": []
+}

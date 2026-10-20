@@ -1,0 +1,19 @@
+{
+  "chapter": 387,
+  "title": "Unrest",
+  "label": "ch:la-unrest",
+  "canDo": "I can talk about discord and uprising, call people seditious or turbulent, and say that someone stirs up a crowd.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C387-concito",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 387: I can talk about discord and uprising, call people seditious or turbulent, and say that someone stirs up a crowd.",
+    "assesses": [
+      "LA-LEX-C387-SEDITIO-03",
+      "LA-LEX-C387-SEDITIO-04",
+      "LA-LEX-C387-SEDITIO-05"
+    ]
+  }
+}

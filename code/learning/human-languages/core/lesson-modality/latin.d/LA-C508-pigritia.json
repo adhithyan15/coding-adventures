@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C508-pigritia",
+    "language": "latin",
+    "chapter": 508,
+    "sequence": 26980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9f6f58e9c692c10a"
+  },
+  "findings": []
+}

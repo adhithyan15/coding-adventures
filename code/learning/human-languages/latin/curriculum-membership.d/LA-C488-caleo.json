@@ -1,0 +1,11 @@
+{
+  "id": "LA-C488-caleo",
+  "pathSegment": "LA-PATH-488-BRUMA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-488-BRUMA",
+      "order": 4
+    }
+  ]
+}

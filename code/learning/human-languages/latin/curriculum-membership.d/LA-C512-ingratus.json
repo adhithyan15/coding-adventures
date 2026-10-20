@@ -1,0 +1,11 @@
+{
+  "id": "LA-C512-ingratus",
+  "pathSegment": "LA-PATH-512-GRAT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-512-GRAT",
+      "order": 1
+    }
+  ]
+}

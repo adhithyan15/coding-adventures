@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C485-turbidus",
+    "language": "latin",
+    "chapter": 485,
+    "sequence": 25810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2c02176bdb9552a6"
+  },
+  "findings": []
+}

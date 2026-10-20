@@ -1,0 +1,11 @@
+{
+  "id": "LA-C441-promunturium",
+  "pathSegment": "LA-PATH-441-PORTUS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-441-PORTUS",
+      "order": 4
+    }
+  ]
+}

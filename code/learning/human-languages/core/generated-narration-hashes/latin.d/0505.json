@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 505,
+  "sourceHash": "fnv1a64:f3bbf244cac3be5d",
+  "lessonIds": [
+    "LA-C505-clemens",
+    "LA-C505-clementia",
+    "LA-C505-benignitas",
+    "LA-C505-benevolus",
+    "LA-C505-benevolentia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch505.txt",
+  "json": "latin/narration/ch505.json",
+  "textHash": "fnv1a64:4916b5c346455d0a",
+  "jsonHash": "fnv1a64:ea5c1d24e271c1c9",
+  "findings": []
+}

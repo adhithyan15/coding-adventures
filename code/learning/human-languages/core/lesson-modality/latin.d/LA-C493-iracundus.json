@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C493-iracundus",
+    "language": "latin",
+    "chapter": 493,
+    "sequence": 26210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6ebf7e6c64a03aa4"
+  },
+  "findings": []
+}

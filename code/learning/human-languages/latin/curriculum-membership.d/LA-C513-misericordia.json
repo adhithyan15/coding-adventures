@@ -1,0 +1,11 @@
+{
+  "id": "LA-C513-misericordia",
+  "pathSegment": "LA-PATH-513-MISE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-513-MISE",
+      "order": 1
+    }
+  ]
+}

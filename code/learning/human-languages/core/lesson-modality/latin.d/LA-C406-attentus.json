@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C406-attentus",
+    "language": "latin",
+    "chapter": 406,
+    "sequence": 21720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4df386c3b2f9c116"
+  },
+  "findings": []
+}

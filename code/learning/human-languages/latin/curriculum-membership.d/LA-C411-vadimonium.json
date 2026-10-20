@@ -1,0 +1,11 @@
+{
+  "id": "LA-C411-vadimonium",
+  "pathSegment": "LA-PATH-411-TRIBUNAL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-411-TRIBUNAL",
+      "order": 3
+    }
+  ]
+}

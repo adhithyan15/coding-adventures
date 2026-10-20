@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C400-doceo",
+    "language": "latin",
+    "chapter": 400,
+    "sequence": 21400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:733bcb9931ceb5d6"
+  },
+  "findings": []
+}

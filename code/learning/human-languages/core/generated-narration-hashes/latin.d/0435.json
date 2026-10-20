@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 435,
+  "sourceHash": "fnv1a64:817f899ac16c4547",
+  "lessonIds": [
+    "LA-C435-navigium",
+    "LA-C435-navicula",
+    "LA-C435-scapha",
+    "LA-C435-linter",
+    "LA-C435-ratis"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch435.txt",
+  "json": "latin/narration/ch435.json",
+  "textHash": "fnv1a64:12c7d3edc95a0cbf",
+  "jsonHash": "fnv1a64:6819de8c27312d7e",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C432-equito",
+    "language": "latin",
+    "chapter": 432,
+    "sequence": 23060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:74c1ffa5d46b5180"
+  },
+  "findings": []
+}

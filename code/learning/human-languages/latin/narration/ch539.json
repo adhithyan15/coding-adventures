@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 539,
+  "title": "Dice and board games",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7bc5534740f1b727",
+  "lessons": [
+    {
+      "id": "LA-C539-alea",
+      "sequence": 28560,
+      "title": "ālea, āleae — dice-playing, a game of chance",
+      "headword": "ālea, āleae",
+      "romanization": "ālea, āleae",
+      "gloss": "dice-playing, a game of chance",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4369d8bdcff585d0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to relax, then the Latin for relaxation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ālea, āleae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ālea, āleae — \"dice-playing, a game of chance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mīlitēs in castrīs āleā lūdunt. The soldiers play dice in the camp."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, first declension. Gambling at dice was forbidden except at festival time. Ālea iacta est — the die is cast."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ālea is a word of uncertain origin; Lewis & Short reports a guess linking it with a word for bone, but nothing is settled. English aleatory, depending on chance, comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ālea, āleae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ālea, āleae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ālea, āleae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ālea, āleae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ālea, āleae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ālea, āleae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to relax, then the Latin for relaxation, then say ālea, āleae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to relax, then the Latin for relaxation, then say *ālea, āleae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ālea, āleae mean? (\"Dice-playing, a game of chance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C539-fritillus",
+      "sequence": 28570,
+      "title": "fritillus, fritillī — a dice-box",
+      "headword": "fritillus, fritillī",
+      "romanization": "fritillus, fritillī",
+      "gloss": "a dice-box",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6b2bb64009af7709",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for relaxation, then the Latin for dice-playing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: fritillus, fritillī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fritillus, fritillī — \"a dice-box\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Senex tālōs ē fritillō iacit. The old man throws the knucklebones from the dice-box."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine, second declension. A little cup for shaking and throwing the dice."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fritillus is a native Latin noun whose origin is not settled (Lewis & Short gives none). The flower fritillary is named after it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fritillus, fritillī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fritillus, fritillī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fritillus, fritillī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fritillus, fritillī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with fritillus, fritillī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *fritillus, fritillī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for relaxation, then the Latin for dice-playing, then say fritillus, fritillī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for relaxation, then the Latin for dice-playing, then say *fritillus, fritillī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does fritillus, fritillī mean? (\"A dice-box\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C539-latrunculus",
+      "sequence": 28580,
+      "title": "latrunculus, latrunculī — a piece in a board game; a robber",
+      "headword": "latrunculus, latrunculī",
+      "romanization": "latrunculus, latrunculī",
+      "gloss": "a piece in a board game; a robber",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:61a3ac1e78678a1f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for dice-playing, then the Latin for a dice-box."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: latrunculus, latrunculī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "latrunculus, latrunculī — \"a piece in a board game; a robber\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Duo amīcī latrunculīs lūdunt. Two friends play the board game of soldiers."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine, second declension. First a little robber or hired soldier, then a piece in a war game played on a board."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "latrunculus is a diminutive of latrō \"robber, hired soldier\" (Lewis & Short): the pieces of the game were little soldiers."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "latrunculus, latrunculī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *latrunculus, latrunculī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "latrunculus, latrunculī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *latrunculus, latrunculī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with latrunculus, latrunculī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *latrunculus, latrunculī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for dice-playing, then the Latin for a dice-box, then say latrunculus, latrunculī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for dice-playing, then the Latin for a dice-box, then say *latrunculus, latrunculī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does latrunculus, latrunculī mean? (\"A piece in a board game; a robber\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C539-lusus",
+      "sequence": 28590,
+      "title": "lūsus, lūsūs — play, a game",
+      "headword": "lūsus, lūsūs",
+      "romanization": "lūsus, lūsūs",
+      "gloss": "play, a game",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1792d2145ac73b5e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a dice-box, then the Latin for a piece in a board game."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: lūsus, lūsūs",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lūsus, lūsūs — \"play, a game\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Lūsus puerōrum in viā clāmōsus est. The children's play in the street is noisy."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine, fourth declension, from lūdō — to play."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lūsus is the action noun of lūdō \"to play\" (Lewis & Short; EtymDB). English illusion comes from the family, through illūdō \"to mock\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lūsus, lūsūs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lūsus, lūsūs*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lūsus, lūsūs, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lūsus, lūsūs*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with lūsus, lūsūs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *lūsus, lūsūs*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a dice-box, then the Latin for a piece in a board game, then say lūsus, lūsūs again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a dice-box, then the Latin for a piece in a board game, then say *lūsus, lūsūs* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does lūsus, lūsūs mean? (\"Play, a game\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C539-luctor",
+      "sequence": 28600,
+      "title": "luctor, luctārī — to wrestle, struggle",
+      "headword": "luctor, luctārī",
+      "romanization": "luctor, luctārī",
+      "gloss": "to wrestle, struggle",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bf45938e595496d4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a piece in a board game, then the Latin for play."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: luctor, luctārī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "luctor, luctārī — \"to wrestle, struggle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Iuvenēs in campō luctantur. The young men wrestle on the field."
+            },
+            {
+              "kind": "speech",
+              "text": "Deponent: luctor, luctārī, luctātus sum. Also to struggle against something. English reluctant comes from reluctor."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "luctor is built on lucta \"wrestling\" (Lewis & Short); EtymDB links it with a Proto-Indo-European root meaning \"to bend, twist\". English reluctant comes from the compound reluctor."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "luctor, luctārī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *luctor, luctārī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "luctor, luctārī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *luctor, luctārī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with luctor, luctārī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *luctor, luctārī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a piece in a board game, then the Latin for play, then say luctor, luctārī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a piece in a board game, then the Latin for play, then say *luctor, luctārī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does luctor, luctārī mean? (\"To wrestle, struggle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

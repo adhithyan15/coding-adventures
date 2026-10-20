@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-476-TRITURO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "LA-EXT-476-TRITURO"
+  ],
+  "after": []
+}

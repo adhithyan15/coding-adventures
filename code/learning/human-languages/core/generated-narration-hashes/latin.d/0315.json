@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:606edfa82eff2397",
+  "lessonIds": [
+    "LA-C315-naufragium",
+    "LA-C315-naufragus",
+    "LA-C315-mergo",
+    "LA-C315-obruo",
+    "LA-C315-calamitas"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch315.txt",
+  "json": "latin/narration/ch315.json",
+  "textHash": "fnv1a64:0f6be25f7f7a6e05",
+  "jsonHash": "fnv1a64:6f5dbef91e6bbc06",
+  "findings": []
+}

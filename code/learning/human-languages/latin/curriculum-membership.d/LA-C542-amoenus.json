@@ -1,0 +1,11 @@
+{
+  "id": "LA-C542-amoenus",
+  "pathSegment": "LA-PATH-542-STRI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-542-STRI",
+      "order": 4
+    }
+  ]
+}

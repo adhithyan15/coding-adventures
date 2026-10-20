@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:91de6cc370dd8c4c",
+  "lessonIds": [
+    "LA-C312-fateor",
+    "LA-C312-punio",
+    "LA-C312-supplicium",
+    "LA-C312-exsilium",
+    "LA-C312-vinculum"
+  ],
+  "tex": "latin/book/chapters/ch312-poena-et-supplicium.tex"
+}

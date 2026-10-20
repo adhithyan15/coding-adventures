@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 347,
+  "sourceHash": "fnv1a64:bc1d5cdc27c113c8",
+  "lessonIds": [
+    "LA-C347-monstrum",
+    "LA-C347-gigas",
+    "LA-C347-heros",
+    "LA-C347-nympha",
+    "LA-C347-vellus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch347.txt",
+  "json": "latin/narration/ch347.json",
+  "textHash": "fnv1a64:599b9e90c88392d3",
+  "jsonHash": "fnv1a64:de275f5d93f2ad83",
+  "findings": []
+}

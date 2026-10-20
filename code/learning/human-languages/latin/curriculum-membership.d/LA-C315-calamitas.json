@@ -1,0 +1,11 @@
+{
+  "id": "LA-C315-calamitas",
+  "pathSegment": "LA-PATH-315-NAUFRAGIUM",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-315-NAUFRAGIUM",
+      "order": 4
+    }
+  ]
+}

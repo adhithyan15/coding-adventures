@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:4ee7ab3ce32f6e2a",
+  "lessonIds": [
+    "LA-C333-festus",
+    "LA-C333-sollemnis",
+    "LA-C333-pompa",
+    "LA-C333-epulae",
+    "LA-C333-epulor"
+  ],
+  "tex": "latin/book/chapters/ch333-dies-festus.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C369-dissuadeo",
+  "pathSegment": "LA-PATH-369-HORTOR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-369-HORTOR",
+      "order": 1
+    }
+  ]
+}

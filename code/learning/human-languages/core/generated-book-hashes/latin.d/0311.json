@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:935a8576372d0ea0",
+  "lessonIds": [
+    "LA-C311-damno",
+    "LA-C311-absolvo",
+    "LA-C311-nocens",
+    "LA-C311-innocens",
+    "LA-C311-culpa"
+  ],
+  "tex": "latin/book/chapters/ch311-damnatus-aut-absolutus.tex"
+}

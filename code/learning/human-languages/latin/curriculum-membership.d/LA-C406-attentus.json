@@ -1,0 +1,11 @@
+{
+  "id": "LA-C406-attentus",
+  "pathSegment": "LA-PATH-406-SEDULUS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-406-SEDULUS",
+      "order": 1
+    }
+  ]
+}

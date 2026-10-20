@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 374,
+  "sourceHash": "fnv1a64:7adb0f14449f1dcd",
+  "lessonIds": [
+    "LA-C374-noceo",
+    "LA-C374-prosum",
+    "LA-C374-obsum",
+    "LA-C374-impedio",
+    "LA-C374-perturbo"
+  ],
+  "tex": "latin/book/chapters/ch374-harm-and-help.tex"
+}

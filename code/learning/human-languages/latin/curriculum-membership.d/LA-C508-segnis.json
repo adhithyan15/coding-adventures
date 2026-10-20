@@ -1,0 +1,11 @@
+{
+  "id": "LA-C508-segnis",
+  "pathSegment": "LA-PATH-508-IGNA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-508-IGNA",
+      "order": 2
+    }
+  ]
+}

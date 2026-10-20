@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C367-tamquam",
+    "language": "latin",
+    "chapter": 367,
+    "sequence": 19750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f49feb9a86163074"
+  },
+  "findings": []
+}

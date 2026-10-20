@@ -1,0 +1,11 @@
+{
+  "id": "LA-C366-idcirco",
+  "pathSegment": "LA-PATH-366-PROINDE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-366-PROINDE",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C417-proprius",
+    "language": "latin",
+    "chapter": 417,
+    "sequence": 22280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:35e5da6723488367"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C527-dormito",
+    "language": "latin",
+    "chapter": 527,
+    "sequence": 27960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d704d21d2912c961"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 433,
+  "title": "Beast of burden, Nag, She-mule, Pack saddle, To load",
+  "label": "ch:la-beast-of-burden-nag-she-mule-pack-saddle-to-load",
+  "canDo": "I can talk about animals that carry loads: a beast of burden, a nag, a she-mule, a pack saddle, and loading them.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C433-onero",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 433: I can talk about animals that carry loads: a beast of burden, a nag, a she-mule, a pack saddle, and loading them.",
+    "assesses": [
+      "LA-LEX-C433-IUMENTUM-03",
+      "LA-LEX-C433-IUMENTUM-04",
+      "LA-LEX-C433-IUMENTUM-05"
+    ]
+  }
+}

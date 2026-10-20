@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C533-familiaritas",
+    "language": "latin",
+    "chapter": 533,
+    "sequence": 28260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6d1015a6a0564080"
+  },
+  "findings": []
+}
