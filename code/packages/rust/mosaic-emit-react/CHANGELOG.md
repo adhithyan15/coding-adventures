@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-19 (Text-area commit on Ctrl/Cmd+Enter)
+
+- **A `<textarea>` commits on Ctrl+Enter or Cmd+Enter (UI25 §4).** `HostInput` and the legacy `Input` share `commit_key_branch`: a multiline field's `onKeyDown` checks `e.key === "Enter" && (e.ctrlKey || e.metaKey)` and calls `preventDefault()`; a single-line field keeps bare Enter. A text-payload commit carries `e.currentTarget.value`, as the single-line one does.
+- **Fixed: the legacy multiline `Input` committed on every line break.** It kept its bare-Enter branch on a `<textarea>`, so each Enter both inserted a newline and dispatched `onCommit`.
+
 ## 2026-10-19 (slot-bound placeholder)
 
 - **`placeholder : slot: x` reaches the field.** `HostInput` and the legacy `Input` read `placeholder` with a string-literal-only lookup, so a bound placeholder (every toolkit `Input`, the note-type editor's fields, the SPICE netlist editor) emitted no attribute at all, and the degradation report said nothing. Both paths, on `<input>` and `<textarea>`, now share `push_text_field_placeholder`: a literal is `placeholder="..."` (expression form when it needs escaping), a slot is `placeholder={x}`, and a `For` binding or expression passes through as `a11y-label` does. A slot or binding name that is not a JavaScript identifier is an `UnsafeSlotName` error.
