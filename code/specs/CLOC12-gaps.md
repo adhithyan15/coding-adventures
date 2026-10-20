@@ -253,6 +253,19 @@ historical context with status `RESOLVED` and a link to the fix PR.
   gets none. Upstream WHITESPACE_ONLY bytes are in #15919, probed under Java
   21.0.10.
 
+### CCR-083 (#15918) — a `do…while` in a body slot is braced
+
+- **Upstream rule.** At `10ca677a`, `CodeGenerator.addNonEmptyStatement`
+  unwraps a one-statement BLOCK body unless `isBlockDeclOrDo` is true. That
+  holds for `LET`, `CONST`, `FUNCTION`, `CLASS` and `DO`. Closure's AST always
+  gives `IF`, `WHILE`, `FOR`, `FOR_IN`, `FOR_OF`, `WITH` and `DO` a BLOCK
+  body. `LABEL` passes `allowNonBlockChild=true`, so it keeps a bare child.
+- **AST emitter (SIMPLE/ADVANCED): resolved.** `emit_body` braces a bare
+  `do…while` in every one of those slots. `else`/`do` drop the separating
+  space before a `{`-led body.
+- **WHITESPACE_ONLY token path: open.** It is queued behind #17840 (newline
+  ASI), since both rewrite the same statement boundaries.
+
 ### gap-031 — empty `{}` body collapses to `;`
 
 - **Status:** **RESOLVED** in CLOC12.41 (PR pending). `minify_for_loop` flipped IGNORED → PASS.
