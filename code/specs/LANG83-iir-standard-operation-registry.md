@@ -1,6 +1,7 @@
 # LANG83 — IIR standard operation registry and backend lowering contract
 
-**Status:** Draft, 2026-10-19. Contract slice (PR1a) under LANG78.
+**Status:** Draft, 2026-10-19. Contract slice (PR1a) and first op family on
+all nine backends (PR1b, see "PR1b — what landed") under LANG78.
 
 ## Why this exists
 
@@ -75,8 +76,9 @@ family that prefix dispatches.
 ### Families
 
 `Exists` = lowered by the standard backends today and registered in PR1a.
-`PR1b` = registered in PR1a, lowered by no backend yet (every backend declares
-`Refused("not yet lowered; LANG83 PR1b")`). `Later` = planned; enters the
+`PR1b` = registered in PR1a and lowered by **every** backend since PR1b
+(`introduced_by: "LANG83 PR1b"`; the shared `NOT_YET_LOWERED_PR1B` reason is
+no longer used by any backend). `Later` = planned; enters the
 registry before any frontend emits it. `Unregistered` = exists in IIR today but
 is not yet in the registry (it keeps working exactly as before; the registry
 does not gate it).
@@ -120,8 +122,8 @@ already depend on some of those behaviours:
 | JVM | `ArithmeticException` | `MIN` |
 | CLR | `DivideByZeroException` | `OverflowException` |
 | BEAM | `badarith` | bignum `2^63` |
-| vm-core | `VMError::DivisionByZero` | Rust panic |
-| GenericCirJit | `set_error` | `wrapping_div` |
+| vm-core | `VMError::DivisionByZero` | wraps to `MIN` (`mod`: `0`); a Rust panic before PR1b |
+| GenericCirJit | `VMError::DivisionByZero` (via the error slot; was fail-open before the PR1b security review) | `wrapping_div` |
 
 Rather than silently change those programs, LANG83 adds new ops whose edges are
 *defined* and identical everywhere. `i64_div_trunc` (Later) is the defined twin
@@ -138,6 +140,37 @@ of the same kind must behave identically, so `trap` becomes sugar for it.
 
 `interpreter_ir::exception_kind` holds the **closed** kind table. A `trap`
 whose kind is not in the table is malformed IR.
+
+How each column reports a trap (PR1b). Every one flushes earlier output first:
+
+| Column | Trap sequence | Kind observable as |
+| --- | --- | --- |
+| native x86-64 / AArch64 | `mov edi/w0, id; call/bl __twig_trap; ud2/udf` — runtime does `fflush(stdout)`, `trap: <kind>` to stderr, `abort()` | stderr `trap: <kind>`, signal exit |
+| LLVM | `call @__iir_trap(msg, len); unreachable` — module-local `linkonce_odr`: `fflush(NULL)`, `write(2, …)`, `abort()` | stderr `trap: <kind>` |
+| WASM | `i32.const id; call $env.__trap; unreachable` | the host's `__trap` argument; the module traps even if the host returns |
+| JVM | `System.out.flush(); throw new RuntimeException("<kind>")` | stderr `java.lang.RuntimeException: <kind>`, exit 1 |
+| CLR | `Console.Out.Flush(); throw new System.Exception("<kind>")` | stderr `Unhandled exception. System.Exception: <kind>` |
+| BEAM | `erlang:error('<kind>')` — the reason is the kind **atom** | the uncaught error's reason |
+| VM | `VMError::Trap { kind }` | the error value |
+| JIT | `TRAP <id>` bytecode; error slot `trap: <kind>`, drained by `JITCore` after every run | `VMError::Trap { kind }` from `JITCore::execute` / `execute_with_jit` |
+
+**JIT traps fail closed (PR1b security review).** `Backend::run` returns a
+plain `Value`, so `GenericCirJit` records a trap in its error slot. The first
+PR1b cut stopped there: the JIT handler vm-core called returned the placeholder
+`Value::Null`, nothing on the call path read the slot, and an *interpreted*
+caller of a trapping JIT-compiled function kept running (and `execute_with_jit`
+returned `Ok`). vm-core JIT handlers are now fallible
+(`Fn(&[Value]) -> Result<Value, VMError>`); after every run `JITCore` drains
+the slot through `Backend::take_error` (`trap: <kind>` → `VMError::Trap`,
+`div_*` by zero → `VMError::DivisionByZero`, anything else →
+`VMError::Custom`), and `call` propagates it with `?`. A JIT trap therefore
+stops the whole program exactly like an interpreted one.
+
+**Divergence from the PR1b plan:** the plan proposed
+`erlang:error({iir_trap, Kind})` on BEAM. `iir-to-beam` has no
+tuple-construction opcodes, and a registered kind atom (`'Trap.DivZero'`) is
+already unambiguous, so the reason is the bare atom. A harness that needs to
+tell a LANG83 trap from another error checks the atom against the closed table.
 
 | Kind | Stable id | Raised by |
 | --- | --- | --- |
@@ -281,7 +314,8 @@ cases per registry entry) and three gates:
 Expected outcomes are `Stdout`, `Exit` and `StdoutThenTrap(stdout, kind)`, and
 the conformance runner's `Trapped` result carries the stdout written before the
 trap, so "print, then trap" is checkable. (The older `lang_matrix` keeps its
-data-less `Trapped` until PR1b ports its trap rows.)
+data-less `Trapped` until the first language row that emits a PR1b op —
+LANG83 PR2 — ports it.)
 
 ### 5. Ordered output stream
 
@@ -311,8 +345,13 @@ Every trap path flushes buffered output before terminating (PR1b): native
 `__twig_trap` calls `fflush(stdout)`; LLVM emits `fflush(NULL)` before
 `abort`; JVM/CLR flush their standard output object before throwing; BEAM's
 `io` server is synchronous; WASM/VM/JIT harnesses already hold output in
-memory. A test case prints, then traps, and asserts both the stdout prefix and
-the kind (`Expect::StdoutThenTrap`).
+memory. Test cases print, then trap, and assert both the stdout prefix and
+the kind (`Expect::StdoutThenTrap`). One of them writes with `write_i64` and
+`putchar`, which do not flush per call natively. The gate
+`flush_before_trap_is_proven_on_every_executable_column` requires the proof on
+WASM, VM and JIT always, and on LLVM, native and JVM whenever their toolchain
+is present. Removing the `fflush` from `__twig_trap` makes the native proof
+fail. This was checked by mutation.
 
 ## PR plan
 
@@ -342,15 +381,67 @@ the kind (`Expect::StdoutThenTrap`).
 - **PR4 — overflow family. PR5 — strings. PR6 — floats + Python/JavaScript
   formatting.**
 
+## PR1b — what landed
+
+All four PR1b operations are `Lowered` on all nine backends. The shared
+lowering shape is "test the edges, then divide." No backend lets a hardware or
+library divide see a zero divisor or `MIN / -1`. On those edges x86 raises
+SIGFPE, LLVM has undefined behaviour, AArch64 returns 0 or `MIN`, WASM traps
+without a kind, the JVM returns `MIN` or throws `ArithmeticException`, the CLR
+throws, and BEAM returns a bignum or raises `badarith`.
+
+| Backend | `i64_div_floor` / `i64_mod_floor` | `write_i64` |
+| --- | --- | --- |
+| x86-64 | `test`/`cmp` guards, `cqo; idiv`, fix-up via `xor`-sign test (R8 scratch) | `__twig_write_i64` (`printf("%lld")`, no per-call flush) |
+| AArch64 | `cbnz`/`add #1`+`cbnz`/`cmp` guards, `sdiv`+`msub`, `eor`+`cmp #0` fix-up | `__twig_write_i64` |
+| LLVM | `icmp`+`br` to trap blocks, `sdiv`/`srem`, `select` fix-up; mod divides by 1 for `b = -1` | module-local `@__iir_write_i64` |
+| WASM | `i64.eqz`/`i64.eq` + `if` guards, `div_s`/`rem_s` with recomputed remainder (no scratch locals) | `env.__write_i64` |
+| JVM | `lcmp`/`ifne` guards, then `Math.floorDiv`/`floorMod` | `System.out.print(J)V` |
+| CLR (textual) | `bne.un` guards, `div`/`rem` fix-up; mod stores 0 for `b = -1` | `Console.Write(int64)` |
+| BEAM | `is_eq_exact` guards, branchy fix-up over truncating `div`/`rem`, temp in an allocated (GC-rooted) register | `io:format("~w", [X])` |
+| VM | `floor_divmod` handler | default builtin, same stdout handle |
+| JIT | `DIV_FLOOR_I64` / `MOD_FLOOR_I64` bytecodes | `CALL_BUILTIN` to the embedder sink |
+
+Supporting changes:
+
+- `jit_core::CIRInstr::is_pure` treats `trap` and the floor ops as impure, so
+  dead-code elimination keeps an unused trapping divide. A conformance case
+  pins that.
+- `lang_aot::concretize_scalar_any_for_jvm` keeps a module that uses
+  `write_i64`, `i64_div_floor` or `i64_mod_floor` on the wide i64 model. These
+  ops are defined on i64.
+- vm-core's legacy `div`/`mod` wrap on `MIN / -1` instead of panicking the
+  host.
+- The binary CLR path, `lower_iir_to_cil` for the 32-bit simulator, does not
+  lower the PR1b ops. It returns a typed `UnsupportedOp`. `op_support`
+  describes the textual path (§2).
+- `op_conformance` gains a JVM execution column: real `java`, verifier on,
+  class files at version 49. It also adds the gates
+  `pr1b_ops_are_lowered_on_every_backend` and
+  `flush_before_trap_is_proven_on_every_executable_column`. A column that
+  traps must report the kind; `None` is a failure.
+
+Local evidence and its limits: native x86-64, LLVM (clang), WASM, JVM (JDK 21),
+VM and JIT execute every case. CLR and BEAM are compile-only locally, with no
+`dotnet` or `erl`, and CI executes them. Their unit tests pin the emitted
+IL/BEAM. The BEAM tests also execute the emitted floor sequence on a model of
+the opcodes it uses. AArch64 is structural: each expected word comes from
+`aarch64-encoder`. The macOS ARM64 CI leg runs it.
+
+`lang_matrix` keeps its data-less `RunResult::Trapped`, and its WASM/VM/JIT
+hosts do not yet provide `write_i64`/`__trap`. No language row emits a PR1b op
+yet. LANG83 PR2 (Ruby), the first that does, ports `StdoutThenTrap` and those
+host imports.
+
 ## What PR1a deliberately does not do
 
-- No backend lowers a PR1b op; all nine declare them `Refused`.
+- No backend lowers a PR1b op; all nine declare them `Refused`. (PR1b lowers
+  all four everywhere.)
 - `lang_matrix`'s `RunResult::Trapped` stays data-less; only the conformance
   runner carries stdout through a trap.
 - The matrix runners are not moved into `tests/common/`; `op_conformance.rs`
   has its own compact IIR-level runners for the columns it executes (WASM, VM,
-  JIT in-process; LLVM and native when the toolchain exists). JVM, CLR and BEAM
-  are compile-checked there; the JVM column executes the ordered-output proof
-  through `lang_matrix`.
+  JIT in-process; LLVM and native when the toolchain exists; PR1b adds the
+  JVM). CLR and BEAM are compile-checked there.
 - The older builtin tables are checked against `OP_SUPPORT`, not yet derived
   from it.
