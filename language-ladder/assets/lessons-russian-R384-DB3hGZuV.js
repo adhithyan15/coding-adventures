@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: RU-R384-review-377-384
+spine_node: SPINE-EXPRESS-CONDITION
+sequence: 22250
+chapter: 384
+type: review
+headword: (dialogue)
+gloss: a review of chapters 377-384
+concept_tag: REVIEW
+prerequisites: [RU-C377-perenosit, RU-C377-peredumyvat, RU-C377-otkazyvatsya, RU-C377-naznachat, RU-C377-sobiratsya, RU-C378-dogovarivatsya, RU-C378-dogovoryonnost, RU-C378-variant, RU-C378-alternativa, RU-C378-okonchatelnyy, RU-C379-zapasnoy, RU-C379-v-lyubom-sluchae, RU-C379-kolebatsya, RU-C379-reshatsya, RU-C379-v-zavisimosti-ot, RU-C380-predskazyvat, RU-C380-ugadyvat, RU-C380-dedlayn, RU-C380-postoyannyy, RU-C380-vremennyy, RU-C381-sessiya, RU-C381-zachyot, RU-C381-seminar, RU-C381-konspekt, RU-C381-ball, RU-C382-provalit, RU-C382-peresdavat, RU-C382-peresdacha, RU-C382-podgotovka, RU-C382-gotovitsya, RU-C383-postuplenie, RU-C383-abiturient, RU-C383-vstupitelnyy, RU-C383-fakultet, RU-C383-stipendiya, RU-C384-zubrit, RU-C384-zauchivat, RU-C384-progulivat, RU-C384-shpargalka, RU-C384-otvlekatsya]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [RU-LEX-C377-PLANY-01, RU-LEX-C377-PLANY-02, RU-LEX-C377-PLANY-03, RU-LEX-C377-PLANY-04, RU-LEX-C377-PLANY-05, RU-LEX-C378-DOGOVORILIS-01, RU-LEX-C378-DOGOVORILIS-02, RU-LEX-C378-DOGOVORILIS-03, RU-LEX-C378-DOGOVORILIS-04, RU-LEX-C378-DOGOVORILIS-05, RU-LEX-C379-ZAPASNOY-01, RU-LEX-C379-ZAPASNOY-02, RU-LEX-C379-ZAPASNOY-03, RU-LEX-C379-ZAPASNOY-04, RU-LEX-C379-ZAPASNOY-05, RU-LEX-C380-BUDUSHCHEYE-01, RU-LEX-C380-BUDUSHCHEYE-02, RU-LEX-C380-BUDUSHCHEYE-03, RU-LEX-C380-BUDUSHCHEYE-04, RU-LEX-C380-BUDUSHCHEYE-05, RU-LEX-C381-SESSIYA-01, RU-LEX-C381-SESSIYA-02, RU-LEX-C381-SESSIYA-03, RU-LEX-C381-SESSIYA-04, RU-LEX-C381-SESSIYA-05, RU-LEX-C382-EKZAMEN-01, RU-LEX-C382-EKZAMEN-02, RU-LEX-C382-EKZAMEN-03, RU-LEX-C382-EKZAMEN-04, RU-LEX-C382-EKZAMEN-05, RU-LEX-C383-POSTUPLENIYE-01, RU-LEX-C383-POSTUPLENIYE-02, RU-LEX-C383-POSTUPLENIYE-03, RU-LEX-C383-POSTUPLENIYE-04, RU-LEX-C383-POSTUPLENIYE-05, RU-LEX-C384-UCHYOBA-01, RU-LEX-C384-UCHYOBA-02, RU-LEX-C384-UCHYOBA-03, RU-LEX-C384-UCHYOBA-04, RU-LEX-C384-UCHYOBA-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [RU-LEX-C377-PLANY-01, RU-LEX-C377-PLANY-02, RU-LEX-C377-PLANY-03, RU-LEX-C377-PLANY-04, RU-LEX-C377-PLANY-05, RU-LEX-C378-DOGOVORILIS-01, RU-LEX-C378-DOGOVORILIS-02, RU-LEX-C378-DOGOVORILIS-03, RU-LEX-C378-DOGOVORILIS-04, RU-LEX-C378-DOGOVORILIS-05, RU-LEX-C379-ZAPASNOY-01, RU-LEX-C379-ZAPASNOY-02, RU-LEX-C379-ZAPASNOY-03, RU-LEX-C379-ZAPASNOY-04, RU-LEX-C379-ZAPASNOY-05, RU-LEX-C380-BUDUSHCHEYE-01, RU-LEX-C380-BUDUSHCHEYE-02, RU-LEX-C380-BUDUSHCHEYE-03, RU-LEX-C380-BUDUSHCHEYE-04, RU-LEX-C380-BUDUSHCHEYE-05, RU-LEX-C381-SESSIYA-01, RU-LEX-C381-SESSIYA-02, RU-LEX-C381-SESSIYA-03, RU-LEX-C381-SESSIYA-04, RU-LEX-C381-SESSIYA-05, RU-LEX-C382-EKZAMEN-01, RU-LEX-C382-EKZAMEN-02, RU-LEX-C382-EKZAMEN-03, RU-LEX-C382-EKZAMEN-04, RU-LEX-C382-EKZAMEN-05, RU-LEX-C383-POSTUPLENIYE-01, RU-LEX-C383-POSTUPLENIYE-02, RU-LEX-C383-POSTUPLENIYE-03, RU-LEX-C383-POSTUPLENIYE-04, RU-LEX-C383-POSTUPLENIYE-05, RU-LEX-C384-UCHYOBA-01, RU-LEX-C384-UCHYOBA-02, RU-LEX-C384-UCHYOBA-03, RU-LEX-C384-UCHYOBA-04, RU-LEX-C384-UCHYOBA-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
+reviews_of: [RU-C377-perenosit, RU-C377-peredumyvat, RU-C377-otkazyvatsya, RU-C377-naznachat, RU-C377-sobiratsya, RU-C378-dogovarivatsya, RU-C378-dogovoryonnost, RU-C378-variant, RU-C378-alternativa, RU-C378-okonchatelnyy, RU-C379-zapasnoy, RU-C379-v-lyubom-sluchae, RU-C379-kolebatsya, RU-C379-reshatsya, RU-C379-v-zavisimosti-ot, RU-C380-predskazyvat, RU-C380-ugadyvat, RU-C380-dedlayn, RU-C380-postoyannyy, RU-C380-vremennyy, RU-C381-sessiya, RU-C381-zachyot, RU-C381-seminar, RU-C381-konspekt, RU-C381-ball, RU-C382-provalit, RU-C382-peresdavat, RU-C382-peresdacha, RU-C382-podgotovka, RU-C382-gotovitsya, RU-C383-postuplenie, RU-C383-abiturient, RU-C383-vstupitelnyy, RU-C383-fakultet, RU-C383-stipendiya, RU-C384-zubrit, RU-C384-zauchivat, RU-C384-progulivat, RU-C384-shpargalka, RU-C384-otvlekatsya]
+---
+
+# Words from chapters 377–384 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C377-PLANY-01, RU-LEX-C377-PLANY-02] -->
+
+[PAUSE 3s] Say the Russian for to postpone and to change one’s mind.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C377-PLANY-01, RU-LEX-C377-PLANY-02, RU-LEX-C377-PLANY-03, RU-LEX-C377-PLANY-04, RU-LEX-C377-PLANY-05, RU-LEX-C378-DOGOVORILIS-01, RU-LEX-C378-DOGOVORILIS-02, RU-LEX-C378-DOGOVORILIS-03, RU-LEX-C378-DOGOVORILIS-04, RU-LEX-C378-DOGOVORILIS-05, RU-LEX-C379-ZAPASNOY-01, RU-LEX-C379-ZAPASNOY-02, RU-LEX-C379-ZAPASNOY-03, RU-LEX-C379-ZAPASNOY-04, RU-LEX-C379-ZAPASNOY-05, RU-LEX-C380-BUDUSHCHEYE-01, RU-LEX-C380-BUDUSHCHEYE-02, RU-LEX-C380-BUDUSHCHEYE-03, RU-LEX-C380-BUDUSHCHEYE-04, RU-LEX-C380-BUDUSHCHEYE-05, RU-LEX-C381-SESSIYA-01, RU-LEX-C381-SESSIYA-02, RU-LEX-C381-SESSIYA-03, RU-LEX-C381-SESSIYA-04, RU-LEX-C381-SESSIYA-05, RU-LEX-C382-EKZAMEN-01, RU-LEX-C382-EKZAMEN-02, RU-LEX-C382-EKZAMEN-03, RU-LEX-C382-EKZAMEN-04, RU-LEX-C382-EKZAMEN-05, RU-LEX-C383-POSTUPLENIYE-01, RU-LEX-C383-POSTUPLENIYE-02, RU-LEX-C383-POSTUPLENIYE-03, RU-LEX-C383-POSTUPLENIYE-04, RU-LEX-C383-POSTUPLENIYE-05, RU-LEX-C384-UCHYOBA-01, RU-LEX-C384-UCHYOBA-02, RU-LEX-C384-UCHYOBA-03, RU-LEX-C384-UCHYOBA-04, RU-LEX-C384-UCHYOBA-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to postpone, to change one’s mind, to refuse, to set, to be going to]
+- [YOU SAY: to arrange, an arrangement, an option, an alternative, final]
+- [YOU SAY: spare, in any case, to hesitate, to make up one’s mind, depending on]
+- [YOU SAY: to predict, to guess, a deadline, permanent, temporary]
+- [YOU SAY: an exam period, a pass-or-fail test, a seminar, lecture notes, a point]
+- [YOU SAY: to fail, to retake, a resit, preparation, to prepare oneself]
+- [YOU SAY: admission, a university applicant, entrance, a faculty, a student grant]
+- [YOU SAY: to cram, to memorise, to skip, a crib sheet, to get distracted]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C377-PLANY-01, RU-LEX-C377-PLANY-02, RU-LEX-C377-PLANY-03, RU-LEX-C377-PLANY-04, RU-LEX-C377-PLANY-05, RU-LEX-C378-DOGOVORILIS-01, RU-LEX-C378-DOGOVORILIS-02, RU-LEX-C378-DOGOVORILIS-03, RU-LEX-C378-DOGOVORILIS-04, RU-LEX-C378-DOGOVORILIS-05, RU-LEX-C379-ZAPASNOY-01, RU-LEX-C379-ZAPASNOY-02, RU-LEX-C379-ZAPASNOY-03, RU-LEX-C379-ZAPASNOY-04, RU-LEX-C379-ZAPASNOY-05, RU-LEX-C380-BUDUSHCHEYE-01, RU-LEX-C380-BUDUSHCHEYE-02, RU-LEX-C380-BUDUSHCHEYE-03, RU-LEX-C380-BUDUSHCHEYE-04, RU-LEX-C380-BUDUSHCHEYE-05, RU-LEX-C381-SESSIYA-01, RU-LEX-C381-SESSIYA-02, RU-LEX-C381-SESSIYA-03, RU-LEX-C381-SESSIYA-04, RU-LEX-C381-SESSIYA-05, RU-LEX-C382-EKZAMEN-01, RU-LEX-C382-EKZAMEN-02, RU-LEX-C382-EKZAMEN-03, RU-LEX-C382-EKZAMEN-04, RU-LEX-C382-EKZAMEN-05, RU-LEX-C383-POSTUPLENIYE-01, RU-LEX-C383-POSTUPLENIYE-02, RU-LEX-C383-POSTUPLENIYE-03, RU-LEX-C383-POSTUPLENIYE-04, RU-LEX-C383-POSTUPLENIYE-05, RU-LEX-C384-UCHYOBA-01, RU-LEX-C384-UCHYOBA-02, RU-LEX-C384-UCHYOBA-03, RU-LEX-C384-UCHYOBA-04, RU-LEX-C384-UCHYOBA-05] -->
+
+[PAUSE 3s] To postpone? (**переносить**.) To change one’s mind? (**передумывать**.) To refuse? (**отказываться**.) To set? (**назначать**.) To be going to? (**собираться**.) To arrange? (**договариваться**.) An arrangement? (**договорённость**.) An option? (**вариант**.) An alternative? (**альтернатива**.) Final? (**окончательный**.) Spare? (**запасной**.) In any case? (**в любом случае**.) To hesitate? (**колебаться**.) To make up one’s mind? (**решаться**.) Depending on? (**в зависимости от**.) To predict? (**предсказывать**.) To guess? (**угадывать**.) A deadline? (**дедлайн**.) Permanent? (**постоянный**.) Temporary? (**временный**.) An exam period? (**сессия**.) A pass-or-fail test? (**зачёт**.) A seminar? (**семинар**.) Lecture notes? (**конспект**.) A point? (**балл**.) To fail? (**провалить**.) To retake? (**пересдавать**.) A resit? (**пересдача**.) Preparation? (**подготовка**.) To prepare oneself? (**готовиться**.) Admission? (**поступление**.) A university applicant? (**абитуриент**.) Entrance? (**вступительный**.) A faculty? (**факультет**.) A student grant? (**стипендия**.) To cram? (**зубрить**.) To memorise? (**заучивать**.) To skip? (**прогуливать**.) A crib sheet? (**шпаргалка**.) To get distracted? (**отвлекаться**.)
+`;export{t};

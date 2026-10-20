@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: RU-R368-review-361-368
+spine_node: SPINE-GIVE-REASONS
+sequence: 21430
+chapter: 368
+type: review
+headword: (dialogue)
+gloss: a review of chapters 361-368
+concept_tag: REVIEW
+prerequisites: [RU-C361-predpriyatie, RU-C361-pribyl, RU-C361-ubytok, RU-C361-dokhod, RU-C361-sdelka, RU-C362-povyshenie, RU-C362-premiya, RU-C362-navyk, RU-C362-specialist, RU-C362-uvolnyat, RU-C363-peregovory, RU-C363-kontrakt, RU-C363-zakazchik, RU-C363-konkurent, RU-C363-sotrudnichat, RU-C364-obshchestvo, RU-C364-naselenie, RU-C364-obshchestvennyy, RU-C364-socialnyy, RU-C364-zhitel, RU-C365-gosudarstvo, RU-C365-pravitelstvo, RU-C365-vlast, RU-C365-politika, RU-C365-politik, RU-C366-vybory, RU-C366-golosovat, RU-C366-partiya, RU-C366-protest, RU-C366-protestovat, RU-C367-svoboda, RU-C367-ravenstvo, RU-C367-bednost, RU-C367-bogatstvo, RU-C367-bezrabotica, RU-C368-blagotvoritelnost, RU-C368-volontyor, RU-C368-posobie, RU-C368-zhertvovat, RU-C368-nuzhdatsya]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [RU-LEX-C361-PRIBYL-01, RU-LEX-C361-PRIBYL-02, RU-LEX-C361-PRIBYL-03, RU-LEX-C361-PRIBYL-04, RU-LEX-C361-PRIBYL-05, RU-LEX-C362-POVYSHENIYE-01, RU-LEX-C362-POVYSHENIYE-02, RU-LEX-C362-POVYSHENIYE-03, RU-LEX-C362-POVYSHENIYE-04, RU-LEX-C362-POVYSHENIYE-05, RU-LEX-C363-PEREGOVORY-01, RU-LEX-C363-PEREGOVORY-02, RU-LEX-C363-PEREGOVORY-03, RU-LEX-C363-PEREGOVORY-04, RU-LEX-C363-PEREGOVORY-05, RU-LEX-C364-OBSHCHESTVO-01, RU-LEX-C364-OBSHCHESTVO-02, RU-LEX-C364-OBSHCHESTVO-03, RU-LEX-C364-OBSHCHESTVO-04, RU-LEX-C364-OBSHCHESTVO-05, RU-LEX-C365-VLAST-01, RU-LEX-C365-VLAST-02, RU-LEX-C365-VLAST-03, RU-LEX-C365-VLAST-04, RU-LEX-C365-VLAST-05, RU-LEX-C366-VYBORY-01, RU-LEX-C366-VYBORY-02, RU-LEX-C366-VYBORY-03, RU-LEX-C366-VYBORY-04, RU-LEX-C366-VYBORY-05, RU-LEX-C367-RAVENSTVO-01, RU-LEX-C367-RAVENSTVO-02, RU-LEX-C367-RAVENSTVO-03, RU-LEX-C367-RAVENSTVO-04, RU-LEX-C367-RAVENSTVO-05, RU-LEX-C368-POMOSHCH-01, RU-LEX-C368-POMOSHCH-02, RU-LEX-C368-POMOSHCH-03, RU-LEX-C368-POMOSHCH-04, RU-LEX-C368-POMOSHCH-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [RU-LEX-C361-PRIBYL-01, RU-LEX-C361-PRIBYL-02, RU-LEX-C361-PRIBYL-03, RU-LEX-C361-PRIBYL-04, RU-LEX-C361-PRIBYL-05, RU-LEX-C362-POVYSHENIYE-01, RU-LEX-C362-POVYSHENIYE-02, RU-LEX-C362-POVYSHENIYE-03, RU-LEX-C362-POVYSHENIYE-04, RU-LEX-C362-POVYSHENIYE-05, RU-LEX-C363-PEREGOVORY-01, RU-LEX-C363-PEREGOVORY-02, RU-LEX-C363-PEREGOVORY-03, RU-LEX-C363-PEREGOVORY-04, RU-LEX-C363-PEREGOVORY-05, RU-LEX-C364-OBSHCHESTVO-01, RU-LEX-C364-OBSHCHESTVO-02, RU-LEX-C364-OBSHCHESTVO-03, RU-LEX-C364-OBSHCHESTVO-04, RU-LEX-C364-OBSHCHESTVO-05, RU-LEX-C365-VLAST-01, RU-LEX-C365-VLAST-02, RU-LEX-C365-VLAST-03, RU-LEX-C365-VLAST-04, RU-LEX-C365-VLAST-05, RU-LEX-C366-VYBORY-01, RU-LEX-C366-VYBORY-02, RU-LEX-C366-VYBORY-03, RU-LEX-C366-VYBORY-04, RU-LEX-C366-VYBORY-05, RU-LEX-C367-RAVENSTVO-01, RU-LEX-C367-RAVENSTVO-02, RU-LEX-C367-RAVENSTVO-03, RU-LEX-C367-RAVENSTVO-04, RU-LEX-C367-RAVENSTVO-05, RU-LEX-C368-POMOSHCH-01, RU-LEX-C368-POMOSHCH-02, RU-LEX-C368-POMOSHCH-03, RU-LEX-C368-POMOSHCH-04, RU-LEX-C368-POMOSHCH-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
+reviews_of: [RU-C361-predpriyatie, RU-C361-pribyl, RU-C361-ubytok, RU-C361-dokhod, RU-C361-sdelka, RU-C362-povyshenie, RU-C362-premiya, RU-C362-navyk, RU-C362-specialist, RU-C362-uvolnyat, RU-C363-peregovory, RU-C363-kontrakt, RU-C363-zakazchik, RU-C363-konkurent, RU-C363-sotrudnichat, RU-C364-obshchestvo, RU-C364-naselenie, RU-C364-obshchestvennyy, RU-C364-socialnyy, RU-C364-zhitel, RU-C365-gosudarstvo, RU-C365-pravitelstvo, RU-C365-vlast, RU-C365-politika, RU-C365-politik, RU-C366-vybory, RU-C366-golosovat, RU-C366-partiya, RU-C366-protest, RU-C366-protestovat, RU-C367-svoboda, RU-C367-ravenstvo, RU-C367-bednost, RU-C367-bogatstvo, RU-C367-bezrabotica, RU-C368-blagotvoritelnost, RU-C368-volontyor, RU-C368-posobie, RU-C368-zhertvovat, RU-C368-nuzhdatsya]
+---
+
+# Words from chapters 361–368 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C361-PRIBYL-01, RU-LEX-C361-PRIBYL-02] -->
+
+[PAUSE 3s] Say the Russian for an enterprise and profit.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C361-PRIBYL-01, RU-LEX-C361-PRIBYL-02, RU-LEX-C361-PRIBYL-03, RU-LEX-C361-PRIBYL-04, RU-LEX-C361-PRIBYL-05, RU-LEX-C362-POVYSHENIYE-01, RU-LEX-C362-POVYSHENIYE-02, RU-LEX-C362-POVYSHENIYE-03, RU-LEX-C362-POVYSHENIYE-04, RU-LEX-C362-POVYSHENIYE-05, RU-LEX-C363-PEREGOVORY-01, RU-LEX-C363-PEREGOVORY-02, RU-LEX-C363-PEREGOVORY-03, RU-LEX-C363-PEREGOVORY-04, RU-LEX-C363-PEREGOVORY-05, RU-LEX-C364-OBSHCHESTVO-01, RU-LEX-C364-OBSHCHESTVO-02, RU-LEX-C364-OBSHCHESTVO-03, RU-LEX-C364-OBSHCHESTVO-04, RU-LEX-C364-OBSHCHESTVO-05, RU-LEX-C365-VLAST-01, RU-LEX-C365-VLAST-02, RU-LEX-C365-VLAST-03, RU-LEX-C365-VLAST-04, RU-LEX-C365-VLAST-05, RU-LEX-C366-VYBORY-01, RU-LEX-C366-VYBORY-02, RU-LEX-C366-VYBORY-03, RU-LEX-C366-VYBORY-04, RU-LEX-C366-VYBORY-05, RU-LEX-C367-RAVENSTVO-01, RU-LEX-C367-RAVENSTVO-02, RU-LEX-C367-RAVENSTVO-03, RU-LEX-C367-RAVENSTVO-04, RU-LEX-C367-RAVENSTVO-05, RU-LEX-C368-POMOSHCH-01, RU-LEX-C368-POMOSHCH-02, RU-LEX-C368-POMOSHCH-03, RU-LEX-C368-POMOSHCH-04, RU-LEX-C368-POMOSHCH-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: an enterprise, profit, a loss, income, a deal]
+- [YOU SAY: a promotion, a bonus, a skill, a specialist, to dismiss]
+- [YOU SAY: negotiations, a contract, a client, a competitor, to cooperate]
+- [YOU SAY: society, the population, public, social, an inhabitant]
+- [YOU SAY: the state, the government, power, politics, a politician]
+- [YOU SAY: an election, to vote, a party, a protest, to protest]
+- [YOU SAY: freedom, equality, poverty, wealth, unemployment]
+- [YOU SAY: charity, a volunteer, a benefit, to donate, to need]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C361-PRIBYL-01, RU-LEX-C361-PRIBYL-02, RU-LEX-C361-PRIBYL-03, RU-LEX-C361-PRIBYL-04, RU-LEX-C361-PRIBYL-05, RU-LEX-C362-POVYSHENIYE-01, RU-LEX-C362-POVYSHENIYE-02, RU-LEX-C362-POVYSHENIYE-03, RU-LEX-C362-POVYSHENIYE-04, RU-LEX-C362-POVYSHENIYE-05, RU-LEX-C363-PEREGOVORY-01, RU-LEX-C363-PEREGOVORY-02, RU-LEX-C363-PEREGOVORY-03, RU-LEX-C363-PEREGOVORY-04, RU-LEX-C363-PEREGOVORY-05, RU-LEX-C364-OBSHCHESTVO-01, RU-LEX-C364-OBSHCHESTVO-02, RU-LEX-C364-OBSHCHESTVO-03, RU-LEX-C364-OBSHCHESTVO-04, RU-LEX-C364-OBSHCHESTVO-05, RU-LEX-C365-VLAST-01, RU-LEX-C365-VLAST-02, RU-LEX-C365-VLAST-03, RU-LEX-C365-VLAST-04, RU-LEX-C365-VLAST-05, RU-LEX-C366-VYBORY-01, RU-LEX-C366-VYBORY-02, RU-LEX-C366-VYBORY-03, RU-LEX-C366-VYBORY-04, RU-LEX-C366-VYBORY-05, RU-LEX-C367-RAVENSTVO-01, RU-LEX-C367-RAVENSTVO-02, RU-LEX-C367-RAVENSTVO-03, RU-LEX-C367-RAVENSTVO-04, RU-LEX-C367-RAVENSTVO-05, RU-LEX-C368-POMOSHCH-01, RU-LEX-C368-POMOSHCH-02, RU-LEX-C368-POMOSHCH-03, RU-LEX-C368-POMOSHCH-04, RU-LEX-C368-POMOSHCH-05] -->
+
+[PAUSE 3s] An enterprise? (**предприятие**.) Profit? (**прибыль**.) A loss? (**убыток**.) Income? (**доход**.) A deal? (**сделка**.) A promotion? (**повышение**.) A bonus? (**премия**.) A skill? (**навык**.) A specialist? (**специалист**.) To dismiss? (**увольнять**.) Negotiations? (**переговоры**.) A contract? (**контракт**.) A client? (**заказчик**.) A competitor? (**конкурент**.) To cooperate? (**сотрудничать**.) Society? (**общество**.) The population? (**население**.) Public? (**общественный**.) Social? (**социальный**.) An inhabitant? (**житель**.) The state? (**государство**.) The government? (**правительство**.) Power? (**власть**.) Politics? (**политика**.) A politician? (**политик**.) An election? (**выборы**.) To vote? (**голосовать**.) A party? (**партия**.) A protest? (**протест**.) To protest? (**протестовать**.) Freedom? (**свобода**.) Equality? (**равенство**.) Poverty? (**бедность**.) Wealth? (**богатство**.) Unemployment? (**безработица**.) Charity? (**благотворительность**.) A volunteer? (**волонтёр**.) A benefit? (**пособие**.) To donate? (**жертвовать**.) To need? (**нуждаться**.)
+`;export{t};

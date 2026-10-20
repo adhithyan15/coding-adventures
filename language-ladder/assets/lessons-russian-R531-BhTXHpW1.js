@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: RU-R532-review-525-532
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 29870
+chapter: 532
+type: review
+headword: (dialogue)
+gloss: a review of chapters 525-532
+concept_tag: REVIEW
+prerequisites: [RU-C525-poet, RU-C525-stikhotvoreniye, RU-C525-rifma, RU-C525-rifmovat, RU-C525-naizust, RU-C526-oblozhka, RU-C526-zakladka, RU-C526-listat, RU-C526-izdatelstvo, RU-C526-perechityvat, RU-C527-serial, RU-C527-epizod, RU-C527-subtitry, RU-C527-pereklyuchat, RU-C527-ekranizatsiya, RU-C528-pristavka, RU-C528-videoigra, RU-C528-bloger, RU-C528-podpischik, RU-C528-geymer, RU-C529-pyl, RU-C529-uborka, RU-C529-pylesosit, RU-C529-tryapka, RU-C529-vytirat, RU-C530-stirka, RU-C530-prishchepka, RU-C530-pyatno, RU-C530-razveshivat, RU-C530-otstiryvat, RU-C531-besporyadok, RU-C531-khlam, RU-C531-kladovka, RU-C531-skladyvat, RU-C531-vybrasyvat, RU-C532-oboi, RU-C532-kleit, RU-C532-sverlit, RU-C532-drel, RU-C532-otvyortka]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [RU-LEX-C525-POETRY-01, RU-LEX-C525-POETRY-02, RU-LEX-C525-POETRY-03, RU-LEX-C525-POETRY-04, RU-LEX-C525-POETRY-05, RU-LEX-C526-BOOKS-01, RU-LEX-C526-BOOKS-02, RU-LEX-C526-BOOKS-03, RU-LEX-C526-BOOKS-04, RU-LEX-C526-BOOKS-05, RU-LEX-C527-SERIES-01, RU-LEX-C527-SERIES-02, RU-LEX-C527-SERIES-03, RU-LEX-C527-SERIES-04, RU-LEX-C527-SERIES-05, RU-LEX-C528-GAMING-01, RU-LEX-C528-GAMING-02, RU-LEX-C528-GAMING-03, RU-LEX-C528-GAMING-04, RU-LEX-C528-GAMING-05, RU-LEX-C529-CLEANING-01, RU-LEX-C529-CLEANING-02, RU-LEX-C529-CLEANING-03, RU-LEX-C529-CLEANING-04, RU-LEX-C529-CLEANING-05, RU-LEX-C530-LAUNDRY-01, RU-LEX-C530-LAUNDRY-02, RU-LEX-C530-LAUNDRY-03, RU-LEX-C530-LAUNDRY-04, RU-LEX-C530-LAUNDRY-05, RU-LEX-C531-CLUTTER-01, RU-LEX-C531-CLUTTER-02, RU-LEX-C531-CLUTTER-03, RU-LEX-C531-CLUTTER-04, RU-LEX-C531-CLUTTER-05, RU-LEX-C532-DIY-01, RU-LEX-C532-DIY-02, RU-LEX-C532-DIY-03, RU-LEX-C532-DIY-04, RU-LEX-C532-DIY-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [RU-LEX-C525-POETRY-01, RU-LEX-C525-POETRY-02, RU-LEX-C525-POETRY-03, RU-LEX-C525-POETRY-04, RU-LEX-C525-POETRY-05, RU-LEX-C526-BOOKS-01, RU-LEX-C526-BOOKS-02, RU-LEX-C526-BOOKS-03, RU-LEX-C526-BOOKS-04, RU-LEX-C526-BOOKS-05, RU-LEX-C527-SERIES-01, RU-LEX-C527-SERIES-02, RU-LEX-C527-SERIES-03, RU-LEX-C527-SERIES-04, RU-LEX-C527-SERIES-05, RU-LEX-C528-GAMING-01, RU-LEX-C528-GAMING-02, RU-LEX-C528-GAMING-03, RU-LEX-C528-GAMING-04, RU-LEX-C528-GAMING-05, RU-LEX-C529-CLEANING-01, RU-LEX-C529-CLEANING-02, RU-LEX-C529-CLEANING-03, RU-LEX-C529-CLEANING-04, RU-LEX-C529-CLEANING-05, RU-LEX-C530-LAUNDRY-01, RU-LEX-C530-LAUNDRY-02, RU-LEX-C530-LAUNDRY-03, RU-LEX-C530-LAUNDRY-04, RU-LEX-C530-LAUNDRY-05, RU-LEX-C531-CLUTTER-01, RU-LEX-C531-CLUTTER-02, RU-LEX-C531-CLUTTER-03, RU-LEX-C531-CLUTTER-04, RU-LEX-C531-CLUTTER-05, RU-LEX-C532-DIY-01, RU-LEX-C532-DIY-02, RU-LEX-C532-DIY-03, RU-LEX-C532-DIY-04, RU-LEX-C532-DIY-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
+reviews_of: [RU-C525-poet, RU-C525-stikhotvoreniye, RU-C525-rifma, RU-C525-rifmovat, RU-C525-naizust, RU-C526-oblozhka, RU-C526-zakladka, RU-C526-listat, RU-C526-izdatelstvo, RU-C526-perechityvat, RU-C527-serial, RU-C527-epizod, RU-C527-subtitry, RU-C527-pereklyuchat, RU-C527-ekranizatsiya, RU-C528-pristavka, RU-C528-videoigra, RU-C528-bloger, RU-C528-podpischik, RU-C528-geymer, RU-C529-pyl, RU-C529-uborka, RU-C529-pylesosit, RU-C529-tryapka, RU-C529-vytirat, RU-C530-stirka, RU-C530-prishchepka, RU-C530-pyatno, RU-C530-razveshivat, RU-C530-otstiryvat, RU-C531-besporyadok, RU-C531-khlam, RU-C531-kladovka, RU-C531-skladyvat, RU-C531-vybrasyvat, RU-C532-oboi, RU-C532-kleit, RU-C532-sverlit, RU-C532-drel, RU-C532-otvyortka]
+---
+
+# Words from chapters 525–532 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C525-POETRY-01, RU-LEX-C525-POETRY-02] -->
+
+[PAUSE 3s] Say the Russian for a poet and a poem.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C525-POETRY-01, RU-LEX-C525-POETRY-02, RU-LEX-C525-POETRY-03, RU-LEX-C525-POETRY-04, RU-LEX-C525-POETRY-05, RU-LEX-C526-BOOKS-01, RU-LEX-C526-BOOKS-02, RU-LEX-C526-BOOKS-03, RU-LEX-C526-BOOKS-04, RU-LEX-C526-BOOKS-05, RU-LEX-C527-SERIES-01, RU-LEX-C527-SERIES-02, RU-LEX-C527-SERIES-03, RU-LEX-C527-SERIES-04, RU-LEX-C527-SERIES-05, RU-LEX-C528-GAMING-01, RU-LEX-C528-GAMING-02, RU-LEX-C528-GAMING-03, RU-LEX-C528-GAMING-04, RU-LEX-C528-GAMING-05, RU-LEX-C529-CLEANING-01, RU-LEX-C529-CLEANING-02, RU-LEX-C529-CLEANING-03, RU-LEX-C529-CLEANING-04, RU-LEX-C529-CLEANING-05, RU-LEX-C530-LAUNDRY-01, RU-LEX-C530-LAUNDRY-02, RU-LEX-C530-LAUNDRY-03, RU-LEX-C530-LAUNDRY-04, RU-LEX-C530-LAUNDRY-05, RU-LEX-C531-CLUTTER-01, RU-LEX-C531-CLUTTER-02, RU-LEX-C531-CLUTTER-03, RU-LEX-C531-CLUTTER-04, RU-LEX-C531-CLUTTER-05, RU-LEX-C532-DIY-01, RU-LEX-C532-DIY-02, RU-LEX-C532-DIY-03, RU-LEX-C532-DIY-04, RU-LEX-C532-DIY-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a poet, a poem, a rhyme, to rhyme, by heart]
+- [YOU SAY: a cover, a bookmark, to leaf through, a publishing house, to reread]
+- [YOU SAY: a TV series, an episode, subtitles, to switch, a screen adaptation]
+- [YOU SAY: a games console, a video game, a blogger, a subscriber, a gamer]
+- [YOU SAY: dust, cleaning, to vacuum, a cloth, to wipe]
+- [YOU SAY: laundry, a clothes peg, a stain, to hang out, to wash out]
+- [YOU SAY: a mess, junk, a storeroom, to fold, to throw away]
+- [YOU SAY: wallpaper, to glue, to drill, a power drill, a screwdriver]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C525-POETRY-01, RU-LEX-C525-POETRY-02, RU-LEX-C525-POETRY-03, RU-LEX-C525-POETRY-04, RU-LEX-C525-POETRY-05, RU-LEX-C526-BOOKS-01, RU-LEX-C526-BOOKS-02, RU-LEX-C526-BOOKS-03, RU-LEX-C526-BOOKS-04, RU-LEX-C526-BOOKS-05, RU-LEX-C527-SERIES-01, RU-LEX-C527-SERIES-02, RU-LEX-C527-SERIES-03, RU-LEX-C527-SERIES-04, RU-LEX-C527-SERIES-05, RU-LEX-C528-GAMING-01, RU-LEX-C528-GAMING-02, RU-LEX-C528-GAMING-03, RU-LEX-C528-GAMING-04, RU-LEX-C528-GAMING-05, RU-LEX-C529-CLEANING-01, RU-LEX-C529-CLEANING-02, RU-LEX-C529-CLEANING-03, RU-LEX-C529-CLEANING-04, RU-LEX-C529-CLEANING-05, RU-LEX-C530-LAUNDRY-01, RU-LEX-C530-LAUNDRY-02, RU-LEX-C530-LAUNDRY-03, RU-LEX-C530-LAUNDRY-04, RU-LEX-C530-LAUNDRY-05, RU-LEX-C531-CLUTTER-01, RU-LEX-C531-CLUTTER-02, RU-LEX-C531-CLUTTER-03, RU-LEX-C531-CLUTTER-04, RU-LEX-C531-CLUTTER-05, RU-LEX-C532-DIY-01, RU-LEX-C532-DIY-02, RU-LEX-C532-DIY-03, RU-LEX-C532-DIY-04, RU-LEX-C532-DIY-05] -->
+
+[PAUSE 3s] A poet? (**поэт**.) A poem? (**стихотворение**.) A rhyme? (**рифма**.) To rhyme? (**рифмовать**.) By heart? (**наизусть**.) A cover? (**обложка**.) A bookmark? (**закладка**.) To leaf through? (**листать**.) A publishing house? (**издательство**.) To reread? (**перечитывать**.) A TV series? (**сериал**.) An episode? (**эпизод**.) Subtitles? (**субтитры**.) To switch? (**переключать**.) A screen adaptation? (**экранизация**.) A games console? (**приставка**.) A video game? (**видеоигра**.) A blogger? (**блогер**.) A subscriber? (**подписчик**.) A gamer? (**геймер**.) Dust? (**пыль**.) Cleaning? (**уборка**.) To vacuum? (**пылесосить**.) A cloth? (**тряпка**.) To wipe? (**вытирать**.) Laundry? (**стирка**.) A clothes peg? (**прищепка**.) A stain? (**пятно**.) To hang out? (**развешивать**.) To wash out? (**отстирывать**.) A mess? (**беспорядок**.) Junk? (**хлам**.) A storeroom? (**кладовка**.) To fold? (**складывать**.) To throw away? (**выбрасывать**.) Wallpaper? (**обои**.) To glue? (**клеить**.) To drill? (**сверлить**.) A power drill? (**дрель**.) A screwdriver? (**отвёртка**.)
+`;export{t};

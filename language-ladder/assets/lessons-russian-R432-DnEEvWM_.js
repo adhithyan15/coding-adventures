@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: RU-R434-review-427-434
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 24830
+chapter: 434
+type: review
+headword: (dialogue)
+gloss: a review of chapters 427-434
+concept_tag: REVIEW
+prerequisites: [RU-C427-gavan, RU-C427-mayak, RU-C427-matros, RU-C427-kapitan, RU-C427-tonut, RU-C428-khostel, RU-C428-turbaza, RU-C428-nochleg, RU-C428-nochevat, RU-C428-bron, RU-C429-administrator, RU-C429-zaselyatsya, RU-C429-vyselyatsya, RU-C429-zalog, RU-C429-prodlevat, RU-C430-postel, RU-C430-prostynya, RU-C430-navolochka, RU-C430-gornichnaya, RU-C430-stelit, RU-C431-konditsioner, RU-C431-obogrevatel, RU-C431-skvoznyak, RU-C431-provetrivat, RU-C431-sushit, RU-C432-protekat, RU-C432-kapat, RU-C432-zasoryatsya, RU-C432-tech, RU-C432-potop, RU-C433-shum, RU-C433-meshat, RU-C433-tarakan, RU-C433-seyf, RU-C433-nepoladka, RU-C434-zhaloba, RU-C434-zhalovatsya, RU-C434-pretenziya, RU-C434-nedovolnyy, RU-C434-neispravnyy]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [RU-LEX-C427-MAYAK-01, RU-LEX-C427-MAYAK-02, RU-LEX-C427-MAYAK-03, RU-LEX-C427-MAYAK-04, RU-LEX-C427-MAYAK-05, RU-LEX-C428-NOCHLEG-01, RU-LEX-C428-NOCHLEG-02, RU-LEX-C428-NOCHLEG-03, RU-LEX-C428-NOCHLEG-04, RU-LEX-C428-NOCHLEG-05, RU-LEX-C429-ZASELENIYE-01, RU-LEX-C429-ZASELENIYE-02, RU-LEX-C429-ZASELENIYE-03, RU-LEX-C429-ZASELENIYE-04, RU-LEX-C429-ZASELENIYE-05, RU-LEX-C430-POSTEL-01, RU-LEX-C430-POSTEL-02, RU-LEX-C430-POSTEL-03, RU-LEX-C430-POSTEL-04, RU-LEX-C430-POSTEL-05, RU-LEX-C431-SKVOZNYAK-01, RU-LEX-C431-SKVOZNYAK-02, RU-LEX-C431-SKVOZNYAK-03, RU-LEX-C431-SKVOZNYAK-04, RU-LEX-C431-SKVOZNYAK-05, RU-LEX-C432-PROTEKAT-01, RU-LEX-C432-PROTEKAT-02, RU-LEX-C432-PROTEKAT-03, RU-LEX-C432-PROTEKAT-04, RU-LEX-C432-PROTEKAT-05, RU-LEX-C433-SHUM-01, RU-LEX-C433-SHUM-02, RU-LEX-C433-SHUM-03, RU-LEX-C433-SHUM-04, RU-LEX-C433-SHUM-05, RU-LEX-C434-ZHALOBA-01, RU-LEX-C434-ZHALOBA-02, RU-LEX-C434-ZHALOBA-03, RU-LEX-C434-ZHALOBA-04, RU-LEX-C434-ZHALOBA-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [RU-LEX-C427-MAYAK-01, RU-LEX-C427-MAYAK-02, RU-LEX-C427-MAYAK-03, RU-LEX-C427-MAYAK-04, RU-LEX-C427-MAYAK-05, RU-LEX-C428-NOCHLEG-01, RU-LEX-C428-NOCHLEG-02, RU-LEX-C428-NOCHLEG-03, RU-LEX-C428-NOCHLEG-04, RU-LEX-C428-NOCHLEG-05, RU-LEX-C429-ZASELENIYE-01, RU-LEX-C429-ZASELENIYE-02, RU-LEX-C429-ZASELENIYE-03, RU-LEX-C429-ZASELENIYE-04, RU-LEX-C429-ZASELENIYE-05, RU-LEX-C430-POSTEL-01, RU-LEX-C430-POSTEL-02, RU-LEX-C430-POSTEL-03, RU-LEX-C430-POSTEL-04, RU-LEX-C430-POSTEL-05, RU-LEX-C431-SKVOZNYAK-01, RU-LEX-C431-SKVOZNYAK-02, RU-LEX-C431-SKVOZNYAK-03, RU-LEX-C431-SKVOZNYAK-04, RU-LEX-C431-SKVOZNYAK-05, RU-LEX-C432-PROTEKAT-01, RU-LEX-C432-PROTEKAT-02, RU-LEX-C432-PROTEKAT-03, RU-LEX-C432-PROTEKAT-04, RU-LEX-C432-PROTEKAT-05, RU-LEX-C433-SHUM-01, RU-LEX-C433-SHUM-02, RU-LEX-C433-SHUM-03, RU-LEX-C433-SHUM-04, RU-LEX-C433-SHUM-05, RU-LEX-C434-ZHALOBA-01, RU-LEX-C434-ZHALOBA-02, RU-LEX-C434-ZHALOBA-03, RU-LEX-C434-ZHALOBA-04, RU-LEX-C434-ZHALOBA-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
+reviews_of: [RU-C427-gavan, RU-C427-mayak, RU-C427-matros, RU-C427-kapitan, RU-C427-tonut, RU-C428-khostel, RU-C428-turbaza, RU-C428-nochleg, RU-C428-nochevat, RU-C428-bron, RU-C429-administrator, RU-C429-zaselyatsya, RU-C429-vyselyatsya, RU-C429-zalog, RU-C429-prodlevat, RU-C430-postel, RU-C430-prostynya, RU-C430-navolochka, RU-C430-gornichnaya, RU-C430-stelit, RU-C431-konditsioner, RU-C431-obogrevatel, RU-C431-skvoznyak, RU-C431-provetrivat, RU-C431-sushit, RU-C432-protekat, RU-C432-kapat, RU-C432-zasoryatsya, RU-C432-tech, RU-C432-potop, RU-C433-shum, RU-C433-meshat, RU-C433-tarakan, RU-C433-seyf, RU-C433-nepoladka, RU-C434-zhaloba, RU-C434-zhalovatsya, RU-C434-pretenziya, RU-C434-nedovolnyy, RU-C434-neispravnyy]
+---
+
+# Words from chapters 427–434 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C427-MAYAK-01, RU-LEX-C427-MAYAK-02] -->
+
+[PAUSE 3s] Say the Russian for a harbour and a lighthouse.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C427-MAYAK-01, RU-LEX-C427-MAYAK-02, RU-LEX-C427-MAYAK-03, RU-LEX-C427-MAYAK-04, RU-LEX-C427-MAYAK-05, RU-LEX-C428-NOCHLEG-01, RU-LEX-C428-NOCHLEG-02, RU-LEX-C428-NOCHLEG-03, RU-LEX-C428-NOCHLEG-04, RU-LEX-C428-NOCHLEG-05, RU-LEX-C429-ZASELENIYE-01, RU-LEX-C429-ZASELENIYE-02, RU-LEX-C429-ZASELENIYE-03, RU-LEX-C429-ZASELENIYE-04, RU-LEX-C429-ZASELENIYE-05, RU-LEX-C430-POSTEL-01, RU-LEX-C430-POSTEL-02, RU-LEX-C430-POSTEL-03, RU-LEX-C430-POSTEL-04, RU-LEX-C430-POSTEL-05, RU-LEX-C431-SKVOZNYAK-01, RU-LEX-C431-SKVOZNYAK-02, RU-LEX-C431-SKVOZNYAK-03, RU-LEX-C431-SKVOZNYAK-04, RU-LEX-C431-SKVOZNYAK-05, RU-LEX-C432-PROTEKAT-01, RU-LEX-C432-PROTEKAT-02, RU-LEX-C432-PROTEKAT-03, RU-LEX-C432-PROTEKAT-04, RU-LEX-C432-PROTEKAT-05, RU-LEX-C433-SHUM-01, RU-LEX-C433-SHUM-02, RU-LEX-C433-SHUM-03, RU-LEX-C433-SHUM-04, RU-LEX-C433-SHUM-05, RU-LEX-C434-ZHALOBA-01, RU-LEX-C434-ZHALOBA-02, RU-LEX-C434-ZHALOBA-03, RU-LEX-C434-ZHALOBA-04, RU-LEX-C434-ZHALOBA-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a harbour, a lighthouse, a sailor, a captain, to sink]
+- [YOU SAY: a hostel, a holiday camp, a bed for the night, to spend the night, a booking]
+- [YOU SAY: a receptionist, to check into a hotel, to check out, a deposit, to extend]
+- [YOU SAY: bedding, a sheet, a pillowcase, a chambermaid, to make up]
+- [YOU SAY: an air conditioner, a heater, a draught, to air, to dry]
+- [YOU SAY: to leak, to drip, to get blocked, to flow, a flood]
+- [YOU SAY: noise, to disturb, a cockroach, a safe, a fault]
+- [YOU SAY: a complaint, to complain, a formal complaint, dissatisfied, out of order]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C427-MAYAK-01, RU-LEX-C427-MAYAK-02, RU-LEX-C427-MAYAK-03, RU-LEX-C427-MAYAK-04, RU-LEX-C427-MAYAK-05, RU-LEX-C428-NOCHLEG-01, RU-LEX-C428-NOCHLEG-02, RU-LEX-C428-NOCHLEG-03, RU-LEX-C428-NOCHLEG-04, RU-LEX-C428-NOCHLEG-05, RU-LEX-C429-ZASELENIYE-01, RU-LEX-C429-ZASELENIYE-02, RU-LEX-C429-ZASELENIYE-03, RU-LEX-C429-ZASELENIYE-04, RU-LEX-C429-ZASELENIYE-05, RU-LEX-C430-POSTEL-01, RU-LEX-C430-POSTEL-02, RU-LEX-C430-POSTEL-03, RU-LEX-C430-POSTEL-04, RU-LEX-C430-POSTEL-05, RU-LEX-C431-SKVOZNYAK-01, RU-LEX-C431-SKVOZNYAK-02, RU-LEX-C431-SKVOZNYAK-03, RU-LEX-C431-SKVOZNYAK-04, RU-LEX-C431-SKVOZNYAK-05, RU-LEX-C432-PROTEKAT-01, RU-LEX-C432-PROTEKAT-02, RU-LEX-C432-PROTEKAT-03, RU-LEX-C432-PROTEKAT-04, RU-LEX-C432-PROTEKAT-05, RU-LEX-C433-SHUM-01, RU-LEX-C433-SHUM-02, RU-LEX-C433-SHUM-03, RU-LEX-C433-SHUM-04, RU-LEX-C433-SHUM-05, RU-LEX-C434-ZHALOBA-01, RU-LEX-C434-ZHALOBA-02, RU-LEX-C434-ZHALOBA-03, RU-LEX-C434-ZHALOBA-04, RU-LEX-C434-ZHALOBA-05] -->
+
+[PAUSE 3s] A harbour? (**гавань**.) A lighthouse? (**маяк**.) A sailor? (**матрос**.) A captain? (**капитан**.) To sink? (**тонуть**.) A hostel? (**хостел**.) A holiday camp? (**турбаза**.) A bed for the night? (**ночлег**.) To spend the night? (**ночевать**.) A booking? (**бронь**.) A receptionist? (**администратор**.) To check into a hotel? (**заселяться**.) To check out? (**выселяться**.) A deposit? (**залог**.) To extend? (**продлевать**.) Bedding? (**постель**.) A sheet? (**простыня**.) A pillowcase? (**наволочка**.) A chambermaid? (**горничная**.) To make up? (**стелить**.) An air conditioner? (**кондиционер**.) A heater? (**обогреватель**.) A draught? (**сквозняк**.) To air? (**проветривать**.) To dry? (**сушить**.) To leak? (**протекать**.) To drip? (**капать**.) To get blocked? (**засоряться**.) To flow? (**течь**.) A flood? (**потоп**.) Noise? (**шум**.) To disturb? (**мешать**.) A cockroach? (**таракан**.) A safe? (**сейф**.) A fault? (**неполадка**.) A complaint? (**жалоба**.) To complain? (**жаловаться**.) A formal complaint? (**претензия**.) Dissatisfied? (**недовольный**.) Out of order? (**неисправный**.)
+`;export{t};

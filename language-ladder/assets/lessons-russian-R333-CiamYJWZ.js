@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: RU-R334-review-327-334
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 19670
+chapter: 334
+type: review
+headword: (dialogue)
+gloss: a review of chapters 327-334
+concept_tag: REVIEW
+prerequisites: [RU-C327-arkheolog, RU-C327-raskopki, RU-C327-nakhodka, RU-C327-sokrovishche, RU-C327-klad, RU-C328-lomtik, RU-C328-kusochek, RU-C328-narezat, RU-C328-natirat, RU-C328-tyorka, RU-C329-kipyatit, RU-C329-kipet, RU-C329-otvarivat, RU-C329-kryshka, RU-C329-nakryvat, RU-C330-smeshivat, RU-C330-vzbivat, RU-C330-venchik, RU-C330-pomeshivat, RU-C330-polovnik, RU-C331-testo, RU-C331-mesit, RU-C331-raskatyvat, RU-C331-lepit, RU-C331-nachinka, RU-C332-zapekat, RU-C332-protiven, RU-C332-razogrevat, RU-C332-podgorat, RU-C332-obzharivat, RU-C333-solit, RU-C333-perchit, RU-C333-posypat, RU-C333-priprava, RU-C333-marinovat, RU-C334-farsh, RU-C334-farshirovat, RU-C334-protsezhivat, RU-C334-durshlag, RU-C334-sito]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [RU-LEX-C327-KLAD-01, RU-LEX-C327-KLAD-02, RU-LEX-C327-KLAD-03, RU-LEX-C327-KLAD-04, RU-LEX-C327-KLAD-05, RU-LEX-C328-NAREZAT-01, RU-LEX-C328-NAREZAT-02, RU-LEX-C328-NAREZAT-03, RU-LEX-C328-NAREZAT-04, RU-LEX-C328-NAREZAT-05, RU-LEX-C329-KIPYATIT-01, RU-LEX-C329-KIPYATIT-02, RU-LEX-C329-KIPYATIT-03, RU-LEX-C329-KIPYATIT-04, RU-LEX-C329-KIPYATIT-05, RU-LEX-C330-SMESHIVAT-01, RU-LEX-C330-SMESHIVAT-02, RU-LEX-C330-SMESHIVAT-03, RU-LEX-C330-SMESHIVAT-04, RU-LEX-C330-SMESHIVAT-05, RU-LEX-C331-TESTO-01, RU-LEX-C331-TESTO-02, RU-LEX-C331-TESTO-03, RU-LEX-C331-TESTO-04, RU-LEX-C331-TESTO-05, RU-LEX-C332-ZAPEKAT-01, RU-LEX-C332-ZAPEKAT-02, RU-LEX-C332-ZAPEKAT-03, RU-LEX-C332-ZAPEKAT-04, RU-LEX-C332-ZAPEKAT-05, RU-LEX-C333-SOLIT-01, RU-LEX-C333-SOLIT-02, RU-LEX-C333-SOLIT-03, RU-LEX-C333-SOLIT-04, RU-LEX-C333-SOLIT-05, RU-LEX-C334-FARSH-01, RU-LEX-C334-FARSH-02, RU-LEX-C334-FARSH-03, RU-LEX-C334-FARSH-04, RU-LEX-C334-FARSH-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [RU-LEX-C327-KLAD-01, RU-LEX-C327-KLAD-02, RU-LEX-C327-KLAD-03, RU-LEX-C327-KLAD-04, RU-LEX-C327-KLAD-05, RU-LEX-C328-NAREZAT-01, RU-LEX-C328-NAREZAT-02, RU-LEX-C328-NAREZAT-03, RU-LEX-C328-NAREZAT-04, RU-LEX-C328-NAREZAT-05, RU-LEX-C329-KIPYATIT-01, RU-LEX-C329-KIPYATIT-02, RU-LEX-C329-KIPYATIT-03, RU-LEX-C329-KIPYATIT-04, RU-LEX-C329-KIPYATIT-05, RU-LEX-C330-SMESHIVAT-01, RU-LEX-C330-SMESHIVAT-02, RU-LEX-C330-SMESHIVAT-03, RU-LEX-C330-SMESHIVAT-04, RU-LEX-C330-SMESHIVAT-05, RU-LEX-C331-TESTO-01, RU-LEX-C331-TESTO-02, RU-LEX-C331-TESTO-03, RU-LEX-C331-TESTO-04, RU-LEX-C331-TESTO-05, RU-LEX-C332-ZAPEKAT-01, RU-LEX-C332-ZAPEKAT-02, RU-LEX-C332-ZAPEKAT-03, RU-LEX-C332-ZAPEKAT-04, RU-LEX-C332-ZAPEKAT-05, RU-LEX-C333-SOLIT-01, RU-LEX-C333-SOLIT-02, RU-LEX-C333-SOLIT-03, RU-LEX-C333-SOLIT-04, RU-LEX-C333-SOLIT-05, RU-LEX-C334-FARSH-01, RU-LEX-C334-FARSH-02, RU-LEX-C334-FARSH-03, RU-LEX-C334-FARSH-04, RU-LEX-C334-FARSH-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
+reviews_of: [RU-C327-arkheolog, RU-C327-raskopki, RU-C327-nakhodka, RU-C327-sokrovishche, RU-C327-klad, RU-C328-lomtik, RU-C328-kusochek, RU-C328-narezat, RU-C328-natirat, RU-C328-tyorka, RU-C329-kipyatit, RU-C329-kipet, RU-C329-otvarivat, RU-C329-kryshka, RU-C329-nakryvat, RU-C330-smeshivat, RU-C330-vzbivat, RU-C330-venchik, RU-C330-pomeshivat, RU-C330-polovnik, RU-C331-testo, RU-C331-mesit, RU-C331-raskatyvat, RU-C331-lepit, RU-C331-nachinka, RU-C332-zapekat, RU-C332-protiven, RU-C332-razogrevat, RU-C332-podgorat, RU-C332-obzharivat, RU-C333-solit, RU-C333-perchit, RU-C333-posypat, RU-C333-priprava, RU-C333-marinovat, RU-C334-farsh, RU-C334-farshirovat, RU-C334-protsezhivat, RU-C334-durshlag, RU-C334-sito]
+---
+
+# Words from chapters 327–334 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C327-KLAD-01, RU-LEX-C327-KLAD-02] -->
+
+[PAUSE 3s] Say the Russian for an archaeologist and a dig.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C327-KLAD-01, RU-LEX-C327-KLAD-02, RU-LEX-C327-KLAD-03, RU-LEX-C327-KLAD-04, RU-LEX-C327-KLAD-05, RU-LEX-C328-NAREZAT-01, RU-LEX-C328-NAREZAT-02, RU-LEX-C328-NAREZAT-03, RU-LEX-C328-NAREZAT-04, RU-LEX-C328-NAREZAT-05, RU-LEX-C329-KIPYATIT-01, RU-LEX-C329-KIPYATIT-02, RU-LEX-C329-KIPYATIT-03, RU-LEX-C329-KIPYATIT-04, RU-LEX-C329-KIPYATIT-05, RU-LEX-C330-SMESHIVAT-01, RU-LEX-C330-SMESHIVAT-02, RU-LEX-C330-SMESHIVAT-03, RU-LEX-C330-SMESHIVAT-04, RU-LEX-C330-SMESHIVAT-05, RU-LEX-C331-TESTO-01, RU-LEX-C331-TESTO-02, RU-LEX-C331-TESTO-03, RU-LEX-C331-TESTO-04, RU-LEX-C331-TESTO-05, RU-LEX-C332-ZAPEKAT-01, RU-LEX-C332-ZAPEKAT-02, RU-LEX-C332-ZAPEKAT-03, RU-LEX-C332-ZAPEKAT-04, RU-LEX-C332-ZAPEKAT-05, RU-LEX-C333-SOLIT-01, RU-LEX-C333-SOLIT-02, RU-LEX-C333-SOLIT-03, RU-LEX-C333-SOLIT-04, RU-LEX-C333-SOLIT-05, RU-LEX-C334-FARSH-01, RU-LEX-C334-FARSH-02, RU-LEX-C334-FARSH-03, RU-LEX-C334-FARSH-04, RU-LEX-C334-FARSH-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: an archaeologist, a dig, a find, a treasure, a buried treasure]
+- [YOU SAY: a slice, a little piece, to slice, to grate, a grater]
+- [YOU SAY: to bring to the boil, to boil, to cook in water, a lid, to cover]
+- [YOU SAY: to mix, to whisk, a whisk, to stir, a ladle]
+- [YOU SAY: dough, to knead, to roll out, to shape, a filling]
+- [YOU SAY: to bake, a baking tray, to heat up, to get burnt, to brown]
+- [YOU SAY: to salt, to pepper, to sprinkle, a seasoning, to marinate]
+- [YOU SAY: mince, to stuff, to strain, a colander, a sieve]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C327-KLAD-01, RU-LEX-C327-KLAD-02, RU-LEX-C327-KLAD-03, RU-LEX-C327-KLAD-04, RU-LEX-C327-KLAD-05, RU-LEX-C328-NAREZAT-01, RU-LEX-C328-NAREZAT-02, RU-LEX-C328-NAREZAT-03, RU-LEX-C328-NAREZAT-04, RU-LEX-C328-NAREZAT-05, RU-LEX-C329-KIPYATIT-01, RU-LEX-C329-KIPYATIT-02, RU-LEX-C329-KIPYATIT-03, RU-LEX-C329-KIPYATIT-04, RU-LEX-C329-KIPYATIT-05, RU-LEX-C330-SMESHIVAT-01, RU-LEX-C330-SMESHIVAT-02, RU-LEX-C330-SMESHIVAT-03, RU-LEX-C330-SMESHIVAT-04, RU-LEX-C330-SMESHIVAT-05, RU-LEX-C331-TESTO-01, RU-LEX-C331-TESTO-02, RU-LEX-C331-TESTO-03, RU-LEX-C331-TESTO-04, RU-LEX-C331-TESTO-05, RU-LEX-C332-ZAPEKAT-01, RU-LEX-C332-ZAPEKAT-02, RU-LEX-C332-ZAPEKAT-03, RU-LEX-C332-ZAPEKAT-04, RU-LEX-C332-ZAPEKAT-05, RU-LEX-C333-SOLIT-01, RU-LEX-C333-SOLIT-02, RU-LEX-C333-SOLIT-03, RU-LEX-C333-SOLIT-04, RU-LEX-C333-SOLIT-05, RU-LEX-C334-FARSH-01, RU-LEX-C334-FARSH-02, RU-LEX-C334-FARSH-03, RU-LEX-C334-FARSH-04, RU-LEX-C334-FARSH-05] -->
+
+[PAUSE 3s] An archaeologist? (**археолог**.) A dig? (**раскопки**.) A find? (**находка**.) A treasure? (**сокровище**.) A buried treasure? (**клад**.) A slice? (**ломтик**.) A little piece? (**кусочек**.) To slice? (**нарезать**.) To grate? (**натирать**.) A grater? (**тёрка**.) To bring to the boil? (**кипятить**.) To boil? (**кипеть**.) To cook in water? (**отваривать**.) A lid? (**крышка**.) To cover? (**накрывать**.) To mix? (**смешивать**.) To whisk? (**взбивать**.) A whisk? (**венчик**.) To stir? (**помешивать**.) A ladle? (**половник**.) Dough? (**тесто**.) To knead? (**месить**.) To roll out? (**раскатывать**.) To shape? (**лепить**.) A filling? (**начинка**.) To bake? (**запекать**.) A baking tray? (**противень**.) To heat up? (**разогревать**.) To get burnt? (**подгорать**.) To brown? (**обжаривать**.) To salt? (**солить**.) To pepper? (**перчить**.) To sprinkle? (**посыпать**.) A seasoning? (**приправа**.) To marinate? (**мариновать**.) Mince? (**фарш**.) To stuff? (**фаршировать**.) To strain? (**процеживать**.) A colander? (**дуршлаг**.) A sieve? (**сито**.)
+`;export{t};

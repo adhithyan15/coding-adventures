@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: RU-R466-review-459-466
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 26470
+chapter: 466
+type: review
+headword: (dialogue)
+gloss: a review of chapters 459-466
+concept_tag: REVIEW
+prerequisites: [RU-C459-pokhod, RU-C459-tropa, RU-C459-prival, RU-C459-karabkatsya, RU-C459-spotykatsya, RU-C460-ruchey, RU-C460-boloto, RU-C460-rodnik, RU-C460-prud, RU-C460-zhurchat, RU-C461-polyana, RU-C461-opushka, RU-C461-chashcha, RU-C461-mokh, RU-C461-shishka, RU-C462-palatka, RU-C462-spalnik, RU-C462-kostyor, RU-C462-razzhigat, RU-C462-tushit, RU-C463-priliv, RU-C463-otliv, RU-C463-bukhta, RU-C463-rakushka, RU-C463-nyryat, RU-C464-prognoz, RU-C464-sinoptik, RU-C464-osadki, RU-C464-pasmurnyy, RU-C464-proyasnyatsya, RU-C465-liven, RU-C465-morosit, RU-C465-promokat, RU-C465-luzha, RU-C465-lit, RU-C466-burya, RU-C466-uragan, RU-C466-poryv, RU-C466-gremet, RU-C466-sverkat]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [RU-LEX-C459-POKHOD-01, RU-LEX-C459-POKHOD-02, RU-LEX-C459-POKHOD-03, RU-LEX-C459-POKHOD-04, RU-LEX-C459-POKHOD-05, RU-LEX-C460-RUCHEY-01, RU-LEX-C460-RUCHEY-02, RU-LEX-C460-RUCHEY-03, RU-LEX-C460-RUCHEY-04, RU-LEX-C460-RUCHEY-05, RU-LEX-C461-POLYANA-01, RU-LEX-C461-POLYANA-02, RU-LEX-C461-POLYANA-03, RU-LEX-C461-POLYANA-04, RU-LEX-C461-POLYANA-05, RU-LEX-C462-KOSTYOR-01, RU-LEX-C462-KOSTYOR-02, RU-LEX-C462-KOSTYOR-03, RU-LEX-C462-KOSTYOR-04, RU-LEX-C462-KOSTYOR-05, RU-LEX-C463-PRILIV-01, RU-LEX-C463-PRILIV-02, RU-LEX-C463-PRILIV-03, RU-LEX-C463-PRILIV-04, RU-LEX-C463-PRILIV-05, RU-LEX-C464-PROGNOZ-01, RU-LEX-C464-PROGNOZ-02, RU-LEX-C464-PROGNOZ-03, RU-LEX-C464-PROGNOZ-04, RU-LEX-C464-PROGNOZ-05, RU-LEX-C465-LIVEN-01, RU-LEX-C465-LIVEN-02, RU-LEX-C465-LIVEN-03, RU-LEX-C465-LIVEN-04, RU-LEX-C465-LIVEN-05, RU-LEX-C466-BURYA-01, RU-LEX-C466-BURYA-02, RU-LEX-C466-BURYA-03, RU-LEX-C466-BURYA-04, RU-LEX-C466-BURYA-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [RU-LEX-C459-POKHOD-01, RU-LEX-C459-POKHOD-02, RU-LEX-C459-POKHOD-03, RU-LEX-C459-POKHOD-04, RU-LEX-C459-POKHOD-05, RU-LEX-C460-RUCHEY-01, RU-LEX-C460-RUCHEY-02, RU-LEX-C460-RUCHEY-03, RU-LEX-C460-RUCHEY-04, RU-LEX-C460-RUCHEY-05, RU-LEX-C461-POLYANA-01, RU-LEX-C461-POLYANA-02, RU-LEX-C461-POLYANA-03, RU-LEX-C461-POLYANA-04, RU-LEX-C461-POLYANA-05, RU-LEX-C462-KOSTYOR-01, RU-LEX-C462-KOSTYOR-02, RU-LEX-C462-KOSTYOR-03, RU-LEX-C462-KOSTYOR-04, RU-LEX-C462-KOSTYOR-05, RU-LEX-C463-PRILIV-01, RU-LEX-C463-PRILIV-02, RU-LEX-C463-PRILIV-03, RU-LEX-C463-PRILIV-04, RU-LEX-C463-PRILIV-05, RU-LEX-C464-PROGNOZ-01, RU-LEX-C464-PROGNOZ-02, RU-LEX-C464-PROGNOZ-03, RU-LEX-C464-PROGNOZ-04, RU-LEX-C464-PROGNOZ-05, RU-LEX-C465-LIVEN-01, RU-LEX-C465-LIVEN-02, RU-LEX-C465-LIVEN-03, RU-LEX-C465-LIVEN-04, RU-LEX-C465-LIVEN-05, RU-LEX-C466-BURYA-01, RU-LEX-C466-BURYA-02, RU-LEX-C466-BURYA-03, RU-LEX-C466-BURYA-04, RU-LEX-C466-BURYA-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
+reviews_of: [RU-C459-pokhod, RU-C459-tropa, RU-C459-prival, RU-C459-karabkatsya, RU-C459-spotykatsya, RU-C460-ruchey, RU-C460-boloto, RU-C460-rodnik, RU-C460-prud, RU-C460-zhurchat, RU-C461-polyana, RU-C461-opushka, RU-C461-chashcha, RU-C461-mokh, RU-C461-shishka, RU-C462-palatka, RU-C462-spalnik, RU-C462-kostyor, RU-C462-razzhigat, RU-C462-tushit, RU-C463-priliv, RU-C463-otliv, RU-C463-bukhta, RU-C463-rakushka, RU-C463-nyryat, RU-C464-prognoz, RU-C464-sinoptik, RU-C464-osadki, RU-C464-pasmurnyy, RU-C464-proyasnyatsya, RU-C465-liven, RU-C465-morosit, RU-C465-promokat, RU-C465-luzha, RU-C465-lit, RU-C466-burya, RU-C466-uragan, RU-C466-poryv, RU-C466-gremet, RU-C466-sverkat]
+---
+
+# Words from chapters 459–466 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C459-POKHOD-01, RU-LEX-C459-POKHOD-02] -->
+
+[PAUSE 3s] Say the Russian for a hike and a path.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C459-POKHOD-01, RU-LEX-C459-POKHOD-02, RU-LEX-C459-POKHOD-03, RU-LEX-C459-POKHOD-04, RU-LEX-C459-POKHOD-05, RU-LEX-C460-RUCHEY-01, RU-LEX-C460-RUCHEY-02, RU-LEX-C460-RUCHEY-03, RU-LEX-C460-RUCHEY-04, RU-LEX-C460-RUCHEY-05, RU-LEX-C461-POLYANA-01, RU-LEX-C461-POLYANA-02, RU-LEX-C461-POLYANA-03, RU-LEX-C461-POLYANA-04, RU-LEX-C461-POLYANA-05, RU-LEX-C462-KOSTYOR-01, RU-LEX-C462-KOSTYOR-02, RU-LEX-C462-KOSTYOR-03, RU-LEX-C462-KOSTYOR-04, RU-LEX-C462-KOSTYOR-05, RU-LEX-C463-PRILIV-01, RU-LEX-C463-PRILIV-02, RU-LEX-C463-PRILIV-03, RU-LEX-C463-PRILIV-04, RU-LEX-C463-PRILIV-05, RU-LEX-C464-PROGNOZ-01, RU-LEX-C464-PROGNOZ-02, RU-LEX-C464-PROGNOZ-03, RU-LEX-C464-PROGNOZ-04, RU-LEX-C464-PROGNOZ-05, RU-LEX-C465-LIVEN-01, RU-LEX-C465-LIVEN-02, RU-LEX-C465-LIVEN-03, RU-LEX-C465-LIVEN-04, RU-LEX-C465-LIVEN-05, RU-LEX-C466-BURYA-01, RU-LEX-C466-BURYA-02, RU-LEX-C466-BURYA-03, RU-LEX-C466-BURYA-04, RU-LEX-C466-BURYA-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a hike, a path, a rest stop, to scramble, to stumble]
+- [YOU SAY: a stream, a swamp, a spring, a pond, to babble]
+- [YOU SAY: a clearing, the edge of a forest, a thicket, moss, a cone]
+- [YOU SAY: a tent, a sleeping bag, a campfire, to light, to put out]
+- [YOU SAY: a high tide, a low tide, a bay, a seashell, to dive]
+- [YOU SAY: a forecast, a weather forecaster, precipitation, overcast, to clear up]
+- [YOU SAY: a downpour, to drizzle, to get soaked, a puddle, to pour]
+- [YOU SAY: a storm, a hurricane, a gust, to rumble, to flash]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C459-POKHOD-01, RU-LEX-C459-POKHOD-02, RU-LEX-C459-POKHOD-03, RU-LEX-C459-POKHOD-04, RU-LEX-C459-POKHOD-05, RU-LEX-C460-RUCHEY-01, RU-LEX-C460-RUCHEY-02, RU-LEX-C460-RUCHEY-03, RU-LEX-C460-RUCHEY-04, RU-LEX-C460-RUCHEY-05, RU-LEX-C461-POLYANA-01, RU-LEX-C461-POLYANA-02, RU-LEX-C461-POLYANA-03, RU-LEX-C461-POLYANA-04, RU-LEX-C461-POLYANA-05, RU-LEX-C462-KOSTYOR-01, RU-LEX-C462-KOSTYOR-02, RU-LEX-C462-KOSTYOR-03, RU-LEX-C462-KOSTYOR-04, RU-LEX-C462-KOSTYOR-05, RU-LEX-C463-PRILIV-01, RU-LEX-C463-PRILIV-02, RU-LEX-C463-PRILIV-03, RU-LEX-C463-PRILIV-04, RU-LEX-C463-PRILIV-05, RU-LEX-C464-PROGNOZ-01, RU-LEX-C464-PROGNOZ-02, RU-LEX-C464-PROGNOZ-03, RU-LEX-C464-PROGNOZ-04, RU-LEX-C464-PROGNOZ-05, RU-LEX-C465-LIVEN-01, RU-LEX-C465-LIVEN-02, RU-LEX-C465-LIVEN-03, RU-LEX-C465-LIVEN-04, RU-LEX-C465-LIVEN-05, RU-LEX-C466-BURYA-01, RU-LEX-C466-BURYA-02, RU-LEX-C466-BURYA-03, RU-LEX-C466-BURYA-04, RU-LEX-C466-BURYA-05] -->
+
+[PAUSE 3s] A hike? (**поход**.) A path? (**тропа**.) A rest stop? (**привал**.) To scramble? (**карабкаться**.) To stumble? (**спотыкаться**.) A stream? (**ручей**.) A swamp? (**болото**.) A spring? (**родник**.) A pond? (**пруд**.) To babble? (**журчать**.) A clearing? (**поляна**.) The edge of a forest? (**опушка**.) A thicket? (**чаща**.) Moss? (**мох**.) A cone? (**шишка**.) A tent? (**палатка**.) A sleeping bag? (**спальник**.) A campfire? (**костёр**.) To light? (**разжигать**.) To put out? (**тушить**.) A high tide? (**прилив**.) A low tide? (**отлив**.) A bay? (**бухта**.) A seashell? (**ракушка**.) To dive? (**нырять**.) A forecast? (**прогноз**.) A weather forecaster? (**синоптик**.) Precipitation? (**осадки**.) Overcast? (**пасмурный**.) To clear up? (**проясняться**.) A downpour? (**ливень**.) To drizzle? (**моросить**.) To get soaked? (**промокать**.) A puddle? (**лужа**.) To pour? (**лить**.) A storm? (**буря**.) A hurricane? (**ураган**.) A gust? (**порыв**.) To rumble? (**греметь**.) To flash? (**сверкать**.)
+`;export{t};
