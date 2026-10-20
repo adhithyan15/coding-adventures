@@ -3,7 +3,7 @@
     "id": "MR-A1M20-timed-message",
     "language": "marathi",
     "chapter": 24,
-    "sequence": 15922,
+    "sequence": 1059,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:7e19b7378c321264",
+    "sourceHash": "fnv1a64:8ef1d660e1c18f3e",
     "detachableSegments": [
       "Writing — full task timer"
     ],

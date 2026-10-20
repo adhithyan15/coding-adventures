@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "A Message for Mira",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:653ef2162ed5dba4",
+  "sourceHash": "fnv1a64:8c031e608e673bda",
   "lessons": [
     {
       "id": "MR-A1M01-reader-greeting",
@@ -1498,7 +1498,7 @@
     },
     {
       "id": "MR-A1M19-partial-timer",
-      "sequence": 15921,
+      "sequence": 1058,
       "title": "Give the message its first gentle timer",
       "headword": "partial-timer named-reader message",
       "romanization": "",
@@ -1510,7 +1510,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:466ce729a6456ebf",
+      "sourceHash": "fnv1a64:ab1d580fe0b5d7ab",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1580,7 +1580,7 @@
               "kind": "activity",
               "scored": true,
               "spoken": false,
-              "id": "MR-A1M19-separate-repair",
+              "id": "MR-A1M19-partial-timer-separate-repair",
               "prompt": "After scoring, on a separate line repair only the spelling in उदय भेटू.",
               "assesses": [
                 "MR-A1-MESSAGE-LINE-SEE-TOMORROW"
@@ -1600,7 +1600,7 @@
     },
     {
       "id": "MR-A1M20-timed-message",
-      "sequence": 15922,
+      "sequence": 1059,
       "title": "A full message to Mira under a timer",
       "headword": "timed named-reader message",
       "romanization": "",
@@ -1612,7 +1612,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:7e19b7378c321264",
+      "sourceHash": "fnv1a64:8ef1d660e1c18f3e",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1688,7 +1688,7 @@
               "kind": "activity",
               "scored": true,
               "spoken": false,
-              "id": "MR-A1M20-separate-repair",
+              "id": "MR-A1M20-timed-message-separate-repair",
               "prompt": "After scoring, on a separate line restore the missing subject in मराठी वाचतो.",
               "assesses": [
                 "MR-A1-MESSAGE-LINE-READ-MARATHI"

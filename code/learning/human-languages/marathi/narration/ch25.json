@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "A Six-Field Profile",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0a2b80fa9c847772",
+  "sourceHash": "fnv1a64:cc9ec73cd1cd3d55",
   "lessons": [
     {
       "id": "MR-A1F04-first-three-select",
@@ -849,7 +849,7 @@
     },
     {
       "id": "MR-A1F14-partial-timer",
-      "sequence": 15923,
+      "sequence": 1070,
       "title": "Give the form its first gentle timer",
       "headword": "partial-timer practical form",
       "romanization": "",
@@ -862,7 +862,7 @@
         "writing-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:8fdd5a615725987e",
+      "sourceHash": "fnv1a64:a8a6cab3cda1b508",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -894,7 +894,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Set a 60-second partial timer. Fill just these three fields in Marathi Devanagari. Stop at the bell; keep the first attempt. The six-field form follows next lesson."
+              "text": "Set a 60-second partial timer. Fill only these three fields in Marathi Devanagari. Stop at the bell; keep the first attempt. The six-field form follows next lesson."
             }
           ]
         },
@@ -931,7 +931,7 @@
               "kind": "activity",
               "scored": true,
               "spoken": false,
-              "id": "MR-A1F14-separate-repair",
+              "id": "MR-A1F14-partial-timer-separate-repair",
               "prompt": "After scoring, on a separate line repair the misplaced city value in शहर: मराठी for this profile.",
               "assesses": [
                 "MR-A1-FORM-LABEL-SHAHAR"
@@ -951,7 +951,7 @@
     },
     {
       "id": "MR-A1F15-timed-form",
-      "sequence": 15924,
+      "sequence": 1071,
       "title": "A full practical form under a timer",
       "headword": "timed six-field practical form",
       "romanization": "",
@@ -963,7 +963,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:2520e0612d949644",
+      "sourceHash": "fnv1a64:4e18a1edbdb1f52a",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -982,7 +982,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Profile C means: name Arun; city Pune; language Marathi; favorite drink milk; favorite activity writing; friend Mira. Use the six printed Marathi labels from the earlier form. There is no value bank or completed model."
+              "text": "Profile C gives these meanings: name Arun; city Pune; language Marathi; favorite drink milk; favorite activity writing; friend Mira. Use the six printed Marathi labels from the earlier form. There is no value bank or completed model."
             }
           ]
         },
@@ -1036,7 +1036,7 @@
               "kind": "activity",
               "scored": true,
               "spoken": false,
-              "id": "MR-A1F15-separate-repair",
+              "id": "MR-A1F15-timed-form-separate-repair",
               "prompt": "After scoring, on a separate line repair the wrong friend value in मित्राचे नाव: अरुण for Profile C.",
               "assesses": [
                 "MR-A1-FORM-LABEL-MITRACHE-NAAV"

@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: MR-A1M20-timed-message
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 15922
+sequence: 1059
 delivery: script
 chapter: 24
 type: writing
@@ -49,7 +49,7 @@ at the bell and preserve the first attempt before checking it.
 ## Wrap-up recall — score, then repair
 <!-- hl-knowledge: introduces=[]; assesses=[MR-A1-MESSAGE-LINE-GREETING, MR-A1-MESSAGE-LINE-NAME, MR-A1-MESSAGE-LINE-MEETING, MR-A1-MESSAGE-LINE-KNOW-MARATHI, MR-A1-MESSAGE-LINE-READ-MARATHI, MR-A1-MESSAGE-LINE-WRITE-NAME, MR-A1-MESSAGE-LINE-SPEAK, MR-A1-MESSAGE-LINE-THINK, MR-A1-MESSAGE-LINE-UNDERSTAND-MARATHI, MR-A1-MESSAGE-LINE-THANKS, MR-A1-MESSAGE-LINE-SEE-AGAIN, MR-A1-MESSAGE-LINE-SEE-TOMORROW] -->
 <!-- hl-activity: {"id":"MR-A1M20-timed-message-check","kind":"text","assesses":["MR-A1-MESSAGE-LINE-GREETING","MR-A1-MESSAGE-LINE-NAME","MR-A1-MESSAGE-LINE-MEETING","MR-A1-MESSAGE-LINE-KNOW-MARATHI","MR-A1-MESSAGE-LINE-READ-MARATHI","MR-A1-MESSAGE-LINE-WRITE-NAME","MR-A1-MESSAGE-LINE-SPEAK","MR-A1-MESSAGE-LINE-THINK","MR-A1-MESSAGE-LINE-UNDERSTAND-MARATHI","MR-A1-MESSAGE-LINE-THANKS","MR-A1-MESSAGE-LINE-SEE-AGAIN","MR-A1-MESSAGE-LINE-SEE-TOMORROW"],"prompt":"In 180 seconds write a 30-40-word message to Mira introducing Arun, six practised Marathi skills, thanks and tomorrow's meeting; stop at the bell.","answer":"नमस्कार मीरा. माझं नाव अरुण आहे. भेटून आनंद झाला. मला मराठी येते. मी मराठी वाचतो. मी माझं नाव लिहितो. मी बोलतो. मी विचार करतो. मला मराठी समजते. धन्यवाद. पुन्हा भेटू. उद्या भेटू.","accepted":[],"feedback":{"correct":"Preserve the timed first attempt and count its 30-40 words.","incorrect":"Preserve the timed first attempt; score before viewing any model."},"response_seconds":180} -->
-<!-- hl-activity: {"id":"MR-A1M20-separate-repair","kind":"text","assesses":["MR-A1-MESSAGE-LINE-READ-MARATHI"],"prompt":"After scoring, on a separate line restore the missing subject in मराठी वाचतो.","answer":"मी मराठी वाचतो.","accepted":[],"feedback":{"correct":"This Marathi-control repair is separate from the stopped message attempt.","incorrect":"Add only the missing subject; keep the timed first attempt unchanged."},"response_seconds":15} -->
+<!-- hl-activity: {"id":"MR-A1M20-timed-message-separate-repair","kind":"text","assesses":["MR-A1-MESSAGE-LINE-READ-MARATHI"],"prompt":"After scoring, on a separate line restore the missing subject in मराठी वाचतो.","answer":"मी मराठी वाचतो.","accepted":[],"feedback":{"correct":"This Marathi-control repair is separate from the stopped message attempt.","incorrect":"Add only the missing subject; keep the timed first attempt unchanged."},"response_seconds":15} -->
 
 Score **task fulfilment** (named reader, purpose, 30–40 words),
 **organisation** (opening, skills, closing), **Marathi control** (the

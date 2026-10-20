@@ -3,7 +3,7 @@
     "id": "MR-A1F14-partial-timer",
     "language": "marathi",
     "chapter": 25,
-    "sequence": 15923,
+    "sequence": 1070,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -18,7 +18,7 @@
       "eyes-or-hands-step"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:8fdd5a615725987e",
+    "sourceHash": "fnv1a64:a8a6cab3cda1b508",
     "detachableSegments": [
       "Writing — generous partial timer"
     ],
