@@ -1,15 +1,17 @@
 //! package_compiles — smoke test for the mosaic-pkg-grid package.
 //!
-//! Asserts that the four-file shape of the package (manifest + three
-//! components, each with .mil / .mll / .msl) is internally consistent at
-//! the language-frontend layer:
+//! Asserts that the package (manifest + its components, each with .mil /
+//! .mll and, when it renders anything, a light and a dark .msl) is
+//! internally consistent at the language-frontend layer:
 //!
-//!   1. The manifest parses as TOML and declares the expected exports.
+//!   1. The manifest parses as TOML and exports exactly the interfaces in
+//!      `src/*.mil`; README.md's export table names exactly those exports.
 //!   2. Each <Component>.mil compiles via mosmodel_compiler::compile.
 //!   3. Each <Component>.mll compiles via moslayout_compiler::compile,
 //!      validated against the matching .mil interface descriptor.
-//!   4. Each <Component>.dark.msl compiles via mosstyle_compiler::compile,
-//!      validated against the matching .mll part map.
+//!   4. Each <Component>.{light,dark}.msl compiles via
+//!      mosstyle_compiler::compile, validated against the matching .mll
+//!      part map. A component ships both themes or neither.
 //!
 //! Expected v0.1.0 state — what passes and what is documented to fail
 //! ------------------------------------------------------------------
@@ -37,9 +39,8 @@
 use std::fs;
 use std::path::PathBuf;
 
-/// The list of exported components, in the order they appear in the
-/// manifest.  Used to drive the per-component compile loop.
-const COMPONENTS: &[&str] = &["Grid", "Cell", "Column", "RowHeaderGrid"];
+/// The two themes a styled component ships.
+const THEMES: &[&str] = &["light", "dark"];
 
 /// Path helpers — anchor everything to the package root (the directory
 /// containing this crate's Cargo.toml).  CARGO_MANIFEST_DIR is set by
@@ -51,6 +52,48 @@ fn package_root() -> PathBuf {
 
 fn src_path(name: &str) -> PathBuf {
     package_root().join("src").join(name)
+}
+
+/// The exported components, read from `mosaic-package.toml`'s
+/// `[components].exports`. The manifest is the one list: this test used to
+/// keep its own copy, which is how `RowHeaderGrid`'s stylesheets came to be
+/// exported without ever being compiled here. The manifest is checked
+/// against the files on disk instead (`manifest_declares_expected_exports`)
+/// and against the README (`readme_describes_every_export`).
+fn exported_components() -> Vec<String> {
+    let manifest_src = fs::read_to_string(package_root().join("mosaic-package.toml"))
+        .expect("manifest mosaic-package.toml must exist at the package root");
+    let value: toml::Value =
+        toml::from_str(&manifest_src).expect("mosaic-package.toml must parse as valid TOML");
+    value
+        .get("components")
+        .and_then(|c| c.get("exports"))
+        .and_then(|e| e.as_array())
+        .expect("[components].exports must be an array")
+        .iter()
+        .map(|v| {
+            v.as_str()
+                .expect("[components].exports entries must be strings")
+                .to_string()
+        })
+        .collect()
+}
+
+/// The component interfaces that exist in `src/`, by file stem, sorted.
+fn source_components() -> Vec<String> {
+    let mut names: Vec<String> = fs::read_dir(package_root().join("src"))
+        .expect("src/ must be readable")
+        .map(|entry| entry.expect("src/ entry must be readable").path())
+        .filter(|path| path.extension().and_then(|e| e.to_str()) == Some("mil"))
+        .map(|path| {
+            path.file_stem()
+                .and_then(|s| s.to_str())
+                .expect("a .mil file name must be UTF-8")
+                .to_string()
+        })
+        .collect();
+    names.sort();
+    names
 }
 
 fn read_source(name: &str) -> String {
@@ -94,17 +137,16 @@ fn manifest_declares_expected_exports() {
         .expect("[package].version must be set");
     assert_eq!(version, "0.3.0", "[package].version must be 0.3.0: Column's `column-key`/`column-width` and Cell's `row-height` slots");
 
-    // [components].exports
-    let exports = value
-        .get("components")
-        .and_then(|c| c.get("exports"))
-        .and_then(|e| e.as_array())
-        .expect("[components].exports must be an array");
-    let export_names: Vec<&str> = exports.iter().filter_map(|v| v.as_str()).collect();
+    // [components].exports names exactly the interfaces in src/: an
+    // unexported .mil is dead source, and an export with no .mil fails
+    // every consumer. Sorted, because the manifest's order is the
+    // author's, not part of the contract.
+    let mut export_names = exported_components();
+    export_names.sort();
     assert_eq!(
         export_names,
-        vec!["Grid", "Cell", "Column", "RowHeaderGrid"],
-        "[components].exports must list Grid, Cell, Column and RowHeaderGrid in that order"
+        source_components(),
+        "[components].exports must name exactly the src/*.mil interfaces"
     );
 
     // [kernel].version
@@ -124,7 +166,7 @@ fn manifest_declares_expected_exports() {
 /// onto the descriptor_json output to thread into the .mll compile step.
 #[test]
 fn each_mil_compiles() {
-    for component in COMPONENTS {
+    for component in &exported_components() {
         let src = read_source(&format!("{}.mil", component));
         let result = mosmodel_compiler::compile(&src);
         match result {
@@ -157,7 +199,7 @@ fn each_mil_compiles() {
 /// `HostTable` / `For` / `If` / `Cell`.
 #[test]
 fn each_mll_compiles_against_its_interface() {
-    for component in COMPONENTS {
+    for component in &exported_components() {
         let mil_src = read_source(&format!("{}.mil", component));
         let mil_out = mosmodel_compiler::compile(&mil_src)
             .unwrap_or_else(|e| panic!("{}.mil precompile failed: {:#?}", component, e));
@@ -184,19 +226,27 @@ fn each_mll_compiles_against_its_interface() {
 // 4. mosstyle — .msl compilation
 // ---------------------------------------------------------------------------
 
-/// Compiles each available `<Component>.dark.msl` against the part map
-/// produced by `<Component>.mll`.  Column ships no .msl (it has no
-/// visible output), so we only check Grid and Cell.
+/// Compiles every exported component's `<Component>.{light,dark}.msl`
+/// against the part map produced by `<Component>.mll`.
+///
+/// This used to compile `Grid.dark.msl` and `Cell.dark.msl` only, a list
+/// written when those were the package's only stylesheets. When the light
+/// theme and `RowHeaderGrid` arrived, four of the six stylesheets were
+/// never compiled by the package's own test. The loop now follows the
+/// manifest, and a component ships both themes or neither (Column renders
+/// nothing, so it ships none; `source_tree_has_expected_shape` pins that).
 #[test]
 fn each_msl_compiles_against_its_part_map() {
-    for component in ["Grid", "Cell"] {
-        let msl_filename = format!("{}.dark.msl", component);
-        let msl_path = src_path(&msl_filename);
+    for component in &exported_components() {
+        let present: Vec<&str> = THEMES
+            .iter()
+            .copied()
+            .filter(|theme| src_path(&format!("{component}.{theme}.msl")).exists())
+            .collect();
         assert!(
-            msl_path.exists(),
-            "{} must ship a dark-theme stylesheet at {}",
-            component,
-            msl_path.display()
+            present.is_empty() || present.len() == THEMES.len(),
+            "{component} ships {present:?} but not every theme in {THEMES:?}: a styled \
+             component must ship both, or a consumer of the missing theme renders unstyled"
         );
 
         // We need the part map produced by the .mll.  Compile the .mll
@@ -206,16 +256,43 @@ fn each_msl_compiles_against_its_part_map() {
         let mll_out = moslayout_compiler::compile(&mll_src, None)
             .unwrap_or_else(|e| panic!("{}.mll precompile failed: {:#?}", component, e));
 
-        let msl_src = read_source(&msl_filename);
-        let msl_result = mosstyle_compiler::compile(&msl_src, Some(&mll_out.part_map_json));
-
-        if let Err(errs) = msl_result {
-            panic!(
-                "{} failed to compile via mosstyle_compiler:\n{:#?}",
-                msl_filename, errs
-            );
+        for theme in present {
+            let msl_filename = format!("{component}.{theme}.msl");
+            let msl_src = read_source(&msl_filename);
+            if let Err(errs) = mosstyle_compiler::compile(&msl_src, Some(&mll_out.part_map_json)) {
+                panic!(
+                    "{} failed to compile via mosstyle_compiler:\n{:#?}",
+                    msl_filename, errs
+                );
+            }
         }
     }
+}
+
+/// README.md's export table is prose a person reads, so it cannot be
+/// generated, but it can be checked: its `| `Name` | … |` rows must name
+/// exactly the manifest's exports. It once said "Three components" and
+/// listed three, while the manifest exported four.
+#[test]
+fn readme_describes_every_export() {
+    let readme = fs::read_to_string(package_root().join("README.md"))
+        .expect("README.md must exist at the package root");
+    let section = readme
+        .split("\n## ")
+        .find(|s| s.starts_with("What this package exports"))
+        .expect("README.md must have a `## What this package exports` section");
+    let mut described: Vec<String> = section
+        .lines()
+        .filter_map(|line| line.strip_prefix("| `"))
+        .filter_map(|rest| rest.split_once('`').map(|(name, _)| name.to_string()))
+        .collect();
+    described.sort();
+    let mut exports = exported_components();
+    exports.sort();
+    assert_eq!(
+        described, exports,
+        "README.md's export table must name exactly [components].exports"
+    );
 }
 
 // ---------------------------------------------------------------------------
@@ -478,35 +555,43 @@ fn ui28_1_no_new_kernel_primitive_was_added() {
     }
 }
 
-/// Belt-and-suspenders check: every file the package promises is on disk.
+/// Every file in `src/` belongs to an export: `<Export>.mil`, `.mll`,
+/// `.{light,dark}.msl` or `.stories.json`, plus the crate's `lib.rs`. A
+/// stray file (a renamed component's old stylesheet, say) is source no
+/// build reads, so it fails here instead of drifting.
 #[test]
 fn source_tree_has_expected_shape() {
-    let expected = [
-        "Grid.mil",
-        "Grid.mll",
-        "Grid.dark.msl",
-        "Cell.mil",
-        "Cell.mll",
-        "Cell.dark.msl",
-        "Column.mil",
-        "Column.mll",
-    ];
-    for name in expected {
-        let path = src_path(name);
+    let exports = exported_components();
+    let entries = fs::read_dir(package_root().join("src")).expect("src/ must be readable");
+    for entry in entries {
+        let name = entry.expect("src/ entry must be readable").file_name();
+        let name = name.to_str().expect("a src/ file name must be UTF-8");
+        if name == "lib.rs" {
+            continue;
+        }
+        let (stem, suffix) = name.split_once('.').unwrap_or((name, ""));
         assert!(
-            path.exists(),
-            "expected package source file missing: {}",
-            path.display()
+            exports.iter().any(|e| e == stem)
+                && ["mil", "mll", "light.msl", "dark.msl", "stories.json"].contains(&suffix),
+            "src/{name} is not a source file of any export in {exports:?}"
         );
+    }
+    for component in &exports {
+        for ext in ["mil", "mll"] {
+            let path = src_path(&format!("{component}.{ext}"));
+            assert!(path.exists(), "expected package source file missing: {}", path.display());
+        }
     }
 
     // Column has no .msl on purpose — guard the negative case too.
-    let column_msl = src_path("Column.dark.msl");
-    assert!(
-        !column_msl.exists(),
-        "Column is metadata-only and must not ship a .msl ({} exists unexpectedly)",
-        column_msl.display()
-    );
+    for theme in THEMES {
+        let column_msl = src_path(&format!("Column.{theme}.msl"));
+        assert!(
+            !column_msl.exists(),
+            "Column is metadata-only and must not ship a .msl ({} exists unexpectedly)",
+            column_msl.display()
+        );
+    }
 }
 
 // ---------------------------------------------------------------------------
