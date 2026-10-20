@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+### Changed
+- LANG84 phase 2b: Perl's `releases.csv` now has the common LANG84 header
+  (`grammar_status` is the seventh of fourteen columns, and `perlhist_line` is
+  an extra). The reader already found columns by name. It now also refuses a
+  row whose field count differs from the header's, so a stray comma cannot
+  shift a later column without an error. New test
+  `release_inventory_reads_the_lang84_header`. Regenerating `perl` gives
+  byte-identical tables apart from the new date order of the release lists.
+
 ### Added
 - LANG84 phase 4a: inventory-driven, deduplicating versioned families.
   `generate-rust-compiled-grammars perl` reads the release list from

@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- LANG84 phase 2b: the tests read `releases.csv` by header name through the
+  new `inventory_rows` helper. The 18 per-release checks that matched a
+  `,partial` row ending now call `assert_partial_row`, which requires
+  `grammar_status=partial`, `grammar_stage=P` and
+  `grammar_subset=pl-decimal-print`. New `inventory_rows_use_the_lang84_header`
+  pins the 14 columns and checks that the compiled releases are exactly the
+  stage-P rows. Regenerated in the new date order, and the tables are
+  unchanged.
+
 - LANG84 phase 4b: regenerated for the new `perl5.38.0` partial pair
   (118 checked releases, 2 parser tables). New
   `perl_5_38_0_has_its_own_partial_pair_grounded_in_its_tag` checks the

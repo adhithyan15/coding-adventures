@@ -945,20 +945,29 @@ fn build_versioned_family_target(
 // LANG84 release inventories
 // ---------------------------------------------------------------------------
 //
-// A `releases.csv` looks like this (Perl's, abridged):
+// A `releases.csv` looks like this (Perl's, abridged; the URL cells are
+// shortened here):
 //
 // ```text
 // # provenance comment lines start with '#'
-// release,date,perlhist_line,grammar_status
-// 1.000,1987-Dec-18,78,partial
-// 1.001,1988-Jan-30,80,pending
+// release,date,channel,source_ref,source_sha,predecessor,grammar_status,grammar_stage,grammar_subset,iir_status,backend_status,profile,perlhist_line,lineage
+// 1.000,1987-12-18,final,https://…/tree/perl-1.0,8d063cd8…,,partial,P,pl-decimal-print,-,-,-,78,first
+// 1.001,1988-01-30,patch,https://…/perlhist.pod#L80,d97e2dc0…,1.000,pending,none,-,-,-,-,80,line
 // ```
+//
+// That is the common LANG84 header: twelve required columns, then the
+// language's extras (Perl keeps LANG82's `perlhist_line`). Perl's file had
+// the four-column LANG82 header `release,date,perlhist_line,grammar_status`
+// until LANG84 phase 2b migrated it.
 //
 // The generator needs two columns: `release` (the ID, which becomes both a
 // file name and a Rust string literal) and `grammar_status` (whether a pair
-// exists to compile). Columns are found by header NAME, never by position,
-// because LANG84 adds required columns to every inventory and a positional
-// reader would silently read the wrong one after that migration.
+// exists to compile). Columns are found by header NAME, never by position:
+// the 2b migration moved `grammar_status` from the fourth column to the
+// seventh, and a positional reader would have read `channel` instead. The
+// cells are split on bare commas (inventory cells never quote), so every row
+// must have exactly as many fields as the header -- a row with a stray comma
+// would otherwise shift every later column without any error.
 
 /// One inventory row, reduced to the two columns the generator reads.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -982,9 +991,9 @@ fn is_safe_release_id(release: &str) -> bool {
 
 /// Read a LANG84 `releases.csv`: skip leading `#` comment lines, locate the
 /// `release` and `grammar_status` columns by header name, and return every row
-/// in file (= canonical inventory) order. Fails on an absent column, a short
-/// row, an unsafe or duplicate ID, or a status outside `pending`, `partial`,
-/// `complete`.
+/// in file (= canonical inventory) order. Fails on an absent column, a row
+/// whose field count differs from the header's, an unsafe or duplicate ID, or
+/// a status outside `pending`, `partial`, `complete`.
 fn read_release_inventory(path: &Path) -> Result<Vec<InventoryRow>, String> {
     let text = std::fs::read_to_string(path)
         .map_err(|e| format!("Failed to read inventory '{}': {}", path.display(), e))?;
@@ -1014,10 +1023,14 @@ fn parse_release_inventory(text: &str) -> Result<Vec<InventoryRow>, String> {
     let mut rows = Vec::new();
     for line in lines {
         let fields: Vec<&str> = line.split(',').collect();
-        let (Some(release), Some(status)) = (fields.get(release_col), fields.get(status_col))
-        else {
-            return Err(format!("inventory row has too few columns: {line:?}"));
-        };
+        if fields.len() != header.len() {
+            return Err(format!(
+                "inventory row has {} fields, the header has {}: {line:?}",
+                fields.len(),
+                header.len()
+            ));
+        }
+        let (release, status) = (fields[release_col], fields[status_col]);
         let (release, status) = (release.trim(), status.trim());
         if !is_safe_release_id(release) {
             return Err(format!("unsafe release ID {release:?}"));
@@ -2125,6 +2138,28 @@ mod tests {
         );
     }
 
+    /// LANG84 phase 2b: Perl's inventory now has the common header, with
+    /// `grammar_status` seventh and LANG82's `perlhist_line` as an extra.
+    #[test]
+    fn release_inventory_reads_the_lang84_header() {
+        let csv = "# LANG84 release inventory: Perl\n\
+                   release,date,channel,source_ref,source_sha,predecessor,grammar_status,\
+                   grammar_stage,grammar_subset,iir_status,backend_status,profile,\
+                   perlhist_line,lineage\n\
+                   1.000,1987-12-18,final,https://x/perl-1.0,8d063cd8450e59ea1c611a2f4f5a21059a2804f1,\
+                   ,partial,P,pl-decimal-print,-,-,-,78,first\n\
+                   1.001,1988-01-30,patch,https://x/perlhist.pod#L80,\
+                   d97e2dc0ca5fcae83ac557cf21372672cd497510,1.000,pending,none,-,-,-,-,80,line\n";
+        let rows = parse_release_inventory(csv).unwrap();
+        assert_eq!(
+            rows,
+            vec![
+                InventoryRow { release: "1.000".into(), grammar_status: "partial".into() },
+                InventoryRow { release: "1.001".into(), grammar_status: "pending".into() },
+            ]
+        );
+    }
+
     #[test]
     fn release_inventory_refuses_bad_rows() {
         for (csv, why) in [
@@ -2135,7 +2170,8 @@ mod tests {
             ("release,grammar_status\n,partial\n", "unsafe"),
             ("release,grammar_status\n1.0,done\n", "grammar_status"),
             ("release,grammar_status\n1.0,partial\n1.0,pending\n", "duplicate"),
-            ("release,grammar_status\n1.0\n", "too few"),
+            ("release,grammar_status\n1.0\n", "1 fields, the header has 2"),
+            ("release,grammar_status\n1.0,partial,x\n", "3 fields, the header has 2"),
             ("release,grammar_status\n", "no release rows"),
             ("# only a comment\n", "no header"),
         ] {

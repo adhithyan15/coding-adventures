@@ -432,9 +432,11 @@ fn direct_ast_text_and_module_name_are_bounded() {
 /// on exists in that release's compiled grammar, and the subset corpus
 /// parses into exactly the shapes the compiler destructures.
 ///
-/// `iir_status` does not exist in Perl's `releases.csv` until the phase 2b
-/// schema migration, so "every release with a non-empty `iir_status`" is,
-/// for now, every checked (non-pending) release: all of them already lower
+/// Perl's `releases.csv` has had the `iir_status` column since the LANG84
+/// phase 2b migration, but every row is still `-`: the `pl-int-print`
+/// corpus and the `release_subsets` test that would prove stage I arrive in
+/// phase 4c. Until then "every release with a non-empty `iir_status`" is
+/// read as every checked (non-pending) release: all of them already lower
 /// the corpus (`every_supported_release_lowers_the_corpus_identically`).
 mod cst_contract {
     use super::*;

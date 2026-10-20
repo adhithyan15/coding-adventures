@@ -30,16 +30,9 @@ than trusted:
 
 Columns are always looked up by header NAME. A missing column is an error
 rather than a silent shift of every later field (lessons.d: "read the
-inventory header before grouping release statuses").
-
-LEGACY SCHEMA
-=============
-
-Perl's inventory predates LANG84 and still uses the LANG82 header
-`release,date,perlhist_line,grammar_status`. LANG84 phase 2b migrates it. Until
-then it is reported as skipped, and ONLY the directories listed in
-`LEGACY_SCHEMA` may be skipped: any other inventory with a missing column
-fails.
+inventory header before grouping release statuses"). Every inventory uses the
+common header; there is no legacy-schema exemption (Perl's LANG82 inventory
+was migrated in LANG84 phase 2b).
 
 RELEASES ARE NOT SEMANTIC VERSIONS
 ==================================
@@ -151,11 +144,6 @@ CHANNELS = {
 }
 STATUSES = {"pending", "partial", "complete"}
 STAGES = {"none", "G", "P"}
-
-# Directory -> why its inventory may keep a pre-LANG84 header for now.
-LEGACY_SCHEMA = {
-    "perl": "LANG82 header; LANG84 phase 2b migrates it to the common schema",
-}
 
 # Pair-file stem prefix per directory. LANG84: the prefix is the existing file
 # stem, and `ecmascript/` takes none because its IDs already start es/js.
@@ -727,9 +715,6 @@ def check_inventory(path: Path, matrix: list[dict[str, str]] | None = None) -> R
     missing = [column for column in REQUIRED if column not in header]
     directory = path.parent
     if missing:
-        if directory.name in LEGACY_SCHEMA:
-            report.notes.append(f"skipped: {LEGACY_SCHEMA[directory.name]}")
-            return report
         report.error(f"header is missing required column(s): {', '.join(missing)}")
         return report
     if header[: len(REQUIRED)] != REQUIRED:

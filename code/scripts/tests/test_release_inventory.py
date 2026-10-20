@@ -114,15 +114,14 @@ class InventoryTest(Fixture):
         columns[0], columns[1] = columns[1], columns[0]
         self.assert_error([",".join(columns)], "required columns must come first")
 
-    def test_legacy_schema_is_skipped_only_for_listed_directories(self) -> None:
+    def test_lang82_header_is_no_longer_exempt(self) -> None:
+        # Phase 2b migrated Perl; no directory may keep the LANG82 header.
+        self.assertFalse(hasattr(release_inventory, "LEGACY_SCHEMA"))
         legacy = [
             "release,date,perlhist_line,grammar_status",
             "1.000,1987-Dec-18,78,partial",
         ]
-        report = release_inventory.check_inventory(self.write("perl", legacy))
-        self.assertEqual(report.errors, [])
-        self.assertTrue(report.notes[0].startswith("skipped"))
-        self.assert_error(legacy, "missing required column(s)", directory="other")
+        self.assert_error(legacy, "missing required column(s)", directory="perl")
 
     # -- rows -----------------------------------------------------------------
 
@@ -293,9 +292,32 @@ class InventoryTest(Fixture):
         with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
             status = release_inventory.main(["check", "--matrix"])
         self.assertEqual(status, 0, err.getvalue())
-        for name in ("ruby", "python", "ecmascript"):
+        for name in ("ruby", "python", "ecmascript", "perl"):
             self.assertIn(f"{name}/releases.csv: ok", out.getvalue())
             self.assertIn(f"{name}/releases.csv: matrix:", out.getvalue())
+        self.assertNotIn("skipped", out.getvalue())
+
+    def test_repository_perl_inventory_is_migrated(self) -> None:
+        # LANG84 phase 2b: the mechanical fill of the new columns.
+        path = release_inventory.GRAMMARS / "perl" / "releases.csv"
+        _comments, header, rows = release_inventory.read_inventory(path)
+        self.assertEqual(header[:12], release_inventory.REQUIRED)
+        self.assertEqual(header[12:], ["perlhist_line", "lineage"])
+        self.assertEqual(len(rows), 776)
+        by_id = {r["release"]: r for r in rows}
+        for r in rows:
+            if r["grammar_status"] == "partial":
+                self.assertEqual(r["grammar_stage"], "P", r["release"])
+                self.assertEqual(r["grammar_subset"], "pl-decimal-print")
+            else:
+                self.assertEqual(r["grammar_status"], "pending", r["release"])
+                self.assertEqual(r["grammar_stage"], "none", r["release"])
+        self.assertEqual(rows[0]["release"], "1.000")
+        self.assertEqual(by_id["5.38.0"]["grammar_status"], "partial")
+        self.assertEqual(by_id["5.000alpha4"]["date"], "1993")
+        self.assertEqual(by_id["5.000gamma"]["date"], "1994-10-13?")
+        self.assertEqual(by_id["5.8.0"]["predecessor"], "5.8.0-RC3")
+        self.assertEqual(by_id["5.005"]["lineage"], "branch-point")
 
 
 class SubsetsTest(Fixture):

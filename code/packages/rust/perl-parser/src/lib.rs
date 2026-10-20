@@ -55,24 +55,92 @@ mod tests {
         token_grammar::parse_token_grammar,
     };
     use lexer::grammar_lexer::GrammarLexer;
-    use std::collections::HashSet;
+    use std::collections::{HashMap, HashSet};
     use std::path::Path;
+
+    /// `code/grammars/perl/releases.csv` read by header NAME, one map per
+    /// row from column to cell. Since LANG84 phase 2b the inventory has the
+    /// common header plus `perlhist_line` and `lineage`, so no test may read
+    /// a column by position or match a row by its ending (lesson: "read the
+    /// inventory header before grouping release statuses"). Every row must
+    /// have exactly the header's field count, so a shifted row cannot pass as
+    /// another column.
+    fn inventory_rows() -> Vec<HashMap<String, String>> {
+        let directory = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/perl");
+        let text = std::fs::read_to_string(directory.join("releases.csv")).unwrap();
+        let mut lines = text.lines().filter(|line| !line.starts_with('#'));
+        let header: Vec<&str> = lines.next().expect("inventory header").split(',').collect();
+        lines
+            .map(|line| {
+                let fields: Vec<&str> = line.split(',').collect();
+                assert_eq!(
+                    fields.len(),
+                    header.len(),
+                    "malformed Perl release row: {line}"
+                );
+                header
+                    .iter()
+                    .zip(fields)
+                    .map(|(column, cell)| (column.to_string(), cell.to_string()))
+                    .collect()
+            })
+            .collect()
+    }
+
+    /// A LANG82 `partial` row as LANG84 phase 2b migrated it: status
+    /// `partial`, measured stage `P`, covering the `pl-decimal-print` subset.
+    fn assert_partial_row(release: &str) {
+        let rows = inventory_rows();
+        let row = rows
+            .iter()
+            .find(|row| row["release"] == release)
+            .unwrap_or_else(|| panic!("{release}: no inventory row"));
+        assert_eq!(row["grammar_status"], "partial", "{release}");
+        assert_eq!(row["grammar_stage"], "P", "{release}");
+        assert_eq!(row["grammar_subset"], "pl-decimal-print", "{release}");
+    }
+
+    #[test]
+    fn inventory_rows_use_the_lang84_header() {
+        let rows = inventory_rows();
+        let columns: HashSet<&str> = rows[0].keys().map(String::as_str).collect();
+        for column in [
+            "release",
+            "date",
+            "channel",
+            "source_ref",
+            "source_sha",
+            "predecessor",
+            "grammar_status",
+            "grammar_stage",
+            "grammar_subset",
+            "iir_status",
+            "backend_status",
+            "profile",
+            "perlhist_line",
+            "lineage",
+        ] {
+            assert!(columns.contains(column), "missing column {column}");
+        }
+        assert_eq!(columns.len(), 14);
+        // Every compiled release is a migrated partial row, and only those.
+        for row in &rows {
+            let compiled = SUPPORTED_RELEASES.contains(&row["release"].as_str());
+            assert_eq!(compiled, row["grammar_stage"] == "P", "{}", row["release"]);
+        }
+        for release in SUPPORTED_RELEASES {
+            assert_partial_row(release);
+        }
+    }
 
     #[test]
     fn every_inventoried_pair_is_valid_and_parses_a_small_program() {
         let directory = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/perl");
-        let inventory = std::fs::read_to_string(directory.join("releases.csv")).unwrap();
         let mut checked = 0;
         let mut releases = HashSet::new();
-        for row in inventory
-            .lines()
-            .filter(|row| !row.starts_with('#'))
-            .skip(1)
-        {
-            let fields: Vec<_> = row.split(',').collect();
-            let [release, _, _, status] = fields.as_slice() else {
-                panic!("malformed Perl release row: {row}");
-            };
+        let rows = inventory_rows();
+        for row in &rows {
+            let (release, status) = (&row["release"].as_str(), &row["grammar_status"].as_str());
             assert!(
                 (release.starts_with(|character: char| character.is_ascii_digit())
                     || matches!(*release, "p54rc1" | "p54rc2"))
@@ -89,7 +157,7 @@ mod tests {
             );
             assert!(
                 matches!(*status, "pending" | "partial" | "complete"),
-                "{row}"
+                "{release}: {status}"
             );
             if *status == "pending" {
                 continue;
@@ -554,10 +622,7 @@ mod tests {
     #[test]
     fn perl_5_004_55_has_its_own_partial_pair() {
         let directory = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/perl");
-        let inventory = std::fs::read_to_string(directory.join("releases.csv")).unwrap();
-        assert!(inventory
-            .lines()
-            .any(|row| row.starts_with("5.004_55,") && row.ends_with(",partial")));
+        assert_partial_row("5.004_55");
         assert!(directory.join("perl5.004_55.tokens").is_file());
         assert!(directory.join("perl5.004_55.grammar").is_file());
     }
@@ -565,14 +630,8 @@ mod tests {
     #[test]
     fn perl_5_004_56_and_57_have_distinct_partial_pairs() {
         let directory = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/perl");
-        let inventory = std::fs::read_to_string(directory.join("releases.csv")).unwrap();
         for release in ["5.004_56", "5.004_57"] {
-            assert!(
-                inventory
-                    .lines()
-                    .any(|row| row.starts_with(&format!("{release},")) && row.ends_with(",partial")),
-                "{release}: expected partial inventory row"
-            );
+            assert_partial_row(release);
             assert!(directory.join(format!("perl{release}.tokens")).is_file());
             assert!(directory.join(format!("perl{release}.grammar")).is_file());
         }
@@ -581,10 +640,7 @@ mod tests {
     #[test]
     fn perl_5_004_58_has_its_own_partial_pair() {
         let directory = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/perl");
-        let inventory = std::fs::read_to_string(directory.join("releases.csv")).unwrap();
-        assert!(inventory
-            .lines()
-            .any(|row| row.starts_with("5.004_58,") && row.ends_with(",partial")));
+        assert_partial_row("5.004_58");
         assert!(directory.join("perl5.004_58.tokens").is_file());
         assert!(directory.join("perl5.004_58.grammar").is_file());
     }
@@ -592,10 +648,7 @@ mod tests {
     #[test]
     fn perl_5_004_59_has_its_own_partial_pair() {
         let directory = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/perl");
-        let inventory = std::fs::read_to_string(directory.join("releases.csv")).unwrap();
-        assert!(inventory
-            .lines()
-            .any(|row| row.starts_with("5.004_59,") && row.ends_with(",partial")));
+        assert_partial_row("5.004_59");
         assert!(directory.join("perl5.004_59.tokens").is_file());
         assert!(directory.join("perl5.004_59.grammar").is_file());
     }
@@ -603,10 +656,7 @@ mod tests {
     #[test]
     fn perl_5_004_60_has_its_own_partial_pair() {
         let directory = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/perl");
-        let inventory = std::fs::read_to_string(directory.join("releases.csv")).unwrap();
-        assert!(inventory
-            .lines()
-            .any(|row| row.starts_with("5.004_60,") && row.ends_with(",partial")));
+        assert_partial_row("5.004_60");
         assert!(directory.join("perl5.004_60.tokens").is_file());
         assert!(directory.join("perl5.004_60.grammar").is_file());
     }
@@ -614,10 +664,7 @@ mod tests {
     #[test]
     fn perl_5_004_61_has_its_own_partial_pair() {
         let directory = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/perl");
-        let inventory = std::fs::read_to_string(directory.join("releases.csv")).unwrap();
-        assert!(inventory
-            .lines()
-            .any(|row| row.starts_with("5.004_61,") && row.ends_with(",partial")));
+        assert_partial_row("5.004_61");
         assert!(directory.join("perl5.004_61.tokens").is_file());
         assert!(directory.join("perl5.004_61.grammar").is_file());
     }
@@ -625,10 +672,7 @@ mod tests {
     #[test]
     fn perl_5_004_62_has_its_own_partial_pair() {
         let directory = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/perl");
-        let inventory = std::fs::read_to_string(directory.join("releases.csv")).unwrap();
-        assert!(inventory
-            .lines()
-            .any(|row| row.starts_with("5.004_62,") && row.ends_with(",partial")));
+        assert_partial_row("5.004_62");
         assert!(directory.join("perl5.004_62.tokens").is_file());
         assert!(directory.join("perl5.004_62.grammar").is_file());
     }
@@ -636,10 +680,7 @@ mod tests {
     #[test]
     fn perl_5_004_63_has_its_own_partial_pair() {
         let directory = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/perl");
-        let inventory = std::fs::read_to_string(directory.join("releases.csv")).unwrap();
-        assert!(inventory
-            .lines()
-            .any(|row| row.starts_with("5.004_63,") && row.ends_with(",partial")));
+        assert_partial_row("5.004_63");
         assert!(directory.join("perl5.004_63.tokens").is_file());
         assert!(directory.join("perl5.004_63.grammar").is_file());
     }
@@ -647,10 +688,7 @@ mod tests {
     #[test]
     fn perl_5_004_64_has_its_own_partial_pair() {
         let directory = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/perl");
-        let inventory = std::fs::read_to_string(directory.join("releases.csv")).unwrap();
-        assert!(inventory
-            .lines()
-            .any(|row| row.starts_with("5.004_64,") && row.ends_with(",partial")));
+        assert_partial_row("5.004_64");
         assert!(directory.join("perl5.004_64.tokens").is_file());
         assert!(directory.join("perl5.004_64.grammar").is_file());
     }
@@ -658,10 +696,7 @@ mod tests {
     #[test]
     fn perl_5_004_65_has_its_own_partial_pair() {
         let directory = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/perl");
-        let inventory = std::fs::read_to_string(directory.join("releases.csv")).unwrap();
-        assert!(inventory
-            .lines()
-            .any(|row| row.starts_with("5.004_65,") && row.ends_with(",partial")));
+        assert_partial_row("5.004_65");
         assert!(directory.join("perl5.004_65.tokens").is_file());
         assert!(directory.join("perl5.004_65.grammar").is_file());
     }
@@ -669,10 +704,7 @@ mod tests {
     #[test]
     fn perl_5_004_66_has_its_own_partial_pair() {
         let directory = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/perl");
-        let inventory = std::fs::read_to_string(directory.join("releases.csv")).unwrap();
-        assert!(inventory
-            .lines()
-            .any(|row| row.starts_with("5.004_66,") && row.ends_with(",partial")));
+        assert_partial_row("5.004_66");
         assert!(directory.join("perl5.004_66.tokens").is_file());
         assert!(directory.join("perl5.004_66.grammar").is_file());
     }
@@ -680,10 +712,7 @@ mod tests {
     #[test]
     fn perl_5_004_67_has_its_own_partial_pair() {
         let directory = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/perl");
-        let inventory = std::fs::read_to_string(directory.join("releases.csv")).unwrap();
-        assert!(inventory
-            .lines()
-            .any(|row| row.starts_with("5.004_67,") && row.ends_with(",partial")));
+        assert_partial_row("5.004_67");
         assert!(directory.join("perl5.004_67.tokens").is_file());
         assert!(directory.join("perl5.004_67.grammar").is_file());
     }
@@ -691,10 +720,7 @@ mod tests {
     #[test]
     fn perl_5_004_68_has_its_own_partial_pair() {
         let directory = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/perl");
-        let inventory = std::fs::read_to_string(directory.join("releases.csv")).unwrap();
-        assert!(inventory
-            .lines()
-            .any(|row| row.starts_with("5.004_68,") && row.ends_with(",partial")));
+        assert_partial_row("5.004_68");
         assert!(directory.join("perl5.004_68.tokens").is_file());
         assert!(directory.join("perl5.004_68.grammar").is_file());
     }
@@ -702,10 +728,7 @@ mod tests {
     #[test]
     fn perl_5_004_69_has_its_own_partial_pair_without_constant_hooks() {
         let directory = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/perl");
-        let inventory = std::fs::read_to_string(directory.join("releases.csv")).unwrap();
-        assert!(inventory
-            .lines()
-            .any(|row| row.starts_with("5.004_69,") && row.ends_with(",partial")));
+        assert_partial_row("5.004_69");
         let token_text = std::fs::read_to_string(directory.join("perl5.004_69.tokens")).unwrap();
         let grammar_text = std::fs::read_to_string(directory.join("perl5.004_69.grammar")).unwrap();
         let token_grammar = parse_token_grammar(&token_text).unwrap();
@@ -736,10 +759,7 @@ mod tests {
     #[test]
     fn perl_5_004_70_has_its_own_partial_pair_without_hooks_or_overrides() {
         let directory = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/perl");
-        let inventory = std::fs::read_to_string(directory.join("releases.csv")).unwrap();
-        assert!(inventory
-            .lines()
-            .any(|row| row.starts_with("5.004_70,") && row.ends_with(",partial")));
+        assert_partial_row("5.004_70");
         let token_text = std::fs::read_to_string(directory.join("perl5.004_70.tokens")).unwrap();
         let grammar_text = std::fs::read_to_string(directory.join("perl5.004_70.grammar")).unwrap();
         let token_grammar = parse_token_grammar(&token_text).unwrap();
@@ -773,10 +793,7 @@ mod tests {
     #[test]
     fn perl_5_004_71_has_its_own_partial_pair_without_hooks_or_overrides() {
         let directory = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/perl");
-        let inventory = std::fs::read_to_string(directory.join("releases.csv")).unwrap();
-        assert!(inventory
-            .lines()
-            .any(|row| row.starts_with("5.004_71,") && row.ends_with(",partial")));
+        assert_partial_row("5.004_71");
         let token_text = std::fs::read_to_string(directory.join("perl5.004_71.tokens")).unwrap();
         let grammar_text = std::fs::read_to_string(directory.join("perl5.004_71.grammar")).unwrap();
         let token_grammar = parse_token_grammar(&token_text).unwrap();
@@ -811,10 +828,7 @@ mod tests {
     #[test]
     fn perl_5_004_72_has_its_own_partial_pair_without_hooks_or_overrides() {
         let directory = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/perl");
-        let inventory = std::fs::read_to_string(directory.join("releases.csv")).unwrap();
-        assert!(inventory
-            .lines()
-            .any(|row| row.starts_with("5.004_72,") && row.ends_with(",partial")));
+        assert_partial_row("5.004_72");
         let token_text = std::fs::read_to_string(directory.join("perl5.004_72.tokens")).unwrap();
         let grammar_text = std::fs::read_to_string(directory.join("perl5.004_72.grammar")).unwrap();
         let token_grammar = parse_token_grammar(&token_text).unwrap();
@@ -878,10 +892,7 @@ mod tests {
     #[test]
     fn perl_5_38_0_has_its_own_partial_pair_grounded_in_its_tag() {
         let directory = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/perl");
-        let inventory = std::fs::read_to_string(directory.join("releases.csv")).unwrap();
-        assert!(inventory
-            .lines()
-            .any(|row| row.starts_with("5.38.0,") && row.ends_with(",partial")));
+        assert_partial_row("5.38.0");
         let token_text = std::fs::read_to_string(directory.join("perl5.38.0.tokens")).unwrap();
         let grammar_text = std::fs::read_to_string(directory.join("perl5.38.0.grammar")).unwrap();
         // The headers cite the tag and the exact blobs the rules come from.
@@ -1001,20 +1012,13 @@ mod tests {
     #[test]
     fn compiled_tables_match_every_inventoried_pair() {
         let directory = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/perl");
-        let inventory = std::fs::read_to_string(directory.join("releases.csv")).unwrap();
-        let mut rows = inventory.lines().filter(|row| !row.starts_with('#'));
-        let header: Vec<_> = rows.next().unwrap().split(',').collect();
-        let release_col = header.iter().position(|h| *h == "release").unwrap();
-        let status_col = header.iter().position(|h| *h == "grammar_status").unwrap();
-        let mut all = Vec::new();
-        let mut compiled = Vec::new();
-        for row in rows {
-            let fields: Vec<_> = row.split(',').collect();
-            all.push(fields[release_col]);
-            if fields[status_col] != "pending" {
-                compiled.push(fields[release_col]);
-            }
-        }
+        let rows = inventory_rows();
+        let all: Vec<&str> = rows.iter().map(|row| row["release"].as_str()).collect();
+        let compiled: Vec<&str> = rows
+            .iter()
+            .filter(|row| row["grammar_status"] != "pending")
+            .map(|row| row["release"].as_str())
+            .collect();
         assert_eq!(INVENTORY_RELEASES, all.as_slice());
         assert_eq!(SUPPORTED_RELEASES, compiled.as_slice());
         assert_eq!(
