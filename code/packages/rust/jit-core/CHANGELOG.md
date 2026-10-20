@@ -5,6 +5,26 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.8.0] — 2026-10-20 (LANG83 PR4 — overflow-checked arithmetic)
+
+- **`GenericCirJit` bytecodes `ADD_OVF_I64` (0x18), `SUB_OVF_I64` (0x19),
+  `MUL_OVF_I64` (0x1A), `NEG_OVF_I64` (0x1B)** for the LANG83 PR4 ops
+  `i64_add_ovf`, `i64_sub_ovf`, `i64_mul_ovf`, `i64_neg_ovf`. They use Rust's
+  `checked_*`; `None` writes `trap: Trap.Overflow` to the error slot and stops
+  the function, and `JITCore` drains the slot into `VMError::Trap` (fail
+  closed). A truncated checked op in a hostile binary is a `malformed
+  bytecode` error, not a panic.
+- The compile arms match the full type-first names before any prefix arm, so
+  the wrapping `ADD_I64` family (and its narrow-width masking) can never claim
+  them. A test pins the opcode bytes.
+- **`CIRInstr::is_pure`** treats the four ops as impure: dead-code elimination
+  keeps an unused checked op, whose trap is its only observable effect.
+- `op_support`: all four `Lowered`, checked by compiling a one-op function per
+  registry entry.
+- New `tests/fail_closed.rs` case: each checked op, JIT-compiled in a callee
+  and overflowing, stops its interpreted caller before the next builtin runs,
+  and the error slot is drained.
+
 ## [0.7.0] — 2026-10-19 (LANG83 PR1b — floor division, `trap`, `write_i64`)
 
 - **`GenericCirJit` compiles the LANG83 PR1b ops** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)):

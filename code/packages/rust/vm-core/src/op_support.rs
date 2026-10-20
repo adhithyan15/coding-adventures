@@ -76,7 +76,8 @@ mod tests {
     fn every_standard_op_is_executed() {
         // Pins today's answer so a regression (a handler removed from the
         // dispatch table, a default builtin dropped) is loud. Since LANG83
-        // PR1b this includes write_i64, i64_div_floor, i64_mod_floor and trap.
+        // PR1b this includes write_i64, i64_div_floor, i64_mod_floor and trap,
+        // and since PR4 the four i64_*_ovf ops.
         for spec in STANDARD_OPS {
             assert_eq!(op_support(spec.name), OpSupport::Lowered, "{}", spec.name);
         }
