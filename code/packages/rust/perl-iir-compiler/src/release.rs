@@ -95,10 +95,18 @@ pub fn resolve_release(requested: Option<&str>) -> Result<Release, FrontendError
     })
 }
 
-/// Bound a caller-supplied release string before it enters a diagnostic.
+/// Bound and neutralize a caller-supplied release string before it enters a
+/// diagnostic. Only its first 64 characters are kept, and each is escaped
+/// with `char::escape_debug`, so a control character (a newline that would
+/// forge a log line, an ESC that would drive a terminal) arrives as visible
+/// text such as `\n` or `\u{1b}` rather than as the character itself.
 fn echo(requested: &str) -> String {
     let mut chars = requested.chars();
-    let head: String = chars.by_ref().take(MAX_ECHOED_RELEASE_CHARS).collect();
+    let head: String = chars
+        .by_ref()
+        .take(MAX_ECHOED_RELEASE_CHARS)
+        .flat_map(char::escape_debug)
+        .collect();
     if chars.next().is_some() {
         format!("{head}…")
     } else {
@@ -211,5 +219,18 @@ mod tests {
         };
         assert_eq!(release.chars().count(), MAX_ECHOED_RELEASE_CHARS + 1);
         assert!(release.ends_with('…'));
+    }
+
+    #[test]
+    fn control_characters_in_a_release_are_escaped_in_the_error() {
+        let FrontendError::UnknownRelease { release, .. } =
+            resolve_release(Some("x\nINFO: ok\u{1b}[2J")).unwrap_err()
+        else {
+            panic!("expected UnknownRelease");
+        };
+        assert!(!release.chars().any(char::is_control), "{release:?}");
+        assert_eq!(release, "x\\nINFO: ok\\u{1b}[2J");
+        let message = resolve_release(Some("a\rb")).unwrap_err().to_string();
+        assert!(!message.chars().any(char::is_control), "{message:?}");
     }
 }

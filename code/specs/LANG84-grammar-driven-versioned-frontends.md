@@ -1051,7 +1051,8 @@ execute in CI; the authoring host had no `dotnet` or `erl`.
   &FrontendBudgets)` resolves `release` in `release.rs` (exact IDs only, no
   version ordering), then lexes and parses with that release's tables. Typed
   `FrontendError` variants: `UnknownRelease` (with up to five
-  longest-prefix suggestions, caller text truncated to 64 characters),
+  longest-prefix suggestions, caller text truncated to 64 characters with
+  control characters escaped),
   `ReleaseNotAvailable { stage: "pending" }`, `Budget`, `Lex` and `Parse`
   (line and column), `Unsupported` (rule plus start and end span). All name
   the release. `compile_source` delegates with `None`.

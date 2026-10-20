@@ -7,7 +7,8 @@
   inventory release, or `DEFAULT_RELEASE` (still the unversioned LANG81 pair)
   for `None`. `resolve_release` (in `release.rs`, the only code that looks at
   release IDs) returns typed `UnknownRelease` (up to five longest-prefix
-  suggestions; caller text truncated to 64 characters) or
+  suggestions; caller text truncated to 64 characters and control
+  characters escaped) or
   `ReleaseNotAvailable` errors and never falls back. `FrontendError` adds
   `Budget`, `Lex` and `Parse` with line and column, and `Unsupported` with the
   CST rule and span; every variant after resolution names the release.
