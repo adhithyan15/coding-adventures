@@ -675,6 +675,10 @@ pub fn lower_iir_to_beam(
     let import_put     = imports.intern(erlang_atom, atom_put,     2); // erlang:put/2
     let import_get     = imports.intern(erlang_atom, atom_get,     1); // erlang:get/1
     let import_put_chars = imports.intern(io_atom, atom_put_chars, 1); // io:put_chars/1
+    // LANG83 ordered output: `print_i64` goes through the same `io` server as
+    // `putchar`/`print_str` (see the `print_i64` arm for why not erlang:display).
+    let atom_format = atoms.intern("format");
+    let import_format = imports.intern(io_atom, atom_format, 2); // io:format/2
 
     // ── BEAM07: host-input atoms and imports (`INPUT`/READ-ITEM EOF) ──────
     //
@@ -1369,8 +1373,10 @@ pub fn lower_iir_to_beam(
                 // `string:trim/3`) somewhere in their expansion — the same
                 // "every call_ext-emitting op must be listed" rule `putchar`
                 // already follows just above.
+                // LANG83: `print_i64` now emits `call_ext io:format/2`.
                 Some(Operand::Var(name)) if matches!(
-                    name.as_str(), "putchar" | "getchar" | "input_more" | "input_i64" | "input_str"
+                    name.as_str(), "putchar" | "print_i64" | "getchar" | "input_more"
+                        | "input_i64" | "input_str"
                 ))) {
                 continue;
             }
@@ -2911,16 +2917,57 @@ pub fn lower_iir_to_beam(
                 }
                 "call_builtin" if matches!(instr.srcs.first(),
                     Some(Operand::Var(name)) if name == "print_i64") => {
-                    // Portable Oct output uses the same integer display BIF as
-                    // io_out, with the builtin name occupying the first source.
-                    let rx = operand_reg!(get_src!(instr, 1));
-                    instrs.push(BEAMInstruction::new(OP_GC_BIF1, vec![
-                        BEAMOperand::f(0),
-                        BEAMOperand::u(meta.next_reg as u64),
-                        BEAMOperand::u(import_display as u64),
-                        BEAMOperand::x(rx),
-                        BEAMOperand::x(meta.next_reg),
+                    // LANG83 ordered output: `io:format("~w~n", [X])`.
+                    //
+                    // This used to be `erlang:display/1` (the `io_out` BIF).
+                    // For an integer the bytes are identical — `42\n` either
+                    // way — but `erlang:display` writes straight from the
+                    // emulator to fd 1, bypassing the `io` server that
+                    // `putchar`/`print_str` (`io:put_chars/1`) go through. Two
+                    // writers with two buffers means a program mixing them can
+                    // see its output reordered. Routing every output builtin
+                    // through the one `io` server gives the single ordered
+                    // stream LANG83 requires.
+                    //
+                    //   move       X      -> x0          value is the only root
+                    //   test_heap  10, 1                  [X] + "~w~n" = 5 cells
+                    //   put_list   x0, [] -> x1          x1 = [X]
+                    //   move       []     -> x0
+                    //   put_list   $n, x0 -> x0          x0 = "\n" … "~w~n"
+                    //   put_list   $~, x0 -> x0
+                    //   put_list   $w, x0 -> x0
+                    //   put_list   $~, x0 -> x0
+                    //   call_ext   2, io:format/2
+                    //
+                    // `call_ext` clobbers every X register, so the op is listed
+                    // with the other call-emitting builtins in the live-across
+                    // analysis and brackets itself with save/restore.
+                    let source = operand_reg!(get_src!(instr, 1));
+                    let cur_idx = instr_idx - 1;
+                    save_live_across_imported_call!(cur_idx);
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::x(source), BEAMOperand::x(0),
                     ]));
+                    instrs.push(BEAMInstruction::new(OP_TEST_HEAP, vec![
+                        BEAMOperand::u(10), BEAMOperand::u(1),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_PUT_LIST, vec![
+                        BEAMOperand::x(0), BEAMOperand::a(0), BEAMOperand::x(1),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::a(0), BEAMOperand::x(0),
+                    ]));
+                    for byte in b"~w~n".iter().rev() {
+                        instrs.push(BEAMInstruction::new(OP_PUT_LIST, vec![
+                            BEAMOperand::i(u64::from(*byte)),
+                            BEAMOperand::x(0),
+                            BEAMOperand::x(0),
+                        ]));
+                    }
+                    instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
+                        BEAMOperand::u(2), BEAMOperand::u(import_format as u64),
+                    ]));
+                    restore_live_across_imported_call!(cur_idx);
                 }
                 // A byte-oriented host configures standard_io as latin1.
                 // get_chars reads exactly one element, including NUL/newline;
