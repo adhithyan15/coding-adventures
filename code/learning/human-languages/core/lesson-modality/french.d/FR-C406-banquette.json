@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C406-banquette",
+    "language": "french",
+    "chapter": 406,
+    "sequence": 22640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6ed2584ad86a1d07"
+  },
+  "findings": []
+}

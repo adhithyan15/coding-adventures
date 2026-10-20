@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-515-SCENE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-515-SCENE"
+  ],
+  "after": []
+}

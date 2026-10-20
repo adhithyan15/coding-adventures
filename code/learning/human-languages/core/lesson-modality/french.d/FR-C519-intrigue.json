@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C519-intrigue",
+    "language": "french",
+    "chapter": 519,
+    "sequence": 28420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d8be92e4b5a78c4c"
+  },
+  "findings": []
+}

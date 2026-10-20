@@ -1,0 +1,11 @@
+{
+  "id": "FR-C463-geler",
+  "pathSegment": "FR-PATH-463-FROID",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-463-FROID",
+      "order": 2
+    }
+  ]
+}

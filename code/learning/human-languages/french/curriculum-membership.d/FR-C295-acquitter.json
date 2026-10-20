@@ -1,0 +1,11 @@
+{
+  "id": "FR-C295-acquitter",
+  "pathSegment": "FR-PATH-295-AVEUX",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-295-AVEUX",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 476,
+  "title": "Optimistes et inquiets",
+  "label": "ch:fr-optimistes-et-inquiets",
+  "canDo": "I can say whether someone worries or looks on the bright side.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C476-pessimiste",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 476: I can say whether someone worries or looks on the bright side.",
+    "assesses": [
+      "FR-LEX-C476-INQUIETUDE-03",
+      "FR-LEX-C476-INQUIETUDE-04",
+      "FR-LEX-C476-INQUIETUDE-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 354,
+  "title": "Je cherche du travail",
+  "label": "ch:fr-je-cherche-du-travail",
+  "canDo": "I can apply for a job: send my CV and my application, say who the candidates are and talk about being taken on.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C354-embauche",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 354: I can apply for a job: send my CV and my application, say who the candidates are and talk about being taken on.",
+    "assesses": [
+      "FR-LEX-C354-CANDIDATURE-03",
+      "FR-LEX-C354-CANDIDATURE-04",
+      "FR-LEX-C354-CANDIDATURE-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C345-partisan",
+    "language": "french",
+    "chapter": 345,
+    "sequence": 19480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce3c30542c9e98a8"
+  },
+  "findings": []
+}

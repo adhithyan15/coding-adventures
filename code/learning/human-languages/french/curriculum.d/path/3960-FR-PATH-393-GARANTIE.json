@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-393-GARANTIE",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "FR-EXT-393-GARANTIE"
+  ],
+  "after": []
+}

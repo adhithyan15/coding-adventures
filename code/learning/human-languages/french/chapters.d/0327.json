@@ -1,0 +1,19 @@
+{
+  "chapter": 327,
+  "title": "La recette",
+  "label": "ch:fr-la-recette",
+  "canDo": "I can talk about a recipe: the recipe, the ingredients, a pinch, a spoonful and preheating the oven.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C327-prechauffer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 327: I can talk about a recipe: the recipe, the ingredients, a pinch, a spoonful and preheating the oven.",
+    "assesses": [
+      "FR-LEX-C327-RECETTE-03",
+      "FR-LEX-C327-RECETTE-04",
+      "FR-LEX-C327-RECETTE-05"
+    ]
+  }
+}

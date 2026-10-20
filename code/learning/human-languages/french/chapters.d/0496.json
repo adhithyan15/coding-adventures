@@ -1,0 +1,19 @@
+{
+  "chapter": 496,
+  "title": "Fil et aiguille",
+  "label": "ch:fr-fil-et-aiguille",
+  "canDo": "I can talk about sewing, knitting and embroidery.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C496-couture",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 496: I can talk about sewing, knitting and embroidery.",
+    "assesses": [
+      "FR-LEX-C496-COUTURE-03",
+      "FR-LEX-C496-COUTURE-04",
+      "FR-LEX-C496-COUTURE-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-511-INSTRUMENTS",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-511-INSTRUMENTS"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C462-grele",
+    "language": "french",
+    "chapter": 462,
+    "sequence": 25490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9fb66c4bc76173c"
+  },
+  "findings": []
+}

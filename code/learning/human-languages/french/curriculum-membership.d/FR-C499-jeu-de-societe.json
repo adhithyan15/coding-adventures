@@ -1,0 +1,11 @@
+{
+  "id": "FR-C499-jeu-de-societe",
+  "pathSegment": "FR-PATH-499-JEUX",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-499-JEUX",
+      "order": 0
+    }
+  ]
+}

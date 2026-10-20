@@ -1,0 +1,19 @@
+{
+  "chapter": 438,
+  "title": "Flâner en ville",
+  "label": "ch:fr-flaner-en-ville",
+  "canDo": "I can talk about wandering round a town: strolling, going for a walk, walking about, wandering and pacing the streets.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C438-arpenter",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 438: I can talk about wandering round a town: strolling, going for a walk, walking about, wandering and pacing the streets.",
+    "assesses": [
+      "FR-LEX-C438-FLANER-03",
+      "FR-LEX-C438-FLANER-04",
+      "FR-LEX-C438-FLANER-05"
+    ]
+  }
+}

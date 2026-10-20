@@ -1,0 +1,11 @@
+{
+  "id": "FR-C365-inegalite",
+  "pathSegment": "FR-PATH-365-PAUVRETE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-365-PAUVRETE",
+      "order": 1
+    }
+  ]
+}

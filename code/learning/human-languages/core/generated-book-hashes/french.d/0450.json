@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 450,
+  "sourceHash": "fnv1a64:eecfeea175cad350",
+  "lessonIds": [
+    "FR-C450-caissier",
+    "FR-C450-encaisser",
+    "FR-C450-debiter",
+    "FR-C450-terminal",
+    "FR-C450-liquide"
+  ],
+  "tex": "french/book/chapters/ch450-a-la-caisse.tex"
+}

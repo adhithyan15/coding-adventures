@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:532bdbbb36584870",
+  "lessonIds": [
+    "FR-C387-proces",
+    "FR-C387-defense",
+    "FR-C387-verdict",
+    "FR-C387-coupable",
+    "FR-C387-innocent"
+  ],
+  "tex": "french/book/chapters/ch387-au-tribunal.tex"
+}

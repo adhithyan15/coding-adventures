@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C304-noyer",
+    "language": "french",
+    "chapter": 304,
+    "sequence": 17350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d27ec7ff8a6295ab"
+  },
+  "findings": []
+}

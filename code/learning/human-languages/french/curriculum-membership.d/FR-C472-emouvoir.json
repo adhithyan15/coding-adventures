@@ -1,0 +1,11 @@
+{
+  "id": "FR-C472-emouvoir",
+  "pathSegment": "FR-PATH-472-NOSTALGIE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-472-NOSTALGIE",
+      "order": 3
+    }
+  ]
+}

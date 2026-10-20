@@ -1,0 +1,19 @@
+{
+  "chapter": 323,
+  "title": "Le règne",
+  "label": "ch:fr-le-regne",
+  "canDo": "I can tell the story of a king or queen: reigning, the reign, the throne, the crown and crowning.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-R323-revision-316-323",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 323: I can tell the story of a king or queen: reigning, the reign, the throne, the crown and crowning.",
+    "assesses": [
+      "FR-LEX-C323-REGNE-03",
+      "FR-LEX-C323-REGNE-04",
+      "FR-LEX-C323-REGNE-05"
+    ]
+  }
+}

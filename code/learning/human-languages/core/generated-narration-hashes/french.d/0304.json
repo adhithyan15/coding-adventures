@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:b1948525506bf6ae",
+  "lessonIds": [
+    "FR-C304-noyade",
+    "FR-C304-noyer",
+    "FR-C304-sauveteur",
+    "FR-C304-bouee",
+    "FR-C304-maitre-nageur"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch304.txt",
+  "json": "french/narration/ch304.json",
+  "textHash": "fnv1a64:c4de84a73db793ac",
+  "jsonHash": "fnv1a64:62c67e186c1628fe",
+  "findings": []
+}

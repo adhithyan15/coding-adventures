@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C384-renouveler",
+    "language": "french",
+    "chapter": 384,
+    "sequence": 21490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d63974470fd0df92"
+  },
+  "findings": []
+}

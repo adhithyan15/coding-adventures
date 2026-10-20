@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:b4991546e237837e",
+  "lessonIds": [
+    "FR-C305-naufrage",
+    "FR-C305-ecraser",
+    "FR-C305-rescape",
+    "FR-C305-survivre",
+    "FR-C305-catastrophe"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch305.txt",
+  "json": "french/narration/ch305.json",
+  "textHash": "fnv1a64:9a72638e64635172",
+  "jsonHash": "fnv1a64:751612ef59e9039c",
+  "findings": []
+}

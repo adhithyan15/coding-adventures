@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C473-fierte",
+    "language": "french",
+    "chapter": 473,
+    "sequence": 26050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5a5f6f175e5dc980"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C516-esquisser",
+    "language": "french",
+    "chapter": 516,
+    "sequence": 28300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d8ec448820815556"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:62148fde1566dfe0",
+  "lessonIds": [
+    "FR-C387-proces",
+    "FR-C387-defense",
+    "FR-C387-verdict",
+    "FR-C387-coupable",
+    "FR-C387-innocent"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch387.txt",
+  "json": "french/narration/ch387.json",
+  "textHash": "fnv1a64:48ce3dfd117febde",
+  "jsonHash": "fnv1a64:e71216f7b812d650",
+  "findings": []
+}

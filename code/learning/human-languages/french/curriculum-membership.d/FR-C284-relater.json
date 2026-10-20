@@ -1,0 +1,11 @@
+{
+  "id": "FR-C284-relater",
+  "pathSegment": "FR-PATH-284-RAPPORTER",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-284-RAPPORTER",
+      "order": 3
+    }
+  ]
+}

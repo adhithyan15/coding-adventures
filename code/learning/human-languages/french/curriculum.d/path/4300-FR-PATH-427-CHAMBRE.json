@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-427-CHAMBRE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-427-CHAMBRE"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 316,
+  "title": "Célébrer",
+  "label": "ch:fr-celebrer",
+  "canDo": "I can describe a public celebration: celebrating, the celebration, a procession, a brass band and a public holiday.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C316-jour-ferie",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 316: I can describe a public celebration: celebrating, the celebration, a procession, a brass band and a public holiday.",
+    "assesses": [
+      "FR-LEX-C316-CELEBRER-03",
+      "FR-LEX-C316-CELEBRER-04",
+      "FR-LEX-C316-CELEBRER-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-306-PIQURES",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-306-PIQURES"
+  ],
+  "after": []
+}

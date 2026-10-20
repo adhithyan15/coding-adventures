@@ -1398,6 +1398,8 @@ const SPOKEN_HAND_VERB_ALLOWLIST: ReadonlyMap<string, readonly string[]> = new M
   ["AR-C04-maa-salama", ["You'll want to know — The circle closes"]],
   ["HI-C89-kar-raha-hun", ["Grammar Lens: the stem is bare, and that is the point"]],
   ["KA-C31-shubha-madhyahna", ["Why it's said this way: one verified claim, one still just a single data point"]],
+  // French *le point de vue* "the point of view" is the headword itself.
+  ["FR-C334-point-de-vue", ["You'll want to know: le point de vue"]],
   ["ES-C07-beber", ["Grammar Lens: no new grammar — that's the point"]],
   ["ES-C424-parentesis", ["Grammar Lens: spacing, and where the point goes"]],
   ["ES-C467-producir", ["Grammar Lens: nothing new here, which is the point"]],

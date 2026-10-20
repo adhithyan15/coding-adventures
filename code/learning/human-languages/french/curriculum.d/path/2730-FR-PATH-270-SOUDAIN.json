@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-270-SOUDAIN",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-270-SOUDAIN"
+  ],
+  "after": []
+}

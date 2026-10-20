@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 511,
+  "sourceHash": "fnv1a64:75cd6c11acdee771",
+  "lessonIds": [
+    "FR-C511-flute",
+    "FR-C511-violoncelle",
+    "FR-C511-trompette",
+    "FR-C511-accordeon",
+    "FR-C511-accorder"
+  ],
+  "tex": "french/book/chapters/ch511-instruments-de-musique.tex"
+}

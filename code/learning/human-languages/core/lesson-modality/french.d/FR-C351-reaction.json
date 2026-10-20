@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C351-reaction",
+    "language": "french",
+    "chapter": 351,
+    "sequence": 19780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4031807e46a29957"
+  },
+  "findings": []
+}

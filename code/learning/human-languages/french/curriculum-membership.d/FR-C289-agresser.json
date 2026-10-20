@@ -1,0 +1,11 @@
+{
+  "id": "FR-C289-agresser",
+  "pathSegment": "FR-PATH-289-AGRESSION",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-289-AGRESSION",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 327,
+  "sourceHash": "fnv1a64:14a76f29d6e01c9b",
+  "lessonIds": [
+    "FR-C327-recette",
+    "FR-C327-ingredient",
+    "FR-C327-pincee",
+    "FR-C327-cuilleree",
+    "FR-C327-prechauffer"
+  ],
+  "tex": "french/book/chapters/ch327-la-recette.tex"
+}

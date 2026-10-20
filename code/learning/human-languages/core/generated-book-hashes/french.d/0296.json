@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 296,
+  "sourceHash": "fnv1a64:df88e6de96a940b0",
+  "lessonIds": [
+    "FR-C296-braquage",
+    "FR-C296-braqueur",
+    "FR-C296-otage",
+    "FR-C296-rancon",
+    "FR-C296-echapper"
+  ],
+  "tex": "french/book/chapters/ch296-le-braquage.tex"
+}

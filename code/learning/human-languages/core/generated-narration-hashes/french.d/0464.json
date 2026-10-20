@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 464,
+  "sourceHash": "fnv1a64:4d99035eba79ccdb",
+  "lessonIds": [
+    "FR-C464-canicule",
+    "FR-C464-secheresse",
+    "FR-C464-humidite",
+    "FR-C464-moite",
+    "FR-C464-transpirer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch464.txt",
+  "json": "french/narration/ch464.json",
+  "textHash": "fnv1a64:985dffa79c89a5e2",
+  "jsonHash": "fnv1a64:60107812c1c68276",
+  "findings": []
+}

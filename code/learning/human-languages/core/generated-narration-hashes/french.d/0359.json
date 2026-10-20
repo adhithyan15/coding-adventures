@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 359,
+  "sourceHash": "fnv1a64:3e23960d8a22fdc9",
+  "lessonIds": [
+    "FR-C359-cadre",
+    "FR-C359-tache",
+    "FR-C359-delai",
+    "FR-C359-prolongation",
+    "FR-C359-livraison"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch359.txt",
+  "json": "french/narration/ch359.json",
+  "textHash": "fnv1a64:68d20a7417baebe4",
+  "jsonHash": "fnv1a64:fb1f3e82bcb7eb81",
+  "findings": []
+}

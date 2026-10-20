@@ -1,0 +1,19 @@
+{
+  "chapter": 467,
+  "title": "Qualités et défauts",
+  "label": "ch:fr-qualites-et-defauts",
+  "canDo": "I can describe the weak sides of someone's character.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C467-etourdi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 467: I can describe the weak sides of someone's character.",
+    "assesses": [
+      "FR-LEX-C467-DEFAUTS-03",
+      "FR-LEX-C467-DEFAUTS-04",
+      "FR-LEX-C467-DEFAUTS-05"
+    ]
+  }
+}

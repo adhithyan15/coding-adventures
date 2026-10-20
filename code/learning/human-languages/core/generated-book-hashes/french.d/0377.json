@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 377,
+  "sourceHash": "fnv1a64:2dd3374e22258f57",
+  "lessonIds": [
+    "FR-C377-reviser",
+    "FR-C377-revision",
+    "FR-C377-memoriser",
+    "FR-C377-par-coeur",
+    "FR-C377-manuel"
+  ],
+  "tex": "french/book/chapters/ch377-avant-l-examen.tex"
+}

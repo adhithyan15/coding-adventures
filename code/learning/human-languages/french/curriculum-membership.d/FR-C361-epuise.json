@@ -1,0 +1,11 @@
+{
+  "id": "FR-C361-epuise",
+  "pathSegment": "FR-PATH-361-STRESS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-361-STRESS",
+      "order": 1
+    }
+  ]
+}

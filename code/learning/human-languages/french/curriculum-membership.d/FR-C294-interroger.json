@@ -1,0 +1,11 @@
+{
+  "id": "FR-C294-interroger",
+  "pathSegment": "FR-PATH-294-ARRESTATION",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-294-ARRESTATION",
+      "order": 4
+    }
+  ]
+}

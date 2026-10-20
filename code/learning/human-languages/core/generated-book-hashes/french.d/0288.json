@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 288,
+  "sourceHash": "fnv1a64:d203a293d157e9c0",
+  "lessonIds": [
+    "FR-C288-pickpocket",
+    "FR-C288-arnaque",
+    "FR-C288-escroc",
+    "FR-C288-escroquer",
+    "FR-C288-escroquerie"
+  ],
+  "tex": "french/book/chapters/ch288-attention-aux-escrocs.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:fa949d984dcca324",
+  "lessonIds": [
+    "FR-C392-especes",
+    "FR-C392-cheque",
+    "FR-C392-chequier",
+    "FR-C392-virement",
+    "FR-C392-retirer"
+  ],
+  "tex": "french/book/chapters/ch392-a-la-banque.tex"
+}

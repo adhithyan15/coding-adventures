@@ -1,0 +1,11 @@
+{
+  "id": "FR-C293-elucider",
+  "pathSegment": "FR-PATH-293-MYSTERE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-293-MYSTERE",
+      "order": 1
+    }
+  ]
+}

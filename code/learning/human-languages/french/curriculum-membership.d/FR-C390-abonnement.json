@@ -1,0 +1,11 @@
+{
+  "id": "FR-C390-abonnement",
+  "pathSegment": "FR-PATH-390-BUDGET",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-390-BUDGET",
+      "order": 2
+    }
+  ]
+}

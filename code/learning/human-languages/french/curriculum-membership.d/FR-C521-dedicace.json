@@ -1,0 +1,11 @@
+{
+  "id": "FR-C521-dedicace",
+  "pathSegment": "FR-PATH-521-AUTEURS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-521-AUTEURS",
+      "order": 3
+    }
+  ]
+}

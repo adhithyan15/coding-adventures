@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C499-de",
+    "language": "french",
+    "chapter": 499,
+    "sequence": 27400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:47ad5c659c27a8b5"
+  },
+  "findings": []
+}

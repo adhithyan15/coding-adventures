@@ -1,0 +1,11 @@
+{
+  "id": "FR-C459-biche",
+  "pathSegment": "FR-PATH-459-ANIMAUX",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-459-ANIMAUX",
+      "order": 4
+    }
+  ]
+}

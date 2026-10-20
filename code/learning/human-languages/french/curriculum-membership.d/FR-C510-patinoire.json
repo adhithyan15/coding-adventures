@@ -1,0 +1,11 @@
+{
+  "id": "FR-C510-patinoire",
+  "pathSegment": "FR-PATH-510-GLACE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-510-GLACE",
+      "order": 3
+    }
+  ]
+}

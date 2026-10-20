@@ -1,0 +1,19 @@
+{
+  "chapter": 422,
+  "title": "La traversée",
+  "label": "ch:fr-la-traversee",
+  "canDo": "I can take a ferry: the ferry, the crossing, the cabin, the life jacket and getting off.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C422-debarquer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 422: I can take a ferry: the ferry, the crossing, the cabin, the life jacket and getting off.",
+    "assesses": [
+      "FR-LEX-C422-TRAVERSEE-03",
+      "FR-LEX-C422-TRAVERSEE-04",
+      "FR-LEX-C422-TRAVERSEE-05"
+    ]
+  }
+}

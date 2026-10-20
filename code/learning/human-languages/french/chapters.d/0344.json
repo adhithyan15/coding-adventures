@@ -1,0 +1,19 @@
+{
+  "chapter": 344,
+  "title": "Raisonner",
+  "label": "ch:fr-raisonner",
+  "canDo": "I can reason, follow a line of reasoning, draw a conclusion and qualify what I said with a nuance.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C344-nuancer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 344: I can reason, follow a line of reasoning, draw a conclusion and qualify what I said with a nuance.",
+    "assesses": [
+      "FR-LEX-C344-RAISONNEMENT-03",
+      "FR-LEX-C344-RAISONNEMENT-04",
+      "FR-LEX-C344-RAISONNEMENT-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 287,
+  "title": "Le cambriolage",
+  "label": "ch:fr-le-cambriolage",
+  "canDo": "I can tell the story of a burglary: breaking in, the burglar, the burglary, the forced entry and the loot.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C287-butin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 287: I can tell the story of a burglary: breaking in, the burglar, the burglary, the forced entry and the loot.",
+    "assesses": [
+      "FR-LEX-C287-CAMBRIOLAGE-03",
+      "FR-LEX-C287-CAMBRIOLAGE-04",
+      "FR-LEX-C287-CAMBRIOLAGE-05"
+    ]
+  }
+}

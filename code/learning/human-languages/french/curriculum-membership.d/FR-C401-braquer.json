@@ -1,0 +1,11 @@
+{
+  "id": "FR-C401-braquer",
+  "pathSegment": "FR-PATH-401-CONDUITE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-401-CONDUITE",
+      "order": 1
+    }
+  ]
+}

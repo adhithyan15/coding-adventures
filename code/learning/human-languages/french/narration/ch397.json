@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "french",
+  "chapter": 397,
+  "title": "Les fichiers",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:8bbf3732524778aa",
+  "lessons": [
+    {
+      "id": "FR-C397-fichier",
+      "sequence": 22120,
+      "title": "le fichier — the file (on a computer)",
+      "headword": "le fichier",
+      "romanization": "le fichier",
+      "gloss": "the file (on a computer)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a12e4b1730946915",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the software, then the French for the update."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: le fichier",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le fichier — \"the file (on a computer)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Je t'ai envoyé le fichier par courriel. I sent you the file by email."
+            },
+            {
+              "kind": "speech",
+              "text": "A paper file is un dossier."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fichier is built on fiche \"an index card\", from ficher \"to fasten, to fix in\" (EtymDB), usually traced to a Vulgar Latin fīgicāre, from fīgere \"to fix\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le fichier",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le fichier*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le fichier, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le fichier*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with le fichier",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *le fichier*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the software, then the French for the update, then say le fichier again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the software, then the French for the update, then say *le fichier* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does le fichier mean? (\"The file (on a computer)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C397-supprimer",
+      "sequence": 22130,
+      "title": "supprimer — to delete; to remove",
+      "headword": "supprimer",
+      "romanization": "supprimer",
+      "gloss": "to delete; to remove",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:024814463d063f63",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the update, then the French for the file."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: supprimer",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "supprimer — \"to delete; to remove\"."
+            },
+            {
+              "kind": "speech",
+              "text": "J'ai supprimé toutes les vieilles photos. I deleted all the old photos."
+            },
+            {
+              "kind": "speech",
+              "text": "Also to abolish: supprimer une loi."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "supprimer is a learned borrowing from Latin supprimere \"to press under, to hold back\" (EtymDB; Lewis & Short), built on premere \"to press\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "supprimer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *supprimer*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "supprimer, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *supprimer*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with supprimer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *supprimer*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the update, then the French for the file, then say supprimer again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the update, then the French for the file, then say *supprimer* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does supprimer mean? (\"To delete; to remove\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C397-copier",
+      "sequence": 22140,
+      "title": "copier — to copy",
+      "headword": "copier",
+      "romanization": "copier",
+      "gloss": "to copy",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:792a06a816ae2160",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the file, then the French for to delete."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: copier",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "copier — \"to copy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Il a copié le texte dans un nouveau document. He copied the text into a new document."
+            },
+            {
+              "kind": "speech",
+              "text": "At school, copier also means to cheat by copying."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "copier comes from Medieval Latin copiāre \"to transcribe\" (EtymDB), from cōpia \"plenty, abundance\" (Lewis & Short): to make more of a text."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "copier",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *copier*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "copier, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *copier*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with copier",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *copier*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the file, then the French for to delete, then say copier again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the file, then the French for to delete, then say *copier* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does copier mean? (\"To copy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C397-coller",
+      "sequence": 22150,
+      "title": "coller — to paste; to stick",
+      "headword": "coller",
+      "romanization": "coller",
+      "gloss": "to paste; to stick",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:01d8d6aa5760762d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for to delete, then the French for to copy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: coller",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "coller — \"to paste; to stick\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Elle a collé le texte dans son message. She pasted the text into her message."
+            },
+            {
+              "kind": "speech",
+              "text": "Copier-coller — copy and paste. Informal: être collé à un examen — to fail it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "coller is built on colle \"glue\", which comes through Vulgar Latin from Greek kólla \"glue\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "coller",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *coller*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "coller, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *coller*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with coller",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *coller*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for to delete, then the French for to copy, then say coller again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for to delete, then the French for to copy, then say *coller* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does coller mean? (\"To paste; to stick\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C397-sauvegarder",
+      "sequence": 22160,
+      "title": "sauvegarder — to save (a file); to safeguard",
+      "headword": "sauvegarder",
+      "romanization": "sauvegarder",
+      "gloss": "to save (a file); to safeguard",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:64d1ff8a71e81cab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for to copy, then the French for to paste."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: sauvegarder",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sauvegarder — \"to save (a file); to safeguard\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Il a oublié de sauvegarder son travail. He forgot to save his work."
+            },
+            {
+              "kind": "speech",
+              "text": "Une sauvegarde — a backup."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sauvegarder is built from sauve \"safe\", from Latin salvus \"safe\" (Lewis & Short), and garder \"to keep\", usually traced to a Frankish word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sauvegarder",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sauvegarder*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sauvegarder, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sauvegarder*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with sauvegarder",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *sauvegarder*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for to copy, then the French for to paste, then say sauvegarder again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for to copy, then the French for to paste, then say *sauvegarder* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does sauvegarder mean? (\"To save (a file); to safeguard\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-R397-revision-390-397",
+      "sequence": 22170,
+      "title": "Retour sur les chapitres 390–397",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 390-397",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ea8505f68e968be1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the French for the budget and the income."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the budget, the income, the subscription, the expense, the contribution",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the budget, the income, the subscription, the expense, the contribution]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the savings, to save up, to invest, the investment, the rate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the savings, to save up, to invest, the investment, the rate]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the cash, the cheque, the chequebook, the bank transfer, to take out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the cash, the cheque, the chequebook, the bank transfer, to take out]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the guarantee, to guarantee, the quote, profitable, good value",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the guarantee, to guarantee, the quote, profitable, good value]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the profit, the loss, the bankruptcy, to pay back, the loan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the profit, the loss, the bankruptcy, to pay back, the loan]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the user, the password, the username, to connect, to access",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the user, the password, the username, to connect, to access]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to install, to uninstall, the device, the software, the update",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to install, to uninstall, the device, the software, the update]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the file, to delete, to copy, to paste, to save",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the file, to delete, to copy, to paste, to save]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The budget? (le budget.) The income? (le revenu.) The subscription? (l'abonnement.) The expense? (la dépense.) The contribution? (la cotisation.) The savings? (l'épargne.) To save up? (épargner.) To invest? (investir.) The investment? (l'investissement.) The rate? (le taux.) The cash? (les espèces.) The cheque? (le chèque.) The chequebook? (le chéquier.) The bank transfer? (le virement.) To take out? (retirer.) The guarantee? (la garantie.) To guarantee? (garantir.) The quote? (le devis.) Profitable? (rentable.) Good value? (avantageux.) The profit? (le bénéfice.) The loss? (la perte.) The bankruptcy? (la faillite.) To pay back? (rembourser.) The loan? (l'emprunt.) The user? (l'utilisateur.) The password? (le mot de passe.) The username? (l'identifiant.) To connect? (connecter.) To access? (accéder.) To install? (installer.) To uninstall? (désinstaller.) The device? (l'appareil.) The software? (le logiciel.) The update? (la mise à jour.) The file? (le fichier.) To delete? (supprimer.) To copy? (copier.) To paste? (coller.) To save? (sauvegarder.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

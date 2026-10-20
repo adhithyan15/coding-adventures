@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 442,
+  "sourceHash": "fnv1a64:6f7f74b24beb6a3c",
+  "lessonIds": [
+    "FR-C442-facade",
+    "FR-C442-vitrine",
+    "FR-C442-enseigne",
+    "FR-C442-gouttiere",
+    "FR-C442-halle"
+  ],
+  "tex": "french/book/chapters/ch442-facades-et-vitrines.tex"
+}

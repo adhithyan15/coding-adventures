@@ -1,0 +1,11 @@
+{
+  "id": "FR-C522-polar",
+  "pathSegment": "FR-PATH-522-GENRES",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-522-GENRES",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 507,
+  "sourceHash": "fnv1a64:2d5a26075e43517c",
+  "lessonIds": [
+    "FR-C507-tournoi",
+    "FR-C507-medaille",
+    "FR-C507-podium",
+    "FR-C507-champion",
+    "FR-C507-affronter"
+  ],
+  "tex": "french/book/chapters/ch507-le-tournoi.tex"
+}

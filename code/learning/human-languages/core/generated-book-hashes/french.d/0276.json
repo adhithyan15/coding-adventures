@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 276,
+  "sourceHash": "fnv1a64:fc74953cdc29470d",
+  "lessonIds": [
+    "FR-C276-epoque",
+    "FR-C276-decennie",
+    "FR-C276-millenaire",
+    "FR-C276-ere",
+    "FR-C276-duree"
+  ],
+  "tex": "french/book/chapters/ch276-les-epoques.tex"
+}

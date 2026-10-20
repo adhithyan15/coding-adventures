@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-522-GENRES",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what kinds of books I like.",
+  "prerequisites": []
+}

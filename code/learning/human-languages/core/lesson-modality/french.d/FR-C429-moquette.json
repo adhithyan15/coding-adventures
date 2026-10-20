@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C429-moquette",
+    "language": "french",
+    "chapter": 429,
+    "sequence": 23810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:46d753f1ac70e1f5"
+  },
+  "findings": []
+}

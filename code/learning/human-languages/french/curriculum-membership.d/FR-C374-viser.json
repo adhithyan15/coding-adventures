@@ -1,0 +1,11 @@
+{
+  "id": "FR-C374-viser",
+  "pathSegment": "FR-PATH-374-BUT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-374-BUT",
+      "order": 4
+    }
+  ]
+}

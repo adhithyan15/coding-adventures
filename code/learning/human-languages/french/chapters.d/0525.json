@@ -1,0 +1,19 @@
+{
+  "chapter": 525,
+  "title": "Devant l'écran",
+  "label": "ch:fr-devant-l-ecran",
+  "canDo": "I can talk about watching television.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C525-rediffuser",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 525: I can talk about watching television.",
+    "assesses": [
+      "FR-LEX-C525-ECRAN-03",
+      "FR-LEX-C525-ECRAN-04",
+      "FR-LEX-C525-ECRAN-05"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 299,
+  "sourceHash": "fnv1a64:976ff72e6feea640",
+  "lessonIds": [
+    "FR-C299-chute",
+    "FR-C299-fouler",
+    "FR-C299-contusion",
+    "FR-C299-hematome",
+    "FR-C299-plaie",
+    "FR-R299-revision-292-299"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch299.txt",
+  "json": "french/narration/ch299.json",
+  "textHash": "fnv1a64:3d46c374826047dd",
+  "jsonHash": "fnv1a64:30224b0e8e85ebe4",
+  "findings": []
+}

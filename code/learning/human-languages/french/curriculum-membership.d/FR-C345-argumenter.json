@@ -1,0 +1,11 @@
+{
+  "id": "FR-C345-argumenter",
+  "pathSegment": "FR-PATH-345-PARTISAN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-345-PARTISAN",
+      "order": 4
+    }
+  ]
+}

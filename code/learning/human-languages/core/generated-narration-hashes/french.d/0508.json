@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:92e5414704358824",
+  "lessonIds": [
+    "FR-C508-coureur",
+    "FR-C508-ligne-d-arrivee",
+    "FR-C508-marathon",
+    "FR-C508-relais",
+    "FR-C508-chronometrer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch508.txt",
+  "json": "french/narration/ch508.json",
+  "textHash": "fnv1a64:761c3bade2a1e22b",
+  "jsonHash": "fnv1a64:57add194c49e27e0",
+  "findings": []
+}

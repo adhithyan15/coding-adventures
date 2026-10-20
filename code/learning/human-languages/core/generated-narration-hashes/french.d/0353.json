@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 353,
+  "sourceHash": "fnv1a64:e715398ef7e270cb",
+  "lessonIds": [
+    "FR-C353-remede",
+    "FR-C353-remedier",
+    "FR-C353-aggraver",
+    "FR-C353-attenuer",
+    "FR-C353-compenser"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch353.txt",
+  "json": "french/narration/ch353.json",
+  "textHash": "fnv1a64:e97e568346f52aa7",
+  "jsonHash": "fnv1a64:cd0377bc31c37136",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C498-gourde",
+    "language": "french",
+    "chapter": 498,
+    "sequence": 27360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5651c3b1ca760e47"
+  },
+  "findings": []
+}

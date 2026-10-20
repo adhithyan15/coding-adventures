@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-268-ORDRE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can put the steps of a story in order: first of all, in the first place, afterwards, lastly and to finish.",
+  "prerequisites": []
+}

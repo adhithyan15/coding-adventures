@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C422-traversee",
+    "language": "french",
+    "chapter": 422,
+    "sequence": 23430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c8190b14a847b2a4"
+  },
+  "findings": []
+}

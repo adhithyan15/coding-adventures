@@ -1,0 +1,19 @@
+{
+  "chapter": 393,
+  "title": "Garanties et devis",
+  "label": "ch:fr-garanties-et-devis",
+  "canDo": "I can deal with what I buy: a guarantee, guaranteeing something, a quote, and whether it pays or is good value.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FR-C393-avantageux",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 393: I can deal with what I buy: a guarantee, guaranteeing something, a quote, and whether it pays or is good value.",
+    "assesses": [
+      "FR-LEX-C393-GARANTIE-03",
+      "FR-LEX-C393-GARANTIE-04",
+      "FR-LEX-C393-GARANTIE-05"
+    ]
+  }
+}

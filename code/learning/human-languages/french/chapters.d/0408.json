@@ -1,0 +1,19 @@
+{
+  "chapter": 408,
+  "title": "Contrôles sur la route",
+  "label": "ch:fr-controles-sur-la-route",
+  "canDo": "I can talk about road checks and fines: the fine, the speed camera, getting caught, writing someone up and checking.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C408-controler",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 408: I can talk about road checks and fines: the fine, the speed camera, getting caught, writing someone up and checking.",
+    "assesses": [
+      "FR-LEX-C408-RADAR-03",
+      "FR-LEX-C408-RADAR-04",
+      "FR-LEX-C408-RADAR-05"
+    ]
+  }
+}

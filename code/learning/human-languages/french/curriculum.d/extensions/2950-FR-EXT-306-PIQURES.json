@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-306-PIQURES",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe small accidents: choking, food poisoning, a sting, a bite and biting.",
+  "prerequisites": []
+}

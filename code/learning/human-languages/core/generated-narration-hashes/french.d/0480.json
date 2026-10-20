@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 480,
+  "sourceHash": "fnv1a64:5633225c9390b258",
+  "lessonIds": [
+    "FR-C480-fracture",
+    "FR-C480-platre",
+    "FR-C480-bequille",
+    "FR-C480-boiter",
+    "FR-C480-os"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch480.txt",
+  "json": "french/narration/ch480.json",
+  "textHash": "fnv1a64:8abd4cb5ce88ee73",
+  "jsonHash": "fnv1a64:74bfb67e8bbadd07",
+  "findings": []
+}

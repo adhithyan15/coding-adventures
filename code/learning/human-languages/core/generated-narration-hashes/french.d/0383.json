@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 383,
+  "sourceHash": "fnv1a64:9243d6195acec8fb",
+  "lessonIds": [
+    "FR-C383-exigence",
+    "FR-C383-critere",
+    "FR-C383-eligible",
+    "FR-C383-admission",
+    "FR-C383-exclure"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch383.txt",
+  "json": "french/narration/ch383.json",
+  "textHash": "fnv1a64:61de0af4ed7b6381",
+  "jsonHash": "fnv1a64:34a299e77df8d588",
+  "findings": []
+}

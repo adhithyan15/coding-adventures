@@ -1,0 +1,19 @@
+{
+  "chapter": 527,
+  "title": "Repasser et ranger",
+  "label": "ch:fr-repasser-et-ranger",
+  "canDo": "I can talk about ironing and putting clothes away.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C527-accrocher",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 527: I can talk about ironing and putting clothes away.",
+    "assesses": [
+      "FR-LEX-C527-REPASSAGE-03",
+      "FR-LEX-C527-REPASSAGE-04",
+      "FR-LEX-C527-REPASSAGE-05"
+    ]
+  }
+}

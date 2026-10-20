@@ -1,0 +1,11 @@
+{
+  "id": "FR-C303-eboulement",
+  "pathSegment": "FR-PATH-303-SEISME",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-303-SEISME",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-403-POMPE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can fill up a car: the pump, diesel, fuel, the tank and starting off again.",
+  "prerequisites": []
+}

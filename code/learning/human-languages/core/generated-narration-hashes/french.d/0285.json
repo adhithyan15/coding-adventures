@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 285,
+  "sourceHash": "fnv1a64:8501c54ceb3c9d97",
+  "lessonIds": [
+    "FR-C285-rumeur",
+    "FR-C285-scoop",
+    "FR-C285-desinformation",
+    "FR-C285-censure",
+    "FR-C285-polemique"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch285.txt",
+  "json": "french/narration/ch285.json",
+  "textHash": "fnv1a64:4982bb1e9b41a8f2",
+  "jsonHash": "fnv1a64:8795f8c25eb49f7b",
+  "findings": []
+}

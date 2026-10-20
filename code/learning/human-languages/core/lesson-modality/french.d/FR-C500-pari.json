@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C500-pari",
+    "language": "french",
+    "chapter": 500,
+    "sequence": 27470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:822d302527d994a7"
+  },
+  "findings": []
+}

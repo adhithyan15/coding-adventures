@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 404,
+  "sourceHash": "fnv1a64:732eb2bf0c17180c",
+  "lessonIds": [
+    "FR-C404-crevaison",
+    "FR-C404-crever",
+    "FR-C404-pneu",
+    "FR-C404-cric",
+    "FR-C404-gonfler"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch404.txt",
+  "json": "french/narration/ch404.json",
+  "textHash": "fnv1a64:c27e764452189e14",
+  "jsonHash": "fnv1a64:dc1712c9053f4eb6",
+  "findings": []
+}

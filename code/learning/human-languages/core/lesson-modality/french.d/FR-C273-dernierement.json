@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C273-dernierement",
+    "language": "french",
+    "chapter": 273,
+    "sequence": 15780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d3e545526ae541eb"
+  },
+  "findings": []
+}

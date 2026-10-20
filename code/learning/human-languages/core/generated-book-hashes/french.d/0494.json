@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 494,
+  "sourceHash": "fnv1a64:ca90f41d17010d1f",
+  "lessonIds": [
+    "FR-C494-elever",
+    "FR-C494-gater",
+    "FR-C494-punition",
+    "FR-C494-desobeir",
+    "FR-C494-creche"
+  ],
+  "tex": "french/book/chapters/ch494-elever-des-enfants.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:ec18d6023f5401b9",
+  "lessonIds": [
+    "FR-C360-augmentation",
+    "FR-C360-promotion",
+    "FR-C360-qualification",
+    "FR-C360-competence",
+    "FR-C360-formation"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch360.txt",
+  "json": "french/narration/ch360.json",
+  "textHash": "fnv1a64:508ec79616b560c5",
+  "jsonHash": "fnv1a64:f014ba7daba37a88",
+  "findings": []
+}

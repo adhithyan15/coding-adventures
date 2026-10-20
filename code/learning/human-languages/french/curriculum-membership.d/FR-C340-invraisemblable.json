@@ -1,0 +1,11 @@
+{
+  "id": "FR-C340-invraisemblable",
+  "pathSegment": "FR-PATH-340-FIABLE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-340-FIABLE",
+      "order": 4
+    }
+  ]
+}

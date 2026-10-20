@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-320-TOAST",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can raise a glass and make wishes: clinking glasses, a toast, wishing, candles and a wish.",
+  "prerequisites": []
+}

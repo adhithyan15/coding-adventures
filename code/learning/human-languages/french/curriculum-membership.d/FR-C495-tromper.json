@@ -1,0 +1,11 @@
+{
+  "id": "FR-C495-tromper",
+  "pathSegment": "FR-PATH-495-DISPUTES",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-495-DISPUTES",
+      "order": 2
+    }
+  ]
+}

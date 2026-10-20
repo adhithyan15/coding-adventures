@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-459-ANIMAUX",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-459-ANIMAUX"
+  ],
+  "after": []
+}

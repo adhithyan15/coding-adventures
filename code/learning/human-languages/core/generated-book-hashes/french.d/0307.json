@@ -1,0 +1,14 @@
+{
+  "language": "french",
+  "chapter": 307,
+  "sourceHash": "fnv1a64:14d136191154e92e",
+  "lessonIds": [
+    "FR-C307-degat",
+    "FR-C307-endommager",
+    "FR-C307-assurance",
+    "FR-C307-sinistre",
+    "FR-C307-rayure",
+    "FR-R307-revision-300-307"
+  ],
+  "tex": "french/book/chapters/ch307-les-degats.tex"
+}

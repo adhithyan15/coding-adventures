@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:d91eb4dcebcb6b9b",
+  "lessonIds": [
+    "FR-C420-turbulence",
+    "FR-C420-escale",
+    "FR-C420-decaler",
+    "FR-C420-decalage",
+    "FR-C420-retarder"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch420.txt",
+  "json": "french/narration/ch420.json",
+  "textHash": "fnv1a64:8facbecb845f6f1b",
+  "jsonHash": "fnv1a64:79f4e2f131ae5fbc",
+  "findings": []
+}

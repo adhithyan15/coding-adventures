@@ -1,0 +1,19 @@
+{
+  "chapter": 479,
+  "title": "Petits accidents",
+  "label": "ch:fr-petits-accidents",
+  "canDo": "I can talk about small injuries at home.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C479-bosse",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 479: I can talk about small injuries at home.",
+    "assesses": [
+      "FR-LEX-C479-BLESSURES-03",
+      "FR-LEX-C479-BLESSURES-04",
+      "FR-LEX-C479-BLESSURES-05"
+    ]
+  }
+}

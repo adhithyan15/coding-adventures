@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C449-fleuriste",
+    "language": "french",
+    "chapter": 449,
+    "sequence": 24810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d71c3718a93511e8"
+  },
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-352-FREIN",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what stands in the way of a plan, what prevents or hinders it, and what favours it or works as an asset.",
+  "prerequisites": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 280,
+  "sourceHash": "fnv1a64:36ccbbef20066641",
+  "lessonIds": [
+    "FR-C280-journal-televise",
+    "FR-C280-presentateur",
+    "FR-C280-telespectateur",
+    "FR-C280-auditeur",
+    "FR-C280-micro"
+  ],
+  "tex": "french/book/chapters/ch280-le-journal-televise.tex"
+}

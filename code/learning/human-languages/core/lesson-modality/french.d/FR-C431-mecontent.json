@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C431-mecontent",
+    "language": "french",
+    "chapter": 431,
+    "sequence": 23920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:70358897d9cbaf38"
+  },
+  "findings": []
+}

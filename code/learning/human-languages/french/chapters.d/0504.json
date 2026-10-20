@@ -1,0 +1,19 @@
+{
+  "chapter": 504,
+  "title": "À la salle",
+  "label": "ch:fr-a-la-salle",
+  "canDo": "I can talk about working out at the gym.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C504-echauffer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 504: I can talk about working out at the gym.",
+    "assesses": [
+      "FR-LEX-C504-GYM-03",
+      "FR-LEX-C504-GYM-04",
+      "FR-LEX-C504-GYM-05"
+    ]
+  }
+}

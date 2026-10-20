@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 449,
+  "sourceHash": "fnv1a64:512402af046552a1",
+  "lessonIds": [
+    "FR-C449-fleuriste",
+    "FR-C449-buraliste",
+    "FR-C449-affranchir",
+    "FR-C449-expedier",
+    "FR-C449-ficeler"
+  ],
+  "tex": "french/book/chapters/ch449-fleurs-tabac-et-colis.tex"
+}

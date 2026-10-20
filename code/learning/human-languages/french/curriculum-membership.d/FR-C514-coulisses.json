@@ -1,0 +1,11 @@
+{
+  "id": "FR-C514-coulisses",
+  "pathSegment": "FR-PATH-514-THEATRE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-514-THEATRE",
+      "order": 1
+    }
+  ]
+}

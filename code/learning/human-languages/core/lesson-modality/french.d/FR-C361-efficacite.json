@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C361-efficacite",
+    "language": "french",
+    "chapter": 361,
+    "sequence": 20310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c00076a72535ba5"
+  },
+  "findings": []
+}

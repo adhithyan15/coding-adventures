@@ -1,0 +1,11 @@
+{
+  "id": "FR-C360-promotion",
+  "pathSegment": "FR-PATH-360-CARRIERE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-360-CARRIERE",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-404-CREVAISON",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can deal with a flat tyre: the puncture, getting one, the tyre, the jack and pumping it up.",
+  "prerequisites": []
+}
