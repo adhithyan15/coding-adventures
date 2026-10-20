@@ -328,4 +328,4 @@ multiplication), and a failing test runs the same flush-then-throw sequence with
 `Trap.Overflow`. `Math.*Exact` is not used: its `ArithmeticException` carries no
 kind and does not flush.
 
-LANG83 PR6a adds `write_f64_py` / `write_f64_js` → the class's private static `__iir_write_f64(DI)V`. It takes the shortest digits from `Double.toString` (JDK 19+), with a one-digit correction for the deepest subnormals, and prints Python's `repr` or JavaScript's `toString` layout.
+LANG83 PR6a adds `write_f64_py` / `write_f64_js` → the class's private static `__iir_write_f64(DI)V`. It finds the shortest round-trip digits itself, by rounding the double's exact `BigDecimal` value to 1, 2, … 17 significant digits (`FLOOR` and `CEILING`) until one reads back, and prints Python's `repr` or JavaScript's `toString` layout. It uses Java 5 APIs only, so the output is the same on every JVM that loads a version-49 class (it does not use `Double.toString`, which is shortest only on JDK 19+).

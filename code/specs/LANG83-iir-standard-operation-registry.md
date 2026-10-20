@@ -577,8 +577,10 @@ For finite non-zero `x`, the digit string `D` is the shortest one such that
 length qualify, it is the one closest to `x`. On an exact tie the last digit
 is even. Python's `repr` and ECMAScript's `Number::toString` produce exactly
 this. So, per their documentation, do Java 19+'s `Double.toString`, .NET Core
-3.0+'s `"R"` and Erlang's `float_to_list(F, [short])` (Ryu). Two host
-formatters differ, so the backends that use them correct for it:
+3.0+'s `"R"` and Erlang's `float_to_list(F, [short])` (Ryu). The JVM backend
+does not rely on `Double.toString`, because a version-49 class may run on a
+JVM older than 19 (see the JVM row below). Two host formatters differ, so the
+backends that use them correct for it:
 
 - **Rust's `{:e}` rounds an exact tie up.** Against host `python3` on 535 432
   values, Rust's digits differed on 94, and every one was such a tie. `2^-25`
@@ -642,7 +644,7 @@ emits itself.
 | x86-64 / AArch64 | `__twig_write_f64_py` / `__twig_write_f64_js` in the native runtime (`twig_runtime.c`, the same place PR1b put `__twig_write_i64`): the core above in C, on stack bignums | C; `putchar` on the same `stdout` `FILE*` as `printf`. The argument is the raw bit pattern in a GPR (`rdi` / `x0`), so the generic `call_builtin` marshalling is unchanged. |
 | LLVM | module-local `linkonce_odr` IR: `@__iir_bn_*` limb routines and `@__iir_f64_digits` (the core, bignums in `alloca [40 x i64]`) | `linkonce_odr @__iir_write_f64(double, i32 layout)`; libc `putchar` |
 | WASM | in-module functions: `$__iir_bn_*` limb routines and the core, bignums in a 1 664-byte region reserved at the end of the module's static data (so neither the bump allocator nor string data can overlap it) | in-module `$__iir_write_f64(f64, i32 layout)`; one `env.putchar` per byte |
-| JVM | `Double.toString(Math.abs(x))`: JDK 19+ implements Raffaello Giulietti's shortest algorithm (JDK-4511638). CI runs JDK 21. When two digits survive, the helper tries the two one-digit neighbours with `BigDecimal.doubleValue` and keeps the closer one that reads back (even on a tie), because Java never prints one digit. | synthetic private static method `__iir_write_f64(DI)V`: `new BigDecimal(s).stripTrailingZeros()` gives `D` (`unscaledValue()`) and `e10 = len(D) - 1 - scale()`; fixed layout is `toPlainString()`, sci is built with a `StringBuilder`; one `System.out.print(String)` |
+| JVM | a search in the helper, with Java 5 APIs only, so the output does not depend on the JDK. `exact = new BigDecimal(Math.abs(x))` is the double's exact value. For p = 1, 2, … 17 it computes `lo = exact.round(new MathContext(p, FLOOR))` and `hi = exact.round(new MathContext(p, CEILING))`, and stops at the first p where `lo.doubleValue()` or `hi.doubleValue()` equals `|x|`. If only one reads back, that one wins. If both do, the closer to `exact` wins, and on an exact tie the even last digit. Both neighbours are needed because the round-trip interval is lopsided at a power of two. Any p-digit decimal in the interval implies that `lo` or `hi` is in it, so the first such p is the shortest length. `Double.toString` is NOT used: it is shortest only on JDK 19+ (JDK-4511638), and CI's Windows job runs a pre-19 `java`. | synthetic private static method `__iir_write_f64(DI)V`: `picked.stripTrailingZeros()` gives `D` (`unscaledValue()`) and `e10 = len(D) - 1 - scale()`; fixed layout is `toPlainString()`, sci is built with a `StringBuilder`; one `System.out.print(String)` |
 | CLR (textual) | `Math.Abs(x).ToString("R", CultureInfo.InvariantCulture)`: shortest round-trip on .NET Core 3.0+ | IL helper `__iir_write_f64(float64, int32)` that parses the mantissa / `E` exponent with `IndexOf`, `Substring`, `Remove`, `TrimStart('0')`, `TrimEnd('0')` and `Int32.Parse`, then `Console.Write(string)` for each piece |
 | BEAM | `erlang:float_to_list(F, [short])`: shortest round-trip since OTP 25 (Ryu). CI runs OTP 27. | module function `'__iir_write_f64'/2` (exported, because `ir-to-beam` writes the Code chunk's function count as the export count): `string:split` on `e` and `.`, `string:trim` of `0`s, `list_to_integer`, then `io:put_chars/1` per piece |
 | VM | Rust `format!("{:e}", x)` for the shortest digits. Then Rust's exact `{:.1100e}` expansion detects an exact tie: one digit longer than the shortest, ending in `5`. On a tie the module takes the even neighbour whenever it also reads back. | `vm_core::float_format::{python_repr, js_to_string}`; default builtins on the same `stdout` handle as `write_i64` |
@@ -699,7 +701,10 @@ against `python3`, 402 112 against `node`), with no mismatch:
 - the native runtime's C (also clean under ASan/UBSan);
 - the LLVM IR at `-O0` and `-O2`;
 - the emitted WASM module, run on V8;
-- the JVM helper on JDK 21.
+- the JVM helper on JDK 21. After the fix below it was re-checked with
+  `-Xverify:all` on JDK 8, 17 and 21, on a 775 126-value corpus (the one above,
+  plus every binade boundary `2^k` and its neighbours, random bit patterns,
+  random subnormals and random short decimals), with no mismatch.
 
 The VM/JIT formatter was checked the same way. CLR, BEAM and AArch64 are
 structural here. Their unit tests pin the emitted IL, BEAM instructions and
@@ -719,8 +724,14 @@ these builtins (LANG83 PR2 for Python).
   Rust rounds an exact tie up, so the oracle is host `python3` / `node`. The
   VM/JIT formatter takes Rust's digits and applies round-half-even with Rust's
   exact expansion (see "The digits").
-- *JVM.* `Double.toString` was planned as the whole digit source. It prints at
-  least two digits, so the helper adds the one-digit neighbour check.
+- *JVM.* `Double.toString` was planned as the whole digit source. The first
+  implementation used it, with a one-digit neighbour check because it prints
+  at least two digits. CI's Windows job runs the runner's preinstalled `java`,
+  which is older than 19. There `Double.toString` is not shortest: it printed
+  `1.9999999999999998e+23` where Python and JS print `2e+23`. So the helper
+  now finds the digits itself with the `BigDecimal` FLOOR/CEILING search in
+  the JVM row above. That search also covers one-digit results, so the
+  neighbour check is gone.
 - *JIT.* `JITCore`'s optimiser propagates a `const_f64` into the writer's
   operand, so the JIT accepts a float literal there as well as a float
   register.

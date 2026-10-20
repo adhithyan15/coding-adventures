@@ -16,8 +16,10 @@ real-JVM test against a `python3`-generated table caught the difference on its
 first run.
 
 What to do: when re-using a host formatter as a "shortest digits" source,
-check its documented minimum length, not just its rounding rule. The JVM
-helper now tries the two one-digit neighbours whenever two digits survive
-stripping. It keeps the one that reads back (`BigDecimal.doubleValue` rounds
-correctly), and when both do, the closer one, with an exact tie going to the
-even digit. Include subnormals like `5e-324` in every float-output table.
+check its documented minimum length, not just its rounding rule, and check
+which runtime versions actually have that rounding rule. `Double.toString` is
+shortest only on JDK 19+ (see the lesson on CI's preinstalled Windows JDK). The
+JVM helper therefore no longer uses it. It searches
+`new BigDecimal(|x|).round(MathContext(p, FLOOR | CEILING))` for p = 1, 2, …
+until one reads back, which handles one-digit results like `5e-324` with no
+special case. Include subnormals like `5e-324` in every float-output table.

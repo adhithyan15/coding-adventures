@@ -1,11 +1,14 @@
 //! LANG83 PR6a on the JVM backend: `write_f64_py` / `write_f64_js`.
 //!
 //! Both lower to `dload x; iconst_<layout>; invokestatic __iir_write_f64(DI)V`,
-//! the class's own synthetic method, which takes the shortest digits from
-//! `Double.toString` (JDK 19+) and lays them out like Python or JavaScript.
-//! The structural tests pin that shape; when `java` is installed, the
-//! execution tests run the class on a real JVM with the verifier on and
-//! compare against strings printed by host `python3` and `node`.
+//! the class's own synthetic method, which searches `BigDecimal` roundings of
+//! the double's exact value for the shortest round-trip digits (Java 5 APIs
+//! only — NOT `Double.toString`, which is shortest only on JDK 19+) and lays
+//! them out like Python or JavaScript. The structural tests pin that shape;
+//! when `java` is installed, the execution tests run the class on a real JVM
+//! (whichever `java` is first on PATH — CI's Windows job uses a pre-19 one)
+//! with the verifier on and compare against strings printed by host `python3`
+//! and `node`.
 
 use std::process::Command;
 
@@ -79,7 +82,10 @@ fn the_class_gets_one_private_static_float_writer() {
     assert_eq!(helpers[0].access_flags, 0x0002 | ACC_STATIC, "private static");
     let refs = methodrefs(&class);
     for needed in [
-        "java/lang/Double.toString:(D)Ljava/lang/String;",
+        "java/math/BigDecimal.<init>:(D)V",
+        "java/math/MathContext.<init>:(ILjava/math/RoundingMode;)V",
+        "java/math/BigDecimal.round:(Ljava/math/MathContext;)Ljava/math/BigDecimal;",
+        "java/math/BigDecimal.doubleValue:()D",
         "java/math/BigDecimal.stripTrailingZeros:()Ljava/math/BigDecimal;",
         "java/math/BigDecimal.toPlainString:()Ljava/lang/String;",
         "java/io/PrintStream.print:(Ljava/lang/String;)V",
@@ -87,6 +93,12 @@ fn the_class_gets_one_private_static_float_writer() {
     ] {
         assert!(refs.iter().any(|r| r == needed), "missing {needed} in {refs:?}");
     }
+    // The digits must not come from `Double.toString`: before JDK 19 it is
+    // not the shortest round-trip decimal (it prints 1.9999999999999998E23).
+    assert!(
+        !refs.iter().any(|r| r.starts_with("java/lang/Double.toString:")),
+        "Double.toString is JDK-version dependent: {refs:?}"
+    );
     // A module that prints no float carries no helper.
     let plain = IIRModule { functions: vec![IIRFunction::new("main", vec![], "i64", vec![
         IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"),

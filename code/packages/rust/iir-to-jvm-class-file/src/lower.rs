@@ -5579,16 +5579,17 @@ fn generate_call_closure_dispatch(
 // ```
 //
 // and this section builds that one extra static method, emitted into the class
-// only when the module prints a float. The JVM already knows the hard part:
-// since JDK 19, `Double.toString(d)` prints the SHORTEST decimal that reads
-// back as `d`, closest on a length tie and even on an exact tie (Raffaello
-// Giulietti's algorithm, JDK-4511638; CI runs JDK 21) — with one exception:
-// it never prints fewer than TWO digits, so a value whose shortest decimal
-// has one digit and is inexact (only the deepest subnormals: `5e-324` is
-// `4.9E-324` in Java) needs the one-digit check described at its code. Apart
-// from that, the method only has to move the decimal point the way Python or
-// JavaScript would, which Java's own layout (`1.0E16`, `1.0E-5`, `100.0`)
-// does not:
+// only when the module prints a float. The hard part is the DIGITS: Python's
+// `repr` and JavaScript's `String(x)` both print the SHORTEST decimal that
+// reads back as the double, the closest one on a length tie, and the one with
+// an even last digit on an exact tie. `Double.toString` only does that since
+// JDK 19 (JDK-4511638); on JDK 8 or 17 it prints `1.9999999999999998E23`
+// where Python and JavaScript print `2e+23`. The class file is version 49, so
+// ANY JVM from Java 5 on may run it, and its output must not depend on which.
+// So the method finds the digits itself with a short search over
+// `java.math.BigDecimal` roundings of the double's exact value (Java 5 APIs
+// only; the argument is at its code), then moves the decimal point the way
+// Python or JavaScript would:
 //
 // ```java
 // private static void __iir_write_f64(double x, int js) {
@@ -5599,10 +5600,9 @@ fn generate_call_closure_dispatch(
 //         if (Double.isInfinite(x)) sb.append(js != 0 ? "Infinity" : "inf");
 //         else if (x == 0) sb.append(js != 0 ? "0" : "0.0");
 //         else {
-//             BigDecimal b = new BigDecimal(Double.toString(Math.abs(x))).stripTrailingZeros();
+//             BigDecimal b = shortest(Math.abs(x)).stripTrailingZeros();  // see below
 //             String d = b.unscaledValue().toString();          // the digits, D
 //             int n = d.length(), e = n - 1 - b.scale();        // e: exponent of D[0]
-//             if (n == 2) { ... }   // Java never prints one digit: see below
 //             if (js != 0 ? (e >= -6 && e < 21) : (e >= -4 && e < 16)) {
 //                 sb.append(b.toPlainString());                 // 0.0001, 100, 123.456
 //                 if (js == 0 && b.scale() <= 0) sb.append(".0");
@@ -5679,9 +5679,11 @@ impl Bytecode {
 /// Build `private static void __iir_write_f64(double x, int js)`.
 fn build_write_f64_method(cp: &mut ConstantPoolBuilder) -> Result<JvmMethodInfo, IIRJvmError> {
     // Locals: x = 0..1 (double), js = 2, b = 3 (BigDecimal), d = 4 (String),
-    // n = 5, e = 6, sb = 7 (StringBuilder), a = 8; the one-digit check's lo =
-    // 9, hi = 10, ax = 11..12 (double), lo_miss = 13, hi_miss = 14, exact = 15,
-    // c = 16.
+    // n = 5, e = 6, sb = 7 (StringBuilder), a = 8; the digit search's exact =
+    // 9 (BigDecimal), ax = 10..11 (double), p = 12, lo = 13, hi = 14 (both
+    // BigDecimal), lo_miss = 15, hi_miss = 16, c = 17. Each slot holds ONE
+    // type throughout, so the version-49 type-inferring verifier never has
+    // to merge conflicting types at a join.
     const X: u8 = 0;
     const JS: u8 = 2;
     const BD: u8 = 3;
@@ -5690,13 +5692,16 @@ fn build_write_f64_method(cp: &mut ConstantPoolBuilder) -> Result<JvmMethodInfo,
     const E: u8 = 6;
     const SB: u8 = 7;
     const A: u8 = 8;
-    const LO: u8 = 9;
-    const HI: u8 = 10;
-    const AX: u8 = 11;
-    const LO_MISS: u8 = 13;
-    const HI_MISS: u8 = 14;
-    const EXACT: u8 = 15;
-    const C: u8 = 16;
+    const EXACT: u8 = 9;
+    const AX: u8 = 10;
+    const P: u8 = 12;
+    const LO: u8 = 13;
+    const HI: u8 = 14;
+    const LO_MISS: u8 = 15;
+    const HI_MISS: u8 = 16;
+    const C: u8 = 17;
+    /// One past the highest slot above.
+    const MAX_LOCALS: u16 = 18;
     const SBC: &str = "java/lang/StringBuilder";
     const BDC: &str = "java/math/BigDecimal";
     let append_str = cp.add_methodref(SBC, "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;");
@@ -5752,78 +5757,123 @@ fn build_write_f64_method(cp: &mut ConstantPoolBuilder) -> Result<JvmMethodInfo,
     lit(&mut b, cp, "0.0");
     b.branch(GOTO, "print");
 
-    // ── The shortest digits, via Double.toString and BigDecimal ──────────────
+    // ── The shortest digits, searched for with BigDecimal ────────────────────
+    // `Double.toString` cannot supply them: only since JDK 19 (JDK-4511638)
+    // is its output the SHORTEST round-trip decimal. Older JVMs — and the
+    // class file is version 49, so any JVM from Java 5 on may run it — print
+    // `1.9999999999999998E23` for the double nearest 2e23, although `2e23`
+    // reads back as the very same double. So the method finds the digits
+    // itself, from first principles, with Java 5 APIs only:
+    //
+    // ```java
+    // double ax = Math.abs(x);
+    // BigDecimal exact = new BigDecimal(ax);   // the double's EXACT value
+    // for (int p = 1; ; p++) {
+    //     BigDecimal lo = exact.round(new MathContext(p, RoundingMode.FLOOR));
+    //     BigDecimal hi = exact.round(new MathContext(p, RoundingMode.CEILING));
+    //     int loMiss = dcmpl(lo.doubleValue(), ax);     // 0: lo reads back as ax
+    //     int hiMiss = dcmpl(hi.doubleValue(), ax);
+    //     if (loMiss == 0 || hiMiss == 0 || p >= 17) break;
+    // }
+    // pick: only lo reads back -> lo; only hi -> hi; otherwise the one closer
+    //       to exact, and on an exact tie the one whose last digit is even.
+    // b = picked.stripTrailingZeros();
+    // ```
+    //
+    // Why this is the answer Python's `repr` and JavaScript's `String(x)`
+    // give — "the fewest digits that read back, then the closest, then even":
+    //
+    // - The decimals that read back as x form one interval around `exact`
+    //   (the round-to-nearest-even interval of x). If ANY p-digit decimal
+    //   lies in it, then so does the p-digit decimal just below `exact`
+    //   (FLOOR) or just above it (CEILING): both sit between that decimal and
+    //   `exact`. So trying p = 1, 2, 3, … and stopping at the first p where
+    //   lo or hi reads back finds the shortest length.
+    // - Among the p-digit decimals inside the interval, lo and hi are the two
+    //   closest to `exact`, so "closest, then even" chooses between them.
+    // - Both neighbours are needed, not just the HALF_EVEN rounding: at a
+    //   power of two the interval is lopsided (the gap below x is half the gap
+    //   above), so the nearest p-digit decimal can miss while the other one
+    //   reads back.
+    // - 17 significant digits always identify a double, so the loop stops by
+    //   p = 17. The `p >= 17` exit is a belt-and-braces bound: should a JVM's
+    //   `doubleValue` ever misround, the method still terminates, printing
+    //   the nearest 17-digit decimal.
+    // - `BigDecimal.doubleValue` is the JVM's correctly rounded decimal → double
+    //   conversion, and `dcmpl` compares the two doubles numerically (it sees
+    //   no NaN here: `ax` is finite and nonzero, and so is any decimal near it).
+    //
+    // The same search covers the deepest subnormals (`5e-324` has one digit;
+    // the old `Double.toString` path printed `4.9E-324` and needed a special
+    // one-digit fix-up, which this search makes unnecessary).
     b.bind("digits");
     let bd_class = cp.add_class(BDC);
+    let mc_class = cp.add_class("java/math/MathContext");
     let math_abs = cp.add_methodref("java/lang/Math", "abs", "(D)D");
-    let double_to_string = cp.add_methodref("java/lang/Double", "toString", "(D)Ljava/lang/String;");
-    let bd_init = cp.add_methodref(BDC, "<init>", "(Ljava/lang/String;)V");
-    let strip = cp.add_methodref(BDC, "stripTrailingZeros", "()Ljava/math/BigDecimal;");
-    let unscaled = cp.add_methodref(BDC, "unscaledValue", "()Ljava/math/BigInteger;");
-    let bigint_to_string = cp.add_methodref("java/math/BigInteger", "toString", "()Ljava/lang/String;");
-    let length = cp.add_methodref("java/lang/String", "length", "()I");
-    let scale = cp.add_methodref(BDC, "scale", "()I");
-    b.op_u16(NEW, bd_class).op(DUP).op_u8(DLOAD, X).op_u16(INVOKESTATIC, math_abs);
-    b.op_u16(INVOKESTATIC, double_to_string).op_u16(INVOKESPECIAL, bd_init);
-    b.op_u16(INVOKEVIRTUAL, strip).op_u8(ASTORE, BD);
-    // `derive` recomputes D, n and e from `b`; the one-digit check below
-    // comes back here (at most once) after replacing `b`.
-    b.bind("derive");
-    b.op_u8(ALOAD, BD).op_u16(INVOKEVIRTUAL, unscaled).op_u16(INVOKEVIRTUAL, bigint_to_string).op_u8(ASTORE, DIGITS);
-    b.op_u8(ALOAD, DIGITS).op_u16(INVOKEVIRTUAL, length).op_u8(ISTORE, N);
-    // e = n - 1 - scale
-    b.op_u8(ILOAD, N).op(ICONST_1).op(ISUB).op_u8(ALOAD, BD).op_u16(INVOKEVIRTUAL, scale).op(ISUB).op_u8(ISTORE, E);
-
-    // ── Java never prints ONE digit; Python and JavaScript do ────────────────
-    // `Double.toString` chooses among decimals of length 2 or more, so when
-    // the shortest round-trip decimal has a single digit it prints the
-    // closest TWO-digit one instead. That only differs after stripping zeros
-    // when x has almost no precision — the deepest subnormals: Java prints
-    // `4.9E-324` and `9.9E-324` where Python and JS print `5e-324` and
-    // `1e-323`. So whenever two digits survive, try the two one-digit
-    // neighbours lo = d1 × 10^e and hi = (d1 + 1) × 10^e, keep whichever reads
-    // back as |x| (`BigDecimal.doubleValue` rounds correctly), and when both
-    // do, the closer to the exact |x| — on an exact tie, the even digit.
-    let bi_value_of = cp.add_methodref("java/math/BigInteger", "valueOf", "(J)Ljava/math/BigInteger;");
-    let bi_one = cp.add_fieldref("java/math/BigInteger", "ONE", "Ljava/math/BigInteger;");
-    let bd_scaled = cp.add_methodref(BDC, "<init>", "(Ljava/math/BigInteger;I)V");
     let bd_exact = cp.add_methodref(BDC, "<init>", "(D)V");
-    let bd_add = cp.add_methodref(BDC, "add", "(Ljava/math/BigDecimal;)Ljava/math/BigDecimal;");
+    let mc_init = cp.add_methodref("java/math/MathContext", "<init>", "(ILjava/math/RoundingMode;)V");
+    let floor = cp.add_fieldref("java/math/RoundingMode", "FLOOR", "Ljava/math/RoundingMode;");
+    let ceiling = cp.add_fieldref("java/math/RoundingMode", "CEILING", "Ljava/math/RoundingMode;");
+    let bd_round = cp.add_methodref(BDC, "round", "(Ljava/math/MathContext;)Ljava/math/BigDecimal;");
+    let bd_double = cp.add_methodref(BDC, "doubleValue", "()D");
     let bd_sub = cp.add_methodref(BDC, "subtract", "(Ljava/math/BigDecimal;)Ljava/math/BigDecimal;");
     let bd_cmp = cp.add_methodref(BDC, "compareTo", "(Ljava/math/BigDecimal;)I");
-    let bd_double = cp.add_methodref(BDC, "doubleValue", "()D");
-    let first_char = cp.add_methodref("java/lang/String", "charAt", "(I)C");
-    b.op_u8(ILOAD, N).op(ICONST_2).branch(IF_ICMPNE, "layout");
-    // lo = new BigDecimal(BigInteger.valueOf(d1), -e)
-    b.op_u16(NEW, bd_class).op(DUP).op_u8(ALOAD, DIGITS).op(ICONST_0).op_u16(INVOKEVIRTUAL, first_char);
-    b.op_u8(BIPUSH, b'0').op(ISUB).op(I2L).op_u16(INVOKESTATIC, bi_value_of);
-    b.op_u8(ILOAD, E).op(INEG).op_u16(INVOKESPECIAL, bd_scaled).op_u8(ASTORE, LO);
-    // hi = lo + 10^e
-    b.op_u8(ALOAD, LO).op_u16(NEW, bd_class).op(DUP).op_u16(GETSTATIC, bi_one).op_u8(ILOAD, E).op(INEG);
-    b.op_u16(INVOKESPECIAL, bd_scaled).op_u16(INVOKEVIRTUAL, bd_add).op_u8(ASTORE, HI);
-    // ax = |x|; lo_miss / hi_miss = dcmpl(candidate, ax): 0 when it reads back
+    let strip = cp.add_methodref(BDC, "stripTrailingZeros", "()Ljava/math/BigDecimal;");
+    let unscaled = cp.add_methodref(BDC, "unscaledValue", "()Ljava/math/BigInteger;");
+    let test_bit = cp.add_methodref("java/math/BigInteger", "testBit", "(I)Z");
+    // ax = |x|; exact = new BigDecimal(ax); p = 0
     b.op_u8(DLOAD, X).op_u16(INVOKESTATIC, math_abs).op_u8(DSTORE, AX);
+    b.op_u16(NEW, bd_class).op(DUP).op_u8(DLOAD, AX).op_u16(INVOKESPECIAL, bd_exact).op_u8(ASTORE, EXACT);
+    b.op(ICONST_0).op_u8(ISTORE, P);
+    b.bind("search");
+    // p = p + 1 (there is no `iinc` in this crate's stack-effect table)
+    b.op_u8(ILOAD, P).op(ICONST_1).op(IADD).op_u8(ISTORE, P);
+    // lo = exact.round(new MathContext(p, FLOOR)); hi likewise with CEILING
+    for (mode, slot) in [(floor, LO), (ceiling, HI)] {
+        b.op_u8(ALOAD, EXACT).op_u16(NEW, mc_class).op(DUP).op_u8(ILOAD, P).op_u16(GETSTATIC, mode);
+        b.op_u16(INVOKESPECIAL, mc_init).op_u16(INVOKEVIRTUAL, bd_round).op_u8(ASTORE, slot);
+    }
+    // lo_miss / hi_miss = dcmpl(candidate.doubleValue(), ax): 0 when it reads back
     b.op_u8(ALOAD, LO).op_u16(INVOKEVIRTUAL, bd_double).op_u8(DLOAD, AX).op(DCMPL).op_u8(ISTORE, LO_MISS);
     b.op_u8(ALOAD, HI).op_u16(INVOKEVIRTUAL, bd_double).op_u8(DLOAD, AX).op(DCMPL).op_u8(ISTORE, HI_MISS);
-    b.op_u8(ILOAD, LO_MISS).branch(IFEQ, "one_digit");
-    b.op_u8(ILOAD, HI_MISS).branch(IFNE, "layout"); // neither: two digits it is
-    b.bind("one_digit");
-    b.op_u8(ILOAD, LO_MISS).branch(IFNE, "pick_hi");
-    b.op_u8(ILOAD, HI_MISS).branch(IFNE, "pick_lo");
-    // Both read back: c = (|x| - lo) compareTo (hi - |x|).
-    b.op_u16(NEW, bd_class).op(DUP).op_u8(DLOAD, AX).op_u16(INVOKESPECIAL, bd_exact).op_u8(ASTORE, EXACT);
+    b.op_u8(ILOAD, LO_MISS).branch(IFEQ, "found");
+    b.op_u8(ILOAD, HI_MISS).branch(IFEQ, "found");
+    b.op_u8(ILOAD, P).op_u8(BIPUSH, 17).branch(IF_ICMPLT, "search");
+    // ── Choose: the one that reads back, else the closer, else the even ──────
+    b.bind("found");
+    b.op_u8(ILOAD, LO_MISS).branch(IFNE, "lo_missed");
+    b.op_u8(ILOAD, HI_MISS).branch(IFNE, "pick_lo"); // only lo reads back
+    b.branch(GOTO, "closer"); // both read back
+    b.bind("lo_missed");
+    b.op_u8(ILOAD, HI_MISS).branch(IFEQ, "pick_hi"); // only hi reads back
+    // (neither: only at the p = 17 bound — take the closer, as below)
+    b.bind("closer");
+    // c = (exact - lo) compareTo (hi - exact). When `exact` itself has p
+    // digits, lo == hi == exact and either pick is the same number.
     b.op_u8(ALOAD, EXACT).op_u8(ALOAD, LO).op_u16(INVOKEVIRTUAL, bd_sub);
     b.op_u8(ALOAD, HI).op_u8(ALOAD, EXACT).op_u16(INVOKEVIRTUAL, bd_sub);
     b.op_u16(INVOKEVIRTUAL, bd_cmp).op_u8(ISTORE, C);
     b.op_u8(ILOAD, C).branch(IFLT, "pick_lo");
     b.op_u8(ILOAD, C).branch(IFGT, "pick_hi");
-    // An exact tie: the even digit ('0' is even, so the char's parity is the digit's).
-    b.op_u8(ALOAD, DIGITS).op(ICONST_0).op_u16(INVOKEVIRTUAL, first_char).op(ICONST_1).op(IAND).branch(IFEQ, "pick_lo");
+    // An exact tie: the even last digit. A number's last decimal digit has
+    // the number's parity, so bit 0 of lo's unscaled value decides; hi's
+    // last digit is then lo's plus one (or 0 after a carry), i.e. even.
+    b.op_u8(ALOAD, LO).op_u16(INVOKEVIRTUAL, unscaled).op(ICONST_0).op_u16(INVOKEVIRTUAL, test_bit);
+    b.branch(IFEQ, "pick_lo");
     b.bind("pick_hi");
     b.op_u8(ALOAD, HI).op_u16(INVOKEVIRTUAL, strip).op_u8(ASTORE, BD).branch(GOTO, "derive");
     b.bind("pick_lo");
-    b.op_u8(ALOAD, LO).op_u16(INVOKEVIRTUAL, strip).op_u8(ASTORE, BD).branch(GOTO, "derive");
-    b.bind("layout");
+    b.op_u8(ALOAD, LO).op_u16(INVOKEVIRTUAL, strip).op_u8(ASTORE, BD);
+
+    // ── D, n and e from b: digits 1234, scale 2 -> 12.34, e = 1 ──────────────
+    b.bind("derive");
+    let bigint_to_string = cp.add_methodref("java/math/BigInteger", "toString", "()Ljava/lang/String;");
+    let length = cp.add_methodref("java/lang/String", "length", "()I");
+    let scale = cp.add_methodref(BDC, "scale", "()I");
+    b.op_u8(ALOAD, BD).op_u16(INVOKEVIRTUAL, unscaled).op_u16(INVOKEVIRTUAL, bigint_to_string).op_u8(ASTORE, DIGITS);
+    b.op_u8(ALOAD, DIGITS).op_u16(INVOKEVIRTUAL, length).op_u8(ISTORE, N);
+    // e = n - 1 - scale
+    b.op_u8(ILOAD, N).op(ICONST_1).op(ISUB).op_u8(ALOAD, BD).op_u16(INVOKEVIRTUAL, scale).op(ISUB).op_u8(ISTORE, E);
 
     // ── Fixed or scientific? JS: -6 <= e < 21; Python: -4 <= e < 16 ──────────
     b.op_u8(ILOAD, JS).branch(IFEQ, "py_range");
@@ -5890,7 +5940,7 @@ fn build_write_f64_method(cp: &mut ConstantPoolBuilder) -> Result<JvmMethodInfo,
         attributes: vec![JvmMethodAttribute::Code(JvmCodeAttribute {
             name: "Code".to_string(),
             max_stack,
-            max_locals: 17,
+            max_locals: MAX_LOCALS,
             code,
             nested_attributes: vec![],
         })],

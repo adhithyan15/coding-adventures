@@ -4,19 +4,34 @@
 
 - **`write_f64_py` / `write_f64_js`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR6a): `dload x;
   iconst_0|1; invokestatic <class>.__iir_write_f64(DI)V`. The class gets one
-  private static helper. Its digits come from `Double.toString` (JDK 19+
-  shortest), re-read through `new BigDecimal(..).stripTrailingZeros()`, and it
-  lays them out with `toPlainString` or a `StringBuilder`, then makes one
-  `System.out.print`.
-- Java never prints fewer than two digits (`Double.MIN_VALUE` is `4.9E-324`,
-  where Python and JS print `5e-324`). So when two digits survive, the helper
-  tries the one-digit neighbours with `BigDecimal.doubleValue` and keeps the
-  closer one that reads back. It breaks an exact tie to the even digit.
+  private static helper. It finds the shortest round-trip digits itself: for
+  p = 1, 2, … it rounds `new BigDecimal(|x|)` (the exact value) to p digits
+  with `MathContext(p, FLOOR)` and `MathContext(p, CEILING)`, and stops at the
+  first p where either reads back as `|x|` (`BigDecimal.doubleValue`). If both
+  do, it keeps the closer, and on an exact tie the even last digit. Both
+  neighbours are tried because the round-trip interval is lopsided at a power
+  of two. The loop is bounded at p = 17. The result goes through
+  `stripTrailingZeros()` and is laid out with `toPlainString` or a
+  `StringBuilder`, then printed with one `System.out.print`.
+- **Fixed before merge: the digits no longer come from `Double.toString`.**
+  The first version of this helper used it, which is the shortest round-trip
+  decimal only on JDK 19+ (JDK-4511638). CI's Windows job runs the runner's
+  preinstalled pre-19 `java`, which printed `1.9999999999999998e+23` where
+  Python and JS print `2e+23`. On a 775 126-value corpus the old helper was
+  wrong on 13 values under JDK 8 (and on none under JDK 21). The class is
+  version 49, so any JVM may run it, and its output must not depend on which.
+  The search uses Java 5 APIs only (`BigDecimal`, `MathContext`,
+  `RoundingMode`). It also covers one-digit results such as `5e-324`, so the
+  old one-digit-neighbour fix-up for `Double.toString`'s two-digit minimum is
+  gone.
 - Version 49, no StackMapTable. Every branch target is reached with an empty
   operand stack, and `max_stack` is measured. A non-float operand and a user
   function named `__iir_write_f64` are refused.
-- Checked on JDK 21 with the verifier on, against host `python3` (535 432
-  values) and `node` (402 112 values): no mismatch.
+- Checked with `-Xverify:all` on Temurin JDK 8u422 and 17.0.12 and on
+  OpenJDK 21, against host `python3` `repr` and `node` `String(x)` on 775 126
+  values: the PR's earlier corpus, every binade boundary `2^k` and its
+  neighbours, random bit patterns, random subnormals and random short
+  decimals. No mismatch on any JDK, in either layout.
 
 ## Unreleased — LANG83 PR4 — overflow-checked arithmetic
 

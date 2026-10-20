@@ -32,7 +32,7 @@ pub const OP_SUPPORT: &[(&str, OpSupport)] = &[
     ("putchar", Lowered),
     ("print_str", Lowered),
     ("write_i64", Lowered),
-    // LANG83 PR6a — synthetic `__iir_write_f64(DI)V` (Double.toString digits).
+    // LANG83 PR6a — synthetic `__iir_write_f64(DI)V` (BigDecimal shortest-digit search).
     ("write_f64_py", Lowered),
     ("write_f64_js", Lowered),
     // ── Strings (LANG-FULL E4) ──────────────────────────────────────────────
