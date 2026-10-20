@@ -1,0 +1,19 @@
+{
+  "chapter": 340,
+  "title": "Arma",
+  "label": "ch:la-arma",
+  "canDo": "I can name arms and kinds of soldier: weapons, a horseman, a foot soldier, the breastplate and the round shield.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C340-clipeus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 340: I can name arms and kinds of soldier: weapons, a horseman, a foot soldier, the breastplate and the round shield.",
+    "assesses": [
+      "LA-LEX-C340-ARMA-03",
+      "LA-LEX-C340-ARMA-04",
+      "LA-LEX-C340-ARMA-05"
+    ]
+  }
+}

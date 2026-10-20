@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C540-harpastum",
+    "language": "latin",
+    "chapter": 540,
+    "sequence": 28640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e76211c1e56c0b07"
+  },
+  "findings": []
+}

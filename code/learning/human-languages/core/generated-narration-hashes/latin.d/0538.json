@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 538,
+  "sourceHash": "fnv1a64:cf8bd43664c391e3",
+  "lessonIds": [
+    "LA-C538-otiosus",
+    "LA-C538-vaco",
+    "LA-C538-feriatus",
+    "LA-C538-relaxo",
+    "LA-C538-remissio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch538.txt",
+  "json": "latin/narration/ch538.json",
+  "textHash": "fnv1a64:8f0347edb07e6dbd",
+  "jsonHash": "fnv1a64:a37eb7d8d36bab5d",
+  "findings": []
+}

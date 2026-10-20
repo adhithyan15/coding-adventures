@@ -1,0 +1,11 @@
+{
+  "id": "LA-R488-review-487-488",
+  "pathSegment": "LA-PATH-488-BRUMA",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "LA-EXT-488-BRUMA",
+      "order": 5
+    }
+  ]
+}

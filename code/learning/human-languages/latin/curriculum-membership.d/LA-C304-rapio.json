@@ -1,0 +1,11 @@
+{
+  "id": "LA-C304-rapio",
+  "pathSegment": "LA-PATH-304-COMPREHENDO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-304-COMPREHENDO",
+      "order": 2
+    }
+  ]
+}

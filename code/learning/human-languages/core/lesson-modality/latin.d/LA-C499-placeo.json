@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C499-placeo",
+    "language": "latin",
+    "chapter": 499,
+    "sequence": 26550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:33c2f49450f09d51"
+  },
+  "findings": []
+}

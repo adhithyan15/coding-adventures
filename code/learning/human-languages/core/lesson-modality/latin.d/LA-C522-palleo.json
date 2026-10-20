@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C522-palleo",
+    "language": "latin",
+    "chapter": 522,
+    "sequence": 27690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fbbdca29a9f05689"
+  },
+  "findings": []
+}

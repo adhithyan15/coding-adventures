@@ -27,7 +27,7 @@ One component, per `mosaic-package.toml`'s `[components].exports`:
           ┌──────────────────────────────────────────┐
           │  mosaic-pkg-notes (this package)          │
           │  Notes → Column/Row/Text/HostButton/      │
-          │          HostInput/Input(multiline)       │
+          │          HostInput(multiline)             │
           └──────────────────────────────────────────┘
 ```
 
@@ -40,15 +40,14 @@ includes `notes`), owns the in-progress edit buffer
 (`title-value`/`body-value`), and decides what Save/Delete/Cancel mean as
 engine ops (`upsertNote`/`deleteNote`).
 
-## A deliberate legacy-primitive use
+## The note body
 
-The note body genuinely needs multiple lines, so `notes-body-input` uses
-the legacy `Input ( multiline: true )` (UI25) — the one such use in this
-package, disclosed rather than hidden. When this package was written, UI29's
-kernel `HostInput` was single-line only (the spec's "A real kernel gap found
-while designing this" section). It has since gained `multiline: true` on
-every backend, lowered exactly as `Input` lowers it (#15930), so the body can
-move to `HostInput` when the legacy `Input` retires (U29-X1).
+The note body needs multiple lines, so `notes-body-input` is the kernel's
+text area, `HostInput ( multiline : true )`. Enter is a line break, and
+Ctrl+Enter (Cmd+Enter on macOS) saves, as the Save button does (UI25 §4).
+When this package was written HostInput was single-line only, so the body
+used the legacy UI25 `Input`; HostInput gained `multiline: true` on every
+backend (#15930), and the legacy primitive is retiring (U29-X1).
 
 ## Usage
 

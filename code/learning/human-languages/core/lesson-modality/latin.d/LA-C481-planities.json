@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C481-planities",
+    "language": "latin",
+    "chapter": 481,
+    "sequence": 25580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d690d596ff2f48f9"
+  },
+  "findings": []
+}

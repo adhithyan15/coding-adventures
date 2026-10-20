@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C537-dono",
+    "language": "latin",
+    "chapter": 537,
+    "sequence": 28480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:76f83be000e90ba9"
+  },
+  "findings": []
+}

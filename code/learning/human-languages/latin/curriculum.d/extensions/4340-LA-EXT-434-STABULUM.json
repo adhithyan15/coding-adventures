@@ -1,0 +1,8 @@
+{
+  "id": "LA-EXT-434-STABULUM",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about the stable at an inn: the stable, the manger, hay, horses neighing and the muleteer.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C309-accusator",
+  "pathSegment": "LA-PATH-309-ACCUSO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-309-ACCUSO",
+      "order": 1
+    }
+  ]
+}

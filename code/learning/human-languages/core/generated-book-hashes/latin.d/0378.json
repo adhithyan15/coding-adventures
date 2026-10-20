@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 378,
+  "sourceHash": "fnv1a64:5473039a85e24d66",
+  "lessonIds": [
+    "LA-C378-exerceo",
+    "LA-C378-fabricor",
+    "LA-C378-texo",
+    "LA-C378-suo",
+    "LA-C378-sculpo"
+  ],
+  "tex": "latin/book/chapters/ch378-making-things-by-hand.tex"
+}

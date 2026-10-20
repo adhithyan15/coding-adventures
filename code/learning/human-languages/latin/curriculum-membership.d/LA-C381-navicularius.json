@@ -1,0 +1,11 @@
+{
+  "id": "LA-C381-navicularius",
+  "pathSegment": "LA-PATH-381-CAUSIDICUS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-381-CAUSIDICUS",
+      "order": 2
+    }
+  ]
+}

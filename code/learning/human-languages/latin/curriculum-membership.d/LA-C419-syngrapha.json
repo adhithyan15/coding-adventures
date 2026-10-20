@@ -1,0 +1,11 @@
+{
+  "id": "LA-C419-syngrapha",
+  "pathSegment": "LA-PATH-419-PERSOLVO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-419-PERSOLVO",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C527-requies",
+  "pathSegment": "LA-PATH-527-REQU",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-527-REQU",
+      "order": 1
+    }
+  ]
+}

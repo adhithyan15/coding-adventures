@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 361,
+  "sourceHash": "fnv1a64:52650afce463a47d",
+  "lessonIds": [
+    "LA-C361-argumentum",
+    "LA-C361-exemplum",
+    "LA-C361-documentum",
+    "LA-C361-demonstro",
+    "LA-C361-confirmo"
+  ],
+  "tex": "latin/book/chapters/ch361-proof-and-example.tex"
+}

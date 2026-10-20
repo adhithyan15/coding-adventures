@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C291-tunc",
+    "language": "latin",
+    "chapter": 291,
+    "sequence": 15810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c450cfe6b72ec115"
+  },
+  "findings": []
+}

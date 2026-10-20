@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 497,
+  "sourceHash": "fnv1a64:82e6eb436c3ca7b3",
+  "lessonIds": [
+    "LA-C497-sollicitudo",
+    "LA-C497-ango",
+    "LA-C497-aegritudo",
+    "LA-C497-molestia",
+    "LA-C497-crucio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch497.txt",
+  "json": "latin/narration/ch497.json",
+  "textHash": "fnv1a64:0f1e077f8721be32",
+  "jsonHash": "fnv1a64:e482ac7394cf50af",
+  "findings": []
+}

@@ -650,7 +650,14 @@ root.addEventListener("keydown", event => {
   if (target === null || !root.contains(target)) {
     return;
   }
-  if (event.key === "Enter" && target.dataset.onCommit) {
+  // A field whose commit key is `mod+Enter` (a multi-line text area, where
+  // bare Enter is a line break) commits on Ctrl+Enter or Cmd+Enter only.
+  const commitChord = target.dataset.commitKey === "mod+Enter";
+  if (event.key === "Enter" && target.dataset.onCommit
+      && (!commitChord || event.ctrlKey || event.metaKey)) {
+    if (commitChord) {
+      event.preventDefault();
+    }
     void dispatchMosaicEvent(target.dataset.onCommit, target);
   }
   if (event.key === "Escape" && target.dataset.onCancel) {
@@ -2101,10 +2108,18 @@ fn emit_host_input(
         attrs.push_str(" autofocus");
     }
     append_emit_marker(&mut attrs, node, "onChange", "data-on-change");
-    // Enter is a line break in a text area, so a multiline field has no
-    // commit key and gets no commit marker for the host to bind (#15930).
-    if !multiline {
-        append_emit_marker(&mut attrs, node, "onCommit", "data-on-commit");
+    // The commit marker names its key when it is not bare Enter. In a text
+    // area Enter is a line break, so UI25 §4's multi-line commit key is
+    // Ctrl+Enter (Windows, Linux) or Cmd+Enter (macOS), spelled `mod+Enter`
+    // for the hydrator:
+    //
+    //   field       | markers                                          | commits on
+    //   ------------+--------------------------------------------------+---------------
+    //   single-line | data-on-commit="onX"                             | Enter
+    //   multiline   | data-on-commit="onX" data-commit-key="mod+Enter" | Ctrl/Cmd+Enter
+    append_emit_marker(&mut attrs, node, "onCommit", "data-on-commit");
+    if multiline && matches!(find_prop(node, "onCommit"), Some(LayoutPropValue::EmitRef(_))) {
+        attrs.push_str(" data-commit-key=\"mod+Enter\"");
     }
     append_emit_marker(&mut attrs, node, "onCancel", "data-on-cancel");
     if node.tag == "Input" {
@@ -5461,10 +5476,12 @@ mod tests {
         assert!(textarea.contains(">{{frontTemplate}}</textarea>"), "{textarea}");
     }
 
-    /// #15930 — Enter is a line break in a text area, so a multiline field
-    /// carries no commit marker for the host to bind to Enter. Cancel stays.
+    /// UI25 §4 — Enter is a line break in a text area, so a multiline
+    /// field's commit marker names its key: `data-commit-key="mod+Enter"`
+    /// (Ctrl+Enter, or Cmd+Enter on macOS). A single-line field carries no
+    /// key marker, which means bare Enter. Cancel is unchanged.
     #[test]
-    fn a_multiline_field_has_no_commit_marker() {
+    fn a_multiline_commit_marker_names_its_ctrl_or_cmd_enter_key() {
         for tag in ["HostInput", "Input"] {
             let l = layout(
                 "Editor",
@@ -5480,9 +5497,54 @@ mod tests {
             let out = from_pipeline(&component("Editor", vec![]), &l, &empty_style("Editor"))
                 .unwrap()
                 .output;
-            assert!(!out.contains("data-on-commit"), "{tag}: {out}");
-            assert!(out.contains("data-on-cancel=\"onDiscard\""), "{tag}: {out}");
+            let textarea = out.lines().find(|line| line.contains("<textarea")).expect("a textarea");
+            assert!(textarea.contains("data-on-commit=\"onSave\""), "{tag}: {textarea}");
+            assert!(textarea.contains("data-commit-key=\"mod+Enter\""), "{tag}: {textarea}");
+            assert!(textarea.contains("data-on-cancel=\"onDiscard\""), "{tag}: {textarea}");
         }
+        let l = layout(
+            "Editor",
+            node_with_props("HostInput", vec![prop_emit("onCommit", "onSave")]),
+        );
+        let out = from_pipeline(&component("Editor", vec![]), &l, &empty_style("Editor"))
+            .unwrap()
+            .output;
+        assert!(out.contains("data-on-commit=\"onSave\""), "{out}");
+        assert!(!out.contains("data-commit-key"), "a single-line field commits on Enter: {out}");
+    }
+
+    /// The generated runtime binds the marker: bare Enter commits a field
+    /// with no `data-commit-key`, and a `mod+Enter` field commits only with
+    /// Ctrl or Cmd held, so a line break in a text area never commits.
+    #[test]
+    fn the_runtime_commits_a_text_area_only_on_ctrl_or_cmd_enter() {
+        let model = component_with_emits(
+            "Editor",
+            vec![],
+            vec![EmitDecl {
+                name: "onSave".into(),
+                params: vec![],
+            }],
+        );
+        let l = layout(
+            "Editor",
+            node_with_props(
+                "HostInput",
+                vec![prop_keyword("multiline", "true"), prop_emit("onCommit", "onSave")],
+            ),
+        );
+        let mut options = EmitOptions::default();
+        options.emit_project = true;
+        let main_js = from_pipeline_with_options(&model, &l, &empty_style("Editor"), &options)
+            .unwrap()
+            .project
+            .expect("project shell")
+            .main_js;
+        assert!(
+            main_js.contains("target.dataset.commitKey === \"mod+Enter\""),
+            "{main_js}"
+        );
+        assert!(main_js.contains("event.ctrlKey || event.metaKey"), "{main_js}");
     }
 
     #[test]

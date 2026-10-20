@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C393-statuo",
+    "language": "latin",
+    "chapter": 393,
+    "sequence": 21040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b8f8d83a21798634"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-R285-asking-the-way",
+  "pathSegment": "LA-PATH-285-VIA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-285-VIA",
+      "order": 3
+    }
+  ]
+}

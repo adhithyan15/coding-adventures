@@ -1,0 +1,11 @@
+{
+  "id": "LA-C393-inceptum",
+  "pathSegment": "LA-PATH-393-STATUO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-393-STATUO",
+      "order": 3
+    }
+  ]
+}

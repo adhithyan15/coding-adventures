@@ -1,0 +1,11 @@
+{
+  "id": "LA-C552-scopae",
+  "pathSegment": "LA-PATH-552-DOMI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-552-DOMI",
+      "order": 4
+    }
+  ]
+}

@@ -1,9 +1,43 @@
 # javascript-iir-compiler
 
 The first native JavaScript execution slice. It parses JavaScript into the
-existing typed AST, lowers a deliberately small numeric/`console.log` subset
-directly into InterpreterIR, and runs it on the Rust `vm-core` interpreter.
-It does not use Semantic IR or a host JavaScript runtime to execute programs.
+generic parse tree (CST), lowers a deliberately small numeric/`console.log`
+subset from that tree directly into InterpreterIR, and runs it on the Rust
+`vm-core` interpreter. It does not use Semantic IR or a host JavaScript runtime
+to execute programs.
+
+## Pipeline: the compiler walks the parse tree
+
+```text
+source ──javascript-lexer (GrammarLexer, es2020.tokens, REGEX off)──▶ tokens
+       ──javascript-parser::parse_javascript_cst_division_only──────▶ GrammarASTNode (CST)
+             (GrammarParser over es2020.grammar + ASI + spine bound)        │
+                                                                           │ compile_ast
+                                              javascript-iir-compiler      ▼
+                                                                       IIRModule ──▶ vm-core
+```
+
+Per LANG84 ("the IIR compiler walks the parse tree"), the compiler's only
+input is the `GrammarASTNode` that the shared grammar-driven parser builds from
+`code/grammars/ecmascript/es2020.grammar`. Since 0.3.0 it no longer goes
+through the parser crate's typed `javascript_ast::Program` bridge, which
+remains available for other tools (closurec).
+
+The compiler reads the tree through borrowed, `Copy` handles; nothing is
+copied into a second tree:
+
+- the twenty-odd single-child rules of the precedence ladder, and `( … )`,
+  are seen through in a loop;
+- a flat binary node such as `additive_expression [8, -, 2, +, 1]` is read as
+  the left-associative `(8 - 2) + 1` by index arithmetic (its left operand is
+  "the first two operands of the same node");
+- a flat suffix chain such as `call_expression [console, ., log, (1)]` is read
+  as `Call(Member(console, log), [1])` the same way.
+
+A validation pass over the CST rejects what the typed-AST stage used to
+reject — a numeric literal wider than 64 bits in hex/binary/octal, a
+destructuring pattern, a malformed tree — at the same point and with the
+same messages. The emitted IIR is identical to the 0.2.0 typed-AST pipeline.
 
 ```rust
 let output = javascript_iir_compiler::run_source("console.log(1 / 2);")?;
@@ -32,9 +66,11 @@ explicit division-only tokenizer/parser entry, so repeated divisions and
 `console.log(-0, 1 / 0, 0 / 0)` execute correctly. Regex literals remain
 unsupported. General JavaScript parser callers retain their existing regex
 rules; full context-sensitive regex/division disambiguation remains open.
-Source files are limited to 64 KiB; direct AST compilation has node and depth
+Source files are limited to 64 KiB; direct CST compilation has node and depth
 limits (declarators and their initializers included), and the runner caps
-instructions and captured output.
+instructions and captured output. A caller may hand `compile_ast` a tree it
+built itself: malformed shapes are errors, and wrapper towers are walked
+iteratively, so no tree can panic the compiler or exhaust its stack.
 
 ## Bindings
 
@@ -71,3 +107,12 @@ declarators in one declaration, destructuring, assignment, and non-numeric
 initializers are rejected at compile time.
 
 See [LANG78](../../../specs/LANG78-native-dynamic-iir-frontends.md).
+
+## API
+
+- `compile_source(src, module_name) -> Result<IIRModule, String>`
+- `compile_ast(&GrammarASTNode, module_name) -> Result<IIRModule, String>` —
+  for a `program` tree you already hold, from
+  `parse_javascript_cst_division_only` or `parse_javascript_typed`
+  (changed in 0.3.0: it used to take `&javascript_ast::Program`)
+- `run_source(src) -> Result<String, JavaScriptRunError>`

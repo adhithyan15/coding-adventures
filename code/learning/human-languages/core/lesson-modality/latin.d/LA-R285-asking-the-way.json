@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-R285-asking-the-way",
+    "language": "latin",
+    "chapter": 285,
+    "sequence": 15590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1e4621db5b45165d"
+  },
+  "findings": []
+}

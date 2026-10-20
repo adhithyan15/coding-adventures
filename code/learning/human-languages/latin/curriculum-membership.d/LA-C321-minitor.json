@@ -1,0 +1,11 @@
+{
+  "id": "LA-C321-minitor",
+  "pathSegment": "LA-PATH-321-MINAE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-321-MINAE",
+      "order": 1
+    }
+  ]
+}

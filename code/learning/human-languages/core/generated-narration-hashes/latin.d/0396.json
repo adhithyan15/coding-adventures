@@ -1,0 +1,20 @@
+{
+  "language": "latin",
+  "chapter": 396,
+  "sourceHash": "fnv1a64:06db23946a88768b",
+  "lessonIds": [
+    "LA-C396-promissum",
+    "LA-C396-polliceor",
+    "LA-C396-fiducia",
+    "LA-C396-sponsio",
+    "LA-C396-obstringo",
+    "LA-R396-review-389-396"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "latin/narration/ch396.txt",
+  "json": "latin/narration/ch396.json",
+  "textHash": "fnv1a64:61a96925cc11a732",
+  "jsonHash": "fnv1a64:4d9eeaa447e3b48e",
+  "findings": []
+}

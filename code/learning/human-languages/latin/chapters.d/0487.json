@@ -1,0 +1,19 @@
+{
+  "chapter": 487,
+  "title": "North wind, South wind, West wind, To blow through, Clear weather",
+  "label": "ch:la-north-wind-south-wind-west-wind-to-blow-through-clear-weather",
+  "canDo": "I can talk about the winds: the north, south and west winds, the wind blowing across the land, and clear weather after it.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C487-serenitas",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 487: I can talk about the winds: the north, south and west winds, the wind blowing across the land, and clear weather after it.",
+    "assesses": [
+      "LA-LEX-C487-AQUILO-03",
+      "LA-LEX-C487-AQUILO-04",
+      "LA-LEX-C487-AQUILO-05"
+    ]
+  }
+}

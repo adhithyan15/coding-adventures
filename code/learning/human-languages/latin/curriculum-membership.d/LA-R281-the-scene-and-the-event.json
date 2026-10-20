@@ -1,0 +1,11 @@
+{
+  "id": "LA-R281-the-scene-and-the-event",
+  "pathSegment": "LA-PATH-281-SCAENA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-281-SCAENA",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C545-sono",
+    "language": "latin",
+    "chapter": 545,
+    "sequence": 28880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a2318f14ad01de62"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 516,
+  "sourceHash": "fnv1a64:5da5f6cffb8eee4d",
+  "lessonIds": [
+    "LA-C516-guttur",
+    "LA-C516-fauces",
+    "LA-C516-cervix",
+    "LA-C516-membrum",
+    "LA-C516-artus"
+  ],
+  "tex": "latin/book/chapters/ch516-throat-neck-and-limbs.tex"
+}

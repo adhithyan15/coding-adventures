@@ -138,8 +138,9 @@ themes, identical host contract"* invariant, exercised live:
 `<template>`. A ~40-line switcher (`renderFormulaBar()` / `gridTemplateEl()` /
 `applySwitcher()`) swaps the active fragment into the page and re-renders the
 grid from the workbook. The engine (cells, dependency graph, recalc) is
-untouched by either toggle — only the DOM is rebuilt. `touch.html` remains as
-the standalone touch snapshot; the switcher supersedes it for interactive use.
+untouched by either toggle — only the DOM is rebuilt. (A standalone
+`touch.html` snapshot used to sit beside it, with a hand-pasted FormulaBar and
+a hand-written placeholder grid; the switcher superseded it and it is gone.)
 
 ## How it works
 
@@ -152,15 +153,17 @@ that own *no* spreadsheet logic:
    sources the React, SwiftUI, Qt, Flutter and Compose demos consume).
    The Grid is emitted as a static template with `mosaic-for` /
    `mosaic-if` markers and `{{…}}` placeholders; a small inline
-   template-expander hydrates it. Regenerate with `bash scripts/build.sh`.
+   template-expander hydrates it. `bash scripts/build.sh` compiles every
+   variant and writes it into its `<template>` (scripts/sync-templates.py).
 
 2. **The engine** — the Rust `spreadsheet-core` engine (cells +
    dependency graph + incremental topological recalc + ~50 functions
    delegated to the Layer-1 cores) compiled to `wasm32`. The browser
    loader `vendor/spreadsheet-engine-wasm.js` embeds the `.wasm` as
    base64 and, once instantiated, exposes `window.SpreadsheetEngine`
-   (same API as the TypeScript engine). Regenerate with
-   `bash scripts/bundle-wasm-engine.sh`.
+   (same API as the TypeScript engine). `bash scripts/bundle-wasm-engine.sh`
+   rebuilds it from `spreadsheet-wasm`'s committed `pkg/spreadsheet_engine.wasm`.
+   The Web Component demo loads this same bundle.
 
 The inline `<script>` in `index.html` is the glue: it awaits the WASM
 module, seeds a workbook, renders the workbook's *computed* values
@@ -182,13 +185,24 @@ index.html
 open code/programs/typescript/visicalc-html/index.html
 ```
 
-Any modern browser works — no module loader, no server. To regenerate
-the artifacts after changing sources:
+Any modern browser works — no module loader, no server.
+
+## Keeping the generated pieces current
+
+The page carries generated code so it opens from disk, and every piece is
+written by a script, never pasted:
 
 ```bash
-bash scripts/build.sh              # UI shell (needs the Rust mosaic-compile)
-bash scripts/bundle-wasm-engine.sh # engine bundle (embeds the Rust engine's .wasm)
+bash ../../../packages/rust/spreadsheet-wasm/build-wasm.sh  # the engine .wasm (+ its .inputs stamp)
+bash scripts/bundle-wasm-engine.sh                          # vendor/ engine bundle from that .wasm
+bash scripts/build.sh                                       # the Mosaic <template>s in index.html
 ```
+
+Each has a `--check` mode, and `code/programs/mosaic/visicalc`'s
+`web_demos_are_current` tests run them (with `verify-infinite.mjs`) whenever
+`mosaic-compile` or `spreadsheet-wasm` changes, so a stale page fails CI
+instead of shipping. `spreadsheet-wasm`'s own CI checks its `.wasm` against
+the sources it is built from.
 
 ## Where this fits in the cross-backend demo plan
 

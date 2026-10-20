@@ -1,0 +1,11 @@
+{
+  "id": "LA-C527-insomnia",
+  "pathSegment": "LA-PATH-527-REQU",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-527-REQU",
+      "order": 3
+    }
+  ]
+}

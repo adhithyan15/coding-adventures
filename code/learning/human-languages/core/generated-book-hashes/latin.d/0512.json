@@ -1,0 +1,14 @@
+{
+  "language": "latin",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:e1e4e5462804fe22",
+  "lessonIds": [
+    "LA-C512-gratus",
+    "LA-C512-ingratus",
+    "LA-C512-meritum",
+    "LA-C512-laus",
+    "LA-C512-vitupero",
+    "LA-R512-review-505-512"
+  ],
+  "tex": "latin/book/chapters/ch512-gratitude-and-praise.tex"
+}

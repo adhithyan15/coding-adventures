@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 548,
+  "title": "Beauty",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:24ab25b36e07cd5f",
+  "lessons": [
+    {
+      "id": "LA-C548-pulchritudo",
+      "sequence": 29020,
+      "title": "pulchritūdō, pulchritūdinis — beauty",
+      "headword": "pulchritūdō, pulchritūdinis",
+      "romanization": "pulchritūdō, pulchritūdinis",
+      "gloss": "beauty",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0282006f34f55884",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a small cube, then the Latin for to engrave."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: pulchritūdō, pulchritūdinis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pulchritūdō, pulchritūdinis — \"beauty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Pulchritūdō hortī hospitēs dēlectat. The beauty of the garden delights the guests."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, third declension, from pulcher. English pulchritude."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pulchritūdō is built on pulcher \"beautiful\" with -tūdō (EtymDB; Lewis & Short). English pulchritude comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pulchritūdō, pulchritūdinis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pulchritūdō, pulchritūdinis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pulchritūdō, pulchritūdinis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pulchritūdō, pulchritūdinis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with pulchritūdō, pulchritūdinis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *pulchritūdō, pulchritūdinis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a small cube, then the Latin for to engrave, then say pulchritūdō, pulchritūdinis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a small cube, then the Latin for to engrave, then say *pulchritūdō, pulchritūdinis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does pulchritūdō, pulchritūdinis mean? (\"Beauty\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C548-speciosus",
+      "sequence": 29030,
+      "title": "speciōsus, speciōsa, speciōsum — good-looking, handsome",
+      "headword": "speciōsus, speciōsa, speciōsum",
+      "romanization": "speciōsus, speciōsa, speciōsum",
+      "gloss": "good-looking, handsome",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:303ecffc9a609374",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to engrave, then the Latin for beauty."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: speciōsus, speciōsa, speciōsum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "speciōsus, speciōsa, speciōsum — \"good-looking, handsome\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Iuvenis speciōsus est, sed superbus. The young man is good-looking, but proud."
+            },
+            {
+              "kind": "speech",
+              "text": "From speciēs — appearance. Later also showy but false: English specious."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "speciōsus is built on speciēs \"appearance, look\", from speciō \"to behold\" (Lewis & Short). English specious comes from it, with the later sense \"fair on the surface\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "speciōsus, speciōsa, speciōsum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *speciōsus, speciōsa, speciōsum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "speciōsus, speciōsa, speciōsum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *speciōsus, speciōsa, speciōsum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with speciōsus, speciōsa, speciōsum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *speciōsus, speciōsa, speciōsum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to engrave, then the Latin for beauty, then say speciōsus, speciōsa, speciōsum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to engrave, then the Latin for beauty, then say *speciōsus, speciōsa, speciōsum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does speciōsus, speciōsa, speciōsum mean? (\"Good-looking, handsome\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C548-elegans",
+      "sequence": 29040,
+      "title": "ēlegāns, ēlegantis — elegant, refined, tasteful",
+      "headword": "ēlegāns, ēlegantis",
+      "romanization": "ēlegāns, ēlegantis",
+      "gloss": "elegant, refined, tasteful",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:08fa39b87a8a6a35",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for beauty, then the Latin for good-looking."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ēlegāns, ēlegantis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ēlegāns, ēlegantis — \"elegant, refined, tasteful\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Domus eius parva, sed ēlegāns est. His house is small but elegant."
+            },
+            {
+              "kind": "speech",
+              "text": "One ending. First choosy, then of good taste. English elegant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ēlegāns is probably an old form of ēligēns, the participle of ēligō \"to pick out\" (Lewis & Short; EtymDB), from legō \"to choose\". English elegant comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēlegāns, ēlegantis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēlegāns, ēlegantis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēlegāns, ēlegantis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēlegāns, ēlegantis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ēlegāns, ēlegantis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ēlegāns, ēlegantis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for beauty, then the Latin for good-looking, then say ēlegāns, ēlegantis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for beauty, then the Latin for good-looking, then say *ēlegāns, ēlegantis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ēlegāns, ēlegantis mean? (\"Elegant, refined, tasteful\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C548-ornamentum",
+      "sequence": 29050,
+      "title": "ōrnāmentum, ōrnāmentī — an ornament, decoration",
+      "headword": "ōrnāmentum, ōrnāmentī",
+      "romanization": "ōrnāmentum, ōrnāmentī",
+      "gloss": "an ornament, decoration",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:00a9b22227abd2ec",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for good-looking, then the Latin for elegant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ōrnāmentum, ōrnāmentī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ōrnāmentum, ōrnāmentī — \"an ornament, decoration\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Domina ōrnāmenta aurea gerit. The lady wears gold ornaments."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter, second declension, from ōrnō — to equip, adorn. English ornament."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ōrnāmentum is built on ōrnō \"to equip, adorn\" with -mentum (EtymDB; Lewis & Short). English ornament comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōrnāmentum, ōrnāmentī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōrnāmentum, ōrnāmentī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōrnāmentum, ōrnāmentī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōrnāmentum, ōrnāmentī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ōrnāmentum, ōrnāmentī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ōrnāmentum, ōrnāmentī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for good-looking, then the Latin for elegant, then say ōrnāmentum, ōrnāmentī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for good-looking, then the Latin for elegant, then say *ōrnāmentum, ōrnāmentī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ōrnāmentum, ōrnāmentī mean? (\"An ornament, decoration\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C548-deformis",
+      "sequence": 29060,
+      "title": "dēfōrmis, dēfōrme — ugly, misshapen",
+      "headword": "dēfōrmis, dēfōrme",
+      "romanization": "dēfōrmis, dēfōrme",
+      "gloss": "ugly, misshapen",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b70951a5d8678227",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for elegant, then the Latin for an ornament."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dēfōrmis, dēfōrme",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēfōrmis, dēfōrme — \"ugly, misshapen\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Statua dēfōrmis est, sed antīqua. The statue is ugly, but old."
+            },
+            {
+              "kind": "speech",
+              "text": "Two endings. dē- 'away from' + fōrma 'shape, beauty'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēfōrmis is built on dē- \"away from\" and fōrma \"shape, beauty\" (Lewis & Short; EtymDB). English deformed comes from the related verb dēfōrmō."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēfōrmis, dēfōrme",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēfōrmis, dēfōrme*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēfōrmis, dēfōrme, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēfōrmis, dēfōrme*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dēfōrmis, dēfōrme",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dēfōrmis, dēfōrme*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for elegant, then the Latin for an ornament, then say dēfōrmis, dēfōrme again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for elegant, then the Latin for an ornament, then say *dēfōrmis, dēfōrme* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dēfōrmis, dēfōrme mean? (\"Ugly, misshapen\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

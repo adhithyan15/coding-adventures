@@ -1,0 +1,19 @@
+{
+  "chapter": 516,
+  "title": "Throat, neck and limbs",
+  "label": "ch:la-throat-neck-and-limbs",
+  "canDo": "I can name the throat, the neck and the limbs.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C516-artus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 516: I can name the throat, the neck and the limbs.",
+    "assesses": [
+      "LA-LEX-C516-GUTT-03",
+      "LA-LEX-C516-GUTT-04",
+      "LA-LEX-C516-GUTT-05"
+    ]
+  }
+}

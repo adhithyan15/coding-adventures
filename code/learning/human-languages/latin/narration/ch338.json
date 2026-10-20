@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 338,
+  "title": "Legiō",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:dde4e020c13cb953",
+  "lessons": [
+    {
+      "id": "LA-C338-legio",
+      "sequence": 18200,
+      "title": "legiō, legiōnis — a legion",
+      "headword": "legiō, legiōnis",
+      "romanization": "legiō, legiōnis",
+      "gloss": "a legion",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:95130a9d7627be9d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a contest, then the Latin for applause."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: legiō, legiōnis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "legiō, legiōnis — \"a legion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Decima legiō fortissima erat. The tenth legion was the bravest."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, 3rd declension, from legō, 'to choose': a picked levy, about five thousand men. English legion."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "legiō is built on legō, \"to gather, to choose\" (Lewis & Short): a body of chosen soldiers. English legion comes from it through French."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "legiō, legiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *legiō, legiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "legiō, legiōnis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *legiō, legiōnis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with legiō, legiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *legiō, legiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a contest, then the Latin for applause, then say legiō, legiōnis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a contest, then the Latin for applause, then say *legiō, legiōnis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does legiō, legiōnis mean? (\"A legion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C338-cohors",
+      "sequence": 18210,
+      "title": "cohors, cohortis — a cohort; an enclosure",
+      "headword": "cohors, cohortis",
+      "romanization": "cohors, cohortis",
+      "gloss": "a cohort; an enclosure",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3d702c913dd2aded",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for applause, then the Latin for a legion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: cohors, cohortis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cohors, cohortis — \"a cohort; an enclosure\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Cohors ad portam castrōrum stābat. A cohort was standing at the gate of the camp."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, 3rd declension. A legion had ten cohorts. The same word meant a farmyard, which gives English court."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cohors is inherited, and its earlier history is not settled. It first meant \"an enclosure, a farmyard\" (EtymDB, Lewis & Short), and then the body of soldiers drawn up together. English court comes from it through French, and cohort directly."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cohors, cohortis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cohors, cohortis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cohors, cohortis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cohors, cohortis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with cohors, cohortis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *cohors, cohortis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for applause, then the Latin for a legion, then say cohors, cohortis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for applause, then the Latin for a legion, then say *cohors, cohortis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does cohors, cohortis mean? (\"A cohort; an enclosure\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C338-centurio",
+      "sequence": 18220,
+      "title": "centuriō, centuriōnis — a centurion",
+      "headword": "centuriō, centuriōnis",
+      "romanization": "centuriō, centuriōnis",
+      "gloss": "a centurion",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2042687d69a02e3b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a legion, then the Latin for a cohort."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: centuriō, centuriōnis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "centuriō, centuriōnis — \"a centurion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Centuriō mīlitēs suōs ad mūrum dūxit. The centurion led his soldiers to the wall."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine, 3rd declension, from centuria, a company of a hundred."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "centuriō is built on centuria, \"a division of a hundred\", from centum, \"hundred\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "centuriō, centuriōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *centuriō, centuriōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "centuriō, centuriōnis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *centuriō, centuriōnis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with centuriō, centuriōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *centuriō, centuriōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a legion, then the Latin for a cohort, then say centuriō, centuriōnis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a legion, then the Latin for a cohort, then say *centuriō, centuriōnis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does centuriō, centuriōnis mean? (\"A centurion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C338-signifer",
+      "sequence": 18230,
+      "title": "signifer, signiferī — a standard-bearer",
+      "headword": "signifer, signiferī",
+      "romanization": "signifer, signiferī",
+      "gloss": "a standard-bearer",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:503a3c8670998b4e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a cohort, then the Latin for a centurion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: signifer, signiferī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "signifer, signiferī — \"a standard-bearer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Signifer signum in hostēs tulit. The standard-bearer carried the standard against the enemy."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine: signum (taught) + ferō. Losing the standard was a deep disgrace."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "signifer joins signum, \"sign, standard\", and -fer, \"carrying\", from ferō (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "signifer, signiferī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *signifer, signiferī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "signifer, signiferī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *signifer, signiferī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with signifer, signiferī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *signifer, signiferī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a cohort, then the Latin for a centurion, then say signifer, signiferī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a cohort, then the Latin for a centurion, then say *signifer, signiferī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does signifer, signiferī mean? (\"A standard-bearer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C338-tribunus",
+      "sequence": 18240,
+      "title": "tribūnus, tribūnī — a tribune",
+      "headword": "tribūnus, tribūnī",
+      "romanization": "tribūnus, tribūnī",
+      "gloss": "a tribune",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6b6f52e0af7b4b1d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a centurion, then the Latin for a standard-bearer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: tribūnus, tribūnī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tribūnus, tribūnī — \"a tribune\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Tribūnus mīlitum ad castra advēnit. The military tribune arrived at the camp."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine. Tribūnus mīlitum: an officer of a legion; the people's tribunes protected ordinary citizens."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tribūnus is built on tribus, \"tribe\" (EtymDB): first the head of a tribe. English tribune comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tribūnus, tribūnī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tribūnus, tribūnī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tribūnus, tribūnī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tribūnus, tribūnī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with tribūnus, tribūnī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *tribūnus, tribūnī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a centurion, then the Latin for a standard-bearer, then say tribūnus, tribūnī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a centurion, then the Latin for a standard-bearer, then say *tribūnus, tribūnī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does tribūnus, tribūnī mean? (\"A tribune\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-R338-review-331-338",
+      "sequence": 18250,
+      "title": "Words from chapters 331–338 — a review",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 331-338",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eb858a4dcf3a117e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Latin for grief and a dirge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grief, a dirge, a speech of praise, a memorial, offerings to the dead",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: grief, a dirge, a speech of praise, a memorial, offerings to the dead]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an heir, an inheritance, a will, to seal, to leave behind",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an heir, an inheritance, a will, to seal, to leave behind]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "festive, yearly, a procession, a feast, to feast",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: festive, yearly, a procession, a feast, to feast]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a priest, a sacrificial animal, to sacrifice, to vow, a vow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a priest, a sacrificial animal, to sacrifice, to vow, a vow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a charioteer, a four-horse chariot, a turning post, a racing team, of the circus",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a charioteer, a four-horse chariot, a turning post, a racing team, of the circus]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a gladiator, a trainer of gladiators, a public show, a hunt, a beast",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a gladiator, a trainer of gladiators, a public show, a hunt, a beast]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the palm of victory, a prize, to compete, a contest, applause",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the palm of victory, a prize, to compete, a contest, applause]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a legion, a cohort, a centurion, a standard-bearer, a tribune",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a legion, a cohort, a centurion, a standard-bearer, a tribune]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Grief? (lūctus, lūctūs.) A dirge? (nēnia, nēniae.) A speech of praise? (laudātiō, laudātiōnis.) A memorial? (monumentum, monumentī.) Offerings to the dead? (īnferiae, īnferiārum.) An heir? (hērēs, hērēdis.) An inheritance? (hērēditās, hērēditātis.) A will? (testāmentum, testāmentī.) To seal? (obsignō, obsignāre.) To leave behind? (relinquō, relinquere.) Festive? (fēstus, fēsta, fēstum.) Yearly? (sollemnis, sollemne.) A procession? (pompa, pompae.) A feast? (epulae, epulārum.) To feast? (epulor, epulārī.) A priest? (sacerdōs, sacerdōtis.) A sacrificial animal? (victima, victimae.) To sacrifice? (immolō, immolāre.) To vow? (voveō, vovēre.) A vow? (vōtum, vōtī.) A charioteer? (aurīga, aurīgae.) A four-horse chariot? (quadrīgae, quadrīgārum.) A turning post? (mēta, mētae.) A racing team? (factiō, factiōnis.) Of the circus? (circēnsis, circēnse.) A gladiator? (gladiātor, gladiātōris.) A trainer of gladiators? (lanista, lanistae.) A public show? (mūnus, mūneris.) A hunt? (vēnātiō, vēnātiōnis.) A beast? (bēstia, bēstiae.) The palm of victory? (palma, palmae.) A prize? (praemium, praemiī.) To compete? (certō, certāre.) A contest? (certāmen, certāminis.) Applause? (plausus, plausūs.) A legion? (legiō, legiōnis.) A cohort? (cohors, cohortis.) A centurion? (centuriō, centuriōnis.) A standard-bearer? (signifer, signiferī.) A tribune? (tribūnus, tribūnī.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

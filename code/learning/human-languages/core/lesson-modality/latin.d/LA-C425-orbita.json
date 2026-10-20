@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C425-orbita",
+    "language": "latin",
+    "chapter": 425,
+    "sequence": 22730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:72fb9273654f01a3"
+  },
+  "findings": []
+}

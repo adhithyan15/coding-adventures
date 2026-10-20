@@ -1,0 +1,19 @@
+{
+  "chapter": 506,
+  "title": "Manners",
+  "label": "ch:la-manners",
+  "canDo": "I can describe good and bad manners.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C506-liberalitas",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 506: I can describe good and bad manners.",
+    "assesses": [
+      "LA-LEX-C506-COMI-03",
+      "LA-LEX-C506-COMI-04",
+      "LA-LEX-C506-COMI-05"
+    ]
+  }
+}

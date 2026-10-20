@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 547,
+  "sourceHash": "fnv1a64:59a2989f46fbd87e",
+  "lessonIds": [
+    "LA-C547-imago",
+    "LA-C547-effigies",
+    "LA-C547-figura",
+    "LA-C547-tessella",
+    "LA-C547-caelo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch547.txt",
+  "json": "latin/narration/ch547.json",
+  "textHash": "fnv1a64:78664109da874289",
+  "jsonHash": "fnv1a64:50943a9a5a21d685",
+  "findings": []
+}

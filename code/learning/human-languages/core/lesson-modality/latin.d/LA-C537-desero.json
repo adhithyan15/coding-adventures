@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C537-desero",
+    "language": "latin",
+    "chapter": 537,
+    "sequence": 28500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3d12ad8ae635eed6"
+  },
+  "findings": []
+}

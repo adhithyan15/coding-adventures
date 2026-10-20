@@ -1,0 +1,11 @@
+{
+  "id": "LA-C360-constantia",
+  "pathSegment": "LA-PATH-360-MANIFESTUS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-360-MANIFESTUS",
+      "order": 4
+    }
+  ]
+}

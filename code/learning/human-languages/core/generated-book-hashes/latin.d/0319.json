@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 319,
+  "sourceHash": "fnv1a64:9c813274f45e8fb9",
+  "lessonIds": [
+    "LA-C319-sipho",
+    "LA-C319-hama",
+    "LA-C319-restinguo",
+    "LA-C319-excubiae",
+    "LA-C319-amburo"
+  ],
+  "tex": "latin/book/chapters/ch319-vigiles.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C533-familiaritas",
+  "pathSegment": "LA-PATH-533-FAMI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-533-FAMI",
+      "order": 1
+    }
+  ]
+}

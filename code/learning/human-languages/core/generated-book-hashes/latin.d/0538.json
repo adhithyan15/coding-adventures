@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 538,
+  "sourceHash": "fnv1a64:3ab0f4a0a42bd0a0",
+  "lessonIds": [
+    "LA-C538-otiosus",
+    "LA-C538-vaco",
+    "LA-C538-feriatus",
+    "LA-C538-relaxo",
+    "LA-C538-remissio"
+  ],
+  "tex": "latin/book/chapters/ch538-free-time.tex"
+}

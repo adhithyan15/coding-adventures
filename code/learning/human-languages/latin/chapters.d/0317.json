@@ -1,0 +1,19 @@
+{
+  "chapter": 317,
+  "title": "Incendium",
+  "label": "ch:la-incendium",
+  "canDo": "I can describe a fire: a blaze, the heat, glowing ash, a firebrand and burning heat.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C317-ardor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 317: I can describe a fire: a blaze, the heat, glowing ash, a firebrand and burning heat.",
+    "assesses": [
+      "LA-LEX-C317-INCENDIUM-03",
+      "LA-LEX-C317-INCENDIUM-04",
+      "LA-LEX-C317-INCENDIUM-05"
+    ]
+  }
+}

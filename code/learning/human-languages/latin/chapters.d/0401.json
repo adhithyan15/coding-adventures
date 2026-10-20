@@ -1,0 +1,19 @@
+{
+  "chapter": 401,
+  "title": "At School",
+  "label": "ch:la-at-school",
+  "canDo": "I can name the slave who walks a boy to school, a teacher, the grammar master, the primary teacher and a schoolfellow.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "LA-C401-condiscipulus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 401: I can name the slave who walks a boy to school, a teacher, the grammar master, the primary teacher and a schoolfellow.",
+    "assesses": [
+      "LA-LEX-C401-PRAECEPTOR-03",
+      "LA-LEX-C401-PRAECEPTOR-04",
+      "LA-LEX-C401-PRAECEPTOR-05"
+    ]
+  }
+}

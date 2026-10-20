@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-420-AUCTIO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "LA-EXT-420-AUCTIO"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C376-artifex",
+  "pathSegment": "LA-PATH-376-OPUS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-376-OPUS",
+      "order": 2
+    }
+  ]
+}

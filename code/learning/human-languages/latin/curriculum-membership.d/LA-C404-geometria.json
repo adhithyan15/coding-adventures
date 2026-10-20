@@ -1,0 +1,11 @@
+{
+  "id": "LA-C404-geometria",
+  "pathSegment": "LA-PATH-404-RHETORICA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-404-RHETORICA",
+      "order": 3
+    }
+  ]
+}

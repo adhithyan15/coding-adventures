@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:af4642a8318acd88",
+  "lessonIds": [
+    "LA-C502-iocus",
+    "LA-C502-iocor",
+    "LA-C502-iocosus",
+    "LA-C502-ridiculus",
+    "LA-C502-facetus"
+  ],
+  "tex": "latin/book/chapters/ch502-jokes-and-wit.tex"
+}

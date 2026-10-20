@@ -1,0 +1,11 @@
+{
+  "id": "LA-C493-iracundus",
+  "pathSegment": "LA-PATH-493-IRA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-493-IRA",
+      "order": 1
+    }
+  ]
+}

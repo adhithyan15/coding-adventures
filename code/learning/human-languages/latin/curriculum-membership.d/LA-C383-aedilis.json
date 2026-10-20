@@ -1,0 +1,11 @@
+{
+  "id": "LA-C383-aedilis",
+  "pathSegment": "LA-PATH-383-MAGISTRATUS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-383-MAGISTRATUS",
+      "order": 2
+    }
+  ]
+}

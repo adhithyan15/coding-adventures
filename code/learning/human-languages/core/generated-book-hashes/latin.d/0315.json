@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:6f5c46cac7e32c32",
+  "lessonIds": [
+    "LA-C315-naufragium",
+    "LA-C315-naufragus",
+    "LA-C315-mergo",
+    "LA-C315-obruo",
+    "LA-C315-calamitas"
+  ],
+  "tex": "latin/book/chapters/ch315-naufragium.tex"
+}

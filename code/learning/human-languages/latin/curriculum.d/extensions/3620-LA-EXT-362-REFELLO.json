@@ -1,0 +1,8 @@
+{
+  "id": "LA-EXT-362-REFELLO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can refute a claim, prove someone wrong and say that a case rests only on a guess.",
+  "prerequisites": []
+}

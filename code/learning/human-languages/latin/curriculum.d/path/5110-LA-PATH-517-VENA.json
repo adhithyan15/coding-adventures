@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-517-VENA",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "LA-EXT-517-VENA"
+  ],
+  "after": []
+}

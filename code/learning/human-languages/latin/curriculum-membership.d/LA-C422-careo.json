@@ -1,0 +1,11 @@
+{
+  "id": "LA-C422-careo",
+  "pathSegment": "LA-PATH-422-DIVITIAE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-422-DIVITIAE",
+      "order": 3
+    }
+  ]
+}

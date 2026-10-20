@@ -218,7 +218,7 @@
       <!-- /mosaic-for -->
     </colgroup>
     <thead>
-      <tr>
+      <tr style="height: 24px">
         <!-- mosaic-for each="columnHeaders" as="h" index="ch" -->
           <th>
             <div style="background: #2d2d30; color: #9d9d9d; font-weight: normal; text-align: center; border-width: 1px; border-style: solid; border-color: #3f3f46; height: 24px">
@@ -230,15 +230,16 @@
     </thead>
     <tbody>
       <!-- mosaic-for each="viewportRows" as="row" index="r" -->
-        <tr>
+        <tr style="height: 22px">
           <!-- mosaic-for each="row" as="v" index="c" -->
             <td>
+              <!-- emit "onNavigate" dropped: HTML is static -->
               <div style="border-width: 1px; border-style: solid; border-color: #3f3f46; padding: 2px; height: 22px; text-align: right">
                 <!-- mosaic-if when="( r == editRow &amp;&amp; c == editCol )" -->
                   <!-- emit "onFormulaChange" dropped: HTML is static -->
                   <!-- emit "onEditCommit" dropped: HTML is static -->
                   <!-- emit "onEditCancel" dropped: HTML is static -->
-                  <input type="text" value="{{editContent}}" data-on-change="onFormulaChange" data-on-commit="onEditCommit" data-on-cancel="onEditCancel">
+                  <input type="text" aria-label="Cell value" value="{{editContent}}" autofocus data-on-change="onFormulaChange" data-on-commit="onEditCommit" data-on-cancel="onEditCancel" style="padding: 0px; border: 0px; background: transparent; font: inherit; width: 100%; box-sizing: border-box">
                 <!-- mosaic-else -->
                   <span>{{v}}</span>
                 <!-- /mosaic-if -->
@@ -259,7 +260,7 @@
       <!-- /mosaic-for -->
     </colgroup>
     <thead>
-      <tr>
+      <tr style="height: 24px">
         <!-- mosaic-for each="columnHeaders" as="h" index="ch" -->
           <th>
             <div style="background: #f3f3f3; color: #555555; font-weight: normal; text-align: center; border-width: 1px; border-style: solid; border-color: #c8c8c8; height: 24px">
@@ -271,15 +272,16 @@
     </thead>
     <tbody>
       <!-- mosaic-for each="viewportRows" as="row" index="r" -->
-        <tr>
+        <tr style="height: 22px">
           <!-- mosaic-for each="row" as="v" index="c" -->
             <td>
+              <!-- emit "onNavigate" dropped: HTML is static -->
               <div style="border-width: 1px; border-style: solid; border-color: #c8c8c8; padding: 2px; height: 22px">
                 <!-- mosaic-if when="( r == editRow &amp;&amp; c == editCol )" -->
                   <!-- emit "onFormulaChange" dropped: HTML is static -->
                   <!-- emit "onEditCommit" dropped: HTML is static -->
                   <!-- emit "onEditCancel" dropped: HTML is static -->
-                  <input type="text" value="{{editContent}}" data-on-change="onFormulaChange" data-on-commit="onEditCommit" data-on-cancel="onEditCancel">
+                  <input type="text" aria-label="Cell value" value="{{editContent}}" autofocus data-on-change="onFormulaChange" data-on-commit="onEditCommit" data-on-cancel="onEditCancel" style="padding: 0px; border: 0px; background: transparent; font: inherit; width: 100%; box-sizing: border-box">
                 <!-- mosaic-else -->
                   <span>{{v}}</span>
                 <!-- /mosaic-if -->

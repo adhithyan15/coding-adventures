@@ -1,0 +1,11 @@
+{
+  "id": "LA-C461-fumosus",
+  "pathSegment": "LA-PATH-461-THERMOPOLIUM",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-461-THERMOPOLIUM",
+      "order": 3
+    }
+  ]
+}

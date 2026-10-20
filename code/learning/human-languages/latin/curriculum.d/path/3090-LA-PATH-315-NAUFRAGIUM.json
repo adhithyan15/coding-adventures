@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-315-NAUFRAGIUM",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-315-NAUFRAGIUM"
+  ],
+  "after": []
+}

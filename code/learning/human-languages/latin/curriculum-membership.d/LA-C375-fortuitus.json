@@ -1,0 +1,11 @@
+{
+  "id": "LA-C375-fortuitus",
+  "pathSegment": "LA-PATH-375-EXSISTO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-375-EXSISTO",
+      "order": 2
+    }
+  ]
+}

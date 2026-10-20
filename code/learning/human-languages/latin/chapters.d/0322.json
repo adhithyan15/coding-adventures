@@ -1,0 +1,19 @@
+{
+  "chapter": 322,
+  "title": "Fuga",
+  "label": "ch:la-fuga",
+  "canDo": "I can tell how people got away or did not: flight, to escape, to get away, to perish and a guard.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-R322-review-315-322",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 322: I can tell how people got away or did not: flight, to escape, to get away, to perish and a guard.",
+    "assesses": [
+      "LA-LEX-C322-FUGA-03",
+      "LA-LEX-C322-FUGA-04",
+      "LA-LEX-C322-FUGA-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C539-luctor",
+  "pathSegment": "LA-PATH-539-ALEA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-539-ALEA",
+      "order": 4
+    }
+  ]
+}

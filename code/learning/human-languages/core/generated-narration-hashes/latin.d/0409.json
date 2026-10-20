@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 409,
+  "sourceHash": "fnv1a64:d2f8a6867e2949c3",
+  "lessonIds": [
+    "LA-C409-edictum",
+    "LA-C409-decretum",
+    "LA-C409-praeceptum",
+    "LA-C409-legitimus",
+    "LA-C409-licitus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch409.txt",
+  "json": "latin/narration/ch409.json",
+  "textHash": "fnv1a64:2de012996a57edb6",
+  "jsonHash": "fnv1a64:f0f393107365cd53",
+  "findings": []
+}

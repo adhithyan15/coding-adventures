@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-R528-review-521-528",
+    "language": "latin",
+    "chapter": 528,
+    "sequence": 28040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5be830c3494368e3"
+  },
+  "findings": []
+}

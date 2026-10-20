@@ -1,0 +1,19 @@
+{
+  "chapter": 391,
+  "title": "Even If and Otherwise",
+  "label": "ch:la-even-if-and-otherwise",
+  "canDo": "I can say even if and although, otherwise and differently, and whether … or.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "LA-C391-sive",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 391: I can say even if and although, otherwise and differently, and whether … or.",
+    "assesses": [
+      "LA-LEX-C391-ETIAMSI-03",
+      "LA-LEX-C391-ETIAMSI-04",
+      "LA-LEX-C391-ETIAMSI-05"
+    ]
+  }
+}

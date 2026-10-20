@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C446-cervical",
+    "language": "latin",
+    "chapter": 446,
+    "sequence": 23800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00b3aa009e5c5063"
+  },
+  "findings": []
+}

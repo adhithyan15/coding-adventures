@@ -1,0 +1,19 @@
+{
+  "chapter": 508,
+  "title": "Laziness and energy",
+  "label": "ch:la-laziness-and-energy",
+  "canDo": "I can describe lazy and hard-working people.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C508-assiduus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 508: I can describe lazy and hard-working people.",
+    "assesses": [
+      "LA-LEX-C508-IGNA-03",
+      "LA-LEX-C508-IGNA-04",
+      "LA-LEX-C508-IGNA-05"
+    ]
+  }
+}

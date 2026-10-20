@@ -1,0 +1,11 @@
+{
+  "id": "LA-C366-proinde",
+  "pathSegment": "LA-PATH-366-PROINDE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-366-PROINDE",
+      "order": 3
+    }
+  ]
+}

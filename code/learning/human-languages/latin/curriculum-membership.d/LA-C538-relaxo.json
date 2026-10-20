@@ -1,0 +1,11 @@
+{
+  "id": "LA-C538-relaxo",
+  "pathSegment": "LA-PATH-538-OTIU",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-538-OTIU",
+      "order": 3
+    }
+  ]
+}

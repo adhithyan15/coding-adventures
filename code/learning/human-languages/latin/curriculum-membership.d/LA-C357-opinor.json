@@ -1,0 +1,11 @@
+{
+  "id": "LA-C357-opinor",
+  "pathSegment": "LA-PATH-357-SENTENTIA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-357-SENTENTIA",
+      "order": 3
+    }
+  ]
+}

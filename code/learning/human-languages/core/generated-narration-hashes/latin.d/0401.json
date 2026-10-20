@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 401,
+  "sourceHash": "fnv1a64:9b0d6d82962648be",
+  "lessonIds": [
+    "LA-C401-paedagogus",
+    "LA-C401-praeceptor",
+    "LA-C401-grammaticus",
+    "LA-C401-litterator",
+    "LA-C401-condiscipulus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch401.txt",
+  "json": "latin/narration/ch401.json",
+  "textHash": "fnv1a64:f854568911a12f59",
+  "jsonHash": "fnv1a64:23143606d32ebfc4",
+  "findings": []
+}

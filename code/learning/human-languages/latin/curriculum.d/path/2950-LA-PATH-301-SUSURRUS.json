@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-301-SUSURRUS",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-301-SUSURRUS"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C472-lanificium",
+    "language": "latin",
+    "chapter": 472,
+    "sequence": 25150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a6e0c476ef0c158d"
+  },
+  "findings": []
+}

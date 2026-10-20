@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 518,
+  "sourceHash": "fnv1a64:8022d57e06eea2fa",
+  "lessonIds": [
+    "LA-C518-latus",
+    "LA-C518-coxa",
+    "LA-C518-calx",
+    "LA-C518-planta",
+    "LA-C518-umbilicus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch518.txt",
+  "json": "latin/narration/ch518.json",
+  "textHash": "fnv1a64:daafde81909a3d4a",
+  "jsonHash": "fnv1a64:c2dcfbc926fc4036",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C405-calculus",
+  "pathSegment": "LA-PATH-405-CALCULUS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-405-CALCULUS",
+      "order": 1
+    }
+  ]
+}

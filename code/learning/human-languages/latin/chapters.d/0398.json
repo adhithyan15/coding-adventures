@@ -1,0 +1,19 @@
+{
+  "chapter": 398,
+  "title": "Keeping My Word",
+  "label": "ch:la-keeping-my-word",
+  "canDo": "I can say that someone broke or kept his word and bound himself, and that an agreement holds good or comes to nothing.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "LA-C398-irritus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 398: I can say that someone broke or kept his word and bound himself, and that an agreement holds good or comes to nothing.",
+    "assesses": [
+      "LA-LEX-C398-PRAESTO-03",
+      "LA-LEX-C398-PRAESTO-04",
+      "LA-LEX-C398-PRAESTO-05"
+    ]
+  }
+}

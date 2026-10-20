@@ -1,0 +1,19 @@
+{
+  "chapter": 464,
+  "title": "Steelyard, Pair of scales, Scale pan, To weigh out, To weigh carefully",
+  "label": "ch:la-steelyard-pair-of-scales-scale-pan-to-weigh-out-to-weigh-carefully",
+  "canDo": "I can talk about weighing in the market: the steelyard, a pair of scales, the scale pan, and weighing things out with care.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C464-penso",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 464: I can talk about weighing in the market: the steelyard, a pair of scales, the scale pan, and weighing things out with care.",
+    "assesses": [
+      "LA-LEX-C464-STATERA-03",
+      "LA-LEX-C464-STATERA-04",
+      "LA-LEX-C464-STATERA-05"
+    ]
+  }
+}

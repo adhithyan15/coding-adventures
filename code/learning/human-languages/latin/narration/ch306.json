@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 306,
+  "title": "Caedēs",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:52385cc192892d23",
+  "lessons": [
+    {
+      "id": "LA-C306-caedes",
+      "sequence": 16560,
+      "title": "caedēs, caedis — slaughter, murder",
+      "headword": "caedēs, caedis",
+      "romanization": "caedēs, caedis",
+      "gloss": "slaughter, murder",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4b1f6c88a0d15cc9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for fraud, then the Latin for a trick."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: caedēs, caedis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "caedēs, caedis — \"slaughter, murder\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Post caedem tōta urbs tacita erat. After the murder the whole city was silent."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, 3rd declension, genitive plural caedium. Used of one killing or of a massacre."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "caedēs is built on caedō, \"to cut, to cut down\" (EtymDB), which is inherited from a root meaning \"to cut, to hew\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caedēs, caedis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caedēs, caedis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caedēs, caedis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caedēs, caedis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with caedēs, caedis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *caedēs, caedis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for fraud, then the Latin for a trick, then say caedēs, caedis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for fraud, then the Latin for a trick, then say *caedēs, caedis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does caedēs, caedis mean? (\"Slaughter, murder\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C306-homicida",
+      "sequence": 16570,
+      "title": "homicīda, homicīdae — a murderer, a killer",
+      "headword": "homicīda, homicīdae",
+      "romanization": "homicīda, homicīdae",
+      "gloss": "a murderer, a killer",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d740d31de33d7d26",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a trick, then the Latin for slaughter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: homicīda, homicīdae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "homicīda, homicīdae — \"a murderer, a killer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Homicīda ē carcere fūgit. The murderer escaped from prison."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine or feminine, 1st declension. English homicide names both the deed and the doer."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "homicīda joins homō, \"person\", and -cīda, \"killer\", from caedō, \"to cut down\" (Lewis & Short). English homicide comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "homicīda, homicīdae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *homicīda, homicīdae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "homicīda, homicīdae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *homicīda, homicīdae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with homicīda, homicīdae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *homicīda, homicīdae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a trick, then the Latin for slaughter, then say homicīda, homicīdae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a trick, then the Latin for slaughter, then say *homicīda, homicīdae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does homicīda, homicīdae mean? (\"A murderer, a killer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C306-sicarius",
+      "sequence": 16580,
+      "title": "sīcārius, sīcāriī — an assassin",
+      "headword": "sīcārius, sīcāriī",
+      "romanization": "sīcārius, sīcāriī",
+      "gloss": "an assassin",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bf48df1c876a5fc3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for slaughter, then the Latin for a murderer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: sīcārius, sīcāriī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sīcārius, sīcāriī — \"an assassin\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sīcāriī cōnsulem in viā exspectābant. The assassins were waiting for the consul in the street."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine. Murder trials at Rome were held inter sīcāriōs: among the assassins."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sīcārius is built on sīca, \"a curved dagger\" (Lewis & Short): the dagger man."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sīcārius, sīcāriī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sīcārius, sīcāriī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sīcārius, sīcāriī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sīcārius, sīcāriī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with sīcārius, sīcāriī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *sīcārius, sīcāriī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for slaughter, then the Latin for a murderer, then say sīcārius, sīcāriī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for slaughter, then the Latin for a murderer, then say *sīcārius, sīcāriī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does sīcārius, sīcāriī mean? (\"An assassin\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C306-pugio",
+      "sequence": 16590,
+      "title": "pugiō, pugiōnis — a dagger",
+      "headword": "pugiō, pugiōnis",
+      "romanization": "pugiō, pugiōnis",
+      "gloss": "a dagger",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:58f3bfa6c9dc4f4d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a murderer, then the Latin for an assassin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: pugiō, pugiōnis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pugiō, pugiōnis — \"a dagger\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Pugiōnem sub veste habēbat. He had a dagger under his clothing."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine, 3rd declension. A short stabbing blade that soldiers wore on the belt."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pugiō is built, says Lewis & Short, on the root of pungō, \"to prick, to stab\"; an old explanation says the dagger strikes with the point."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pugiō, pugiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pugiō, pugiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pugiō, pugiōnis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pugiō, pugiōnis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with pugiō, pugiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *pugiō, pugiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a murderer, then the Latin for an assassin, then say pugiō, pugiōnis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a murderer, then the Latin for an assassin, then say *pugiō, pugiōnis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does pugiō, pugiōnis mean? (\"A dagger\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C306-occido",
+      "sequence": 16600,
+      "title": "occīdō, occīdere — to kill, to cut down",
+      "headword": "occīdō, occīdere",
+      "romanization": "occīdō, occīdere",
+      "gloss": "to kill, to cut down",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e10e4bbc4b9d044e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for an assassin, then the Latin for a dagger."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: occīdō, occīdere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "occīdō, occīdere — \"to kill, to cut down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Latrō viātōrem occīdit et pecūniam rapuit. The bandit killed a traveller and snatched his money."
+            },
+            {
+              "kind": "speech",
+              "text": "occīdō, occīdere, occīdī, occīsum, with a long ī. Do not confuse occidō, 'to fall, to set', of the sun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "occīdō is built on caedō, \"to cut down\", with ob- (EtymDB, Lewis & Short): to strike down. Its look-alike occidō, \"to fall\", is built on cadō."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "occīdō, occīdere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *occīdō, occīdere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "occīdō, occīdere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *occīdō, occīdere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with occīdō, occīdere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *occīdō, occīdere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for an assassin, then the Latin for a dagger, then say occīdō, occīdere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for an assassin, then the Latin for a dagger, then say *occīdō, occīdere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does occīdō, occīdere mean? (\"To kill, to cut down\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-R306-review-299-306",
+      "sequence": 16610,
+      "title": "Words from chapters 299–306 — a review",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 299-306",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:39398153ee27825a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Latin for a narrative and to recall."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a narrative, to recall, to tell of, to report, I say",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a narrative, to recall, to tell of, to report, I say]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a letter-carrier, a herald, an instruction, an embassy, to bring back word",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a letter-carrier, a herald, an instruction, an embassy, to bring back word]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a whisper, to whisper, to spread abroad, to grow stronger, to assert",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a whisper, to whisper, to spread abroad, to grow stronger, to assert]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a spy, a scout, to search out, to betray, to open up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a spy, a scout, to search out, to betray, to open up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a theft, highway robbery, a mugger, a robber, loot",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a theft, highway robbery, a mugger, a robber, loot]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to break open, a bolt, to snatch, to catch, to seize",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to break open, a bolt, to snatch, to catch, to seize]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a crime, a deed, wicked, fraud, a trick",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a crime, a deed, wicked, fraud, a trick]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "slaughter, a murderer, an assassin, a dagger, to kill",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: slaughter, a murderer, an assassin, a dagger, to kill]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A narrative? (nārrātiō, nārrātiōnis.) To recall? (commemorō, commemorāre.) To tell of? (memorō, memorāre.) To report? (referō, referre.) I say? (inquam.) A letter-carrier? (tabellārius, tabellāriī.) A herald? (praecō, praecōnis.) An instruction? (mandātum, mandātī.) An embassy? (lēgātiō, lēgātiōnis.) To bring back word? (renūntiō, renūntiāre.) A whisper? (susurrus, susurrī.) To whisper? (susurrō, susurrāre.) To spread abroad? (vulgō, vulgāre.) To grow stronger? (crēbrēscō, crēbrēscere.) To assert? (perhibeō, perhibēre.) A spy? (speculātor, speculātōris.) A scout? (explōrātor, explōrātōris.) To search out? (explōrō, explōrāre.) To betray? (prōdō, prōdere.) To open up? (patefaciō, patefacere.) A theft? (fūrtum, fūrtī.) Highway robbery? (latrōcinium, latrōciniī.) A mugger? (grassātor, grassātōris.) A robber? (praedō, praedōnis.) Loot? (praeda, praedae.) To break open? (effringō, effringere.) A bolt? (claustrum, claustrī.) To snatch? (rapiō, rapere.) To catch? (dēprehendō, dēprehendere.) To seize? (comprehendō, comprehendere.) A crime? (scelus, sceleris.) A deed? (facinus, facinoris.) Wicked? (scelerātus, scelerāta, scelerātum.) Fraud? (fraus, fraudis.) A trick? (dolus, dolī.) Slaughter? (caedēs, caedis.) A murderer? (homicīda, homicīdae.) An assassin? (sīcārius, sīcāriī.) A dagger? (pugiō, pugiōnis.) To kill? (occīdō, occīdere.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C292-confestim",
+  "pathSegment": "LA-PATH-292-REPENTE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-292-REPENTE",
+      "order": 1
+    }
+  ]
+}

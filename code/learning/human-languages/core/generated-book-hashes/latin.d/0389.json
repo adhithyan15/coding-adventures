@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 389,
+  "sourceHash": "fnv1a64:915126f10dcd3e22",
+  "lessonIds": [
+    "LA-C389-servitus",
+    "LA-C389-manumitto",
+    "LA-C389-pietas",
+    "LA-C389-onus",
+    "LA-C389-obsequium"
+  ],
+  "tex": "latin/book/chapters/ch389-duty-and-freedom.tex"
+}

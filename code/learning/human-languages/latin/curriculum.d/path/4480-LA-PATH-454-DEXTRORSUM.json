@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-454-DEXTRORSUM",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "LA-EXT-454-DEXTRORSUM"
+  ],
+  "after": []
+}

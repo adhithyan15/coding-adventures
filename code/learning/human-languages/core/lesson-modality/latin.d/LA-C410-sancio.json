@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C410-sancio",
+    "language": "latin",
+    "chapter": 410,
+    "sequence": 21940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3bcd64d9b41ed01c"
+  },
+  "findings": []
+}

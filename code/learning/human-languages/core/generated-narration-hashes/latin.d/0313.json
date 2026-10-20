@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:de89300c6a111e40",
+  "lessonIds": [
+    "LA-C313-ruo",
+    "LA-C313-ruina",
+    "LA-C313-corruo",
+    "LA-C313-collabor",
+    "LA-C313-decido"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch313.txt",
+  "json": "latin/narration/ch313.json",
+  "textHash": "fnv1a64:25da8a229b4d79e8",
+  "jsonHash": "fnv1a64:a4821dcbc67f2658",
+  "findings": []
+}
