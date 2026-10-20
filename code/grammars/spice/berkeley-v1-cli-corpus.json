@@ -116,6 +116,41 @@
       }
     },
     {
+      "id": "raw-output-artifacts",
+      "deck": "* Berkeley SPICE raw output CLI corpus\nV1 in 0 1\nR1 in out 1k\nR2 out 0 1k\n.op\n.control\nset filetype=ascii\nset wr_vecnames\nwrite result.raw V(out) V(missing)\nwrdata result.dat V(out) V(missing)\n.endc\n.end\n",
+      "expected": {
+        "title": "Berkeley SPICE raw output CLI corpus",
+        "rawfiles": [
+          {
+            "analysisIndex": 0,
+            "analysis": "op",
+            "temperatureKelvin": null,
+            "target": "result.raw",
+            "marker": "write result.raw V(out) V(missing)",
+            "probes": ["V(out)", "V(missing)"],
+            "matchedProbes": ["V(out)"],
+            "unmatchedProbes": ["V(missing)"],
+            "options": ["set filetype=ascii", "set wr_vecnames"],
+            "content": "Title: SPICE deck op result\nDate: deterministic\nPlotname: op\nFlags: real\nNo. Variables: 2\nNo. Points: 1\nOptions: set filetype=ascii;set wr_vecnames\nVariables:\n\t0\tIndex\treal\n\t1\tV(out)\treal\nValues:\n0\t0\t5.000000e-01\n"
+          }
+        ],
+        "wrdata": [
+          {
+            "analysisIndex": 0,
+            "analysis": "op",
+            "temperatureKelvin": null,
+            "target": "result.dat",
+            "marker": "wrdata result.dat V(out) V(missing)",
+            "probes": ["V(out)", "V(missing)"],
+            "matchedProbes": ["V(out)"],
+            "unmatchedProbes": ["V(missing)"],
+            "options": ["set filetype=ascii", "set wr_vecnames"],
+            "content": "# SPICE deck wrdata artifact\nProbes: V(out);V(missing)\nOptions: set filetype=ascii;set wr_vecnames\nVectorNames: Index;V(out)\nIndex\tV(out)\n0\t5.000000e-01\n"
+          }
+        ]
+      }
+    },
+    {
       "id": "engine-backed-analysis-plan",
       "deck": "* Berkeley SPICE engine-backed analysis CLI corpus\nV1 in 0 DC 1 AC 1\nR1 in out 1k\nR2 out 0 1k\n.sens V(out)\n.noise V(out) V1 LIN 2 1k 2k\n.end\n",
       "expected": {
