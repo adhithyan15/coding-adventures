@@ -6170,60 +6170,60 @@ fn is_plain_identifier(tok: &lexer::token::Token) -> bool {
 /// `.`/`?.` (`a.throw(1)`), before `:` (`{throw:1}`), or as a method
 /// (`throw(){…}`, a `(…)` followed by `{`). Those are skipped.
 fn throw_terminators(kept: &[&lexer::token::Token]) -> Vec<bool> {
+    let opens = |t: &lexer::token::Token| {
+        is_structural_punct(t, "(") || is_structural_punct(t, "[") || is_structural_punct(t, "{")
+    };
+    let closes = |t: &lexer::token::Token| {
+        is_structural_punct(t, ")") || is_structural_punct(t, "]") || is_structural_punct(t, "}")
+    };
+    // `(` index → its `)` index, in one pass, for the `throw(…){` method test.
+    let mut close_of = vec![usize::MAX; kept.len()];
+    let mut parens: Vec<usize> = Vec::new();
+    for (k, t) in kept.iter().enumerate() {
+        if is_structural_punct(t, "(") {
+            parens.push(k);
+        } else if is_structural_punct(t, ")") {
+            if let Some(o) = parens.pop() {
+                close_of[o] = k;
+            }
+        }
+    }
+
+    // One pass. `pending` holds the depth at which each open `throw` waits for
+    // its `;`. A closer that drops below a throw's depth abandons it: it left
+    // its block without one. Each token is visited once, so the whole scan is
+    // linear even for deeply nested or terminator-less input.
     let mut marks = vec![false; kept.len()];
-    for i in 0..kept.len() {
-        if kept[i].value != "throw" || !is_word_like(kept[i]) {
-            continue;
-        }
-        let after_dot = i > 0
-            && (is_structural_punct(kept[i - 1], ".") || is_structural_punct(kept[i - 1], "?."));
-        let next = kept.get(i + 1);
-        let property_key = next.is_some_and(|t| is_structural_punct(t, ":"));
-        if after_dot || property_key {
-            continue;
-        }
-        // `throw(…){` is a method named `throw`, not a statement.
-        let span = paren_span(kept, i + 1);
-        if span > 0 && kept.get(i + 1 + span).is_some_and(|t| is_structural_punct(t, "{")) {
-            continue;
-        }
-        // The terminator is the first `;` at the `throw`'s own depth.
-        let mut depth: i32 = 0;
-        for (j, t) in kept.iter().enumerate().skip(i + 1) {
-            if is_structural_punct(t, "(") || is_structural_punct(t, "[") || is_structural_punct(t, "{") {
-                depth += 1;
-            } else if is_structural_punct(t, ")") || is_structural_punct(t, "]") || is_structural_punct(t, "}") {
-                depth -= 1;
-                if depth < 0 {
-                    break; // left the enclosing block without a terminator
-                }
-            } else if depth == 0 && is_structural_punct(t, ";") {
-                marks[j] = true;
-                break;
+    let mut pending: Vec<i32> = Vec::new();
+    let mut depth: i32 = 0;
+    for (i, t) in kept.iter().enumerate() {
+        if opens(t) {
+            depth += 1;
+        } else if closes(t) {
+            depth -= 1;
+            while pending.last().is_some_and(|&d| d > depth) {
+                pending.pop();
+            }
+        } else if is_structural_punct(t, ";") {
+            if pending.last() == Some(&depth) {
+                marks[i] = true;
+                pending.pop();
+            }
+        } else if t.value == "throw" && is_word_like(t) {
+            let after_dot = i > 0
+                && (is_structural_punct(kept[i - 1], ".")
+                    || is_structural_punct(kept[i - 1], "?."));
+            let property_key = kept.get(i + 1).is_some_and(|n| is_structural_punct(n, ":"));
+            // `throw(…){` is a method named `throw`, not a statement.
+            let method = kept.get(i + 1).is_some_and(|n| is_structural_punct(n, "("))
+                && close_of[i + 1] != usize::MAX
+                && kept.get(close_of[i + 1] + 1).is_some_and(|n| is_structural_punct(n, "{"));
+            if !after_dot && !property_key && !method {
+                pending.push(depth);
             }
         }
     }
     marks
-}
-
-/// If `kept[start]` is `(`, the number of tokens up to and including its
-/// matching `)`; otherwise 0.
-fn paren_span(kept: &[&lexer::token::Token], start: usize) -> usize {
-    if !kept.get(start).is_some_and(|t| is_structural_punct(t, "(")) {
-        return 0;
-    }
-    let mut depth = 0i32;
-    for (k, t) in kept.iter().enumerate().skip(start) {
-        if is_structural_punct(t, "(") || is_structural_punct(t, "[") || is_structural_punct(t, "{") {
-            depth += 1;
-        } else if is_structural_punct(t, ")") || is_structural_punct(t, "]") || is_structural_punct(t, "}") {
-            depth -= 1;
-            if depth == 0 {
-                return k - start + 1;
-            }
-        }
-    }
-    0
 }
 
 fn is_word_like(tok: &lexer::token::Token) -> bool {
