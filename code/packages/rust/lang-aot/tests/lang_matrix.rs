@@ -135,6 +135,13 @@ enum Expect {
     Stdout(&'static str),
     /// The program must fail closed at runtime (for example, a bounds trap).
     Trap,
+    /// LANG83 `StdoutThenTrap`: the program writes this (trimmed) stdout, then
+    /// stops on a trap of this registered kind (`Trap.DivZero`, …). Unlike the
+    /// data-less [`Expect::Trap`], both the output before the trap and the kind
+    /// are checked, so a column that loses buffered output on a trap, or
+    /// reports the wrong kind, fails. Ruby's `ZeroDivisionError` rows use it
+    /// (LANG84 phase 5a, the first rows that emit a LANG83 PR1b op).
+    StdoutThenTrap(&'static str, &'static str),
 }
 
 /// The observed outcome from a backend that was present and successfully built
@@ -143,6 +150,43 @@ enum Expect {
 enum RunResult {
     Completed { code: Option<i32>, stdout: String },
     Trapped,
+    /// A run that stopped on a trap, with the stdout written before it and
+    /// the LANG83 kind the column reported (`None` when it reported none).
+    /// Produced only for [`Expect::StdoutThenTrap`] rows.
+    TrappedAfter { stdout: String, kind: Option<String> },
+}
+
+/// Does this row expect LANG83 "print, then trap"?
+fn expects_trap_after_output(p: &Prog) -> bool {
+    matches!(&p.expect, Expect::StdoutThenTrap(..))
+}
+
+/// The LANG83 trap kind a subprocess column reported on stderr: the first
+/// word that starts with `Trap.`, without surrounding punctuation.
+///
+/// | column      | stderr                                                    |
+/// |-------------|-----------------------------------------------------------|
+/// | native/LLVM | `trap: Trap.DivZero`                                      |
+/// | JVM         | `Exception in thread "main" java.lang.RuntimeException: Trap.DivZero` |
+/// | CLR         | `Unhandled exception. System.Exception: Trap.DivZero`     |
+fn trap_kind_in(stderr: &str) -> Option<String> {
+    stderr
+        .split(|c: char| c.is_whitespace() || matches!(c, '\'' | '"' | ',' | '{' | '}' | '(' | ')' | ':'))
+        .find(|word| word.starts_with("Trap.") && word.len() > "Trap.".len())
+        .map(str::to_string)
+}
+
+#[test]
+fn trap_kinds_are_read_from_every_columns_stderr() {
+    for stderr in [
+        "trap: Trap.DivZero\n",
+        "Exception in thread \"main\" java.lang.RuntimeException: Trap.DivZero\n\tat Main.main(Unknown Source)",
+        "Unhandled exception. System.Exception: Trap.DivZero\n   at Main.MccarthyEntry()",
+    ] {
+        assert_eq!(trap_kind_in(stderr).as_deref(), Some("Trap.DivZero"), "{stderr:?}");
+    }
+    assert_eq!(trap_kind_in("Segmentation fault"), None);
+    assert_eq!(trap_kind_in("Trap. alone"), None);
 }
 
 /// One conformance program: a language, a source-file extension, the source, the
@@ -9181,6 +9225,57 @@ fn main() { out(1, VALUE); }\n",
     backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
 
+    // Python — LANG84 phase 7a: the `py-int-print` subset on the default
+    // release 3.13.16. The compiler walks the tree that the generic
+    // GrammarLexer/GrammarParser build from `python3.13.16.tokens`/`.grammar`
+    // and emits only LANG83 registry ops: `+ - *` and unary `-` are the PR4
+    // checked ops `i64_add_ovf`/`i64_sub_ovf`/`i64_mul_ovf`/`i64_neg_ovf`, `//`
+    // is `i64_div_floor`, `%` is `i64_mod_floor`, `print` is `print_i64`,
+    // `print()` is `putchar 10`. These are the first matrix rows that emit a
+    // PR4 op, and the first `StdoutThenTrap` rows whose kind is
+    // `Trap.Overflow`.
+    //
+    // Every source below is a case of `code/grammars/python/corpus/py-int-print/`
+    // verbatim, and every expectation is that case's `.expect` trimmed. Host
+    // CPython 3.13.16 produced them, except that where CPython prints an int
+    // outside i64 the subset traps (`python_rows_are_py_int_print_corpus_cases`
+    // and `python_rows_agree_with_the_host_python_oracle` re-check both).
+    // `* // %` bind tighter than `+ -`; both levels associate left: 1 + 6 - (2 % 3) = 5.
+    Prog { lang: Language::Python, ext: "py", src: "print(1 + 2)\nprint(1 + 2 * 3 - 8 // 4 % 3)\nprint((1 + 2) * 3)\nprint(10 - 3 - 2)\n", expect: Expect::Stdout("3\n5\n9\n5"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // Python's `//` rounds toward negative infinity (LANG83 `i64_div_floor`), unlike C, the JVM or the CLR.
+    Prog { lang: Language::Python, ext: "py", src: "print(7 // 2)\nprint(-7 // 2)\nprint(7 // -2)\nprint(-7 // -2)\n", expect: Expect::Stdout("3\n-4\n-4\n3"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // Python's `%` takes the divisor's sign (LANG83 `i64_mod_floor`).
+    Prog { lang: Language::Python, ext: "py", src: "print(7 % 3)\nprint(-7 % 3)\nprint(7 % -3)\nprint(-7 % -3)\n", expect: Expect::Stdout("1\n2\n-2\n-1"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // Nested unary minus (`i64_neg_ovf`) and plus (no op), and a trailing comma in the call.
+    Prog { lang: Language::Python, ext: "py", src: "print(- -5)\nprint(-(3 - 10))\nprint(2 * -3 * 4)\nprint(+7, )\nprint(-+3)\n", expect: Expect::Stdout("5\n7\n-24\n7\n-3"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // PEP 515 `_` separators (3.6+; 3.0a1 refuses them) and the zero spellings `00` and `0_0`.
+    Prog { lang: Language::Python, ext: "py", src: "print(1_000_000 * 3)\nprint(0_0 + 00)\n", expect: Expect::Stdout("3000000\n0"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // `print()` writes one newline (`putchar 10`); `;` between statements and after the last.
+    Prog { lang: Language::Python, ext: "py", src: "print(1)\nprint()\nprint(2); print(3);\nprint(4,)\n", expect: Expect::Stdout("1\n\n2\n3\n4"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // Comments, blank lines, newlines inside parentheses and a backslash continuation.
+    Prog { lang: Language::Python, ext: "py", src: "# a comment\n\nprint(1 +\n      2)\nprint(\n    3\n)  # trailing comment\nprint(5 \\\n      - 6)\n", expect: Expect::Stdout("3\n3\n-1"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // Both ends of i64, a product just under 2^62, and `MIN // 1`.
+    Prog { lang: Language::Python, ext: "py", src: "print(9223372036854775807)\nprint(-9223372036854775807 - 1)\nprint(46340 * 46340 * 46340 * 46340)\nprint((-9223372036854775807 - 1) // 1)\n", expect: Expect::Stdout("9223372036854775807\n-9223372036854775808\n4611307862899360000\n-9223372036854775808"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // A known -1 divisor is folded (`a // -1` = `i64_neg_ovf a`, `a % -1` = 0): `MIN % -1` never reaches a machine `rem`.
+    Prog { lang: Language::Python, ext: "py", src: "print(7 // -1, )\nprint((-9223372036854775807 - 1) % -1)\nprint(9223372036854775807 // -1)\nprint(-7 % -1)\n", expect: Expect::Stdout("-7\n0\n-9223372036854775807\n0"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // `ZeroDivisionError` after output: `1` is flushed, then `Trap.DivZero`; the third statement never runs.
+    Prog { lang: Language::Python, ext: "py", src: "print(1)\nprint(2 // 0)\nprint(3)\n", expect: Expect::StdoutThenTrap("1", "Trap.DivZero"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // A zero modulus traps too, with nothing printed first.
+    Prog { lang: Language::Python, ext: "py", src: "print(5 % 0)\n", expect: Expect::StdoutThenTrap("", "Trap.DivZero"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // A divisor that is zero only after evaluation.
+    Prog { lang: Language::Python, ext: "py", src: "print(4)\nprint(10 // (5 - 5))\n", expect: Expect::StdoutThenTrap("4", "Trap.DivZero"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // The argument is evaluated before `print` writes, so the trapping call prints nothing.
+    Prog { lang: Language::Python, ext: "py", src: "print(2)\nprint(0 * (1 // 0))\n", expect: Expect::StdoutThenTrap("2", "Trap.DivZero"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // CPython prints 2^63 here; this i64 subset stops with `Trap.Overflow` after the earlier output (stated divergence).
+    Prog { lang: Language::Python, ext: "py", src: "print(1)\nprint(9223372036854775807 + 1)\nprint(2)\n", expect: Expect::StdoutThenTrap("1", "Trap.Overflow"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // `MIN - 1` leaves i64: `i64_sub_ovf` traps.
+    Prog { lang: Language::Python, ext: "py", src: "print(-9223372036854775807 - 2)\n", expect: Expect::StdoutThenTrap("", "Trap.Overflow"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // 3037000500^2 is just past `MAX`: `i64_mul_ovf` traps.
+    Prog { lang: Language::Python, ext: "py", src: "print(5)\nprint(3037000500 * 3037000500)\n", expect: Expect::StdoutThenTrap("5", "Trap.Overflow"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // `-MIN` is the one negation that overflows: `i64_neg_ovf` traps.
+    Prog { lang: Language::Python, ext: "py", src: "print(-(-9223372036854775807 - 1))\n", expect: Expect::StdoutThenTrap("", "Trap.Overflow"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // `MIN // -1` is folded to `-MIN`, which traps `Trap.Overflow` (CPython: 2^63).
+    Prog { lang: Language::Python, ext: "py", src: "print(0)\nprint((-9223372036854775807 - 1) // -1)\n", expect: Expect::StdoutThenTrap("0", "Trap.Overflow"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses
@@ -9378,6 +9473,10 @@ fn run_native(p: &Prog) -> Option<RunResult> {
     let stdout = String::from_utf8_lossy(&out.stdout).trim().to_string();
     if matches!(&p.expect, Expect::Trap) && !out.status.success() {
         return Some(RunResult::Trapped);
+    }
+    if expects_trap_after_output(p) && !out.status.success() {
+        let kind = trap_kind_in(&String::from_utf8_lossy(&out.stderr));
+        return Some(RunResult::TrappedAfter { stdout, kind });
     }
     Some(RunResult::Completed { code: out.status.code(), stdout })
 }
@@ -9586,6 +9685,10 @@ fn run_llvm(p: &Prog) -> Option<RunResult> {
     let stdout = String::from_utf8_lossy(&out.stdout).trim().to_string();
     if matches!(&p.expect, Expect::Trap) && !out.status.success() {
         return Some(RunResult::Trapped);
+    }
+    if expects_trap_after_output(p) && !out.status.success() {
+        let kind = trap_kind_in(&String::from_utf8_lossy(&out.stderr));
+        return Some(RunResult::TrappedAfter { stdout, kind });
     }
     Some(RunResult::Completed { code: out.status.code(), stdout })
 }
@@ -10080,6 +10183,41 @@ struct PrintHost {
     /// The program's single ordered output stream: every output import appends here.
     bytes: std::sync::Arc<std::sync::Mutex<Vec<u8>>>,
     input: std::sync::Arc<std::sync::Mutex<std::collections::VecDeque<u8>>>,
+    /// The kind id `env.__trap` received, if the program trapped (LANG83).
+    trap_kind: std::sync::Arc<std::sync::Mutex<Option<u32>>>,
+}
+
+/// LANG83 `env.__trap : (i32) -> ()`. The emitted module calls it with the
+/// trap's stable kind id and then executes `unreachable`, so the host only
+/// records the id; the module itself stops the run (and still traps if a
+/// host returned normally).
+struct TrapFunc {
+    kind: std::sync::Arc<std::sync::Mutex<Option<u32>>>,
+}
+
+impl wasm_execution::HostFunction for TrapFunc {
+    fn func_type(&self) -> &wasm_types::FuncType {
+        static FT: std::sync::LazyLock<wasm_types::FuncType> =
+            std::sync::LazyLock::new(|| wasm_types::FuncType {
+                params: vec![wasm_types::ValueType::I32],
+                results: vec![],
+            });
+        &FT
+    }
+
+    fn call(
+        &self,
+        args: &[wasm_execution::WasmValue],
+        _memory: Option<&mut wasm_execution::LinearMemory>,
+    ) -> Result<Vec<wasm_execution::WasmValue>, wasm_execution::TrapError> {
+        let id = match args.first() {
+            Some(wasm_execution::WasmValue::I32(id)) => u32::try_from(*id).ok(),
+            _ => None,
+        }
+        .ok_or_else(|| wasm_execution::TrapError::new("__trap: expected one non-negative i32 kind id"))?;
+        *self.kind.lock().expect("lang-matrix trap slot poisoned") = Some(id);
+        Ok(vec![])
+    }
 }
 
 impl wasm_execution::HostInterface for PrintHost {
@@ -10123,6 +10261,10 @@ impl wasm_execution::HostInterface for PrintHost {
             ("env", "__atan") => Some(Box::new(AtanFunc)),
             ("env", "__tan")  => Some(Box::new(TanFunc)),
             ("env", "__pow")  => Some(Box::new(PowFunc)),
+            // LANG83 PR1b: records the trap's kind id (Ruby's zero divisor).
+            ("env", "__trap") => Some(Box::new(TrapFunc {
+                kind: std::sync::Arc::clone(&self.trap_kind),
+            })),
             _ => None,
         }
     }
@@ -10171,14 +10313,28 @@ fn run_wasm(p: &Prog) -> Option<RunResult> {
     let input = std::sync::Arc::new(std::sync::Mutex::new(
         program_stdin(p).iter().copied().collect::<std::collections::VecDeque<u8>>(),
     ));
+    let trap_kind = std::sync::Arc::new(std::sync::Mutex::new(None));
     let host = PrintHost {
         bytes: std::sync::Arc::clone(&byte_buf),
         input: std::sync::Arc::clone(&input),
+        trap_kind: std::sync::Arc::clone(&trap_kind),
     };
     let rt = wasm_runtime::WasmRuntime::with_host(Box::new(host));
     let result = match rt.load_and_run(&wasm, "main", &[]) {
         Ok(result) => result,
         Err(_) if matches!(&p.expect, Expect::Trap) => return Some(RunResult::Trapped),
+        Err(_) if expects_trap_after_output(p) => {
+            let printed = byte_buf.lock().expect("lang-matrix output buffer poisoned");
+            let kind = trap_kind
+                .lock()
+                .expect("lang-matrix trap slot poisoned")
+                .and_then(interpreter_ir::exception_kind::trap_kind_name)
+                .map(str::to_string);
+            return Some(RunResult::TrappedAfter {
+                stdout: String::from_utf8_lossy(&printed).trim().to_string(),
+                kind,
+            });
+        }
         Err(e) => cell_failed("Wasm", p, "wasm-runtime execution", format!("{e:?}")),
     };
     // `main`'s single i64 result is the program's value (`& 0xFF` matches the exit
@@ -10360,7 +10516,7 @@ fn run_jvm(p: &Prog) -> Option<RunResult> {
         cp.push(Some(e));
         (cp.len() - 1) as u16
     }
-    let prints = matches!(&p.expect, Expect::Stdout(_));
+    let prints = matches!(&p.expect, Expect::Stdout(_) | Expect::StdoutThenTrap(..));
     let mut class = match lang_aot::compile_source_to_jvm_class(p.lang, p.src, "Main") {
         Ok(c) => c,
         Err(e) => cell_failed("Jvm", p, "source → JVM class file", format!("{e:?}")),
@@ -10550,6 +10706,10 @@ fn run_jvm(p: &Prog) -> Option<RunResult> {
     if matches!(&p.expect, Expect::Trap) && !out.status.success() {
         return Some(RunResult::Trapped);
     }
+    // LANG83: `System.out.flush(); throw new RuntimeException("<kind>")`.
+    if expects_trap_after_output(p) && !out.status.success() {
+        return Some(RunResult::TrappedAfter { stdout, kind: trap_kind_in(&stderr) });
+    }
     // A non-zero `java` exit for a program that is *not* expected to trap means the
     // JVM refused or crashed on our class — a VerifyError, a ClassFormatError, an
     // uncaught exception. That diagnostic lives on stderr, and the value path below
@@ -10678,9 +10838,19 @@ fn run_beam(p: &Prog) -> Option<RunResult> {
         // prints anything has its output concatenated with its result: a module
         // printing "5" and returning 42 yields "542", which parses cleanly and
         // is then confidently wrong.
-        .arg(format!(
-            "io:format(\"<<R>>~w<</R>>~n\",[{module}:main()]),halt(0)."
-        ));
+        .arg(if expects_trap_after_output(p) {
+            // LANG83 on BEAM: a trap is `erlang:error('<kind>')`. Catch it in
+            // the launcher and print the reason between its own sentinels, so
+            // the kind is read from a marker rather than from OTP's crash
+            // report, and the program's output before it stays on stdout in
+            // order (the `io` server is synchronous).
+            format!(
+                "try {module}:main() of R -> io:format(\"<<R>>~w<</R>>~n\",[R]) \
+                 catch error:K -> io:format(\"<<T>>~w<</T>>~n\",[K]) end, halt(0)."
+            )
+        } else {
+            format!("io:format(\"<<R>>~w<</R>>~n\",[{module}:main()]),halt(0).")
+        });
     // Brainfuck's I/O is bytes, including 128..255, not Unicode characters.
     if p.lang == Language::Brainfuck {
         cmd.args(["-kernel", "standard_io_encoding", "latin1"]);
@@ -10697,6 +10867,18 @@ fn run_beam(p: &Prog) -> Option<RunResult> {
     let out = output_with_stdin(cmd, program_stdin(p)).expect("beam: spawn erl");
 
     let raw = String::from_utf8_lossy(&out.stdout);
+    if expects_trap_after_output(p) && out.status.success() {
+        if let Some((before, rest)) = raw.split_once("<<T>>") {
+            if let Some((reason, _)) = rest.split_once("<</T>>") {
+                // `~w` quotes an atom that is not a bare word: 'Trap.DivZero'.
+                let kind = reason.trim().trim_matches('\'').to_string();
+                return Some(RunResult::TrappedAfter {
+                    stdout: before.trim().to_string(),
+                    kind: Some(kind),
+                });
+            }
+        }
+    }
     // A non-zero exit is a failure even when stdout happens to parse. OTP writes
     // `=ERROR REPORT` to stdout, not stderr, so the status is the reliable signal.
     // A program that must fail closed (`Expect::Trap` — e.g. a COBOL reference
@@ -10824,6 +11006,14 @@ fn run_clr_il(p: &Prog, il: &str, input: &[u8], ilasm: &std::path::Path) -> RunR
     if !out.status.success() {
         if matches!(&p.expect, Expect::Trap) {
             return RunResult::Trapped;
+        }
+        // LANG83: `Console.Out.Flush(); throw new System.Exception("<kind>")`,
+        // reported by the host as `Unhandled exception. System.Exception: <kind>`.
+        if expects_trap_after_output(p) {
+            return RunResult::TrappedAfter {
+                stdout: String::from_utf8_lossy(&out.stdout).trim().to_string(),
+                kind: trap_kind_in(&String::from_utf8_lossy(&out.stderr)),
+            };
         }
         cell_failed(
             "Clr",
@@ -11000,6 +11190,14 @@ fn run_vm(p: &Prog) -> Option<RunResult> {
     let result = match vm.execute(&mut module, &entry, &[]) {
         Ok(result) => result,
         Err(_) if matches!(&p.expect, Expect::Trap) => return Some(RunResult::Trapped),
+        // LANG83: the VM reports a trap as `VMError::Trap { kind }`.
+        Err(vm_core::errors::VMError::Trap { kind }) if expects_trap_after_output(p) => {
+            let printed = printed_bytes.lock().expect("lang-matrix VM output buffer poisoned");
+            return Some(RunResult::TrappedAfter {
+                stdout: String::from_utf8_lossy(&printed).trim().to_string(),
+                kind: Some(kind),
+            });
+        }
         Err(e) => cell_failed("Vm", p, "VMCore execution", format!("{e:?}")),
     };
 
@@ -11165,6 +11363,15 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
     let result = match jit.execute_with_jit(&mut vm, &mut module, &entry, &[]) {
         Ok(result) => result,
         Err(_) if matches!(&p.expect, Expect::Trap) => return Some(RunResult::Trapped),
+        // LANG83: a trap on either tier surfaces as `VMError::Trap { kind }`
+        // (`JITCore` drains the JIT's error slot, so it fails closed).
+        Err(vm_core::errors::VMError::Trap { kind }) if expects_trap_after_output(p) => {
+            let printed = printed_bytes.lock().expect("lang-matrix JIT output buffer poisoned");
+            return Some(RunResult::TrappedAfter {
+                stdout: String::from_utf8_lossy(&printed).trim().to_string(),
+                kind: Some(kind),
+            });
+        }
         Err(e) => cell_failed("Jit", p, "JITCore execution", format!("{e:?}")),
     };
 
@@ -11304,6 +11511,22 @@ fn assert_cell(backend: Backend, p: &Prog, result: RunResult) {
             p.src
         ),
         (Expect::Trap, RunResult::Trapped) => {}
+        // LANG83 "print, then trap": the output before the trap AND the kind.
+        (Expect::StdoutThenTrap(want, kind), RunResult::TrappedAfter { stdout, kind: got }) => {
+            assert_eq!(
+                comparison_stdout(p.lang, &stdout), *want,
+                "{backend:?} {:?}: expected stdout {want:?} before the trap, got {stdout:?}\nsource: {:?}",
+                p.lang,
+                p.src
+            );
+            assert_eq!(
+                got.as_deref(),
+                Some(*kind),
+                "{backend:?} {:?}: expected trap kind {kind}\nsource: {:?}",
+                p.lang,
+                p.src
+            );
+        }
         (expect, other) => panic!(
             "{backend:?} {:?}: expected {expect:?}, got {other:?}\nsource: {:?}",
             p.lang, p.src
@@ -11919,6 +12142,10 @@ fn feature_coverage_doc_counts_match_programs_source() {
         (Language::MacroOct, 15, 120),
         (Language::FlowMatic, 8, 64),
         (Language::Cobol60, 59, 472),
+        // Python: LANG84 phase 7a's eighteen py-int-print rows (nine of them
+        // StdoutThenTrap: four Trap.DivZero, five Trap.Overflow), all eight
+        // columns.
+        (Language::Python, 18, 144),
     ];
 
     for (lang, want_rows, want_cells) in expected {
@@ -25253,4 +25480,197 @@ fn portable_text_stdout_cobol_region_intersection() {
             None => eprintln!("SKIP VM058 region intersection: {backend:?} runtime unavailable"),
         }
     }
+}
+
+// ---------------------------------------------------------------------------
+// LANG84 phase 7a — Python `py-int-print` on every backend
+// ---------------------------------------------------------------------------
+
+fn python_rows() -> Vec<&'static Prog> {
+    let rows: Vec<_> = PROGRAMS.iter().filter(|p| p.lang == Language::Python).collect();
+    assert!(!rows.is_empty(), "PROGRAMS has no Python rows");
+    rows
+}
+
+/// The `py-int-print` corpus directory, read from `subsets.csv` by header.
+fn python_corpus_dir() -> std::path::PathBuf {
+    let grammars = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/python");
+    let text = std::fs::read_to_string(grammars.join("subsets.csv")).expect("python subsets.csv");
+    let mut lines = text.lines().filter(|l| !l.starts_with('#'));
+    let header: Vec<&str> = lines.next().expect("subsets.csv header").split(',').collect();
+    let column = |name: &str| header.iter().position(|h| *h == name).expect("subsets.csv column");
+    let (subset, dir) = (column("subset"), column("corpus_dir"));
+    let row = lines
+        .map(|l| l.split(',').collect::<Vec<_>>())
+        .find(|cells| cells[subset] == "py-int-print")
+        .expect("py-int-print is declared");
+    grammars.join(row[dir])
+}
+
+/// Every Python row on every backend it declares, as one named test so a
+/// Python regression is reported as one. A runner that returns `None` while
+/// its toolchain is present fails rather than skips.
+#[test]
+fn python_rows_run_on_every_available_backend() {
+    let (mut ran, mut skipped, mut trapped) = (0usize, 0usize, 0usize);
+    for program in python_rows() {
+        assert_eq!(
+            program.backends,
+            &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+            "every Python row declares all eight columns: {:?}",
+            program.src
+        );
+        for &backend in program.backends {
+            let available = match backend {
+                NativeAot => native_linker_ok(),
+                _ => toolchain_available(backend),
+            };
+            match run(backend, program) {
+                Some(result) => {
+                    trapped += usize::from(matches!(result, RunResult::TrappedAfter { .. }));
+                    assert_cell(backend, program, result);
+                    ran += 1;
+                }
+                None => {
+                    assert!(!available, "Python {backend:?} silently skipped: {:?}", program.src);
+                    skipped += 1;
+                }
+            }
+        }
+    }
+    assert!(ran > 0 && trapped > 0);
+    eprintln!("Python matrix: {ran} cells executed ({trapped} trapped as expected), {skipped} skipped");
+}
+
+/// The rows are the corpus: each source is a `.py` case verbatim and each
+/// expectation its `.expect`, and every accepted case that applies to the
+/// default release is a row, so the matrix cannot drift from what the
+/// frontend's own stage-I test (and the oracle) checked.
+#[test]
+fn python_rows_are_py_int_print_corpus_cases() {
+    let dir = python_corpus_dir();
+    let mut cases: Vec<(String, String, String)> = std::fs::read_dir(&dir)
+        .expect("py-int-print corpus")
+        .filter_map(|entry| {
+            let path = entry.expect("corpus entry").path();
+            if path.extension()? != "py" {
+                return None;
+            }
+            let expect = std::fs::read_to_string(path.with_extension("expect")).ok()?;
+            let name = path.file_stem()?.to_string_lossy().into_owned();
+            Some((name, std::fs::read_to_string(&path).expect("corpus source"), expect))
+        })
+        .collect();
+    cases.sort();
+    let rows = python_rows();
+    for program in &rows {
+        let Some((_, _, expect)) = cases.iter().find(|(_, source, _)| source == program.src) else {
+            panic!("Python row is not a py-int-print corpus case: {:?}", program.src);
+        };
+        let (stdout, trap) = match expect.rfind("trap:") {
+            Some(at) => (expect[..at].trim(), Some(expect[at + 5..].trim())),
+            None => (expect.trim(), None),
+        };
+        match (&program.expect, trap) {
+            (Expect::Stdout(want), None) => assert_eq!(*want, stdout, "{:?}", program.src),
+            (Expect::StdoutThenTrap(want, kind), Some(trap)) => {
+                assert_eq!((*want, *kind), (stdout, trap), "{:?}", program.src)
+            }
+            (other, _) => panic!("{:?}: {other:?} disagrees with the corpus {expect:?}", program.src),
+        }
+    }
+    // The other direction: no accepted case is left out of the matrix.
+    for (name, source, _) in &cases {
+        assert!(rows.iter().any(|p| p.src == source), "corpus case {name} has no matrix row");
+    }
+    assert_eq!(rows.len(), cases.len());
+}
+
+/// The oracle: host CPython 3.13 must print each row's stdout. For a
+/// `Trap.DivZero` row it must stop with `ZeroDivisionError` after that
+/// stdout. For a `Trap.Overflow` row it must print that stdout and then an
+/// integer outside `i64` (where CPython has a bigger int, this subset stops:
+/// the stated divergence). The compiled programs never run on it. Skips
+/// (loudly) without a `python3` on the 3.13 line.
+#[test]
+fn python_rows_agree_with_the_host_python_oracle() {
+    let version = match Command::new("python3").args(["-I", "-c", "import sys; print(sys.version.split()[0])"]).output() {
+        Ok(out) if out.status.success() => String::from_utf8_lossy(&out.stdout).trim().to_string(),
+        _ => {
+            eprintln!("SKIP Python oracle: no `python3` on PATH");
+            return;
+        }
+    };
+    if !version.starts_with("3.13.") {
+        eprintln!("SKIP Python oracle: python3 {version} is not the 3.13 line these rows target");
+        return;
+    }
+    for program in python_rows() {
+        // `-c` with the source as its own argument: no shell, no temp file.
+        let out = Command::new("python3").args(["-I", "-c", program.src]).output().expect("python3 ran once already");
+        let stdout = String::from_utf8_lossy(&out.stdout);
+        match program.expect {
+            Expect::Stdout(want) => {
+                assert!(out.status.success(), "{version} failed {:?}", program.src);
+                assert_eq!(stdout.trim(), want, "{version}: {:?}", program.src);
+            }
+            Expect::StdoutThenTrap(want, "Trap.DivZero") => {
+                assert!(!out.status.success(), "{version} did not raise on {:?}", program.src);
+                assert!(String::from_utf8_lossy(&out.stderr).contains("ZeroDivisionError"));
+                assert_eq!(stdout.trim(), want, "{version}: {:?}", program.src);
+            }
+            Expect::StdoutThenTrap(want, "Trap.Overflow") => {
+                assert!(out.status.success(), "{version} failed {:?}", program.src);
+                let lines: Vec<&str> = stdout.lines().collect();
+                let before = if want.is_empty() { 0 } else { want.lines().count() };
+                assert_eq!(lines[..before].join("\n"), want, "{version}: {:?}", program.src);
+                let value: i128 = lines[before].parse().expect("CPython printed an integer");
+                assert!(i64::try_from(value).is_err(), "{version}: {value} fits in i64: {:?}", program.src);
+            }
+            ref other => panic!("no Python oracle for {other:?}"),
+        }
+    }
+    eprintln!("Python oracle: {} rows agree with CPython {version}", python_rows().len());
+}
+
+/// LANG84 C7.3: every row's module passes `check_module_for` on all nine
+/// LANG83 backends (CLR, BEAM and AArch64 included, whatever this host can
+/// run) and holds only registry ops: the PR4 checked arithmetic,
+/// `i64_div_floor` / `i64_mod_floor`, `print_i64` / `putchar`, plus the
+/// ungated `const`/`ret`. No wrapping `add`/`sub`/`mul`/`neg` survives.
+#[test]
+fn python_rows_pass_the_lang83_check_on_all_nine_backends() {
+    let mut checked_ops = 0;
+    for program in python_rows() {
+        let module = lang_aot::compile_source_to_iir(Language::Python, program.src, "c7")
+            .unwrap_or_else(|e| panic!("{:?}: {e}", program.src));
+        for instr in module.functions.iter().flat_map(|f| &f.instructions) {
+            match interpreter_ir::op_registry::registry_name(instr) {
+                Some(name) => {
+                    assert!(
+                        [
+                            "i64_add_ovf",
+                            "i64_sub_ovf",
+                            "i64_mul_ovf",
+                            "i64_neg_ovf",
+                            "i64_div_floor",
+                            "i64_mod_floor",
+                            "print_i64",
+                            "putchar",
+                        ]
+                        .contains(&name),
+                        "{:?}: unexpected registry op {name}",
+                        program.src
+                    );
+                    checked_ops += usize::from(name.starts_with("i64_"));
+                }
+                None => assert!(["const", "ret"].contains(&instr.op.as_str()), "{:?}: {instr:?}", program.src),
+            }
+        }
+        for backend in lang_aot::op_check::Backend::ALL {
+            lang_aot::op_check::check_module_for(backend, &module)
+                .unwrap_or_else(|e| panic!("{:?} refused on {}: {e}", program.src, backend.name()));
+        }
+    }
+    assert!(checked_ops > 0, "the rows must exercise the LANG83 checked and floor ops");
 }

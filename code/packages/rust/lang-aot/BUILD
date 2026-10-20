@@ -109,3 +109,16 @@ cargo test -p lang-aot --test lang_matrix algol_out_of_range_entier_traps_on_eve
 # `print_str` must produce one ordered stream on every available column (WASM/VM/
 # JIT used to drop the integers whenever any byte output existed).
 cargo test -p lang-aot --test lang_matrix mixed_print_i64_and_print_str_output_is_one_ordered_stream_on_every_available_backend -- --exact
+# LANG84 phase 7a: Python's py-int-print on every backend. The eighteen Python
+# rows also run in the full-corpus aggregate above; these name the
+# Python-specific claims so a Python regression is reported as one. The oracle
+# compares every expectation with a host python3 3.13 (skips without one); the
+# corpus test ties the rows to code/grammars/python/corpus/py-int-print in both
+# directions; the LANG83 check runs `check_module_for` on all nine backends,
+# CLR, BEAM and AArch64 included. The StdoutThenTrap trap-kind reader is pinned
+# by the last line (shared with LANG84 phase 5a, which lists it too).
+cargo test -p lang-aot --test lang_matrix python_rows_run_on_every_available_backend -- --exact
+cargo test -p lang-aot --test lang_matrix python_rows_are_py_int_print_corpus_cases -- --exact
+cargo test -p lang-aot --test lang_matrix python_rows_agree_with_the_host_python_oracle -- --exact
+cargo test -p lang-aot --test lang_matrix python_rows_pass_the_lang83_check_on_all_nine_backends -- --exact
+cargo test -p lang-aot --test lang_matrix trap_kinds_are_read_from_every_columns_stderr -- --exact
