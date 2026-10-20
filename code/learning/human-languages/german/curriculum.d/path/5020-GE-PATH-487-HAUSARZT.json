@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-487-HAUSARZT",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GE-EXT-487-HAUSARZT"
+  ],
+  "after": []
+}

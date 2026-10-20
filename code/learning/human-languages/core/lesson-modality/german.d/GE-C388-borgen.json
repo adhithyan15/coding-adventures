@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C388-borgen",
+    "language": "german",
+    "chapter": 388,
+    "sequence": 21010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b9b3de52f0dd8792"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:db08f858e961bbdc",
+  "lessonIds": [
+    "GE-C422-kreuzfahrt",
+    "GE-C422-anlegen",
+    "GE-C422-ablegen",
+    "GE-C422-schaukeln",
+    "GE-C422-kapitaen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch422.txt",
+  "json": "german/narration/ch422.json",
+  "textHash": "fnv1a64:b8eec20a2208d6f0",
+  "jsonHash": "fnv1a64:a1a15c171d8a5481",
+  "findings": []
+}

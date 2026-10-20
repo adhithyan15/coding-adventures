@@ -1,0 +1,11 @@
+{
+  "id": "FR-C522-bande-dessinee",
+  "pathSegment": "FR-PATH-522-GENRES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-522-GENRES",
+      "order": 1
+    }
+  ]
+}

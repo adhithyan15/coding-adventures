@@ -1,0 +1,11 @@
+{
+  "id": "GE-C480-schwindlig",
+  "pathSegment": "GE-PATH-480-UEBELKEIT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-480-UEBELKEIT",
+      "order": 3
+    }
+  ]
+}

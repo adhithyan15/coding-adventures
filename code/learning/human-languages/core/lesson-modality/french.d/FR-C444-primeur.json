@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C444-primeur",
+    "language": "french",
+    "chapter": 444,
+    "sequence": 24590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fe53bd70db325072"
+  },
+  "findings": []
+}

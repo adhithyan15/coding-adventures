@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-456-RUISSEAU",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-456-RUISSEAU"
+  ],
+  "after": []
+}

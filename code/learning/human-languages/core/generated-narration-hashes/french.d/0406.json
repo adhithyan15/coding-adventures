@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 406,
+  "sourceHash": "fnv1a64:f4e5edfb5056633e",
+  "lessonIds": [
+    "FR-C406-carrosserie",
+    "FR-C406-capot",
+    "FR-C406-portiere",
+    "FR-C406-coffre",
+    "FR-C406-banquette"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch406.txt",
+  "json": "french/narration/ch406.json",
+  "textHash": "fnv1a64:4d7a4bdcc354a40a",
+  "jsonHash": "fnv1a64:1a628951bfae184a",
+  "findings": []
+}

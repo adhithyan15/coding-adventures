@@ -1,0 +1,11 @@
+{
+  "id": "FR-C495-brouiller",
+  "pathSegment": "FR-PATH-495-DISPUTES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-495-DISPUTES",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 380,
+  "sourceHash": "fnv1a64:55a4b78f9f5a094f",
+  "lessonIds": [
+    "GE-C380-zulassung",
+    "GE-C380-zulassen",
+    "GE-C380-stipendium",
+    "GE-C380-anmeldung",
+    "GE-C380-abmelden"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch380.txt",
+  "json": "german/narration/ch380.json",
+  "textHash": "fnv1a64:c83f4ea6cdaab2a4",
+  "jsonHash": "fnv1a64:39c301b9e4a85e0f",
+  "findings": []
+}

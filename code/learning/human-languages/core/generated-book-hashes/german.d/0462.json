@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 462,
+  "sourceHash": "fnv1a64:66db90c8e0134174",
+  "lessonIds": [
+    "GE-C462-unwetter",
+    "GE-C462-aufziehen",
+    "GE-C462-hagel",
+    "GE-C462-hageln",
+    "GE-C462-donnern"
+  ],
+  "tex": "german/book/chapters/ch462-ein-unwetter.tex"
+}

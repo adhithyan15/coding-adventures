@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C291-patrouille",
+    "language": "french",
+    "chapter": 291,
+    "sequence": 16700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5fa0487ad1fd05c8"
+  },
+  "findings": []
+}

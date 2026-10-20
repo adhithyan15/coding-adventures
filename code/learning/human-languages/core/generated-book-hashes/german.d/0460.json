@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 460,
+  "sourceHash": "fnv1a64:a0f3b9c8dd7043cc",
+  "lessonIds": [
+    "GE-C460-wetterbericht",
+    "GE-C460-wetterlage",
+    "GE-C460-wolkenlos",
+    "GE-C460-bedeckt",
+    "GE-C460-umschlagen"
+  ],
+  "tex": "german/book/chapters/ch460-der-wetterbericht.tex"
+}

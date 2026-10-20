@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 296,
+  "sourceHash": "fnv1a64:5338514844fba6d4",
+  "lessonIds": [
+    "GE-C296-geburt",
+    "GE-C296-schwanger",
+    "GE-C296-schwangerschaft",
+    "GE-C296-taufen",
+    "GE-C296-taufe"
+  ],
+  "tex": "german/book/chapters/ch296-die-geburt.tex"
+}

@@ -1,0 +1,476 @@
+{
+  "version": 1,
+  "language": "german",
+  "chapter": 256,
+  "title": "Finding the Way — wie komme ich zum Bahnhof",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:faec1f3c0c1671c9",
+  "lessons": [
+    {
+      "id": "GE-C256-wie-komme-ich",
+      "sequence": 14250,
+      "title": "wie komme ich zum Bahnhof — asking the way",
+      "headword": "wie komme ich zum Bahnhof",
+      "romanization": "wie komme ich zum Bahnhof",
+      "gloss": "how do I get to the station — asking the way with kommen, and zum or zur for the place",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:48b08f33eaaa43bb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To get a stranger's attention in the street, say Entschuldigung!"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: wie komme ich zum Bahnhof",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Entschuldigung, wie komme ich zum Bahnhof? — \"Excuse me, how do I get to the station?\""
+            },
+            {
+              "kind": "speech",
+              "text": "German asks with kommen: literally \"how do I come to the station?\" English says \"get\"; German keeps the plain verb of coming."
+            },
+            {
+              "kind": "speech",
+              "text": "Two short follow-ups help:"
+            },
+            {
+              "kind": "speech",
+              "text": "Ist das weit? — Is it far? Danke schön! — Thank you."
+            },
+            {
+              "kind": "speech",
+              "text": "To a stranger, keep to Sie: Können Sie mir helfen?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: zum or zur",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zu, \"to\", takes the dative, and it fuses with the article:"
+            },
+            {
+              "kind": "speech",
+              "text": "zum = zu dem, for der and das words: zum Bahnhof, zum Museum zur = zu der, for die words: zur Post, zur Apotheke, zur Haltestelle."
+            },
+            {
+              "kind": "speech",
+              "text": "So the gender you learned with each noun decides the little word in front of it. Der Bahnhof, zum Bahnhof. Die Post, zur Post."
+            },
+            {
+              "kind": "speech",
+              "text": "In Switzerland you will hear Exgüsi in dialect for \"excuse me\", usually traced to French excusez; Entschuldigung is understood everywhere."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kommen from Old High German kweman from Proto-Germanic kwemaną, \"to come\" (EtymDB 2.1): the same verb as English come. zu is usually traced to Old High German zuo, a cousin of English to; EtymDB lists zu without a parent, so that is given as the usual account."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Entschuldigung, wie komme ich zum Bahnhof?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Entschuldigung, wie komme ich zum Bahnhof?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Wie komme ich zur Post? Then zum Museum, zur Haltestelle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Wie komme ich zur Post?* Then *zum Museum*, *zur Haltestelle*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the follow-up: Ist das weit?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the follow-up: *Ist das weit?*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"How do I get to the station?\" (Wie komme ich zum Bahnhof?) Zum is short for what? (Zu dem.) \"To the post office\"? (Zur Post, because it is die Post.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C256-links",
+      "sequence": 14260,
+      "title": "Gehen Sie geradeaus — following the answer",
+      "headword": "Gehen Sie geradeaus, dann links",
+      "romanization": "Gehen Sie geradeaus, dann links",
+      "gloss": "following the answer — links beside the taught rechts and geradeaus, and the polite Sie command with the verb first",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:663d6d1089cd3e66",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask the way to the station. (Entschuldigung, wie komme ich zum Bahnhof?)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now the stranger answers, and you have to follow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: links",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have geradeaus, straight on, and rechts, right. The missing one is links, \"left\": links, with a short i."
+            },
+            {
+              "kind": "speech",
+              "text": "geradeaus — straight on rechts — right links — left."
+            },
+            {
+              "kind": "speech",
+              "text": "German speakers often add nach in front: nach links, nach rechts, \"to the left, to the right\". Both ways are standard."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the Sie command, verb first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A stranger will tell you the way with Sie. The polite command puts the verb first, in its Sie form, and Sie straight after it:"
+            },
+            {
+              "kind": "speech",
+              "text": "Gehen Sie geradeaus. — Go straight on. Gehen Sie bis zur Ampel, dann links. — Go as far as the lights, then left. Nehmen Sie die U-Bahn. — Take the underground."
+            },
+            {
+              "kind": "speech",
+              "text": "Bis zur Ampel is bis + zur: as far as the lights. Bis zur Kreuzung, as far as the crossroads."
+            },
+            {
+              "kind": "speech",
+              "text": "The answer may end with the place itself: Der Bahnhof ist gleich gegenüber, the station is right opposite."
+            },
+            {
+              "kind": "speech",
+              "text": "With a friend, the du command you met in chapter forty-six drops the pronoun: Geh geradeaus! With a stranger, keep the Sie."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "links comes from Middle High German linc, \"left\", and EtymDB 2.1 sets Old High German linka, \"the left hand\", beside it; further back its origin is not settled. rechts is built on recht, which EtymDB traces through Old High German reht to Proto-Germanic rehtaz, \"right, direct\", the parent of English right. The -s at the end of both is usually explained as an old adverb ending, the one that also sits in abends, \"in the evening\"."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "geradeaus, rechts, links",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *geradeaus, rechts, links*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Gehen Sie geradeaus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Gehen Sie geradeaus.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Gehen Sie bis zur Ampel, dann links.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Gehen Sie bis zur Ampel, dann links.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Nehmen Sie die U-Bahn.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Nehmen Sie die U-Bahn.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to a friend: Geh geradeaus, dann rechts!",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to a friend: *Geh geradeaus, dann rechts!*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Left\"? (Links.) \"Go straight on\", to a stranger? (Gehen Sie geradeaus.) Where does the verb stand in a command? (First.) \"As far as the lights\"? (Bis zur Ampel.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C256-review",
+      "sequence": 14270,
+      "title": "Review — the way there",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "asking the way and following it — zum or zur by the noun's gender, and a Sie command with the verb first",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e07d462281a73e12",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask the way to the pharmacy. (Wie komme ich zur Apotheke?) Die Apotheke, so zur."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two lessons, and a whole exchange in the street. You ask with wie komme ich, and the gender of the place picks zum or zur. The answer comes back as a Sie command with the verb first, and three short words do much of the work: geradeaus, rechts, links."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One exchange, both halves:"
+            },
+            {
+              "kind": "speech",
+              "text": "Entschuldigung, wie komme ich zum Museum? Gehen Sie geradeaus bis zur Kreuzung, dann rechts. Das Museum ist gleich gegenüber."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Entschuldigung, wie komme ich zum Museum?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Entschuldigung, wie komme ich zum Museum?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the answer: Gehen Sie geradeaus bis zur Kreuzung, dann rechts.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the answer: *Gehen Sie geradeaus bis zur Kreuzung, dann rechts.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Wie komme ich zur Haltestelle?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Wie komme ich zur Haltestelle?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an answer of your own, with links",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an answer of your own, with *links*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Danke schön!",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Danke schön!*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Der Bahnhof: zum or zur? (Zum.) Die Post? (Zur.) \"Then left\"? (Dann links.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

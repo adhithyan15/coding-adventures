@@ -1,0 +1,19 @@
+{
+  "chapter": 285,
+  "title": "On dit que…",
+  "label": "ch:fr-on-dit-que",
+  "canDo": "I can talk about what goes round: a rumour, a scoop, false information, censorship and a controversy.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C285-polemique",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 285: I can talk about what goes round: a rumour, a scoop, false information, censorship and a controversy.",
+    "assesses": [
+      "FR-LEX-C285-RUMEUR-03",
+      "FR-LEX-C285-RUMEUR-04",
+      "FR-LEX-C285-RUMEUR-05"
+    ]
+  }
+}

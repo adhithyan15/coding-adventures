@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C380-obligation",
+    "language": "french",
+    "chapter": 380,
+    "sequence": 21290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:346ab4ad89605df6"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 293,
+  "title": "Un mystère",
+  "label": "ch:fr-un-mystere",
+  "canDo": "I can talk about solving a case: a mystery, clearing it up, proving something, an alibi and a suspicion.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C293-soupcon",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 293: I can talk about solving a case: a mystery, clearing it up, proving something, an alibi and a suspicion.",
+    "assesses": [
+      "FR-LEX-C293-MYSTERE-03",
+      "FR-LEX-C293-MYSTERE-04",
+      "FR-LEX-C293-MYSTERE-05"
+    ]
+  }
+}

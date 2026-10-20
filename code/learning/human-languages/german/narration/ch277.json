@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "german",
+  "chapter": 277,
+  "title": "Der Streik",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:b5cac077955ef753",
+  "lessons": [
+    {
+      "id": "GE-C277-streik",
+      "sequence": 15260,
+      "title": "der Streik — the strike (at work)",
+      "headword": "der Streik",
+      "romanization": "der Streik",
+      "gloss": "the strike (at work)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:56a4514c77b7f941",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to increase, then the German for to sink."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: der Streik",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "der Streik — \"the strike (at work)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Wegen des Streiks fuhren keine Züge. Because of the strike no trains ran."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Streiks."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Streik was borrowed from English strike (EtymDB) and given German spelling."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Streik",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Streik*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Streik, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Streik*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with der Streik",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *der Streik*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to increase, then the German for to sink, then say der Streik again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to increase, then the German for to sink, then say *der Streik* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does der Streik mean? (\"The strike (at work)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C277-streiken",
+      "sequence": 15270,
+      "title": "streiken — to go on strike",
+      "headword": "streiken",
+      "romanization": "streiken",
+      "gloss": "to go on strike",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b10945e7dc235303",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to sink, then the German for the strike."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: streiken",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "streiken — \"to go on strike\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Die Busfahrer streikten zwei Tage lang. The bus drivers were on strike for two days."
+            },
+            {
+              "kind": "speech",
+              "text": "Regular: sie streikt, sie hat gestreikt."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "streiken is built on Streik, which was borrowed from English strike (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "streiken",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *streiken*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "streiken, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *streiken*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with streiken",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *streiken*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to sink, then the German for the strike, then say streiken again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to sink, then the German for the strike, then say *streiken* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does streiken mean? (\"To go on strike\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C277-protestieren",
+      "sequence": 15280,
+      "title": "protestieren — to protest",
+      "headword": "protestieren",
+      "romanization": "protestieren",
+      "gloss": "to protest",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:49e5d87f12b7a3fd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the strike, then the German for to go on strike."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: protestieren",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "protestieren — \"to protest\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Viele Bürger protestierten gegen die neue Straße. Many citizens protested against the new road."
+            },
+            {
+              "kind": "speech",
+              "text": "With gegen: gegen etwas protestieren. Perfekt without ge-: hat protestiert."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "protestieren was borrowed from French protester, from Latin prōtestārī (EtymDB) \"to declare in public\", built on testis \"a witness\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "protestieren",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *protestieren*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "protestieren, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *protestieren*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with protestieren",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *protestieren*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the strike, then the German for to go on strike, then say protestieren again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the strike, then the German for to go on strike, then say *protestieren* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does protestieren mean? (\"To protest\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C277-demonstrieren",
+      "sequence": 15290,
+      "title": "demonstrieren — to demonstrate",
+      "headword": "demonstrieren",
+      "romanization": "demonstrieren",
+      "gloss": "to demonstrate",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4d30608d65a9c4a5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to go on strike, then the German for to protest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: demonstrieren",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "demonstrieren — \"to demonstrate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Am Samstag demonstrierten tausend Menschen in der Stadt. On Saturday a thousand people demonstrated in the town."
+            },
+            {
+              "kind": "speech",
+              "text": "Short noun: die Demo. Also to show how something works."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "demonstrieren is a learned borrowing from Latin dēmonstrāre \"to show\" (EtymDB), built on monstrāre \"to show\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "demonstrieren",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *demonstrieren*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "demonstrieren, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *demonstrieren*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with demonstrieren",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *demonstrieren*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to go on strike, then the German for to protest, then say demonstrieren again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to go on strike, then the German for to protest, then say *demonstrieren* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does demonstrieren mean? (\"To demonstrate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C277-krise",
+      "sequence": 15300,
+      "title": "die Krise — the crisis",
+      "headword": "die Krise",
+      "romanization": "die Krise",
+      "gloss": "the crisis",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:88a544c7419eeb63",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to protest, then the German for to demonstrate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Krise",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Krise — \"the crisis\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Das Land war in einer tiefen Krise. The country was in a deep crisis."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Krisen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Krise was borrowed through Latin crisis from Greek krisis \"a decision, the turning point of an illness\"; EtymDB lists no parent, so this follows the usual account."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Krise",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Krise*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Krise, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Krise*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with die Krise",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *die Krise*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to protest, then the German for to demonstrate, then say die Krise again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to protest, then the German for to demonstrate, then say *die Krise* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does die Krise mean? (\"The crisis\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-R277-review-270-277",
+      "sequence": 15310,
+      "title": "Words from chapters 270–277 — a review",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 270-277",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c06996ca09a5ddf5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the German for to hesitate and to wait and see."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to hesitate, to wait and see, to delay, to go, the sequence of events",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to hesitate, to wait and see, to delay, to go, the sequence of events]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to report, the news item, the report, the headline, the article",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to report, the news item, the report, the headline, the article]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the broadcast, radio, the press, the journalist, the front page",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the broadcast, radio, the press, the journalist, the front page]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to publish, to mention, to express, to announce, to make public",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to publish, to mention, to express, to announce, to make public]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the rumour, the source, to claim, the claim, to confirm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the rumour, the source, to claim, the claim, to confirm]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "supposedly, apparently, according to, to suspect, presumably",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: supposedly, apparently, according to, to suspect, presumably]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the survey, the statistics, the share, to increase, to sink",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the survey, the statistics, the share, to increase, to sink]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the strike, to go on strike, to protest, to demonstrate, the crisis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the strike, to go on strike, to protest, to demonstrate, the crisis]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To hesitate? (zögern.) To wait and see? (abwarten.) To delay? (verzögern.) To go? (verlaufen.) The sequence of events? (der Ablauf.) To report? (melden.) The news item? (die Meldung.) The report? (der Bericht.) The headline? (die Schlagzeile.) The article? (der Artikel.) The broadcast? (die Sendung.) Radio? (der Rundfunk.) The press? (die Presse.) The journalist? (der Journalist.) The front page? (die Titelseite.) To publish? (veröffentlichen.) To mention? (erwähnen.) To express? (äußern.) To announce? (ankündigen.) To make public? (bekanntgeben.) The rumour? (das Gerücht.) The source? (die Quelle.) To claim? (behaupten.) The claim? (die Behauptung.) To confirm? (bestätigen.) Supposedly? (angeblich.) Apparently? (offenbar.) According to? (zufolge.) To suspect? (vermuten.) Presumably? (vermutlich.) The survey? (die Umfrage.) The statistics? (die Statistik.) The share? (der Anteil.) To increase? (zunehmen.) To sink? (sinken.) The strike? (der Streik.) To go on strike? (streiken.) To protest? (protestieren.) To demonstrate? (demonstrieren.) The crisis? (die Krise.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

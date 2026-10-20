@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-500-CARTES",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-500-CARTES"
+  ],
+  "after": []
+}

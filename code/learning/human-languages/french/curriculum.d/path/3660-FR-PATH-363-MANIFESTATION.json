@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-363-MANIFESTATION",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "FR-EXT-363-MANIFESTATION"
+  ],
+  "after": []
+}

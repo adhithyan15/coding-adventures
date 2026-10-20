@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-295-AVEUX",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that someone confessed, had an accomplice, was acquitted or was let go.",
+  "prerequisites": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-293-MYSTERE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-293-MYSTERE"
+  ],
+  "after": []
+}

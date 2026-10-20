@@ -1,0 +1,19 @@
+{
+  "chapter": 414,
+  "title": "Jeden Tag mit dem Zug",
+  "label": "ch:ge-jeden-tag-mit-dem-zug",
+  "canDo": "I can talk about travelling to work: the connection, local transport, long-distance transport, commuting and the commuter.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C414-pendler",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 414: I can talk about travelling to work: the connection, local transport, long-distance transport, commuting and the commuter.",
+    "assesses": [
+      "GE-LEX-C414-PENDELN-03",
+      "GE-LEX-C414-PENDELN-04",
+      "GE-LEX-C414-PENDELN-05"
+    ]
+  }
+}

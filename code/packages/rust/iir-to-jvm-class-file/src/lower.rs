@@ -369,6 +369,260 @@ const L2I: u8 = 0x88;
 /// Used to box i32/bool captured values into the `long[]` closure array.
 const I2L: u8 = 0x85;
 
+/// `areturn` (0xB0) — return an object reference (e.g. a `LispyPair`).
+///
+/// Stack: `ref` → (method exit)
+const ARETURN: u8 = 0xB0;
+
+// ---------------------------------------------------------------------------
+// Operand-stack depth analysis (max_stack)
+// ---------------------------------------------------------------------------
+//
+// Every JVM `Code` attribute declares `max_stack`: the deepest the operand
+// stack ever gets, counted in 32-bit words (a `long` or `double` takes two).
+// The verifier rejects a method whose real depth exceeds the declaration with
+// `VerifyError: Stack size too large`, and an over-large declaration wastes
+// interpreter frame space on every call. Earlier versions declared a fixed 8,
+// which held until a multi-dimensional `double[]` store needed
+// `arrayref + int index + double value` beyond eight words.
+//
+// So instead of guessing, walk the bytecode we just emitted the same way the
+// verifier does:
+//
+// ```text
+//   worklist = [(pc 0, depth 0)]
+//   for each (pc, depth):
+//       decode one instruction → (length, words popped, words pushed, successors)
+//       depth' = depth - popped + pushed;  max = max(max, depth')
+//       queue every successor not yet seen with depth'
+// ```
+//
+// Straight-line code and forward/backward branches are both covered; the
+// emitter produces no exception tables or switches. A successor reached
+// twice must agree on its depth (the verifier requires it), so a mismatch,
+// an underflow, an unknown opcode, or a truncated instruction is reported as
+// an error rather than silently mis-sized.
+
+/// Words a JVM field/return descriptor occupies on the operand stack:
+/// `J` and `D` are two, `V` is none, everything else (ints, references,
+/// arrays) is one.
+fn descriptor_words(ty: &str) -> u16 {
+    match ty.as_bytes().first() {
+        Some(b'J') | Some(b'D') => 2,
+        Some(b'V') | None => 0,
+        _ => 1,
+    }
+}
+
+/// `(argument words, return words)` for a method descriptor such as
+/// `([JID)J` → `(1 + 1 + 2, 2)`.
+fn method_descriptor_words(descriptor: &str) -> Option<(u16, u16)> {
+    let rest = descriptor.strip_prefix('(')?;
+    let close = rest.find(')')?;
+    let (params, ret) = (&rest[..close], &rest[close + 1..]);
+    let bytes = params.as_bytes();
+    let mut words = 0u16;
+    let mut i = 0;
+    while i < bytes.len() {
+        // Array dimensions collapse into one reference word.
+        let mut is_array = false;
+        while bytes.get(i) == Some(&b'[') {
+            is_array = true;
+            i += 1;
+        }
+        let ty = *bytes.get(i)?;
+        if ty == b'L' {
+            i += params[i..].find(';')? + 1;
+        } else {
+            i += 1;
+        }
+        let ty_words = if is_array { 1 } else { descriptor_words(std::str::from_utf8(&[ty]).ok()?) };
+        words = words.checked_add(ty_words)?;
+    }
+    Some((words, descriptor_words(ret)))
+}
+
+/// The descriptor behind a `Fieldref`/`Methodref` constant-pool index.
+fn member_descriptor(cp: &[Option<JvmConstantPoolEntry>], index: u16) -> Option<&str> {
+    let nat = match cp.get(index as usize)?.as_ref()? {
+        JvmConstantPoolEntry::Fieldref { name_and_type_index, .. }
+        | JvmConstantPoolEntry::Methodref { name_and_type_index, .. } => *name_and_type_index,
+        _ => return None,
+    };
+    let descriptor_index = match cp.get(nat as usize)?.as_ref()? {
+        JvmConstantPoolEntry::NameAndType { descriptor_index, .. } => *descriptor_index,
+        _ => return None,
+    };
+    match cp.get(descriptor_index as usize)?.as_ref()? {
+        JvmConstantPoolEntry::Utf8(s) => Some(s.as_str()),
+        _ => None,
+    }
+}
+
+/// One decoded instruction's effect on the operand stack.
+struct StackEffect {
+    len: usize,
+    pops: u16,
+    pushes: u16,
+    /// Relative branch target, for `if*` / `goto`.
+    branch: Option<i16>,
+    /// Whether execution can continue at `pc + len`.
+    falls_through: bool,
+}
+
+fn decode_stack_effect(
+    code: &[u8],
+    pc: usize,
+    cp: &[Option<JvmConstantPoolEntry>],
+) -> Result<StackEffect, String> {
+    let op = code[pc];
+    let u16_at = |at: usize| -> Result<u16, String> {
+        match (code.get(at), code.get(at + 1)) {
+            (Some(&hi), Some(&lo)) => Ok(u16::from_be_bytes([hi, lo])),
+            _ => Err(format!("truncated operand for opcode 0x{op:02X} at pc {pc}")),
+        }
+    };
+    let simple = |len: usize, pops: u16, pushes: u16| StackEffect {
+        len,
+        pops,
+        pushes,
+        branch: None,
+        falls_through: true,
+    };
+    let branch = |pops: u16, conditional: bool| -> Result<StackEffect, String> {
+        Ok(StackEffect {
+            len: 3,
+            pops,
+            pushes: 0,
+            branch: Some(u16_at(pc + 1)? as i16),
+            falls_through: conditional,
+        })
+    };
+    let terminal = |pops: u16| StackEffect {
+        len: 1,
+        pops,
+        pushes: 0,
+        branch: None,
+        falls_through: false,
+    };
+    Ok(match op {
+        ICONST_M1 | ICONST_0 | ICONST_1 | ICONST_2 | ICONST_3 | ICONST_4 | ICONST_5
+        | FCONST_0 | FCONST_1 | FCONST_2 | ACONST_NULL => simple(1, 0, 1),
+        LCONST_0 | LCONST_1 | DCONST_0 | DCONST_1 => simple(1, 0, 2),
+        BIPUSH | LDC => simple(2, 0, 1),
+        SIPUSH | LDC_W => simple(3, 0, 1),
+        LDC2_W => simple(3, 0, 2),
+        ILOAD | FLOAD | ALOAD => simple(2, 0, 1),
+        LLOAD | DLOAD => simple(2, 0, 2),
+        ILOAD_0 | ILOAD_1 | ILOAD_2 | ILOAD_3 => simple(1, 0, 1),
+        ISTORE | FSTORE | ASTORE => simple(2, 1, 0),
+        LSTORE | DSTORE => simple(2, 2, 0),
+        ISTORE_0 | ISTORE_1 | ISTORE_2 | ISTORE_3 => simple(1, 1, 0),
+        WIDE => {
+            // `wide <load/store> u16` — same effect as the narrow form.
+            let inner = *code
+                .get(pc + 1)
+                .ok_or_else(|| format!("truncated wide prefix at pc {pc}"))?;
+            match inner {
+                ILOAD | FLOAD | ALOAD => simple(4, 0, 1),
+                LLOAD | DLOAD => simple(4, 0, 2),
+                ISTORE | FSTORE | ASTORE => simple(4, 1, 0),
+                LSTORE | DSTORE => simple(4, 2, 0),
+                _ => return Err(format!("unsupported wide opcode 0x{inner:02X} at pc {pc}")),
+            }
+        }
+        IADD | ISUB | IMUL | IDIV | IREM | ISHL | ISHR | IAND | IOR | IXOR | FADD | FSUB
+        | FMUL | FDIV => simple(1, 2, 1),
+        LADD | LSUB | LMUL | LDIV | LREM | LAND | LOR | LXOR | DADD | DSUB | DMUL | DDIV => {
+            simple(1, 4, 2)
+        }
+        LSHL | LSHR => simple(1, 3, 2),
+        INEG | FNEG => simple(1, 1, 1),
+        LNEG | DNEG => simple(1, 2, 2),
+        I2D | I2L => simple(1, 1, 2),
+        L2D | D2L => simple(1, 2, 2),
+        D2I | L2I => simple(1, 2, 1),
+        LCMP | DCMPL | DCMPG => simple(1, 4, 1),
+        IRETURN | FRETURN | ARETURN => terminal(1),
+        LRETURN | DRETURN => terminal(2),
+        RETURN => terminal(0),
+        INVOKESTATIC | INVOKEVIRTUAL => {
+            let index = u16_at(pc + 1)?;
+            let (args, ret) = member_descriptor(cp, index)
+                .and_then(method_descriptor_words)
+                .ok_or_else(|| format!("unresolvable method #{index} at pc {pc}"))?;
+            let receiver = u16::from(op == INVOKEVIRTUAL);
+            let pops = args
+                .checked_add(receiver)
+                .ok_or_else(|| format!("method #{index} at pc {pc} has too many argument words"))?;
+            simple(3, pops, ret)
+        }
+        GETSTATIC | PUTSTATIC => {
+            let index = u16_at(pc + 1)?;
+            let words = descriptor_words(
+                member_descriptor(cp, index)
+                    .ok_or_else(|| format!("unresolvable field #{index} at pc {pc}"))?,
+            );
+            if op == GETSTATIC {
+                simple(3, 0, words)
+            } else {
+                simple(3, words, 0)
+            }
+        }
+        CHECKCAST | INSTANCEOF | ANEWARRAY => simple(3, 1, 1),
+        NEWARRAY => simple(2, 1, 1),
+        ARRAYLENGTH => simple(1, 1, 1),
+        BALOAD | IALOAD | FALOAD | AALOAD => simple(1, 2, 1),
+        LALOAD | DALOAD => simple(1, 2, 2),
+        BASTORE | IASTORE | FASTORE | AASTORE => simple(1, 3, 0),
+        LASTORE | DASTORE => simple(1, 4, 0),
+        DUP => simple(1, 1, 2),
+        SWAP => simple(1, 2, 2),
+        IFEQ | IFNE | IFLT | IFGE | IFGT | IFLE | IFNULL => branch(1, true)?,
+        IF_ICMPEQ | IF_ICMPNE | IF_ICMPLT | IF_ICMPGE | IF_ICMPGT | IF_ICMPLE => branch(2, true)?,
+        GOTO => branch(0, false)?,
+        _ => return Err(format!("unknown opcode 0x{op:02X} at pc {pc}")),
+    })
+}
+
+/// The exact `max_stack` for `code`, found by abstract interpretation of the
+/// operand-stack depth along every control-flow path.
+fn compute_max_stack(code: &[u8], cp: &[Option<JvmConstantPoolEntry>]) -> Result<u16, String> {
+    let mut depth_at: Vec<Option<u16>> = vec![None; code.len()];
+    let mut worklist = vec![(0usize, 0u16)];
+    let mut max = 0u16;
+    while let Some((pc, depth)) = worklist.pop() {
+        if pc >= code.len() {
+            return Err(format!("control reaches pc {pc} past the end of the code"));
+        }
+        match depth_at[pc] {
+            Some(seen) if seen == depth => continue,
+            Some(seen) => {
+                return Err(format!("inconsistent stack depth at pc {pc}: {seen} vs {depth}"))
+            }
+            None => depth_at[pc] = Some(depth),
+        }
+        let effect = decode_stack_effect(code, pc, cp)?;
+        let after = depth
+            .checked_sub(effect.pops)
+            .ok_or_else(|| format!("operand stack underflow at pc {pc}"))?
+            .checked_add(effect.pushes)
+            .ok_or_else(|| format!("operand stack overflow at pc {pc}"))?;
+        // An instruction's peak is its result (pops happen before pushes).
+        max = max.max(after);
+        if effect.falls_through {
+            worklist.push((pc + effect.len, after));
+        }
+        if let Some(offset) = effect.branch {
+            let target = pc as i64 + i64::from(offset);
+            let target = usize::try_from(target)
+                .map_err(|_| format!("branch before the start of the code at pc {pc}"))?;
+            worklist.push((target, after));
+        }
+    }
+    Ok(max)
+}
+
 fn checked_jvm_string_literal(ctx: &str, s: &str) -> Result<(), IIRJvmError> {
     for ch in s.chars() {
         match ch {
@@ -463,6 +717,17 @@ pub enum IIRJvmError {
         /// Human-readable description of what was wrong.
         detail: String,
     },
+
+    /// The emitted bytecode could not be walked to measure its operand-stack
+    /// depth (`max_stack`): an opcode the analysis does not model, an
+    /// inconsistent depth at a join, or an underflow. This is a backend bug,
+    /// reported instead of emitting a method the JVM verifier would reject.
+    StackDepthAnalysis {
+        /// Name of the function whose bytecode failed the analysis.
+        function: String,
+        /// What the analysis found.
+        detail: String,
+    },
 }
 
 impl std::fmt::Display for IIRJvmError {
@@ -506,6 +771,13 @@ impl std::fmt::Display for IIRJvmError {
                 write!(
                     f,
                     "function {:?}: invalid operand — {}",
+                    function, detail
+                )
+            }
+            IIRJvmError::StackDepthAnalysis { function, detail } => {
+                write!(
+                    f,
+                    "function {:?}: cannot size the JVM operand stack — {}",
                     function, detail
                 )
             }
@@ -3016,9 +3288,8 @@ fn lower_function(
                             JvmType::Float => FRETURN,
                             JvmType::Double => DRETURN,
                             JvmType::Void => RETURN,
-                            // `areturn` (0xB0) — return an object reference.
                             // Used when a function returns a LispyPair ref.
-                            JvmType::Ref => 0xB0,
+                            JvmType::Ref => ARETURN,
                         };
                         code.push(ret_opcode);
                     }
@@ -4605,10 +4876,10 @@ fn lower_function(
     // ── Build method descriptor ────────────────────────────────────────────
     let descriptor = make_descriptor(&func.params, &func.return_type);
 
-    // max_stack is the depth of the operand stack.  A conservative upper
-    // bound is 2 (for binary ops that push two values before a binary opcode).
-    // In practice our emit patterns never exceed a stack depth of ~4.
-    let max_stack: u16 = 8;
+    // max_stack is measured from the emitted bytecode, never guessed.
+    let max_stack = compute_max_stack(&code, &cp.entries).map_err(|detail| {
+        IIRJvmError::StackDepthAnalysis { function: fname.clone(), detail }
+    })?;
 
     let code_attribute = JvmCodeAttribute {
         name: "Code".to_string(),
@@ -4747,7 +5018,7 @@ fn generate_call_closure_dispatch(
     class_name: &str,
     dispatch_table: &[&ClosureDispatchEntry], // sorted by dispatch_idx
     cp: &mut ConstantPoolBuilder,
-) -> JvmMethodInfo {
+) -> Result<JvmMethodInfo, IIRJvmError> {
     let mut code: Vec<u8> = Vec::new();
 
     // The CLOSURE parameter is in slot 0, ARGS parameter is in slot 1.
@@ -4886,11 +5157,13 @@ fn generate_call_closure_dispatch(
     cp.add_utf8(&descriptor);
     cp.add_utf8("__callClosure");
 
-    // Generous max_stack — the worst case is:
-    //   closure[0] comparison: 2 longs = 4 stack words
-    //   body: long[] ref + int index + long value per arg = 3 per arg
-    // We set 16 to be safe for any reasonable function arity.
-    let max_stack: u16 = 16;
+    // Measured from the emitted dispatch bytecode, like every other method.
+    // A closure target whose return type the dispatch does not widen to
+    // `long` leaves the stack short of the closing `lreturn`; that is
+    // reported, not emitted.
+    let max_stack = compute_max_stack(&code, &cp.entries).map_err(|detail| {
+        IIRJvmError::StackDepthAnalysis { function: "__callClosure".to_string(), detail }
+    })?;
 
     let code_attribute = JvmCodeAttribute {
         name: "Code".to_string(),
@@ -4900,12 +5173,12 @@ fn generate_call_closure_dispatch(
         nested_attributes: vec![],
     };
 
-    JvmMethodInfo {
+    Ok(JvmMethodInfo {
         access_flags: ACC_PUBLIC | ACC_STATIC,
         name: "__callClosure".to_string(),
         descriptor,
         attributes: vec![JvmMethodAttribute::Code(code_attribute)],
-    }
+    })
 }
 
 // ---------------------------------------------------------------------------
@@ -5274,7 +5547,7 @@ pub fn lower_iir_to_jvm(
         sorted.sort_by_key(|e| e.dispatch_idx);
 
         let dispatch_method =
-            generate_call_closure_dispatch(&config.class_name, &sorted, &mut cp);
+            generate_call_closure_dispatch(&config.class_name, &sorted, &mut cp)?;
         methods.push(dispatch_method);
     }
 

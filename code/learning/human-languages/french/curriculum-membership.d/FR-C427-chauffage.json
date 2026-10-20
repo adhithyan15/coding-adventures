@@ -1,0 +1,11 @@
+{
+  "id": "FR-C427-chauffage",
+  "pathSegment": "FR-PATH-427-CHAMBRE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-427-CHAMBRE",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C333-levure",
+    "language": "french",
+    "chapter": 333,
+    "sequence": 18830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1bc6375241d1160b"
+  },
+  "findings": []
+}

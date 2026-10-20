@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C477-feige",
+    "language": "german",
+    "chapter": 477,
+    "sequence": 25570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b7626cb0ba1ba42c"
+  },
+  "findings": []
+}

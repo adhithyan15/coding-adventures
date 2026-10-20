@@ -1,6 +1,30 @@
 # Changelog
 
-## Unreleased
+## 0.2.0
+
+- Accept top-level numeric `let` and `const` declarations with one plain
+  identifier binding and an initializer from the numeric subset, and
+  identifier reads in expressions, initializers and `console.log` arguments.
+  Each binding lowers directly from the typed AST to a `mov` into register
+  `js.<name>`, a namespace disjoint from temporaries (`js<n>`) and runner
+  builtins (`js_<name>`). Declarations are accepted both as statements and
+  directly at program level in caller-built ASTs.
+- Report a duplicate lexical name as the early error
+  `SyntaxError: Identifier '<name>' has already been declared`, and `const`
+  without an initializer as `SyntaxError: Missing initializer in const
+  declaration`, both with no output.
+- Raise `ReferenceError: <name> is not defined` for undeclared reads and
+  `ReferenceError: Cannot access '<name>' before initialization` for
+  temporal-dead-zone reads (including a binding's own initializer) through two
+  narrow runner builtins at the read site. Earlier completed console output is
+  kept.
+- Reject at compile time: `var`, `let` without an initializer, multiple
+  declarators, destructuring, non-numeric initializers, assignment
+  expressions, reads or bindings of runner global names (ECMA-262 globals,
+  `escape`/`unescape`, `Intl`, `console`), and caller-built identifiers that
+  are not plain IdentifierName spellings.
+- Charge one node per declarator and one per binding name, and apply the node
+  and depth budget to initializers of caller-supplied ASTs.
 
 - Select an explicit division-only source parser for the native numeric
   subset. Repeated division now lowers directly to IIR, including combined

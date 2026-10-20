@@ -1,0 +1,11 @@
+{
+  "id": "FR-C432-defectueux",
+  "pathSegment": "FR-PATH-432-GERANT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-432-GERANT",
+      "order": 4
+    }
+  ]
+}

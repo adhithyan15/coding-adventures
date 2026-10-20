@@ -1,0 +1,11 @@
+{
+  "id": "GE-C510-anfeuern",
+  "pathSegment": "GE-PATH-510-TRIBUENE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-510-TRIBUENE",
+      "order": 2
+    }
+  ]
+}

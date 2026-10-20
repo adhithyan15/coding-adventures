@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 282,
+  "sourceHash": "fnv1a64:fcd754faef8771c6",
+  "lessonIds": [
+    "FR-C282-gros-titre",
+    "FR-C282-manchette",
+    "FR-C282-rubrique",
+    "FR-C282-editorial",
+    "FR-C282-faits-divers"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch282.txt",
+  "json": "french/narration/ch282.json",
+  "textHash": "fnv1a64:20ade7972fa7b36a",
+  "jsonHash": "fnv1a64:c46d054248fb2ddc",
+  "findings": []
+}

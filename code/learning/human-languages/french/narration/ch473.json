@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "french",
+  "chapter": 473,
+  "title": "Fierté et modestie",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:5ec2860dbb4b3890",
+  "lessons": [
+    {
+      "id": "FR-C473-fierte",
+      "sequence": 26050,
+      "title": "la fierté — pride",
+      "headword": "la fierté",
+      "romanization": "la fierté",
+      "gloss": "pride",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5a5f6f175e5dc980",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for to move, then the French for to deeply upset."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la fierté",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la fierté — \"pride\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mon père parle de mon travail avec fierté. My father speaks about my work with pride."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on fier \"proud\"; a good kind of pride."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la fierté is built on fier \"proud\" with -té (EtymDB). Fier is inherited from Latin ferus \"wild, untamed\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la fierté",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la fierté*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la fierté, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la fierté*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la fierté",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la fierté*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for to move, then the French for to deeply upset, then say la fierté again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for to move, then the French for to deeply upset, then say *la fierté* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la fierté mean? (\"Pride\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C473-orgueil",
+      "sequence": 26060,
+      "title": "l'orgueil — arrogance, excessive pride",
+      "headword": "l'orgueil",
+      "romanization": "l'orgueil",
+      "gloss": "arrogance, excessive pride",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aa8590ffc565021c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for to deeply upset, then the French for pride."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: l'orgueil",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "l'orgueil — \"arrogance, excessive pride\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Par orgueil, il n'a pas demandé d'aide. Out of pride, he did not ask for help."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine: un orgueil. Stronger and more negative than la fierté."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "l'orgueil comes from Frankish urgōli \"pride\", a Germanic word related to Old English orgel \"pride\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'orgueil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'orgueil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'orgueil, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'orgueil*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with l'orgueil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *l'orgueil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for to deeply upset, then the French for pride, then say l'orgueil again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for to deeply upset, then the French for pride, then say *l'orgueil* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does l'orgueil mean? (\"Arrogance, excessive pride\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C473-vaniteux",
+      "sequence": 26070,
+      "title": "vaniteux — vain, conceited",
+      "headword": "vaniteux",
+      "romanization": "vaniteux",
+      "gloss": "vain, conceited",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:baaf06df201e9526",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for pride, then the French for arrogance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: vaniteux",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vaniteux — \"vain, conceited\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Il est vaniteux et parle toujours de lui. He is vain and always talks about himself."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine vaniteuse. The noun is la vanité."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vaniteux is built on vanité, a learned borrowing from Latin vānitās \"emptiness, vanity\", from vānus \"empty\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaniteux",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaniteux*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaniteux, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaniteux*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with vaniteux",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *vaniteux*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for pride, then the French for arrogance, then say vaniteux again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for pride, then the French for arrogance, then say *vaniteux* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does vaniteux mean? (\"Vain, conceited\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C473-modeste",
+      "sequence": 26080,
+      "title": "modeste — modest",
+      "headword": "modeste",
+      "romanization": "modeste",
+      "gloss": "modest",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:49c890ad45b9f801",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for arrogance, then the French for vain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: modeste",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "modeste — \"modest\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Elle a gagné le prix, mais elle reste modeste. She won the prize, but she remains modest."
+            },
+            {
+              "kind": "speech",
+              "text": "Also simple, small: un salaire modeste."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "modeste is a learned borrowing from Latin modestus \"keeping within measure\", from modus \"measure\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "modeste",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *modeste*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "modeste, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *modeste*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with modeste",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *modeste*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for arrogance, then the French for vain, then say modeste again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for arrogance, then the French for vain, then say *modeste* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does modeste mean? (\"Modest\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C473-vanter",
+      "sequence": 26090,
+      "title": "vanter — to praise; (se vanter) to boast",
+      "headword": "vanter",
+      "romanization": "vanter",
+      "gloss": "to praise; (se vanter) to boast",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:823dbada61696e0a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for vain, then the French for modest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: vanter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vanter — \"to praise; (se vanter) to boast\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mon collègue se vante de sa nouvelle voiture. My colleague is boasting about his new car."
+            },
+            {
+              "kind": "speech",
+              "text": "Mostly reflexive: se vanter de quelque chose. Vanter un produit — to praise a product."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vanter is inherited from Old French vanter (EtymDB), usually traced to a Late Latin vānitāre \"to speak emptily\", built on Latin vānus \"empty, vain\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vanter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vanter*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vanter, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vanter*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with vanter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *vanter*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for vain, then the French for modest, then say vanter again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for vain, then the French for modest, then say *vanter* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does vanter mean? (\"To praise; (se vanter) to boast\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-R473-revision-466-473",
+      "sequence": 26100,
+      "title": "Sentiments et santé",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 466-473",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4e697866c29ff152",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the French for shyness and sociable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shyness, sociable, reserved, to sulk, to tease",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: shyness, sociable, reserved, to sulk, to tease]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stubborn, laziness, stingy, clumsy, scatterbrained",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: stubborn, laziness, stingy, clumsy, scatterbrained]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sincere, liar, naive, cunning, to lie",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: sincere, liar, naive, cunning, to lie]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mood, calm, moody, to annoy, to irritate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: mood, calm, moody, to annoy, to irritate]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fright, to frighten, to jump, relief, to reassure",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: fright, to frighten, to jump, relief, to reassure]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "disappointment, to disappoint, sorrow, to sob, to comfort",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: disappointment, to disappoint, sorrow, to sob, to comfort]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nostalgia, to regret, melancholy, to move, to deeply upset",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: nostalgia, to regret, melancholy, to move, to deeply upset]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pride, arrogance, vain, modest, to praise",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: pride, arrogance, vain, modest, to praise]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Shyness? (la timidité.) Sociable? (sociable.) Reserved? (réservé.) To sulk? (bouder.) To tease? (taquiner.) Stubborn? (têtu.) Laziness? (la paresse.) Stingy? (avare.) Clumsy? (maladroit.) Scatterbrained? (étourdi.) Sincere? (sincère.) Liar? (le menteur.) Naive? (naïf.) Cunning? (rusé.) To lie? (mentir.) Mood? (l'humeur.) Calm? (serein.) Moody? (lunatique.) To annoy? (énerver.) To irritate? (agacer.) Fright? (la frayeur.) To frighten? (effrayer.) To jump? (sursauter.) Relief? (le soulagement.) To reassure? (rassurer.) Disappointment? (la déception.) To disappoint? (décevoir.) Sorrow? (le chagrin.) To sob? (sangloter.) To comfort? (consoler.) Nostalgia? (la nostalgie.) To regret? (regretter.) Melancholy? (la mélancolie.) To move? (émouvoir.) To deeply upset? (bouleverser.) Pride? (la fierté.) Arrogance? (l'orgueil.) Vain? (vaniteux.) Modest? (modeste.) To praise? (vanter.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

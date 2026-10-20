@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 458,
+  "sourceHash": "fnv1a64:ac5036c319feeb81",
+  "lessonIds": [
+    "GE-C458-eichhoernchen",
+    "GE-C458-igel",
+    "GE-C458-wildschwein",
+    "GE-C458-hirsch",
+    "GE-C458-zwitschern"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch458.txt",
+  "json": "german/narration/ch458.json",
+  "textHash": "fnv1a64:5c1c3a6550a11ce6",
+  "jsonHash": "fnv1a64:3e7a5fbd441d1d51",
+  "findings": []
+}

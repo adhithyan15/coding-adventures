@@ -1,0 +1,19 @@
+{
+  "chapter": 278,
+  "title": "La presse",
+  "label": "ch:fr-la-presse",
+  "canDo": "I can talk about the news and the papers: current events, the press, daily and weekly papers, and their subscribers.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C278-abonne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 278: I can talk about the news and the papers: current events, the press, daily and weekly papers, and their subscribers.",
+    "assesses": [
+      "FR-LEX-C278-PRESSE-03",
+      "FR-LEX-C278-PRESSE-04",
+      "FR-LEX-C278-PRESSE-05"
+    ]
+  }
+}

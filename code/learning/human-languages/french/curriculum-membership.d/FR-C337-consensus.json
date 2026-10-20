@@ -1,0 +1,11 @@
+{
+  "id": "FR-C337-consensus",
+  "pathSegment": "FR-PATH-337-COMPROMIS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-337-COMPROMIS",
+      "order": 1
+    }
+  ]
+}

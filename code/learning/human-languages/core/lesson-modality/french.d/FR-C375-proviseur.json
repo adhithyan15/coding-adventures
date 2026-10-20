@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C375-proviseur",
+    "language": "french",
+    "chapter": 375,
+    "sequence": 21040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:48816335f6dedd45"
+  },
+  "findings": []
+}

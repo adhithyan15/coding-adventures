@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-262-ZUNAECHST",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can put the steps of a story in order: at first, afterwards, as a result, last of all and the order of things.",
+  "prerequisites": []
+}

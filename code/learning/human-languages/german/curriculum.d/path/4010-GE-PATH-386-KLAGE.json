@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-386-KLAGE",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "GE-EXT-386-KLAGE"
+  ],
+  "after": []
+}

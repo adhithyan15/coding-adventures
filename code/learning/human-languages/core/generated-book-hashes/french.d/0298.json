@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 298,
+  "sourceHash": "fnv1a64:70ec41fc6a2c53b0",
+  "lessonIds": [
+    "FR-C298-renverser",
+    "FR-C298-blesse",
+    "FR-C298-choc",
+    "FR-C298-airbag",
+    "FR-C298-cabosser"
+  ],
+  "tex": "french/book/chapters/ch298-le-choc.tex"
+}

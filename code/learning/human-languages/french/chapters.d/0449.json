@@ -1,0 +1,19 @@
+{
+  "chapter": 449,
+  "title": "Fleurs, tabac et colis",
+  "label": "ch:fr-fleurs-tabac-et-colis",
+  "canDo": "I can use local shops and send things: the florist, the tobacconist, putting a stamp on, sending off and tying up a parcel.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C449-ficeler",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 449: I can use local shops and send things: the florist, the tobacconist, putting a stamp on, sending off and tying up a parcel.",
+    "assesses": [
+      "FR-LEX-C449-BURALISTE-03",
+      "FR-LEX-C449-BURALISTE-04",
+      "FR-LEX-C449-BURALISTE-05"
+    ]
+  }
+}

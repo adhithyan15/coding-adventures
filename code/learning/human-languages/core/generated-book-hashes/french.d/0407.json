@@ -1,0 +1,14 @@
+{
+  "language": "french",
+  "chapter": 407,
+  "sourceHash": "fnv1a64:b4d21c90ae24fbef",
+  "lessonIds": [
+    "FR-C407-stationnement",
+    "FR-C407-stationner",
+    "FR-C407-horodateur",
+    "FR-C407-creneau",
+    "FR-C407-fourriere",
+    "FR-R407-revision-400-407"
+  ],
+  "tex": "french/book/chapters/ch407-se-garer-en-ville.tex"
+}

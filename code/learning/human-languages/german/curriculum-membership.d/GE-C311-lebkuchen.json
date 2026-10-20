@@ -1,0 +1,11 @@
+{
+  "id": "GE-C311-lebkuchen",
+  "pathSegment": "GE-PATH-311-ADVENT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-311-ADVENT",
+      "order": 4
+    }
+  ]
+}

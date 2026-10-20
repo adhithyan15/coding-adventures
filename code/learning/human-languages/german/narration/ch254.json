@@ -1,0 +1,665 @@
+{
+  "version": 1,
+  "language": "german",
+  "chapter": 254,
+  "title": "What I Think — ich finde, dass; darum",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:5664223d3f1191ec",
+  "lessons": [
+    {
+      "id": "GE-C254-ich-finde-dass",
+      "sequence": 14180,
+      "title": "ich finde, dass — an opinion, with its verb at the end",
+      "headword": "ich finde, dass …",
+      "romanization": "ich finde, dass …",
+      "gloss": "I think that — ich finde, ich glaube and ich meine, each followed by dass and a clause with its verb at the end",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:61ae52c54c9d51a0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"because German is beautiful\". (Weil Deutsch schön ist.) Where did ist go? (To the end.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: dass does what weil does",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dass means \"that\", the \"that\" of \"I think that …\". It opens a clause, and like weil it sends the verb to the end:"
+            },
+            {
+              "kind": "speech",
+              "text": "Ich finde, dass Deutsch schön ist. — I think German is beautiful. Ich glaube, dass der Zug Verspätung hat. — I believe the train is late."
+            },
+            {
+              "kind": "speech",
+              "text": "German sets the dass clause off with a comma. German can drop dass, as English drops \"that\", but then the verb returns to second place: Ich glaube, der Zug hat Verspätung. Both are standard."
+            },
+            {
+              "kind": "speech",
+              "text": "To disagree, put nicht on the opinion verb: Ich finde nicht, dass das richtig ist."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: three verbs of opinion",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ich finde is a judgement of your own, often about something you have tried."
+            },
+            {
+              "kind": "speech",
+              "text": "ich glaube is a belief you hold without being sure."
+            },
+            {
+              "kind": "speech",
+              "text": "ich meine is \"I think, I mean\". The verb is meinen, and you know its noun already: die Meinung, the opinion. Meinen also means \"to mean\": Was meinst du?, what do you mean?"
+            },
+            {
+              "kind": "speech",
+              "text": "One trap in the spelling: dass with two s joins clauses; das with one is \"the\" or \"that one\". Before 1996 the joiner was written daß. Swiss spelling does without ß altogether, so Swiss writers used dass long before then."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dass and das go back to one Old High German word, daz, from Proto-Germanic þat (EtymDB 2.1), which EtymDB sets beside English that. English kept one spelling for both jobs; German later split it in two, by the usual account in the sixteenth century."
+            },
+            {
+              "kind": "speech",
+              "text": "meinen from Old High German meinen from Proto-Germanic mainijaną, \"to mean, to think\" (EtymDB 2.1): the same verb as English mean."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ich finde, dass Deutsch schön ist.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ich finde, dass Deutsch schön ist.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ich glaube, dass der Zug Verspätung hat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ich glaube, dass der Zug Verspätung hat.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same without dass: Ich glaube, der Zug hat Verspätung.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same without *dass*: *Ich glaube, der Zug hat Verspätung.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ich meine, dass das richtig ist.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ich meine, dass das richtig ist.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ich finde nicht, dass das richtig ist.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ich finde nicht, dass das richtig ist.*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "After dass, where does the verb go? (To the end.) Drop dass, and where does it go? (Back to second place.) Which opinion verb is a judgement you formed yourself? (Finden.) And which noun belongs to meinen? (Die Meinung.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C254-meiner-meinung-nach",
+      "sequence": 14190,
+      "title": "meiner Meinung nach — in my opinion",
+      "headword": "meiner Meinung nach",
+      "romanization": "meiner Meinung nach",
+      "gloss": "in my opinion — a phrase that fills the first place of the sentence, with nach standing after its noun",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d921d905c85946ee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I think that is right\", with dass. (Ich finde, dass das richtig ist.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "There is a shorter way in, and it does not move the verb to the end."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: meiner Meinung nach",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "meiner Meinung nach — \"in my opinion\": MY-ner MY-noong nahkh."
+            },
+            {
+              "kind": "speech",
+              "text": "Meiner Meinung nach ist das richtig. — In my opinion, that is right."
+            },
+            {
+              "kind": "speech",
+              "text": "Two things are unusual in it. Nach comes after its noun, and here it means \"according to\". Nach meiner Meinung exists too, but nach last is the usual order. And meiner is mein with the dative ending -er, the case nach asks for. With \"your\": deiner Meinung nach."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: one place, then the verb",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The whole phrase, three words long, takes the first place of the sentence, exactly as dann did. So the verb comes next, and the subject waits behind it:"
+            },
+            {
+              "kind": "speech",
+              "text": "Meiner Meinung nach ist das wichtig. Meiner Meinung nach hat der Zug Verspätung."
+            },
+            {
+              "kind": "speech",
+              "text": "Compare the two ways in:"
+            },
+            {
+              "kind": "speech",
+              "text": "Ich finde, dass das wichtig ist. — the verb at the end. Meiner Meinung nach ist das wichtig. — the verb second."
+            },
+            {
+              "kind": "speech",
+              "text": "Same opinion, two word orders. Meiner Meinung nach is at home in a discussion and in writing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Meinung is the verb meinen + -ung, from Old High German meinen (EtymDB 2.1)."
+            },
+            {
+              "kind": "speech",
+              "text": "nach is set by EtymDB 2.1 beside nah, \"near\", from Old High German nāh, and beside English nigh. From \"near\" it came to mean \"after\" and, behind a noun, \"according to\"; EtymDB does not record those steps, so they are given here as the usual account."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meiner Meinung nach",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meiner Meinung nach*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Meiner Meinung nach ist das richtig.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Meiner Meinung nach ist das richtig.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Meiner Meinung nach ist das wichtig.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Meiner Meinung nach ist das wichtig.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same opinion with dass: Ich finde, dass das wichtig ist.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same opinion with *dass*: *Ich finde, dass das wichtig ist.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to a friend: Deiner Meinung nach?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to a friend: *Deiner Meinung nach?*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"In my opinion, that is important\"? (Meiner Meinung nach ist das wichtig.) Where does nach stand? (After its noun.) After the phrase, which comes next, the verb or the subject? (The verb.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C254-darum",
+      "sequence": 14200,
+      "title": "darum — that's why",
+      "headword": "darum",
+      "romanization": "darum",
+      "gloss": "that's why, so — the partner of deshalb, pointing forward to a result, with the verb straight after it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a5e6c413b2ca8606",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the German for \"therefore\", from chapter two hundred and fifty. (Deshalb.) And the question \"why?\" (Warum?)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: darum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "darum — \"that's why, so\": da-RUM, with a short u; when you point hard at the reason, DA-rum."
+            },
+            {
+              "kind": "speech",
+              "text": "Es regnet, darum nehme ich den Regenschirm. — It's raining, so I'm taking the umbrella. Der Zug hatte Verspätung, darum kam ich spät. — The train was late, that's why I came late."
+            },
+            {
+              "kind": "speech",
+              "text": "Darum and deshalb do the same job, and either fits in both sentences. Darum has one more use: on its own, it is the curt answer to warum. \"Warum?\" \"Darum!\", because."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: two directions, two word orders",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One fact, told two ways:"
+            },
+            {
+              "kind": "speech",
+              "text": "Ich nehme den Regenschirm, weil es regnet. Es regnet, darum nehme ich den Regenschirm."
+            },
+            {
+              "kind": "speech",
+              "text": "weil points back to the cause, and its verb goes to the end. darum points forward to the result. It takes the first place of its clause, like dann, so its verb comes straight after it: darum nehme ich, not darum ich nehme."
+            },
+            {
+              "kind": "speech",
+              "text": "The comma before darum is where one clause stops and the next begins. In a longer stretch, darum can open a fresh sentence: Es regnet. Darum nehme ich den Regenschirm."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "darum is da(r), \"there, that\", + um, \"around, about\": about that. You took warum apart the same way, \"about what\". EtymDB 2.1 lists darum without its parts, but traces um through Old High German umbi to Proto-Germanic umbi, beside Greek amphí and Latin ambi-, \"around\"."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Es regnet, darum nehme ich den Regenschirm.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Es regnet, darum nehme ich den Regenschirm.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same fact backwards: Ich nehme den Regenschirm, weil es regnet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same fact backwards: *Ich nehme den Regenschirm, weil es regnet.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Der Zug hatte Verspätung, darum kam ich spät.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Der Zug hatte Verspätung, darum kam ich spät.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same with deshalb: Der Zug hatte Verspätung, deshalb kam ich spät.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same with *deshalb*: *Der Zug hatte Verspätung, deshalb kam ich spät.*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"So I'm taking the umbrella\"? (Darum nehme ich den Regenschirm.) Which word points back to the cause? (Weil.) Which points forward to the result? (Darum, or deshalb.) And which little word is in both warum and darum? (Um, around.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C254-review",
+      "sequence": 14210,
+      "title": "Review — what I think, and why",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "an opinion, a reason and a consequence — dass with the verb last, weil pointing back, darum pointing forward",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1b7699293045d4d3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I believe that the train is late\". (Ich glaube, dass der Zug Verspätung hat.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three lessons, and an argument has all its joints. An opinion: ich finde, ich glaube or ich meine, then dass and the verb at the end. Or meiner Meinung nach in the first place, with the verb right after it. A reason with weil, verb last. A consequence with darum, verb second."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two sentences, and both word orders in them:"
+            },
+            {
+              "kind": "speech",
+              "text": "Meiner Meinung nach kommen wir spät, weil der Zug Verspätung hat. Der Zug hat Verspätung, darum nehme ich ein Taxi."
+            },
+            {
+              "kind": "speech",
+              "text": "Verb second after the opinion phrase, verb last after weil, and verb second again after darum."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ich finde, dass Deutsch schön ist.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ich finde, dass Deutsch schön ist.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Meiner Meinung nach ist das richtig.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Meiner Meinung nach ist das richtig.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Ich nehme den Regenschirm, weil es regnet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Ich nehme den Regenschirm, weil es regnet.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Es regnet, darum nehme ich den Regenschirm.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Es regnet, darum nehme ich den Regenschirm.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one opinion of your own with ich finde, dass, and one consequence with darum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one opinion of your own with *ich finde, dass*, and one consequence with *darum*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "After dass and weil, where is the verb? (At the end.) After darum and meiner Meinung nach? (Second, straight after them.) Which one points back to a cause? (Weil.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

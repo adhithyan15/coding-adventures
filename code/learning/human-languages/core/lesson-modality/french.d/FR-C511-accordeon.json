@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C511-accordeon",
+    "language": "french",
+    "chapter": 511,
+    "sequence": 28030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f408dca007f9b2e6"
+  },
+  "findings": []
+}

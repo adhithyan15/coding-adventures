@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-373-UNVORHERGESEHEN",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "GE-EXT-373-UNVORHERGESEHEN"
+  ],
+  "after": []
+}

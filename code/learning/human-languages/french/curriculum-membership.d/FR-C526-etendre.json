@@ -1,0 +1,11 @@
+{
+  "id": "FR-C526-etendre",
+  "pathSegment": "FR-PATH-526-LINGE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-526-LINGE",
+      "order": 2
+    }
+  ]
+}

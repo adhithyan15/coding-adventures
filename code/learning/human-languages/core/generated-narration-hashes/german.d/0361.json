@@ -1,0 +1,20 @@
+{
+  "language": "german",
+  "chapter": 361,
+  "sourceHash": "fnv1a64:b8fd3772d446ef40",
+  "lessonIds": [
+    "GE-C361-einwanderung",
+    "GE-C361-flucht",
+    "GE-C361-fluechtling",
+    "GE-C361-integrieren",
+    "GE-C361-gewalt",
+    "GE-R361-review-354-361"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "german/narration/ch361.txt",
+  "json": "german/narration/ch361.json",
+  "textHash": "fnv1a64:7c91a81cfcaffbe7",
+  "jsonHash": "fnv1a64:5e00ddf70cd585e5",
+  "findings": []
+}

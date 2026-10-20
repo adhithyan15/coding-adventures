@@ -1,0 +1,11 @@
+{
+  "id": "FR-C375-frequenter",
+  "pathSegment": "FR-PATH-375-LYCEE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-375-LYCEE",
+      "order": 2
+    }
+  ]
+}

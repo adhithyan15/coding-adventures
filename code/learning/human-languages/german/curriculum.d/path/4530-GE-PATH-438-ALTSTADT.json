@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-438-ALTSTADT",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-438-ALTSTADT"
+  ],
+  "after": []
+}

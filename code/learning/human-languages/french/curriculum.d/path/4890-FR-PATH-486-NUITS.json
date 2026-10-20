@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-486-NUITS",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-486-NUITS"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C286-hausse",
+    "language": "french",
+    "chapter": 286,
+    "sequence": 16440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:decfc1a186147948"
+  },
+  "findings": []
+}

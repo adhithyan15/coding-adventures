@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C423-anker",
+    "language": "german",
+    "chapter": 423,
+    "sequence": 22780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5b13b5723253d8b7"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C331-ueberreden",
+  "pathSegment": "GE-PATH-331-UEBERZEUGEN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-331-UEBERZEUGEN",
+      "order": 3
+    }
+  ]
+}

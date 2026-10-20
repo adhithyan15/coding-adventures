@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 292,
+  "sourceHash": "fnv1a64:7109f4167680def2",
+  "lessonIds": [
+    "FR-C292-enqueteur",
+    "FR-C292-inspecteur",
+    "FR-C292-detective",
+    "FR-C292-indice",
+    "FR-C292-empreinte"
+  ],
+  "tex": "french/book/chapters/ch292-les-enqueteurs.tex"
+}

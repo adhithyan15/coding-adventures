@@ -1,0 +1,11 @@
+{
+  "id": "GE-C362-spenden",
+  "pathSegment": "GE-PATH-362-EHRENAMT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-362-EHRENAMT",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C355-licencier",
+  "pathSegment": "FR-PATH-355-DEMISSION",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-355-DEMISSION",
+      "order": 0
+    }
+  ]
+}

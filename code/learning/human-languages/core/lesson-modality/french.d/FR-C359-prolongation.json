@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C359-prolongation",
+    "language": "french",
+    "chapter": 359,
+    "sequence": 20210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:59461975e1cf0c96"
+  },
+  "findings": []
+}

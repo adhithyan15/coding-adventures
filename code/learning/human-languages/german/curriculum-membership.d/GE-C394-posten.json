@@ -1,0 +1,11 @@
+{
+  "id": "GE-C394-posten",
+  "pathSegment": "GE-PATH-394-INTERNET",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-394-INTERNET",
+      "order": 3
+    }
+  ]
+}

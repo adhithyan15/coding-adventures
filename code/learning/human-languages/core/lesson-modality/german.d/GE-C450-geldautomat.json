@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C450-geldautomat",
+    "language": "german",
+    "chapter": 450,
+    "sequence": 24160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9d6fa7d82c9cca91"
+  },
+  "findings": []
+}

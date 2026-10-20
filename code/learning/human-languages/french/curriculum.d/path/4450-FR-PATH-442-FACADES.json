@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-442-FACADES",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-442-FACADES"
+  ],
+  "after": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-412-GUICHET",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-412-GUICHET"
+  ],
+  "after": []
+}

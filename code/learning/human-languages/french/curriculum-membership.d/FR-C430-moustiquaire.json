@@ -1,0 +1,11 @@
+{
+  "id": "FR-C430-moustiquaire",
+  "pathSegment": "FR-PATH-430-BESTIOLES",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-430-BESTIOLES",
+      "order": 2
+    }
+  ]
+}

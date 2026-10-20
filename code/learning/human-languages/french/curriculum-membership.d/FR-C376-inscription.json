@@ -1,0 +1,11 @@
+{
+  "id": "FR-C376-inscription",
+  "pathSegment": "FR-PATH-376-FAC",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-376-FAC",
+      "order": 2
+    }
+  ]
+}

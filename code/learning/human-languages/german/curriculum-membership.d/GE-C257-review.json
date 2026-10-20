@@ -1,0 +1,11 @@
+{
+  "id": "GE-C257-review",
+  "pathSegment": "GE-PATH-257-FAHRKARTE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-257-FAHRKARTE",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C327-aufkochen",
+  "pathSegment": "GE-PATH-327-KOECHELN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-327-KOECHELN",
+      "order": 1
+    }
+  ]
+}

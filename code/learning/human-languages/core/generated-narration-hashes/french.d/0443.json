@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 443,
+  "sourceHash": "fnv1a64:26c451583e3eba12",
+  "lessonIds": [
+    "FR-C443-egout",
+    "FR-C443-caniveau",
+    "FR-C443-deblayer",
+    "FR-C443-saler",
+    "FR-C443-deneiger"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch443.txt",
+  "json": "french/narration/ch443.json",
+  "textHash": "fnv1a64:6e0a74541e8314a7",
+  "jsonHash": "fnv1a64:61436f014dafa2f4",
+  "findings": []
+}

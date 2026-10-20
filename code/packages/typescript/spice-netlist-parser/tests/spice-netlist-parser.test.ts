@@ -172,8 +172,8 @@ R2 out 0 1k
     expect(corpus.schemaVersion).toBe(1);
     expect(corpus.suite).toBe("berkeley-v1-core");
     expect(corpus.cases.map((testCase) => testCase.analysis)).toEqual([
-      "op", "op", "op", "op", "op", "op", "op", "ac", "ac", "ac", "ac", "ac", "ac", "ac",
-      "tran", "tran", "tran", "tran", "tran", "tran", "tran", "dc", "dc", "dc", "dc", "dc",
+      "op", "op", "op", "op", "op", "op", "op", "op", "op", "ac", "ac", "ac", "ac", "ac",
+      "ac", "ac", "ac", "tran", "tran", "tran", "tran", "tran", "tran", "tran", "dc", "dc", "dc", "dc", "dc",
       "dc", "dc", "dc", "tf", "tf", "tf", "tf", "tf", "tf", "tf", "tf",
     ]);
 

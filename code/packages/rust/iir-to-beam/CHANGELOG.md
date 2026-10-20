@@ -1,5 +1,28 @@
 # Changelog — iir-to-beam
 
+## [0.20.0] — 2026-10-19 (LANG83 PR1a — standard operation support)
+
+- **LANG83 op support.** New `op_support` module exporting `OP_SUPPORT` and
+  `op_support(name) -> OpSupport`: this backend's declaration for every entry of
+  `interpreter_ir::op_registry::STANDARD_OPS` ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)). Every existing registered op is `Lowered`. The four PR1b ops
+  (`write_i64`, `i64_div_floor`, `i64_mod_floor`, `trap`) are
+  `Refused("not yet lowered; LANG83 PR1b")`. `lang-aot`'s `check_module_for`
+  uses the table to refuse an unsupported op at compile time.
+- Tests: every registry entry is declared exactly once; the PR1b ops are
+  refused; the Builtin rows agree with the new `validate::CALL_BUILTIN_SUPPORTED_NAMES`.
+- **`print_i64` now writes through the `io` server** (`io:format("~w~n", [X])`)
+  instead of `erlang:display/1`. The bytes are identical for integers (`42\n`),
+  but `erlang:display` writes straight from the emulator and bypasses the `io`
+  server `putchar`/`print_str` use, so mixed output could be reordered (LANG83
+  "ordered output stream"). The new sequence is a real `call_ext`, so
+  `print_i64` joins the call-emitting builtins in the live-across analysis (live
+  values are saved to Y slots); a new test pins the sequence, the `io:format/2`
+  import and GC-root validity, and runs it on real `erl` when present.
+  `io_out` still uses `erlang:display/1`.
+- The validator's inline builtin list is hoisted into
+  `validate::CALL_BUILTIN_SUPPORTED_NAMES` (the predicates folded in; behaviour
+  unchanged) so the validator and `OP_SUPPORT` share one list.
+
 ## Unreleased - reserve heap for string literals
 
 `str_const` now emits `test_heap` for two words per byte before the

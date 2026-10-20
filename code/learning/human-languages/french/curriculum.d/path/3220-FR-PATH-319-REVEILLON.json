@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-319-REVEILLON",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-319-REVEILLON"
+  ],
+  "after": []
+}

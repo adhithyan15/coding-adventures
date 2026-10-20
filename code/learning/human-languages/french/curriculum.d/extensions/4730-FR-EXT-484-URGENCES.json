@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-484-URGENCES",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about emergency care.",
+  "prerequisites": []
+}

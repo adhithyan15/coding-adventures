@@ -1,0 +1,11 @@
+{
+  "id": "FR-C481-enfler",
+  "pathSegment": "FR-PATH-481-ENTORSE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-481-ENTORSE",
+      "order": 2
+    }
+  ]
+}

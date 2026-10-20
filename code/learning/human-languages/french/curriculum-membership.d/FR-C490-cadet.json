@@ -1,0 +1,11 @@
+{
+  "id": "FR-C490-cadet",
+  "pathSegment": "FR-PATH-490-PARRAIN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-490-PARRAIN",
+      "order": 4
+    }
+  ]
+}

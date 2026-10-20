@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 458,
+  "sourceHash": "fnv1a64:8beb7cdcbf214a12",
+  "lessonIds": [
+    "GE-C458-eichhoernchen",
+    "GE-C458-igel",
+    "GE-C458-wildschwein",
+    "GE-C458-hirsch",
+    "GE-C458-zwitschern"
+  ],
+  "tex": "german/book/chapters/ch458-tiere-im-wald.tex"
+}

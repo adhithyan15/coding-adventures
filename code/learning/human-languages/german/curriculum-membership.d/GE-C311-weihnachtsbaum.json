@@ -1,0 +1,11 @@
+{
+  "id": "GE-C311-weihnachtsbaum",
+  "pathSegment": "GE-PATH-311-ADVENT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-311-ADVENT",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C452-brader",
+  "pathSegment": "FR-PATH-452-BRADERIE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-452-BRADERIE",
+      "order": 3
+    }
+  ]
+}

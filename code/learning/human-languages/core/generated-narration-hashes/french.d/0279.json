@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 279,
+  "sourceHash": "fnv1a64:569e150bafaee5cc",
+  "lessonIds": [
+    "FR-C279-rediger",
+    "FR-C279-redaction",
+    "FR-C279-imprimer",
+    "FR-C279-paraitre",
+    "FR-C279-parution"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch279.txt",
+  "json": "french/narration/ch279.json",
+  "textHash": "fnv1a64:eb77eb665e49ee29",
+  "jsonHash": "fnv1a64:8017ef0eff2c901b",
+  "findings": []
+}

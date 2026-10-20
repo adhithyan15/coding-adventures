@@ -1,0 +1,11 @@
+{
+  "id": "GE-C436-sackgasse",
+  "pathSegment": "GE-PATH-436-GASSE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-436-GASSE",
+      "order": 1
+    }
+  ]
+}

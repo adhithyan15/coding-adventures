@@ -1,0 +1,20 @@
+{
+  "language": "german",
+  "chapter": 505,
+  "sourceHash": "fnv1a64:807b27ce56348920",
+  "lessonIds": [
+    "GE-C505-trainieren",
+    "GE-C505-ausdauer",
+    "GE-C505-kondition",
+    "GE-C505-dehnen",
+    "GE-C505-muskelkater",
+    "GE-R505-review-498-505"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "german/narration/ch505.txt",
+  "json": "german/narration/ch505.json",
+  "textHash": "fnv1a64:ae26c3c7401dc57c",
+  "jsonHash": "fnv1a64:16a6d77bb1f4d451",
+  "findings": []
+}

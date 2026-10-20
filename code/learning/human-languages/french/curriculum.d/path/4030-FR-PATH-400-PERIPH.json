@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-400-PERIPH",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-400-PERIPH"
+  ],
+  "after": []
+}

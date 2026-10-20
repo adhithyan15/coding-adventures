@@ -1,0 +1,19 @@
+{
+  "chapter": 291,
+  "title": "Les gendarmes",
+  "label": "ch:fr-les-gendarmes",
+  "canDo": "I can talk about the police on patrol: the gendarme, the gendarmerie, patrolling, a patrol and a squad.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-R291-revision-284-291",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 291: I can talk about the police on patrol: the gendarme, the gendarmerie, patrolling, a patrol and a squad.",
+    "assesses": [
+      "FR-LEX-C291-GENDARMES-03",
+      "FR-LEX-C291-GENDARMES-04",
+      "FR-LEX-C291-GENDARMES-05"
+    ]
+  }
+}

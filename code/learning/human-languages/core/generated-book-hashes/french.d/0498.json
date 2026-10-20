@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 498,
+  "sourceHash": "fnv1a64:b50c0f95666a9459",
+  "lessonIds": [
+    "FR-C498-escalade",
+    "FR-C498-grimper",
+    "FR-C498-gourde",
+    "FR-C498-lampe-de-poche",
+    "FR-C498-feu-de-camp"
+  ],
+  "tex": "french/book/chapters/ch498-en-plein-air.tex"
+}

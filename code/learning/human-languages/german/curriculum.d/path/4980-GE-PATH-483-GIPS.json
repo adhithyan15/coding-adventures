@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-483-GIPS",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GE-EXT-483-GIPS"
+  ],
+  "after": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-461-NIESELREGEN",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-461-NIESELREGEN"
+  ],
+  "after": []
+}

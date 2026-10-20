@@ -1,0 +1,11 @@
+{
+  "id": "GE-C294-ueberschwemmung",
+  "pathSegment": "GE-PATH-294-ERDBEBEN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-294-ERDBEBEN",
+      "order": 2
+    }
+  ]
+}

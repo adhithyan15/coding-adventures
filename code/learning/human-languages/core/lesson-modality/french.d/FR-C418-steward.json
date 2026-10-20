@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C418-steward",
+    "language": "french",
+    "chapter": 418,
+    "sequence": 23240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:615f8fbf30e3b514"
+  },
+  "findings": []
+}

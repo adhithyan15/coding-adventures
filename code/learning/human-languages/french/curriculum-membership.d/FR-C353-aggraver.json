@@ -1,0 +1,11 @@
+{
+  "id": "FR-C353-aggraver",
+  "pathSegment": "FR-PATH-353-REMEDE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-353-REMEDE",
+      "order": 2
+    }
+  ]
+}

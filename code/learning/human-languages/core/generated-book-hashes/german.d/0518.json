@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 518,
+  "sourceHash": "fnv1a64:23231554f64c735e",
+  "lessonIds": [
+    "GE-C518-gemaelde",
+    "GE-C518-pinsel",
+    "GE-C518-leinwand",
+    "GE-C518-staffelei",
+    "GE-C518-aquarell"
+  ],
+  "tex": "german/book/chapters/ch518-pinsel-und-leinwand.tex"
+}

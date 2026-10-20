@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 390,
+  "sourceHash": "fnv1a64:416a75603f1dc5a6",
+  "lessonIds": [
+    "GE-C390-verschwenden",
+    "GE-C390-verschwendung",
+    "GE-C390-preiswert",
+    "GE-C390-vermoegen",
+    "GE-C390-zahlung"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch390.txt",
+  "json": "german/narration/ch390.json",
+  "textHash": "fnv1a64:f3cfc8a563fb6b9f",
+  "jsonHash": "fnv1a64:94a43f9126ab867f",
+  "findings": []
+}

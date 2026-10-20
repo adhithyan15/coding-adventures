@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-426-RECEPTION",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can check in at a hotel: the front desk, the receptionist, the floor, the stay and unpacking.",
+  "prerequisites": []
+}

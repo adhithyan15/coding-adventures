@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C409-raststaette",
+    "language": "german",
+    "chapter": 409,
+    "sequence": 22100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b6d82a1a12a833cc"
+  },
+  "findings": []
+}

@@ -1,0 +1,14 @@
+{
+  "language": "french",
+  "chapter": 389,
+  "sourceHash": "fnv1a64:1cd3d335e17fae53",
+  "lessonIds": [
+    "FR-C389-enquete",
+    "FR-C389-enqueter",
+    "FR-C389-temoin",
+    "FR-C389-temoigner",
+    "FR-C389-victime",
+    "FR-R389-revision-382-389"
+  ],
+  "tex": "french/book/chapters/ch389-l-enquete.tex"
+}

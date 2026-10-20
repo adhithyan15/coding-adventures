@@ -1,0 +1,11 @@
+{
+  "id": "FR-C527-froisse",
+  "pathSegment": "FR-PATH-527-REPASSAGE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-527-REPASSAGE",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 442,
+  "title": "Façades et vitrines",
+  "label": "ch:fr-facades-et-vitrines",
+  "canDo": "I can describe the front of buildings: the façade, the shop window, the shop sign, the gutter and the covered market.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C442-halle",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 442: I can describe the front of buildings: the façade, the shop window, the shop sign, the gutter and the covered market.",
+    "assesses": [
+      "FR-LEX-C442-FACADES-03",
+      "FR-LEX-C442-FACADES-04",
+      "FR-LEX-C442-FACADES-05"
+    ]
+  }
+}

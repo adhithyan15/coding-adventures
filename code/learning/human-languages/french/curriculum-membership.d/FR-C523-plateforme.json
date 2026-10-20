@@ -1,0 +1,11 @@
+{
+  "id": "FR-C523-plateforme",
+  "pathSegment": "FR-PATH-523-SERIES",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-523-SERIES",
+      "order": 3
+    }
+  ]
+}

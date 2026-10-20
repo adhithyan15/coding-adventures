@@ -1,0 +1,11 @@
+{
+  "id": "GE-C322-essloeffel",
+  "pathSegment": "GE-PATH-322-ZUTAT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-322-ZUTAT",
+      "order": 2
+    }
+  ]
+}

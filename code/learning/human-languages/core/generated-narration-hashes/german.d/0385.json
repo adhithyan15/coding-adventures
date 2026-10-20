@@ -1,0 +1,20 @@
+{
+  "language": "german",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:78a4521517658b69",
+  "lessonIds": [
+    "GE-C385-ausnahme",
+    "GE-C385-bestrafen",
+    "GE-C385-gesetzlich",
+    "GE-C385-rechtlich",
+    "GE-C385-regelung",
+    "GE-R385-review-378-385"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "german/narration/ch385.txt",
+  "json": "german/narration/ch385.json",
+  "textHash": "fnv1a64:15bd3e0cbac340b1",
+  "jsonHash": "fnv1a64:d78d2c8e2817deb3",
+  "findings": []
+}

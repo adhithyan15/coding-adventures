@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-532-WG",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GE-EXT-532-WG"
+  ],
+  "after": []
+}

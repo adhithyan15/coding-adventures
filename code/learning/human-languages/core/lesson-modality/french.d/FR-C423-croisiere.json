@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C423-croisiere",
+    "language": "french",
+    "chapter": 423,
+    "sequence": 23470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e120dd686d9308c8"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C371-zusage",
+  "pathSegment": "GE-PATH-371-ZUSAGE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-371-ZUSAGE",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C314-verwandeln",
+  "pathSegment": "GE-PATH-314-ZAUBERN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-314-ZAUBERN",
+      "order": 2
+    }
+  ]
+}

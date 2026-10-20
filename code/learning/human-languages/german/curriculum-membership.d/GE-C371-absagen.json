@@ -1,0 +1,11 @@
+{
+  "id": "GE-C371-absagen",
+  "pathSegment": "GE-PATH-371-ZUSAGE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-371-ZUSAGE",
+      "order": 2
+    }
+  ]
+}

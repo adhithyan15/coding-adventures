@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 526,
+  "sourceHash": "fnv1a64:1df7bda67ff7d7eb",
+  "lessonIds": [
+    "GE-C526-staub",
+    "GE-C526-wischen",
+    "GE-C526-fegen",
+    "GE-C526-staubsaugen",
+    "GE-C526-lappen"
+  ],
+  "tex": "german/book/chapters/ch526-wischen-und-fegen.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C466-goennen",
+    "language": "german",
+    "chapter": 466,
+    "sequence": 25040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d41d69489d9af96"
+  },
+  "findings": []
+}

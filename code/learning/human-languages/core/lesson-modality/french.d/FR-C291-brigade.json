@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C291-brigade",
+    "language": "french",
+    "chapter": 291,
+    "sequence": 16710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:30ed82afb3a9cd85"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C347-vermeiden",
+  "pathSegment": "GE-PATH-347-ZUFALL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-347-ZUFALL",
+      "order": 3
+    }
+  ]
+}

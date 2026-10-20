@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-485-GUERIR",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-485-GUERIR"
+  ],
+  "after": []
+}

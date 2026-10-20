@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 275,
+  "sourceHash": "fnv1a64:a21b6afd3e9341be",
+  "lessonIds": [
+    "GE-C275-angeblich",
+    "GE-C275-offenbar",
+    "GE-C275-zufolge",
+    "GE-C275-vermuten",
+    "GE-C275-vermutlich"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch275.txt",
+  "json": "german/narration/ch275.json",
+  "textHash": "fnv1a64:1eff8a8ffe4c80cb",
+  "jsonHash": "fnv1a64:c92b7d4b579adc6e",
+  "findings": []
+}

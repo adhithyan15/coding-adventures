@@ -1,0 +1,11 @@
+{
+  "id": "GE-C382-verstoss",
+  "pathSegment": "GE-PATH-382-VERSTOSS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-382-VERSTOSS",
+      "order": 4
+    }
+  ]
+}

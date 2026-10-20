@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 403,
+  "sourceHash": "fnv1a64:e8c7ff9a2e14d8dd",
+  "lessonIds": [
+    "GE-C403-anspringen",
+    "GE-C403-batterie",
+    "GE-C403-starthilfe",
+    "GE-C403-abschleppwagen",
+    "GE-C403-mechaniker"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch403.txt",
+  "json": "german/narration/ch403.json",
+  "textHash": "fnv1a64:7b7ef451e9aba3f4",
+  "jsonHash": "fnv1a64:7d464f7802b8ac46",
+  "findings": []
+}

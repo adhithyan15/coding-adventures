@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 516,
+  "sourceHash": "fnv1a64:2e26c008ba02fec0",
+  "lessonIds": [
+    "GE-C516-buehne",
+    "GE-C516-proben",
+    "GE-C516-lampenfieber",
+    "GE-C516-auftreten",
+    "GE-C516-auftritt"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch516.txt",
+  "json": "german/narration/ch516.json",
+  "textHash": "fnv1a64:7da35ceec24b2069",
+  "jsonHash": "fnv1a64:9e243969a9fa4bea",
+  "findings": []
+}

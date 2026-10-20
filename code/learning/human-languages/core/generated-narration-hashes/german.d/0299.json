@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 299,
+  "sourceHash": "fnv1a64:6209ecd3856eed9a",
+  "lessonIds": [
+    "GE-C299-ehe",
+    "GE-C299-ehemann",
+    "GE-C299-ehefrau",
+    "GE-C299-trauung",
+    "GE-C299-standesamt"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch299.txt",
+  "json": "german/narration/ch299.json",
+  "textHash": "fnv1a64:80860537ce7b9d7f",
+  "jsonHash": "fnv1a64:65865b6c0604e391",
+  "findings": []
+}

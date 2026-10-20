@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C398-lien",
+    "language": "french",
+    "chapter": 398,
+    "sequence": 22210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3f9e102c8397b386"
+  },
+  "findings": []
+}

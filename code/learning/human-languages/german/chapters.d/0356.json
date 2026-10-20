@@ -1,0 +1,19 @@
+{
+  "chapter": 356,
+  "title": "Karriere machen",
+  "label": "ch:ge-karriere-machen",
+  "canDo": "I can talk about a career and a promotion, a challenge I coped with and a plan that failed.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C356-scheitern",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 356: I can talk about a career and a promotion, a challenge I coped with and a plan that failed.",
+    "assesses": [
+      "GE-LEX-C356-KARRIERE-03",
+      "GE-LEX-C356-KARRIERE-04",
+      "GE-LEX-C356-KARRIERE-05"
+    ]
+  }
+}

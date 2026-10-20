@@ -1,0 +1,11 @@
+{
+  "id": "FR-C497-canne-a-peche",
+  "pathSegment": "FR-PATH-497-PECHE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-497-PECHE",
+      "order": 0
+    }
+  ]
+}

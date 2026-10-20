@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C306-intoxication",
+    "language": "french",
+    "chapter": 306,
+    "sequence": 17450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:87114cc1b7141f3a"
+  },
+  "findings": []
+}

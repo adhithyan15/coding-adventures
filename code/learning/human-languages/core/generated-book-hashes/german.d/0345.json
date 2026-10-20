@@ -1,0 +1,14 @@
+{
+  "language": "german",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:89bd51735977d9aa",
+  "lessonIds": [
+    "GE-C345-zusammenhang",
+    "GE-C345-zusammenhaengen",
+    "GE-C345-beweis",
+    "GE-C345-belegen",
+    "GE-C345-nachweisen",
+    "GE-R345-review-338-345"
+  ],
+  "tex": "german/book/chapters/ch345-zusammenhange.tex"
+}

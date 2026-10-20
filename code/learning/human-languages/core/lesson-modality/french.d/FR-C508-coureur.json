@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C508-coureur",
+    "language": "french",
+    "chapter": 508,
+    "sequence": 27850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e01cee5e52eda2c4"
+  },
+  "findings": []
+}

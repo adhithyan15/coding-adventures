@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 467,
+  "sourceHash": "fnv1a64:42a4086496ecfd1e",
+  "lessonIds": [
+    "GE-C467-scham",
+    "GE-C467-schaemen",
+    "GE-C467-verlegen",
+    "GE-C467-verlegenheit",
+    "GE-C467-erroeten"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch467.txt",
+  "json": "german/narration/ch467.json",
+  "textHash": "fnv1a64:a856b39c115fa7cb",
+  "jsonHash": "fnv1a64:5a510454aa05366c",
+  "findings": []
+}

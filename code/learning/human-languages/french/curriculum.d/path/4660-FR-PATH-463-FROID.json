@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-463-FROID",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-463-FROID"
+  ],
+  "after": []
+}

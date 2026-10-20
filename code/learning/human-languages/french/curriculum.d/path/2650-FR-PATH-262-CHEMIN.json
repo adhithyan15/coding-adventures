@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-262-CHEMIN",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-262-CHEMIN"
+  ],
+  "after": []
+}

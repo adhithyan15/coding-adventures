@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:d0b9304655291a24",
+  "lessonIds": [
+    "GE-C323-schaelen",
+    "GE-C323-hacken",
+    "GE-C323-wuerfeln",
+    "GE-C323-raspeln",
+    "GE-C323-halbieren"
+  ],
+  "tex": "german/book/chapters/ch323-schalen-und-schneiden.tex"
+}

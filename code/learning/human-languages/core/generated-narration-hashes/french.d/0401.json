@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 401,
+  "sourceHash": "fnv1a64:3b1818a6552d09b7",
+  "lessonIds": [
+    "FR-C401-accelerer",
+    "FR-C401-braquer",
+    "FR-C401-deraper",
+    "FR-C401-caler",
+    "FR-C401-pedale"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch401.txt",
+  "json": "french/narration/ch401.json",
+  "textHash": "fnv1a64:c38d32e07ecc09be",
+  "jsonHash": "fnv1a64:98b1ca93049e822e",
+  "findings": []
+}

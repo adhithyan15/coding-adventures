@@ -1,0 +1,19 @@
+{
+  "chapter": 445,
+  "title": "Petites boutiques",
+  "label": "ch:fr-petites-boutiques",
+  "canDo": "I can find small specialist shops: the hardware shop, the household shop, the stationer, the haberdasher and the wine merchant.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C445-caviste",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 445: I can find small specialist shops: the hardware shop, the household shop, the stationer, the haberdasher and the wine merchant.",
+    "assesses": [
+      "FR-LEX-C445-BOUTIQUES-03",
+      "FR-LEX-C445-BOUTIQUES-04",
+      "FR-LEX-C445-BOUTIQUES-05"
+    ]
+  }
+}

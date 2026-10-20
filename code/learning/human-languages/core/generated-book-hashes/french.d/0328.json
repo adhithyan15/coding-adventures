@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 328,
+  "sourceHash": "fnv1a64:e6f2309077723a4c",
+  "lessonIds": [
+    "FR-C328-planche-a-decouper",
+    "FR-C328-eplucher",
+    "FR-C328-hacher",
+    "FR-C328-emincer",
+    "FR-C328-raper"
+  ],
+  "tex": "french/book/chapters/ch328-couper-les-legumes.tex"
+}

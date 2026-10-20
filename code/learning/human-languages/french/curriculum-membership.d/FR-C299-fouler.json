@@ -1,0 +1,11 @@
+{
+  "id": "FR-C299-fouler",
+  "pathSegment": "FR-PATH-299-CHUTE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-299-CHUTE",
+      "order": 1
+    }
+  ]
+}

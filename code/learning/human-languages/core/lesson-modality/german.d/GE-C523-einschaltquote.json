@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C523-einschaltquote",
+    "language": "german",
+    "chapter": 523,
+    "sequence": 27960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:add4b815e9368fd6"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C364-injuste",
+    "language": "french",
+    "chapter": 364,
+    "sequence": 20440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3e7f7cfc16612f59"
+  },
+  "findings": []
+}

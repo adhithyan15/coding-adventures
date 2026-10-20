@@ -1,0 +1,11 @@
+{
+  "id": "GE-C276-zunehmen",
+  "pathSegment": "GE-PATH-276-UMFRAGE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-276-UMFRAGE",
+      "order": 3
+    }
+  ]
+}

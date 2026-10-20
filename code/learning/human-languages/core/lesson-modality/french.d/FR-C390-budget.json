@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C390-budget",
+    "language": "french",
+    "chapter": 390,
+    "sequence": 21770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9830353c56f53312"
+  },
+  "findings": []
+}

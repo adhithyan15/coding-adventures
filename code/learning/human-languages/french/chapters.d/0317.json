@@ -1,0 +1,19 @@
+{
+  "chapter": 317,
+  "title": "Le carnaval",
+  "label": "ch:fr-le-carnaval",
+  "canDo": "I can describe a carnival: the parade, marching past, the carnival, a float and dressing up.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C317-deguiser",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 317: I can describe a carnival: the parade, marching past, the carnival, a float and dressing up.",
+    "assesses": [
+      "FR-LEX-C317-CARNAVAL-03",
+      "FR-LEX-C317-CARNAVAL-04",
+      "FR-LEX-C317-CARNAVAL-05"
+    ]
+  }
+}

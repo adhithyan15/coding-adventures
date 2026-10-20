@@ -1,0 +1,11 @@
+{
+  "id": "FR-C418-hotesse",
+  "pathSegment": "FR-PATH-418-BORD",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-418-BORD",
+      "order": 1
+    }
+  ]
+}

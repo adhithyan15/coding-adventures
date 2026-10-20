@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-469-ENTTAEUSCHUNG",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GE-EXT-469-ENTTAEUSCHUNG"
+  ],
+  "after": []
+}

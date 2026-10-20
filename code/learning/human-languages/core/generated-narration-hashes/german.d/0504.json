@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 504,
+  "sourceHash": "fnv1a64:713022c49ddd3364",
+  "lessonIds": [
+    "GE-C504-umgraben",
+    "GE-C504-spaten",
+    "GE-C504-saeen",
+    "GE-C504-samen",
+    "GE-C504-ernte"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch504.txt",
+  "json": "german/narration/ch504.json",
+  "textHash": "fnv1a64:a1150225141d5eda",
+  "jsonHash": "fnv1a64:99b100fa992e4610",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C508-turnier",
+  "pathSegment": "GE-PATH-508-SIEGER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-508-SIEGER",
+      "order": 4
+    }
+  ]
+}

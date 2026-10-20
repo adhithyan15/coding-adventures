@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 434,
+  "sourceHash": "fnv1a64:10ebe9724f711025",
+  "lessonIds": [
+    "FR-C434-orienter",
+    "FR-C434-boussole",
+    "FR-C434-reperer",
+    "FR-C434-repere",
+    "FR-C434-egarer"
+  ],
+  "tex": "french/book/chapters/ch434-trouver-son-chemin.tex"
+}

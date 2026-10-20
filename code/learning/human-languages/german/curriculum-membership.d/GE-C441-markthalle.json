@@ -1,0 +1,11 @@
+{
+  "id": "GE-C441-markthalle",
+  "pathSegment": "GE-PATH-441-FASSADE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-441-FASSADE",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 327,
+  "title": "Auf dem Herd",
+  "label": "ch:ge-auf-dem-herd",
+  "canDo": "I can describe cooking on the stove: to simmer, to bring to the boil, to steam, to brown quickly and a lid.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C327-deckel",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 327: I can describe cooking on the stove: to simmer, to bring to the boil, to steam, to brown quickly and a lid.",
+    "assesses": [
+      "GE-LEX-C327-KOECHELN-03",
+      "GE-LEX-C327-KOECHELN-04",
+      "GE-LEX-C327-KOECHELN-05"
+    ]
+  }
+}

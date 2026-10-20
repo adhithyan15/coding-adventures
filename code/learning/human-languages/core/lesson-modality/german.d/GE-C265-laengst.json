@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C265-laengst",
+    "language": "german",
+    "chapter": 265,
+    "sequence": 14690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eb9825c841b0bc63"
+  },
+  "findings": []
+}

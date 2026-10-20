@@ -1,0 +1,11 @@
+{
+  "id": "GE-C392-geraet",
+  "pathSegment": "GE-PATH-392-GERAET",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-392-GERAET",
+      "order": 0
+    }
+  ]
+}

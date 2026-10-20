@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-501-COLLECTIONS",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-501-COLLECTIONS"
+  ],
+  "after": []
+}

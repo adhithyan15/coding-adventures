@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C400-peripherique",
+    "language": "french",
+    "chapter": 400,
+    "sequence": 22300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:79d363bc750e0d29"
+  },
+  "findings": []
+}

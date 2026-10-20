@@ -1,0 +1,11 @@
+{
+  "id": "FR-C495-trahir",
+  "pathSegment": "FR-PATH-495-DISPUTES",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-495-DISPUTES",
+      "order": 3
+    }
+  ]
+}

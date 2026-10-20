@@ -1,0 +1,11 @@
+{
+  "id": "GE-C292-bergen",
+  "pathSegment": "GE-PATH-292-RETTUNG",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-292-RETTUNG",
+      "order": 2
+    }
+  ]
+}

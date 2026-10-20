@@ -66,7 +66,7 @@ input_member ::= input_prop
                | connects_clause ;
 
 input_prop ::= KW_VALUE       COLON slot_ref_or_string ";"
-             | KW_PLACEHOLDER COLON STRING            ";"
+             | KW_PLACEHOLDER COLON slot_ref_or_string ";"
              | KW_READ_ONLY   COLON slot_ref_or_bool  ";"
              | KW_MULTILINE   COLON BOOL_LIT          ";"
              | KW_MAX_LENGTH  COLON NUMBER            ";"
@@ -89,15 +89,15 @@ accept either a slot reference (`@formula`) or a literal value.
 | Property      | Required | Type       | Notes |
 |---|---|---|---|
 | `value`       | yes      | text       | The current text in the field. Almost always a slot ref so the host can drive it; literal strings are valid for read-only display. |
-| `placeholder` | no       | text (literal only) | Ghost text shown when `value` is empty. Literal only because placeholder is a layout decision, not data. |
+| `placeholder` | no       | text       | Ghost text shown when `value` is empty. May be a slot ref: a placeholder is often host data (a localised hint, a reusable field's own `placeholder` slot). *Changed:* this was literal-only, on the theory that a placeholder is a layout decision, but real components bind it (`mosaic-pkg-toolkit`'s `Input`, the note-type editor), and every backend now lowers the bound form (UI29 §2, `placeholder`). |
 | `read-only`   | no       | bool       | Default `false`. If `true`, the field renders but rejects edits. May be a slot ref so the host can toggle it. |
 | `multiline`   | no       | bool (literal only) | Default `false`. If `true`, renders as a multi-line text area instead of a single-line input. Literal-only because the choice affects which HTML/native widget is used. |
 | `max-length`  | no       | number (literal only) | Maximum character count. Literal-only for the same widget-decision reason. |
 
 ### Why some properties are literal-only
 
-`value` and `read-only` are *data* — they change at runtime in response to
-host state, so they must be slot-refable. `multiline` and `max-length`
+`value`, `placeholder` and `read-only` are *data* — they change at runtime
+in response to host state, so they must be slot-refable. `multiline` and `max-length`
 determine *which widget* is constructed (`<input>` vs. `<textarea>`, or
 the native equivalent) and cannot change after the widget is mounted.
 Putting them on slots would force every backend to handle widget-swap on
@@ -402,6 +402,7 @@ The React backend's implementation of Input must be covered by:
 | `test_input_commit_on_enter` | The `onKeyDown` handler dispatches the commit event on `e.key === "Enter"`. |
 | `test_input_cancel_on_escape` | The `onKeyDown` handler dispatches the cancel event on `e.key === "Escape"`. |
 | `test_input_placeholder_attribute` | The `placeholder="..."` attribute appears verbatim. |
+| `input_placeholder_slot_ref_binds_to_placeholder_expression` | `placeholder: slot: x` lowers to `placeholder={x}` on `<input>` and `<textarea>`. |
 | `test_input_max_length_attribute` | `max-length: 100` lowers to `maxLength={100}`. |
 | `test_input_missing_value_errors` | A moslayout `Input` with no `value` property causes a compile error. |
 | `test_input_value_wrong_type_errors` | `value: @number-slot` where the slot is `number` errors. |

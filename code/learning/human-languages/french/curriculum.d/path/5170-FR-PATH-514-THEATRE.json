@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-514-THEATRE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-514-THEATRE"
+  ],
+  "after": []
+}

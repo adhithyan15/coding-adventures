@@ -1,0 +1,11 @@
+{
+  "id": "FR-C292-indice",
+  "pathSegment": "FR-PATH-292-INDICES",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-292-INDICES",
+      "order": 3
+    }
+  ]
+}

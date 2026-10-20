@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C297-exces-de-vitesse",
+    "language": "french",
+    "chapter": 297,
+    "sequence": 17000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e71171107f80a6a5"
+  },
+  "findings": []
+}

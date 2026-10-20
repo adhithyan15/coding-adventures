@@ -1,0 +1,11 @@
+{
+  "language": "french",
+  "chapter": 262,
+  "sourceHash": "fnv1a64:b44ca922c478865c",
+  "lessonIds": [
+    "FR-C262-excusez-moi",
+    "FR-C262-tout-droit",
+    "FR-C262-revision-chemin"
+  ],
+  "tex": "french/book/chapters/ch262-finding-the-way.tex"
+}

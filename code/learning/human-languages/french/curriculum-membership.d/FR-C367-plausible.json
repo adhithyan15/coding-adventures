@@ -1,0 +1,11 @@
+{
+  "id": "FR-C367-plausible",
+  "pathSegment": "FR-PATH-367-HYPOTHESE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-367-HYPOTHESE",
+      "order": 3
+    }
+  ]
+}

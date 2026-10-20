@@ -1,0 +1,19 @@
+{
+  "chapter": 340,
+  "title": "Croire ou pas",
+  "label": "ch:fr-croire-ou-pas",
+  "canDo": "I can say whether a person or a story is reliable, believable, dubious, likely or hard to believe.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C340-invraisemblable",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 340: I can say whether a person or a story is reliable, believable, dubious, likely or hard to believe.",
+    "assesses": [
+      "FR-LEX-C340-FIABLE-03",
+      "FR-LEX-C340-FIABLE-04",
+      "FR-LEX-C340-FIABLE-05"
+    ]
+  }
+}

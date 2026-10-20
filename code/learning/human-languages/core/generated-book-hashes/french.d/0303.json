@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:95eaca7b06e29a56",
+  "lessonIds": [
+    "FR-C303-tremblement-de-terre",
+    "FR-C303-avalanche",
+    "FR-C303-eboulement",
+    "FR-C303-effondrer",
+    "FR-C303-decombres"
+  ],
+  "tex": "french/book/chapters/ch303-quand-la-terre-tremble.tex"
+}

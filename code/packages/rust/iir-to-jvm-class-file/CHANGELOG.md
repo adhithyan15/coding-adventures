@@ -1,5 +1,30 @@
 # Changelog — iir-to-jvm-class-file
 
+## Unreleased — LANG83 PR1a — standard operation support
+
+- **LANG83 op support.** New `op_support` module exporting `OP_SUPPORT` and
+  `op_support(name) -> OpSupport`: this backend's declaration for every entry of
+  `interpreter_ir::op_registry::STANDARD_OPS` ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)). Every existing registered op is `Lowered`. The four PR1b ops
+  (`write_i64`, `i64_div_floor`, `i64_mod_floor`, `trap`) are
+  `Refused("not yet lowered; LANG83 PR1b")`. `lang-aot`'s `check_module_for`
+  uses the table to refuse an unsupported op at compile time.
+- Tests: every registry entry is declared exactly once; the PR1b ops are
+  refused; the Builtin rows agree with `validate::CALL_BUILTIN_SUPPORTED_NAMES`.
+
+## 0.36.0 - 2026-10-19 - measured operand-stack depth
+
+Each method's `max_stack` is now measured by walking the emitted bytecode with
+a stack-depth dataflow, as the JVM verifier does. It replaces a fixed `8`
+(and `16` for `__callClosure`). The fixed value was too small for captured 3-D
+and 4-D `double[]` stores and failed verification with `VerifyError: Stack size
+too large`. An opcode the analysis does not model, an inconsistent depth where
+branches join, or a stack underflow is reported as the new
+`IIRJvmError::StackDepthAnalysis` instead of being emitted. `areturn` is now
+the named `ARETURN` constant instead of a raw `0xB0`, which the analysis found.
+
+Sizing `__callClosure` returns `StackDepthAnalysis` instead of panicking.
+Descriptor slot counts and invoke pop counts use checked `u16` arithmetic.
+
 ## 0.35.0 - 2026-10-05 - floating-point module globals
 
 Module globals carrying `f32` or `f64` values now use JVM fields with `F` or

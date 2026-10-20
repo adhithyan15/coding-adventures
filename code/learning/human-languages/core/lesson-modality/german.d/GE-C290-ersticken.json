@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C290-ersticken",
+    "language": "german",
+    "chapter": 290,
+    "sequence": 15960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c57355a9e9c4ab33"
+  },
+  "findings": []
+}

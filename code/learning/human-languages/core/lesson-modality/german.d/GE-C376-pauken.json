@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C376-pauken",
+    "language": "german",
+    "chapter": 376,
+    "sequence": 20350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6913f0331ac77abc"
+  },
+  "findings": []
+}

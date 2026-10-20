@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 290,
+  "sourceHash": "fnv1a64:beff8bc18115c6e6",
+  "lessonIds": [
+    "FR-C290-crime",
+    "FR-C290-criminel",
+    "FR-C290-meurtre",
+    "FR-C290-delinquant",
+    "FR-C290-delinquance"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch290.txt",
+  "json": "french/narration/ch290.json",
+  "textHash": "fnv1a64:28c6d9f1362bd3a8",
+  "jsonHash": "fnv1a64:f4d3158b80bf476c",
+  "findings": []
+}

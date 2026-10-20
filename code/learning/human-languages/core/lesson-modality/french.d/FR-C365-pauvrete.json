@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C365-pauvrete",
+    "language": "french",
+    "chapter": 365,
+    "sequence": 20480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:22bc6da0ec871282"
+  },
+  "findings": []
+}

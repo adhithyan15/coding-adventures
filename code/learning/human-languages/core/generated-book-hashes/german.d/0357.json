@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 357,
+  "sourceHash": "fnv1a64:13d5b3e55d3892af",
+  "lessonIds": [
+    "GE-C357-gewerkschaft",
+    "GE-C357-betriebsrat",
+    "GE-C357-forderung",
+    "GE-C357-unterstuetzen",
+    "GE-C357-unterstuetzung"
+  ],
+  "tex": "german/book/chapters/ch357-die-gewerkschaft.tex"
+}

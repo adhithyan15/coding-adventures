@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "french",
+  "chapter": 299,
+  "title": "Une mauvaise chute",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:976ff72e6feea640",
+  "lessons": [
+    {
+      "id": "FR-C299-chute",
+      "sequence": 17080,
+      "title": "la chute — the fall; the drop",
+      "headword": "la chute",
+      "romanization": "la chute",
+      "gloss": "the fall; the drop",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:be401dfe3a488901",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the airbag, then the French for to dent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la chute",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la chute — \"the fall; the drop\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ma grand-mère a fait une chute dans l'escalier. My grandmother had a fall on the stairs."
+            },
+            {
+              "kind": "speech",
+              "text": "Les chutes de neige — snowfalls; une chute d'eau — a waterfall."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chute is built on chu, the old past participle of choir \"to fall\" (EtymDB), which is inherited from Latin cadere \"to fall\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la chute",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la chute*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la chute, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la chute*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la chute",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la chute*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the airbag, then the French for to dent, then say la chute again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the airbag, then the French for to dent, then say *la chute* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la chute mean? (\"The fall; the drop\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C299-fouler",
+      "sequence": 17090,
+      "title": "fouler — to sprain (as se fouler); to tread on",
+      "headword": "fouler",
+      "romanization": "fouler",
+      "gloss": "to sprain (as se fouler); to tread on",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9224287601bbedd1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for to dent, then the French for the fall."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: fouler",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fouler — \"to sprain (as se fouler); to tread on\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Il s'est foulé la cheville en courant. He sprained his ankle while running."
+            },
+            {
+              "kind": "speech",
+              "text": "In this sense mostly reflexive, with a body part: se fouler le poignet. Without se, it means to tread on or to press: fouler le sol."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fouler is inherited through Old French foler \"to crush, to trample\" from a verb built on Latin fullō \"a fuller\", who trod cloth (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fouler",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fouler*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fouler, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fouler*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with fouler",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *fouler*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for to dent, then the French for the fall, then say fouler again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for to dent, then the French for the fall, then say *fouler* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does fouler mean? (\"To sprain (as se fouler); to tread on\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C299-contusion",
+      "sequence": 17100,
+      "title": "la contusion — the bruise, the contusion",
+      "headword": "la contusion",
+      "romanization": "la contusion",
+      "gloss": "the bruise, the contusion",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3fb2947653461600",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the fall, then the French for to sprain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la contusion",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la contusion — \"the bruise, the contusion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Il a seulement quelques contusions. He only has a few bruises."
+            },
+            {
+              "kind": "speech",
+              "text": "Medical; in everyday French, un bleu."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "contusion is a learned borrowing from Latin contūsiō \"a bruising\" (EtymDB), from contundere \"to beat, to bruise\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la contusion",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la contusion*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la contusion, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la contusion*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la contusion",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la contusion*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the fall, then the French for to sprain, then say la contusion again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the fall, then the French for to sprain, then say *la contusion* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la contusion mean? (\"The bruise, the contusion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C299-hematome",
+      "sequence": 17110,
+      "title": "l'hématome — the haematoma, the large bruise",
+      "headword": "l'hématome",
+      "romanization": "l'hématome",
+      "gloss": "the haematoma, the large bruise",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7569248ec7049004",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for to sprain, then the French for the bruise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: l'hématome",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "l'hématome — \"the haematoma, the large bruise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Elle a un gros hématome sur la jambe. She has a big bruise on her leg."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine: un hématome."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hématome is a learned medical word built on Greek haîma \"blood\" with the suffix -ōma (EtymDB lists no parent)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'hématome",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'hématome*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'hématome, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'hématome*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with l'hématome",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *l'hématome*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for to sprain, then the French for the bruise, then say l'hématome again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for to sprain, then the French for the bruise, then say *l'hématome* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does l'hématome mean? (\"The haematoma, the large bruise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C299-plaie",
+      "sequence": 17120,
+      "title": "la plaie — the wound, the cut",
+      "headword": "la plaie",
+      "romanization": "la plaie",
+      "gloss": "the wound, the cut",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:488c1abacbabaa12",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the bruise, then the French for the haematoma."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la plaie",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la plaie — \"the wound, the cut\"."
+            },
+            {
+              "kind": "speech",
+              "text": "L'infirmière a nettoyé la plaie. The nurse cleaned the wound."
+            },
+            {
+              "kind": "speech",
+              "text": "Informal: quelle plaie! — what a pain!"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "plaie is inherited from Latin plāga \"a blow, a wound\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la plaie",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la plaie*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la plaie, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la plaie*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la plaie",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la plaie*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the bruise, then the French for the haematoma, then say la plaie again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the bruise, then the French for the haematoma, then say *la plaie* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la plaie mean? (\"The wound, the cut\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-R299-revision-292-299",
+      "sequence": 17130,
+      "title": "Retour sur les chapitres 292–299",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 292-299",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:47d3125ae4bbab78",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the French for the investigator and the inspector."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the investigator, the inspector, the private detective, the clue, the print",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the investigator, the inspector, the private detective, the clue, the print]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the mystery, to solve, to prove, the alibi, the suspicion",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the mystery, to solve, to prove, the alibi, the suspicion]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to stop and question, the arrest, the handcuffs, police custody, to question",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to stop and question, the arrest, the handcuffs, police custody, to question]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to confess, the confession, the accomplice, to acquit, to release",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to confess, the confession, the accomplice, to acquit, to release]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the armed robbery, the armed robber, the hostage, the ransom, to escape",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the armed robbery, the armed robber, the hostage, the ransom, to escape]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pile-up, the reckless driver, speeding, the accident report, the skid",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pile-up, the reckless driver, speeding, the accident report, the skid]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to knock over, the injured person, the shock, the airbag, to dent",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to knock over, the injured person, the shock, the airbag, to dent]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the fall, to sprain, the bruise, the haematoma, the wound",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the fall, to sprain, the bruise, the haematoma, the wound]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The investigator? (l'enquêteur.) The inspector? (l'inspecteur.) The private detective? (le détective.) The clue? (l'indice.) The print? (l'empreinte.) The mystery? (le mystère.) To solve? (élucider.) To prove? (prouver.) The alibi? (l'alibi.) The suspicion? (le soupçon.) To stop and question? (interpeller.) The arrest? (l'arrestation.) The handcuffs? (les menottes.) Police custody? (la garde à vue.) To question? (interroger.) To confess? (avouer.) The confession? (l'aveu.) The accomplice? (le complice.) To acquit? (acquitter.) To release? (relâcher.) The armed robbery? (le braquage.) The armed robber? (le braqueur.) The hostage? (l'otage.) The ransom? (la rançon.) To escape? (échapper.) The pile-up? (le carambolage.) The reckless driver? (le chauffard.) Speeding? (l'excès de vitesse.) The accident report? (le constat.) The skid? (le dérapage.) To knock over? (renverser.) The injured person? (le blessé.) The shock? (le choc.) The airbag? (l'airbag.) To dent? (cabosser.) The fall? (la chute.) To sprain? (fouler.) The bruise? (la contusion.) The haematoma? (l'hématome.) The wound? (la plaie.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

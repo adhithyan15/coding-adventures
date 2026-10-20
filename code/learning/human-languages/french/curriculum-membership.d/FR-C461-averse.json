@@ -1,0 +1,11 @@
+{
+  "id": "FR-C461-averse",
+  "pathSegment": "FR-PATH-461-BRUINE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-461-BRUINE",
+      "order": 2
+    }
+  ]
+}

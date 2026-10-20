@@ -1,0 +1,19 @@
+{
+  "chapter": 339,
+  "title": "Les preuves",
+  "label": "ch:fr-les-preuves",
+  "canDo": "I can talk about proof: say something is obvious, plain to see, indisputable or clear.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C339-manifeste",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 339: I can talk about proof: say something is obvious, plain to see, indisputable or clear.",
+    "assesses": [
+      "FR-LEX-C339-PREUVE-03",
+      "FR-LEX-C339-PREUVE-04",
+      "FR-LEX-C339-PREUVE-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C436-itineraire",
+  "pathSegment": "FR-PATH-436-RACCOURCI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-436-RACCOURCI",
+      "order": 2
+    }
+  ]
+}

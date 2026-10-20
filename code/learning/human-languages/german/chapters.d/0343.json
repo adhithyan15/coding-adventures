@@ -1,0 +1,19 @@
+{
+  "chapter": 343,
+  "title": "Die Konsequenzen",
+  "label": "ch:ge-die-konsequenzen",
+  "canDo": "I can talk about consequences and results, and link a cause to its result with folglich, sodass and daher.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C343-daher",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 343: I can talk about consequences and results, and link a cause to its result with folglich, sodass and daher.",
+    "assesses": [
+      "GE-LEX-C343-KONSEQUENZ-03",
+      "GE-LEX-C343-KONSEQUENZ-04",
+      "GE-LEX-C343-KONSEQUENZ-05"
+    ]
+  }
+}

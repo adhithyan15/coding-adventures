@@ -1,0 +1,11 @@
+{
+  "id": "GE-C449-wechselgeld",
+  "pathSegment": "GE-PATH-449-KASSE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-449-KASSE",
+      "order": 4
+    }
+  ]
+}

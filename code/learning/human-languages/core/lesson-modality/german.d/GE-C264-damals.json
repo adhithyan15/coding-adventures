@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C264-damals",
+    "language": "german",
+    "chapter": 264,
+    "sequence": 14600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:028c76f272a7cf47"
+  },
+  "findings": []
+}

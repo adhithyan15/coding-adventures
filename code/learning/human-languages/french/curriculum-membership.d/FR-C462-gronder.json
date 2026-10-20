@@ -1,0 +1,11 @@
+{
+  "id": "FR-C462-gronder",
+  "pathSegment": "FR-PATH-462-ORAGE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-462-ORAGE",
+      "order": 3
+    }
+  ]
+}

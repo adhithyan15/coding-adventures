@@ -1,0 +1,11 @@
+{
+  "id": "FR-C309-poussette",
+  "pathSegment": "FR-PATH-309-BAPTEME",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-309-BAPTEME",
+      "order": 3
+    }
+  ]
+}

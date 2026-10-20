@@ -1,0 +1,11 @@
+{
+  "id": "GE-C508-gegner",
+  "pathSegment": "GE-PATH-508-SIEGER",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-508-SIEGER",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "chapter": 261,
+  "title": "Should, and Why — je devrais, expliquer",
+  "label": "ch:fr-should-and-why",
+  "canDo": "I can give advice with je devrais and tu devrais, and explain a decision in four moves.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C261-revision-explication",
+    "kind": "production",
+    "summary": "Complete FR-C261-revision-explication: a whole explanation aloud: a view, a cause, a consequence and a piece of advice.",
+    "assesses": [
+      "FR-LEX-JE-DEVRAIS-01",
+      "FR-GRAM-EXPLIQUER-A-01",
+      "FR-GRAM-EXPLICATION-02",
+      "FR-GRAM-TU-DEVRAIS-02"
+    ]
+  }
+}

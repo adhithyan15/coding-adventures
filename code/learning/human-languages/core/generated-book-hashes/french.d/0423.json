@@ -1,0 +1,14 @@
+{
+  "language": "french",
+  "chapter": 423,
+  "sourceHash": "fnv1a64:1043180c87c6768d",
+  "lessonIds": [
+    "FR-C423-croisiere",
+    "FR-C423-accoster",
+    "FR-C423-tanguer",
+    "FR-C423-chavirer",
+    "FR-C423-deriver",
+    "FR-R423-revision-416-423"
+  ],
+  "tex": "french/book/chapters/ch423-en-croisiere.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C348-en-effet",
+    "language": "french",
+    "chapter": 348,
+    "sequence": 19630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:56b0c729930d2773"
+  },
+  "findings": []
+}

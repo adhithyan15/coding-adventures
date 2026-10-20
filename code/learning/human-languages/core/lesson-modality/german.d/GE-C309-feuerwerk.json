@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C309-feuerwerk",
+    "language": "german",
+    "chapter": 309,
+    "sequence": 16940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00ed3bc1a6d591e1"
+  },
+  "findings": []
+}

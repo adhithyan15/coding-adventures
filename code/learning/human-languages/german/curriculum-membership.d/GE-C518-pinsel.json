@@ -1,0 +1,11 @@
+{
+  "id": "GE-C518-pinsel",
+  "pathSegment": "GE-PATH-518-MALEN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-518-MALEN",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C490-marraine",
+    "language": "french",
+    "chapter": 490,
+    "sequence": 26940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:366f6f203570d9f6"
+  },
+  "findings": []
+}

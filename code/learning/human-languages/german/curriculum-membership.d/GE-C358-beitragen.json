@@ -1,0 +1,11 @@
+{
+  "id": "GE-C358-beitragen",
+  "pathSegment": "GE-PATH-358-GESELLSCHAFT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-358-GESELLSCHAFT",
+      "order": 4
+    }
+  ]
+}

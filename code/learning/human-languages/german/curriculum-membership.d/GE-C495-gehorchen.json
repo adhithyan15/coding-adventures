@@ -1,0 +1,11 @@
+{
+  "id": "GE-C495-gehorchen",
+  "pathSegment": "GE-PATH-495-ERZIEHUNG",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-495-ERZIEHUNG",
+      "order": 3
+    }
+  ]
+}

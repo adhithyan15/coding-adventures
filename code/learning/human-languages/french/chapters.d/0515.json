@@ -1,0 +1,19 @@
+{
+  "chapter": 515,
+  "title": "Sur scène",
+  "label": "ch:fr-sur-scene",
+  "canDo": "I can talk about acting on stage.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C515-applaudissements",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 515: I can talk about acting on stage.",
+    "assesses": [
+      "FR-LEX-C515-SCENE-03",
+      "FR-LEX-C515-SCENE-04",
+      "FR-LEX-C515-SCENE-05"
+    ]
+  }
+}

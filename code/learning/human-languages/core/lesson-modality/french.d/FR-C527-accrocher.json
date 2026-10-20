@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C527-accrocher",
+    "language": "french",
+    "chapter": 527,
+    "sequence": 28860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cc1067fee2b0ea45"
+  },
+  "findings": []
+}

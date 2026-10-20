@@ -1,0 +1,11 @@
+{
+  "id": "GE-C404-aufpumpen",
+  "pathSegment": "GE-PATH-404-REIFEN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-404-REIFEN",
+      "order": 2
+    }
+  ]
+}

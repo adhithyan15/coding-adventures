@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "german",
+  "chapter": 309,
+  "title": "Alles ist geschmückt",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:f846041a56f59098",
+  "lessons": [
+    {
+      "id": "GE-C309-schmuecken",
+      "sequence": 16900,
+      "title": "schmücken — to decorate, to adorn",
+      "headword": "schmücken",
+      "romanization": "schmücken",
+      "gloss": "to decorate, to adorn",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:95991dfecb576a76",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the applause, then the German for to applaud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: schmücken",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "schmücken — \"to decorate, to adorn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Wir schmückten den Saal mit Blumen. We decorated the hall with flowers."
+            },
+            {
+              "kind": "speech",
+              "text": "Der Schmuck — jewellery or decoration."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "schmücken is usually traced to Middle High German smücken, which EtymDB glosses \"to dress, to adorn\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "schmücken",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *schmücken*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "schmücken, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *schmücken*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with schmücken",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *schmücken*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the applause, then the German for to applaud, then say schmücken again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the applause, then the German for to applaud, then say *schmücken* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does schmücken mean? (\"To decorate, to adorn\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C309-girlande",
+      "sequence": 16910,
+      "title": "die Girlande — the garland, the paper chain",
+      "headword": "die Girlande",
+      "romanization": "die Girlande",
+      "gloss": "the garland, the paper chain",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aca44b67d0329f3c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to applaud, then the German for to decorate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Girlande",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Girlande — \"the garland, the paper chain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Über der Tür hing eine bunte Girlande. A colourful garland hung over the door."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Girlanden."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Girlande was borrowed from French guirlande \"garland\", which came from Italian ghirlanda (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Girlande",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Girlande*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Girlande, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Girlande*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with die Girlande",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *die Girlande*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to applaud, then the German for to decorate, then say die Girlande again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to applaud, then the German for to decorate, then say *die Girlande* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does die Girlande mean? (\"The garland, the paper chain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C309-aufhaengen",
+      "sequence": 16920,
+      "title": "aufhängen — to hang up",
+      "headword": "aufhängen",
+      "romanization": "aufhängen",
+      "gloss": "to hang up",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e3845e89067825f5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to decorate, then the German for the garland."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: aufhängen",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aufhängen — \"to hang up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Die Kinder hängten Bilder an der Wand auf. The children hung pictures on the wall."
+            },
+            {
+              "kind": "speech",
+              "text": "Separable: er hängt auf. On the phone, to hang up."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aufhängen joins auf \"up\" and hängen \"to hang\", an inherited Germanic verb and a cousin of English hang; EtymDB lists no parent for the compound."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aufhängen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aufhängen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aufhängen, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aufhängen*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with aufhängen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *aufhängen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to decorate, then the German for the garland, then say aufhängen again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to decorate, then the German for the garland, then say *aufhängen* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does aufhängen mean? (\"To hang up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C309-luftballon",
+      "sequence": 16930,
+      "title": "der Luftballon — the balloon",
+      "headword": "der Luftballon",
+      "romanization": "der Luftballon",
+      "gloss": "the balloon",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:17ae46af4af20b8b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the garland, then the German for to hang up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: der Luftballon",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "der Luftballon — \"the balloon\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Jedes Kind bekam einen roten Luftballon. Every child got a red balloon."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Luftballons."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Luftballon joins Luft \"air\", Old High German luft (EtymDB), and Ballon, borrowed from French ballon \"a large ball\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Luftballon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Luftballon*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Luftballon, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Luftballon*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with der Luftballon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *der Luftballon*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the garland, then the German for to hang up, then say der Luftballon again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the garland, then the German for to hang up, then say *der Luftballon* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does der Luftballon mean? (\"The balloon\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C309-feuerwerk",
+      "sequence": 16940,
+      "title": "das Feuerwerk — the fireworks, the firework display",
+      "headword": "das Feuerwerk",
+      "romanization": "das Feuerwerk",
+      "gloss": "the fireworks, the firework display",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:00ed3bc1a6d591e1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to hang up, then the German for the balloon."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: das Feuerwerk",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "das Feuerwerk — \"the fireworks, the firework display\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Um Mitternacht gab es ein großes Feuerwerk. At midnight there was a big firework display."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Feuerwerke. One rocket is eine Rakete."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Feuerwerk joins Feuer \"fire\", a cousin of English fire (EtymDB), and Werk \"work\", both inherited Germanic words."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "das Feuerwerk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *das Feuerwerk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "das Feuerwerk, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *das Feuerwerk*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with das Feuerwerk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *das Feuerwerk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to hang up, then the German for the balloon, then say das Feuerwerk again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to hang up, then the German for the balloon, then say *das Feuerwerk* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does das Feuerwerk mean? (\"The fireworks, the firework display\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-R309-review-302-309",
+      "sequence": 16950,
+      "title": "Words from chapters 302–309 — a review",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 302-309",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aae54748c08016c8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the German for the pension and the retirement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pension, the retirement, the pensioner, the anniversary, the farewell",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pension, the retirement, the pensioner, the anniversary, the farewell]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the death, to bury, the funeral, the coffin, the cemetery",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the death, to bury, the funeral, the coffin, the cemetery]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the grief, to mourn, the condolences, the widow, to inherit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the grief, to mourn, the condolences, the widow, to inherit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the celebration, solemn, the public holiday, the ceremony, to open officially",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the celebration, solemn, the public holiday, the ceremony, to open officially]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to congratulate, the good wishes, to present, to give presents to, to unwrap",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to congratulate, the good wishes, to present, to give presents to, to unwrap]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the host, to treat guests, the guest of honour, the speech, the toast",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the host, to treat guests, the guest of honour, the speech, the toast]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to clink glasses, the sparkling wine, to cheer, the applause, to applaud",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to clink glasses, the sparkling wine, to cheer, the applause, to applaud]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to decorate, the garland, to hang up, the balloon, the fireworks",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to decorate, the garland, to hang up, the balloon, the fireworks]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The pension? (die Rente.) The retirement? (der Ruhestand.) The pensioner? (der Rentner.) The anniversary? (das Jubiläum.) The farewell? (der Abschied.) The death? (der Tod.) To bury? (beerdigen.) The funeral? (die Beerdigung.) The coffin? (der Sarg.) The cemetery? (der Friedhof.) The grief? (die Trauer.) To mourn? (trauern.) The condolences? (das Beileid.) The widow? (die Witwe.) To inherit? (erben.) The celebration? (die Feier.) Solemn? (feierlich.) The public holiday? (der Feiertag.) The ceremony? (die Zeremonie.) To open officially? (einweihen.) To congratulate? (gratulieren.) The good wishes? (der Glückwunsch.) To present? (überreichen.) To give presents to? (beschenken.) To unwrap? (auspacken.) The host? (der Gastgeber.) To treat guests? (bewirten.) The guest of honour? (der Ehrengast.) The speech? (die Ansprache.) The toast? (der Trinkspruch.) To clink glasses? (anstoßen.) The sparkling wine? (der Sekt.) To cheer? (jubeln.) The applause? (der Beifall.) To applaud? (applaudieren.) To decorate? (schmücken.) The garland? (die Girlande.) To hang up? (aufhängen.) The balloon? (der Luftballon.) The fireworks? (das Feuerwerk.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

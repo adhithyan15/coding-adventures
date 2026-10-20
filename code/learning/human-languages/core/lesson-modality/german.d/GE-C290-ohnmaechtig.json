@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C290-ohnmaechtig",
+    "language": "german",
+    "chapter": 290,
+    "sequence": 15940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2775c813c9e0f945"
+  },
+  "findings": []
+}

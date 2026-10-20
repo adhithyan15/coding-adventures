@@ -1,0 +1,19 @@
+{
+  "chapter": 337,
+  "title": "Trouver un accord",
+  "label": "ch:fr-trouver-un-accord",
+  "canDo": "I can admit someone is right, give way, concede a point and reach a consensus or a compromise.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C337-conceder",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 337: I can admit someone is right, give way, concede a point and reach a consensus or a compromise.",
+    "assesses": [
+      "FR-LEX-C337-COMPROMIS-03",
+      "FR-LEX-C337-COMPROMIS-04",
+      "FR-LEX-C337-COMPROMIS-05"
+    ]
+  }
+}

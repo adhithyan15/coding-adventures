@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C466-timidite",
+    "language": "french",
+    "chapter": 466,
+    "sequence": 25700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd2778f9172fa3f9"
+  },
+  "findings": []
+}

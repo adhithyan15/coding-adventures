@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 388,
+  "sourceHash": "fnv1a64:307ab50ec2f384ff",
+  "lessonIds": [
+    "GE-C388-kredit",
+    "GE-C388-darlehen",
+    "GE-C388-schulden",
+    "GE-C388-zurueckzahlen",
+    "GE-C388-borgen"
+  ],
+  "tex": "german/book/chapters/ch388-geld-leihen.tex"
+}

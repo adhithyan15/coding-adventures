@@ -1,0 +1,11 @@
+{
+  "id": "FR-C423-chavirer",
+  "pathSegment": "FR-PATH-423-CROISIERE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-423-CROISIERE",
+      "order": 3
+    }
+  ]
+}

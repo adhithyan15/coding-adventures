@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C391-steuer",
+    "language": "german",
+    "chapter": 391,
+    "sequence": 21120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:905282b7373cce97"
+  },
+  "findings": []
+}

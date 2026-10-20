@@ -1,0 +1,19 @@
+{
+  "chapter": 369,
+  "title": "Selon les cas",
+  "label": "ch:fr-selon-les-cas",
+  "canDo": "I can say that a plan depends on things: according to, a possible extra, possibly, an eventuality and for lack of.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FR-C369-faute-de",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 369: I can say that a plan depends on things: according to, a possible extra, possibly, an eventuality and for lack of.",
+    "assesses": [
+      "FR-LEX-C369-EVENTUEL-03",
+      "FR-LEX-C369-EVENTUEL-04",
+      "FR-LEX-C369-EVENTUEL-05"
+    ]
+  }
+}

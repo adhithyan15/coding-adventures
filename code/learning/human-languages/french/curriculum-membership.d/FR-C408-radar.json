@@ -1,0 +1,11 @@
+{
+  "id": "FR-C408-radar",
+  "pathSegment": "FR-PATH-408-RADAR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-408-RADAR",
+      "order": 1
+    }
+  ]
+}

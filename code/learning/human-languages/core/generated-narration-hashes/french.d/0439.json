@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 439,
+  "sourceHash": "fnv1a64:47af9dcb6f2287cb",
+  "lessonIds": [
+    "FR-C439-cathedrale",
+    "FR-C439-basilique",
+    "FR-C439-clocher",
+    "FR-C439-beffroi",
+    "FR-C439-remparts",
+    "FR-R439-revision-432-439"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch439.txt",
+  "json": "french/narration/ch439.json",
+  "textHash": "fnv1a64:d9e194ec7d1dc863",
+  "jsonHash": "fnv1a64:24313ea0c04d3734",
+  "findings": []
+}

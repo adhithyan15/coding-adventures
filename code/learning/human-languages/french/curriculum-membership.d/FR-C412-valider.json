@@ -1,0 +1,11 @@
+{
+  "id": "FR-C412-valider",
+  "pathSegment": "FR-PATH-412-GUICHET",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-412-GUICHET",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C438-arpenter",
+  "pathSegment": "FR-PATH-438-FLANER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-438-FLANER",
+      "order": 4
+    }
+  ]
+}

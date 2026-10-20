@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C316-jour-ferie",
+    "language": "french",
+    "chapter": 316,
+    "sequence": 18000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c6d6120204ef3120"
+  },
+  "findings": []
+}

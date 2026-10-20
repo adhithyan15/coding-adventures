@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 280,
+  "sourceHash": "fnv1a64:4c985650ec2c105d",
+  "lessonIds": [
+    "GE-C280-verbrechen",
+    "GE-C280-verbrecher",
+    "GE-C280-taeter",
+    "GE-C280-opfer",
+    "GE-C280-tatort"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch280.txt",
+  "json": "german/narration/ch280.json",
+  "textHash": "fnv1a64:a17dba2b3c560c70",
+  "jsonHash": "fnv1a64:25275e55aaf7db53",
+  "findings": []
+}

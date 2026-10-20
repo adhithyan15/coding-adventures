@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 412,
+  "sourceHash": "fnv1a64:ce0c67200976814c",
+  "lessonIds": [
+    "GE-C412-bahnsteig",
+    "GE-C412-durchsage",
+    "GE-C412-abteil",
+    "GE-C412-schaffner",
+    "GE-C412-kontrollieren"
+  ],
+  "tex": "german/book/chapters/ch412-auf-dem-bahnsteig.tex"
+}

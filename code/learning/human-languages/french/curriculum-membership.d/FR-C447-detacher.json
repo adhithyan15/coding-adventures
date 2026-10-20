@@ -1,0 +1,11 @@
+{
+  "id": "FR-C447-detacher",
+  "pathSegment": "FR-PATH-447-PRESSING",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-447-PRESSING",
+      "order": 2
+    }
+  ]
+}

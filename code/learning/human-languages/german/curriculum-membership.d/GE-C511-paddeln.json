@@ -1,0 +1,11 @@
+{
+  "id": "GE-C511-paddeln",
+  "pathSegment": "GE-PATH-511-WASSERSPORT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-511-WASSERSPORT",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-376-FAC",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "FR-EXT-376-FAC"
+  ],
+  "after": []
+}

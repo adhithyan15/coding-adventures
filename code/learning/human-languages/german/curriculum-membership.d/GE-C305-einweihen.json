@@ -1,0 +1,11 @@
+{
+  "id": "GE-C305-einweihen",
+  "pathSegment": "GE-PATH-305-FEIER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-305-FEIER",
+      "order": 4
+    }
+  ]
+}

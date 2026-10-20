@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C316-celebrer",
+    "language": "french",
+    "chapter": 316,
+    "sequence": 17960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8ffa44daf00dce35"
+  },
+  "findings": []
+}

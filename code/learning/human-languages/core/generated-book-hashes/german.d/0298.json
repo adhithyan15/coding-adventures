@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 298,
+  "sourceHash": "fnv1a64:e0c683568b66836a",
+  "lessonIds": [
+    "GE-C298-verloben",
+    "GE-C298-verlobung",
+    "GE-C298-braut",
+    "GE-C298-braeutigam",
+    "GE-C298-brautpaar"
+  ],
+  "tex": "german/book/chapters/ch298-die-verlobung.tex"
+}

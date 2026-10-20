@@ -1,0 +1,21 @@
+{
+  "language": "german",
+  "chapter": 397,
+  "sourceHash": "fnv1a64:83f301b646667a83",
+  "lessonIds": [
+    "GE-C397-abstuerzen",
+    "GE-C397-aktualisieren",
+    "GE-C397-fehlermeldung",
+    "GE-C397-wiederherstellen",
+    "GE-C397-sicherung",
+    "GE-R397-review-394-397",
+    "GE-R397-review-final-397"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "german/narration/ch397.txt",
+  "json": "german/narration/ch397.json",
+  "textHash": "fnv1a64:caaec0b2c426f782",
+  "jsonHash": "fnv1a64:60c04467b7f425ed",
+  "findings": []
+}

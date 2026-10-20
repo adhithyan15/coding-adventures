@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C387-coupable",
+    "language": "french",
+    "chapter": 387,
+    "sequence": 21640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7e59f02d5409f8d2"
+  },
+  "findings": []
+}

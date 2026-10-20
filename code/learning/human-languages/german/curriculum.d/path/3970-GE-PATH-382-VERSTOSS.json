@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-382-VERSTOSS",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "GE-EXT-382-VERSTOSS"
+  ],
+  "after": []
+}

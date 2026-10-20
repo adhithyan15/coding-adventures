@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-345-PARTISAN",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "FR-EXT-345-PARTISAN"
+  ],
+  "after": []
+}

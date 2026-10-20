@@ -5706,6 +5706,17 @@ model-card parameter, or a UI artifact is not a completion signal.
      cards into the same frequency points used by deck execution. The shared
      CLI corpus executes a canonical LIN card, while parser tests lock all
      three sweep modes across Python, Rust, and TypeScript.
+   - **Passive, source, and subcircuit core coverage** (completed in the
+     cross-language core corpus slice): the Berkeley v1 core gate now requires
+     40 cases, including runnable current-source bias, inductor AC, and
+     non-nested subcircuit divider decks. The release manifest explicitly
+     requires those three promised surfaces, and every parser runtime executes
+     the shared corpus.
+   - Discovery: `.temp` cards are parsed and engine temperature helpers are
+     available, but generic parser and deck runners do not yet apply `.temp`
+     to ordinary analysis cards. Keep global temperature-deck execution as a
+     dedicated follow-up phase; it requires analysis-result and CLI-contract
+     design rather than a single-card corpus addition.
    - Expand deck-owned output compatibility beyond source-order analysis
      execution and stable artifact exports toward nested sweeps, raw-format
      interoperability, and remaining vendor-style output controls.

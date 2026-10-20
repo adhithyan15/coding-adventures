@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "french",
+  "chapter": 291,
+  "title": "Les gendarmes",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:d4b866f7eb6a9c87",
+  "lessons": [
+    {
+      "id": "FR-C291-gendarme",
+      "sequence": 16670,
+      "title": "le gendarme — the gendarme",
+      "headword": "le gendarme",
+      "romanization": "le gendarme",
+      "gloss": "the gendarme",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2217a4c92d324fd5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the offender, then the French for crime."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: le gendarme",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le gendarme — \"the gendarme\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Les gendarmes ont arrêté la voiture sur la route. The gendarmes stopped the car on the road."
+            },
+            {
+              "kind": "speech",
+              "text": "In France, les gendarmes are soldiers who do police work, mostly outside big towns; les policiers work in the cities."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gendarme comes from gens d'armes \"men of arms\" (EtymDB lists the word without a parent): gens goes back to Latin gēns \"a people, a clan\" and armes to Latin arma \"weapons\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le gendarme",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le gendarme*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le gendarme, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le gendarme*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with le gendarme",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *le gendarme*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the offender, then the French for crime, then say le gendarme again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the offender, then the French for crime, then say *le gendarme* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does le gendarme mean? (\"The gendarme\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C291-gendarmerie",
+      "sequence": 16680,
+      "title": "la gendarmerie — the gendarmerie; its offices",
+      "headword": "la gendarmerie",
+      "romanization": "la gendarmerie",
+      "gloss": "the gendarmerie; its offices",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e1866dc4f46da25c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for crime, then the French for the gendarme."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la gendarmerie",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la gendarmerie — \"the gendarmerie; its offices\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Elle a perdu son sac et elle a appelé la gendarmerie. She lost her bag and called the gendarmerie."
+            },
+            {
+              "kind": "speech",
+              "text": "Both the force and the building."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gendarmerie is built on gendarme (EtymDB), from gens d'armes \"men of arms\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la gendarmerie",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la gendarmerie*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la gendarmerie, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la gendarmerie*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la gendarmerie",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la gendarmerie*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for crime, then the French for the gendarme, then say la gendarmerie again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for crime, then the French for the gendarme, then say *la gendarmerie* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la gendarmerie mean? (\"The gendarmerie; its offices\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C291-patrouiller",
+      "sequence": 16690,
+      "title": "patrouiller — to patrol",
+      "headword": "patrouiller",
+      "romanization": "patrouiller",
+      "gloss": "to patrol",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:55c231816be559b7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the gendarme, then the French for the gendarmerie."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: patrouiller",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "patrouiller — \"to patrol\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Des policiers patrouillent dans le parc la nuit. Police officers patrol the park at night."
+            },
+            {
+              "kind": "speech",
+              "text": "Patrouiller dans un quartier — to patrol a neighbourhood."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "patrouiller comes from Old French patrouiller \"to paddle about, to tramp in mud\" (EtymDB), built on patte \"paw\", whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patrouiller",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patrouiller*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patrouiller, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patrouiller*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with patrouiller",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *patrouiller*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the gendarme, then the French for the gendarmerie, then say patrouiller again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the gendarme, then the French for the gendarmerie, then say *patrouiller* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does patrouiller mean? (\"To patrol\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C291-patrouille",
+      "sequence": 16700,
+      "title": "la patrouille — the patrol",
+      "headword": "la patrouille",
+      "romanization": "la patrouille",
+      "gloss": "the patrol",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5fa0487ad1fd05c8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the gendarmerie, then the French for to patrol."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la patrouille",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la patrouille — \"the patrol\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Une patrouille passe dans la rue toutes les heures. A patrol goes down the street every hour."
+            },
+            {
+              "kind": "speech",
+              "text": "En patrouille — on patrol."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "patrouille comes from Old French patrouille (EtymDB), built on patrouiller \"to tramp about\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la patrouille",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la patrouille*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la patrouille, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la patrouille*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la patrouille",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la patrouille*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the gendarmerie, then the French for to patrol, then say la patrouille again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the gendarmerie, then the French for to patrol, then say *la patrouille* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la patrouille mean? (\"The patrol\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C291-brigade",
+      "sequence": 16710,
+      "title": "la brigade — the squad, the brigade",
+      "headword": "la brigade",
+      "romanization": "la brigade",
+      "gloss": "the squad, the brigade",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:30ed82afb3a9cd85",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for to patrol, then the French for the patrol."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la brigade",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la brigade — \"the squad, the brigade\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Une brigade de police est arrivée en dix minutes. A police squad arrived in ten minutes."
+            },
+            {
+              "kind": "speech",
+              "text": "La brigade des stupéfiants — the drug squad."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "brigade was borrowed from Italian brigata \"a troop, a company\" (EtymDB), built on briga \"strife, trouble\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la brigade",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la brigade*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la brigade, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la brigade*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la brigade",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la brigade*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for to patrol, then the French for the patrol, then say la brigade again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for to patrol, then the French for the patrol, then say *la brigade* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la brigade mean? (\"The squad, the brigade\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-R291-revision-284-291",
+      "sequence": 16720,
+      "title": "Retour sur les chapitres 284–291",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 284-291",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e70c574e655ef56e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the French for to reveal and to report."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to reveal, to report, to deny, to recount, to comment on",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to reveal, to report, to deny, to recount, to comment on]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the rumour, the scoop, disinformation, censorship, the controversy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the rumour, the scoop, disinformation, censorship, the controversy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the poll, the final count, the rise, the drop, the statistic",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the poll, the final count, the rise, the drop, the statistic]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to burgle, the burglar, the burglary, the forced entry, the loot",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to burgle, the burglar, the burglary, the forced entry, the loot]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pickpocket, the scam, the swindler, to swindle, the fraud",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pickpocket, the scam, the swindler, to swindle, the fraud]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the attack, to attack, the attacker, to threaten, the threat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the attack, to attack, the attacker, to threaten, the threat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the crime, the criminal, the murder, the offender, crime",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the crime, the criminal, the murder, the offender, crime]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the gendarme, the gendarmerie, to patrol, the patrol, the squad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the gendarme, the gendarmerie, to patrol, the patrol, the squad]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To reveal? (révéler.) To report? (rapporter.) To deny? (démentir.) To recount? (relater.) To comment on? (commenter.) The rumour? (la rumeur.) The scoop? (le scoop.) Disinformation? (la désinformation.) Censorship? (la censure.) The controversy? (la polémique.) The poll? (le sondage.) The final count? (le bilan.) The rise? (la hausse.) The drop? (la baisse.) The statistic? (la statistique.) To burgle? (cambrioler.) The burglar? (le cambrioleur.) The burglary? (le cambriolage.) The forced entry? (l'effraction.) The loot? (le butin.) The pickpocket? (le pickpocket.) The scam? (l'arnaque.) The swindler? (l'escroc.) To swindle? (escroquer.) The fraud? (l'escroquerie.) The attack? (l'agression.) To attack? (agresser.) The attacker? (l'agresseur.) To threaten? (menacer.) The threat? (la menace.) The crime? (le crime.) The criminal? (le criminel.) The murder? (le meurtre.) The offender? (le délinquant.) Crime? (la délinquance.) The gendarme? (le gendarme.) The gendarmerie? (la gendarmerie.) To patrol? (patrouiller.) The patrol? (la patrouille.) The squad? (la brigade.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

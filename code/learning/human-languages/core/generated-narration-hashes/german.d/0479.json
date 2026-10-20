@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 479,
+  "sourceHash": "fnv1a64:fd7437193f7931fc",
+  "lessonIds": [
+    "GE-C479-erkaelten",
+    "GE-C479-schnupfen",
+    "GE-C479-hustensaft",
+    "GE-C479-schweiss",
+    "GE-C479-gaensehaut"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch479.txt",
+  "json": "german/narration/ch479.json",
+  "textHash": "fnv1a64:47136f5b3250d9a8",
+  "jsonHash": "fnv1a64:4ce6746d4dc282a1",
+  "findings": []
+}

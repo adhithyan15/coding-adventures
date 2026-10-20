@@ -1,0 +1,11 @@
+{
+  "id": "GE-C487-untersuchen",
+  "pathSegment": "GE-PATH-487-HAUSARZT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-487-HAUSARZT",
+      "order": 2
+    }
+  ]
+}

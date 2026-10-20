@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:17e970418d0f61dc",
+  "lessonIds": [
+    "FR-C314-deceder",
+    "FR-C314-enterrer",
+    "FR-C314-enterrement",
+    "FR-C314-funerailles",
+    "FR-C314-cimetiere"
+  ],
+  "tex": "french/book/chapters/ch314-les-funerailles.tex"
+}

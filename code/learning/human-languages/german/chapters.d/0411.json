@@ -1,0 +1,19 @@
+{
+  "chapter": 411,
+  "title": "Fahrkarten kaufen",
+  "label": "ch:ge-fahrkarten-kaufen",
+  "canDo": "I can buy a ticket: the ticket machine, the travel ticket, the fare, stamping a ticket and getting one.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C411-loesen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 411: I can buy a ticket: the ticket machine, the travel ticket, the fare, stamping a ticket and getting one.",
+    "assesses": [
+      "GE-LEX-C411-FAHRSCHEIN-03",
+      "GE-LEX-C411-FAHRSCHEIN-04",
+      "GE-LEX-C411-FAHRSCHEIN-05"
+    ]
+  }
+}

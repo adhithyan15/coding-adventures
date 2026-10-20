@@ -1,0 +1,19 @@
+{
+  "chapter": 508,
+  "title": "Sieger und Verlierer",
+  "label": "ch:ge-sieger-und-verlierer",
+  "canDo": "I can talk about winning and losing.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C508-turnier",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 508: I can talk about winning and losing.",
+    "assesses": [
+      "GE-LEX-C508-SIEGER-03",
+      "GE-LEX-C508-SIEGER-04",
+      "GE-LEX-C508-SIEGER-05"
+    ]
+  }
+}

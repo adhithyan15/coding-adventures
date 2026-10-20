@@ -1,0 +1,11 @@
+{
+  "id": "FR-C307-assurance",
+  "pathSegment": "FR-PATH-307-DEGATS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-307-DEGATS",
+      "order": 2
+    }
+  ]
+}

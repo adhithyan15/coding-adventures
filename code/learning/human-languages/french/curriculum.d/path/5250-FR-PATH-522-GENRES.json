@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-522-GENRES",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-522-GENRES"
+  ],
+  "after": []
+}

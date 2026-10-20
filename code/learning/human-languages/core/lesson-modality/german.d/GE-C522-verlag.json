@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C522-verlag",
+    "language": "german",
+    "chapter": 522,
+    "sequence": 27900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1cad5d5acf12ef26"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C522-verlag",
+  "pathSegment": "GE-PATH-522-VERLAG",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-522-VERLAG",
+      "order": 3
+    }
+  ]
+}

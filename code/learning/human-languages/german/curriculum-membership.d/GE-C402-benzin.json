@@ -1,0 +1,11 @@
+{
+  "id": "GE-C402-benzin",
+  "pathSegment": "GE-PATH-402-TANKEN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-402-TANKEN",
+      "order": 2
+    }
+  ]
+}

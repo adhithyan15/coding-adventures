@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:356c7d8ce52d6fe9",
+  "lessonIds": [
+    "GE-C305-feier",
+    "GE-C305-feierlich",
+    "GE-C305-feiertag",
+    "GE-C305-zeremonie",
+    "GE-C305-einweihen"
+  ],
+  "tex": "german/book/chapters/ch305-die-feier.tex"
+}

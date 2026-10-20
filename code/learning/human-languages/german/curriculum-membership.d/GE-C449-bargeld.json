@@ -1,0 +1,11 @@
+{
+  "id": "GE-C449-bargeld",
+  "pathSegment": "GE-PATH-449-KASSE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-449-KASSE",
+      "order": 2
+    }
+  ]
+}

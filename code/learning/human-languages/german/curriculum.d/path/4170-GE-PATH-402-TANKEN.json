@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-402-TANKEN",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-402-TANKEN"
+  ],
+  "after": []
+}

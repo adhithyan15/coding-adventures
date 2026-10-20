@@ -1,0 +1,11 @@
+{
+  "id": "FR-C466-taquiner",
+  "pathSegment": "FR-PATH-466-TIMIDITE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-466-TIMIDITE",
+      "order": 4
+    }
+  ]
+}

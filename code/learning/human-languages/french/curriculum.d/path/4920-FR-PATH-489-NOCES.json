@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-489-NOCES",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-489-NOCES"
+  ],
+  "after": []
+}

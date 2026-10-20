@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-492-FAMILLES",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-492-FAMILLES"
+  ],
+  "after": []
+}

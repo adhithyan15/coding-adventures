@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C265-waehrenddessen",
+    "language": "german",
+    "chapter": 265,
+    "sequence": 14670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b48bc7a59f3e42a5"
+  },
+  "findings": []
+}

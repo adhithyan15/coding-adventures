@@ -1,0 +1,11 @@
+{
+  "id": "FR-C279-parution",
+  "pathSegment": "FR-PATH-279-REDIGER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-279-REDIGER",
+      "order": 4
+    }
+  ]
+}

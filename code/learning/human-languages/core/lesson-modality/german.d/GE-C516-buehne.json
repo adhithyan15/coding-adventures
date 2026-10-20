@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C516-buehne",
+    "language": "german",
+    "chapter": 516,
+    "sequence": 27560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0442d907da0d1a85"
+  },
+  "findings": []
+}

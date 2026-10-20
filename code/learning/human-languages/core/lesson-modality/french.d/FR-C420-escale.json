@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C420-escale",
+    "language": "french",
+    "chapter": 420,
+    "sequence": 23330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:979900e58c7ae767"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C332-naemlich",
+    "language": "german",
+    "chapter": 332,
+    "sequence": 18120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f3c1f6c4a456aa95"
+  },
+  "findings": []
+}

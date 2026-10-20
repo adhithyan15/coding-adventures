@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C486-sieste",
+    "language": "french",
+    "chapter": 486,
+    "sequence": 26760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8887aa38f380c932"
+  },
+  "findings": []
+}
