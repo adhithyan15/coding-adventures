@@ -64,6 +64,11 @@ pub mod il_text;
 pub mod lower;
 pub mod validate;
 
+/// LANG83: this backend's declaration for every standard operation (see the
+/// module docs and `code/specs/LANG83-iir-standard-operation-registry.md`).
+pub mod op_support;
+pub use op_support::{op_support, OP_SUPPORT};
+
 // Re-export the most commonly used types at the crate root.
 pub use validate::validate_iir_for_clr;
 pub use lower::{IIRClrConfig, IIRClrError, lower_iir_to_cil};
