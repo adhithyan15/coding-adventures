@@ -15,7 +15,7 @@ concept_tag: COMPARISON-BASIC
 prerequisites: [FA-R296-feelings-and-hopes, FA-C58-bozorg, FA-C58-kuchek, FA-C164-behtar, FA-C66-zud, FA-C45-otagh, FA-C72-shahr]
 sounds: []
 roots: []
-etymology_hook: "EtymDB traces -tar to an Indo-European suffix that set one thing against another; English other carries it too"
+etymology_hook: "EtymDB traces -tar to an Indo-European contrastive suffix; English other is usually said to carry it too"
 duration:
   max_seconds: 290
 requires:
@@ -70,15 +70,16 @@ with no ezafe between them:
 > **این بهترین رستوران شهر است.** — *in behtarin resturân-e shahr ast* — This
 > is the best restaurant in town.
 
-Every other adjective follows its noun with the ezafe, *ghazâ-ye khub*. The
+An ordinary adjective follows its noun with the ezafe, *ghazâ-ye khub*. The
 *-tarin* one jumps ahead.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 EtymDB 2.1 traces the suffix *-tar* back to an Indo-European suffix that set
-one of two things against the other. It finds the same suffix at the end of
-English **other**: one of two. *-tarin* is *-tar* with a further *-in*.
+one of two things against the other. The same suffix is usually seen at
+the end of English **other**, one of two, though EtymDB does not draw that
+link itself. *-tarin* is *-tar* with a further *-in*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FA-GRAMMAR-COMPARATIVE-TAR-01, FA-GRAMMAR-SUPERLATIVE-TARIN-01, FA-GRAMMAR-OMIDVARAM-KE-01] -->

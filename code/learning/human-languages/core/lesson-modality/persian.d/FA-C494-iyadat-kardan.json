@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C494-iyadat-kardan",
+    "language": "persian",
+    "chapter": 494,
+    "sequence": 25310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:111bdcba5d0c33d0"
+  },
+  "findings": []
+}

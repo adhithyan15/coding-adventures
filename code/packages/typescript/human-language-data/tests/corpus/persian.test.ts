@@ -52,7 +52,10 @@ it("pins Persian lesson-content budgets", () =>
     // 1485 -> 1534: chapters 290-299, the B1 core that realizes all five B1
     // spine nodes, with letter lessons for ع غ ژ ث ذ ض ئ: 49 lessons, one
     // reading and one writing, no idiom, sense or culture claim.
-    lessons: 1534,
+    // 1534 -> 2770: chapters 300-539, the B1 vocabulary: 1,200 headwords, one
+    // word per lesson, plus a review lesson every eight chapters. No idiom,
+    // sense or culture claim.
+    lessons: 2770,
     idioms: 4,
     senses: 4,
     cultureClaims: 4,
@@ -110,8 +113,10 @@ it("pins Persian's peace-root payoff inside the chapter-one practice", () => {
       introducedBy: "FA-C01-salam",
       // FA-C130-salem joined in the etymology pass: sâlem "healthy" is Arabic
       // sālim, from the same root s-l-m (Lane), so it spends the peace root again.
-      payoffs: ["FA-C01-practice", "FA-C130-salem"],
-      payoffCount: 2,
+      // FA-C494-salamati joined with the B1 vocabulary: salâmati "health" is
+      // built on Arabic salāma, from the same root.
+      payoffs: ["FA-C01-practice", "FA-C130-salem", "FA-C494-salamati"],
+      payoffCount: 3,
     });
   expect(ledger.entries.find((entry) =>
     entry.namespace === "etymon-atom" && entry.root === "FA-ETYMON-SALAM-SLM-02"

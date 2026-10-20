@@ -1,0 +1,11 @@
+{
+  "id": "FA-C488-khosh-akhlaq",
+  "pathSegment": "FA-PATH-488-CHARACTER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-488-CHARACTER",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C346-naql-kardan",
+    "language": "persian",
+    "chapter": 346,
+    "sequence": 17680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:322dc766feaa62d8"
+  },
+  "findings": []
+}

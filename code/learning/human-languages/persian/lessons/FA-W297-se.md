@@ -70,7 +70,7 @@ and larger than it is printed.
 <!-- hl-knowledge: introduces=[]; assesses=[FA-SCRIPT-TE-01, FA-SCRIPT-C25-SAD-01, FA-LEX-C297-MESL-01, FA-SCRIPT-C297-SE-01] -->
 
 [PAUSE 1s]
-- [YOU FIND: the tooth and three dots of ث inside **مثل**, and point at them]
+- [YOU FIND: the tooth and three dots of ث inside **مثل**]
 - [YOU TRACE: ث standing alone three times, saying *s* as you finish each one]
 - [YOU WRITE: ت, then ث, from memory: two dots, then three]
 - [YOU WRITE: **مثل**, joined]

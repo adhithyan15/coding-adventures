@@ -1,0 +1,19 @@
+{
+  "chapter": 514,
+  "title": "Ball Games",
+  "label": "ch:fa-ball-games",
+  "canDo": "I can talk about ball games.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C514-darvazeban",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 514: I can talk about ball games.",
+    "assesses": [
+      "FA-LEX-C514-BALL-03",
+      "FA-LEX-C514-BALL-04",
+      "FA-LEX-C514-BALL-05"
+    ]
+  }
+}

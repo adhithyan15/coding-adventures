@@ -95,13 +95,13 @@ You'll want to know: گذشته.
 گذشته — gozashte — "last", of a stretch of time, and "the past".
 It follows its noun with the ezafe, the same -e as in esm-e man:
 سال گذشته به تهران رفتم. — sâl-e gozashte be Tehrân raftam — Last year I went to Tehran.
-So mâh-e gozashte is "last month", and hafte-ye gozashte is "last week": after a final vowel the ezafe is said -ye, and in plain print it is often not written at all, هفته گذشته.
+So mâh-e gozashte is "last month", and hafte-ye gozashte is "last week": after a final vowel the ezafe is said -ye, and after a final -e, as here, plain print often leaves it unwritten, هفته گذشته.
 Standing alone it is a noun: در گذشته, dar gozashte, "in the past".
 Say it in three beats, go-zash-te. Its second letter is one you have not written yet. The next lesson takes it out and puts it in your hand.
 
 The word, taken apart.
-gozashte is a past stem with -e on the end, the way Persian makes a participle: گذشت, gozasht, from gozashtan, "to pass", and then -e: "passed", the time that has gone by. Rafte, "gone", is built the same way from raft.
-EtymDB takes gozashtan back to a Middle Persian verb, written wtštn' in Pahlavi letters, "to pass, to cross". It records no older parent, so no English cousin is claimed here.
+gozashte is a past stem with -e on the end, the way Persian makes a participle: گذشت, gozasht, the past stem of the verb "to pass", and then -e: "passed", the time that has gone by. Rafte, "gone", is built the same way from raft.
+EtymDB takes that verb back to a Middle Persian one, written wtštn' in Pahlavi letters, "to pass, to cross". It records no older parent, so no English cousin is claimed here.
 
 Guided Practice.
 [pause 1 second]
@@ -144,7 +144,7 @@ This book does not yet tell you where to start this letter or which way to trave
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
 [pause 1 second]
-[once you have stopped driving — find: ذ (zâl) inside گذشته (gozashte), and point at it]
+[once you have stopped driving — find: ذ (zâl) inside گذشته (gozashte)]
 [once you have stopped driving — trace: ذ (zâl) three times, saying z as you finish each one]
 [once you have stopped driving — write: د, then ذ (zâl), from memory]
 [once you have stopped driving — write: گذشته (gozashte), with the break after ذ (zâl)]
@@ -192,7 +192,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-How do you build "I was reading"? (Mi- on the past stem: mikhândam.) In the phone sentence, which verb is the scene? (Mikhândam, still running.) Which is the event? (Zang zad, over in a moment.) Why is there no mi- in havâ sard bud? (Budan takes none: bud is already background.)
+How do you build "I was reading"? (Mi- on the past stem: mikhândam.) In the phone sentence, which verb is the scene? (Mikhândam, still running.) Which is the event? (Zang zad, over in a moment.) Why is there no mi- in havâ sard bud? (Budan normally takes none: bud is already background.)
 
 
 Lesson 6 of 6.

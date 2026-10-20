@@ -66,7 +66,7 @@ The verb is *dâshtan*, so it takes no *mi-*: *dârad*.
 
 *bastegi* is *baste*, "bound, tied", with *-gi*, which makes a noun of it:
 "boundness". *Baste* is the participle of *bastan*, "to tie, to close", built
-the way *gozashte* was built from *gozashtan*. So *bastegi dârad be havâ* is
+the way *gozashte* was built from its past stem *gozasht*. So *bastegi dârad be havâ* is
 "it has a binding to the weather".
 
 EtymDB 2.1 takes *bastan* back to an Indo-European root meaning "to bind, to

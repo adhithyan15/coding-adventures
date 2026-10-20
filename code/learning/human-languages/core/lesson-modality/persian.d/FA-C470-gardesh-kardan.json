@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C470-gardesh-kardan",
+    "language": "persian",
+    "chapter": 470,
+    "sequence": 24090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2e45fc0ff8afaa30"
+  },
+  "findings": []
+}

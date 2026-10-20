@@ -4,7 +4,7 @@
   "chapter": 293,
   "title": "Advice, And Why",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:d087c18c8e94c113",
+  "sourceHash": "fnv1a64:61d0a021ac5d3ede",
   "lessons": [
     {
       "id": "FA-C293-beravam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4bdcfb871f31644c",
+      "sourceHash": "fnv1a64:2a6e390a9b44451a",
       "notice": null,
       "blocks": [
         {
@@ -68,7 +68,7 @@
             },
             {
               "kind": "speech",
-              "text": "Three habits to know. A compound verb mostly leaves be- off: komak konam, fekr konam. Budan has a stem of its own here: bâsham, bâshi, bâshad. And \"not\" is na- in place of be-: naravam."
+              "text": "Three habits to know. A compound verb often leaves be- off, above all in writing: komak konam, fekr konam. Budan has a stem of its own here: bâsham, bâshi, bâshad. And \"not\" is na- in place of be-: naravam."
             }
           ]
         },
@@ -172,7 +172,7 @@
             },
             {
               "kind": "speech",
-              "text": "What replaces mi- in the subjunctive? (Be-.) \"That it be\"? (Bâshad.) \"Do you want to go?\" (Mikhâhi beravi?) Which verbs usually leave be- off? (Compound verbs: komak konam.)"
+              "text": "What replaces mi- in the subjunctive? (Be-.) \"That it be\"? (Bâshad.) \"Do you want to go?\" (Mikhâhi beravi?) Which verbs often leave be- off? (Compound verbs: komak konam.)"
             }
           ]
         }
@@ -515,7 +515,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:e410f16522dcddb3",
+      "sourceHash": "fnv1a64:1054eae53ccd50e1",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -606,11 +606,11 @@
             {
               "kind": "prompt",
               "action": "FIND",
-              "instruction": "ض (zâd) inside توضیح, and point at it",
+              "instruction": "ض (zâd) inside توضیح",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU FIND: ض inside **توضیح**, and point at it]"
+              "source": "[YOU FIND: ض inside **توضیح**]"
             },
             {
               "kind": "prompt",

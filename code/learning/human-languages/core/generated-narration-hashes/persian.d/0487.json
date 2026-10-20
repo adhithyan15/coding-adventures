@@ -1,0 +1,20 @@
+{
+  "language": "persian",
+  "chapter": 487,
+  "sourceHash": "fnv1a64:8b70ed2e97e7e978",
+  "lessonIds": [
+    "FA-C487-naomid",
+    "FA-C487-khoshbin",
+    "FA-C487-badbin",
+    "FA-C487-etemad-be-nafs",
+    "FA-C487-shojaat",
+    "FA-R487-review-480-487"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "persian/narration/ch487.txt",
+  "json": "persian/narration/ch487.json",
+  "textHash": "fnv1a64:c7a5111992942083",
+  "jsonHash": "fnv1a64:5852267e505e7f23",
+  "findings": []
+}

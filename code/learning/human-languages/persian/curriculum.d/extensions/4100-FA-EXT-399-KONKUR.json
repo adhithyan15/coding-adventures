@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-399-KONKUR",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about the entrance exam and other tests, say that someone passed or failed, and give a grade average.",
+  "prerequisites": []
+}

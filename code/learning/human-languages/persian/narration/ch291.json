@@ -4,7 +4,7 @@
   "chapter": 291,
   "title": "Then, And In The End --- A Story In Order",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:bed11c870d760c58",
+  "sourceHash": "fnv1a64:dc3a921f6d88f65e",
   "lessons": [
     {
       "id": "FA-C291-tarif-kardan",
@@ -171,7 +171,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:88d7ac35cb84edc2",
+      "sourceHash": "fnv1a64:eb22a7efa1a439dc",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -266,11 +266,11 @@
             {
               "kind": "prompt",
               "action": "FIND",
-              "instruction": "the closed ع ('eyn) inside تعریف, and point at it",
+              "instruction": "the closed ع ('eyn) inside تعریف",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU FIND: the closed ع inside **تعریف**, and point at it]"
+              "source": "[YOU FIND: the closed ع inside **تعریف**]"
             },
             {
               "kind": "prompt",

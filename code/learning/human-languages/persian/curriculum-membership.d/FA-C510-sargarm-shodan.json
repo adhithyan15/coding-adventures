@@ -1,0 +1,11 @@
+{
+  "id": "FA-C510-sargarm-shodan",
+  "pathSegment": "FA-PATH-510-LEISURE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-510-LEISURE",
+      "order": 2
+    }
+  ]
+}

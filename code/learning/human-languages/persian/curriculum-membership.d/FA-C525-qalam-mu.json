@@ -1,0 +1,11 @@
+{
+  "id": "FA-C525-qalam-mu",
+  "pathSegment": "FA-PATH-525-PAINTING",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-525-PAINTING",
+      "order": 2
+    }
+  ]
+}

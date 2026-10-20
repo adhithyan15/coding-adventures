@@ -71,7 +71,7 @@ has not happened yet:
 > **چه کار کنم؟** — *che kâr konam?* — What should I do?
 
 *Che*, "what", is the *che* inside *chetor*; *kâr konam* is *kâr kardan*, "to
-work, to do", in the subjunctive without *be-*, as compounds go.
+work, to do", in the subjunctive without *be-*, as compounds often go.
 
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

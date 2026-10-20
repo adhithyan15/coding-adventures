@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C479-nasim",
+    "language": "persian",
+    "chapter": 479,
+    "sequence": 24530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c18cfb895c44d3e9"
+  },
+  "findings": []
+}

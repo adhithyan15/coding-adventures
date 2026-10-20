@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 531,
+  "sourceHash": "fnv1a64:205ce8e16a26a89e",
+  "lessonIds": [
+    "FA-C531-mostanad",
+    "FA-C531-kartun",
+    "FA-C531-zirnevis",
+    "FA-C531-duble",
+    "FA-C531-kanal"
+  ],
+  "tex": "persian/book/chapters/ch531-on-screen.tex"
+}

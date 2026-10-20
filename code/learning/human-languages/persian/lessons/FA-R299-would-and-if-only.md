@@ -44,7 +44,8 @@ mâshin mikharidam.*)
 
 Two chapters, and two kinds of "if". A condition that may come true takes
 the subjunctive: *agar bârân biyâyad, dar khâne mimânim*. One that is not
-true takes the plain past, and its result the *mi-* past: *agar havâ khub
+true moves into the past, the plain past for *budan* and *dâshtan*, and its
+result takes the *mi-* past: *agar havâ khub
 bud, be pârk miraftim*, "if the weather were good, we'd go to the park".
 
 [PAUSE 2s] The *mi-* past has now done three jobs. In chapter two hundred and

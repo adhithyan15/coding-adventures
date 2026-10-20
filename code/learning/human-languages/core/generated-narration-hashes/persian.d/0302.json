@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:60ce926800a0f63e",
+  "lessonIds": [
+    "FA-C302-aghaz",
+    "FA-C302-aghaz-shodan",
+    "FA-C302-payan",
+    "FA-C302-payan-yaftan",
+    "FA-C302-saranjam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch302.txt",
+  "json": "persian/narration/ch302.json",
+  "textHash": "fnv1a64:ae3bfc1ac1ee5a4d",
+  "jsonHash": "fnv1a64:ed70101d8c2097cc",
+  "findings": []
+}

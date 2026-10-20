@@ -4,7 +4,7 @@
   "chapter": 299,
   "title": "Would, And Six Lines About A Trip",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:5a0f9bbb8634a102",
+  "sourceHash": "fnv1a64:ad4eab2e432a2f42",
   "lessons": [
     {
       "id": "FA-C299-agar-vaqt-dashtam",
@@ -12,14 +12,14 @@
       "title": "اگر وقت داشتم، میرفتم (agar vaqt dâshtam, miraftam) — if I had time, I would go",
       "headword": "اگر وقت داشتم، میرفتم",
       "romanization": "agar vaqt dâshtam, miraftam",
-      "gloss": "if I had time, I would go — a condition that is not true: the plain past after agar, and the mi- past for 'would'",
+      "gloss": "if I had time, I would go — a condition that is not true: a past after agar, such as dâshtam, and the mi- past for 'would'",
       "script": "perso-arabic",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:87bded44c4700096",
+      "sourceHash": "fnv1a64:3567b48d332b65e7",
       "notice": null,
       "blocks": [
         {
@@ -52,7 +52,7 @@
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the plain past after agar, the mi- past after it",
+          "title": "Grammar Lens: a past after agar, the mi- past after it",
           "segments": [
             {
               "kind": "speech",
@@ -61,6 +61,10 @@
             {
               "kind": "speech",
               "text": "I have no time, and I am not going. The agar half says so by moving into the plain past, dâshtam, the way English moves to \"had\". The result goes into the mi- past, miraftam."
+            },
+            {
+              "kind": "speech",
+              "text": "That plain past belongs mostly to dâshtan and budan. Most other verbs take the mi- past in the agar half too: agar bârân nemiâmad, miraftim, if it weren't raining, we would go."
             },
             {
               "kind": "speech",
@@ -157,7 +161,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which past goes after agar when the condition is not true? (The plain past: dâshtam.) Which says \"would\"? (The mi- past: miraftam.) \"If I were you\"? (Agar jâ-ye to budam.)"
+              "text": "Which past goes after agar when the condition is not true? (A past: the plain dâshtam or budam, and for most other verbs the mi- past.) Which says \"would\"? (The mi- past: miraftam.) \"If I were you\"? (Agar jâ-ye to budam.)"
             }
           ]
         }
@@ -176,7 +180,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:693f0a86f5c4b197",
+      "sourceHash": "fnv1a64:c8854450545ef4eb",
       "notice": null,
       "blocks": [
         {
@@ -202,7 +206,7 @@
             },
             {
               "kind": "speech",
-              "text": "Put those two together and you have the politest way to turn something down."
+              "text": "Put those two together and you have a polite way to turn something down."
             }
           ]
         },
@@ -333,7 +337,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ca8f0d031b2ed2a5",
+      "sourceHash": "fnv1a64:c7cf4aca60c2e225",
       "notice": null,
       "blocks": [
         {
@@ -360,7 +364,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Two chapters, and two kinds of \"if\". A condition that may come true takes the subjunctive: agar bârân biyâyad, dar khâne mimânim. One that is not true takes the plain past, and its result the mi- past: agar havâ khub bud, be pârk miraftim, \"if the weather were good, we'd go to the park\"."
+              "text": "Two chapters, and two kinds of \"if\". A condition that may come true takes the subjunctive: agar bârân biyâyad, dar khâne mimânim. One that is not true moves into the past, the plain past for budan and dâshtan, and its result takes the mi- past: agar havâ khub bud, be pârk miraftim, \"if the weather were good, we'd go to the park\"."
             },
             {
               "kind": "pause",

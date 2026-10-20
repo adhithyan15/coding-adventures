@@ -73,7 +73,7 @@ and larger than it is printed.
 <!-- hl-knowledge: introduces=[]; assesses=[FA-SCRIPT-TE-01, FA-SCRIPT-C22-RE-01, FA-LEX-C291-TARIF-KARDAN-01, FA-SCRIPT-C291-EYN-01] -->
 
 [PAUSE 1s]
-- [YOU FIND: the closed ع inside **تعریف**, and point at it]
+- [YOU FIND: the closed ع inside **تعریف**]
 - [YOU TRACE: ع standing alone three times, saying the catch as you finish each one]
 - [YOU WRITE: ت, then تع, joined, from memory]
 - [YOU WRITE: **تعریف**]

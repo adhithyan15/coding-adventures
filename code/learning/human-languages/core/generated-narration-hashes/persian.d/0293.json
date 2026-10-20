@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 293,
-  "sourceHash": "fnv1a64:d087c18c8e94c113",
+  "sourceHash": "fnv1a64:61d0a021ac5d3ede",
   "lessonIds": [
     "FA-C293-beravam",
     "FA-C293-bayad-beravi",
@@ -14,7 +14,7 @@
   "drivablePrefix": 3,
   "text": "persian/narration/ch293.txt",
   "json": "persian/narration/ch293.json",
-  "textHash": "fnv1a64:b4fd65abb608c798",
-  "jsonHash": "fnv1a64:db49bef811055fa7",
+  "textHash": "fnv1a64:7ee54ef2b27b3071",
+  "jsonHash": "fnv1a64:93b3384d784933d3",
   "findings": []
 }

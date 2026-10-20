@@ -1,0 +1,19 @@
+{
+  "chapter": 539,
+  "title": "Garden, Pets and Get-togethers",
+  "label": "ch:fa-garden-pets-and-get-togethers",
+  "canDo": "I can talk about the garden, pets and family get-togethers.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-R539-review-final-539",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 539: I can talk about the garden, pets and family get-togethers.",
+    "assesses": [
+      "FA-LEX-C539-GARDEN-03",
+      "FA-LEX-C539-GARDEN-04",
+      "FA-LEX-C539-GARDEN-05"
+    ]
+  }
+}

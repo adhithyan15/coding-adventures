@@ -21,10 +21,10 @@ Grammar Lens: -tarin, in front of the noun.
 For "the most", add -tarin and move the adjective in front of its noun, with no ezafe between them:
 بهترین غذا — behtarin ghazâ — the best food.
 این بهترین رستوران شهر است. — in behtarin resturân-e shahr ast — This is the best restaurant in town.
-Every other adjective follows its noun with the ezafe, ghazâ-ye khub. The -tarin one jumps ahead.
+An ordinary adjective follows its noun with the ezafe, ghazâ-ye khub. The -tarin one jumps ahead.
 
 The word, taken apart.
-EtymDB 2.1 traces the suffix -tar back to an Indo-European suffix that set one of two things against the other. It finds the same suffix at the end of English other: one of two. -tarin is -tar with a further -in.
+EtymDB 2.1 traces the suffix -tar back to an Indo-European suffix that set one of two things against the other. The same suffix is usually seen at the end of English other, one of two, though EtymDB does not draw that link itself. -tarin is -tar with a further -in.
 
 Guided Practice.
 [pause 1 second]
@@ -103,7 +103,7 @@ This book does not yet tell you where to start this letter or which way to trave
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
 [pause 1 second]
-[once you have stopped driving — find: the tooth and three dots of ث (se) inside مثل (mesl), and point at them]
+[once you have stopped driving — find: the tooth and three dots of ث (se) inside مثل (mesl)]
 [once you have stopped driving — trace: ث (se) standing alone three times, saying s as you finish each one]
 [once you have stopped driving — write: ت, then ث (se), from memory: two dots, then three]
 [once you have stopped driving — write: مثل (mesl), joined]
@@ -134,7 +134,7 @@ Grammar Lens: pish, with the plain past.
 For a point in the past, the time goes first with pish after it, and the verb is the plain past:
 سه سال پیش به تهران آمدم. — se sâl pish be Tehrân âmadam — I came to Tehran three years ago.
 And a stretch that is over takes barâ-ye, "for", with the plain past: barâ-ye do hafte be Tehrân raftam, "I went to Tehran for two weeks".
-So the three fit together: se sâl pish âmadam. se sâl ast ke injâ zendegi mikonam.
+So the first two fit together: se sâl pish âmadam. se sâl ast ke injâ zendegi mikonam.
 
 Guided Practice.
 [pause 1 second]

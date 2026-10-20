@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-469-TALAB",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FA-EXT-469-TALAB"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C529-naqd-kardan",
+  "pathSegment": "FA-PATH-529-READERS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-529-READERS",
+      "order": 2
+    }
+  ]
+}

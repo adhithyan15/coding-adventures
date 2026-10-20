@@ -1,0 +1,19 @@
+{
+  "chapter": 385,
+  "title": "Society and generations",
+  "label": "ch:fa-society-and-generations",
+  "canDo": "I can talk about society and social life, the generations, elderly people and religion.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C385-mazhab",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 385: I can talk about society and social life, the generations, elderly people and religion.",
+    "assesses": [
+      "FA-LEX-C385-JAMEE-03",
+      "FA-LEX-C385-JAMEE-04",
+      "FA-LEX-C385-JAMEE-05"
+    ]
+  }
+}

@@ -4,7 +4,7 @@
   "chapter": 297,
   "title": "Better Than, And Years Ago",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:e22dc879988c4277",
+  "sourceHash": "fnv1a64:c39e466c7cfbd364",
   "lessons": [
     {
       "id": "FA-C297-bozorgtar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fdfcbbac39751599",
+      "sourceHash": "fnv1a64:97ab795d8f798eeb",
       "notice": null,
       "blocks": [
         {
@@ -91,7 +91,7 @@
             },
             {
               "kind": "speech",
-              "text": "Every other adjective follows its noun with the ezafe, ghazâ-ye khub. The -tarin one jumps ahead."
+              "text": "An ordinary adjective follows its noun with the ezafe, ghazâ-ye khub. The -tarin one jumps ahead."
             }
           ]
         },
@@ -102,7 +102,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "EtymDB 2.1 traces the suffix -tar back to an Indo-European suffix that set one of two things against the other. It finds the same suffix at the end of English other: one of two. -tarin is -tar with a further -in."
+              "text": "EtymDB 2.1 traces the suffix -tar back to an Indo-European suffix that set one of two things against the other. The same suffix is usually seen at the end of English other, one of two, though EtymDB does not draw that link itself. -tarin is -tar with a further -in."
             }
           ]
         },
@@ -343,7 +343,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:11796f99b628ce67",
+      "sourceHash": "fnv1a64:a0d29be1a5237b27",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -434,11 +434,11 @@
             {
               "kind": "prompt",
               "action": "FIND",
-              "instruction": "the tooth and three dots of ث (se) inside مثل (mesl), and point at them",
+              "instruction": "the tooth and three dots of ث (se) inside مثل (mesl)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU FIND: the tooth and three dots of ث inside **مثل**, and point at them]"
+              "source": "[YOU FIND: the tooth and three dots of ث inside **مثل**]"
             },
             {
               "kind": "prompt",
@@ -510,7 +510,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8a58c32f8971d1a0",
+      "sourceHash": "fnv1a64:ec44b1daff39cb48",
       "notice": null,
       "blocks": [
         {
@@ -586,7 +586,7 @@
             },
             {
               "kind": "speech",
-              "text": "So the three fit together: se sâl pish âmadam. se sâl ast ke injâ zendegi mikonam."
+              "text": "So the first two fit together: se sâl pish âmadam. se sâl ast ke injâ zendegi mikonam."
             }
           ]
         },

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 403,
+  "sourceHash": "fnv1a64:9886f00d89eb7dee",
+  "lessonIds": [
+    "FA-C403-faregh-ot-tahsil",
+    "FA-C403-tahsilat",
+    "FA-C403-erae-dadan",
+    "FA-C403-lisans",
+    "FA-C403-doktora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch403.txt",
+  "json": "persian/narration/ch403.json",
+  "textHash": "fnv1a64:d3263b19f92da02f",
+  "jsonHash": "fnv1a64:8567204cdc3ebb87",
+  "findings": []
+}

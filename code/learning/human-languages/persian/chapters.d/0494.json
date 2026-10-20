@@ -1,0 +1,19 @@
+{
+  "chapter": 494,
+  "title": "Caring for the Sick",
+  "label": "ch:fa-caring-for-the-sick",
+  "canDo": "I can talk about looking after someone who is ill.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C494-khub-shodan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 494: I can talk about looking after someone who is ill.",
+    "assesses": [
+      "FA-LEX-C494-CARE-03",
+      "FA-LEX-C494-CARE-04",
+      "FA-LEX-C494-CARE-05"
+    ]
+  }
+}

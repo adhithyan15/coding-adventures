@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 536,
+  "sourceHash": "fnv1a64:92d48807cf932bea",
+  "lessonIds": [
+    "FA-C536-jam-kardan",
+    "FA-C536-khoshk-kardan",
+    "FA-C536-sholugh-kardan",
+    "FA-C536-namorattab",
+    "FA-C536-ashghal"
+  ],
+  "tex": "persian/book/chapters/ch536-tidying-up.tex"
+}

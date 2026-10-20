@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:161a713f9d92cb64",
+  "lessonIds": [
+    "FA-C325-zamin-khordan",
+    "FA-C325-pich-khordan",
+    "FA-C325-asib-didan",
+    "FA-C325-sadame-didan",
+    "FA-C325-shekastegi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch325.txt",
+  "json": "persian/narration/ch325.json",
+  "textHash": "fnv1a64:153a26bdeba869bf",
+  "jsonHash": "fnv1a64:1fd96cab9e4f5707",
+  "findings": []
+}

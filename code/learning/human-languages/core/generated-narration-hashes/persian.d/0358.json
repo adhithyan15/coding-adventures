@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 358,
+  "sourceHash": "fnv1a64:49ed004cdd5f6e46",
+  "lessonIds": [
+    "FA-C358-qablame",
+    "FA-C358-jush-amadan",
+    "FA-C358-qol-zadan",
+    "FA-C358-ja-oftadan",
+    "FA-C358-kafgir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch358.txt",
+  "json": "persian/narration/ch358.json",
+  "textHash": "fnv1a64:0e9513509fb0ffac",
+  "jsonHash": "fnv1a64:a302f02a61219ccb",
+  "findings": []
+}

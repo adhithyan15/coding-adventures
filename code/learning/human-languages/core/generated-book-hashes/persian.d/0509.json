@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 509,
+  "sourceHash": "fnv1a64:0d6efa92ac0baa1d",
+  "lessonIds": [
+    "FA-C509-pazel",
+    "FA-C509-takhte-nard",
+    "FA-C509-varaq",
+    "FA-C509-tas",
+    "FA-C509-varaq-bazi-kardan"
+  ],
+  "tex": "persian/book/chapters/ch509-games.tex"
+}

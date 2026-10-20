@@ -1,0 +1,11 @@
+{
+  "id": "FA-C373-afzayesh-yaftan",
+  "pathSegment": "FA-PATH-373-AFZAYESH",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-373-AFZAYESH",
+      "order": 1
+    }
+  ]
+}

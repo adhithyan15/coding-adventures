@@ -11,9 +11,10 @@ Say "if the weather is good, we'll go". (Agar havâ khub bâshad, miravim.) Then
 [pause 1 second]
 That condition may come true. The last turn in this run is a condition that is not true at all, and what would follow if it were.
 
-Grammar Lens: the plain past after agar, the mi- past after it.
+Grammar Lens: a past after agar, the mi- past after it.
 اگر وقت داشتم، به سفر میرفتم. — agar vaqt dâshtam, be safar miraftam — If I had time, I would go on a trip.
 I have no time, and I am not going. The agar half says so by moving into the plain past, dâshtam, the way English moves to "had". The result goes into the mi- past, miraftam.
+That plain past belongs mostly to dâshtan and budan. Most other verbs take the mi- past in the agar half too: agar bârân nemiâmad, miraftim, if it weren't raining, we would go.
 Set it beside the real one: agar havâ khub bâshad, miravim, it may be fine, and then we'll go; agar havâ khub bud, miraftim, it is not fine, so we are not going.
 
 Grammar Lens: the mi- past as "would".
@@ -36,7 +37,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which past goes after agar when the condition is not true? (The plain past: dâshtam.) Which says "would"? (The mi- past: miraftam.) "If I were you"? (Agar jâ-ye to budam.)
+Which past goes after agar when the condition is not true? (A past: the plain dâshtam or budam, and for most other verbs the mi- past.) Which says "would"? (The mi- past: miraftam.) "If I were you"? (Agar jâ-ye to budam.)
 
 
 Lesson 2 of 4.
@@ -46,7 +47,7 @@ Warm-up.
 [pause 2 seconds]
 Say "I'd like to go". (Dust dâram beravam.) Then "if I had time, I would go". (Agar vaqt dâshtam, miraftam.)
 [pause 1 second]
-Put those two together and you have the politest way to turn something down.
+Put those two together and you have a polite way to turn something down.
 
 Grammar Lens: dust dâshtam, for a wish held back.
 Dust dâram beravam is open: I'd like to go, and I may. Move dâshtan into the past and the wish steps back from what is happening:
@@ -84,7 +85,7 @@ Warm-up.
 Say "if I had the money, I'd buy a car". (Agar pul dâshtam, yek mâshin mikharidam.)
 
 What you've built.
-Two chapters, and two kinds of "if". A condition that may come true takes the subjunctive: agar bârân biyâyad, dar khâne mimânim. One that is not true takes the plain past, and its result the mi- past: agar havâ khub bud, be pârk miraftim, "if the weather were good, we'd go to the park".
+Two chapters, and two kinds of "if". A condition that may come true takes the subjunctive: agar bârân biyâyad, dar khâne mimânim. One that is not true moves into the past, the plain past for budan and dâshtan, and its result takes the mi- past: agar havâ khub bud, be pârk miraftim, "if the weather were good, we'd go to the park".
 [pause 2 seconds]
 The mi- past has now done three jobs. In chapter two hundred and ninety it painted a scene, mikhândam, and told a habit, har ruz miraftam. Here it says what would happen, miraftim.
 [pause 2 seconds]

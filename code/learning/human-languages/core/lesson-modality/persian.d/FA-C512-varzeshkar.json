@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C512-varzeshkar",
+    "language": "persian",
+    "chapter": 512,
+    "sequence": 26250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3de3e8973a311a15"
+  },
+  "findings": []
+}

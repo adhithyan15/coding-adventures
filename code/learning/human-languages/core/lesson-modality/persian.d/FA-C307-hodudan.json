@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C307-hodudan",
+    "language": "persian",
+    "chapter": 307,
+    "sequence": 15690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d38561fb2ecf12ba"
+  },
+  "findings": []
+}

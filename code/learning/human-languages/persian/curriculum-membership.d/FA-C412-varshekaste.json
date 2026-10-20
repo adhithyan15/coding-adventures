@@ -1,0 +1,11 @@
+{
+  "id": "FA-C412-varshekaste",
+  "pathSegment": "FA-PATH-412-SARMAYE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-412-SARMAYE",
+      "order": 4
+    }
+  ]
+}

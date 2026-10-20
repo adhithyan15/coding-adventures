@@ -1,0 +1,11 @@
+{
+  "id": "FA-C500-khaharzade",
+  "pathSegment": "FA-PATH-500-UNCLES",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-500-UNCLES",
+      "order": 4
+    }
+  ]
+}

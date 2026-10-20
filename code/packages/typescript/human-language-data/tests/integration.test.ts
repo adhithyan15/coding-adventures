@@ -251,7 +251,8 @@ describe("real curriculum", () => {
       // not proved (my own line, a three-minute timed form, four lines).
       // 289 -> 299: chapters 290-299, the B1 core that realizes the five B1
       // spine nodes, with letter lessons for ع غ ژ ث ذ ض ئ.
-    ).toEqual(Array.from({ length: 299 }, (_, i) => i + 1));
+      // 299 -> 539: chapters 300-539, the B1 vocabulary (1,200 headwords).
+    ).toEqual(Array.from({ length: 539 }, (_, i) => i + 1));
     expect(
       books.books
         .find((book) => book.language === "urdu")

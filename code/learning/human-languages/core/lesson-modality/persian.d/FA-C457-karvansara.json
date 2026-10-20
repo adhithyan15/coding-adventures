@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C457-karvansara",
+    "language": "persian",
+    "chapter": 457,
+    "sequence": 23430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:479f226b7291b509"
+  },
+  "findings": []
+}

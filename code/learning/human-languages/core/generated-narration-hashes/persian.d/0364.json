@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 364,
+  "sourceHash": "fnv1a64:0926535ff11defd1",
+  "lessonIds": [
+    "FA-C364-vaqeiyyat",
+    "FA-C364-haqiqat",
+    "FA-C364-dar-vaqe",
+    "FA-C364-shayee",
+    "FA-C364-enkar-kardan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch364.txt",
+  "json": "persian/narration/ch364.json",
+  "textHash": "fnv1a64:7acb32d7393bf2c0",
+  "jsonHash": "fnv1a64:3c256db8ac93d463",
+  "findings": []
+}

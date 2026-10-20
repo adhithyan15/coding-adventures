@@ -70,7 +70,7 @@ and larger than it is printed.
 <!-- hl-knowledge: introduces=[]; assesses=[FA-SCRIPT-C25-SAD-01, FA-SCRIPT-C290-ZAL-01, FA-LEX-C293-TOWZIH-DADAN-01, FA-SCRIPT-C293-ZAD-01] -->
 
 [PAUSE 1s]
-- [YOU FIND: ض inside **توضیح**, and point at it]
+- [YOU FIND: ض inside **توضیح**]
 - [YOU TRACE: ض three times, saying *z* as you finish each one]
 - [YOU WRITE: ص, then ض, from memory]
 - [YOU WRITE: **توضیح**, with the break after و]

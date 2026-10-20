@@ -66,7 +66,7 @@ on the word before it, as *-e* does.
 *bilit* is the French loan from chapter one hundred and thirteen, *billet*
 (EtymDB). The other two words are verbs you already own, with their endings
 taken off. *Raft* is the past stem of *raftan*: "going". *Bargasht* is the past
-stem of *bargashtan*: "coming back", from *bar*, "back", and *gashtan*, "to
+stem of *bargashtan*: "coming back", from the prefix *bar-*, which here gives the sense "back", and *gashtan*, "to
 turn". Persian makes nouns this way: a past stem, standing alone, names the
 action.
 

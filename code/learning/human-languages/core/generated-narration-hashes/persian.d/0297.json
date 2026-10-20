@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 297,
-  "sourceHash": "fnv1a64:e22dc879988c4277",
+  "sourceHash": "fnv1a64:c39e466c7cfbd364",
   "lessonIds": [
     "FA-C297-bozorgtar",
     "FA-C297-mesl",
@@ -13,7 +13,7 @@
   "drivablePrefix": 2,
   "text": "persian/narration/ch297.txt",
   "json": "persian/narration/ch297.json",
-  "textHash": "fnv1a64:830f37a2b85788f6",
-  "jsonHash": "fnv1a64:4081543ffdc7fc59",
+  "textHash": "fnv1a64:90520f2b5c89cd9f",
+  "jsonHash": "fnv1a64:2e898e359f08827d",
   "findings": []
 }

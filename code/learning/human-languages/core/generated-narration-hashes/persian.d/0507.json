@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 507,
+  "sourceHash": "fnv1a64:c2f099e67806d0a4",
+  "lessonIds": [
+    "FA-C507-akkas",
+    "FA-C507-akkasi",
+    "FA-C507-baghbani",
+    "FA-C507-ashpazi-kardan",
+    "FA-C507-koleksiyon"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch507.txt",
+  "json": "persian/narration/ch507.json",
+  "textHash": "fnv1a64:d61eb724fd096b84",
+  "jsonHash": "fnv1a64:74a5322f3a63c192",
+  "findings": []
+}

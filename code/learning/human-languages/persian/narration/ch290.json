@@ -4,7 +4,7 @@
   "chapter": 290,
   "title": "The Past, Seen Two Ways",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:c84c94436ac3bc0d",
+  "sourceHash": "fnv1a64:a5ca30af833e5464",
   "lessons": [
     {
       "id": "FA-C290-miravam",
@@ -355,7 +355,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b49856dafe72c299",
+      "sourceHash": "fnv1a64:0f989a3f73b58a22",
       "notice": null,
       "blocks": [
         {
@@ -404,7 +404,7 @@
             },
             {
               "kind": "speech",
-              "text": "So mâh-e gozashte is \"last month\", and hafte-ye gozashte is \"last week\": after a final vowel the ezafe is said -ye, and in plain print it is often not written at all, هفته گذشته."
+              "text": "So mâh-e gozashte is \"last month\", and hafte-ye gozashte is \"last week\": after a final vowel the ezafe is said -ye, and after a final -e, as here, plain print often leaves it unwritten, هفته گذشته."
             },
             {
               "kind": "speech",
@@ -423,11 +423,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "gozashte is a past stem with -e on the end, the way Persian makes a participle: گذشت, gozasht, from gozashtan, \"to pass\", and then -e: \"passed\", the time that has gone by. Rafte, \"gone\", is built the same way from raft."
+              "text": "gozashte is a past stem with -e on the end, the way Persian makes a participle: گذشت, gozasht, the past stem of the verb \"to pass\", and then -e: \"passed\", the time that has gone by. Rafte, \"gone\", is built the same way from raft."
             },
             {
               "kind": "speech",
-              "text": "EtymDB takes gozashtan back to a Middle Persian verb, written wtštn' in Pahlavi letters, \"to pass, to cross\". It records no older parent, so no English cousin is claimed here."
+              "text": "EtymDB takes that verb back to a Middle Persian one, written wtštn' in Pahlavi letters, \"to pass, to cross\". It records no older parent, so no English cousin is claimed here."
             }
           ]
         },
@@ -515,7 +515,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:98b5442739ea6856",
+      "sourceHash": "fnv1a64:0ca28421ca4cf678",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -606,11 +606,11 @@
             {
               "kind": "prompt",
               "action": "FIND",
-              "instruction": "ذ (zâl) inside گذشته (gozashte), and point at it",
+              "instruction": "ذ (zâl) inside گذشته (gozashte)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU FIND: ذ inside **گذشته**, and point at it]"
+              "source": "[YOU FIND: ذ inside **گذشته**]"
             },
             {
               "kind": "prompt",
@@ -682,7 +682,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:15053749f4a8a999",
+      "sourceHash": "fnv1a64:999059b25e6d1311",
       "notice": null,
       "blocks": [
         {
@@ -832,7 +832,7 @@
             },
             {
               "kind": "speech",
-              "text": "How do you build \"I was reading\"? (Mi- on the past stem: mikhândam.) In the phone sentence, which verb is the scene? (Mikhândam, still running.) Which is the event? (Zang zad, over in a moment.) Why is there no mi- in havâ sard bud? (Budan takes none: bud is already background.)"
+              "text": "How do you build \"I was reading\"? (Mi- on the past stem: mikhândam.) In the phone sentence, which verb is the scene? (Mikhândam, still running.) Which is the event? (Zang zad, over in a moment.) Why is there no mi- in havâ sard bud? (Budan normally takes none: bud is already background.)"
             }
           ]
         }

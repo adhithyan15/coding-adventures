@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C503-arusak",
+    "language": "persian",
+    "chapter": 503,
+    "sequence": 25780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:15102fa76cf7caab"
+  },
+  "findings": []
+}

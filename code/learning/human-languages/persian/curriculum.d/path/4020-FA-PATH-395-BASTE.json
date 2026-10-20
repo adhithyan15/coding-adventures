@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-395-BASTE",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "FA-EXT-395-BASTE"
+  ],
+  "after": []
+}

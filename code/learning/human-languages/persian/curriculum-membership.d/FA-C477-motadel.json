@@ -1,0 +1,11 @@
+{
+  "id": "FA-C477-motadel",
+  "pathSegment": "FA-PATH-477-SHARJI",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-477-SHARJI",
+      "order": 3
+    }
+  ]
+}

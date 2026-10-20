@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-340-EYDI",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-340-EYDI"
+  ],
+  "after": []
+}

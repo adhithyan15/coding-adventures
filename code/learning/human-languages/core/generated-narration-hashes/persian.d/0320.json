@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:d0dc8dee54fbe413",
+  "lessonIds": [
+    "FA-C320-karagah",
+    "FA-C320-sarnakh",
+    "FA-C320-raddepa",
+    "FA-C320-asar-e-angosht",
+    "FA-C320-bazjuyi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch320.txt",
+  "json": "persian/narration/ch320.json",
+  "textHash": "fnv1a64:28138b8152eca083",
+  "jsonHash": "fnv1a64:808dcafcc50e5e6f",
+  "findings": []
+}

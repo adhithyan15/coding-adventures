@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 463,
+  "title": "Souvenirs",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0740b85f2c6c3874",
+  "lessons": [
+    {
+      "id": "FA-C463-sowghati",
+      "sequence": 23700,
+      "title": "سوغاتی (sowghâti) — a souvenir, a present brought back from a trip",
+      "headword": "سوغاتی",
+      "romanization": "sowghâti",
+      "gloss": "a souvenir, a present brought back from a trip",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9b70b9ac1d996dc5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to sell, then the Persian for a box."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: سوغاتی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سوغاتی (sowghâti) — \"a souvenir, a present brought back from a trip\"."
+            },
+            {
+              "kind": "speech",
+              "text": "از سفر برای مادرم سوغاتی آوردم. Az safar barâ-ye mâdaram sowghâti âvardam. I brought my mother a present back from the trip."
+            },
+            {
+              "kind": "speech",
+              "text": "Bringing sowghâti for family and friends is expected after a trip."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sowghâti is built from sowghât 'a gift from a journey', usually traced to a Turkic word for a present, and the Persian ending -i. EtymDB does not list it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sowghâti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sowghâti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sowghâti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sowghâti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with sowghâti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *sowghâti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to sell, then the Persian for a box, then say sowghâti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to sell, then the Persian for a box, then say *sowghâti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does سوغاتی (sowghâti) mean? (\"A souvenir, a present brought back from a trip\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C463-sanaye-e-dasti",
+      "sequence": 23710,
+      "title": "صنایع دستی (sanâye'-e dasti) — handicrafts, crafts",
+      "headword": "صنایع دستی",
+      "romanization": "sanâye'-e dasti",
+      "gloss": "handicrafts, crafts",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ede2663cfe56ed60",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a box, then the Persian for a souvenir."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: صنایع دستی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "صنایع دستی (sanâye'-e dasti) — \"handicrafts, crafts\"."
+            },
+            {
+              "kind": "speech",
+              "text": "در بازار صنایع دستی خریدیم. Dar bâzâr sanâye'-e dasti kharidim. We bought handicrafts in the bazaar."
+            },
+            {
+              "kind": "speech",
+              "text": "sanâye' is an Arabic broken plural of san'at 'craft, industry'; dasti 'by hand'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sanâye'-e dasti is built from sanâye' 'crafts', the Arabic plural ṣanāʾiʿ that EtymDB lists, and native dasti 'by hand', from dast 'hand'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sanâye'-e dasti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sanâye'-e dasti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sanâye'-e dasti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sanâye'-e dasti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with sanâye'-e dasti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *sanâye'-e dasti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a box, then the Persian for a souvenir, then say sanâye'-e dasti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a box, then the Persian for a souvenir, then say *sanâye'-e dasti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does صنایع دستی (sanâye'-e dasti) mean? (\"Handicrafts, crafts\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C463-gelim",
+      "sequence": 23720,
+      "title": "گلیم (gelim) — a kilim, a flat-woven rug",
+      "headword": "گلیم",
+      "romanization": "gelim",
+      "gloss": "a kilim, a flat-woven rug",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8c364191e2ba5b55",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a souvenir, then the Persian for handicrafts."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: گلیم",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "گلیم (gelim) — \"a kilim, a flat-woven rug\"."
+            },
+            {
+              "kind": "speech",
+              "text": "روی زمین اتاق یک گلیم قرمز بود. Ru-ye zamin-e otâq yek gelim-e qermez bud. There was a red kilim on the floor of the room."
+            },
+            {
+              "kind": "speech",
+              "text": "A gelim has no pile, unlike a farsh or qâli."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gelim is a Persian word that EtymDB links with Greek kálymma 'a cover, a covering'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gelim",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gelim*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gelim, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gelim*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with gelim",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *gelim*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a souvenir, then the Persian for handicrafts, then say gelim again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a souvenir, then the Persian for handicrafts, then say *gelim* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does گلیم (gelim) mean? (\"A kilim, a flat-woven rug\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C463-javaher",
+      "sequence": 23730,
+      "title": "جواهر (javâher) — jewels, jewellery",
+      "headword": "جواهر",
+      "romanization": "javâher",
+      "gloss": "jewels, jewellery",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:baf1e7895f5f5fc1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for handicrafts, then the Persian for a kilim."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: جواهر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جواهر (javâher) — \"jewels, jewellery\"."
+            },
+            {
+              "kind": "speech",
+              "text": "در موزه جواهر قدیمی دیدیم. Dar muze javâher-e qadimi didim. We saw old jewels in the museum."
+            },
+            {
+              "kind": "speech",
+              "text": "An Arabic broken plural of jowhar; a jeweller is a javâherforush."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "javâher came back into Persian from Arabic jawāhir 'jewels' (EtymDB), which itself was taken from Persian gowhar 'jewel', from Middle Persian and Old Persian gauthra 'substance, essence'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "javâher",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *javâher*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "javâher, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *javâher*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with javâher",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *javâher*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for handicrafts, then the Persian for a kilim, then say javâher again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for handicrafts, then the Persian for a kilim, then say *javâher* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does جواهر (javâher) mean? (\"Jewels, jewellery\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C463-atr",
+      "sequence": 23740,
+      "title": "عطر ('atr) — a perfume, a scent",
+      "headword": "عطر",
+      "romanization": "'atr",
+      "gloss": "a perfume, a scent",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ddb2afab8c50351",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a kilim, then the Persian for jewels."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: عطر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عطر ('atr) — \"a perfume, a scent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "خواهرم برای تولدم یک عطر خرید. Khâharam barâ-ye tavallodam yek 'atr kharid. My sister bought me a perfume for my birthday."
+            },
+            {
+              "kind": "speech",
+              "text": "'Atr-e gol-e mohammadi — rose scent, made from the damask rose."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "'atr was borrowed from Arabic ʿiṭr 'perfume' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "'atr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *'atr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "'atr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *'atr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with 'atr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *'atr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a kilim, then the Persian for jewels, then say 'atr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a kilim, then the Persian for jewels, then say *'atr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does عطر ('atr) mean? (\"A perfume, a scent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

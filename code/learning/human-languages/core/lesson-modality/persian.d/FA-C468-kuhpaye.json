@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C468-kuhpaye",
+    "language": "persian",
+    "chapter": 468,
+    "sequence": 23990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1253773fc9a87d60"
+  },
+  "findings": []
+}

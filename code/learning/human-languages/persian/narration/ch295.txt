@@ -19,7 +19,7 @@ If you are not coming back by train, the ticket is for the going alone: bilit-e 
 Say raft-o bargasht as one run. The va, "and", shrinks to -o and leans on the word before it, as -e does.
 
 The phrase, taken apart.
-bilit is the French loan from chapter one hundred and thirteen, billet (EtymDB). The other two words are verbs you already own, with their endings taken off. Raft is the past stem of raftan: "going". Bargasht is the past stem of bargashtan: "coming back", from bar, "back", and gashtan, "to turn". Persian makes nouns this way: a past stem, standing alone, names the action.
+bilit is the French loan from chapter one hundred and thirteen, billet (EtymDB). The other two words are verbs you already own, with their endings taken off. Raft is the past stem of raftan: "going". Bargasht is the past stem of bargashtan: "coming back", from the prefix bar-, which here gives the sense "back", and gashtan, "to turn". Persian makes nouns this way: a past stem, standing alone, names the action.
 
 Guided Practice.
 [pause 1 second]
@@ -57,7 +57,7 @@ A problem is reported in the plain past: it happened, and it is done.
 دیر رسیدم و قطار رفت. — dir residam va qatâr raft — I arrived late, and the train left.
 Then the question that asks for help, in the subjunctive, because the doing has not happened yet:
 چه کار کنم؟ — che kâr konam? — What should I do?
-Che, "what", is the che inside chetor; kâr konam is kâr kardan, "to work, to do", in the subjunctive without be-, as compounds go.
+Che, "what", is the che inside chetor; kâr konam is kâr kardan, "to work, to do", in the subjunctive without be-, as compounds often go.
 
 The phrase, taken apart.
 All three words are Persian. Dast is "hand", inherited from Old Persian (EtymDB 2.1). Dâdan is "to give", on the Indo-European root EtymDB also gives for Latin dō. Az is "from". What you let slip from your hand is gone: a train, a chance.
@@ -138,7 +138,7 @@ This book does not yet tell you where to start this letter or which way to trave
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.
 [pause 1 second]
-[once you have stopped driving — find: the seat and the mark of ئ (hamze) inside مسئول (mas'ul), and point at each]
+[once you have stopped driving — find: the seat and the mark of ئ (hamze) inside مسئول (mas'ul)]
 [once you have stopped driving — trace: ئ (hamze) three times, saying the catch as you finish each one]
 [once you have stopped driving — write: مسئ, joined, then the و after it]
 [once you have stopped driving — write: مسئول (mas'ul), then تعریف: two catches, two letters]

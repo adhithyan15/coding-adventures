@@ -1,0 +1,11 @@
+{
+  "id": "FA-C304-qadim",
+  "pathSegment": "FA-PATH-304-DARANZAMAN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-304-DARANZAMAN",
+      "order": 1
+    }
+  ]
+}

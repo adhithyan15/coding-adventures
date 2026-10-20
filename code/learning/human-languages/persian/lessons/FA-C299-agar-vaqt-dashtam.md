@@ -9,7 +9,7 @@ sequence: 15260
 chapter: 299
 type: grammar
 headword: "اگر وقت داشتم، میرفتم"
-gloss: "if I had time, I would go — a condition that is not true: the plain past after agar, and the mi- past for 'would'"
+gloss: "if I had time, I would go — a condition that is not true: a past after agar, such as dâshtam, and the mi- past for 'would'"
 romanization: "agar vaqt dâshtam, miraftam"
 concept_tag: MODAL-WOULD
 prerequisites: [FA-R298-if-and-it-depends, FA-C290-miraftam, FA-C49-pul, FA-C70-mashin, FA-C193-ja, FA-C36-kharidan]
@@ -43,7 +43,7 @@ miravim.*) Then "it depends". (*Bastegi dârad.*)
 [PAUSE 1s] That condition may come true. The last turn in this run is a
 condition that is not true at all, and what would follow if it were.
 
-## Grammar Lens: the plain past after agar, the mi- past after it
+## Grammar Lens: a past after agar, the mi- past after it
 <!-- hl-knowledge: introduces=[FA-GRAMMAR-UNREAL-CONDITION-01]; assesses=[FA-LEX-DASHTAN, FA-LEX-C136-NAFY136-05, FA-LEX-C78-WORLD78-01, FA-GRAMMAR-SIMPLE-PAST-01] -->
 
 > **اگر وقت داشتم، به سفر میرفتم.** — *agar vaqt dâshtam, be safar miraftam* —
@@ -52,6 +52,10 @@ condition that is not true at all, and what would follow if it were.
 I have no time, and I am not going. The *agar* half says so by moving into
 the plain past, *dâshtam*, the way English moves to "had". The result goes
 into the *mi-* past, *miraftam*.
+
+That plain past belongs mostly to *dâshtan* and *budan*. Most other verbs
+take the *mi-* past in the *agar* half too: *agar bârân nemiâmad, miraftim*,
+if it weren't raining, we would go.
 
 Set it beside the real one: *agar havâ khub bâshad, miravim*, it may be
 fine, and then we'll go; *agar havâ khub bud, miraftim*, it is not fine, so
@@ -87,6 +91,6 @@ The same pair can also look back, "if I had had time, I would have gone":
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FA-GRAMMAR-UNREAL-CONDITION-01, FA-GRAMMAR-WOULD-MI-PAST-01, FA-GRAMMAR-PAST-CONTINUOUS-01] -->
 
-[PAUSE 3s] Which past goes after *agar* when the condition is not true? (The
-**plain past**: *dâshtam*.) Which says "would"? (The ***mi-*** past:
+[PAUSE 3s] Which past goes after *agar* when the condition is not true? (A **past**: the
+plain *dâshtam* or *budam*, and for most other verbs the *mi-* past.) Which says "would"? (The ***mi-*** past:
 *miraftam*.) "If I were you"? (***Agar jâ-ye to budam.***)

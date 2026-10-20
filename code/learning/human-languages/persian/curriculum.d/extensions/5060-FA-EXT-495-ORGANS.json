@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-495-ORGANS",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name some organs of the body.",
+  "prerequisites": []
+}

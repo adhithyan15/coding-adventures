@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C313-amar",
+    "language": "persian",
+    "chapter": 313,
+    "sequence": 15960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:df65bf6966d42815"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:fcf17b41f9d77d5b",
+  "lessonIds": [
+    "FA-C343-barande-shodan",
+    "FA-C343-bakhtan",
+    "FA-C343-tamashagar",
+    "FA-C343-tashviq-kardan",
+    "FA-C343-medal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch343.txt",
+  "json": "persian/narration/ch343.json",
+  "textHash": "fnv1a64:3142b9e467a852d7",
+  "jsonHash": "fnv1a64:fddad12ecf6e0242",
+  "findings": []
+}

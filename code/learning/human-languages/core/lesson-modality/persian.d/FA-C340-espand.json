@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C340-espand",
+    "language": "persian",
+    "chapter": 340,
+    "sequence": 17390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:993c3301bd1f0d21"
+  },
+  "findings": []
+}

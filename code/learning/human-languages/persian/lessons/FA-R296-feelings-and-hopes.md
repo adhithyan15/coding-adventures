@@ -50,7 +50,7 @@ the hope forward, each with the subjunctive after it.
 [PAUSE 2s] Back to the bad morning at the station, told as an experience:
 
 > *qatâr râ az dast dâdam va nârâhat shodam. ba'd mas'ul-e istgâh bilit-e
-> fardâ râ dâd, barâ-ye hamin khoshhâl shodam. ghazâ-ye istgâh khoshmaze
+> fardâ râ be man dâd, barâ-ye hamin khoshhâl shodam. ghazâ-ye istgâh khoshmaze
 > bud. omidvâram ke fardâ dir naresam.*
 
 The last verb, *naresam*, is the subjunctive with *na-*: "that I don't

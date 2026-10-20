@@ -74,7 +74,7 @@ verb is the plain past:
 And a stretch that is over takes *barâ-ye*, "for", with the plain past:
 *barâ-ye do hafte be Tehrân raftam*, "I went to Tehran for two weeks".
 
-So the three fit together: *se sâl pish âmadam. se sâl ast ke injâ zendegi
+So the first two fit together: *se sâl pish âmadam. se sâl ast ke injâ zendegi
 mikonam.*
 
 ## Guided Practice

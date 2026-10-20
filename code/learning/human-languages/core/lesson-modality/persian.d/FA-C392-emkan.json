@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C392-emkan",
+    "language": "persian",
+    "chapter": 392,
+    "sequence": 20060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cd0d12260deee822"
+  },
+  "findings": []
+}

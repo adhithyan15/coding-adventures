@@ -70,7 +70,7 @@ and larger than it is printed.
 <!-- hl-knowledge: introduces=[]; assesses=[FA-SCRIPT-C291-EYN-01, FA-SCRIPT-C26-GHAF-01, FA-LEX-C296-GHAZA-01, FA-SCRIPT-C296-GHEYN-01] -->
 
 [PAUSE 1s]
-- [YOU FIND: غ at the start of **غذا**, and point at it]
+- [YOU FIND: غ at the start of **غذا**]
 - [YOU TRACE: غ standing alone three times, saying *gh* as you finish each one]
 - [YOU WRITE: ع, then غ, from memory: one dot apart]
 - [YOU WRITE: **غذا**, then **قطار**: one sound, two letters]

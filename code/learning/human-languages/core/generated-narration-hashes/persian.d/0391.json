@@ -1,0 +1,20 @@
+{
+  "language": "persian",
+  "chapter": 391,
+  "sourceHash": "fnv1a64:0350f82015aa2c2b",
+  "lessonIds": [
+    "FA-C391-farz-kardan",
+    "FA-C391-farziye",
+    "FA-C391-chenanche",
+    "FA-C391-ba-vojud-e-inke",
+    "FA-C391-khiyal-kardan",
+    "FA-R391-review-384-391"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "persian/narration/ch391.txt",
+  "json": "persian/narration/ch391.json",
+  "textHash": "fnv1a64:5243ea5bad18993c",
+  "jsonHash": "fnv1a64:fa5492c89e02a5e0",
+  "findings": []
+}

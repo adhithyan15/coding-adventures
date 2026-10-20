@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 406,
+  "sourceHash": "fnv1a64:3fdd0d1af8c17707",
+  "lessonIds": [
+    "FA-C406-qazi",
+    "FA-C406-mottaham",
+    "FA-C406-shahed",
+    "FA-C406-hokm",
+    "FA-C406-mohakeme"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch406.txt",
+  "json": "persian/narration/ch406.json",
+  "textHash": "fnv1a64:9e1f269ed5b044a0",
+  "jsonHash": "fnv1a64:644e75906a5dea91",
+  "findings": []
+}

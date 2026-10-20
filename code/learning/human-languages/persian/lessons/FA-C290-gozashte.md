@@ -15,7 +15,7 @@ concept_tag: FA-ZAMAN290-GOZASHTE
 prerequisites: [FA-C290-raftam, FA-C64-sal, FA-C13-mah, FA-C64-hafte, FA-C137-parsal]
 sounds: []
 roots: [persian-guzashta]
-etymology_hook: "gozashte is 'passed': the participle of gozashtan, which EtymDB takes back to a Middle Persian verb 'to pass'"
+etymology_hook: "gozashte is 'passed': the participle of the verb 'to pass', which EtymDB takes back to a Middle Persian verb"
 duration:
   max_seconds: 270
 requires:
@@ -54,8 +54,8 @@ It follows its noun with the ezafe, the same *-e* as in *esm-e man*:
 > year I went to Tehran.
 
 So *mâh-e gozashte* is "last month", and *hafte-ye gozashte* is "last week":
-after a final vowel the ezafe is said *-ye*, and in plain print it is often
-not written at all, **هفته گذشته**.
+after a final vowel the ezafe is said *-ye*, and after a final *-e*, as here,
+plain print often leaves it unwritten, **هفته گذشته**.
 
 Standing alone it is a noun: **در گذشته**, *dar gozashte*, "in the past".
 
@@ -66,11 +66,11 @@ written yet. The next lesson takes it out and puts it in your hand.
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-RAFTAN] -->
 
 *gozashte* is a past stem with *-e* on the end, the way Persian makes a
-participle: **گذشت**, *gozasht*, from *gozashtan*, "to pass", and then *-e*:
+participle: **گذشت**, *gozasht*, the past stem of the verb "to pass", and then *-e*:
 "passed", the time that has gone by. *Rafte*, "gone", is built the same way
 from *raft*.
 
-EtymDB takes *gozashtan* back to a Middle Persian verb, written *wtštn'* in
+EtymDB takes that verb back to a Middle Persian one, written *wtštn'* in
 Pahlavi letters, "to pass, to cross". It records no older parent, so no
 English cousin is claimed here.
 

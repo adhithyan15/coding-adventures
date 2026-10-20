@@ -1,0 +1,11 @@
+{
+  "id": "FA-C504-dust-shodan",
+  "pathSegment": "FA-PATH-504-FRIENDS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-504-FRIENDS",
+      "order": 1
+    }
+  ]
+}

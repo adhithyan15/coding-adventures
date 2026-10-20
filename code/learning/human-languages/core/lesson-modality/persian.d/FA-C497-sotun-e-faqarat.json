@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C497-sotun-e-faqarat",
+    "language": "persian",
+    "chapter": 497,
+    "sequence": 25500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c3dbad3ad49b63f8"
+  },
+  "findings": []
+}

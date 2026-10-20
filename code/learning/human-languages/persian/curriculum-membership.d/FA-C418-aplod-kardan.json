@@ -1,0 +1,11 @@
+{
+  "id": "FA-C418-aplod-kardan",
+  "pathSegment": "FA-PATH-418-NARMAFZAR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-418-NARMAFZAR",
+      "order": 3
+    }
+  ]
+}

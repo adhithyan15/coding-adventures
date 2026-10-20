@@ -54,8 +54,8 @@ on any stored stem: *bekhânam*, *benevisam*, *begiram*, and *bekharam* from
 *kharidan*. This is the **subjunctive**: the verb shape for something
 wanted, needed or possible rather than reported.
 
-Three habits to know. A compound verb mostly leaves *be-* off: *komak
-konam*, *fekr konam*. *Budan* has a stem of its own here: *bâsham*, *bâshi*,
+Three habits to know. A compound verb often leaves *be-* off, above all in
+writing: *komak konam*, *fekr konam*. *Budan* has a stem of its own here: *bâsham*, *bâshi*,
 *bâshad*. And "not" is *na-* in place of *be-*: *naravam*.
 
 ## Grammar Lens: mikhâham, and the verb after it
@@ -94,5 +94,5 @@ no history is claimed for it here.
 <!-- hl-knowledge: introduces=[]; assesses=[FA-GRAMMAR-SUBJUNCTIVE-BE-01, FA-GRAMMAR-MIKHAHAM-SUBJ-01, FA-LEX-BUDAN] -->
 
 [PAUSE 3s] What replaces *mi-* in the subjunctive? (***Be-.***) "That it be"?
-(***Bâshad.***) "Do you want to go?" (***Mikhâhi beravi?***) Which verbs usually
+(***Bâshad.***) "Do you want to go?" (***Mikhâhi beravi?***) Which verbs often
 leave *be-* off? (**Compound verbs**: *komak konam*.)

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C387-tabiz",
+    "language": "persian",
+    "chapter": 387,
+    "sequence": 19820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ab27090d2d925f63"
+  },
+  "findings": []
+}

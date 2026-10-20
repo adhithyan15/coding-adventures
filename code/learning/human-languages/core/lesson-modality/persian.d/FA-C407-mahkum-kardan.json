@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C407-mahkum-kardan",
+    "language": "persian",
+    "chapter": 407,
+    "sequence": 20840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d88d4e88fc681e5"
+  },
+  "findings": []
+}

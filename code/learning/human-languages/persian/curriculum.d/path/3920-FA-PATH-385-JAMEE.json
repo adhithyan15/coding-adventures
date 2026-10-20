@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-385-JAMEE",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "FA-EXT-385-JAMEE"
+  ],
+  "after": []
+}

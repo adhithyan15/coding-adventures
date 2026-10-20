@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-508-CRAFTS",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FA-EXT-508-CRAFTS"
+  ],
+  "after": []
+}

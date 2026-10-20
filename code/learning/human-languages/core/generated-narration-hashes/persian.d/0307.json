@@ -1,0 +1,20 @@
+{
+  "language": "persian",
+  "chapter": 307,
+  "sourceHash": "fnv1a64:bb5716682e1975a4",
+  "lessonIds": [
+    "FA-C307-avayel",
+    "FA-C307-avaset",
+    "FA-C307-avakher",
+    "FA-C307-astane",
+    "FA-C307-hodudan",
+    "FA-R307-review-300-307"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "persian/narration/ch307.txt",
+  "json": "persian/narration/ch307.json",
+  "textHash": "fnv1a64:4b54073fa5b968ee",
+  "jsonHash": "fnv1a64:ceef9585d4dfd8b6",
+  "findings": []
+}

@@ -70,7 +70,7 @@ and larger than it is printed.
 <!-- hl-knowledge: introduces=[]; assesses=[FA-SCRIPT-C22-ZE-01, FA-SCRIPT-C24-PE-01, FA-LEX-C298-ZHAKAT-01, FA-SCRIPT-C298-ZHE-01] -->
 
 [PAUSE 1s]
-- [YOU FIND: ژ at the start of **ژاکت**, and point at its three dots]
+- [YOU FIND: ژ at the start of **ژاکت**, and its three dots]
 - [YOU TRACE: ژ three times, saying *zh* as you finish each one]
 - [YOU WRITE: ز, then ژ, from memory: one dot, then three]
 - [YOU WRITE: **ژاکت**, lifting the pen after ژ and after ا]

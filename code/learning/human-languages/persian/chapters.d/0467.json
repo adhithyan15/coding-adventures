@@ -1,0 +1,19 @@
+{
+  "chapter": 467,
+  "title": "Gardens",
+  "label": "ch:fa-gardens",
+  "canDo": "I can talk about gardens: a garden, a flower bed, a gardener, the lawn and pruning.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-R467-review-460-467",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 467: I can talk about gardens: a garden, a flower bed, a gardener, the lawn and pruning.",
+    "assesses": [
+      "FA-LEX-C467-BAGH-03",
+      "FA-LEX-C467-BAGH-04",
+      "FA-LEX-C467-BAGH-05"
+    ]
+  }
+}

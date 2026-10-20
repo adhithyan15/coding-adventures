@@ -1,0 +1,19 @@
+{
+  "chapter": 335,
+  "title": "The wedding",
+  "label": "ch:fa-the-wedding",
+  "canDo": "I can talk about a wedding, the bride, the henna night, the bride's marriage gift and her trousseau.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C335-jahiziye",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 335: I can talk about a wedding, the bride, the henna night, the bride's marriage gift and her trousseau.",
+    "assesses": [
+      "FA-LEX-C335-ARUSI-03",
+      "FA-LEX-C335-ARUSI-04",
+      "FA-LEX-C335-ARUSI-05"
+    ]
+  }
+}

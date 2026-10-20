@@ -4,7 +4,7 @@
   "chapter": 296,
   "title": "Glad, Tired, Hopeful",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:4d598c6f6b2e23ca",
+  "sourceHash": "fnv1a64:e1015b8deb2abd94",
   "lessons": [
     {
       "id": "FA-C296-khoshhal-budam",
@@ -343,7 +343,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:3004c943a3ef9d23",
+      "sourceHash": "fnv1a64:5c54ff362b62e89b",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -434,11 +434,11 @@
             {
               "kind": "prompt",
               "action": "FIND",
-              "instruction": "غ (gheyn) at the start of غذا (ghazâ), and point at it",
+              "instruction": "غ (gheyn) at the start of غذا (ghazâ)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU FIND: غ at the start of **غذا**, and point at it]"
+              "source": "[YOU FIND: غ at the start of **غذا**]"
             },
             {
               "kind": "prompt",
@@ -667,7 +667,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d41d319ac66d9e42",
+      "sourceHash": "fnv1a64:ec4677bb234dd5c0",
       "notice": null,
       "blocks": [
         {
@@ -708,7 +708,7 @@
             },
             {
               "kind": "speech",
-              "text": "qatâr râ az dast dâdam va nârâhat shodam. ba'd mas'ul-e istgâh bilit-e fardâ râ dâd, barâ-ye hamin khoshhâl shodam. ghazâ-ye istgâh khoshmaze bud. omidvâram ke fardâ dir naresam."
+              "text": "qatâr râ az dast dâdam va nârâhat shodam. ba'd mas'ul-e istgâh bilit-e fardâ râ be man dâd, barâ-ye hamin khoshhâl shodam. ghazâ-ye istgâh khoshmaze bud. omidvâram ke fardâ dir naresam."
             },
             {
               "kind": "speech",

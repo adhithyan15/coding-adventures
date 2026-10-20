@@ -73,7 +73,7 @@ and larger than it is printed.
 <!-- hl-knowledge: introduces=[]; assesses=[FA-SCRIPT-C22-DAL-01, FA-SCRIPT-C22-ZE-01, FA-LEX-C290-GOZASHTE-01, FA-SCRIPT-C290-ZAL-01] -->
 
 [PAUSE 1s]
-- [YOU FIND: ذ inside **گذشته**, and point at it]
+- [YOU FIND: ذ inside **گذشته**]
 - [YOU TRACE: ذ three times, saying *z* as you finish each one]
 - [YOU WRITE: د, then ذ, from memory]
 - [YOU WRITE: **گذشته**, with the break after ذ]

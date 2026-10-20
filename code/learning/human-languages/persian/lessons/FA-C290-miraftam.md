@@ -94,5 +94,5 @@ Two pieces of scene, and nothing has happened yet. That is how a story opens.
 [PAUSE 3s] How do you build "I was reading"? (*Mi-* on the past stem:
 ***mikhândam***.) In the phone sentence, which verb is the scene? (***Mikhândam***,
 still running.) Which is the event? (***Zang zad***, over in a moment.) Why is
-there no *mi-* in *havâ sard bud*? (*Budan* takes none: ***bud*** is already
+there no *mi-* in *havâ sard bud*? (*Budan* normally takes none: ***bud*** is already
 background.)

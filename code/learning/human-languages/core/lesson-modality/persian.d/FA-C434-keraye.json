@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C434-keraye",
+    "language": "persian",
+    "chapter": 434,
+    "sequence": 22230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:19e2dbdaa01636d3"
+  },
+  "findings": []
+}

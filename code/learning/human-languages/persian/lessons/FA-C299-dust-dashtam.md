@@ -40,7 +40,7 @@ reviews_of: [FA-C08-dust-dashtan, FA-C296-omidvaram-ke, FA-C299-agar-vaqt-dashta
 [PAUSE 2s] Say "I'd like to go". (*Dust dâram beravam.*) Then "if I had
 time, I would go". (*Agar vaqt dâshtam, miraftam.*)
 
-[PAUSE 1s] Put those two together and you have the politest way to turn
+[PAUSE 1s] Put those two together and you have a polite way to turn
 something down.
 
 ## Grammar Lens: dust dâshtam, for a wish held back

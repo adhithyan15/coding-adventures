@@ -1,0 +1,11 @@
+{
+  "id": "FA-C324-tasadof-kardan",
+  "pathSegment": "FA-PATH-324-HADESE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-324-HADESE",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-498-WEIGHT",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FA-EXT-498-WEIGHT"
+  ],
+  "after": []
+}

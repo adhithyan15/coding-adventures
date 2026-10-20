@@ -1,0 +1,11 @@
+{
+  "id": "FA-C427-yadakkesh",
+  "pathSegment": "FA-PATH-427-TAMIRGAH",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-427-TAMIRGAH",
+      "order": 3
+    }
+  ]
+}

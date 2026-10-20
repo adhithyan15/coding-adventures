@@ -1,0 +1,11 @@
+{
+  "id": "FA-C431-kart-e-parvaz",
+  "pathSegment": "FA-PATH-431-PARVAZ",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-431-PARVAZ",
+      "order": 4
+    }
+  ]
+}

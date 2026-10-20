@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 477,
+  "sourceHash": "fnv1a64:264235929089b5d8",
+  "lessonIds": [
+    "FA-C477-sharji",
+    "FA-C477-rotubat",
+    "FA-C477-garmazadegi",
+    "FA-C477-motadel",
+    "FA-C477-aftab-gereftan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch477.txt",
+  "json": "persian/narration/ch477.json",
+  "textHash": "fnv1a64:8b411ed6200e5c41",
+  "jsonHash": "fnv1a64:29ebc2f92597f009",
+  "findings": []
+}

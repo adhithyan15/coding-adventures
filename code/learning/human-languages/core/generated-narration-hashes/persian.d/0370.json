@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:4973360db829c0c8",
+  "lessonIds": [
+    "FA-C370-payamad",
+    "FA-C370-avaqeb",
+    "FA-C370-dar-natije",
+    "FA-C370-monjar-shodan",
+    "FA-C370-natije-gereftan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch370.txt",
+  "json": "persian/narration/ch370.json",
+  "textHash": "fnv1a64:084a841e82ee1b0a",
+  "jsonHash": "fnv1a64:c6646683fdd8920b",
+  "findings": []
+}

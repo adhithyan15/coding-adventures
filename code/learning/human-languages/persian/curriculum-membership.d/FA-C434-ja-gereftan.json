@@ -1,0 +1,11 @@
+{
+  "id": "FA-C434-ja-gereftan",
+  "pathSegment": "FA-PATH-434-PELLE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-434-PELLE",
+      "order": 3
+    }
+  ]
+}

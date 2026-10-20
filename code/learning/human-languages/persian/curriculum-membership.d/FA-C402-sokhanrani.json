@@ -1,0 +1,11 @@
+{
+  "id": "FA-C402-sokhanrani",
+  "pathSegment": "FA-PATH-402-TAHQIQ",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-402-TAHQIQ",
+      "order": 4
+    }
+  ]
+}

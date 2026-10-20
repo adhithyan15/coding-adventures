@@ -311,7 +311,7 @@ describe("corpus level summary", () => {
       "telugu",
       "urdu",
     ]);
-    // Six tracks now exceed A2, and naming them is stronger than a blanket
+    // Seven tracks now exceed A2, and naming them is stronger than a blanket
     // "nothing does" -- it says which rung was climbed and by whom. Italian joins
     // Spanish with its B1 core, chapters 263-272, Portuguese with its B1
     // core, chapters 259-268, French with its B1 core, chapters 258-267,

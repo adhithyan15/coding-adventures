@@ -72,7 +72,7 @@ and larger than it is printed.
 <!-- hl-knowledge: introduces=[]; assesses=[FA-SCRIPT-C24-YE-01, FA-SCRIPT-C291-EYN-01, FA-LEX-C295-MASUL-01, FA-SCRIPT-C295-HAMZE-01] -->
 
 [PAUSE 1s]
-- [YOU FIND: the seat and the mark of ئ inside **مسئول**, and point at each]
+- [YOU FIND: the seat and the mark of ئ inside **مسئول**]
 - [YOU TRACE: ئ three times, saying the catch as you finish each one]
 - [YOU WRITE: مسئ, joined, then the و after it]
 - [YOU WRITE: **مسئول**, then **تعریف**: two catches, two letters]

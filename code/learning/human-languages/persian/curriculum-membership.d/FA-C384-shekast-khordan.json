@@ -1,0 +1,11 @@
+{
+  "id": "FA-C384-shekast-khordan",
+  "pathSegment": "FA-PATH-384-ETESAB",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-384-ETESAB",
+      "order": 4
+    }
+  ]
+}

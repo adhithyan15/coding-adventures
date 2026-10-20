@@ -1,0 +1,11 @@
+{
+  "id": "FA-C399-qabuli",
+  "pathSegment": "FA-PATH-399-KONKUR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-399-KONKUR",
+      "order": 2
+    }
+  ]
+}

@@ -4,7 +4,7 @@
   "chapter": 298,
   "title": "If It Rains",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:153272d0af3161bb",
+  "sourceHash": "fnv1a64:1dab3421e558f92f",
   "lessons": [
     {
       "id": "FA-C298-agar",
@@ -12,14 +12,14 @@
       "title": "اگر … باشد (agar ... bâshad) (agar... bâshad) — if it is",
       "headword": "اگر … باشد",
       "romanization": "agar ... bâshad",
-      "gloss": "if it is — agar opens a condition, the condition comes first, and a condition about now or later takes the subjunctive",
+      "gloss": "if it is — agar opens a condition, the condition comes first, and a condition about now or later usually takes the subjunctive",
       "script": "perso-arabic",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a778f13cdb866c49",
+      "sourceHash": "fnv1a64:baa5d8d208ebac3a",
       "notice": null,
       "blocks": [
         {
@@ -331,7 +331,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:8f4889a1fe567ac0",
+      "sourceHash": "fnv1a64:d834f665187c6da4",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -422,11 +422,11 @@
             {
               "kind": "prompt",
               "action": "FIND",
-              "instruction": "ژ (zhe) at the start of ژاکت (zhâkat), and point at its three dots",
+              "instruction": "ژ (zhe) at the start of ژاکت (zhâkat), and its three dots",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU FIND: ژ at the start of **ژاکت**, and point at its three dots]"
+              "source": "[YOU FIND: ژ at the start of **ژاکت**, and its three dots]"
             },
             {
               "kind": "prompt",
@@ -659,7 +659,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ce63c48985414b42",
+      "sourceHash": "fnv1a64:ed0802a30f70cd3e",
       "notice": null,
       "blocks": [
         {
@@ -719,7 +719,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "bastegi is baste, \"bound, tied\", with -gi, which makes a noun of it: \"boundness\". Baste is the participle of bastan, \"to tie, to close\", built the way gozashte was built from gozashtan. So bastegi dârad be havâ is \"it has a binding to the weather\"."
+              "text": "bastegi is baste, \"bound, tied\", with -gi, which makes a noun of it: \"boundness\". Baste is the participle of bastan, \"to tie, to close\", built the way gozashte was built from its past stem gozasht. So bastegi dârad be havâ is \"it has a binding to the weather\"."
             },
             {
               "kind": "speech",

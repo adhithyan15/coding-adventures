@@ -9,7 +9,7 @@ sequence: 15212
 chapter: 298
 type: grammar
 headword: "اگر … باشد"
-gloss: "if it is — agar opens a condition, the condition comes first, and a condition about now or later takes the subjunctive"
+gloss: "if it is — agar opens a condition, the condition comes first, and a condition about now or later usually takes the subjunctive"
 romanization: "agar ... bâshad"
 concept_tag: CONNECTIVE-IF
 prerequisites: [FA-R297-comparing-and-time, FA-C158-agar, FA-C159-vagarna, FA-C208-hava, FA-C87-park]

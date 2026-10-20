@@ -1,0 +1,11 @@
+{
+  "id": "FA-C419-hak-kardan",
+  "pathSegment": "FA-PATH-419-HARIM",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-419-HARIM",
+      "order": 1
+    }
+  ]
+}

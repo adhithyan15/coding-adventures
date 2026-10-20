@@ -1,0 +1,7 @@
+{
+  "language": "persian",
+  "chapter": 301,
+  "output": "persian/book/chapters/ch301-things-happen.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "fa"
+}

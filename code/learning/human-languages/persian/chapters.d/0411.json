@@ -1,0 +1,19 @@
+{
+  "chapter": 411,
+  "title": "Borrowing and lending",
+  "label": "ch:fa-borrowing-and-lending",
+  "canDo": "I can say that I borrowed or lent money, talk about debts, and say who owes whom.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FA-C411-talabkar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 411: I can say that I borrowed or lent money, talk about debts, and say who owes whom.",
+    "assesses": [
+      "FA-LEX-C411-QARZ-03",
+      "FA-LEX-C411-QARZ-04",
+      "FA-LEX-C411-QARZ-05"
+    ]
+  }
+}

@@ -4,7 +4,7 @@
   "chapter": 295,
   "title": "A Ticket, And A Missed Train",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:5c3905c5a209fdfb",
+  "sourceHash": "fnv1a64:93e5fe7ce7a80f07",
   "lessons": [
     {
       "id": "FA-C295-raft-o-bargasht",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9bd7fd72da41dfc6",
+      "sourceHash": "fnv1a64:60ce7d7283a66846",
       "notice": null,
       "blocks": [
         {
@@ -83,7 +83,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "bilit is the French loan from chapter one hundred and thirteen, billet (EtymDB). The other two words are verbs you already own, with their endings taken off. Raft is the past stem of raftan: \"going\". Bargasht is the past stem of bargashtan: \"coming back\", from bar, \"back\", and gashtan, \"to turn\". Persian makes nouns this way: a past stem, standing alone, names the action."
+              "text": "bilit is the French loan from chapter one hundred and thirteen, billet (EtymDB). The other two words are verbs you already own, with their endings taken off. Raft is the past stem of raftan: \"going\". Bargasht is the past stem of bargashtan: \"coming back\", from the prefix bar-, which here gives the sense \"back\", and gashtan, \"to turn\". Persian makes nouns this way: a past stem, standing alone, names the action."
             }
           ]
         },
@@ -168,7 +168,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fdb5c6ecd2f01f3f",
+      "sourceHash": "fnv1a64:5ac05a1027e5d007",
       "notice": null,
       "blocks": [
         {
@@ -244,7 +244,7 @@
             },
             {
               "kind": "speech",
-              "text": "Che, \"what\", is the che inside chetor; kâr konam is kâr kardan, \"to work, to do\", in the subjunctive without be-, as compounds go."
+              "text": "Che, \"what\", is the che inside chetor; kâr konam is kâr kardan, \"to work, to do\", in the subjunctive without be-, as compounds often go."
             }
           ]
         },
@@ -492,7 +492,7 @@
         "script-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:3b5af192a3ffbe62",
+      "sourceHash": "fnv1a64:81347663b920d1ec",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -583,11 +583,11 @@
             {
               "kind": "prompt",
               "action": "FIND",
-              "instruction": "the seat and the mark of ئ (hamze) inside مسئول (mas'ul), and point at each",
+              "instruction": "the seat and the mark of ئ (hamze) inside مسئول (mas'ul)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU FIND: the seat and the mark of ئ inside **مسئول**, and point at each]"
+              "source": "[YOU FIND: the seat and the mark of ئ inside **مسئول**]"
             },
             {
               "kind": "prompt",

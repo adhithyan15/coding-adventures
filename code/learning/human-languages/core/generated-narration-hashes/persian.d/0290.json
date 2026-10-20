@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 290,
-  "sourceHash": "fnv1a64:c84c94436ac3bc0d",
+  "sourceHash": "fnv1a64:a5ca30af833e5464",
   "lessonIds": [
     "FA-C290-miravam",
     "FA-C290-raftam",
@@ -14,7 +14,7 @@
   "drivablePrefix": 3,
   "text": "persian/narration/ch290.txt",
   "json": "persian/narration/ch290.json",
-  "textHash": "fnv1a64:a2ce3fd95e7e5edb",
-  "jsonHash": "fnv1a64:bd2a8b91fc02df19",
+  "textHash": "fnv1a64:74302e152f3ee670",
+  "jsonHash": "fnv1a64:294995e50c4d9840",
   "findings": []
 }

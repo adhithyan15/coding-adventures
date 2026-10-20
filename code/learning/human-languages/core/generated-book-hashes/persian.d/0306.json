@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 306,
+  "sourceHash": "fnv1a64:53f178a9522ad178",
+  "lessonIds": [
+    "FA-C306-be-tadrij",
+    "FA-C306-dar-hamin-hal",
+    "FA-C306-ta-inke",
+    "FA-C306-tey",
+    "FA-C306-mojaddadan"
+  ],
+  "tex": "persian/book/chapters/ch306-little-by-little-and-meanwhile.tex"
+}

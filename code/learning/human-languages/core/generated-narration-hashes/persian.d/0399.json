@@ -1,0 +1,20 @@
+{
+  "language": "persian",
+  "chapter": 399,
+  "sourceHash": "fnv1a64:fe380201a5c35ea4",
+  "lessonIds": [
+    "FA-C399-konkur",
+    "FA-C399-azmun",
+    "FA-C399-qabuli",
+    "FA-C399-mardud-shodan",
+    "FA-C399-moaddel",
+    "FA-R399-review-392-399"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "persian/narration/ch399.txt",
+  "json": "persian/narration/ch399.json",
+  "textHash": "fnv1a64:3c0fce5622648a5a",
+  "jsonHash": "fnv1a64:61769fa2f3ba13b7",
+  "findings": []
+}
