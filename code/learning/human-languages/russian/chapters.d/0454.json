@@ -1,0 +1,19 @@
+{
+  "chapter": 454,
+  "title": "Sales and bargains",
+  "label": "ch:ru-sales-and-bargains",
+  "canDo": "I can find a bargain: the sale, a markdown, a special offer, haggling and paying too much.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C454-pereplachivat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 454: I can find a bargain: the sale, a markdown, a special offer, haggling and paying too much.",
+    "assesses": [
+      "RU-LEX-C454-RASPRODAZHA-03",
+      "RU-LEX-C454-RASPRODAZHA-04",
+      "RU-LEX-C454-RASPRODAZHA-05"
+    ]
+  }
+}

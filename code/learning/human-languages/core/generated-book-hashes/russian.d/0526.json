@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 526,
+  "sourceHash": "fnv1a64:ca9aa6908f9b95fe",
+  "lessonIds": [
+    "RU-C526-oblozhka",
+    "RU-C526-zakladka",
+    "RU-C526-listat",
+    "RU-C526-izdatelstvo",
+    "RU-C526-perechityvat"
+  ],
+  "tex": "russian/book/chapters/ch526-covers-and-bookmarks.tex"
+}

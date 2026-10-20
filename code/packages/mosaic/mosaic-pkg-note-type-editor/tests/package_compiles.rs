@@ -174,6 +174,8 @@ fn note_type_editor_layout_wires_model_editor() {
     assert!(source.contains("HostInput [ note-type-back-template-input ]"));
     assert!(source.contains("value : slot: back-template-value"));
     assert!(source.contains("onChange : emit: onBackTemplateChange"));
+    // Both templates save on Ctrl/Cmd+Enter, as the Save button does.
+    assert_eq!(source.matches("onCommit : emit: onSaveNoteType").count(), 2);
     assert!(source.contains("HostInput [ note-type-stylesheet-input ]"));
     assert!(source.contains("value : slot: stylesheet-value"));
     assert!(source.contains("onChange : emit: onStylesheetChange"));

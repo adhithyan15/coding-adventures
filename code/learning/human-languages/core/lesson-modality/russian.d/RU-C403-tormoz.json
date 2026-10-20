@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C403-tormoz",
+    "language": "russian",
+    "chapter": 403,
+    "sequence": 23210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ef6dc0e2e8cfa5e3"
+  },
+  "findings": []
+}

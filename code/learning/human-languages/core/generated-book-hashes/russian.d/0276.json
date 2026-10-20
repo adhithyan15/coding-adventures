@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 276,
+  "sourceHash": "fnv1a64:5a56d853abfd4a65",
+  "lessonIds": [
+    "RU-C276-desyatiletiye",
+    "RU-C276-period",
+    "RU-C276-etap",
+    "RU-C276-promezhutok",
+    "RU-C276-srok"
+  ],
+  "tex": "russian/book/chapters/ch276-spans-of-time.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 436,
+  "title": "Getting a refund",
+  "label": "ch:ru-getting-a-refund",
+  "canDo": "I can ask for my money back: a refund, demanding, protesting, getting a fault fixed and a receipt.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C436-kvitantsiya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 436: I can ask for my money back: a refund, demanding, protesting, getting a fault fixed and a receipt.",
+    "assesses": [
+      "RU-LEX-C436-VOZVRAT-03",
+      "RU-LEX-C436-VOZVRAT-04",
+      "RU-LEX-C436-VOZVRAT-05"
+    ]
+  }
+}

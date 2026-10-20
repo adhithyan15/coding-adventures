@@ -1,0 +1,19 @@
+{
+  "chapter": 478,
+  "title": "Stubborn and Fussy",
+  "label": "ch:ru-stubborn-and-fussy",
+  "canDo": "I can describe stubborn, fussy and grumpy people.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C478-vorchat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 478: I can describe stubborn, fussy and grumpy people.",
+    "assesses": [
+      "RU-LEX-C478-STUBBORN-03",
+      "RU-LEX-C478-STUBBORN-04",
+      "RU-LEX-C478-STUBBORN-05"
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "language": "russian",
+  "chapter": 269,
+  "sourceHash": "fnv1a64:5d993636cd46187d",
+  "lessonIds": [
+    "RU-C269-yesli",
+    "RU-C269-yesli-budet",
+    "RU-C269-zavisit",
+    "RU-C269-review"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "russian/narration/ch269.txt",
+  "json": "russian/narration/ch269.json",
+  "textHash": "fnv1a64:90f3cfe7f700589d",
+  "jsonHash": "fnv1a64:952c87cd62d2b1b9",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C413-tarif",
+  "pathSegment": "RU-PATH-413-PROYEZD",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-413-PROYEZD",
+      "order": 3
+    }
+  ]
+}

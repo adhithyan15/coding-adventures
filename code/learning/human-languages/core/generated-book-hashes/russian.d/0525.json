@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:a7de2602733df0b6",
+  "lessonIds": [
+    "RU-C525-poet",
+    "RU-C525-stikhotvoreniye",
+    "RU-C525-rifma",
+    "RU-C525-rifmovat",
+    "RU-C525-naizust"
+  ],
+  "tex": "russian/book/chapters/ch525-poems-and-rhymes.tex"
+}

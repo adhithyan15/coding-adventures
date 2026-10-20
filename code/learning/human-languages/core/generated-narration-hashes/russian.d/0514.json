@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 514,
+  "sourceHash": "fnv1a64:ed30e637c80c5b6d",
+  "lessonIds": [
+    "RU-C514-katok",
+    "RU-C514-figurist",
+    "RU-C514-skolzit",
+    "RU-C514-lasty",
+    "RU-C514-pleskatsya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch514.txt",
+  "json": "russian/narration/ch514.json",
+  "textHash": "fnv1a64:bc28a23ab75a87df",
+  "jsonHash": "fnv1a64:0d72d0a4c23c7e49",
+  "findings": []
+}

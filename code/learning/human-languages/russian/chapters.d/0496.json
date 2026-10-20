@@ -1,0 +1,19 @@
+{
+  "chapter": 496,
+  "title": "A Baby at Home",
+  "label": "ch:ru-a-baby-at-home",
+  "canDo": "I can talk about looking after a baby.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C496-pelenat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 496: I can talk about looking after a baby.",
+    "assesses": [
+      "RU-LEX-C496-BABY-03",
+      "RU-LEX-C496-BABY-04",
+      "RU-LEX-C496-BABY-05"
+    ]
+  }
+}

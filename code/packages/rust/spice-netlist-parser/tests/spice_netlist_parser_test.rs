@@ -306,9 +306,10 @@ fn runs_shared_berkeley_v1_core_corpus() {
             .map(|case| case["analysis"].as_str().unwrap())
             .collect::<Vec<_>>(),
         vec![
-            "op", "op", "op", "op", "op", "op", "op", "op", "op", "ac", "ac", "ac", "ac", "ac",
-            "ac", "ac", "ac", "tran", "tran", "tran", "tran", "tran", "tran", "tran", "dc", "dc",
-            "dc", "dc", "dc", "dc", "dc", "dc", "tf", "tf", "tf", "tf", "tf", "tf", "tf", "tf"
+            "op", "op", "op", "op", "op", "op", "op", "op", "op", "op", "ac", "ac", "ac", "ac",
+            "ac", "ac", "ac", "ac", "tran", "tran", "tran", "tran", "tran", "tran", "tran", "dc",
+            "dc", "dc", "dc", "dc", "dc", "dc", "dc", "tf", "tf", "tf", "tf", "tf", "tf", "tf",
+            "tf"
         ]
     );
 
@@ -319,6 +320,38 @@ fn runs_shared_berkeley_v1_core_corpus() {
         let results = parsed
             .run_analysis_plan()
             .unwrap_or_else(|error| panic!("{case_id}: {error}"));
+        if case["sample"].as_str().unwrap() == "temperature-op-node" {
+            let expected = &case["expected"];
+            let temperatures = expected["temperaturesKelvin"].as_array().unwrap();
+            let windows = expected["windows"].as_array().unwrap();
+            assert_eq!(results.len(), temperatures.len(), "{case_id}");
+            assert!(
+                results.iter().all(|result| {
+                    format!("{:?}", result.kind).to_ascii_lowercase()
+                        == case["analysis"].as_str().unwrap()
+                }),
+                "{case_id}"
+            );
+            for ((execution, temperature), window) in results.iter().zip(temperatures).zip(windows)
+            {
+                assert_eq!(
+                    execution.temperature_kelvin,
+                    Some(temperature.as_f64().unwrap()),
+                    "{case_id}"
+                );
+                let value = match &execution.result {
+                    AnalysisResult::Op(result) => result.voltage(case["probe"].as_str().unwrap()),
+                    _ => None,
+                };
+                let value = value.unwrap_or_else(|| panic!("{case_id}: missing probe"));
+                assert!(
+                    value >= window["min"].as_f64().unwrap()
+                        && value <= window["max"].as_f64().unwrap(),
+                    "{case_id}: {value} outside expected window"
+                );
+            }
+            continue;
+        }
         assert_eq!(results.len(), 1, "{case_id}");
         assert_eq!(
             format!("{:?}", results[0].kind).to_ascii_lowercase(),
@@ -669,6 +702,16 @@ fn defaults_operating_temperature_without_temp_cards() {
     assert!(error
         .to_string()
         .contains("temperature index 3 exceeds .temp entries"));
+}
+
+#[test]
+fn analysis_temperature_rejects_values_below_absolute_zero() {
+    let error = parse_netlist(".temp -274\n.op")
+        .unwrap()
+        .analysis_temperatures_kelvin()
+        .unwrap_err();
+
+    assert!(error.to_string().contains("finite positive Kelvin"));
 }
 
 #[test]

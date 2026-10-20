@@ -1,0 +1,11 @@
+{
+  "id": "RU-C531-besporyadok",
+  "pathSegment": "RU-PATH-531-CLUTTER",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-531-CLUTTER",
+      "order": 0
+    }
+  ]
+}

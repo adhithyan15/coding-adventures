@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 490,
+  "sourceHash": "fnv1a64:ba03ede7f7779ee2",
+  "lessonIds": [
+    "RU-C490-vyzdoravlivat",
+    "RU-C490-vyzdorovleniye",
+    "RU-C490-popravlyatsya",
+    "RU-C490-glotat",
+    "RU-C490-sirop"
+  ],
+  "tex": "russian/book/chapters/ch490-getting-better.tex"
+}

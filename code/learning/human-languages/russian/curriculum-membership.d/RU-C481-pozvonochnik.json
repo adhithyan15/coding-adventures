@@ -1,0 +1,11 @@
+{
+  "id": "RU-C481-pozvonochnik",
+  "pathSegment": "RU-PATH-481-BACK",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-481-BACK",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 503,
+  "title": "Collections and Puzzles",
+  "label": "ch:ru-collections-and-puzzles",
+  "canDo": "I can talk about collecting things and doing puzzles.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C503-razgadyvat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 503: I can talk about collecting things and doing puzzles.",
+    "assesses": [
+      "RU-LEX-C503-COLLECTING-03",
+      "RU-LEX-C503-COLLECTING-04",
+      "RU-LEX-C503-COLLECTING-05"
+    ]
+  }
+}

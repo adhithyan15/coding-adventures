@@ -1423,7 +1423,28 @@ fn emit_method(
             // ret_void → a bare `ret` with nothing on the stack (the method's
             // CIL signature is `void`, see `cil_ret_type`).  Oct's void
             // functions (`fn bump() { … }`) end here.
+            //
+            // The one exception is the **entry**. Whatever the IIR `main`
+            // declares, `cil_ret_type` gives `MccarthyEntry` the fixed `int32`
+            // signature the launcher (`Run`) calls and prints. A void `main`
+            // (Perl's `print` program: a statement list ending in `ret_void`)
+            // must therefore still leave one `int32` on the stack, or the CLR
+            // verifier rejects the method outright:
+            //
+            // | method's CIL return | `ret_void` lowers to | stack at `ret` |
+            // |---------------------|----------------------|----------------|
+            // | `void` (helper)     | `ret`                | empty — valid  |
+            // | `int32` (entry)     | `ldc.i4.0; ret`      | one `int32`    |
+            //
+            // A bare `ret` in an `int32` method is "Common Language Runtime
+            // detected an invalid program" (`InvalidProgramException`) at JIT
+            // time — `ilasm` assembles it without complaint, so only a real
+            // `dotnet` run notices. `0` is the natural result: a statement
+            // program that falls off its end succeeded, like `exit(0)`.
             "ret_void" => {
+                if ret_ty == "int32" {
+                    let _ = writeln!(il, "    ldc.i4.0");
+                }
                 let _ = writeln!(il, "    ret");
             }
             // alloc <dest> : ref<LispyPair>  →  a fresh 2-element System.Object[]
@@ -2497,6 +2518,71 @@ mod tests {
         assert!(il.lines().any(|l| l.trim_start().starts_with("call void")
             && l.contains("Program::'bump'()")),
             "void call must be `call void …bump()`; got:\n{il}");
+    }
+
+    /// The lines of one emitted method's body, from its `.method` header up to
+    /// its closing `}` — so an assertion about "the instruction before `ret`"
+    /// looks only inside that method.
+    fn method_body<'a>(il: &'a str, header_fragment: &str) -> Vec<&'a str> {
+        il.lines()
+            .skip_while(|l| !(l.contains(".method") && l.contains(header_fragment)))
+            .take_while(|l| l.trim() != "}")
+            .map(str::trim)
+            .collect()
+    }
+
+    /// A **void entry** — Perl's `print` program shape: `main` is declared
+    /// `void`, its body is statements (`call_builtin write_i64 …`) and it ends
+    /// in `ret_void`. The entry's CIL signature is nonetheless the launcher's
+    /// fixed `int32 MccarthyEntry()`, so `ret_void` must push an `int32` before
+    /// `ret`. A bare `ret` assembles fine under `ilasm` but real CoreCLR
+    /// rejects it with `InvalidProgramException` (PR #17850's macOS failure);
+    /// this structural check catches that with no `dotnet` on the host. A void
+    /// *helper* keeps its bare `ret` (an `int32` there would be just as
+    /// invalid, in the other direction).
+    #[test]
+    fn void_entry_ret_void_still_returns_an_int32() {
+        let helper = IIRFunction::new(
+            "helper",
+            vec![],
+            "void",
+            vec![IIRInstr::new("ret_void", None, vec![], "void")],
+        );
+        let main = IIRFunction::new(
+            "main",
+            vec![],
+            "void",
+            vec![
+                IIRInstr::new("const", Some("n".into()), vec![Operand::Int(3)], "i64"),
+                IIRInstr::new(
+                    "call_builtin",
+                    None,
+                    vec![Operand::Var("write_i64".into()), Operand::Var("n".into())],
+                    "void",
+                ),
+                IIRInstr::new("call", None, vec![Operand::Var("helper".into())], "void"),
+                IIRInstr::new("ret_void", None, vec![], "void"),
+            ],
+        );
+        let mut m = IIRModule::new("Main", "perl");
+        m.functions.push(helper);
+        m.functions.push(main);
+        m.entry_point = Some("main".into());
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+
+        let entry = method_body(&il, "int32 MccarthyEntry()");
+        let ret_at = entry.iter().rposition(|l| *l == "ret").expect("entry ends in ret");
+        assert_eq!(
+            entry[ret_at - 1], "ldc.i4.0",
+            "a void entry's ret_void must push an int32 result; got:\n{il}"
+        );
+
+        let helper_body = method_body(&il, "void 'helper'()");
+        let ret_at = helper_body.iter().rposition(|l| *l == "ret").expect("helper ends in ret");
+        assert_ne!(
+            helper_body[ret_at - 1], "ldc.i4.0",
+            "a void helper's ret_void stays a bare ret; got:\n{il}"
+        );
     }
 
     /// Build a one-function module `c = <op>(a, b); ret c` over two `i32` constants.

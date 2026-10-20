@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 380,
+  "sourceHash": "fnv1a64:cee6ec5e5274fe06",
+  "lessonIds": [
+    "RU-C380-predskazyvat",
+    "RU-C380-ugadyvat",
+    "RU-C380-dedlayn",
+    "RU-C380-postoyannyy",
+    "RU-C380-vremennyy"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch380.txt",
+  "json": "russian/narration/ch380.json",
+  "textHash": "fnv1a64:f52275d349d1d179",
+  "jsonHash": "fnv1a64:972dabacc936a5fb",
+  "findings": []
+}

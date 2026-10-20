@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-332-ZAPEKAT",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-332-ZAPEKAT"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 325,
+  "title": "Empires and uprisings",
+  "label": "ch:ru-empires-and-uprisings",
+  "canDo": "I can talk about an empire, a revolution and an uprising, and say that someone conquered or ruled a land.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C325-pravit",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 325: I can talk about an empire, a revolution and an uprising, and say that someone conquered or ruled a land.",
+    "assesses": [
+      "RU-LEX-C325-IMPERIYA-03",
+      "RU-LEX-C325-IMPERIYA-04",
+      "RU-LEX-C325-IMPERIYA-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C522-mramor",
+    "language": "russian",
+    "chapter": 522,
+    "sequence": 29330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fc3d43db6a2b547d"
+  },
+  "findings": []
+}

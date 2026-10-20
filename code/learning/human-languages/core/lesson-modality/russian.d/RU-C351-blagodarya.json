@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C351-blagodarya",
+    "language": "russian",
+    "chapter": 351,
+    "sequence": 20530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ddbf4cbb14a0c515"
+  },
+  "findings": []
+}

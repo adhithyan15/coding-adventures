@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 299,
+  "sourceHash": "fnv1a64:11a4f32e5721bf39",
+  "lessonIds": [
+    "RU-C299-nosilki",
+    "RU-C299-sirena",
+    "RU-C299-trevoga",
+    "RU-C299-dezhurnyy",
+    "RU-C299-vyzyvat"
+  ],
+  "tex": "russian/book/chapters/ch299-the-emergency-call.tex"
+}

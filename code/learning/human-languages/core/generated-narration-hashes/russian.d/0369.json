@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 369,
+  "sourceHash": "fnv1a64:ec0963cdf3ba6635",
+  "lessonIds": [
+    "RU-C369-ekologiya",
+    "RU-C369-zagryaznenie",
+    "RU-C369-zagryaznyat",
+    "RU-C369-pererabatyvat",
+    "RU-C369-berech"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch369.txt",
+  "json": "russian/narration/ch369.json",
+  "textHash": "fnv1a64:71ec9df6d6d04af0",
+  "jsonHash": "fnv1a64:38d83946a059c410",
+  "findings": []
+}

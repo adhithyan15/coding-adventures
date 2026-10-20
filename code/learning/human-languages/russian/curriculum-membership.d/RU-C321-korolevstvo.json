@@ -1,0 +1,11 @@
+{
+  "id": "RU-C321-korolevstvo",
+  "pathSegment": "RU-PATH-321-KOROL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-321-KOROL",
+      "order": 4
+    }
+  ]
+}

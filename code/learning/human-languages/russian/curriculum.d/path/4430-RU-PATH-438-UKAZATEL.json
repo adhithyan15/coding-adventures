@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-438-UKAZATEL",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "RU-EXT-438-UKAZATEL"
+  ],
+  "after": []
+}

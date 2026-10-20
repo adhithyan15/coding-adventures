@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-409-POLOMKA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "RU-EXT-409-POLOMKA"
+  ],
+  "after": []
+}

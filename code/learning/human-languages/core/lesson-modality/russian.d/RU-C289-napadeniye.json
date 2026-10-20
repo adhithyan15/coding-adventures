@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C289-napadeniye",
+    "language": "russian",
+    "chapter": 289,
+    "sequence": 17350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b354ae5a0b55c033"
+  },
+  "findings": []
+}

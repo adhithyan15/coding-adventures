@@ -1,0 +1,11 @@
+{
+  "id": "RU-C364-zhitel",
+  "pathSegment": "RU-PATH-364-OBSHCHESTVO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-364-OBSHCHESTVO",
+      "order": 4
+    }
+  ]
+}

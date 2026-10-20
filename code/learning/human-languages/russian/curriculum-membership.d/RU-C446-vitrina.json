@@ -1,0 +1,11 @@
+{
+  "id": "RU-C446-vitrina",
+  "pathSegment": "RU-PATH-446-VITRINA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-446-VITRINA",
+      "order": 2
+    }
+  ]
+}

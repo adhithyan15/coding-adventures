@@ -1,2 +1,2 @@
 subset,description,corpus_dir,spec
-rb-int-puts,LANG80 integer puts subset,corpus/rb-int-puts,LANG80
+rb-int-puts,LANG80 integer puts subset: puts with decimal integer arithmetic (+ - * / unary minus and grouping),corpus/rb-int-puts,LANG80

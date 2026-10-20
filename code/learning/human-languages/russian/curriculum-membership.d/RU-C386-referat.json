@@ -1,0 +1,11 @@
+{
+  "id": "RU-C386-referat",
+  "pathSegment": "RU-PATH-386-DOKLAD",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-386-DOKLAD",
+      "order": 1
+    }
+  ]
+}

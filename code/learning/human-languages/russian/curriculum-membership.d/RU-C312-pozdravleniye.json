@@ -1,0 +1,11 @@
+{
+  "id": "RU-C312-pozdravleniye",
+  "pathSegment": "RU-PATH-312-POZDRAVLYAT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-312-POZDRAVLYAT",
+      "order": 1
+    }
+  ]
+}

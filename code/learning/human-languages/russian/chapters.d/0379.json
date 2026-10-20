@@ -1,0 +1,19 @@
+{
+  "chapter": 379,
+  "title": "A fallback plan",
+  "label": "ch:ru-a-fallback-plan",
+  "canDo": "I can have a fallback ready, say in any case and depending on, hesitate, and make up my mind.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "RU-C379-v-zavisimosti-ot",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 379: I can have a fallback ready, say in any case and depending on, hesitate, and make up my mind.",
+    "assesses": [
+      "RU-LEX-C379-ZAPASNOY-03",
+      "RU-LEX-C379-ZAPASNOY-04",
+      "RU-LEX-C379-ZAPASNOY-05"
+    ]
+  }
+}

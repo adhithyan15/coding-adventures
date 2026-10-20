@@ -1,0 +1,11 @@
+{
+  "id": "RU-C383-fakultet",
+  "pathSegment": "RU-PATH-383-POSTUPLENIYE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-383-POSTUPLENIYE",
+      "order": 3
+    }
+  ]
+}

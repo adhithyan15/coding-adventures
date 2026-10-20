@@ -1,5 +1,23 @@
 # Changelog — twig-module-driver
 
+## 0.15.0 - Unreleased - LANG84: hand the IIR compiler the parse tree
+
+### Changed
+
+- Phase 1 now parses each module in two explicit steps:
+  `twig_parser::parse_to_ast` produces the CST, then
+  `twig_parser::extract_program` produces the typed `Program`. Together these
+  are exactly `twig_parser::parse`, so the module driver reports the same
+  errors as before. The driver keeps the CST of each module, and Phase 4
+  passes that CST to `twig_ir_compiler::compile_ast_with_externs_and_globals`
+  (twig-ir-compiler 0.46). Before this change, Phase 4 passed the typed
+  `Program` to `compile_program_with_externs_and_globals`, which has been
+  removed. LANG84 decision 6 requires the IIR compiler to take only the parse
+  tree. The driver's own analyses still use `Program`: import discovery,
+  extern-name collection, and the Phase 3.5 topological type check. The
+  linked IIR is unchanged.
+- The two `IIRExport` unit tests now compile through `compile_ast`.
+
 ## [0.14.0] — 2026-05-17
 
 ### Added (LANG72 — TW05-Q module-driver type-check phase)

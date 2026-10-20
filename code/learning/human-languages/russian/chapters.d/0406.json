@@ -1,0 +1,19 @@
+{
+  "chapter": 406,
+  "title": "Parts of a car",
+  "label": "ch:ru-parts-of-a-car",
+  "canDo": "I can name parts of a car: the boot, the bumper, the headlights, the seats and the wipers.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C406-dvornik",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 406: I can name parts of a car: the boot, the bumper, the headlights, the seats and the wipers.",
+    "assesses": [
+      "RU-LEX-C406-BAGAZHNIK-03",
+      "RU-LEX-C406-BAGAZHNIK-04",
+      "RU-LEX-C406-BAGAZHNIK-05"
+    ]
+  }
+}

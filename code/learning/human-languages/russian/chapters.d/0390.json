@@ -1,0 +1,19 @@
+{
+  "chapter": 390,
+  "title": "Keeping the rules",
+  "label": "ch:ru-keeping-the-rules",
+  "canDo": "I can say that we must keep the rules, that something is compulsory, that there is order, and talk about rights and responsibility.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "RU-C390-otvetstvennost",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 390: I can say that we must keep the rules, that something is compulsory, that there is order, and talk about rights and responsibility.",
+    "assesses": [
+      "RU-LEX-C390-PORYADOK-03",
+      "RU-LEX-C390-PORYADOK-04",
+      "RU-LEX-C390-PORYADOK-05"
+    ]
+  }
+}

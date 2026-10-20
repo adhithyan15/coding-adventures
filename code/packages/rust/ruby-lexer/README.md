@@ -62,6 +62,35 @@ ruby-parser consumes the tokens
 - Parser-driven local-variable lexing (Phase 2)
 - Hash shorthand, lambdas, keyword args (later eras: 1.9.1+)
 
+## LANG84 release token tables (grammar-driven replacement)
+
+LANG84 replaces this hand-written lexer with per-release token grammars,
+`code/grammars/ruby/ruby<release>.tokens`, run by the generic
+`lexer::grammar_lexer::GrammarLexer`. The compiled tables live in
+`src/_grammar.rs`, generated (never hand-edited) by
+
+```sh
+grammar-tools generate-rust-compiled-grammars ruby
+```
+
+and exposed as `coding_adventures_ruby_lexer::releases`:
+
+```rust
+use coding_adventures_ruby_lexer::releases;
+
+assert!(releases::SUPPORTED_RELEASES.contains(&"3.3.6"));
+let grammar = releases::token_grammar("3.3.6").unwrap(); // exact IDs only
+assert!(releases::token_grammar("2.7.8").is_none());     // no pair yet
+```
+
+Releases with identical token files share one compiled module
+(`releases::grammar_class`). Slice R0 (numbers, names, variables, keywords,
+operators, comments, separators) is in place for 0.49, 0.50 and 3.3.5–3.3.7;
+`ruby-parser`'s `tokenize_ruby_at` / `parse_ruby_at` are the entry points
+that apply budgets and typed errors. The state-machine lexer described above
+is unchanged and still serves every existing caller until the later slices
+reach parity (LANG84 phase 3.10).
+
 ## Usage
 
 ```rust

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:ffbbd048235fdfab",
+  "lessonIds": [
+    "RU-C345-spravedlivyy",
+    "RU-C345-nespravedlivyy",
+    "RU-C345-spravedlivost",
+    "RU-C345-razumnyy",
+    "RU-C345-istina"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch345.txt",
+  "json": "russian/narration/ch345.json",
+  "textHash": "fnv1a64:673c7897475c85eb",
+  "jsonHash": "fnv1a64:801015744bc16144",
+  "findings": []
+}

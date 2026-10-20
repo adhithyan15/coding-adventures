@@ -666,6 +666,17 @@ excludes OS, enterprise, user-installed, and local roots and carries an
 explicit update cadence. It supplies data only: certificate parsing, path and
 hostname validation, signature verification, constraint and algorithm policy,
 revocation, TLS, HTTP, and platform trust remain separate blockers.
+A bounded `x509-webpki-root-anchor-selection` composition now selects one
+decoded candidate certificate against only that reviewed snapshot. It requires
+exact canonical encoded Name and SubjectPublicKeyInfo contents, scans the
+complete set, and fails closed when no anchor or more than one anchor matches.
+Its
+non-copyable evidence binds the exact candidate certificate to the selected
+snapshot entry and retains that entry's optional name constraints for later
+path policy. Selection does not validate those constraints, grant the
+candidate a certificate role, verify any signature, check validity, construct
+or validate a path, check revocation, or provide hostname validation, TLS,
+HTTP, OAuth transport, or network authority.
 A bounded algorithm-specific prerequisite is now shipped as
 `x509-rsa-public-key`. It requires the exact RFC 3279 `rsaEncryption`
 SubjectPublicKeyInfo form, decodes its nested PKCS #1 public modulus and
@@ -708,6 +719,20 @@ issuer, and validated key. The composition does not process other critical
 extensions, validity, path length, name constraints, trust anchors, path
 construction, revocation, TLS, HTTP, or network effects, so concrete HTTPS
 remains unavailable.
+A bounded `x509-certificate-path-length-policy` prerequisite now applies the
+RFC 5280 path-length state transition to caller-ordered intermediate-CA role
+evidence. The caller supplies the initial maximum, identifies whether each
+intermediate certificate is self-issued, and advances from the trust-anchor
+side toward the target. Non-self-issued intermediates consume one unit;
+self-issued rollover certificates do not. Each certificate's decoded
+`pathLenConstraint` can only tighten the remaining maximum, including exact
+values too large for the local counter, which cannot loosen a tighter current
+limit. Exhaustion fails closed with a payload-free category. This gate neither
+decides self-issuance nor orders, links, authenticates, or trusts certificates;
+the target certificate and trust anchor are outside this transition. Path
+construction, complete path validation, trust-anchor constraints, name
+constraints, revocation, TLS, HTTP, and network effects remain separate
+blockers, so concrete HTTPS remains unavailable.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns

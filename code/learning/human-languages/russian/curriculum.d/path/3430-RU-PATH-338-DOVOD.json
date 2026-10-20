@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-338-DOVOD",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "RU-EXT-338-DOVOD"
+  ],
+  "after": []
+}

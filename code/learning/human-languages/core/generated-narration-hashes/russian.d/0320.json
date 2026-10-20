@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:2e5191f1cab50011",
+  "lessonIds": [
+    "RU-C320-volshebnik",
+    "RU-C320-vedma",
+    "RU-C320-chudovishche",
+    "RU-C320-drakon",
+    "RU-C320-prevrashchatsya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch320.txt",
+  "json": "russian/narration/ch320.json",
+  "textHash": "fnv1a64:ada537ef2dde14cd",
+  "jsonHash": "fnv1a64:854b421501647443",
+  "findings": []
+}

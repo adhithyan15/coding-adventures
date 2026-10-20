@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C397-vygodnyy",
+    "language": "russian",
+    "chapter": 397,
+    "sequence": 22910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d5eb3fff8bace659"
+  },
+  "findings": []
+}

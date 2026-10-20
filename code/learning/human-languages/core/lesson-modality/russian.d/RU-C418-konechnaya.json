@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C418-konechnaya",
+    "language": "russian",
+    "chapter": 418,
+    "sequence": 23970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:db5238f40aafaa3b"
+  },
+  "findings": []
+}

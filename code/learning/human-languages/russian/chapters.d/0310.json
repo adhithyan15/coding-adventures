@@ -1,0 +1,19 @@
+{
+  "chapter": 310,
+  "title": "Anniversaries and christenings",
+  "label": "ch:ru-anniversaries-and-christenings",
+  "canDo": "I can talk about a big birthday, an anniversary, a newborn, a christening party and christening a child.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-R310-review-303-310",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 310: I can talk about a big birthday, an anniversary, a newborn, a christening party and christening a child.",
+    "assesses": [
+      "RU-LEX-C310-YUBILEY-03",
+      "RU-LEX-C310-YUBILEY-04",
+      "RU-LEX-C310-YUBILEY-05"
+    ]
+  }
+}

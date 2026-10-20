@@ -1,0 +1,19 @@
+{
+  "chapter": 365,
+  "title": "The state and power",
+  "label": "ch:ru-the-state-and-power",
+  "canDo": "I can talk about the state, the government, power and politics, and about a politician.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C365-politik",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 365: I can talk about the state, the government, power and politics, and about a politician.",
+    "assesses": [
+      "RU-LEX-C365-VLAST-03",
+      "RU-LEX-C365-VLAST-04",
+      "RU-LEX-C365-VLAST-05"
+    ]
+  }
+}

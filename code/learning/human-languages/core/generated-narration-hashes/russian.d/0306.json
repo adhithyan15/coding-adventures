@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 306,
+  "sourceHash": "fnv1a64:6ddc45f95aa4dd6e",
+  "lessonIds": [
+    "RU-C306-pomolvka",
+    "RU-C306-vlyublyatsya",
+    "RU-C306-ukhazhivat",
+    "RU-C306-venchaniye",
+    "RU-C306-rasstavatsya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch306.txt",
+  "json": "russian/narration/ch306.json",
+  "textHash": "fnv1a64:0e6b892043d1db9c",
+  "jsonHash": "fnv1a64:9fb023bf56641725",
+  "findings": []
+}

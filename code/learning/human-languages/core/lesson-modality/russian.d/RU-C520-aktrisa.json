@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C520-aktrisa",
+    "language": "russian",
+    "chapter": 520,
+    "sequence": 29220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d3a6609d28121bdd"
+  },
+  "findings": []
+}

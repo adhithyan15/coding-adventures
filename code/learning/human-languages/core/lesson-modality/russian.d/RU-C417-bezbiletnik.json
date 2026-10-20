@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C417-bezbiletnik",
+    "language": "russian",
+    "chapter": 417,
+    "sequence": 23930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:23fa1f34096c4363"
+  },
+  "findings": []
+}

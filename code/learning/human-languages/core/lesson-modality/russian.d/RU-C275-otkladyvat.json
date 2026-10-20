@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C275-otkladyvat",
+    "language": "russian",
+    "chapter": 275,
+    "sequence": 16610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b466e3e02e7a23da"
+  },
+  "findings": []
+}

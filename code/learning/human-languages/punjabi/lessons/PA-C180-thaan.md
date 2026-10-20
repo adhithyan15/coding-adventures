@@ -12,6 +12,7 @@ concept_tag: PA-A2-PLACE-THAAN
 prerequisites: [PA-C180-us]
 sounds: []
 roots: []
+etymology_hook: "thaan ← Sanskrit sthāman 'station, place' through Prakrit thāma, a tadbhava (CDIAL 13760)"
 duration:
   max_seconds: 220
 requires:
@@ -47,6 +48,11 @@ reviews_of: [PA-C180-us, PA-C180-lok]
 
 Keep this as a two-word pointing phrase, not a new rule for every location noun.
 
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**ਥਾਂ** (*thā̃*) is a tadbhava, inherited and reshaped by sound change. It comes through Prakrit *thāma* from Sanskrit *sthāman*, "station, place" (CDIAL 13760).
+
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-PLACE-THAAN-LOCATION-01, PA-PLACE-US-THAT-01, PA-PLACE-LOK-PEOPLE-01] -->
 
@@ -59,4 +65,4 @@ Keep this as a two-word pointing phrase, not a new rule for every location noun.
 
 [PAUSE 3s] Say *that place*. (**ਉਸ ਥਾਂ**.)
 
-Source: Punjabi University, [RCPLT dictionary](https://dic.learnpunjabi.org/default.aspx?look=%E0%A8%A5%E0%A8%BE%E0%A8%82), gives **ਥਾਂ** as place or location.
+Sources: Punjabi University, [RCPLT dictionary](https://dic.learnpunjabi.org/default.aspx?look=%E0%A8%A5%E0%A8%BE%E0%A8%82), gives **ਥਾਂ** as place or location. Turner derives it through Prakrit *thāma* from Sanskrit *sthāman* in [CDIAL 13760](https://dsal.uchicago.edu/dictionaries/soas/).

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 356,
+  "sourceHash": "fnv1a64:7a05842857b242e8",
+  "lessonIds": [
+    "RU-C356-nesmotrya-na",
+    "RU-C356-tem-ne-menee",
+    "RU-C356-vprochem",
+    "RU-C356-s-odnoy-storony",
+    "RU-C356-s-drugoy-storony"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch356.txt",
+  "json": "russian/narration/ch356.json",
+  "textHash": "fnv1a64:7fea0770f78790f3",
+  "jsonHash": "fnv1a64:2d227959f7d4afd2",
+  "findings": []
+}

@@ -4,24 +4,62 @@
 
 ### Changed
 - LANG84 phase 2b: Perl's `releases.csv` now has the common LANG84 header
-  (`grammar_status` is the seventh of fourteen columns, and `perlhist_line` is
-  an extra). The reader already found columns by name. It now also refuses a
-  row whose field count differs from the header's, so a stray comma cannot
-  shift a later column without an error. New test
-  `release_inventory_reads_the_lang84_header`. Regenerating `perl` gives
-  byte-identical tables apart from the new date order of the release lists.
+  (`grammar_status` is the seventh of fourteen columns, `grammar_stage` the
+  eighth, and `perlhist_line` an extra). The Perl release family now reads
+  `grammar_stage` from its column like Ruby's, so
+  `RustReleaseFamilySpec.stage_source` and `StageSource::DerivedFromStatus`
+  (added in 2.3.0 only for the pre-schema file) are removed, and every family
+  requires the column again. The reader already refused rows whose field
+  count differs from the header's. New test
+  `release_inventory_reads_the_lang84_header`, which also checks that the old
+  four-column LANG82 header is refused. Regenerating `perl` gives the same
+  grammar classes; the release lists follow the new date order.
 
-### Added
-- LANG84 phase 4a: inventory-driven, deduplicating versioned families.
-  `generate-rust-compiled-grammars perl` reads the release list from
-  `code/grammars/perl/releases.csv` (columns found by header name; unsafe,
-  duplicate or unknown-status rows refused), compiles every non-pending pair,
-  and emits one module per distinct grammar (`g_<12 hex of SHA-256>` of the
-  generated code with comment lines dropped and `line_number` zeroed). Output
-  exports `INVENTORY_RELEASES`, `SUPPORTED_RELEASES`, a release → module
-  `match`, and `unversioned_*()` instead of a `""` release. Perl's 117 checked
-  pairs become 5 token and 2 parser tables.
-- Depends on the in-repo `sha256` crate for the module names.
+## [2.3.0] - 2026-10-20
+
+### Added — Perl joins the LANG84 release families (phase 4a)
+- `generate-rust-compiled-grammars perl` uses the generic release-family path
+  (`RustReleaseFamilySpec`) instead of a Perl-only generator. Perl's 117
+  checked pairs become 5 token and 2 parser tables; its generated API matches
+  Ruby's (`SUPPORTED_RELEASES`, `grammar_class`, the exact-ID selector, and
+  `INVENTORY` in the parser table).
+- `RustReleaseFamilySpec.legacy_token_grammar`: also embed the unversioned
+  `<prefix>.tokens` as `unversioned_token_grammar()` (Perl on, Ruby off).
+- `RustReleaseFamilySpec.stage_source`: `Column` (the LANG84 schema; the
+  `grammar_stage` column is required) or `DerivedFromStatus` for an inventory
+  that predates it (Perl until LANG84 2b), which derives the stage by the
+  spec's migration rule (`pending` → `none`, otherwise `P`).
+
+### Security
+- The release-inventory reader now also refuses duplicate release IDs and
+  unknown `grammar_status` / `grammar_stage` values, on top of quoted rows,
+  field-count mismatches and unsafe IDs. A trailing `\r` is dropped so a
+  CRLF checkout reads like an LF one. Ruby's generated tables are unchanged
+  byte for byte.
+
+## [2.2.0] - 2026-10-20
+
+### Added — LANG84 release families
+- `generate-rust-compiled-grammars ruby` now reads the release list from
+  `code/grammars/ruby/releases.csv` instead of a hard-coded version array.
+  Every row past stage `none` must have both `ruby<release>.tokens` and
+  `ruby<release>.grammar`; a missing file is an error, not a skip.
+- Pairs are deduplicated by content: each pair is parsed, its line numbers
+  zeroed, compiled with a blank source name, and hashed with SHA-256. One
+  module `g_<12 hex>` is emitted per distinct grammar, keeping the first
+  release's real line numbers. A 48-bit prefix collision between different
+  grammars is detected by comparing the full canonical text.
+- Generated selectors take an exact release ID and return `None` otherwise
+  (`token_grammar(release)` / `parser_grammar(release)`), plus
+  `SUPPORTED_RELEASES`, `grammar_class(release)`, and for parser tables the
+  full `INVENTORY` of `(release, grammar_stage)` rows. The unversioned
+  `ruby.grammar` stays embedded as `unversioned_parser_grammar()` for legacy
+  callers and is not reachable through the release selector.
+- Each release pair is validated and cross-validated before generation
+  (LANG84 stage G).
+- New dependency: `coding_adventures_sha256` (module naming).
+- 5 new tests, including one that fails when the committed Ruby tables are
+  stale.
 
 ## [2.1.0] - 2026-03-26
 

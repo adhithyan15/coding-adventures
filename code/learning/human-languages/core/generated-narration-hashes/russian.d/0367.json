@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 367,
+  "sourceHash": "fnv1a64:1e2931a04bac0acb",
+  "lessonIds": [
+    "RU-C367-svoboda",
+    "RU-C367-ravenstvo",
+    "RU-C367-bednost",
+    "RU-C367-bogatstvo",
+    "RU-C367-bezrabotica"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch367.txt",
+  "json": "russian/narration/ch367.json",
+  "textHash": "fnv1a64:a9cf16d04dcb1e98",
+  "jsonHash": "fnv1a64:29654fc242fc4993",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C523-personazh",
+  "pathSegment": "RU-PATH-523-PLOT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-523-PLOT",
+      "order": 1
+    }
+  ]
+}

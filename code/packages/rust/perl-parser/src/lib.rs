@@ -13,12 +13,18 @@ use parser::grammar_parser::{GrammarASTNode, GrammarParser};
 
 mod _grammar;
 
-/// Every release in `code/grammars/perl/releases.csv`, pending rows included,
-/// in canonical inventory order.
-pub use _grammar::INVENTORY_RELEASES;
+/// Every release in `code/grammars/perl/releases.csv` as `(release,
+/// grammar_stage)`, pending rows included, in canonical inventory order. A
+/// release here but not in [`SUPPORTED_RELEASES`] is known but has no pair
+/// yet (stage `none`); a release in neither is unknown.
+pub use _grammar::INVENTORY;
 
 /// Every release with a compiled parser grammar, in inventory order.
 pub use _grammar::SUPPORTED_RELEASES;
+
+/// The deduplicated module (`g_<12 hex>`) that holds a release's parser
+/// table, or `None` for a release without one.
+pub use _grammar::grammar_class;
 
 /// The parser's rule-depth cap. `GrammarParser`'s default is `usize::MAX`,
 /// so every Perl parse sets this explicitly (LANG84 C5). The bounded grammar
@@ -1013,13 +1019,18 @@ mod tests {
     fn compiled_tables_match_every_inventoried_pair() {
         let directory = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/perl");
         let rows = inventory_rows();
-        let all: Vec<&str> = rows.iter().map(|row| row["release"].as_str()).collect();
+        // INVENTORY is every row as (release, grammar_stage), read from the
+        // migrated inventory's own `grammar_stage` column.
+        let all: Vec<(&str, &str)> = rows
+            .iter()
+            .map(|row| (row["release"].as_str(), row["grammar_stage"].as_str()))
+            .collect();
         let compiled: Vec<&str> = rows
             .iter()
             .filter(|row| row["grammar_status"] != "pending")
             .map(|row| row["release"].as_str())
             .collect();
-        assert_eq!(INVENTORY_RELEASES, all.as_slice());
+        assert_eq!(INVENTORY, all.as_slice());
         assert_eq!(SUPPORTED_RELEASES, compiled.as_slice());
         assert_eq!(
             SUPPORTED_RELEASES,
@@ -1035,7 +1046,11 @@ mod tests {
                 "{release}: compiled table is stale"
             );
         }
-        for release in INVENTORY_RELEASES {
+        for (release, _) in INVENTORY {
+            assert_eq!(
+                grammar_class(release).is_some(),
+                SUPPORTED_RELEASES.contains(release)
+            );
             assert_eq!(
                 release_parser_grammar(release).is_some(),
                 SUPPORTED_RELEASES.contains(release),

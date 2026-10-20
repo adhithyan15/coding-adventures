@@ -1,0 +1,11 @@
+{
+  "id": "RU-C458-sklon",
+  "pathSegment": "RU-PATH-458-DOLINA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-458-DOLINA",
+      "order": 2
+    }
+  ]
+}

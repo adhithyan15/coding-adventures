@@ -1,0 +1,19 @@
+{
+  "chapter": 486,
+  "title": "A Fever and a Sore Throat",
+  "label": "ch:ru-a-fever-and-a-sore-throat",
+  "canDo": "I can describe a fever, chills and a sore throat.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C486-pershit",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 486: I can describe a fever, chills and a sore throat.",
+    "assesses": [
+      "RU-LEX-C486-FEVER-03",
+      "RU-LEX-C486-FEVER-04",
+      "RU-LEX-C486-FEVER-05"
+    ]
+  }
+}

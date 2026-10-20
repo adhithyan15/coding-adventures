@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 443,
+  "sourceHash": "fnv1a64:ecf3ca9d3379c077",
+  "lessonIds": [
+    "RU-C443-brodit",
+    "RU-C443-progulivatsya",
+    "RU-C443-kvartal",
+    "RU-C443-prigorod",
+    "RU-C443-mostovaya"
+  ],
+  "tex": "russian/book/chapters/ch443-a-stroll-round-town.tex"
+}

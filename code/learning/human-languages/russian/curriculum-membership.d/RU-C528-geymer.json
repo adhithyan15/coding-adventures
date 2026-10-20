@@ -1,0 +1,11 @@
+{
+  "id": "RU-C528-geymer",
+  "pathSegment": "RU-PATH-528-GAMING",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-528-GAMING",
+      "order": 4
+    }
+  ]
+}

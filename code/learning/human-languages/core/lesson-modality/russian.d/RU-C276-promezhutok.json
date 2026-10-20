@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C276-promezhutok",
+    "language": "russian",
+    "chapter": 276,
+    "sequence": 16680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4b81cb2ed31ede55"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 374,
+  "sourceHash": "fnv1a64:d09247dc5fbac6d3",
+  "lessonIds": [
+    "RU-C374-rasschityvat",
+    "RU-C374-ozhidat",
+    "RU-C374-ozhidanie",
+    "RU-C374-udavatsya",
+    "RU-C374-poluchatsya"
+  ],
+  "tex": "russian/book/chapters/ch374-expectations.tex"
+}

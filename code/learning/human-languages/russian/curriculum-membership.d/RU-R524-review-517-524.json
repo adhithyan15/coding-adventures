@@ -1,0 +1,11 @@
+{
+  "id": "RU-R524-review-517-524",
+  "pathSegment": "RU-PATH-524-GENRES",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "RU-EXT-524-GENRES",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C376-khotya-by",
+  "pathSegment": "RU-PATH-376-ISKLYUCHENIYE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-376-ISKLYUCHENIYE",
+      "order": 3
+    }
+  ]
+}

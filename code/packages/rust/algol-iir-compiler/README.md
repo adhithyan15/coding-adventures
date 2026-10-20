@@ -246,8 +246,11 @@ exact binary64 integer. Fractional, oversized, and dynamic additive terms
 remain conservative. The budget is tracked through parentheses, supported
 standard-function wrappers, and runtime conditional branches; each conditional
 path receives its own budget.
-Variable-free exact multiplicative unit factors may likewise surround it;
-non-unit or variable factors remain conservative.
+Exact whole-number multiplication may scale the sign-rooted integer transform
+through magnitude `2^53`, including composition with exact additive terms, as
+long as every intermediate magnitude stays in that exact binary64 range.
+Fractional factors, oversized products, repeated roots, and variable factors
+remain conservative.
 Exact unit division is also permitted when the bounded result is the numerator;
 non-unit or variable divisors and a bounded denominator remain conservative.
 An exact variable-free exponent chain evaluating to one may preserve the

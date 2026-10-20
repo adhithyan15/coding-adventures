@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-470-SHAME",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "RU-EXT-470-SHAME"
+  ],
+  "after": []
+}

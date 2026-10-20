@@ -1,0 +1,11 @@
+{
+  "id": "RU-W266-tvyordyy-znak",
+  "pathSegment": "RU-PATH-266-TICKET",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-266-TICKET",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "language": "russian",
+  "chapter": 484,
+  "sourceHash": "fnv1a64:1d855f24c6ffd186",
+  "lessonIds": [
+    "RU-C484-gips",
+    "RU-C484-kostyl",
+    "RU-C484-vyvikh",
+    "RU-C484-rastyazheniye",
+    "RU-C484-khromat",
+    "RU-R484-review-477-484"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "russian/narration/ch484.txt",
+  "json": "russian/narration/ch484.json",
+  "textHash": "fnv1a64:c879896de3d5ee73",
+  "jsonHash": "fnv1a64:e9282fdd85ed0255",
+  "findings": []
+}

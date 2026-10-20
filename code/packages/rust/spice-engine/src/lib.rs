@@ -9292,14 +9292,19 @@ fn resolve_measurement_line(
     }
 
     let analysis = tokens[1].trim().to_ascii_lowercase();
-    if analysis != "tran" && analysis != "transient" && analysis != "dc" && analysis != "ac" {
+    if analysis != "op"
+        && analysis != "tran"
+        && analysis != "transient"
+        && analysis != "dc"
+        && analysis != "ac"
+    {
         add_measurement_diagnostic(
             state,
             "SPICE_DECK_MEASURE_ANALYSIS",
             directive,
             line_number,
             &format!(
-                "only transient, dc, and ac .measure cards are supported, got {:?}",
+                "only operating-point, transient, dc, and ac .measure cards are supported, got {:?}",
                 tokens[1]
             ),
             Some(tokens[1].to_string()),
@@ -9499,13 +9504,23 @@ fn resolve_measurement_line(
         }
     }
 
-    if mode == "find" && at_value.is_none() {
+    if mode == "find" && at_value.is_none() && analysis != "op" {
         add_measurement_diagnostic(
             state,
             "SPICE_DECK_MEASURE_ARGUMENT",
             directive,
             line_number,
             "FIND measurements require an AT value",
+            None,
+        );
+    }
+    if analysis == "op" && (mode != "find" || at_value.is_some_and(|value| value != 0.0)) {
+        add_measurement_diagnostic(
+            state,
+            "SPICE_DECK_MEASURE_ARGUMENT",
+            directive,
+            line_number,
+            "operating-point .measure cards require FIND probe with optional AT=0",
             None,
         );
     }
@@ -16285,8 +16300,10 @@ fn run_deck_analysis_plan(
         "op" => {
             let result = dc_op(circuit)?;
             let table = format_deck_op_table(&result, netlist)?;
-            select_deck_measurement_cards_for_analysis(netlist, "op")?;
-            let measurements = Vec::new();
+            let measurements = measure_operating_point_cards(
+                &result,
+                &select_deck_measurement_cards_for_analysis(netlist, "op")?,
+            )?;
             let measurement_table = format_measurement_table(&measurements);
             select_deck_fourier_cards_for_analysis(netlist, "op")?;
             let fourier = Vec::new();
@@ -18770,6 +18787,52 @@ pub fn measure_transient_deck(
         ));
     }
     measure_transient_cards(points, &summary.measurements)
+}
+
+pub fn measure_operating_point_probe(
+    result: &DcResult,
+    name: &str,
+    probe: &str,
+) -> Result<ProbeMeasurement, SpiceError> {
+    Ok(ProbeMeasurement {
+        name: name.to_string(),
+        analysis: "op".to_string(),
+        probe: probe.to_string(),
+        mode: "find".to_string(),
+        value: table_probe_value(
+            &result.node_voltages,
+            &result.branch_currents,
+            probe,
+            "measure_operating_point_probe",
+        )?,
+        from_value: Some(0.0),
+        to_value: Some(0.0),
+    })
+}
+
+pub fn measure_operating_point_cards(
+    result: &DcResult,
+    measurements: &[DeckMeasurementCard],
+) -> Result<Vec<ProbeMeasurement>, SpiceError> {
+    measurements
+        .iter()
+        .map(|measurement| {
+            if measurement.analysis != "op" {
+                return Err(table_error(
+                    "measure_operating_point_cards",
+                    "only operating-point measurement cards are supported",
+                ));
+            }
+            if measurement.mode != "find" || measurement.at_value.is_some_and(|value| value != 0.0)
+            {
+                return Err(table_error(
+                    "measure_operating_point_cards",
+                    "operating-point measurements require FIND probe with optional AT=0",
+                ));
+            }
+            measure_operating_point_probe(result, &measurement.name, &measurement.probe)
+        })
+        .collect()
 }
 
 pub fn measure_dc_sweep_probe(

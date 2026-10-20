@@ -1,0 +1,11 @@
+{
+  "id": "RU-C402-perepisyvatsya",
+  "pathSegment": "RU-PATH-402-SVYAZ",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-402-SVYAZ",
+      "order": 2
+    }
+  ]
+}

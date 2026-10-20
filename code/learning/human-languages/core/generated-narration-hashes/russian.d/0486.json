@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 486,
+  "sourceHash": "fnv1a64:5539fc949ba5a700",
+  "lessonIds": [
+    "RU-C486-zhar",
+    "RU-C486-oznob",
+    "RU-C486-smorkatsya",
+    "RU-C486-okhripnut",
+    "RU-C486-pershit"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch486.txt",
+  "json": "russian/narration/ch486.json",
+  "textHash": "fnv1a64:c7134cd9018fcf92",
+  "jsonHash": "fnv1a64:9c1e64489b96e5a1",
+  "findings": []
+}

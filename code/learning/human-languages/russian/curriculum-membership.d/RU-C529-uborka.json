@@ -1,0 +1,11 @@
+{
+  "id": "RU-C529-uborka",
+  "pathSegment": "RU-PATH-529-CLEANING",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-529-CLEANING",
+      "order": 1
+    }
+  ]
+}

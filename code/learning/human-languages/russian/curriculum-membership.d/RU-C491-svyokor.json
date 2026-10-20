@@ -1,0 +1,11 @@
+{
+  "id": "RU-C491-svyokor",
+  "pathSegment": "RU-PATH-491-INLAWS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-491-INLAWS",
+      "order": 2
+    }
+  ]
+}

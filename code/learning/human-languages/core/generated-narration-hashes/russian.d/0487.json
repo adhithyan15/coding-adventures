@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 487,
+  "sourceHash": "fnv1a64:9e6b98bf386b8c91",
+  "lessonIds": [
+    "RU-C487-syp",
+    "RU-C487-zud",
+    "RU-C487-chesatsya",
+    "RU-C487-privivka",
+    "RU-C487-zarazhatsya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch487.txt",
+  "json": "russian/narration/ch487.json",
+  "textHash": "fnv1a64:086ab1b3da15b0f3",
+  "jsonHash": "fnv1a64:b89f72263e3e562d",
+  "findings": []
+}

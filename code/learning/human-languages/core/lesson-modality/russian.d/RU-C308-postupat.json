@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C308-postupat",
+    "language": "russian",
+    "chapter": 308,
+    "sequence": 18300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0e21917b918e114b"
+  },
+  "findings": []
+}

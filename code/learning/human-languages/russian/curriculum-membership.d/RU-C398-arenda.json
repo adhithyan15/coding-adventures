@@ -1,0 +1,11 @@
+{
+  "id": "RU-C398-arenda",
+  "pathSegment": "RU-PATH-398-ARENDA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-398-ARENDA",
+      "order": 0
+    }
+  ]
+}

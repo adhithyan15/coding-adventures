@@ -1,0 +1,11 @@
+{
+  "id": "RU-C371-predpolozhim",
+  "pathSegment": "RU-PATH-371-GIPOTEZA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-371-GIPOTEZA",
+      "order": 2
+    }
+  ]
+}

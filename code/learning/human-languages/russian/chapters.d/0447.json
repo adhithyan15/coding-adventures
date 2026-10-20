@@ -1,0 +1,19 @@
+{
+  "chapter": 447,
+  "title": "Repair shops",
+  "label": "ch:ru-repair-shops",
+  "canDo": "I can find repair shops: a workshop, a shoemaker, a watchmaker, a locksmith and repairs.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C447-remont",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 447: I can find repair shops: a workshop, a shoemaker, a watchmaker, a locksmith and repairs.",
+    "assesses": [
+      "RU-LEX-C447-MASTERSKAYA-03",
+      "RU-LEX-C447-MASTERSKAYA-04",
+      "RU-LEX-C447-MASTERSKAYA-05"
+    ]
+  }
+}

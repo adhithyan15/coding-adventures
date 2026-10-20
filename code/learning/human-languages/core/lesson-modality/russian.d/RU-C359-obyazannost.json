@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C359-obyazannost",
+    "language": "russian",
+    "chapter": 359,
+    "sequence": 20920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d4acd556eb743263"
+  },
+  "findings": []
+}
