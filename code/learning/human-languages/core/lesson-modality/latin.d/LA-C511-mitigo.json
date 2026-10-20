@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C511-mitigo",
+    "language": "latin",
+    "chapter": 511,
+    "sequence": 27150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e150f265e70fd1d7"
+  },
+  "findings": []
+}

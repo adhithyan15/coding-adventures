@@ -1,0 +1,19 @@
+{
+  "chapter": 527,
+  "title": "Rest and sleep",
+  "label": "ch:la-rest-and-sleep",
+  "canDo": "I can talk about rest, dozing and sleeplessness.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C527-recumbo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 527: I can talk about rest, dozing and sleeplessness.",
+    "assesses": [
+      "LA-LEX-C527-REQU-03",
+      "LA-LEX-C527-REQU-04",
+      "LA-LEX-C527-REQU-05"
+    ]
+  }
+}

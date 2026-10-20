@@ -1,0 +1,11 @@
+{
+  "id": "LA-C323-nutrio",
+  "pathSegment": "LA-PATH-323-PARTUS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-323-PARTUS",
+      "order": 3
+    }
+  ]
+}

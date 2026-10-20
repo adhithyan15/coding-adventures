@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-413-CONDEMNO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "LA-EXT-413-CONDEMNO"
+  ],
+  "after": []
+}

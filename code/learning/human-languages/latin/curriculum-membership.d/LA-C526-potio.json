@@ -1,0 +1,11 @@
+{
+  "id": "LA-C526-potio",
+  "pathSegment": "LA-PATH-526-SANO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-526-SANO",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-312-SUPPLICIUM",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-312-SUPPLICIUM"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "language": "latin",
+  "chapter": 488,
+  "sourceHash": "fnv1a64:11c2b567198a80e8",
+  "lessonIds": [
+    "LA-C488-bruma",
+    "LA-C488-solstitium",
+    "LA-C488-canicula",
+    "LA-C488-aestivus",
+    "LA-C488-caleo",
+    "LA-R488-review-487-488",
+    "LA-R488-review-final-488"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "latin/narration/ch488.txt",
+  "json": "latin/narration/ch488.json",
+  "textHash": "fnv1a64:06a7a03d3e835ec5",
+  "jsonHash": "fnv1a64:2ec6078b3d0fd491",
+  "findings": []
+}

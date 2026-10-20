@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 498,
+  "sourceHash": "fnv1a64:c46ab986fa36290c",
+  "lessonIds": [
+    "LA-C498-despero",
+    "LA-C498-desperatio",
+    "LA-C498-confido",
+    "LA-C498-diffido",
+    "LA-C498-credulus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch498.txt",
+  "json": "latin/narration/ch498.json",
+  "textHash": "fnv1a64:b948b81bd4574005",
+  "jsonHash": "fnv1a64:c4521a3351bb9270",
+  "findings": []
+}

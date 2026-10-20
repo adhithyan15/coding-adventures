@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 411,
+  "title": "Going to Law",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:becd92219b7977ef",
+  "lessons": [
+    {
+      "id": "LA-C411-tribunal",
+      "sequence": 21960,
+      "title": "tribūnal, tribūnālis — the judgement seat, a raised platform",
+      "headword": "tribūnal, tribūnālis",
+      "romanization": "tribūnal, tribūnālis",
+      "gloss": "the judgement seat, a raised platform",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:980f3820573d3510",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to make sacred and binding, then the Latin for to lay down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: tribūnal, tribūnālis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tribūnal, tribūnālis — \"the judgement seat, a raised platform\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Praetor in tribūnālī sedēbat. The praetor sat on the judgement seat."
+            },
+            {
+              "kind": "speech",
+              "text": "tribūnal, tribūnālis n.: the raised platform where a magistrate sat to judge. English tribunal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tribūnal is built on tribūnus \"a tribune\" (Lewis & Short), who takes his name from tribus \"a tribe\": the platform of the tribunes. English tribunal comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tribūnal, tribūnālis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tribūnal, tribūnālis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tribūnal, tribūnālis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tribūnal, tribūnālis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with tribūnal, tribūnālis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *tribūnal, tribūnālis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to make sacred and binding, then the Latin for to lay down, then say tribūnal, tribūnālis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to make sacred and binding, then the Latin for to lay down, then say *tribūnal, tribūnālis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does tribūnal, tribūnālis mean? (\"The judgement seat, a raised platform\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C411-lis",
+      "sequence": 21970,
+      "title": "līs, lītis — a lawsuit, a dispute",
+      "headword": "līs, lītis",
+      "romanization": "līs, lītis",
+      "gloss": "a lawsuit, a dispute",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cbd0fc52f5a1d03e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to lay down, then the Latin for the judgement seat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: līs, lītis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "līs, lītis — \"a lawsuit, a dispute\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Inter frātrēs līs dē hērēditāte erat. There was a lawsuit between the brothers about the inheritance."
+            },
+            {
+              "kind": "speech",
+              "text": "līs, lītis f., old Latin stlīs. Lītem intendere, to bring a suit. English litigation is built on it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "līs was stlīs in old Latin (EtymDB; Lewis & Short); its deeper origin is not settled. English litigation comes from its family."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "līs, lītis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *līs, lītis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "līs, lītis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *līs, lītis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with līs, lītis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *līs, lītis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to lay down, then the Latin for the judgement seat, then say līs, lītis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to lay down, then the Latin for the judgement seat, then say *līs, lītis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does līs, lītis mean? (\"A lawsuit, a dispute\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C411-litigo",
+      "sequence": 21980,
+      "title": "lītigō, lītigāre — to go to law, to quarrel",
+      "headword": "lītigō, lītigāre",
+      "romanization": "lītigō, lītigāre",
+      "gloss": "to go to law, to quarrel",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c848693cf774e955",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for the judgement seat, then the Latin for a lawsuit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: lītigō, lītigāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lītigō, lītigāre — \"to go to law, to quarrel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Vīcīnī dē fīnibus lītigant. The neighbours are going to law about the boundaries."
+            },
+            {
+              "kind": "speech",
+              "text": "lītigō, lītigāre, lītigāvī, lītigātum, built on līs and agō: to drive a suit. English litigate."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lītigō is built from līs, lītis \"a lawsuit\" and agō \"to drive, to conduct\" (Lewis & Short). English litigate comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lītigō, lītigāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lītigō, lītigāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lītigō, lītigāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lītigō, lītigāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with lītigō, lītigāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *lītigō, lītigāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for the judgement seat, then the Latin for a lawsuit, then say lītigō, lītigāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for the judgement seat, then the Latin for a lawsuit, then say *lītigō, lītigāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does lītigō, lītigāre mean? (\"To go to law, to quarrel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C411-vadimonium",
+      "sequence": 21990,
+      "title": "vadimōnium, vadimōniī — a promise to appear in court, bail",
+      "headword": "vadimōnium, vadimōniī",
+      "romanization": "vadimōnium, vadimōniī",
+      "gloss": "a promise to appear in court, bail",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5cf08a584851bd48",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a lawsuit, then the Latin for to go to law."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: vadimōnium, vadimōniī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vadimōnium, vadimōniī — \"a promise to appear in court, bail\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Reus vadimōnium prōmīsit. The accused gave bail to appear."
+            },
+            {
+              "kind": "speech",
+              "text": "vadimōnium, vadimōniī n., built on vas, vadis, a surety: a promise, backed by money, to appear in court on a set day."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vadimōnium is built on vas, vadis \"a surety, a bail\" (EtymDB; Lewis & Short), with the ending -mōnium; it is a different word from vās \"a vessel\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vadimōnium, vadimōniī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vadimōnium, vadimōniī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vadimōnium, vadimōniī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vadimōnium, vadimōniī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with vadimōnium, vadimōniī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *vadimōnium, vadimōniī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a lawsuit, then the Latin for to go to law, then say vadimōnium, vadimōniī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a lawsuit, then the Latin for to go to law, then say *vadimōnium, vadimōniī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does vadimōnium, vadimōniī mean? (\"A promise to appear in court, bail\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C411-iurisconsultus",
+      "sequence": 22000,
+      "title": "iūriscōnsultus, iūriscōnsultī — a legal expert, a jurist",
+      "headword": "iūriscōnsultus, iūriscōnsultī",
+      "romanization": "iūriscōnsultus, iūriscōnsultī",
+      "gloss": "a legal expert, a jurist",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f6b4fe11f66af2b1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to go to law, then the Latin for a promise to appear in court."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: iūriscōnsultus, iūriscōnsultī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "iūriscōnsultus, iūriscōnsultī — \"a legal expert, a jurist\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Iūriscōnsultum dē hāc rē cōnsuluī. I consulted a legal expert about this matter."
+            },
+            {
+              "kind": "speech",
+              "text": "iūriscōnsultus, iūriscōnsultī m., also written as two words, iūris cōnsultus: one consulted on the law. Romans came to his house in the morning for advice."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "iūriscōnsultus is built from iūris \"of the law\", the genitive of iūs, and cōnsultus, the participle of cōnsulō \"to consult\" (EtymDB; Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iūriscōnsultus, iūriscōnsultī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iūriscōnsultus, iūriscōnsultī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iūriscōnsultus, iūriscōnsultī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iūriscōnsultus, iūriscōnsultī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with iūriscōnsultus, iūriscōnsultī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *iūriscōnsultus, iūriscōnsultī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to go to law, then the Latin for a promise to appear in court, then say iūriscōnsultus, iūriscōnsultī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to go to law, then the Latin for a promise to appear in court, then say *iūriscōnsultus, iūriscōnsultī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does iūriscōnsultus, iūriscōnsultī mean? (\"A legal expert, a jurist\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

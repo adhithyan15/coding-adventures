@@ -1,0 +1,11 @@
+{
+  "id": "LA-C422-egestas",
+  "pathSegment": "LA-PATH-422-DIVITIAE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-422-DIVITIAE",
+      "order": 2
+    }
+  ]
+}

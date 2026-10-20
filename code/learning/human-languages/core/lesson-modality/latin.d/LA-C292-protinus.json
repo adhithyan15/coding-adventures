@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C292-protinus",
+    "language": "latin",
+    "chapter": 292,
+    "sequence": 15890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3869c6b0b4c3db5a"
+  },
+  "findings": []
+}

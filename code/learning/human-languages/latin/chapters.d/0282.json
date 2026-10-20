@@ -1,0 +1,20 @@
+{
+  "chapter": 282,
+  "title": "A Story in Order",
+  "label": "ch:la-a-story-in-order",
+  "canDo": "I can tell a short story in order, with prīmum, deinde, tum and postrēmō, and hold two things together with dum.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-R282-a-story-in-order",
+    "kind": "production",
+    "summary": "Complete LA-R282-a-story-in-order: I can tell a short story in order, with prīmum, deinde, tum and postrēmō, and hold two things together with dum.",
+    "assesses": [
+      "LA-GRAMMAR-C282-ORDO-01",
+      "LA-LEX-C282-DUM-01",
+      "LA-GRAMMAR-C282-DUM-PRAESENS-02",
+      "LA-SKILL-READ-NARRATIVE-01"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C456-incolo",
+  "pathSegment": "LA-PATH-456-INCOLA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-456-INCOLA",
+      "order": 3
+    }
+  ]
+}

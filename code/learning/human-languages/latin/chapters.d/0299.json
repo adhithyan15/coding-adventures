@@ -1,0 +1,19 @@
+{
+  "chapter": 299,
+  "title": "Nārrātiō",
+  "label": "ch:la-narratio",
+  "canDo": "I can talk about telling a story: a narrative, to recall, to relate, to report and to quote words.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C299-inquam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 299: I can talk about telling a story: a narrative, to recall, to relate, to report and to quote words.",
+    "assesses": [
+      "LA-LEX-C299-NARRATIO-03",
+      "LA-LEX-C299-NARRATIO-04",
+      "LA-LEX-C299-NARRATIO-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:d627efc694fcc8d4",
+  "lessonIds": [
+    "LA-C370-auctoritas",
+    "LA-C370-dignitas",
+    "LA-C370-gravitas",
+    "LA-C370-levitas",
+    "LA-C370-temeritas"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch370.txt",
+  "json": "latin/narration/ch370.json",
+  "textHash": "fnv1a64:b4403303063d2928",
+  "jsonHash": "fnv1a64:64ddd0959d362a83",
+  "findings": []
+}

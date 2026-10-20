@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C303-praeda",
+    "language": "latin",
+    "chapter": 303,
+    "sequence": 16450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f1c6223d922812fa"
+  },
+  "findings": []
+}

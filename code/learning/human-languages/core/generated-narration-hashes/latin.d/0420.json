@@ -1,0 +1,20 @@
+{
+  "language": "latin",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:d3cee78075b0982b",
+  "lessonIds": [
+    "LA-C420-consto",
+    "LA-C420-auctio",
+    "LA-C420-liceor",
+    "LA-C420-emptor",
+    "LA-C420-venditor",
+    "LA-R420-review-413-420"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "latin/narration/ch420.txt",
+  "json": "latin/narration/ch420.json",
+  "textHash": "fnv1a64:0efa0c248e27ea60",
+  "jsonHash": "fnv1a64:942f4561d42cdf74",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C422-egeo",
+  "pathSegment": "LA-PATH-422-DIVITIAE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-422-DIVITIAE",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 394,
+  "sourceHash": "fnv1a64:f841b5244b8cf9a4",
+  "lessonIds": [
+    "LA-C394-apparo",
+    "LA-C394-dispono",
+    "LA-C394-ordino",
+    "LA-C394-molior",
+    "LA-C394-praevideo"
+  ],
+  "tex": "latin/book/chapters/ch394-getting-ready.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C419-fenerator",
+    "language": "latin",
+    "chapter": 419,
+    "sequence": 22410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:36e353182098a19e"
+  },
+  "findings": []
+}

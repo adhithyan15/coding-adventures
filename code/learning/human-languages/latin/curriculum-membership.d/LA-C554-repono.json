@@ -1,0 +1,11 @@
+{
+  "id": "LA-C554-repono",
+  "pathSegment": "LA-PATH-554-SUBS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-554-SUBS",
+      "order": 2
+    }
+  ]
+}

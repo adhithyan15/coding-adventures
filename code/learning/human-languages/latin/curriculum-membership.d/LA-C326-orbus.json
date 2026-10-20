@@ -1,0 +1,11 @@
+{
+  "id": "LA-C326-orbus",
+  "pathSegment": "LA-PATH-326-SENECTUS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-326-SENECTUS",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C340-clipeus",
+  "pathSegment": "LA-PATH-340-ARMA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-340-ARMA",
+      "order": 4
+    }
+  ]
+}

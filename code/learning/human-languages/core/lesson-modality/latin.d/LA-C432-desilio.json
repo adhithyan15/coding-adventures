@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C432-desilio",
+    "language": "latin",
+    "chapter": 432,
+    "sequence": 23090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:739081d0d57ba69c"
+  },
+  "findings": []
+}

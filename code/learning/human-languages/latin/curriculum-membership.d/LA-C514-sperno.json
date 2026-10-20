@@ -1,0 +1,11 @@
+{
+  "id": "LA-C514-sperno",
+  "pathSegment": "LA-PATH-514-CONT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-514-CONT",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C503-lascivus",
+    "language": "latin",
+    "chapter": 503,
+    "sequence": 26750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e6f45cb2ee08432a"
+  },
+  "findings": []
+}

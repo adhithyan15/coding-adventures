@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:f2df8ed38e9957d2",
+  "lessonIds": [
+    "LA-C305-scelus",
+    "LA-C305-facinus",
+    "LA-C305-sceleratus",
+    "LA-C305-fraus",
+    "LA-C305-dolus"
+  ],
+  "tex": "latin/book/chapters/ch305-scelus-et-fraus.tex"
+}

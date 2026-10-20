@@ -1,0 +1,11 @@
+{
+  "id": "LA-C415-custodia",
+  "pathSegment": "LA-PATH-415-CASTIGO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-415-CASTIGO",
+      "order": 4
+    }
+  ]
+}

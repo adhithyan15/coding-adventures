@@ -1,0 +1,11 @@
+{
+  "id": "LA-C493-irascor",
+  "pathSegment": "LA-PATH-493-IRA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-493-IRA",
+      "order": 0
+    }
+  ]
+}

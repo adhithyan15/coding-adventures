@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C299-memoro",
+    "language": "latin",
+    "chapter": 299,
+    "sequence": 16230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:847758f84b4c06d7"
+  },
+  "findings": []
+}

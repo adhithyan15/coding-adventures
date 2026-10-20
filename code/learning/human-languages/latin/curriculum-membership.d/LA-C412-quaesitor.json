@@ -1,0 +1,11 @@
+{
+  "id": "LA-C412-quaesitor",
+  "pathSegment": "LA-PATH-412-COGNITIO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-412-COGNITIO",
+      "order": 1
+    }
+  ]
+}

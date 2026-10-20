@@ -1,0 +1,11 @@
+{
+  "id": "LA-C348-prodigium",
+  "pathSegment": "LA-PATH-348-ORACULUM",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-348-ORACULUM",
+      "order": 2
+    }
+  ]
+}

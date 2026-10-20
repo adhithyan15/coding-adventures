@@ -1,0 +1,11 @@
+{
+  "id": "LA-C499-voluptas",
+  "pathSegment": "LA-PATH-499-VOLU",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-499-VOLU",
+      "order": 2
+    }
+  ]
+}

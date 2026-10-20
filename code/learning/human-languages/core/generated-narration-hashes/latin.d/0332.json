@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 332,
+  "sourceHash": "fnv1a64:44900d9fc0cfc03e",
+  "lessonIds": [
+    "LA-C332-heres",
+    "LA-C332-hereditas",
+    "LA-C332-testamentum",
+    "LA-C332-obsigno",
+    "LA-C332-relinquo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch332.txt",
+  "json": "latin/narration/ch332.json",
+  "textHash": "fnv1a64:1fa7228d3d14ea51",
+  "jsonHash": "fnv1a64:783b204dec28df32",
+  "findings": []
+}

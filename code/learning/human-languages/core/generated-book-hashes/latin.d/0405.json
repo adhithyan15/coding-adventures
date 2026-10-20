@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:d5848f7bf4a5124e",
+  "lessonIds": [
+    "LA-C405-abacus",
+    "LA-C405-calculus",
+    "LA-C405-enumero",
+    "LA-C405-dicto",
+    "LA-C405-pensum"
+  ],
+  "tex": "latin/book/chapters/ch405-counting-and-dictation.tex"
+}

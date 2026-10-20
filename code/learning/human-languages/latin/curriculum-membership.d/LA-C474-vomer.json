@@ -1,0 +1,11 @@
+{
+  "id": "LA-C474-vomer",
+  "pathSegment": "LA-PATH-474-ARO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-474-ARO",
+      "order": 2
+    }
+  ]
+}

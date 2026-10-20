@@ -1,0 +1,19 @@
+{
+  "chapter": 360,
+  "title": "Plain, Clear and Absurd",
+  "label": "ch:la-plain-clear-and-absurd",
+  "canDo": "I can say that a thing is plain or clear, call an idea absurd or foolish, and praise steadiness of mind.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C360-constantia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 360: I can say that a thing is plain or clear, call an idea absurd or foolish, and praise steadiness of mind.",
+    "assesses": [
+      "LA-LEX-C360-MANIFESTUS-03",
+      "LA-LEX-C360-MANIFESTUS-04",
+      "LA-LEX-C360-MANIFESTUS-05"
+    ]
+  }
+}

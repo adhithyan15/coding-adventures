@@ -1,0 +1,11 @@
+{
+  "id": "LA-C540-harpastum",
+  "pathSegment": "LA-PATH-540-PUPA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-540-PUPA",
+      "order": 3
+    }
+  ]
+}

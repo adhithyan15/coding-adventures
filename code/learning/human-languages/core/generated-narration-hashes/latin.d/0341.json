@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:65c28f2c97f9de8f",
+  "lessonIds": [
+    "LA-C341-obsideo",
+    "LA-C341-obsidio",
+    "LA-C341-oppugno",
+    "LA-C341-expugno",
+    "LA-C341-aries"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch341.txt",
+  "json": "latin/narration/ch341.json",
+  "textHash": "fnv1a64:1213fc525c1e22f3",
+  "jsonHash": "fnv1a64:333d95f9d4eeab40",
+  "findings": []
+}

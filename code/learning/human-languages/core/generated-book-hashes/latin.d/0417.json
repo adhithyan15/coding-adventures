@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:27f6639973a4d6f1",
+  "lessonIds": [
+    "LA-C417-possessio",
+    "LA-C417-proprius",
+    "LA-C417-alienus",
+    "LA-C417-dominium",
+    "LA-C417-mancipium"
+  ],
+  "tex": "latin/book/chapters/ch417-property.tex"
+}

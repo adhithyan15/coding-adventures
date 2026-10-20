@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 512,
+  "title": "Gratitude and praise",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:f07c9e70c88efbbb",
+  "lessons": [
+    {
+      "id": "LA-C512-gratus",
+      "sequence": 27170,
+      "title": "grātus, grāta, grātum — welcome, pleasing; grateful",
+      "headword": "grātus, grāta, grātum",
+      "romanization": "grātus, grāta, grātum",
+      "gloss": "welcome, pleasing; grateful",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b5f04e6f7e062a7a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to ease, then the Latin for tame."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: grātus, grāta, grātum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "grātus, grāta, grātum — \"welcome, pleasing; grateful\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Epistula tua mihi grāta est. Your letter is welcome to me."
+            },
+            {
+              "kind": "speech",
+              "text": "Two sides: pleasing to someone (with the dative), and grateful for something. Grātiās agō, already known, belongs here. English grateful."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "grātus is inherited and traced to a Proto-Indo-European root meaning \"to praise, welcome\" (EtymDB); Lewis & Short compares Greek charis. English grateful and gratitude come from its family."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grātus, grāta, grātum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *grātus, grāta, grātum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grātus, grāta, grātum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *grātus, grāta, grātum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with grātus, grāta, grātum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *grātus, grāta, grātum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to ease, then the Latin for tame, then say grātus, grāta, grātum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to ease, then the Latin for tame, then say *grātus, grāta, grātum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does grātus, grāta, grātum mean? (\"Welcome, pleasing; grateful\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C512-ingratus",
+      "sequence": 27180,
+      "title": "ingrātus, ingrāta, ingrātum — ungrateful; unpleasant",
+      "headword": "ingrātus, ingrāta, ingrātum",
+      "romanization": "ingrātus, ingrāta, ingrātum",
+      "gloss": "ungrateful; unpleasant",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dfad3bc609ad9ff7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for tame, then the Latin for welcome."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ingrātus, ingrāta, ingrātum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ingrātus, ingrāta, ingrātum — \"ungrateful; unpleasant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Fīlius ingrātus parentēs nōn vīsitat. The ungrateful son does not visit his parents."
+            },
+            {
+              "kind": "speech",
+              "text": "in- 'not' + grātus. English ingrate."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ingrātus is built on in- \"not\" and grātus \"pleasing, grateful\" (Lewis & Short). English ingratitude and ingrate come from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ingrātus, ingrāta, ingrātum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ingrātus, ingrāta, ingrātum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ingrātus, ingrāta, ingrātum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ingrātus, ingrāta, ingrātum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ingrātus, ingrāta, ingrātum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ingrātus, ingrāta, ingrātum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for tame, then the Latin for welcome, then say ingrātus, ingrāta, ingrātum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for tame, then the Latin for welcome, then say *ingrātus, ingrāta, ingrātum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ingrātus, ingrāta, ingrātum mean? (\"Ungrateful; unpleasant\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C512-meritum",
+      "sequence": 27190,
+      "title": "meritum, meritī — a kindness, service; merit",
+      "headword": "meritum, meritī",
+      "romanization": "meritum, meritī",
+      "gloss": "a kindness, service; merit",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f68b6e39db9101a1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for welcome, then the Latin for ungrateful."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: meritum, meritī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "meritum, meritī — \"a kindness, service; merit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Prō meritīs tuīs tibi grātiās agō. I thank you for your kindnesses."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter, second declension, from mereō — to earn. A good deed that deserves thanks. English merit."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "meritum is the neuter past participle of mereō \"to earn, deserve\", used as a noun (Lewis & Short; EtymDB). English merit comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meritum, meritī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meritum, meritī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meritum, meritī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meritum, meritī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with meritum, meritī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *meritum, meritī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for welcome, then the Latin for ungrateful, then say meritum, meritī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for welcome, then the Latin for ungrateful, then say *meritum, meritī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does meritum, meritī mean? (\"A kindness, service; merit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C512-laus",
+      "sequence": 27200,
+      "title": "laus, laudis — praise",
+      "headword": "laus, laudis",
+      "romanization": "laus, laudis",
+      "gloss": "praise",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4f699349dfc8bb13",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for ungrateful, then the Latin for a kindness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: laus, laudis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "laus, laudis — \"praise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mīles laudem ducis accipit. The soldier receives the general's praise."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, third declension. Laudō, already known, comes from it. English laud."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "laus is a native Latin noun, and laudō \"to praise\" is built on it (Lewis & Short). Lewis & Short links it with clueō \"to be spoken of\", but the origin is not settled. English laud and laudable come from the family."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "laus, laudis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *laus, laudis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "laus, laudis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *laus, laudis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with laus, laudis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *laus, laudis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for ungrateful, then the Latin for a kindness, then say laus, laudis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for ungrateful, then the Latin for a kindness, then say *laus, laudis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does laus, laudis mean? (\"Praise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C512-vitupero",
+      "sequence": 27210,
+      "title": "vituperō, vituperāre — to blame, scold",
+      "headword": "vituperō, vituperāre",
+      "romanization": "vituperō, vituperāre",
+      "gloss": "to blame, scold",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7296918909972ba6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a kindness, then the Latin for praise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: vituperō, vituperāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vituperō, vituperāre — \"to blame, scold\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Magister discipulum pigrum vituperat. The teacher scolds the lazy pupil."
+            },
+            {
+              "kind": "speech",
+              "text": "vituperō, vituperāre, vituperāvī, vituperātum, the opposite of laudō. English vituperation."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vituperō is built on vitium \"a fault\" and parō \"to prepare\" (Lewis & Short; EtymDB): to make out a fault. English vituperate comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vituperō, vituperāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vituperō, vituperāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vituperō, vituperāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vituperō, vituperāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with vituperō, vituperāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *vituperō, vituperāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a kindness, then the Latin for praise, then say vituperō, vituperāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a kindness, then the Latin for praise, then say *vituperō, vituperāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does vituperō, vituperāre mean? (\"To blame, scold\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-R512-review-505-512",
+      "sequence": 27220,
+      "title": "Words from chapters 505–512 — a review",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 505-512",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b1621d1ca75d6c88",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Latin for merciful and mercy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merciful, mercy, kindness, kindly, goodwill",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: merciful, mercy, kindness, kindly, goodwill]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "courteous, friendliness, refinement, country manners, generosity",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: courteous, friendliness, refinement, country manners, generosity]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pride, arrogant, arrogance, insolent, boastfulness",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: pride, arrogant, arrogance, insolent, boastfulness]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cowardice, sloth, sluggish, vigorous, diligent",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: cowardice, sloth, sluggish, vigorous, diligent]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "courage, boldness, rash, steadfast, good sense",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: courage, boldness, rash, steadfast, good sense]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "silly, mad, madness, out of one's mind, to be delirious",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: silly, mad, madness, out of one's mind, to be delirious]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cruelty, fury, to hurt, to ease, tame",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: cruelty, fury, to hurt, to ease, tame]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "welcome, ungrateful, a kindness, praise, to blame",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: welcome, ungrateful, a kindness, praise, to blame]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Merciful? (clēmēns, clēmentis.) Mercy? (clēmentia, clēmentiae.) Kindness? (benignitās, benignitātis.) Kindly? (benevolus, benevola, benevolum.) Goodwill? (benevolentia, benevolentiae.) Courteous? (cōmis, cōme.) Friendliness? (cōmitās, cōmitātis.) Refinement? (urbānitās, urbānitātis.) Country manners? (rūsticitās, rūsticitātis.) Generosity? (līberālitās, līberālitātis.) Pride? (superbia, superbiae.) Arrogant? (arrogāns, arrogantis.) Arrogance? (arrogantia, arrogantiae.) Insolent? (īnsolēns, īnsolentis.) Boastfulness? (vānitās, vānitātis.) Cowardice? (ignāvia, ignāviae.) Sloth? (pigritia, pigritiae.) Sluggish? (segnis, segne.) Vigorous? (strēnuus, strēnua, strēnuum.) Diligent? (assiduus, assidua, assiduum.) Courage? (fortitūdō, fortitūdinis.) Boldness? (audācia, audāciae.) Rash? (temerārius, temerāria, temerārium.) Steadfast? (cōnstāns, cōnstantis.) Good sense? (prūdentia, prūdentiae.) Silly? (ineptus, inepta, ineptum.) Mad? (īnsānus, īnsāna, īnsānum.) Madness? (īnsānia, īnsāniae.) Out of one's mind? (dēmēns, dēmentis.) To be delirious? (dēlīrō, dēlīrāre.) Cruelty? (crūdēlitās, crūdēlitātis.) Fury? (saevitia, saevitiae.) To hurt? (laedō, laedere.) To ease? (mītigō, mītigāre.) Tame? (mānsuētus, mānsuēta, mānsuētum.) Welcome? (grātus, grāta, grātum.) Ungrateful? (ingrātus, ingrāta, ingrātum.) A kindness? (meritum, meritī.) Praise? (laus, laudis.) To blame? (vituperō, vituperāre.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

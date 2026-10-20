@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C453-prosequor",
+    "language": "latin",
+    "chapter": 453,
+    "sequence": 24150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:562b556fb6bc3ac7"
+  },
+  "findings": []
+}

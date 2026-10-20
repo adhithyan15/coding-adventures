@@ -1,0 +1,19 @@
+{
+  "chapter": 356,
+  "title": "Cēna appōnitur",
+  "label": "ch:la-cena-apponitur",
+  "canDo": "I can tell how a dinner was served and eaten: to serve up, to wait at table, the dining room, to recline and a course.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-R356-review-final-356",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 356: I can tell how a dinner was served and eaten: to serve up, to wait at table, the dining room, to recline and a course.",
+    "assesses": [
+      "LA-LEX-C356-APPONO-03",
+      "LA-LEX-C356-APPONO-04",
+      "LA-LEX-C356-APPONO-05"
+    ]
+  }
+}

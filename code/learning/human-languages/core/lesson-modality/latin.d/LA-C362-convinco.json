@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C362-convinco",
+    "language": "latin",
+    "chapter": 362,
+    "sequence": 19480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:afc3ed76e695e3c5"
+  },
+  "findings": []
+}

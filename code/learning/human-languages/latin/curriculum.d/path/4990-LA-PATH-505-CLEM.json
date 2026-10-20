@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-505-CLEM",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "LA-EXT-505-CLEM"
+  ],
+  "after": []
+}

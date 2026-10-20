@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C328-divortium",
+    "language": "latin",
+    "chapter": 328,
+    "sequence": 17730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:05c88a7e27690864"
+  },
+  "findings": []
+}

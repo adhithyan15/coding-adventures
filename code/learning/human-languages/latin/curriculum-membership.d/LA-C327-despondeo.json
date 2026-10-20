@@ -1,0 +1,11 @@
+{
+  "id": "LA-C327-despondeo",
+  "pathSegment": "LA-PATH-327-SPONSA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-327-SPONSA",
+      "order": 2
+    }
+  ]
+}

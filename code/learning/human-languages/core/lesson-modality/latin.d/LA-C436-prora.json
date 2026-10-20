@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C436-prora",
+    "language": "latin",
+    "chapter": 436,
+    "sequence": 23270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7721a4e1082e1750"
+  },
+  "findings": []
+}

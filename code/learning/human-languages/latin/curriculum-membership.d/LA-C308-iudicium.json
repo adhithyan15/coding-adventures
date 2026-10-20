@@ -1,0 +1,11 @@
+{
+  "id": "LA-C308-iudicium",
+  "pathSegment": "LA-PATH-308-IUDEX",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-308-IUDEX",
+      "order": 1
+    }
+  ]
+}

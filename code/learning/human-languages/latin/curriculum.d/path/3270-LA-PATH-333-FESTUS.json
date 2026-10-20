@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-333-FESTUS",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-333-FESTUS"
+  ],
+  "after": []
+}

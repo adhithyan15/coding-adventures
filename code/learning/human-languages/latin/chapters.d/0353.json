@@ -1,0 +1,19 @@
+{
+  "chapter": 353,
+  "title": "Aqua fervet",
+  "label": "ch:la-aqua-fervet",
+  "canDo": "I can describe boiling food: to boil, the cooking pot, boiled, the foam and to skim.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C353-despumo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 353: I can describe boiling food: to boil, the cooking pot, boiled, the foam and to skim.",
+    "assesses": [
+      "LA-LEX-C353-FERVEO-03",
+      "LA-LEX-C353-FERVEO-04",
+      "LA-LEX-C353-FERVEO-05"
+    ]
+  }
+}

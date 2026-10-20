@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C478-bubulcus",
+    "language": "latin",
+    "chapter": 478,
+    "sequence": 25420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3f21c0fc49796805"
+  },
+  "findings": []
+}

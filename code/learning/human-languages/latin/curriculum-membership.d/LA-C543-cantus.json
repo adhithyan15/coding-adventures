@@ -1,0 +1,11 @@
+{
+  "id": "LA-C543-cantus",
+  "pathSegment": "LA-PATH-543-CANT",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-543-CANT",
+      "order": 0
+    }
+  ]
+}

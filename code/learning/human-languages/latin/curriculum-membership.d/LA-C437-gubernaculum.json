@@ -1,0 +1,11 @@
+{
+  "id": "LA-C437-gubernaculum",
+  "pathSegment": "LA-PATH-437-RUDENS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-437-RUDENS",
+      "order": 3
+    }
+  ]
+}

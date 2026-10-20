@@ -1,0 +1,19 @@
+{
+  "chapter": 445,
+  "title": "Roadside inn, To lodge, To spend the night, Stable-keeper, Hospitable",
+  "label": "ch:la-roadside-inn-to-lodge-to-spend-the-night-stable-keeper-hospitable",
+  "canDo": "I can talk about stopping at an inn: a roadside inn, lodging there, spending the night, the stable-keeper and a hospitable host.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C445-hospitalis",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 445: I can talk about stopping at an inn: a roadside inn, lodging there, spending the night, the stable-keeper and a hospitable host.",
+    "assesses": [
+      "LA-LEX-C445-DEVERTICULUM-03",
+      "LA-LEX-C445-DEVERTICULUM-04",
+      "LA-LEX-C445-DEVERTICULUM-05"
+    ]
+  }
+}

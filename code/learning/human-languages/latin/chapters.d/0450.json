@@ -1,0 +1,19 @@
+{
+  "chapter": 450,
+  "title": "Complaint, To complain, To cheat, Grasping, Dirt",
+  "label": "ch:la-complaint-to-complain-to-cheat-grasping-dirt",
+  "canDo": "I can complain about a bad inn: making a complaint, complaining, being cheated, a grasping landlord, and dirt.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C450-sordes",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 450: I can complain about a bad inn: making a complaint, complaining, being cheated, a grasping landlord, and dirt.",
+    "assesses": [
+      "LA-LEX-C450-QUERELA-03",
+      "LA-LEX-C450-QUERELA-04",
+      "LA-LEX-C450-QUERELA-05"
+    ]
+  }
+}

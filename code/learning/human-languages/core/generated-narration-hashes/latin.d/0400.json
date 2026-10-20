@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:b8fe4859093665c9",
+  "lessonIds": [
+    "LA-C400-doceo",
+    "LA-C400-erudio",
+    "LA-C400-instituo",
+    "LA-C400-instruo",
+    "LA-C400-praecipio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch400.txt",
+  "json": "latin/narration/ch400.json",
+  "textHash": "fnv1a64:cc3b4897a8aafe61",
+  "jsonHash": "fnv1a64:ebc675cb456d72f8",
+  "findings": []
+}

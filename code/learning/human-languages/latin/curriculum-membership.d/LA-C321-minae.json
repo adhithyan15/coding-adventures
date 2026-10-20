@@ -1,0 +1,11 @@
+{
+  "id": "LA-C321-minae",
+  "pathSegment": "LA-PATH-321-MINAE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-321-MINAE",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C481-saxosus",
+  "pathSegment": "LA-PATH-481-CONVALLIS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-481-CONVALLIS",
+      "order": 2
+    }
+  ]
+}

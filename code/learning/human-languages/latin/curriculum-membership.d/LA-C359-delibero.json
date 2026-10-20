@@ -1,0 +1,11 @@
+{
+  "id": "LA-C359-delibero",
+  "pathSegment": "LA-PATH-359-PONDERO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-359-PONDERO",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C304-effringo",
+  "pathSegment": "LA-PATH-304-COMPREHENDO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-304-COMPREHENDO",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C352-subigo",
+  "pathSegment": "LA-PATH-352-SUBIGO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-352-SUBIGO",
+      "order": 2
+    }
+  ]
+}

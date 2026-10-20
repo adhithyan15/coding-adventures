@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C495-admiratio",
+    "language": "latin",
+    "chapter": 495,
+    "sequence": 26300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ab9642ada96850bb"
+  },
+  "findings": []
+}

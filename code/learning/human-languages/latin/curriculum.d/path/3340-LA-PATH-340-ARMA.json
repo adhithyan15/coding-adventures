@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-340-ARMA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-340-ARMA"
+  ],
+  "after": []
+}

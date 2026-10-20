@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 531,
+  "sourceHash": "fnv1a64:91794b8eec53b65b",
+  "lessonIds": [
+    "LA-C531-atriensis",
+    "LA-C531-ianitor",
+    "LA-C531-ostiarius",
+    "LA-C531-lecticarius",
+    "LA-C531-vilica"
+  ],
+  "tex": "latin/book/chapters/ch531-jobs-in-a-great-house.tex"
+}

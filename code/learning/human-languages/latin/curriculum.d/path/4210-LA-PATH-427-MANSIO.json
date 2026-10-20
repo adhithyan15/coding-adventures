@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-427-MANSIO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "LA-EXT-427-MANSIO"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 452,
+  "sourceHash": "fnv1a64:9750a507c265caf6",
+  "lessonIds": [
+    "LA-C452-aberro",
+    "LA-C452-devius",
+    "LA-C452-invius",
+    "LA-C452-ambages",
+    "LA-C452-vagor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch452.txt",
+  "json": "latin/narration/ch452.json",
+  "textHash": "fnv1a64:0e36eca1dbc91983",
+  "jsonHash": "fnv1a64:1ffa4df6213f3960",
+  "findings": []
+}

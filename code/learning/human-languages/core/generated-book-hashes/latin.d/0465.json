@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 465,
+  "sourceHash": "fnv1a64:7934efcd54f75801",
+  "lessonIds": [
+    "LA-C465-modius",
+    "LA-C465-sextarius",
+    "LA-C465-pondo",
+    "LA-C465-quadrans",
+    "LA-C465-nummularius"
+  ],
+  "tex": "latin/book/chapters/ch465-peck-pint-by-weight-quarter-as-money-changer.tex"
+}

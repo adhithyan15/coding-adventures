@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-299-NARRATIO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-299-NARRATIO"
+  ],
+  "after": []
+}

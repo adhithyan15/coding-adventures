@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-382-SENATOR",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "LA-EXT-382-SENATOR"
+  ],
+  "after": []
+}

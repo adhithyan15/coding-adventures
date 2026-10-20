@@ -1,0 +1,19 @@
+{
+  "chapter": 381,
+  "title": "Pleaders, Clients and Clerks",
+  "label": "ch:la-pleaders-clients-and-clerks",
+  "canDo": "I can name an advocate and his client, a shipowner, a copyist and a land surveyor.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C381-agrimensor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 381: I can name an advocate and his client, a shipowner, a copyist and a land surveyor.",
+    "assesses": [
+      "LA-LEX-C381-CAUSIDICUS-03",
+      "LA-LEX-C381-CAUSIDICUS-04",
+      "LA-LEX-C381-CAUSIDICUS-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 358,
+  "sourceHash": "fnv1a64:8fe402d1b1b81d47",
+  "lessonIds": [
+    "LA-C358-assentior",
+    "LA-C358-dissentio",
+    "LA-C358-consentio",
+    "LA-C358-consensus",
+    "LA-C358-controversia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch358.txt",
+  "json": "latin/narration/ch358.json",
+  "textHash": "fnv1a64:a68fe9f2d993f265",
+  "jsonHash": "fnv1a64:a1d044281441a6d4",
+  "findings": []
+}

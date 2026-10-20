@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 425,
+  "title": "Roadbed, Flint, Kerb, Wheel rut, To pave",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b70d46e11ed6fd51",
+  "lessons": [
+    {
+      "id": "LA-C425-agger",
+      "sequence": 22700,
+      "title": "agger, aggeris — a raised roadbed; a mound, an embankment",
+      "headword": "agger, aggeris",
+      "romanization": "agger, aggeris",
+      "gloss": "a raised roadbed; a mound, an embankment",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:863ede5c5739dcfc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a winding, then the Latin for to bend."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: agger, aggeris",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "agger, aggeris — \"a raised roadbed; a mound, an embankment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Via in aggere altō per campum it. The road runs across the plain on a high embankment."
+            },
+            {
+              "kind": "speech",
+              "text": "Third declension, masculine: agger, aggeris m. A Roman road was laid on a raised bank of earth and stones. English exaggerate first meant 'to heap up'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "agger is built on ad- 'to' and gerō 'to carry' (EtymDB; Lewis & Short): earth and stones carried to one spot. English exaggerate comes from Latin exaggerāre 'to heap up', built on it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agger, aggeris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agger, aggeris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agger, aggeris, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agger, aggeris*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with agger, aggeris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *agger, aggeris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a winding, then the Latin for to bend, then say agger, aggeris again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a winding, then the Latin for to bend, then say *agger, aggeris* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does agger, aggeris mean? (\"A raised roadbed; a mound, an embankment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C425-silex",
+      "sequence": 22710,
+      "title": "silex, silicis — a flint; a hard paving stone",
+      "headword": "silex, silicis",
+      "romanization": "silex, silicis",
+      "gloss": "a flint; a hard paving stone",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c1d338bb9856d6ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to bend, then the Latin for a raised roadbed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: silex, silicis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "silex, silicis — \"a flint; a hard paving stone\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Haec via ē silice facta est, itaque in pluviā quoque bona est. This road is made of hard stone, so it is good in the rain too."
+            },
+            {
+              "kind": "speech",
+              "text": "Third declension, usually masculine: silex, silicis m. Roman roads were paved with blocks of it. English silica and silicon come from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of silex is not settled: Lewis & Short tentatively link it with a root meaning 'firm', as in solidus, and EtymDB gives no parent. EtymDB lists English silica and silicon among the words made from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "silex, silicis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *silex, silicis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "silex, silicis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *silex, silicis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with silex, silicis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *silex, silicis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to bend, then the Latin for a raised roadbed, then say silex, silicis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to bend, then the Latin for a raised roadbed, then say *silex, silicis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does silex, silicis mean? (\"A flint; a hard paving stone\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C425-crepido",
+      "sequence": 22720,
+      "title": "crepīdō, crepīdinis — a raised edge; a kerb, a raised footway; a quay",
+      "headword": "crepīdō, crepīdinis",
+      "romanization": "crepīdō, crepīdinis",
+      "gloss": "a raised edge; a kerb, a raised footway; a quay",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3fd7f86b0bbacf5b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a raised roadbed, then the Latin for a flint."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: crepīdō, crepīdinis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "crepīdō, crepīdinis — \"a raised edge; a kerb, a raised footway; a quay\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Viātōrēs in crepīdine ambulant, plaustra in mediā viā eunt. The travellers walk on the raised footway, the wagons go in the middle of the road."
+            },
+            {
+              "kind": "speech",
+              "text": "Third declension, feminine: crepīdō, crepīdinis f. Any raised edge: the kerb of a street, the base of a building, the stone edge of a quay."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "crepīdō was borrowed from Greek krēpis, krēpidos 'foundation, base' (EtymDB; Lewis & Short). The Greek word also meant a kind of boot, the source of Latin crepida 'sandal'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "crepīdō, crepīdinis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *crepīdō, crepīdinis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "crepīdō, crepīdinis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *crepīdō, crepīdinis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with crepīdō, crepīdinis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *crepīdō, crepīdinis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a raised roadbed, then the Latin for a flint, then say crepīdō, crepīdinis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a raised roadbed, then the Latin for a flint, then say *crepīdō, crepīdinis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does crepīdō, crepīdinis mean? (\"A raised edge; a kerb, a raised footway; a quay\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C425-orbita",
+      "sequence": 22730,
+      "title": "orbita, orbitae — a wheel rut, a track",
+      "headword": "orbita, orbitae",
+      "romanization": "orbita, orbitae",
+      "gloss": "a wheel rut, a track",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:72fb9273654f01a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a flint, then the Latin for a raised edge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: orbita, orbitae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "orbita, orbitae — \"a wheel rut, a track\"."
+            },
+            {
+              "kind": "speech",
+              "text": "In viā vetere altae orbitae sunt, et plaustrum lentē it. On the old road there are deep ruts, and the wagon goes slowly."
+            },
+            {
+              "kind": "speech",
+              "text": "First declension, feminine: orbita, orbitae f. English orbit is the same word: the track a planet runs in."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "orbita is built on orbis 'circle, wheel' (EtymDB; Lewis & Short): the track a wheel leaves. English orbit comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "orbita, orbitae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *orbita, orbitae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "orbita, orbitae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *orbita, orbitae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with orbita, orbitae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *orbita, orbitae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a flint, then the Latin for a raised edge, then say orbita, orbitae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a flint, then the Latin for a raised edge, then say *orbita, orbitae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does orbita, orbitae mean? (\"A wheel rut, a track\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C425-sterno",
+      "sequence": 22740,
+      "title": "sternō, sternere — to spread, to lay out; to pave (a road)",
+      "headword": "sternō, sternere",
+      "romanization": "sternō, sternere",
+      "gloss": "to spread, to lay out; to pave (a road)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dfe6a6de1020af4c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a raised edge, then the Latin for a wheel rut."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: sternō, sternere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sternō, sternere — \"to spread, to lay out; to pave (a road)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Fabrī viam novam saxīs sternunt. The workmen pave the new road with stones."
+            },
+            {
+              "kind": "speech",
+              "text": "sternō, sternere, strāvī, strātum. Viam sternere, to pave a road; lectum sternere, to make a bed. Its participle strāta gives English street."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sternō is inherited from Proto-Italic stornō, from PIE sterh₃- 'to stretch out, to spread' (EtymDB). Its participle in via strāta 'paved road' was borrowed into Germanic and became English street (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sternō, sternere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sternō, sternere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sternō, sternere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sternō, sternere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with sternō, sternere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *sternō, sternere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a raised edge, then the Latin for a wheel rut, then say sternō, sternere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a raised edge, then the Latin for a wheel rut, then say *sternō, sternere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does sternō, sternere mean? (\"To spread, to lay out; to pave (a road)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

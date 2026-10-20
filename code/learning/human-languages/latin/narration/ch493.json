@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 493,
+  "title": "Anger and indignation",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c9a704c9aba64651",
+  "lessons": [
+    {
+      "id": "LA-C493-irascor",
+      "sequence": 26200,
+      "title": "īrāscor, īrāscī — to grow angry, be angry",
+      "headword": "īrāscor, īrāscī",
+      "romanization": "īrāscor, īrāscī",
+      "gloss": "to grow angry, be angry",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bfc1c08cb22011f5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for gentle, then the Latin for to soothe."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: īrāscor, īrāscī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "īrāscor, īrāscī — \"to grow angry, be angry\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Dominus servō īrāscitur, quod cēnam nōn parāvit. The master grows angry with the slave because he has not prepared dinner."
+            },
+            {
+              "kind": "speech",
+              "text": "Deponent: īrāscor, īrāscī, īrātus sum, with the dative of the person. Īrātus, already known, is its participle."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "īrāscor is built on īra \"anger\" with -scor, an ending for a state that begins (Lewis & Short; EtymDB). English irascible comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "īrāscor, īrāscī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *īrāscor, īrāscī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "īrāscor, īrāscī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *īrāscor, īrāscī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with īrāscor, īrāscī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *īrāscor, īrāscī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for gentle, then the Latin for to soothe, then say īrāscor, īrāscī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for gentle, then the Latin for to soothe, then say *īrāscor, īrāscī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does īrāscor, īrāscī mean? (\"To grow angry, be angry\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C493-iracundus",
+      "sequence": 26210,
+      "title": "īrācundus, īrācunda, īrācundum — hot-tempered, quick to anger",
+      "headword": "īrācundus, īrācunda, īrācundum",
+      "romanization": "īrācundus, īrācunda, īrācundum",
+      "gloss": "hot-tempered, quick to anger",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6ebf7e6c64a03aa4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to soothe, then the Latin for to grow angry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: īrācundus, īrācunda, īrācundum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "īrācundus, īrācunda, īrācundum — \"hot-tempered, quick to anger\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Senex īrācundus semper clāmat. The hot-tempered old man is always shouting."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on īra — anger. A trait of character, where īrātus is a passing mood."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "īrācundus is built on īra \"anger\" with the adjective ending -cundus, as in verēcundus (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "īrācundus, īrācunda, īrācundum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *īrācundus, īrācunda, īrācundum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "īrācundus, īrācunda, īrācundum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *īrācundus, īrācunda, īrācundum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with īrācundus, īrācunda, īrācundum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *īrācundus, īrācunda, īrācundum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to soothe, then the Latin for to grow angry, then say īrācundus, īrācunda, īrācundum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to soothe, then the Latin for to grow angry, then say *īrācundus, īrācunda, īrācundum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does īrācundus, īrācunda, īrācundum mean? (\"Hot-tempered, quick to anger\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C493-iracundia",
+      "sequence": 26220,
+      "title": "īrācundia, īrācundiae — a hot temper, irritability",
+      "headword": "īrācundia, īrācundiae",
+      "romanization": "īrācundia, īrācundiae",
+      "gloss": "a hot temper, irritability",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1142de4df9841cbd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to grow angry, then the Latin for hot-tempered."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: īrācundia, īrācundiae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "īrācundia, īrācundiae — \"a hot temper, irritability\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Īrācundia eius omnēs amīcōs terret. His hot temper frightens all his friends."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, first declension, from īrācundus."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "īrācundia is built on īrācundus \"hot-tempered\", itself from īra \"anger\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "īrācundia, īrācundiae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *īrācundia, īrācundiae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "īrācundia, īrācundiae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *īrācundia, īrācundiae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with īrācundia, īrācundiae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *īrācundia, īrācundiae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to grow angry, then the Latin for hot-tempered, then say īrācundia, īrācundiae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to grow angry, then the Latin for hot-tempered, then say *īrācundia, īrācundiae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does īrācundia, īrācundiae mean? (\"A hot temper, irritability\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C493-indignus",
+      "sequence": 26230,
+      "title": "indignus, indigna, indignum — unworthy, undeserving; shameful",
+      "headword": "indignus, indigna, indignum",
+      "romanization": "indignus, indigna, indignum",
+      "gloss": "unworthy, undeserving; shameful",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6ab40ef0463729e6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for hot-tempered, then the Latin for a hot temper."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: indignus, indigna, indignum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "indignus, indigna, indignum — \"unworthy, undeserving; shameful\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Hoc verbum tē indignum est. This word is unworthy of you."
+            },
+            {
+              "kind": "speech",
+              "text": "With the ablative: indignus honōre — unworthy of honour. The opposite of dignus."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "indignus is built on in- \"not\" and dignus \"worthy\" (Lewis & Short; EtymDB traces dignus to a Proto-Indo-European root meaning \"to take, accept\"). English indignity comes from its noun indignitās."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "indignus, indigna, indignum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *indignus, indigna, indignum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "indignus, indigna, indignum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *indignus, indigna, indignum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with indignus, indigna, indignum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *indignus, indigna, indignum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for hot-tempered, then the Latin for a hot temper, then say indignus, indigna, indignum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for hot-tempered, then the Latin for a hot temper, then say *indignus, indigna, indignum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does indignus, indigna, indignum mean? (\"Unworthy, undeserving; shameful\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C493-indignor",
+      "sequence": 26240,
+      "title": "indignor, indignārī — to be indignant, resent",
+      "headword": "indignor, indignārī",
+      "romanization": "indignor, indignārī",
+      "gloss": "to be indignant, resent",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7906df3fc3579c5f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a hot temper, then the Latin for unworthy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: indignor, indignārī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "indignor, indignārī — \"to be indignant, resent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Cīvēs indignantur, quod tribūtum magnum est. The citizens are indignant that the tax is large."
+            },
+            {
+              "kind": "speech",
+              "text": "Deponent: indignor, indignārī, indignātus sum. To count a thing unworthy, and be angry at it. English indignant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "indignor is built on indignus \"unworthy\" (Lewis & Short; EtymDB). English indignant comes from its present participle."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "indignor, indignārī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *indignor, indignārī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "indignor, indignārī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *indignor, indignārī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with indignor, indignārī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *indignor, indignārī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a hot temper, then the Latin for unworthy, then say indignor, indignārī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a hot temper, then the Latin for unworthy, then say *indignor, indignārī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does indignor, indignārī mean? (\"To be indignant, resent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

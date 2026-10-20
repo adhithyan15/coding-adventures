@@ -1,0 +1,8 @@
+{
+  "id": "LA-EXT-520-SPIR",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe panting, sobbing, yawning and sneezing.",
+  "prerequisites": []
+}

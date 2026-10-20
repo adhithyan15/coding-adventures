@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 329,
+  "sourceHash": "fnv1a64:a67b411336fd5335",
+  "lessonIds": [
+    "LA-C329-mors",
+    "LA-C329-mortuus",
+    "LA-C329-exspiro",
+    "LA-C329-obeo",
+    "LA-C329-decedo"
+  ],
+  "tex": "latin/book/chapters/ch329-mors.tex"
+}

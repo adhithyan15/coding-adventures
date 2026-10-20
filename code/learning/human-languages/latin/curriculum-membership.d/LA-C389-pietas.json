@@ -1,0 +1,11 @@
+{
+  "id": "LA-C389-pietas",
+  "pathSegment": "LA-PATH-389-SERVITUS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-389-SERVITUS",
+      "order": 2
+    }
+  ]
+}

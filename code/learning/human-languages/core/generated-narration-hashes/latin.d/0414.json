@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:ea733fbb496f1ebd",
+  "lessonIds": [
+    "LA-C414-iniuria",
+    "LA-C414-flagitium",
+    "LA-C414-fas",
+    "LA-C414-nefas",
+    "LA-C414-iniquus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch414.txt",
+  "json": "latin/narration/ch414.json",
+  "textHash": "fnv1a64:7ec55d93864eb517",
+  "jsonHash": "fnv1a64:1d8cb7294cc49829",
+  "findings": []
+}

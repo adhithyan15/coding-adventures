@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 467,
+  "sourceHash": "fnv1a64:22b9d01814b5c0db",
+  "lessonIds": [
+    "LA-C467-sutrina",
+    "LA-C467-tonstrina",
+    "LA-C467-subula",
+    "LA-C467-coriarius",
+    "LA-C467-pellio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch467.txt",
+  "json": "latin/narration/ch467.json",
+  "textHash": "fnv1a64:8bc96ee5e7b785fd",
+  "jsonHash": "fnv1a64:24b6b915b06bfaf9",
+  "findings": []
+}
