@@ -904,7 +904,7 @@ noted.
 | Derive, Wolfram | GL + `drop_bracketed_newlines` | GP | CST | unversioned | Compliant (C3 hook) | Optional E3 replacement; inventories |
 | MacroOct, MacroNib | GL + Oct/Nib GP | GP | CST | — | Base parse compliant; directive layer is a preprocessor | See [Preprocessor dialects](#preprocessor-dialects) |
 | McCarthy Lisp | GL | GP, then `extract_program` → `Vec<LispExpr>` | typed lift | unversioned | **Non-compliant (C2 typed lift)** | Phase 8 rewrite |
-| Twig | GL | GP, then `ast_extract.rs` (1,401) + `ast_nodes.rs` (636) → `twig_parser::Program` | typed lift | unversioned | **Non-compliant (C2 typed lift)** | Phase 8 rewrite |
+| Twig | GL | GP | CST | unversioned | Compliant since `twig-ir-compiler` 0.46.0 (was C2 typed lift via `ast_extract.rs` + `ast_nodes.rs` → `twig_parser::Program`). The TW05-B gate's checker still lifts internally; see open question 2 | Phase 8 CST rewrite done; single-row inventory (see open question 5) |
 | JavaScript | GL with runtime `REGEX`/`BAD_REGEX` deletion | GP over `es*.grammar` + `asi.rs` (≈338) | `bridge.rs` (≈4,214) → `javascript_ast::Program` | 14 pairs (es1, es3, es5, es2015–es2025) + unversioned; no CSV; hard-coded `Es2020` | **Non-compliant (C2 mutation, hook size, typed lift)** | Phase 6 |
 | Ruby | hand-written `ruby-lexer` (≈2,200 lines) driving `ruby-1.8.lexer.states.toml` (1,917 lines; 15 eras share it, the era list stops at 3.3) | GP over `ruby.grammar` (919 lines) | CST | unversioned; stale 79-line `ruby.tokens` | **Non-compliant (C2 hand-written lexer)** | Phases 3 and 5 |
 
@@ -969,6 +969,26 @@ corpus.
   checker, SIR11, and others), but not on the IIR path.
 - The Twig type-check pre-pass (TW05-B) currently consumes the typed AST.
   See [Open questions](#open-questions).
+- **Twig done** in `twig-ir-compiler` 0.46.0, as one PR rather than the
+  planned 6–10. The compiler takes `parse_to_ast`'s `GrammarASTNode`
+  (`compile_ast`, `compile_ast_with_externs`,
+  `compile_ast_with_externs_and_globals`). It reads the tree through borrowed
+  one-level views: `ExprNode::kind`, plus lazy child cursors and no owned
+  tree. Sugar is expanded on the fly: `'x` ≡ `(quote x)`, and
+  `(define (f x) …)` ≡ `(define f (lambda (x) …))`. Free-variable capture
+  runs over the CST (C1.7). `check_cst` mirrors `ast_extract.rs` and raises
+  the same errors in the same order. The IIR-identity gate was a diff of the
+  `Debug` dumps of the old and new compilers' output. It covered 7,343 inputs
+  (every string literal in the twig crates and `lang-aot`, every `.tw` file,
+  and edge cases) through three entry points, and 42,704 mutated hand-built
+  trees. The only differences were 4 errors that moved from the harness's
+  parse step into `compile_ast`, with the same text. `twig-module-driver`
+  hands the compiler the CST.
+- **The TW05-B gate after the rewrite.** The compiler passes the CST to
+  `twig_type_checker::check_cst_with_globals` and consumes only `ok` and the
+  `(line, column)`-keyed diagnostics, which gate emission and never feed it.
+  The checker still lifts the tree to `Program` internally: open question 2,
+  option 2, now isolated inside `twig-type-checker`.
 - McCarthy Lisp's `extract_program` is replaced by borrowed views over the
   CST.
 
@@ -1055,7 +1075,7 @@ are rough estimates of reviewed diff size, not counting regenerated
 | 5 | 5a–5b | **Ruby integer subset on all backends** (= LANG83 PR2), on R0 pairs: `rb_int_div` → `i64_div_floor`, `puts` → `print_i64`, `StdoutThenTrap` rows; `Language::Ruby`; the IIR path drops `ruby-lexer` | ~1,200 lines over 2 PRs |
 | 6 | 6a–6e | JavaScript CST rewrite (see above) | ~3,000 lines over 5 PRs |
 | 7 | 7a–7c | Python: inventory pairs for the subset, `compile_source_at`, `Language::Python`, matrix rows. The float subset depends on LANG83 float formatting; an int subset depends on the LANG83 `*_ovf` family | ~2,000 lines over 3 PRs |
-| 8 | 8.x | Twig CST rewrite (≈5,700-line compiler, ~6–10 PRs by construct family, IIR-identity gate). McCarthy Lisp CST rewrite (~3 PRs) | large |
+| 8 | 8.x | Twig CST rewrite (≈5,700-line compiler, ~6–10 PRs by construct family, IIR-identity gate; done in one, `twig-ir-compiler` 0.46.0). McCarthy Lisp CST rewrite (~3 PRs) | large |
 | 9 | ongoing | Release backfill, earliest first: per-release pairs and subset status for every language; remaining inventories (BASIC, ALGOL, COBOL and others); remaining lang-aot variants | many small PRs |
 
 Phases 4 and 5 may start once 2b (and, for Ruby, 3.2) has landed. They do not
@@ -1070,7 +1090,13 @@ wait for the rest of phase 3.
 2. **The Twig type checker.** TW05-B's pre-pass consumes
    `twig_parser::Program`. Port it to the CST, or run it on the typed AST only
    as a *checker* whose results do not feed IIR emission? The second option
-   would keep a typed lift beside the IIR path.
+   would keep a typed lift beside the IIR path. *Current state
+   (`twig-ir-compiler` 0.46.0):* the second option, isolated. The IIR compiler
+   names no typed-AST item. It passes the CST to
+   `twig_type_checker::check_cst_with_globals`, which lifts the tree inside
+   the checker crate, and reads back only position-keyed diagnostics. Porting
+   TW05-B to the CST would remove the last lift. That change is confined to
+   `twig-type-checker`.
 3. **The preprocessor exception.** Is PREP01's hand-written directive layer
    acceptable under the conditions in
    [Preprocessor dialects](#preprocessor-dialects)?
