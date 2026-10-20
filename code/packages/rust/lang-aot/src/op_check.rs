@@ -212,7 +212,7 @@ pub fn check_module_for(backend: Backend, module: &IIRModule) -> Result<(), Unsu
 #[cfg(test)]
 mod tests {
     use super::*;
-    use interpreter_ir::op_registry::{OpKind, NOT_YET_LOWERED_PR1B, STANDARD_OPS};
+    use interpreter_ir::op_registry::{registry_entry, OpKind, STANDARD_OPS};
     use interpreter_ir::{IIRFunction, IIRInstr, Operand};
 
     fn module_using(instrs: Vec<IIRInstr>) -> IIRModule {
@@ -232,40 +232,48 @@ mod tests {
         )
     }
 
+    /// `mod` — refused by the generic JIT (interpreter tier only), lowered
+    /// everywhere else. Since LANG83 PR1b no backend refuses a PR1b op, so
+    /// the refusal path is exercised through the JIT's honest refusals.
+    fn trunc_mod() -> IIRInstr {
+        IIRInstr::new(
+            "mod",
+            Some("r".into()),
+            vec![Operand::Var("a".into()), Operand::Var("b".into())],
+            "i64",
+        )
+    }
+
     #[test]
     fn every_backend_answers_for_every_registry_op_through_its_own_crate() {
         for backend in Backend::ALL {
             for spec in STANDARD_OPS {
                 let support = backend.op_support(spec.name);
                 if spec.is_pr1b() {
-                    assert_eq!(support, OpSupport::Refused(NOT_YET_LOWERED_PR1B), "{backend} {}", spec.name);
+                    // LANG83 PR1b lowered all four everywhere.
+                    assert_eq!(support, OpSupport::Lowered, "{backend} {}", spec.name);
                 }
             }
             // The output builtins every existing I/O frontend relies on are
             // lowered by every column.
-            for name in ["print_i64", "putchar"] {
+            for name in ["print_i64", "putchar", "write_i64"] {
                 assert!(backend.op_support(name).is_lowered(), "{backend} {name}");
             }
         }
     }
 
     #[test]
-    fn i64_div_floor_is_refused_on_every_backend_with_a_clear_message() {
-        let module = module_using(vec![floor_div()]);
-        for backend in Backend::ALL {
-            let err = check_module_for(backend, &module).unwrap_err();
-            assert_eq!(err.backend, backend);
-            assert_eq!(
-                err.refusals,
-                vec![OpRefusal {
-                    function: "main".into(),
-                    op: "i64_div_floor",
-                    reason: NOT_YET_LOWERED_PR1B
-                }]
-            );
-            let msg = err.to_string();
-            assert!(msg.starts_with(&format!("{backend} cannot lower 1 standard operation")), "{msg}");
-            assert!(msg.contains("`i64_div_floor` in function `main`"), "{msg}");
+    fn a_refused_op_is_reported_with_a_clear_message() {
+        let module = module_using(vec![trunc_mod()]);
+        let err = check_module_for(Backend::Jit, &module).unwrap_err();
+        assert_eq!(err.backend, Backend::Jit);
+        assert_eq!(err.refusals.len(), 1);
+        assert_eq!((err.refusals[0].function.as_str(), err.refusals[0].op), ("main", "mod"));
+        let msg = err.to_string();
+        assert!(msg.starts_with(&format!("{} cannot lower 1 standard operation", Backend::Jit)), "{msg}");
+        assert!(msg.contains("`mod` in function `main`"), "{msg}");
+        for backend in Backend::ALL.into_iter().filter(|b| *b != Backend::Jit) {
+            assert!(check_module_for(backend, &module).is_ok(), "{backend}");
         }
     }
 
@@ -277,22 +285,33 @@ mod tests {
             vec![Operand::Var("write_i64".into()), Operand::Var("x".into())],
             "void",
         );
-        let err = check_module_for(Backend::Wasm, &module_using(vec![write])).unwrap_err();
-        assert_eq!(err.refusals[0].op, "write_i64");
+        assert_eq!(registry_entry(&write).map(|s| s.name), Some("write_i64"));
         assert_eq!(
             STANDARD_OPS.iter().find(|s| s.name == "write_i64").unwrap().kind,
             OpKind::Builtin
         );
+        for backend in Backend::ALL {
+            assert!(check_module_for(backend, &module_using(vec![write.clone()])).is_ok(), "{backend}");
+        }
     }
 
     #[test]
     fn refusals_are_deduplicated_per_function_and_listed_in_order() {
-        let trap = IIRInstr::new("trap", None, vec![Operand::Str("Trap.User".into())], "void");
-        let module = module_using(vec![floor_div(), floor_div(), trap]);
-        let err = check_module_for(Backend::Beam, &module).unwrap_err();
+        let len = IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64");
+        let module = module_using(vec![trunc_mod(), trunc_mod(), len]);
+        let err = check_module_for(Backend::Jit, &module).unwrap_err();
         let ops: Vec<&str> = err.refusals.iter().map(|r| r.op).collect();
-        assert_eq!(ops, ["i64_div_floor", "trap"]);
+        assert_eq!(ops, ["mod", "str_len"]);
         assert!(err.to_string().contains("2 standard operation use(s)"));
+    }
+
+    #[test]
+    fn pr1b_ops_pass_the_check_on_every_backend() {
+        let trap = IIRInstr::new("trap", None, vec![Operand::Str("Trap.User".into())], "void");
+        let module = module_using(vec![floor_div(), trap]);
+        for backend in Backend::ALL {
+            assert!(check_module_for(backend, &module).is_ok(), "{backend}");
+        }
     }
 
     #[test]
