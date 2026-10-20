@@ -926,6 +926,14 @@ is checked by differential tests against the current `ruby-lexer` and against
 | R6 | Disambiguation that depends on locals: `foo /x/`, `foo -1`, `foo [1]`, `foo ::C`, `p *a`, `foo &b` | E6 (`@space_before`), E7 |
 | R7 | Per-release lexical deltas along the `predecessor` tree: 1.9 hash labels and `->`; 2.0 `%i`; 2.1 `1r`/`1i`; 2.3 `<<~`, `&.`; 2.6 endless range; 2.7 `_1` and beginless range; 3.0 `=>` rightward assignment and endless `def`; 3.1 `{x:}` and anonymous `&`; 3.2 anonymous `*`/`**`; 3.4 `it` | per-release pairs |
 
+**R0 note: line-start state.** Ruby's lexer returns to EXPR_BEG at every line
+start, which R0 pairs express as `on NEWLINE -> set-mode beg` (the `;` token takes
+the same rule). Per the F10 amendment of 2026-10-20 the engine's
+built-in `NEWLINE` participates in transitions like any declared token. R0
+pairs written before that amendment pinned "the previous line's mode carries
+over" as a documented divergence; they should adopt the `NEWLINE` rule and
+drop the divergence.
+
 R0 is the only slice phase 5 needs. At phase 5 the IIR path stops using
 `ruby-lexer`: `ruby-parser` builds `GrammarLexer` over `ruby<release>.tokens`
 for the IIR entry points. After R6 reaches parity on the corpus, the state
