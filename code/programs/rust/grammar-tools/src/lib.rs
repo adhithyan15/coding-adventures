@@ -926,6 +926,12 @@ struct RustReleaseFamilySpec {
     /// `unversioned_parser_grammar()` for consumers that have not moved to a
     /// release (LANG84 C4.5 lets them keep it). Never selectable by release.
     legacy_parser_grammar: bool,
+    /// Pre-LANG84 minor-line pairs (`<prefix><version>.tokens/.grammar`) that
+    /// a legacy version API still serves, such as Python's
+    /// `parse_python(source, "3.12")`. They are embedded in a separate
+    /// `legacy_versions` module, are not inventory releases, and the release
+    /// selector above cannot reach them. Empty for a family without any.
+    legacy_versions: &'static [&'static str],
 }
 
 /// Opt-in table. A language joins once its first pair exists; until then its
@@ -937,6 +943,19 @@ fn rust_release_family_for_package(package_stem: &str) -> Option<RustReleaseFami
             input_dir: "ruby",
             input_prefix: "ruby",
             legacy_parser_grammar: true,
+            legacy_versions: &[],
+        }),
+        // LANG84 phase 7a. Python's release pairs (`python3.13.16.*` …)
+        // follow `releases.csv`; the six minor-line pairs (`python3.12.*` …)
+        // keep serving `tokenize_python`/`parse_python(source, "3.12")` from
+        // `legacy_versions`, which no release ID can select. The CSV header
+        // declares the same six stems (`legacy-minor-line-pairs:`).
+        "python" => Some(RustReleaseFamilySpec {
+            family_name: "python",
+            input_dir: "python",
+            input_prefix: "python",
+            legacy_parser_grammar: false,
+            legacy_versions: PYTHON_VERSIONS,
         }),
         _ => None,
     }
@@ -956,6 +975,8 @@ struct RustReleaseFamilyTarget {
     /// Rows with a pair, in inventory order, with the pair's directory stem.
     paired: Vec<(String, PathBuf)>,
     legacy_input: Option<PathBuf>,
+    /// The legacy minor-line pairs, as versioned sources (`v_3_12` …).
+    legacy_versions: Vec<RustVersionedSource>,
 }
 
 /// Release IDs become file names and Rust string literals, so only the LANG84
@@ -1054,11 +1075,38 @@ fn build_release_family_target(
         }
         _ => None,
     };
+    let mut legacy_versions = Vec::new();
+    for version in spec.legacy_versions {
+        // A legacy stem that is also an inventory release with a pair would
+        // make one file name mean two things (LANG84: `python3.0.*` versus
+        // release 3.0). Refuse it rather than embed it twice.
+        if paired.iter().any(|(release, _)| release == version) {
+            return Err(format!(
+                "{}{} is both a legacy minor-line pair and a release pair; move the legacy pair first.",
+                spec.input_prefix, version
+            ));
+        }
+        let input_path = input_dir.join(format!(
+            "{}{}.{}",
+            spec.input_prefix,
+            version,
+            kind.input_extension()
+        ));
+        if !input_path.exists() {
+            return Err(format!("Expected legacy pair file '{}'.", input_path.display()));
+        }
+        legacy_versions.push(RustVersionedSource {
+            version: (*version).to_string(),
+            input_path,
+            module_name: rust_module_name_for_version(version),
+        });
+    }
     Ok(RustReleaseFamilyTarget {
         family_name: spec.family_name.to_string(),
         inventory,
         paired,
         legacy_input,
+        legacy_versions,
     })
 }
 
@@ -1179,7 +1227,11 @@ fn render_release_rust_target(
     let mut classes: Vec<(String, String, Vec<String>)> = Vec::new(); // (module, embedded, releases)
     let mut canonical_by_module: Vec<String> = Vec::new();
     for (release, stem) in &family.paired {
-        let (embedded, canonical) = release_module_source(target.kind, stem, force)?;
+        // A release pair is always validated and cross-validated (LANG84
+        // stage G), even for a package whose legacy grammars need `force`
+        // (python-parser's minor-line pairs do): `force` below applies only
+        // to the legacy modules, never to a release pair.
+        let (embedded, canonical) = release_module_source(target.kind, stem, false)?;
         let digest = coding_adventures_sha256::sha256_hex(canonical.as_bytes());
         let module = format!("g_{}", &digest[..12]);
         match classes.iter().position(|(name, _, _)| *name == module) {
@@ -1277,6 +1329,45 @@ fn render_release_rust_target(
         out.push_str("mod legacy {\n");
         out.push_str(&indent_rust_code(&code, 4));
         out.push_str("}\n\n");
+    }
+
+    if !family.legacy_versions.is_empty() {
+        // The pre-LANG84 minor-line pairs, for a legacy version API only.
+        // They live in their own module with their own selector, so a
+        // release ID can never reach them, and their `v_*` module names
+        // cannot collide with the `g_<hex>` release classes.
+        out.push_str("/// Pre-LANG84 minor-line pairs, kept for the legacy version API only.\n");
+        out.push_str("/// They are not inventory releases: the release selector above cannot\n");
+        out.push_str("/// reach them, and these names are not release IDs (LANG84 C4).\n");
+        out.push_str("pub mod legacy_versions {\n");
+        out.push_str(&format!("    use {};\n\n", import));
+        out.push_str("    /// The minor-line versions, in their historical order.\n");
+        out.push_str("    pub const SUPPORTED_VERSIONS: &[&str] = &[\n");
+        for source in &family.legacy_versions {
+            out.push_str(&format!("        {:?},\n", source.version));
+        }
+        out.push_str("    ];\n\n");
+        out.push_str(&format!(
+            "    /// The {} of exactly one minor-line `version`, or `None`.\n",
+            grammar_type
+        ));
+        out.push_str(&format!(
+            "    pub fn {}(version: &str) -> Option<{}> {{\n        match version {{\n",
+            selector, grammar_type
+        ));
+        for source in &family.legacy_versions {
+            out.push_str(&format!(
+                "            {:?} => Some(super::{}::{}()),\n",
+                source.version, source.module_name, selector
+            ));
+        }
+        out.push_str("            _ => None,\n        }\n    }\n}\n\n");
+        for source in &family.legacy_versions {
+            let code = compile_rust_input_source(target.kind, &source.input_path, force)?;
+            out.push_str(&format!("mod {} {{\n", source.module_name));
+            out.push_str(&indent_rust_code(&code, 4));
+            out.push_str("}\n\n");
+        }
     }
 
     for (module, embedded, _) in &classes {
@@ -2082,6 +2173,7 @@ mod tests {
             input_dir: "toy",
             input_prefix: "toy",
             legacy_parser_grammar: false,
+            legacy_versions: &[],
         };
         let family_target = build_release_family_target(&dir, spec, RustGrammarKind::Tokens).unwrap();
         assert_eq!(family_target.inventory.len(), 4);
@@ -2112,6 +2204,74 @@ mod tests {
         std::fs::remove_dir_all(dir).unwrap();
     }
 
+    /// LANG84 phase 7a: a release family can keep serving pre-LANG84
+    /// minor-line pairs (Python's `python3.12.*`) through a separate
+    /// `legacy_versions` module that no release ID can reach.
+    #[test]
+    fn release_family_embeds_legacy_minor_lines_out_of_the_release_selector() {
+        let dir = scratch_dir("legacy-lines");
+        let family = dir.join("toy");
+        std::fs::create_dir_all(&family).unwrap();
+        std::fs::write(
+            family.join("releases.csv"),
+            "release,grammar_status,grammar_stage\n9.0a1,partial,P\n9.0,pending,none\n",
+        )
+        .unwrap();
+        for stem in ["toy9.0a1", "toy9.0"] {
+            std::fs::write(family.join(format!("{stem}.tokens")), "NUMBER = /[0-9]+/\n").unwrap();
+            std::fs::write(family.join(format!("{stem}.grammar")), "program = NUMBER ;\n").unwrap();
+        }
+        let spec = RustReleaseFamilySpec {
+            family_name: "toy",
+            input_dir: "toy",
+            input_prefix: "toy",
+            legacy_parser_grammar: false,
+            legacy_versions: &["9.0"],
+        };
+        let family_target = build_release_family_target(&dir, spec, RustGrammarKind::Grammar).unwrap();
+        assert_eq!(family_target.legacy_versions.len(), 1);
+        let target = RustCompileTarget {
+            package_name: "toy-parser".into(),
+            package_stem: "toy".into(),
+            grammar_name: "toy".into(),
+            filter_names: vec![],
+            kind: RustGrammarKind::Grammar,
+            inputs: RustCompileInputs::Release(family_target.clone()),
+            output_path: dir.join("_grammar.rs"),
+            force: false,
+        };
+        let out = render_release_rust_target(&target, &family_target, false).unwrap();
+        // The release selector names only the release; the minor line has its own.
+        let release_selector = out.split("pub fn parser_grammar(release").nth(1).unwrap();
+        let release_selector = release_selector.split("\n}\n").next().unwrap();
+        assert!(release_selector.contains("\"9.0a1\" => Some(g_"), "{release_selector}");
+        assert!(!release_selector.contains("\"9.0\" =>"), "{release_selector}");
+        assert!(out.contains("pub mod legacy_versions {"));
+        assert!(out.contains("            \"9.0\" => Some(super::v_9_0::parser_grammar()),"));
+        assert!(out.contains("mod v_9_0 {"));
+
+        // A legacy stem that is also a paired release is refused.
+        std::fs::write(
+            family.join("releases.csv"),
+            "release,grammar_status,grammar_stage\n9.0a1,partial,P\n9.0,partial,P\n",
+        )
+        .unwrap();
+        assert!(build_release_family_target(&dir, spec, RustGrammarKind::Grammar)
+            .unwrap_err()
+            .contains("both a legacy minor-line pair and a release pair"));
+        // A missing legacy file is an error, not a skip.
+        std::fs::write(
+            family.join("releases.csv"),
+            "release,grammar_status,grammar_stage\n9.0a1,partial,P\n",
+        )
+        .unwrap();
+        std::fs::remove_file(family.join("toy9.0.grammar")).unwrap();
+        assert!(build_release_family_target(&dir, spec, RustGrammarKind::Grammar)
+            .unwrap_err()
+            .contains("toy9.0.grammar"));
+        std::fs::remove_dir_all(dir).unwrap();
+    }
+
     #[test]
     fn release_family_rejects_a_pair_that_does_not_cross_validate() {
         let dir = scratch_dir("cross");
@@ -2123,6 +2283,28 @@ mod tests {
         let error = release_module_source(RustGrammarKind::Grammar, &family.join("toy1"), false).unwrap_err();
         assert!(error.contains("UNDEFINED_TOKEN"), "{error}");
         std::fs::remove_dir_all(dir).unwrap();
+    }
+
+    /// LANG84 phase 7a: Python is a release family that also carries the
+    /// legacy minor-line pairs; the committed tables must match regeneration.
+    #[test]
+    fn committed_python_release_tables_match_regeneration() {
+        let root = find_root();
+        let targets = find_rust_compile_targets(&root, &["python".to_string()]).unwrap();
+        assert_eq!(targets.len(), 2);
+        for target in &targets {
+            let RustCompileInputs::Release(family) = &target.inputs else {
+                panic!("{} is not a release family", target.package_name);
+            };
+            assert_eq!(family.legacy_versions.len(), PYTHON_VERSIONS.len());
+            let generated = compile_rust_target_to_string(target, target.force).unwrap();
+            let committed = std::fs::read_to_string(&target.output_path).unwrap();
+            assert!(
+                generated == committed,
+                "{} is stale; run grammar-tools generate-rust-compiled-grammars python",
+                target.output_path.display()
+            );
+        }
     }
 
     #[test]
