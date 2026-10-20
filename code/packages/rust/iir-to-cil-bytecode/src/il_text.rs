@@ -919,19 +919,25 @@ fn emit_method(
     //
     // The labels must be unforgeable: IIR labels share the CIL label namespace,
     // so a user label (or a branch to one) spelled `__lang83_1` would collide
-    // with an internal one. The prefix therefore starts as `__lang83_` and
-    // grows a leading `_` until *no* name the function mentions starts with
-    // it — then no user label or branch target can equal `<prefix><n>`.
+    // with an internal one. The prefix is `k` underscores then `lang83_`,
+    // with `k` one more than the longest leading-underscore run of any name
+    // the function mentions that continues with `lang83_` (and at least 2).
+    // A name starts with `"_"×k + "lang83_"` only if its leading underscore
+    // run is exactly `k`, so no user label or branch target can equal
+    // `<prefix><n>`. One linear pass — a growing-prefix search would rescan
+    // every name per extra `_` and go super-linear on hostile label sets.
     // (Every `Var` operand is checked, a superset of the label names, so the
     // rule needs no list of which ops take labels.)
-    let mentioned: Vec<&str> = f.instructions.iter()
+    let longest_underscore_run = f.instructions.iter()
         .flat_map(|i| i.srcs.iter())
         .filter_map(|s| match s { Operand::Var(n) => Some(n.as_str()), _ => None })
-        .collect();
-    let mut lang83_prefix = String::from("__lang83_");
-    while mentioned.iter().any(|n| n.starts_with(lang83_prefix.as_str())) {
-        lang83_prefix.insert(0, '_');
-    }
+        .filter_map(|n| {
+            let run = n.bytes().take_while(|&b| b == b'_').count();
+            n[run..].starts_with("lang83_").then_some(run)
+        })
+        .max()
+        .unwrap_or(0);
+    let lang83_prefix = format!("{}lang83_", "_".repeat((longest_underscore_run + 1).max(2)));
     let mut lang83_labels = 0usize;
     let mut lang83_label = || {
         lang83_labels += 1;

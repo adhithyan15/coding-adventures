@@ -152,8 +152,8 @@ fn binary_artifact_path_refuses_the_pr1b_ops() {
 /// used to be the fixed `'__lang83_<n>'`, so a user label of that exact
 /// spelling collided with one (a duplicate label ilasm rejects — or, for a
 /// branch to an *undefined* user label `__lang83_1`, a jump into the middle of
-/// the guard sequence). The internal prefix now grows until no name the
-/// function mentions starts with it.
+/// the guard sequence). The internal prefix now has one more leading `_` than
+/// any mentioned name that continues with `lang83_`.
 #[test]
 fn user_label_spelled_like_an_internal_floor_label_cannot_collide() {
     let il = il_of(&module(
@@ -170,5 +170,38 @@ fn user_label_spelled_like_an_internal_floor_label_cannot_collide() {
     assert_eq!(lines.iter().filter(|l| *l == "'__lang83_1':").count(), 1, "{il}");
     // The internal labels moved to a longer prefix the user never mentioned.
     assert!(lines.iter().any(|l| l.starts_with("'___lang83_")), "{il}");
+    assert_labels_resolve(&lines);
+}
+
+
+/// Security re-review (LANG83 PR1b): choosing the prefix by growing it one
+/// `_` at a time and rescanning every name was super-linear on a hostile set
+/// `__lang83_`, `___lang83_`, … (k labels → ~k³ comparisons; 4,000 labels
+/// took 0.5 s and the cost grew ~8× per doubling). The prefix is now chosen
+/// in one linear pass, so this hostile function compiles at once and its
+/// internal labels still collide with none of the user's.
+#[test]
+fn hostile_underscore_label_set_is_linear_and_still_unforgeable() {
+    const K: usize = 2_000;
+    let mut body = Vec::new();
+    // Longest first: the order that made the old `any()` scan slowest.
+    for i in (0..K).rev() {
+        let name = format!("{}__lang83_1", "_".repeat(i));
+        body.push(IIRInstr::new("label", None, vec![v(&name)], "void"));
+    }
+    body.push(IIRInstr::new("i64_div_floor", Some("q".into()), vec![v("a"), v("b")], "i64"));
+    body.push(IIRInstr::new("ret", None, vec![v("q")], "i64"));
+    let started = std::time::Instant::now();
+    let il = il_of(&module(body, vec![("a".into(), "i64".into()), ("b".into(), "i64".into())]));
+    assert!(started.elapsed() < std::time::Duration::from_secs(5), "prefix search is not linear");
+    let lines: Vec<String> = il.lines().map(|l| l.trim().to_string()).collect();
+    // Every user label is still defined exactly once, by the user.
+    for i in 0..K {
+        let def = format!("'{}__lang83_1':", "_".repeat(i));
+        assert_eq!(lines.iter().filter(|l| **l == def).count(), 1, "user label {i}");
+    }
+    // The longest user run is K+1 underscores, so internal labels use K+2.
+    let internal = format!("'{}lang83_", "_".repeat(K + 2));
+    assert!(lines.iter().any(|l| l.starts_with(internal.as_str())), "internal prefix");
     assert_labels_resolve(&lines);
 }
