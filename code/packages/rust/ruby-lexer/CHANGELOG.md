@@ -2,7 +2,7 @@
 
 All notable changes to the `coding-adventures-ruby-lexer` crate will be documented in this file.
 
-## [0.26.0] - 2026-10-20 (crate version 0.2.0)
+## Unreleased — LANG84 release token tables (R0)
 
 ### Added — LANG84 release token tables
 

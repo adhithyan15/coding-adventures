@@ -2,7 +2,7 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
-## [0.9.0] - 2026-10-20 — LANG84 release selection
+## Unreleased — LANG84 release selection (R0)
 
 - **Token budget (security review).** `FrontendBudgets::max_tokens` (default
   `DEFAULT_MAX_TOKENS` = 16,384; ceiling `MAX_TRUSTED_TOKENS` = 262,144) is
