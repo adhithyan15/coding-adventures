@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C281-pluebat-venit",
+    "language": "latin",
+    "chapter": 281,
+    "sequence": 15430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4c058ad57560a252"
+  },
+  "findings": []
+}

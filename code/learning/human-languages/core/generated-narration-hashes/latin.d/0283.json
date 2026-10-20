@@ -1,0 +1,18 @@
+{
+  "language": "latin",
+  "chapter": 283,
+  "sourceHash": "fnv1a64:bf9beb7ea1ccce59",
+  "lessonIds": [
+    "LA-C283-puto",
+    "LA-C283-mea-sententia",
+    "LA-C283-ergo",
+    "LA-R283-what-i-think"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "latin/narration/ch283.txt",
+  "json": "latin/narration/ch283.json",
+  "textHash": "fnv1a64:1c0c4146ccb35316",
+  "jsonHash": "fnv1a64:17284514cfde4dd0",
+  "findings": []
+}

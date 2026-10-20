@@ -1,0 +1,17 @@
+{
+  "language": "latin",
+  "chapter": 288,
+  "sourceHash": "fnv1a64:982fe8e39d02cf48",
+  "lessonIds": [
+    "LA-C288-maior-quam",
+    "LA-C288-abhinc",
+    "LA-R288-bigger-and-how-long"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "latin/narration/ch288.txt",
+  "json": "latin/narration/ch288.json",
+  "textHash": "fnv1a64:94be9b2291221b9e",
+  "jsonHash": "fnv1a64:bc7f7951906b4f09",
+  "findings": []
+}

@@ -1,0 +1,18 @@
+{
+  "language": "latin",
+  "chapter": 282,
+  "sourceHash": "fnv1a64:c4253ae612413297",
+  "lessonIds": [
+    "LA-C282-primum-deinde",
+    "LA-C282-dum",
+    "LA-C282-lectio",
+    "LA-R282-a-story-in-order"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 2,
+  "text": "latin/narration/ch282.txt",
+  "json": "latin/narration/ch282.json",
+  "textHash": "fnv1a64:a28702e3328c0008",
+  "jsonHash": "fnv1a64:fa2bf1b4225b823c",
+  "findings": []
+}

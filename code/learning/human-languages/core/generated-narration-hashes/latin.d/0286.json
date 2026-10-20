@@ -1,0 +1,18 @@
+{
+  "language": "latin",
+  "chapter": 286,
+  "sourceHash": "fnv1a64:90bd85d6a672daf2",
+  "lessonIds": [
+    "LA-C286-navis",
+    "LA-C286-naulum",
+    "LA-C286-amitto",
+    "LA-R286-by-sea"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "latin/narration/ch286.txt",
+  "json": "latin/narration/ch286.json",
+  "textHash": "fnv1a64:f88d4462e218ad16",
+  "jsonHash": "fnv1a64:45186bfb5280fccb",
+  "findings": []
+}

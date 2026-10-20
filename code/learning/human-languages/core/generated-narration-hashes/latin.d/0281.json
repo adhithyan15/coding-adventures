@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 281,
+  "sourceHash": "fnv1a64:1b1a9fdb14abd5e4",
+  "lessonIds": [
+    "LA-C281-vidi-vidit",
+    "LA-C281-eram",
+    "LA-C281-ambulabam",
+    "LA-C281-pluebat-venit",
+    "LA-R281-the-scene-and-the-event"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch281.txt",
+  "json": "latin/narration/ch281.json",
+  "textHash": "fnv1a64:126129bad2362e40",
+  "jsonHash": "fnv1a64:0828abfa9c96668e",
+  "findings": []
+}

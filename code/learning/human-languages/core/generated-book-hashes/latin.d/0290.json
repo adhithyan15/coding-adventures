@@ -1,0 +1,12 @@
+{
+  "language": "latin",
+  "chapter": 290,
+  "sourceHash": "fnv1a64:46a1ad65b1bff31d",
+  "lessonIds": [
+    "LA-C290-velim",
+    "LA-C290-si-esset",
+    "LA-R290-would",
+    "LA-W290-epistula"
+  ],
+  "tex": "latin/book/chapters/ch290-would.tex"
+}

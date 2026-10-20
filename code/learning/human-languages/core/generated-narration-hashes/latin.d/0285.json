@@ -1,0 +1,18 @@
+{
+  "language": "latin",
+  "chapter": 285,
+  "sourceHash": "fnv1a64:b26a896886e7a88f",
+  "lessonIds": [
+    "LA-C285-qua-via",
+    "LA-C285-recta-via",
+    "LA-C285-iter",
+    "LA-R285-asking-the-way"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "latin/narration/ch285.txt",
+  "json": "latin/narration/ch285.json",
+  "textHash": "fnv1a64:29b5c1bb5b34a64c",
+  "jsonHash": "fnv1a64:ca54908a39f6268e",
+  "findings": []
+}

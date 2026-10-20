@@ -1,0 +1,669 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 283,
+  "title": "What I Think",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:bf9beb7ea1ccce59",
+  "lessons": [
+    {
+      "id": "LA-C283-puto",
+      "sequence": 15490,
+      "title": "putō — I think that …",
+      "headword": "putō, putāre",
+      "romanization": "putō, putāre",
+      "gloss": "I think, I reckon — and the accusative and infinitive, Latin's way of saying 'I think that he is …' with no word for 'that'",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fa6162002421cfd9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I think\", the verb of turning things over. (Cōgitō.) Now \"I believe\". (Crēdō.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The chapter on cōgitō named a lighter verb beside it, closer to \"I reckon\". This lesson puts it to work."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: putō",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "putō, putāre — \"to think, to reckon, to suppose\". It is the everyday verb of opinion: cōgitō is thinking hard; putō is what you think."
+            },
+            {
+              "kind": "speech",
+              "text": "Ita putō. — I think so; that is how I reckon it."
+            },
+            {
+              "kind": "speech",
+              "text": "Its perfect is regular: putāvī, I thought."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: no word for \"that\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English says \"I think that my friend is ill\". Latin has no word there. It puts the person in the accusative and the verb in the infinitive:"
+            },
+            {
+              "kind": "speech",
+              "text": "Putō amīcum aegrum esse. — I think my friend is ill."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word, \"I think friend-um to be ill\". The -um of amīcum marks who the thought is about, and esse carries the verb. Even the adjective joins the accusative: aegrum, not aeger."
+            },
+            {
+              "kind": "speech",
+              "text": "Crēdō tē fessum esse. — I believe you are tired. Putō pluere. — I think it is raining."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Pluere has no subject at all, as pluit had none. This pattern, accusative and infinitive, carries what someone thinks, believes or says all through Latin."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart: putō",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The cōgitō lesson told the story: putō first meant \"to prune\", then \"to settle an account\", then \"to think\" (Lewis & Short trace it to a root meaning \"to clean\"). You own two of its compounds already: computō, \"to calculate\", is com- + putō, reckoning together, and disputō, \"to discuss\", began in the merchants' sense of going over a sum item by item."
+            },
+            {
+              "kind": "speech",
+              "text": "The Roman writer Aulus Gellius made a point of it. He read the word for \"I think\" as a pruner's word: cutting away the false opinions until what is left is true (Lewis & Short quote the passage under puto)."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "putō — then Ita putō.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *putō* — then *Ita putō.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Putō amīcum aegrum esse.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Putō amīcum aegrum esse.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Crēdō tē fessum esse.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Crēdō tē fessum esse.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Putō pluere.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Putō pluere.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Herī putāvī amīcum venīre. — Yesterday I thought my friend was coming",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Herī putāvī amīcum venīre.* — Yesterday I thought my friend was coming]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How does Latin say \"I think my friend is ill\"? (Putō amīcum aegrum esse.) Which case does the person go into? (The accusative.) And the verb? (The infinitive.) What did putō first mean? (To prune.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C283-mea-sententia",
+      "sequence": 15500,
+      "title": "meā sententiā, mihi vidētur — in my opinion",
+      "headword": "meā sententiā, mihi vidētur",
+      "romanization": "meā sententiā, mihi vidētur",
+      "gloss": "in my opinion; it seems to me — two ways to hang an opinion on a sentence",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:633aef8f4dfe510c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I think my friend is ill\". (Putō amīcum aegrum esse.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Putō turns the whole sentence into what you think. Latin also has ways to leave the sentence as it is and hang the opinion on it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: meā sententiā",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "meā sententiā — \"in my opinion\". You own sententia, \"an opinion\"; this is its ablative with meā, \"my\": word for word, \"by my opinion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Meā sententiā, Rōma pulchra est. — In my opinion, Rome is beautiful."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing else in the sentence changes: Rōma stays nominative, est stays as it was. Plautus says it, and so does Cicero."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: mihi vidētur",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mihi vidētur — \"it seems to me\". You own videor, \"to seem\"; mihi is \"to me\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mārcus mihi fessus vidētur. — Marcus seems tired to me. Pluit, ut mihi vidētur. — It is raining, as far as I can tell."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Marcus is the subject, so fessus stays nominative. And ut mihi vidētur, \"as it seems to me\", is a phrase Cicero tucks into the middle of a sentence."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sententia is built on sentiō, \"to feel, to think\" (Lewis & Short), so meā sententiā is \"by what I feel about it\". vidētur is the passive of videō, \"to see\": \"it is seen\". So mihi vidētur is, word for word, \"it is seen, to me\", which is how a Roman said \"it seems to me\". Videō is inherited from Proto-Indo-European weyd-, \"to see\" (EtymDB 2.1)."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meā sententiā, then mihi vidētur",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meā sententiā*, then *mihi vidētur*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Meā sententiā, Rōma pulchra est.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Meā sententiā, Rōma pulchra est.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mārcus mihi fessus vidētur.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mārcus mihi fessus vidētur.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same opinion three ways — Putō Rōmam pulchram esse. Meā sententiā, Rōma pulchra est. Rōma mihi pulchra vidētur.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same opinion three ways — *Putō Rōmam pulchram esse. Meā sententiā, Rōma pulchra est. Rōma mihi pulchra vidētur.*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"In my opinion\"? (Meā sententiā.) \"It seems to me\"? (Mihi vidētur.) After putō, Rōma becomes what? (Rōmam, with esse.) After meā sententiā? (It stays Rōma.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C283-ergo",
+      "sequence": 15510,
+      "title": "ergō, itaque, igitur — and so",
+      "headword": "ergō, itaque, igitur",
+      "romanization": "ergō, itaque, igitur",
+      "gloss": "three ways to say 'so' — itaque for what happened next, igitur and ergō for what follows from it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9403de022f123751",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The cōgitō lesson gave you a famous sentence. Say it. (Cōgitō, ergō sum. I think, therefore I am.) The sentence is Descartes', written long after Rome, but every word of it is Latin."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You also own itaque, \"and so\", and igitur, \"therefore\". This lesson sorts all three."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: what happened next, and what follows",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "itaque tells a story forward. It stands first, and what comes after it is the next thing that happened, because of the last:"
+            },
+            {
+              "kind": "speech",
+              "text": "Pluēbat; itaque in vīllā mānsimus. — It was raining, and so we stayed in the farmhouse."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "igitur and ergō draw a conclusion. They belong to an argument more than to a story. In Cicero's prose igitur usually comes second, after the first word: Fessus igitur es. — So you are tired."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "ergō, \"therefore, so\", often stands first, and it has the sound of someone reaching the point: Fessus es; ergō dormī. — You are tired; so sleep."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "So: a story's and so is itaque; an argument's therefore is igitur or ergō."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: ergō",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Before ergō meant \"therefore\", it meant \"on account of\", and it followed a genitive: virtūtis ergō, \"on account of courage\", an old formula for decorating a soldier (Lewis & Short). Lewis & Short build the word from ex, \"out of\", and a root meaning \"to stretch, to direct\", but the origin is not settled. The sense moved from \"on account of this\" to \"so, then\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Cōgitō, ergō sum.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Cōgitō, ergō sum.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a story — Pluēbat; itaque in vīllā mānsimus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a story — *Pluēbat; itaque in vīllā mānsimus.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an argument — Fessus igitur es. — then Fessus es; ergō dormī.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an argument — *Fessus igitur es.* — then *Fessus es; ergō dormī.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Meā sententiā, amīcus aeger est; ergō nōn venit.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Meā sententiā, amīcus aeger est; ergō nōn venit.*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which \"so\" carries a story forward? (Itaque.) Which two draw a conclusion? (Igitur and ergō.) Where does igitur usually stand in Cicero? (Second, after the first word.) And what did ergō mean before \"therefore\"? (On account of, after a genitive.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-R283-what-i-think",
+      "sequence": 15520,
+      "title": "Review — what I think, and what follows",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "an opinion and its conclusion — putō with the accusative and infinitive, meā sententiā, mihi vidētur, and ergō",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5eaa8c801d6faa5a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I think it is raining\". (Putō pluere.) Then \"I believe you are tired\". (Crēdō tē fessum esse.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three lessons, and an opinion has three shapes. putō with the accusative and infinitive, which turns the sentence into what you think. meā sententiā, which leaves it alone. And mihi vidētur, \"it seems to me\", with the thing that seems as its subject. Then ergō to draw the conclusion, beside the itaque of a story and the igitur of an argument."
+            },
+            {
+              "kind": "speech",
+              "text": "Meā sententiā, Mārcus fessus est; ergō dormit. — In my opinion Marcus is tired; so he is sleeping."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The opinion leaves Mārcus nominative. Say it with putō instead, and he turns accusative: Putō Mārcum fessum esse."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one opinion three ways — Putō Rōmam pulchram esse. Meā sententiā, Rōma pulchra est. Rōma mihi pulchra vidētur.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one opinion three ways — *Putō Rōmam pulchram esse. Meā sententiā, Rōma pulchra est. Rōma mihi pulchra vidētur.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Meā sententiā, Mārcus fessus est; ergō dormit.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Meā sententiā, Mārcus fessus est; ergō dormit.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a story's \"and so\" — Pluēbat; itaque in vīllā mānsimus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a story's \"and so\" — *Pluēbat; itaque in vīllā mānsimus.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an opinion of your own about today's weather, with putō, then a conclusion with ergō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an opinion of your own about today's weather, with *putō*, then a conclusion with *ergō*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"In my opinion\"? (Meā sententiā.) \"It seems to me\"? (Mihi vidētur.) What did putō first mean? (To prune.) After putō, which case is the person in? (The accusative.) And from the last chapter: what does dum mean? (While.) Which rung comes first? (Prīmum.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

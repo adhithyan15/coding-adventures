@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-R290-would",
+    "language": "latin",
+    "chapter": 290,
+    "sequence": 15760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:72026606d7bb16c5"
+  },
+  "findings": []
+}

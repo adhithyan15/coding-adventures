@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C288-maior-quam",
+    "language": "latin",
+    "chapter": 288,
+    "sequence": 15670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ec6e1dab7e489192"
+  },
+  "findings": []
+}

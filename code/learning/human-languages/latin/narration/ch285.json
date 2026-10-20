@@ -1,0 +1,690 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 285,
+  "title": "Asking the Way",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:b26a896886e7a88f",
+  "lessons": [
+    {
+      "id": "LA-C285-qua-via",
+      "sequence": 15560,
+      "title": "quā viā — asking the way",
+      "headword": "quā viā ad forum?",
+      "romanization": "quā viā ad forum?",
+      "gloss": "asking the way — via, a road, and the polite frame quaesō, dīc mihi: quā viā …?",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:65e70b792ec0a7a5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask \"where is the forum?\" (Ubi est forum?)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That asks for a place. A traveller standing at a crossroads needs something else: not where it is, but which way to go."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: via, viae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "via, viae — \"a road, a way, a street\". It is a feminine noun like porta."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You own quā, \"by which way\", and its own lesson said that viā, \"road\", was understood inside it. Now say it out loud:"
+            },
+            {
+              "kind": "speech",
+              "text": "Quā viā ad forum? — By which road to the forum?"
+            },
+            {
+              "kind": "speech",
+              "text": "Viā is the ablative, \"by road\": the road you travel along."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: asking politely",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A stranger deserves a softer opening. Put two pieces in front:"
+            },
+            {
+              "kind": "speech",
+              "text": "Quaesō, dīc mihi: quā viā ad thermās? — Please, tell me: which way to the baths."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Dīc is \"tell!\", the command of dīcō, and it is short: no ending at all. Mihi, \"to me\", you know from ignōsce mihi."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ad plus the accusative is where you are heading: ad forum, ad thermās."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart: via",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "via is inherited, usually traced to Proto-Indo-European wegh- (EtymDB 2.1), the root the vehō lesson named, \"to carry, to convey\"; Lewis & Short put the two words together. A road is where things are carried. English way is usually given as a cousin, and English via, \"by way of\", is this word's ablative, taken over whole."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "via, viae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *via, viae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Quā viā ad forum?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Quā viā ad forum?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Quaesō, dīc mihi: quā viā ad thermās?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Quaesō, dīc mihi: quā viā ad thermās?*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "LA-C285-qua-via-ask",
+              "prompt": "Ask politely which way to the baths.",
+              "assesses": [
+                "LA-GRAMMAR-C285-QUA-VIA-02"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "quaeso dic mihi qua via ad thermas",
+                "qua via ad thermas",
+                "quaeso qua via ad thermas"
+              ],
+              "feedback": {
+                "correct": "Quaeso, dic mihi: qua via ad thermas?",
+                "incorrect": "Quaeso, dic mihi: qua via ad thermas?"
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"a road\", then \"by which road to the forum\". (Via. Quā viā ad forum.) Say \"tell me!\" (Dīc mihi!) Which verb you own is via related to? (Vehō, to carry by cart.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C285-recta-via",
+      "sequence": 15570,
+      "title": "rēctā viā, ad dextram — following the directions",
+      "headword": "rēctā viā, ad dextram, ad sinistram",
+      "romanization": "rēctā viā, ad dextram, ad sinistram",
+      "gloss": "following directions — straight on, to the right, to the left, and the one-letter command ī, go",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:746822eb8ab43519",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask the way to the forum, politely. (Quaesō, dīc mihi: quā viā ad forum?) And say \"right\", then \"left\". (Dexter. Sinister.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: three directions",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Rēctā viā ī. — Go straight on. Deinde ad dextram. — Then to the right. Tum ad sinistram. — Then to the left."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "ī is the command of eō: \"go!\", a whole sentence in one long vowel. Rēctā viā is \"by the straight road\", the ablative of via with rēctus agreeing."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "ad dextram and ad sinistram are \"towards the right\" and \"towards the left\": dextram and sinistram are the feminine accusative, because manum, \"hand\", is understood. Where something already is, Latin says dextrā, \"on the right\", and sinistrā, \"on the left\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Thermae sunt dextrā, iūxtā pontem. — The baths are on the right, next to the bridge."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: directions in a comedy",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Roman comedy has a scene built on exactly this. In Terence's Adelphoe, a slave gets rid of an old man by sending him across town: ad sinistram, then ad dextram, along hāc rēctā plateā, \"this straight street\", to a place where the person he wants is not. Lewis & Short quote the ad dextram from that play. A Roman audience laughed because they gave and got directions this way every day."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart: dextram",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dextram is the adjective dexter with manum left out: Lewis & Short give ad dextram as short for ad dextram manum or partem, \"to the right hand\" or \"side\". The dexter lesson traced the word itself to Proto-Indo-European deks-, \"right\", and named Greek dexios as a cousin."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Rēctā viā ī.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Rēctā viā ī.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Prīmum rēctā viā ī; deinde ad dextram.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Prīmum rēctā viā ī; deinde ad dextram.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Tum ad sinistram. Ibi est forum.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Tum ad sinistram. Ibi est forum.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Thermae sunt dextrā, iūxtā pontem.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Thermae sunt dextrā, iūxtā pontem.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "directions of your own, from your door to the nearest shop",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: directions of your own, from your door to the nearest shop]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Go straight on\"? (Rēctā viā ī.) \"To the left\"? (Ad sinistram.) \"On the right\"? (Dextrā.) What word is understood inside ad dextram? (Manum, hand.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C285-iter",
+      "sequence": 15580,
+      "title": "iter, itineris — a journey",
+      "headword": "iter, itineris",
+      "romanization": "iter, itineris",
+      "gloss": "a journey; a route, a way",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:61f94fbbea8bc3d0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"go straight on\". (Rēctā viā ī.) Then \"we go\". (Īmus.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: iter, itineris",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "iter, itineris — \"a journey; a route, a way\". It is neuter, and the genitive shows the stem every other form is built on: itiner-."
+            },
+            {
+              "kind": "speech",
+              "text": "Iter longum erat. — The journey was long. In itinere — on the way, on the journey."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Via is the road under your feet; iter is the going along it, from the start to the arrival."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: iter faciō",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "To travel, a Roman made a journey: iter faciō. Caesar writes it of whole armies marching through a province."
+            },
+            {
+              "kind": "speech",
+              "text": "Rōmam iter faciō. — I am travelling to Rome. Herī iter fēcī. — Yesterday I made a journey."
+            },
+            {
+              "kind": "speech",
+              "text": "Rōmam needs no ad: a city's name points the way by itself, as domum does. Fēcī is the perfect of faciō, a stem learned on its own."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart: iter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "iter is built on īre, \"to go\" (Lewis & Short), the one-vowel verb whose lesson traced it to Proto-Indo-European h₁ey-: a journey is a going. Its stem itiner- gives English itinerary, a plan of the route, and itinerant, someone who lives on the road."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iter, itineris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iter, itineris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Iter longum erat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Iter longum erat.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Rōmam iter faciō.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Rōmam iter faciō.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Herī iter fēcī.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Herī iter fēcī.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the road and the journey — via, then iter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the road and the journey — *via*, then *iter*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does iter, itineris mean? (A journey; a route.) How does a Roman say \"I travel\"? (Iter faciō.) And which verb is inside iter? (Īre, to go.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-R285-asking-the-way",
+      "sequence": 15590,
+      "title": "Review — at the crossroads",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "a whole exchange at a crossroads — the polite question, the directions back, and the journey around them",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6977de03bc1c457f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"a road\", then \"a journey\". (Via. Iter.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three lessons, and you can find your way through a Roman town. The question: quaesō, dīc mihi: quā viā ad …? The answer: rēctā viā ī, ad dextram, ad sinistram, and dextrā or sinistrā for where a place already stands. And the whole of it: iter faciō, I am on a journey."
+            },
+            {
+              "kind": "speech",
+              "text": "— Quaesō, dīc mihi: quā viā ad thermās? — Prīmum rēctā viā ī. Deinde ad sinistram. Thermae sunt dextrā, iūxtā pontem."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The rungs of a story, prīmum and deinde, are the rungs of a set of directions too."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the question — Quaesō, dīc mihi: quā viā ad thermās?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the question — *Quaesō, dīc mihi: quā viā ad thermās?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the answer — Prīmum rēctā viā ī. Deinde ad sinistram.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the answer — *Prīmum rēctā viā ī. Deinde ad sinistram.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Thermae sunt dextrā, iūxtā pontem.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Thermae sunt dextrā, iūxtā pontem.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "advice for the road — Rēctā viā īre dēbēs, quia via longa est.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: advice for the road — *Rēctā viā īre dēbēs, quia via longa est.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the advice too late — Viam rogāre dēbēbās. — You should have asked the way",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the advice too late — *Viam rogāre dēbēbās.* — You should have asked the way]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask the way to the forum, then give the answer yourself",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask the way to the forum, then give the answer yourself]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Which way to the baths?\" (Quā viā ad thermās?) \"Go straight on\"? (Rēctā viā ī.) \"To the right\"? (Ad dextram.) \"I am travelling to Rome\"? (Rōmam iter faciō.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

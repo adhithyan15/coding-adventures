@@ -1,0 +1,12 @@
+{
+  "language": "latin",
+  "chapter": 289,
+  "sourceHash": "fnv1a64:57807a5dc9562dc9",
+  "lessonIds": [
+    "LA-C289-si",
+    "LA-C289-si-pluit",
+    "LA-C289-pendet-ex",
+    "LA-R289-if"
+  ],
+  "tex": "latin/book/chapters/ch289-if.tex"
+}

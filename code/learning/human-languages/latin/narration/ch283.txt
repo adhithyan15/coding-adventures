@@ -1,0 +1,154 @@
+Latin, chapter 283: What I Think.
+4 lessons. All 4 can be done entirely by ear.
+
+
+Lesson 1 of 4.
+putō — I think that …
+
+Warm-up.
+[pause 2 seconds]
+Say "I think", the verb of turning things over. (Cōgitō.) Now "I believe". (Crēdō.)
+[pause 1 second]
+The chapter on cōgitō named a lighter verb beside it, closer to "I reckon". This lesson puts it to work.
+
+You'll want to know: putō.
+putō, putāre — "to think, to reckon, to suppose". It is the everyday verb of opinion: cōgitō is thinking hard; putō is what you think.
+Ita putō. — I think so; that is how I reckon it.
+Its perfect is regular: putāvī, I thought.
+
+Grammar Lens: no word for "that".
+English says "I think that my friend is ill". Latin has no word there. It puts the person in the accusative and the verb in the infinitive:
+Putō amīcum aegrum esse. — I think my friend is ill.
+[pause 2 seconds]
+Word for word, "I think friend-um to be ill". The -um of amīcum marks who the thought is about, and esse carries the verb. Even the adjective joins the accusative: aegrum, not aeger.
+Crēdō tē fessum esse. — I believe you are tired. Putō pluere. — I think it is raining.
+[pause 1 second]
+Pluere has no subject at all, as pluit had none. This pattern, accusative and infinitive, carries what someone thinks, believes or says all through Latin.
+
+The word, taken apart: putō.
+The cōgitō lesson told the story: putō first meant "to prune", then "to settle an account", then "to think" (Lewis & Short trace it to a root meaning "to clean"). You own two of its compounds already: computō, "to calculate", is com- + putō, reckoning together, and disputō, "to discuss", began in the merchants' sense of going over a sum item by item.
+The Roman writer Aulus Gellius made a point of it. He read the word for "I think" as a pruner's word: cutting away the false opinions until what is left is true (Lewis & Short quote the passage under puto).
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: putō — then Ita putō.]
+[pause 8 seconds for the answer]
+[your turn — say: Putō amīcum aegrum esse.]
+[pause 8 seconds for the answer]
+[your turn — say: Crēdō tē fessum esse.]
+[pause 8 seconds for the answer]
+[your turn — say: Putō pluere.]
+[pause 8 seconds for the answer]
+[your turn — say: Herī putāvī amīcum venīre. — Yesterday I thought my friend was coming]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How does Latin say "I think my friend is ill"? (Putō amīcum aegrum esse.) Which case does the person go into? (The accusative.) And the verb? (The infinitive.) What did putō first mean? (To prune.)
+
+
+Lesson 2 of 4.
+meā sententiā, mihi vidētur — in my opinion.
+
+Warm-up.
+[pause 2 seconds]
+Say "I think my friend is ill". (Putō amīcum aegrum esse.)
+[pause 1 second]
+Putō turns the whole sentence into what you think. Latin also has ways to leave the sentence as it is and hang the opinion on it.
+
+You'll want to know: meā sententiā.
+meā sententiā — "in my opinion". You own sententia, "an opinion"; this is its ablative with meā, "my": word for word, "by my opinion".
+Meā sententiā, Rōma pulchra est. — In my opinion, Rome is beautiful.
+[pause 1 second]
+Nothing else in the sentence changes: Rōma stays nominative, est stays as it was. Plautus says it, and so does Cicero.
+
+You'll want to know: mihi vidētur.
+mihi vidētur — "it seems to me". You own videor, "to seem"; mihi is "to me".
+Mārcus mihi fessus vidētur. — Marcus seems tired to me. Pluit, ut mihi vidētur. — It is raining, as far as I can tell.
+[pause 1 second]
+Marcus is the subject, so fessus stays nominative. And ut mihi vidētur, "as it seems to me", is a phrase Cicero tucks into the middle of a sentence.
+
+The phrase, taken apart.
+sententia is built on sentiō, "to feel, to think" (Lewis & Short), so meā sententiā is "by what I feel about it". vidētur is the passive of videō, "to see": "it is seen". So mihi vidētur is, word for word, "it is seen, to me", which is how a Roman said "it seems to me". Videō is inherited from Proto-Indo-European weyd-, "to see" (EtymDB 2.1).
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: meā sententiā, then mihi vidētur]
+[pause 8 seconds for the answer]
+[your turn — say: Meā sententiā, Rōma pulchra est.]
+[pause 8 seconds for the answer]
+[your turn — say: Mārcus mihi fessus vidētur.]
+[pause 8 seconds for the answer]
+[your turn — say: the same opinion three ways — Putō Rōmam pulchram esse. Meā sententiā, Rōma pulchra est. Rōma mihi pulchra vidētur.]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+"In my opinion"? (Meā sententiā.) "It seems to me"? (Mihi vidētur.) After putō, Rōma becomes what? (Rōmam, with esse.) After meā sententiā? (It stays Rōma.)
+
+
+Lesson 3 of 4.
+ergō, itaque, igitur — and so.
+
+Warm-up.
+[pause 2 seconds]
+The cōgitō lesson gave you a famous sentence. Say it. (Cōgitō, ergō sum. I think, therefore I am.) The sentence is Descartes', written long after Rome, but every word of it is Latin.
+[pause 1 second]
+You also own itaque, "and so", and igitur, "therefore". This lesson sorts all three.
+
+Grammar Lens: what happened next, and what follows.
+itaque tells a story forward. It stands first, and what comes after it is the next thing that happened, because of the last:
+Pluēbat; itaque in vīllā mānsimus. — It was raining, and so we stayed in the farmhouse.
+[pause 2 seconds]
+igitur and ergō draw a conclusion. They belong to an argument more than to a story. In Cicero's prose igitur usually comes second, after the first word: Fessus igitur es. — So you are tired.
+[pause 1 second]
+ergō, "therefore, so", often stands first, and it has the sound of someone reaching the point: Fessus es; ergō dormī. — You are tired; so sleep.
+[pause 1 second]
+So: a story's and so is itaque; an argument's therefore is igitur or ergō.
+
+The word, taken apart: ergō.
+Before ergō meant "therefore", it meant "on account of", and it followed a genitive: virtūtis ergō, "on account of courage", an old formula for decorating a soldier (Lewis & Short). Lewis & Short build the word from ex, "out of", and a root meaning "to stretch, to direct", but the origin is not settled. The sense moved from "on account of this" to "so, then".
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: Cōgitō, ergō sum.]
+[pause 8 seconds for the answer]
+[your turn — say: a story — Pluēbat; itaque in vīllā mānsimus.]
+[pause 8 seconds for the answer]
+[your turn — say: an argument — Fessus igitur es. — then Fessus es; ergō dormī.]
+[pause 8 seconds for the answer]
+[your turn — say: Meā sententiā, amīcus aeger est; ergō nōn venit.]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which "so" carries a story forward? (Itaque.) Which two draw a conclusion? (Igitur and ergō.) Where does igitur usually stand in Cicero? (Second, after the first word.) And what did ergō mean before "therefore"? (On account of, after a genitive.)
+
+
+Lesson 4 of 4.
+Review — what I think, and what follows.
+
+Warm-up.
+[pause 2 seconds]
+Say "I think it is raining". (Putō pluere.) Then "I believe you are tired". (Crēdō tē fessum esse.)
+
+What you've built.
+Three lessons, and an opinion has three shapes. putō with the accusative and infinitive, which turns the sentence into what you think. meā sententiā, which leaves it alone. And mihi vidētur, "it seems to me", with the thing that seems as its subject. Then ergō to draw the conclusion, beside the itaque of a story and the igitur of an argument.
+Meā sententiā, Mārcus fessus est; ergō dormit. — In my opinion Marcus is tired; so he is sleeping.
+[pause 2 seconds]
+The opinion leaves Mārcus nominative. Say it with putō instead, and he turns accusative: Putō Mārcum fessum esse.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: one opinion three ways — Putō Rōmam pulchram esse. Meā sententiā, Rōma pulchra est. Rōma mihi pulchra vidētur.]
+[pause 8 seconds for the answer]
+[your turn — say: Meā sententiā, Mārcus fessus est; ergō dormit.]
+[pause 8 seconds for the answer]
+[your turn — say: a story's "and so" — Pluēbat; itaque in vīllā mānsimus.]
+[pause 8 seconds for the answer]
+[your turn — say: an opinion of your own about today's weather, with putō, then a conclusion with ergō]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+"In my opinion"? (Meā sententiā.) "It seems to me"? (Mihi vidētur.) What did putō first mean? (To prune.) After putō, which case is the person in? (The accusative.) And from the last chapter: what does dum mean? (While.) Which rung comes first? (Prīmum.)

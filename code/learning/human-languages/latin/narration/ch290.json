@@ -1,0 +1,745 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 290,
+  "title": "Would",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:bc74abfb6c3f8ad1",
+  "lessons": [
+    {
+      "id": "LA-C290-velim",
+      "sequence": 15740,
+      "title": "velim — I would like",
+      "headword": "velim, possim, mālim",
+      "romanization": "velim, possim, mālim",
+      "gloss": "I would like, I could, I would rather — the subjunctive, Latin's mood for what is wished or possible rather than stated",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a4bf7fe008d21a1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I want to see Rome\". (Rōmam vidēre volō.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Volō states a fact about you: I want. Said to a stranger it can sound blunt. Latin softens it by changing the verb's mood."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: velim, the softer want",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Velim tē vidēre. — I would like to see you."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "velim is the subjunctive of volō: not \"I want\", but \"I would want, I would like\". All six persons:"
+            },
+            {
+              "kind": "speech",
+              "text": "velim, velīs, velit, velīmus, velītis, velint."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The other wanting and able verbs do the same, with the same endings: possim, \"I could, I might be able\"; mālim, \"I would rather\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Hoc facere possim. — I could do this. Mālim manēre. — I would rather stay."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Cicero writes velim scire, \"I should like to know\", when he asks a friend a question in a letter (Lewis & Short quote it)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: a mood, not a tense",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Velim is not past or future. It is a different way of holding the same present: the indicative, volō, says what is; the subjunctive, velim, says what would be, or could be. Sum has one too, sim, \"I may be\", and the next lesson puts sum's other subjunctive to work."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart: the -i- of velim",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The -i- of velim, possim and sim is usually explained as the mark of an old wishing mood, which Greek kept as a mood of its own and Latin folded into the subjunctive. Neither EtymDB nor Lewis & Short records endings, so this is the account histories of Latin give, offered as one."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "velim, velīs, velit — then velīmus, velītis, velint",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *velim, velīs, velit* — then *velīmus, velītis, velint*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Velim tē vidēre.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Velim tē vidēre.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Hoc facere possim.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Hoc facere possim.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mālim manēre.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mālim manēre.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the blunt want, then the soft one — volō, then velim",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the blunt want, then the soft one — *volō*, then *velim*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Sī vīs, tē vidēre velim.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Sī vīs, tē vidēre velim.*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I would like to see you\". (Velim tē vidēre.) Say \"I could\". (Possim.) Say \"I would rather stay\". (Mālim manēre.) Is velim a tense? (No: a mood, the subjunctive.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C290-si-esset",
+      "sequence": 15750,
+      "title": "sī hīc essēs — if it were so",
+      "headword": "sī hīc essēs, laetus essem",
+      "romanization": "sī hīc essēs, laetus essem",
+      "gloss": "if it were so — the imperfect subjunctive, made from the infinitive, for a condition that is not true now",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b7af5a3ec7a7fb61",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"if it rains, we stay in the farmhouse\". (Sī pluit, in vīllā manēmus.) Then \"I would like to see you\". (Velim tē vidēre.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The first may well come true. Now a condition you know is false, about right now."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the infinitive plus an ending",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sī hīc essēs, laetus essem. — If you were here, I would be happy."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You are not here, and both halves say so by their mood. essem and essēs are the imperfect subjunctive of sum, and they are made the easiest way Latin has: take the infinitive, esse, and add the endings: essem, essēs, esset, essēmus, essētis, essent."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The other verbs follow the same recipe: habēre, habērem, I would have; posse, possem, I could; velle, vellem, I would want."
+            },
+            {
+              "kind": "speech",
+              "text": "Sī pecūniam habērem, nāvem emerem. — If I had money, I would buy a ship."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Emerem is emere with -m. In English the \"if\" half sounds past, \"if I had\"; Latin agrees, and calls this the imperfect."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: real or not",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Set the two side by side:"
+            },
+            {
+              "kind": "speech",
+              "text": "Sī pluit, in vīllā manēmus. — If it rains, we stay in. (It may.) Sī nōn plueret, nāvigārēmus. — If it were not raining, we would be sailing. (It is.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Plain verbs leave the question open. The subjunctive tells the listener the \"if\" is false right now, and the speaker knows it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "esse, then essem, essēs, esset",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *esse*, then *essem, essēs, esset*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Sī hīc essēs, laetus essem.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Sī hīc essēs, laetus essem.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Sī pecūniam habērem, nāvem emerem.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Sī pecūniam habērem, nāvem emerem.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Sī nōn plueret, nāvigārēmus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Sī nōn plueret, nāvigārēmus.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one thing that is not true now, and what would follow if it were",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one thing that is not true now, and what would follow if it were]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "LA-C290-si-esset-build",
+              "prompt": "Build 'I would have' from habere.",
+              "assesses": [
+                "LA-GRAMMAR-C290-IRREALIS-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "haberem",
+                "habērem"
+              ],
+              "feedback": {
+                "correct": "Haberem: the infinitive plus -m.",
+                "incorrect": "Haberem: habere plus -m."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"if you were here, I would be happy\". (Sī hīc essēs, laetus essem.) What is essem built on? (The infinitive, esse.) Say \"I would have\". (Habērem.) Which kind of condition says the \"if\" is false? (The one with the subjunctive.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-R290-would",
+      "sequence": 15760,
+      "title": "Review — what is, what may be, what would be",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "what is, what may be and what would be — plain verbs, velim and possim, and sī … essem",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:72026606d7bb16c5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I would like to see you\". (Velim tē vidēre.) Then \"if you were here, I would be happy\". (Sī hīc essēs, laetus essem.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two chapters, and three ways to hold a thought. What is, and what may well be: plain verbs, sī pluit, manēmus. What depends: ex tempestāte pendet. What would be: the subjunctive, velim and possim for the polite and the possible, essem and habērem for an \"if\" that is not true now."
+            },
+            {
+              "kind": "speech",
+              "text": "Sī pluit, in vīllā manēmus. Sed sī nōn plueret, nāvigārēmus, et laetus essem."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The first sentence leaves the weather open. The second knows it is raining, and wishes it were not."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Sī pecūniam habērem, nāvem emerem.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Sī pecūniam habērem, nāvem emerem.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Hoc facere possim, sed mālim manēre.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Hoc facere possim, sed mālim manēre.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "In tuā potestāte est. — then Spērō tē venīre.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *In tuā potestāte est.* — then *Spērō tē venīre.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Sī nōn plueret, nāvigārēmus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Sī nōn plueret, nāvigārēmus.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one real condition and one unreal one about today",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one real condition and one unreal one about today]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I could\". (Possim.) Say \"if I had money\". (Sī pecūniam habērem.) In sī pluit, manēmus, may it rain? (Yes, it is open.) In sī nōn plueret, is it raining? (Yes: that is why the verb is subjunctive.) What is the -i- of velim usually said to be? (An old wishing mood.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-W290-epistula",
+      "sequence": 15770,
+      "title": "A letter about a journey",
+      "headword": "(epistula)",
+      "romanization": "(epistula)",
+      "gloss": "a six-line letter to one friend about a journey — the Roman opening, a scene and its events, a feeling, and a condition at the end",
+      "script": "latin",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:9399b8fc208632d9",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Your four lines with joiners held together. These six lines are an epistula, a letter, and they tell a story."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Pick one friend who will read it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A Roman letter opened with two names and two letters: Mārcus Iūliae S. D., Marcus to Julia, S. D., salūtem dīcit, \"sends greeting\". Your name goes first, in the nominative; your friend's in the dative."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then, often, a real condition: Sī valēs, bene est; ego valeō. \"If you are well, good; I am well.\" Seneca calls it an old custom for the first words of a letter (Lewis & Short quote him), and it was common enough to be written as initials."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The middle tells the story: the scene in the imperfect, the events in the perfect, in order. The end looks forward, and the last word is valē."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — connected composition",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "On paper, write six lines to your friend about a journey, real or invented, one line for each of these:"
+            },
+            {
+              "kind": "speech",
+              "text": "the opening: your name, your friend's, S. D., and sī valēs, bene est;"
+            },
+            {
+              "kind": "speech",
+              "text": "the scene: when it was, with abhinc, and the weather, with erat or -bat;"
+            },
+            {
+              "kind": "speech",
+              "text": "the first events, with prīmum and deinde: iter faciō, a ship, the fare;"
+            },
+            {
+              "kind": "speech",
+              "text": "what went wrong, with subitō or quid accidit, in the perfect;"
+            },
+            {
+              "kind": "speech",
+              "text": "how you felt and why, with eram and quia or quod, and one comparison with quam;"
+            },
+            {
+              "kind": "speech",
+              "text": "one line forward, with sī … essēs, … essem, or velim, or spērō, then valē."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Use only words you already write. The exercise is choosing the right past for each line."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now go through your lines as you went through the rainy day in your first story. Mark every verb S for scene or E for event. Line two should be all S; lines three and four mostly E; line five mostly S. A line about the weather marked E is the commonest slip: change pluit to pluēbat."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then two endings to check. The perfect for \"they\" ends in -ērunt; the imperfect has -ba- before its ending. And a feeling word agrees with whoever felt it: laeta eram if a woman is writing."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Last, read line six on its own. If its sī is about something that may be true, are both verbs plain? If it is about something false, are both subjunctive, essēs and essem? Then the letter looks forward, and it is finished."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

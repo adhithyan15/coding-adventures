@@ -1,0 +1,17 @@
+{
+  "language": "latin",
+  "chapter": 284,
+  "sourceHash": "fnv1a64:2a5b3c0674535020",
+  "lessonIds": [
+    "LA-C284-debes",
+    "LA-C284-explico",
+    "LA-R284-advice-and-reasons"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "latin/narration/ch284.txt",
+  "json": "latin/narration/ch284.json",
+  "textHash": "fnv1a64:9ee4a9847c4869fb",
+  "jsonHash": "fnv1a64:1a27dbc8bee9fd9d",
+  "findings": []
+}

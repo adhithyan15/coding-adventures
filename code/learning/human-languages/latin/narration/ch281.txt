@@ -1,0 +1,213 @@
+Latin, chapter 281: The Scene and the Event.
+5 lessons. All 5 can be done entirely by ear.
+
+
+Lesson 1 of 5.
+vīdī, vīdit — the past of what happened.
+
+Warm-up.
+[pause 2 seconds]
+Say "I recently read a book". (Nūper librum lēgī.) Now "before, I lived in Rome". (Anteā Rōmae habitāvī.) And ask "what happened?" (Quid accidit?)
+[pause 1 second]
+All three are the perfect, Latin's past for a thing that happened and was over. Here are its six persons.
+
+Grammar Lens: one stem, six endings.
+Every verb has a perfect stem: for videō, vīd-, with a long ī. Onto it go six endings, the same for every verb:
+vīdī — I saw. vīdistī — you saw. vīdit — he saw, she saw. vīdimus — we saw. vīdistis — you all saw. vīdērunt — they saw.
+Stories lean on two of them: -it for one person, -ērunt for several.
+[pause 2 seconds]
+The stem is learned with each verb. veniō has vēn-: vēnit, vēnērunt. sum has fu-: fuī, I was; fuit, he was.
+[pause 1 second]
+Vīdī is also "I have seen"; the sentence decides.
+
+You'll want to know: the -āvī verbs.
+Most -āre verbs add -āv-, like the habitāvī you own:
+ambulāre — ambulāvī, I walked; ambulāvit, he walked clāmāre — clāmāvit, he shouted nārrāre — nārrāvit, she told; nārrāvērunt, they told.
+The stems learned one by one are the others: vīdī, vēnī, fuī, lēgī, and bibī, from bibō, with nothing added at all.
+
+The word, taken apart: fuī.
+fuī looks nothing like sum because it is built on another root, the one the chapter on sum named: Proto-Indo-European bʰuH-, "to become", which EtymDB 2.1 lists among the parents of sum and which also gives English be.
+vīdī keeps the root of videō with a longer vowel (Lewis & Short give vīdi as its perfect). That vowel is how the ear tells videt, "he sees", from vīdit, "he saw".
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: vīdī, vīdistī, vīdit — then vīdimus, vīdistis, vīdērunt]
+[pause 8 seconds for the answer]
+[your turn — say: videt, he sees; then vīdit, he saw — and hear the long ī]
+[pause 8 seconds for the answer]
+[your turn — say: vēnit, he came; vēnērunt, they came]
+[pause 8 seconds for the answer]
+[your turn — say: fuī, I was; fuit, it was]
+[pause 8 seconds for the answer]
+[your turn — say: ambulāvī, I walked; ambulāvērunt, they walked]
+[pause 8 seconds for the answer]
+[your turn — say: Nūper amīcum vīdī. — Recently I saw a friend]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+"He saw"? (Vīdit.) "They came"? (Vēnērunt.) "I walked"? (Ambulāvī.) Which ending says "they"? (-ērunt.) And which root is behind fuī? (bʰuH-, "to become", the root of English be.)
+
+
+Lesson 2 of 5.
+eram, erat — the past that stays open.
+
+Warm-up.
+[pause 2 seconds]
+Say "I am" and "they are". (Sum. Sunt.) Now "I was", in the perfect. (Fuī.)
+[pause 1 second]
+Fuī closes a door: I was, and that is over. Latin has a second "was" that holds it open.
+
+Grammar Lens: six forms, and the endings you know.
+Ōlim Rōma parva erat. — Long ago Rome was small.
+erat is "was", the imperfect of sum. All six persons:
+eram — I was. erās — you were. erat — he, she, it was. erāmus — we were. erātis — you all were. erant — they were.
+[pause 2 seconds]
+The endings -m, -s, -t, -mus, -tis, -nt are those of sum, es, est, sumus, estis, sunt, on the stem era-. Before -m, -t and -nt the a is short.
+[pause 1 second]
+Erat is a state that went on, with no edge in view.
+Fessus eram. — I was tired. Caelum obscūrum erat. — The sky was dark.
+
+Why it's said this way: fuit or erat?
+[pause 2 seconds]
+Both are "was"; the choice is the frame. Laetus eram paints a mood that lasted through the story. Laetus fuī sums it up from outside: I was happy, and that time is over. A story sets its scene with erat.
+
+The word, taken apart: eram.
+eram is usually explained as an older esam, built on the same root as est: between two vowels an old Latin s turned into r, and es-a-m came out as eram. Neither EtymDB nor Lewis & Short records a form that old, so this is the account histories of Latin give, offered here as one. The s survives where no vowel followed it: es, est, estis.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: eram, erās, erat — then erāmus, erātis, erant]
+[pause 8 seconds for the answer]
+[your turn — say: Ōlim Rōma parva erat.]
+[pause 8 seconds for the answer]
+[your turn — say: Fessus eram. — then a woman says it: Fessa eram.]
+[pause 8 seconds for the answer]
+[your turn — say: Caelum obscūrum erat. — then In vīllā erāmus.]
+[pause 8 seconds for the answer]
+[your turn — say: the closed door, then the open one — fuit, then erat]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+"They were"? (Erant.) "We were"? (Erāmus.) Whose endings does eram borrow? (The present sum, es, est.) Which "was" paints a scene, fuit or erat? (Erat.) And what did the r of eram used to be? (An s, between two vowels.)
+
+
+Lesson 3 of 5.
+ambulābam — I was walking.
+
+Warm-up.
+[pause 2 seconds]
+Say "I was tired", the open past. (Fessus eram.) Now "I walked", the closed one. (Ambulāvī.)
+[pause 1 second]
+Eram belongs to one verb. Every other verb makes its open past with two letters slipped in before the ending.
+
+Grammar Lens: -ba- before the ending.
+Take the present stem, add -ba-, then the endings eram taught you:
+ambulābam — I was walking. ambulābās — you were walking. ambulābat — he was walking. ambulābāmus — we were walking. ambulābātis — you all were walking. ambulābant — they were walking.
+[pause 2 seconds]
+The vowel before -ba- comes from the infinitive. An -āre verb keeps its ā, and an -ēre verb its ē: habēre, habēbam, I had, I used to have; sedēre, sedēbat, he was sitting.
+[pause 1 second]
+The other verbs put -ēbam on the stem: legere, legēbam, I was reading; volō gives volēbat, he wanted. And the verbs with -iō keep their i: venīre, veniēbam; dormīre, dormiēbat, he was sleeping.
+[pause 1 second]
+What it says is the same for all of them: an action under way, or a habit. Ambulābam is "I was walking", and also "I used to walk".
+
+The word, taken apart: the -b- of -bam.
+Histories of Latin often trace the -b- of -bam to the root behind fuī, Proto-Indo-European bʰuH-, "to become". That is a reconstruction, and neither EtymDB nor Lewis & Short takes it up, so it is offered as the usual account, not as a fact.
+What is certain is where the ending went. Spanish kept it: cantābat, "he was singing", is Spanish cantaba. French wore the b away, so the same form there is chantait.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: ambulābam, ambulābās, ambulābat]
+[pause 8 seconds for the answer]
+[your turn — say: ambulābāmus, ambulābātis, ambulābant]
+[pause 8 seconds for the answer]
+[your turn — say: habēbam, I had; sedēbat, he was sitting]
+[pause 8 seconds for the answer]
+[your turn — say: Mercātōrēs clāmābant. — The merchants were shouting]
+[pause 8 seconds for the answer]
+[your turn — say: legēbam, I was reading; veniēbam, I was coming]
+[pause 8 seconds for the answer]
+[your turn — say: Amīcus dormiēbat. — My friend was sleeping]
+[pause 8 seconds for the answer]
+[your turn — say: the closed past, then the open one — ambulāvit, then ambulābat]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+"They were walking"? (Ambulābant.) "I had"? (Habēbam.) "I was reading"? (Legēbam.) What two letters come before the ending? (-ba-.) And which Romance language still keeps the b? (Spanish: cantaba.)
+
+
+Lesson 4 of 5.
+pluēbat … vēnit — the scene and the event.
+
+Warm-up.
+[pause 2 seconds]
+Say "it rains", with no subject. (Pluit.) Now put it in the open past, the way legere gives legēbat. (Pluēbat, it was raining.)
+
+Grammar Lens: which past for which job.
+Pluēbat. Subitō amīcus vēnit. — It was raining. Suddenly a friend came.
+[pause 2 seconds]
+The rain was already going on, and it went on afterwards: that is the imperfect, pluēbat. The friend's arrival happened once, at one moment, and was done: that is the perfect, vēnit.
+[pause 2 seconds]
+So a story runs on two tracks. The imperfect paints the scene: weather, places, what people were doing. The perfect moves the events along.
+In forō ambulābam; subitō amīcum vīdī. — I was walking in the forum; suddenly I saw a friend.
+[pause 1 second]
+A word like subitō, "suddenly", nearly guarantees a perfect after it: suddenness is an event.
+
+Why it's said this way: habitābam or habitāvī?
+[pause 2 seconds]
+Sometimes both are right. Rōmae habitāvī counts it up from outside: I lived in Rome, a closed stretch. Rōmae habitābam puts you inside it: I was living in Rome then.
+[pause 2 seconds]
+One small trap: pluit in the perfect is spelled pluit too, "it rained", the way accidit serves two tenses. Only the story around it decides.
+
+The word, taken apart: perfect and imperfect.
+The names are Latin. perfectum comes from perficiō, "to carry through, to finish" (Lewis & Short), which EtymDB 2.1 builds from per-, "through", and faciō, "to make, to do". The perfect is the past that was carried through. imperfectum puts in-, "not", in front: unfinished, still going, which is what pluēbat is.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: Pluēbat. Subitō amīcus vēnit.]
+[pause 8 seconds for the answer]
+[your turn — say: In forō ambulābam; subitō amīcum vīdī.]
+[pause 8 seconds for the answer]
+[your turn — say: a scene — Caelum obscūrum erat. — and an event — Amīcus vēnit.]
+[pause 8 seconds for the answer]
+[your turn — say: inside it, then outside it — Rōmae habitābam, then Rōmae habitāvī]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 12 seconds]
+In 'Pluebat. Subito amicus venit.', which verb is the event?
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which past paints the scene? (The imperfect: pluēbat.) Which moves the story along? (The perfect: vēnit.) After subitō, which one is likely? (The perfect: suddenness is an event.) And what does perfectum mean, taken apart? (Carried through.)
+
+
+Lesson 5 of 5.
+Review — the scene, and what happened in it.
+
+Warm-up.
+[pause 2 seconds]
+Say "they saw". (Vīdērunt.) Then "we were", the open past. (Erāmus.)
+
+What you've built.
+Four lessons, and both of Latin's story pasts are in your hands. The perfect, a stem and six endings: vīdī, vīdit, vīdērunt, with -āvī for most -āre verbs. The imperfect: eram, erat, erant for sum, and -ba- before the ending for every other verb: ambulābam, habēbam, legēbam, veniēbam.
+[pause 2 seconds]
+And the division of labour between them: the imperfect holds the scene still, the perfect drops the events into it.
+Pluēbat, et in caupōnā sedēbam. Subitō amīcus intrāvit. — It was raining, and I was sitting in the inn. Suddenly a friend came in.
+[pause 1 second]
+Two verbs of scene, pluēbat and sedēbam; one event, intrāvit, and subitō in front of it.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: a scene in three — Caelum obscūrum erat. Pluēbat. In caupōnā sedēbam.]
+[pause 8 seconds for the answer]
+[your turn — say: the event — Subitō amīcus intrāvit. — and a closed one — In caupōnā cēnāvērunt.]
+[pause 8 seconds for the answer]
+[your turn — say: In forō ambulābam; subitō amīcum vīdī.]
+[pause 8 seconds for the answer]
+[your turn — say: one of your own — a scene with erat or -bat, and one thing that happened, with subitō]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+"He came in"? (Intrāvit.) "I was sitting"? (Sedēbam.) Which ending says "they" in the perfect? (-ērunt.) In pluēbat … intrāvit, which verb is the scene? (Pluēbat.) What does perfectum mean? (Carried through.) What was the r of eram once? (An s.) And which language still says cantaba? (Spanish, keeping the -b-.)
