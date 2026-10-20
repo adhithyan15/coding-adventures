@@ -88,8 +88,8 @@ rung is then stale and fails the gate.
 The refused cohort is pinned by name (`UPSTREAM_REFUSED`).
 
 The three `ladder_t7_private_field_*` rungs move from recorded divergences to
-declining identically. The ledger drops from 59 to 56 entries, and parity goes
-to WS 55/57, SIMPLE 35/57 and ADVANCED 25/57. The four CCR-081 `simple-private-*`
+declining identically. The ledger drops from 58 to 55 entries, and parity goes
+to WS 55/57, SIMPLE 36/57 and ADVANCED 25/57. The four CCR-081 `simple-private-*`
 fixtures assert the identical refusal too.
 
 ## Later slices (one PR each)

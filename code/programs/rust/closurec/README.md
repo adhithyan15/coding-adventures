@@ -310,9 +310,9 @@ divergence-ledger checks on 2026-09-26 cover 57 rungs:
 
 | Level | Rungs agreeing | |
 |-------|---------------:|---|
-| `WHITESPACE_ONLY` | 54 / 57 | 95% |
-| `SIMPLE` | 35 / 57 | 61% |
-| `ADVANCED` | 24 / 57 | 42% |
+| `WHITESPACE_ONLY` | 55 / 57 | 96% |
+| `SIMPLE` | 36 / 57 | 63% |
+| `ADVANCED` | 25 / 57 | 44% |
 
 All 57 rungs are committed as fixtures under `tests/diff/ladder_*`. Agreement falls as the amount of claimed optimization rises. The `ADVANCED`
 figure flatters it: most of its agreements are rungs with nothing to optimize.

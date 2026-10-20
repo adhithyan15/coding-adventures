@@ -178,8 +178,8 @@ Every input is scanned before compilation, and a refused program produces:
 The ladder gains a third verdict, `DeclinedIdentically`. A rung upstream
 refuses records `expected.exit` and `expected.stderr` from the jar, and
 counts as agreement when closurec declines identically. The three
-`private_field` rungs moved there: the ledger drops from 59 to 56, and parity
-is now 55/57, 35/57 and 25/57. The four CCR-081 `simple-private-*` fixtures
+`private_field` rungs moved there: the ledger drops from 58 to 55, and parity
+is now 55/57, 36/57 and 25/57. The four CCR-081 `simple-private-*` fixtures
 now assert the identical refusal. They had pinned closurec's old output.
 
 Diagnostics stay byte-identical up to 16 MiB. Past that, closurec stops
