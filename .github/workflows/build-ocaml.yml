@@ -90,7 +90,7 @@ jobs:
 
       - name: Set up the reviewed OCaml compiler and repository
         # ocaml/setup-ocaml v3.7.0 -- SHA is contract-bound in ocaml_toolchain_lock.py
-        uses: ocaml/setup-ocaml@93303b622b2522e4411e295f9e77411a24912ac7
+        uses: ocaml/setup-ocaml@15d660006c1d3110d77c34b7faa3bddefe8b82f0
         # Avoid opam/opam#7031 while opam inspects its Git-backed repository.
         env:
           GIT_CONFIG_COUNT: '1'
@@ -166,7 +166,7 @@ jobs:
             "$RUNNER_OS" "$RUNNER_ARCH" > "$output/runner-image.txt"
 
       - name: Upload fresh solver evidence
-        # actions/upload-artifact v7.0.1 -- SHA is contract-bound in ocaml_toolchain_lock.py
+        # actions/upload-artifact v7.0.2 -- SHA is contract-bound in ocaml_toolchain_lock.py
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: ocaml03-fresh-${{ matrix.target }}
@@ -216,7 +216,7 @@ jobs:
 
       - name: Set up the reviewed OCaml compiler and repository
         # ocaml/setup-ocaml v3.7.0 -- SHA is contract-bound in ocaml_toolchain_lock.py
-        uses: ocaml/setup-ocaml@93303b622b2522e4411e295f9e77411a24912ac7
+        uses: ocaml/setup-ocaml@15d660006c1d3110d77c34b7faa3bddefe8b82f0
         # Avoid opam/opam#7031 while opam inspects its Git-backed repository.
         env:
           GIT_CONFIG_COUNT: '1'
@@ -335,7 +335,7 @@ jobs:
           done
 
       - name: Upload measured coverage
-        # actions/upload-artifact v7.0.1 -- SHA is contract-bound in ocaml_toolchain_lock.py
+        # actions/upload-artifact v7.0.2 -- SHA is contract-bound in ocaml_toolchain_lock.py
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: ocaml03-coverage-${{ matrix.target }}
