@@ -1,0 +1,11 @@
+{
+  "id": "RU-C488-dremat",
+  "pathSegment": "RU-PATH-488-NIGHT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-488-NIGHT",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 494,
+  "sourceHash": "fnv1a64:279862d1ad96ce95",
+  "lessonIds": [
+    "RU-C494-suprug",
+    "RU-C494-brak",
+    "RU-C494-izmena",
+    "RU-C494-izmenyat",
+    "RU-C494-rasstavaniye"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch494.txt",
+  "json": "russian/narration/ch494.json",
+  "textHash": "fnv1a64:24bc7f8947cc3ee5",
+  "jsonHash": "fnv1a64:dc84be1b00148ae8",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 453,
+  "title": "Trying things on",
+  "label": "ch:ru-trying-things-on",
+  "canDo": "I can try on clothes: the fitting room, trying on, the size, shoes that pinch and exchanging things.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C453-obmenivat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 453: I can try on clothes: the fitting room, trying on, the size, shoes that pinch and exchanging things.",
+    "assesses": [
+      "RU-LEX-C453-PRIMERKA-03",
+      "RU-LEX-C453-PRIMERKA-04",
+      "RU-LEX-C453-PRIMERKA-05"
+    ]
+  }
+}

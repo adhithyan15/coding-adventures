@@ -1,0 +1,11 @@
+{
+  "id": "RU-R402-review-final-402",
+  "pathSegment": "RU-PATH-402-SVYAZ",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "RU-EXT-402-SVYAZ",
+      "order": 6
+    }
+  ]
+}

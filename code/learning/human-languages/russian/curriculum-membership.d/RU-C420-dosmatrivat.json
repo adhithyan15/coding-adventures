@@ -1,0 +1,11 @@
+{
+  "id": "RU-C420-dosmatrivat",
+  "pathSegment": "RU-PATH-420-DOSMOTR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-420-DOSMOTR",
+      "order": 1
+    }
+  ]
+}

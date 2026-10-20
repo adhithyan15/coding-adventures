@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 306,
+  "sourceHash": "fnv1a64:5ea79d13a231935b",
+  "lessonIds": [
+    "RU-C306-pomolvka",
+    "RU-C306-vlyublyatsya",
+    "RU-C306-ukhazhivat",
+    "RU-C306-venchaniye",
+    "RU-C306-rasstavatsya"
+  ],
+  "tex": "russian/book/chapters/ch306-love-and-engagement.tex"
+}

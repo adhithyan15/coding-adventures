@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-270-WOULD",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "RU-EXT-270-WOULD"
+  ],
+  "after": []
+}

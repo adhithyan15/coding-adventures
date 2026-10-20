@@ -1,0 +1,11 @@
+{
+  "id": "RU-C493-potseluy",
+  "pathSegment": "RU-PATH-493-SWEETHEARTS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-493-SWEETHEARTS",
+      "order": 1
+    }
+  ]
+}

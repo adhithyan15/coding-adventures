@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C411-pristyogivatsya",
+    "language": "russian",
+    "chapter": 411,
+    "sequence": 23650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:22675ddb7d4c3648"
+  },
+  "findings": []
+}

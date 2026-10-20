@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-384-UCHYOBA",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "RU-EXT-384-UCHYOBA"
+  ],
+  "after": []
+}

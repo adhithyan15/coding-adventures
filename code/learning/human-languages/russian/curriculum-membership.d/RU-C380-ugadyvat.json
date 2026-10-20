@@ -1,0 +1,11 @@
+{
+  "id": "RU-C380-ugadyvat",
+  "pathSegment": "RU-PATH-380-BUDUSHCHEYE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-380-BUDUSHCHEYE",
+      "order": 1
+    }
+  ]
+}

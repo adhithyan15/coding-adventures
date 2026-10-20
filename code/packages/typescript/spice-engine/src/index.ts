@@ -1291,7 +1291,7 @@ export interface DeckFunctionSummary {
 
 export interface DeckMeasurementCard {
   readonly directive: ".measure" | ".meas";
-  readonly analysis: "tran" | "transient" | "dc" | "ac";
+  readonly analysis: "op" | "tran" | "transient" | "dc" | "ac";
   readonly name: string;
   readonly mode: string;
   readonly probe: string;
@@ -5488,17 +5488,17 @@ function resolveMeasurementLine(
   }
 
   const analysis = tokens[1].trim().toLowerCase();
-  if (analysis !== "tran" && analysis !== "transient" && analysis !== "dc" && analysis !== "ac") {
+  if (analysis !== "op" && analysis !== "tran" && analysis !== "transient" && analysis !== "dc" && analysis !== "ac") {
     addMeasurementDiagnostic(state, {
       code: "SPICE_DECK_MEASURE_ANALYSIS",
       directive,
       lineNumber,
-      message: `only transient, dc, and ac .measure cards are supported, got ${JSON.stringify(tokens[1])}`,
+      message: `only operating-point, transient, dc, and ac .measure cards are supported, got ${JSON.stringify(tokens[1])}`,
       token: tokens[1],
     });
     return;
   }
-  const analysisName = analysis === "tran" || analysis === "dc" || analysis === "ac" ? analysis : "transient";
+  const analysisName = analysis === "op" || analysis === "tran" || analysis === "dc" || analysis === "ac" ? analysis : "transient";
 
   const name = tokens[2].trim();
   if (!isParameterName(name)) {
@@ -5692,12 +5692,20 @@ function resolveMeasurementLine(
     }
   }
 
-  if (mode === "find" && atValue === undefined) {
+  if (mode === "find" && atValue === undefined && analysisName !== "op") {
     addMeasurementDiagnostic(state, {
       code: "SPICE_DECK_MEASURE_ARGUMENT",
       directive,
       lineNumber,
       message: "FIND measurements require an AT value",
+    });
+  }
+  if (analysisName === "op" && (mode !== "find" || (atValue !== undefined && atValue !== 0))) {
+    addMeasurementDiagnostic(state, {
+      code: "SPICE_DECK_MEASURE_ARGUMENT",
+      directive,
+      lineNumber,
+      message: "operating-point .measure cards require FIND probe with optional AT=0",
     });
   }
   if (mode === "when" && targetValue === undefined) {
@@ -6551,7 +6559,7 @@ function resolveMeasurementDelayLine(
   lineNumber: number,
   directive: ".measure" | ".meas",
   state: DeckMeasurementState,
-  analysis: "tran" | "transient" | "dc" | "ac",
+  analysis: "op" | "tran" | "transient" | "dc" | "ac",
   name: string,
 ): void {
   if (analysis !== "tran" && analysis !== "transient") {
@@ -11125,6 +11133,50 @@ export function measureTransientDeck(
   return measureTransientCards(points, summary.measurements);
 }
 
+export function measureOperatingPointProbe(
+  result: DcResult,
+  name: string,
+  probe: string,
+): ProbeMeasurement {
+  return {
+    name,
+    analysis: "op",
+    probe,
+    mode: "find",
+    value: tableProbeValue(
+      result.nodeVoltages,
+      result.branchCurrents,
+      probe,
+      "measureOperatingPointProbe",
+    ),
+    fromValue: 0,
+    toValue: 0,
+  };
+}
+
+export function measureOperatingPointCards(
+  result: DcResult,
+  measurements: readonly DeckMeasurementCard[],
+): ProbeMeasurement[] {
+  return measurements.map((measurement) => {
+    if (measurement.analysis !== "op") {
+      throw invalidElement(
+        "measureOperatingPointCards",
+        "only operating-point measurement cards are supported",
+      );
+    }
+    if (measurement.mode !== "find" || (
+      measurement.atValue !== undefined && measurement.atValue !== 0
+    )) {
+      throw invalidElement(
+        "measureOperatingPointCards",
+        "operating-point measurements require FIND probe with optional AT=0",
+      );
+    }
+    return measureOperatingPointProbe(result, measurement.name, measurement.probe);
+  });
+}
+
 export function measureDcSweepProbe(
   points: readonly DcSweepPoint[],
   name: string,
@@ -13179,9 +13231,11 @@ function runDeckAnalysisPlan(
   if (plan.analysis === "op") {
     const result = dcOp(circuit);
     const table = formatDeckOpTable(result, netlist);
-    selectDeckMeasurementCardsForAnalysis(netlist, plan.analysis);
+    const measurements = measureOperatingPointCards(
+      result,
+      selectDeckMeasurementCardsForAnalysis(netlist, plan.analysis),
+    );
     selectDeckFourierCardsForAnalysis(netlist, plan.analysis);
-    const measurements: ProbeMeasurement[] = [];
     const fourier: FourierResult[] = [];
     const outputProbes = selectDeckOutputProbes(netlist, plan.analysis);
     const outputProbeLines = selectDeckOutputProbeLines(netlist, plan.analysis);

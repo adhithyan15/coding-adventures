@@ -1,0 +1,19 @@
+{
+  "chapter": 449,
+  "title": "A haircut",
+  "label": "ch:ru-a-haircut",
+  "canDo": "I can get a haircut: the hairdresser's, a haircut, cutting hair, shaving and a fringe.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C449-chyolka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 449: I can get a haircut: the hairdresser's, a haircut, cutting hair, shaving and a fringe.",
+    "assesses": [
+      "RU-LEX-C449-STRIZHKA-03",
+      "RU-LEX-C449-STRIZHKA-04",
+      "RU-LEX-C449-STRIZHKA-05"
+    ]
+  }
+}

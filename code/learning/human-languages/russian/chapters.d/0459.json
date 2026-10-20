@@ -1,0 +1,19 @@
+{
+  "chapter": 459,
+  "title": "Going hiking",
+  "label": "ch:ru-going-hiking",
+  "canDo": "I can go hiking: a hike, a trail, a rest stop, scrambling up and stumbling.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C459-spotykatsya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 459: I can go hiking: a hike, a trail, a rest stop, scrambling up and stumbling.",
+    "assesses": [
+      "RU-LEX-C459-POKHOD-03",
+      "RU-LEX-C459-POKHOD-04",
+      "RU-LEX-C459-POKHOD-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C375-obyazatelno",
+    "language": "russian",
+    "chapter": 375,
+    "sequence": 21750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c99a6de8c0c18e45"
+  },
+  "findings": []
+}

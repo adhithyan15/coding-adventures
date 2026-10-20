@@ -1,0 +1,11 @@
+{
+  "id": "RU-R410-review-403-410",
+  "pathSegment": "RU-PATH-410-STOLKNOVENIYE",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "RU-EXT-410-STOLKNOVENIYE",
+      "order": 5
+    }
+  ]
+}

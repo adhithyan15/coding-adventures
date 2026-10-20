@@ -1,0 +1,19 @@
+{
+  "chapter": 442,
+  "title": "Sightseeing",
+  "label": "ch:ru-sightseeing",
+  "canDo": "I can go sightseeing: a guided tour, the guide, the guidebook, the sights and looking round a place.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-R442-review-435-442",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 442: I can go sightseeing: a guided tour, the guide, the guidebook, the sights and looking round a place.",
+    "assesses": [
+      "RU-LEX-C442-EKSKURSIYA-03",
+      "RU-LEX-C442-EKSKURSIYA-04",
+      "RU-LEX-C442-EKSKURSIYA-05"
+    ]
+  }
+}

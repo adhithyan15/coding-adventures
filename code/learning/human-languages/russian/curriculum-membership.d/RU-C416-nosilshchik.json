@@ -1,0 +1,11 @@
+{
+  "id": "RU-C416-nosilshchik",
+  "pathSegment": "RU-PATH-416-PROVODNIK",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-416-PROVODNIK",
+      "order": 2
+    }
+  ]
+}

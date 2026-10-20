@@ -1,0 +1,11 @@
+{
+  "id": "RU-C425-prichalivat",
+  "pathSegment": "RU-PATH-425-KACHKA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-425-KACHKA",
+      "order": 1
+    }
+  ]
+}

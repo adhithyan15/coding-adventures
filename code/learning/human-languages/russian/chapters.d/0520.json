@@ -1,0 +1,19 @@
+{
+  "chapter": 520,
+  "title": "Directors and Actresses",
+  "label": "ch:ru-directors-and-actresses",
+  "canDo": "I can talk about the people who make a film.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C520-snimatsya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 520: I can talk about the people who make a film.",
+    "assesses": [
+      "RU-LEX-C520-SCREENACTING-03",
+      "RU-LEX-C520-SCREENACTING-04",
+      "RU-LEX-C520-SCREENACTING-05"
+    ]
+  }
+}

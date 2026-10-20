@@ -5,6 +5,7 @@ edition = "2021"
 description = "Ruby lexer driven by a TOML-encoded state machine. See code/specs/ruby-parser.md for the design."
 
 [dependencies]
+grammar-tools = { path = "../grammar-tools" }
 lexer = { path = "../lexer" }
 state-machine = { path = "../state-machine" }
 state-machine-markup-deserializer = { path = "../state-machine-markup-deserializer" }

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 413,
+  "sourceHash": "fnv1a64:3fb7dfd814c28d61",
+  "lessonIds": [
+    "RU-C413-proyezd",
+    "RU-C413-platskart",
+    "RU-C413-kupe",
+    "RU-C413-tarif",
+    "RU-C413-lgota"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch413.txt",
+  "json": "russian/narration/ch413.json",
+  "textHash": "fnv1a64:94d5f6699ded7d70",
+  "jsonHash": "fnv1a64:598f7ec0b933f1f4",
+  "findings": []
+}

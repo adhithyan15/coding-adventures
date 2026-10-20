@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 364,
+  "sourceHash": "fnv1a64:8df32eccae4b99c2",
+  "lessonIds": [
+    "RU-C364-obshchestvo",
+    "RU-C364-naselenie",
+    "RU-C364-obshchestvennyy",
+    "RU-C364-socialnyy",
+    "RU-C364-zhitel"
+  ],
+  "tex": "russian/book/chapters/ch364-society-and-its-people.tex"
+}

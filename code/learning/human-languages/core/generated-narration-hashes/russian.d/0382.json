@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:b57c84184890c99e",
+  "lessonIds": [
+    "RU-C382-provalit",
+    "RU-C382-peresdavat",
+    "RU-C382-peresdacha",
+    "RU-C382-podgotovka",
+    "RU-C382-gotovitsya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch382.txt",
+  "json": "russian/narration/ch382.json",
+  "textHash": "fnv1a64:018b6659d2857abe",
+  "jsonHash": "fnv1a64:cc9d05cbccb7a2c2",
+  "findings": []
+}

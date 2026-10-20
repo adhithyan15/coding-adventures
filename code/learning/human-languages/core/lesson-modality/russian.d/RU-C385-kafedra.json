@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C385-kafedra",
+    "language": "russian",
+    "chapter": 385,
+    "sequence": 22280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ba51b1e9e9cd2e9"
+  },
+  "findings": []
+}

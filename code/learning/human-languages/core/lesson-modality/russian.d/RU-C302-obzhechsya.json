@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C302-obzhechsya",
+    "language": "russian",
+    "chapter": 302,
+    "sequence": 18010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7ade636d0bebc7aa"
+  },
+  "findings": []
+}

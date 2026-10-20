@@ -193,4 +193,9 @@ LANG04  (future)        — codegen-core bridge
 (`interpreter_ir::op_registry::STANDARD_OPS`). "Lowered" means `GenericCirJit` compiles the op to JIT bytecode. An op that only runs because `JITCore` falls back to the vm-core interpreter is declared `Refused`, so interpreter fallback cannot pass as JIT support. A test checks every row against the real compiler. `lang-aot` refuses a
 module that uses a refused op at compile time, with a typed error. Since LANG83 PR1b, `GenericCirJit` compiles `i64_div_floor`/`i64_mod_floor`
 (`DIV_FLOOR_I64`/`MOD_FLOOR_I64`), `trap` (`TRAP`, error slot
-`trap: <kind>`, surfaced by `JITCore` as `VMError::Trap`) and `write_i64` (`CALL_BUILTIN`), so all four are `Lowered`.
+`trap: <kind>`, surfaced by `JITCore` as `VMError::Trap`) and `write_i64` (`CALL_BUILTIN`), so all four are `Lowered`. LANG83 PR4 adds
+`i64_add_ovf`/`i64_sub_ovf`/`i64_mul_ovf`/`i64_neg_ovf` (`ADD_OVF_I64`/`SUB_OVF_I64`/
+`MUL_OVF_I64`/`NEG_OVF_I64`, Rust `checked_*`): an out-of-range result writes
+`trap: Trap.Overflow` to the error slot, which `JITCore` drains into
+`VMError::Trap` so an interpreted caller stops too. `CIRInstr::is_pure` treats all
+four as impure, so dead-code elimination keeps an unused checked op.

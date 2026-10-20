@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C276-period",
+    "language": "russian",
+    "chapter": 276,
+    "sequence": 16660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0e665031b5fff2a7"
+  },
+  "findings": []
+}

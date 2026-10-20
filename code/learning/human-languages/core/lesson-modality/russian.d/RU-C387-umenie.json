@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C387-umenie",
+    "language": "russian",
+    "chapter": 387,
+    "sequence": 22370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d239f00120c4827d"
+  },
+  "findings": []
+}

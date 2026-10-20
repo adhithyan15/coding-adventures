@@ -1,0 +1,11 @@
+{
+  "id": "RU-C492-dvoyurodnyy",
+  "pathSegment": "RU-PATH-492-STEPFAMILY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-492-STEPFAMILY",
+      "order": 4
+    }
+  ]
+}

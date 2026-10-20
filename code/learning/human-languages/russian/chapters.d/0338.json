@@ -1,0 +1,19 @@
+{
+  "chapter": 338,
+  "title": "Arguments and evidence",
+  "label": "ch:ru-arguments-and-evidence",
+  "canDo": "I can give an argument and a reason, prove a point with evidence and say whether it is convincing.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C338-ubeditelnyy",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 338: I can give an argument and a reason, prove a point with evidence and say whether it is convincing.",
+    "assesses": [
+      "RU-LEX-C338-DOVOD-03",
+      "RU-LEX-C338-DOVOD-04",
+      "RU-LEX-C338-DOVOD-05"
+    ]
+  }
+}

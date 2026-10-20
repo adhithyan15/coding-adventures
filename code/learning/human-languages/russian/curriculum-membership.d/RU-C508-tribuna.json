@@ -1,0 +1,11 @@
+{
+  "id": "RU-C508-tribuna",
+  "pathSegment": "RU-PATH-508-FANS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-508-FANS",
+      "order": 1
+    }
+  ]
+}

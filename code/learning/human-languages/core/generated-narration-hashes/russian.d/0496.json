@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 496,
+  "sourceHash": "fnv1a64:e446888200a3fd41",
+  "lessonIds": [
+    "RU-C496-podguznik",
+    "RU-C496-soska",
+    "RU-C496-kolybelnaya",
+    "RU-C496-ubayukivat",
+    "RU-C496-pelenat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch496.txt",
+  "json": "russian/narration/ch496.json",
+  "textHash": "fnv1a64:31221b3e90acbc90",
+  "jsonHash": "fnv1a64:92a62d00b31649fe",
+  "findings": []
+}

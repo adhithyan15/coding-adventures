@@ -1,0 +1,11 @@
+{
+  "id": "RU-C414-pribytiye",
+  "pathSegment": "RU-PATH-414-PERRON",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-414-PERRON",
+      "order": 4
+    }
+  ]
+}

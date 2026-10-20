@@ -1,0 +1,19 @@
+{
+  "chapter": 521,
+  "title": "Brush and Canvas",
+  "label": "ch:ru-brush-and-canvas",
+  "canDo": "I can talk about painting and sitting for a portrait.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C521-pozirovat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 521: I can talk about painting and sitting for a portrait.",
+    "assesses": [
+      "RU-LEX-C521-PAINTING-03",
+      "RU-LEX-C521-PAINTING-04",
+      "RU-LEX-C521-PAINTING-05"
+    ]
+  }
+}

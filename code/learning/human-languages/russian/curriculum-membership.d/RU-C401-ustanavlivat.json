@@ -1,0 +1,11 @@
+{
+  "id": "RU-C401-ustanavlivat",
+  "pathSegment": "RU-PATH-401-PRILOZHENIYA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-401-PRILOZHENIYA",
+      "order": 1
+    }
+  ]
+}

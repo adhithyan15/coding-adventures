@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C341-otvergat",
+    "language": "russian",
+    "chapter": 341,
+    "sequence": 20010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f08b56ec2a72c472"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C379-kolebatsya",
+  "pathSegment": "RU-PATH-379-ZAPASNOY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-379-ZAPASNOY",
+      "order": 2
+    }
+  ]
+}

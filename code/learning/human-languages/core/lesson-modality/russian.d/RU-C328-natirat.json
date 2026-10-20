@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C328-natirat",
+    "language": "russian",
+    "chapter": 328,
+    "sequence": 19350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2ab0bb163917362f"
+  },
+  "findings": []
+}

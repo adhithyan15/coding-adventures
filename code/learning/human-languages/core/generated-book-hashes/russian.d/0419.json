@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 419,
+  "sourceHash": "fnv1a64:bf6c9c5a1290252b",
+  "lessonIds": [
+    "RU-C419-registratsiya",
+    "RU-C419-registrirovatsya",
+    "RU-C419-reys",
+    "RU-C419-kladi",
+    "RU-C419-posadochnyy"
+  ],
+  "tex": "russian/book/chapters/ch419-checking-in-for-a-flight.tex"
+}

@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-417-MARSHRUTKA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can get around town: the turnstile, a travel pass, a fare dodger, the route and the minibus.",
+  "prerequisites": []
+}

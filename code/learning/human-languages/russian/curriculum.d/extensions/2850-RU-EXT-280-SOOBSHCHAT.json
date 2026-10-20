@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-280-SOOBSHCHAT",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that someone reported, denied, published, confirmed or refuted something.",
+  "prerequisites": []
+}

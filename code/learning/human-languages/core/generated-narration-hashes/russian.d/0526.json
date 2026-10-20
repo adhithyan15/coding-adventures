@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 526,
+  "sourceHash": "fnv1a64:46b3d87eecb0b96f",
+  "lessonIds": [
+    "RU-C526-oblozhka",
+    "RU-C526-zakladka",
+    "RU-C526-listat",
+    "RU-C526-izdatelstvo",
+    "RU-C526-perechityvat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch526.txt",
+  "json": "russian/narration/ch526.json",
+  "textHash": "fnv1a64:b3ca88e99d5d1a86",
+  "jsonHash": "fnv1a64:3fe1f8784c4ae2b7",
+  "findings": []
+}

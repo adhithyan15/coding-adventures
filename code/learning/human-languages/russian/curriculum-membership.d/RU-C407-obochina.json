@@ -1,0 +1,11 @@
+{
+  "id": "RU-C407-obochina",
+  "pathSegment": "RU-PATH-407-OBGON",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-407-OBGON",
+      "order": 4
+    }
+  ]
+}

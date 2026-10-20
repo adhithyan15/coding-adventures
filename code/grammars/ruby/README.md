@@ -1,7 +1,8 @@
 # Ruby grammars
 
-`ruby.tokens` and `ruby.grammar` are the unversioned pair used by the current
-Ruby frontend. `releases.csv` is the LANG84 release inventory: one row per
+`ruby.tokens` and `ruby.grammar` are the unversioned pair used by the legacy
+Ruby frontend (`ruby.tokens` is stale: the hand-written `ruby-lexer` does not
+read it). `releases.csv` is the LANG84 release inventory: one row per
 upstream tagged Ruby release, the list that per-release pairs
 (`ruby<release>.tokens` / `ruby<release>.grammar`) will be built against,
 earliest first. See
@@ -99,7 +100,43 @@ No row has an empty date.
   - any pre-1.6.7 tarball without a tag. The tarball index
     (`cache.ruby-lang.org/pub/ruby/index.txt`) could not be reached during the
     audit, so this has not been cross-checked.
-- Every row is `pending`, stage `none`. No per-release pair exists yet. The
-  first ones are the LANG84 phase 3.2 `rb-int-puts` partial pairs.
+- Most rows are still `pending`, stage `none`; see the next section for the
+  first pairs.
+
+## Release pairs (LANG84 phase 3.2, slice R0)
+
+Five rows have a materialized pair and claim `partial`, stage `P`, subset
+`rb-int-puts` (declared in `subsets.csv`):
+
+| Release | Basis | Token class | Grammar class |
+| --- | --- | --- | --- |
+| `0.49` | reviewed: `parse.y` `yylex()`, `kwtable` and the yacc rules of the tag | 0.49 | 1994 |
+| `0.50` | reviewed: delta from 0.49 (backtick opens an xstring; kwtable adds `__FILE__`/`__LINE__`, drops `func`) | 0.50 | 1994 |
+| `3.3.5` | reviewed: token streams match `Ripper.lex` of the host ruby 3.3.6, whose syntax blobs are identical | 3.3 | 3.3 |
+| `3.3.6` | mechanical copy of 3.3.5 (identical `parse.y`, `defs/keywords`, `prism/config.yml`) | 3.3 | 3.3 |
+| `3.3.7` | mechanical copy of 3.3.6 (identical blobs) | 3.3 | 3.3 |
+
+So R0 covers the contiguous range at the start of the inventory (`0.49`,
+`0.50`) plus the current release line around the default release `3.3.6`.
+`0.51` is next: its `yylex()` splits unary `+`/`-` into UPLUS/UMINUS tokens
+and adds EXPR_FNAME, so it needs a new reviewed pair rather than a copy.
+
+`pair-evidence.csv` records, for each paired release, the blob IDs of the
+syntax files (`git ls-tree <source_sha> parse.y keywords defs/keywords
+prism/config.yml` against https://github.com/ruby/ruby) and its basis.
+`python3 code/scripts/ruby_release_pairs.py write` regenerates every pair
+header from that file and `releases.csv`, and rewrites mechanical copies;
+`check` fails if anything is stale or if a `copy:` row's blobs differ from its
+source's. Reviewed pairs are hand-written below their header.
+
+What R0 lexes, what it leaves to later slices (R1 strings, R3 percent
+literals, R4 regexps, R5 heredocs, R6 local-variable-sensitive forms), and
+each known divergence from the release's own lexer is listed at the top of
+every `.tokens` file and pinned by tests in `code/packages/rust/ruby-parser`
+(`tests/r0_differential.rs`, `tests/r0_releases.rs`,
+`tests/release_probes.rs`).
+
+The `rb-int-puts` corpus directory named in `subsets.csv` arrives with the
+IIR stage (LANG84 phase 5); stage P is proven by the parser probes above.
 
 `python3 code/scripts/release_inventory.py check` validates this file.

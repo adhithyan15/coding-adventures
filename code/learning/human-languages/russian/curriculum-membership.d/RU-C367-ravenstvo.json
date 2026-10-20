@@ -1,0 +1,11 @@
+{
+  "id": "RU-C367-ravenstvo",
+  "pathSegment": "RU-PATH-367-RAVENSTVO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-367-RAVENSTVO",
+      "order": 1
+    }
+  ]
+}

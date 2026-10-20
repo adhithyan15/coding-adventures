@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-290-MOSHENNIK",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-290-MOSHENNIK"
+  ],
+  "after": []
+}

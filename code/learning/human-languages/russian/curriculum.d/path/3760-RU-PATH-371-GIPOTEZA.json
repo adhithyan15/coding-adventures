@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-371-GIPOTEZA",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "RU-EXT-371-GIPOTEZA"
+  ],
+  "after": []
+}

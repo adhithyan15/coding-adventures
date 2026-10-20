@@ -1,0 +1,11 @@
+{
+  "id": "RU-C484-kostyl",
+  "pathSegment": "RU-PATH-484-PLASTER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-484-PLASTER",
+      "order": 1
+    }
+  ]
+}

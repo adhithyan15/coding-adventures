@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:ef8b9bb4ba8760b4",
+  "lessonIds": [
+    "RU-C381-sessiya",
+    "RU-C381-zachyot",
+    "RU-C381-seminar",
+    "RU-C381-konspekt",
+    "RU-C381-ball"
+  ],
+  "tex": "russian/book/chapters/ch381-exam-time.tex"
+}

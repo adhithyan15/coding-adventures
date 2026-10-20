@@ -661,6 +661,76 @@
       "sha256": "b7221aebe863c4fd3177a3174dbb547dd66e67c9fe7c77c4f9496c73efdf1f7d"
     },
     {
+      "family": "ruby",
+      "version": "ruby0.49",
+      "kind": "grammar",
+      "path": "code/grammars/ruby/ruby0.49.grammar",
+      "sha256": "f00822ef5ad8142246c47fd87b346335adabcd08af0948f482bded87996f8ce2"
+    },
+    {
+      "family": "ruby",
+      "version": "ruby0.49",
+      "kind": "tokens",
+      "path": "code/grammars/ruby/ruby0.49.tokens",
+      "sha256": "992187c7bd54b5ad59e535987ba52e6ef2d4b0509b25185ebf2d0044bb213850"
+    },
+    {
+      "family": "ruby",
+      "version": "ruby0.50",
+      "kind": "grammar",
+      "path": "code/grammars/ruby/ruby0.50.grammar",
+      "sha256": "54f0b354abb2ec674a4c9a87e2b5b456728279b9355711077ac9b05824753493"
+    },
+    {
+      "family": "ruby",
+      "version": "ruby0.50",
+      "kind": "tokens",
+      "path": "code/grammars/ruby/ruby0.50.tokens",
+      "sha256": "ccea3f4880eb70a4045563f297c204d338c33f58e908bd2c389923e12a19dbf4"
+    },
+    {
+      "family": "ruby",
+      "version": "ruby3.3.5",
+      "kind": "grammar",
+      "path": "code/grammars/ruby/ruby3.3.5.grammar",
+      "sha256": "9037025c5935c530f0aa5be603d0cf69203c254c2918aba550d13306aefa07d4"
+    },
+    {
+      "family": "ruby",
+      "version": "ruby3.3.5",
+      "kind": "tokens",
+      "path": "code/grammars/ruby/ruby3.3.5.tokens",
+      "sha256": "59ffca2a7f1a5586ee5cc63f107e1a684f91901f43a13cd67035dd33e2039666"
+    },
+    {
+      "family": "ruby",
+      "version": "ruby3.3.6",
+      "kind": "grammar",
+      "path": "code/grammars/ruby/ruby3.3.6.grammar",
+      "sha256": "3c2aed6c12b55c0544ae1a2bc6eb6b144890d02eeb3295ade0bb9fdb5487a4c0"
+    },
+    {
+      "family": "ruby",
+      "version": "ruby3.3.6",
+      "kind": "tokens",
+      "path": "code/grammars/ruby/ruby3.3.6.tokens",
+      "sha256": "6b981074af7fb2e789a7d5ae6ff0c4efcb16869d8498657cd0262dd0b04b7544"
+    },
+    {
+      "family": "ruby",
+      "version": "ruby3.3.7",
+      "kind": "grammar",
+      "path": "code/grammars/ruby/ruby3.3.7.grammar",
+      "sha256": "02a405cc009e5f369d2ff7e797229a45d145b21c758974dbc6a909668c2273c6"
+    },
+    {
+      "family": "ruby",
+      "version": "ruby3.3.7",
+      "kind": "tokens",
+      "path": "code/grammars/ruby/ruby3.3.7.tokens",
+      "sha256": "b605886404df95dba61cac50153e45eed8a267ee263c6740e989f9c6f2a0d3bb"
+    },
+    {
       "family": "sql",
       "version": "sql",
       "kind": "grammar",

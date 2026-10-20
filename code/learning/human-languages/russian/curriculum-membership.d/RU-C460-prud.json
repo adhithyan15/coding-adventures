@@ -1,0 +1,11 @@
+{
+  "id": "RU-C460-prud",
+  "pathSegment": "RU-PATH-460-RUCHEY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-460-RUCHEY",
+      "order": 3
+    }
+  ]
+}

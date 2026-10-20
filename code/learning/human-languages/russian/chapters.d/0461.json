@@ -1,0 +1,19 @@
+{
+  "chapter": 461,
+  "title": "In the forest",
+  "label": "ch:ru-in-the-forest",
+  "canDo": "I can describe a forest: a clearing, the edge of the forest, a thicket, moss and a cone.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C461-shishka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 461: I can describe a forest: a clearing, the edge of the forest, a thicket, moss and a cone.",
+    "assesses": [
+      "RU-LEX-C461-POLYANA-03",
+      "RU-LEX-C461-POLYANA-04",
+      "RU-LEX-C461-POLYANA-05"
+    ]
+  }
+}

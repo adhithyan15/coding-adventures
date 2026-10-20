@@ -1,4 +1,19 @@
 # Changelog — iir-to-llvm
+## [0.61.0] — 2026-10-20 (LANG83 PR4 — overflow-checked arithmetic)
+
+- **`i64_add_ovf` / `i64_sub_ovf` / `i64_mul_ovf` / `i64_neg_ovf`**
+  ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR4):
+  `call { i64, i1 } @llvm.sadd/ssub/smul.with.overflow.i64`, `extractvalue`
+  the overflow bit, `br` to a block that calls the module-local
+  `@__iir_trap` with `Trap.Overflow` (flush, report, abort), and define the
+  destination from the value half on the other edge only. `i64_neg_ovf a` is
+  `ssub.with.overflow(0, a)`. Each intrinsic used is declared once.
+- `op_support` and `SUPPORTED_OPS`: all four.
+- Tests: the textual shape per op, and real-`clang` runs at the range edges
+  (`MAX - 1 + 1`, `MIN + MAX`, `MIN + 1 - 1`, `-1 - MAX`, `-2^32 * 2^31`,
+  `3_037_000_499²`, `-MAX`) plus print-then-trap for each op (stdout is a
+  pipe, so the earlier output survives only because the trap flushes).
+
 ## [0.60.0] — 2026-10-19 (LANG83 PR1b — floor division, `trap`, `write_i64`)
 
 - **Self-contained LANG83 runtime in the emitted module.** A module that uses

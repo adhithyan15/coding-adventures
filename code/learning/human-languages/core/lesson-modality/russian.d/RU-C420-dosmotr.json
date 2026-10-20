@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C420-dosmotr",
+    "language": "russian",
+    "chapter": 420,
+    "sequence": 24070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c40a4952c6f56457"
+  },
+  "findings": []
+}

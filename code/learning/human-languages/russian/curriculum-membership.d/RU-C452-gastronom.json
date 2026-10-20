@@ -1,0 +1,11 @@
+{
+  "id": "RU-C452-gastronom",
+  "pathSegment": "RU-PATH-452-BULOCHNAYA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-452-BULOCHNAYA",
+      "order": 1
+    }
+  ]
+}

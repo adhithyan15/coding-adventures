@@ -1,0 +1,18 @@
+{
+  "language": "russian",
+  "chapter": 261,
+  "sourceHash": "fnv1a64:95e16a62621d51e6",
+  "lessonIds": [
+    "RU-C261-chital",
+    "RU-C261-prochital",
+    "RU-C261-poka",
+    "RU-C261-review"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "russian/narration/ch261.txt",
+  "json": "russian/narration/ch261.json",
+  "textHash": "fnv1a64:49799951d204a8b9",
+  "jsonHash": "fnv1a64:17cc27c591d4ba05",
+  "findings": []
+}

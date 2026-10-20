@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 467,
+  "sourceHash": "fnv1a64:5ce6552b6b03d7be",
+  "lessonIds": [
+    "RU-C467-moroz",
+    "RU-C467-gololyod",
+    "RU-C467-metel",
+    "RU-C467-myorznut",
+    "RU-C467-poskolznutsya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch467.txt",
+  "json": "russian/narration/ch467.json",
+  "textHash": "fnv1a64:9889de4371596e42",
+  "jsonHash": "fnv1a64:caa499e63a8dcf7a",
+  "findings": []
+}

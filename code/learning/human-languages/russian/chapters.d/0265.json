@@ -1,0 +1,20 @@
+{
+  "chapter": 265,
+  "title": "Asking the Way",
+  "label": "ch:ru-asking-the-way",
+  "canDo": "I can ask the way with Извините, как пройти к ...?, and follow an answer with прямо, направо, налево and поверните.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C265-review",
+    "kind": "production",
+    "summary": "Complete RU-C265-review: ask the way to two places in town and give one set of directions back.",
+    "assesses": [
+      "RU-LEX-KAK-PROYTI-01",
+      "RU-GRAMMAR-K-DATIVE-01",
+      "RU-GRAMMAR-IDITE-POVERNITE-01",
+      "RU-GRAMMAR-DO-NA-ROUTE-01"
+    ]
+  }
+}

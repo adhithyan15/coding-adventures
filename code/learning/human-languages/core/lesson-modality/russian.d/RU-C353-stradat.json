@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C353-stradat",
+    "language": "russian",
+    "chapter": 353,
+    "sequence": 20650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d2a4bf578e0eaaf8"
+  },
+  "findings": []
+}

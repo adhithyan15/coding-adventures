@@ -1,0 +1,19 @@
+{
+  "chapter": 451,
+  "title": "The embassy and the post",
+  "label": "ch:ru-the-embassy-and-the-post",
+  "canDo": "I can visit the embassy and send small parcels: the embassy, a passport for travel abroad, a small parcel, the addressee and issuing documents.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C451-vydavat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 451: I can visit the embassy and send small parcels: the embassy, a passport for travel abroad, a small parcel, the addressee and issuing documents.",
+    "assesses": [
+      "RU-LEX-C451-POSOLSTVO-03",
+      "RU-LEX-C451-POSOLSTVO-04",
+      "RU-LEX-C451-POSOLSTVO-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 329,
+  "sourceHash": "fnv1a64:dabbe64e311e92cc",
+  "lessonIds": [
+    "RU-C329-kipyatit",
+    "RU-C329-kipet",
+    "RU-C329-otvarivat",
+    "RU-C329-kryshka",
+    "RU-C329-nakryvat"
+  ],
+  "tex": "russian/book/chapters/ch329-boiling.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 416,
+  "sourceHash": "fnv1a64:21a8d845f826b448",
+  "lessonIds": [
+    "RU-C416-provodnik",
+    "RU-C416-tambur",
+    "RU-C416-nosilshchik",
+    "RU-C416-telezhka",
+    "RU-C416-predyavlyat"
+  ],
+  "tex": "russian/book/chapters/ch416-on-board-the-train.tex"
+}

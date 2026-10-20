@@ -1,0 +1,11 @@
+{
+  "id": "RU-C520-aktrisa",
+  "pathSegment": "RU-PATH-520-SCREENACTING",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-520-SCREENACTING",
+      "order": 1
+    }
+  ]
+}

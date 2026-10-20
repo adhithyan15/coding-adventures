@@ -1,0 +1,11 @@
+{
+  "id": "RU-C342-vyskazyvatsya",
+  "pathSegment": "RU-PATH-342-OBSUZHDAT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-342-OBSUZHDAT",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C524-memuary",
+  "pathSegment": "RU-PATH-524-GENRES",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-524-GENRES",
+      "order": 4
+    }
+  ]
+}

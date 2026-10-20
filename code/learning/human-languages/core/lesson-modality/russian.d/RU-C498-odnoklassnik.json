@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C498-odnoklassnik",
+    "language": "russian",
+    "chapter": 498,
+    "sequence": 28120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b1fe3474ee680f1e"
+  },
+  "findings": []
+}

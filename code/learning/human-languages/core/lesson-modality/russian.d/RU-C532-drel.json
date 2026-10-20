@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C532-drel",
+    "language": "russian",
+    "chapter": 532,
+    "sequence": 29850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:96af8b24670f28f3"
+  },
+  "findings": []
+}

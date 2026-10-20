@@ -1,0 +1,11 @@
+{
+  "id": "RU-C474-trevozhnyy",
+  "pathSegment": "RU-PATH-474-WORRY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-474-WORRY",
+      "order": 1
+    }
+  ]
+}

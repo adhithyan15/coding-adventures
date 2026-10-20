@@ -1,0 +1,11 @@
+{
+  "id": "RU-C386-ponyatie",
+  "pathSegment": "RU-PATH-386-DOKLAD",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-386-DOKLAD",
+      "order": 3
+    }
+  ]
+}

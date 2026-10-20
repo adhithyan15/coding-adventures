@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C382-peresdavat",
+    "language": "russian",
+    "chapter": 382,
+    "sequence": 22110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8a706d57b1cd3d23"
+  },
+  "findings": []
+}

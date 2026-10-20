@@ -1,0 +1,11 @@
+{
+  "id": "RU-C273-prekrashchatsya",
+  "pathSegment": "RU-PATH-273-PROISKHODIT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-273-PROISKHODIT",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-484-PLASTER",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "RU-EXT-484-PLASTER"
+  ],
+  "after": []
+}

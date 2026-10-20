@@ -1,0 +1,19 @@
+{
+  "chapter": 506,
+  "title": "In the Vegetable Garden",
+  "label": "ch:ru-in-the-vegetable-garden",
+  "canDo": "I can talk about growing vegetables.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C506-urozhay",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 506: I can talk about growing vegetables.",
+    "assesses": [
+      "RU-LEX-C506-VEGETABLES-03",
+      "RU-LEX-C506-VEGETABLES-04",
+      "RU-LEX-C506-VEGETABLES-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:cea14e72a4a93d71",
+  "lessonIds": [
+    "RU-C405-shina",
+    "RU-C405-prokol",
+    "RU-C405-nasos",
+    "RU-C405-nakachivat",
+    "RU-C405-buksovat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch405.txt",
+  "json": "russian/narration/ch405.json",
+  "textHash": "fnv1a64:de05b280dcc7fe93",
+  "jsonHash": "fnv1a64:c9776fefa7598a72",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 372,
+  "title": "Likely or unlikely",
+  "label": "ch:ru-likely-or-unlikely",
+  "canDo": "I can say that something is probable or unlikely, talk about probability, and speak about a chance and a risk.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "RU-C372-risk",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 372: I can say that something is probable or unlikely, talk about probability, and speak about a chance and a risk.",
+    "assesses": [
+      "RU-LEX-C372-VEROYATNO-03",
+      "RU-LEX-C372-VEROYATNO-04",
+      "RU-LEX-C372-VEROYATNO-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C435-personal",
+    "language": "russian",
+    "chapter": 435,
+    "sequence": 24860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3f1d8b306c83767c"
+  },
+  "findings": []
+}

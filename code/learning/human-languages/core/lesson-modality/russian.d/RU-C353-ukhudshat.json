@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C353-ukhudshat",
+    "language": "russian",
+    "chapter": 353,
+    "sequence": 20660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6c47c0469311c0b4"
+  },
+  "findings": []
+}

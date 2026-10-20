@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 295,
+  "sourceHash": "fnv1a64:6025b54cf375a307",
+  "lessonIds": [
+    "RU-C295-pozhar",
+    "RU-C295-dym",
+    "RU-C295-goret",
+    "RU-C295-zagoratsya",
+    "RU-C295-ognetushitel"
+  ],
+  "tex": "russian/book/chapters/ch295-fire.tex"
+}

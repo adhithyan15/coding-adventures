@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 287,
+  "sourceHash": "fnv1a64:5dfdc1d465debc04",
+  "lessonIds": [
+    "RU-C287-prestupleniye",
+    "RU-C287-prestupnik",
+    "RU-C287-zhertva",
+    "RU-C287-ulika",
+    "RU-C287-svidetel"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch287.txt",
+  "json": "russian/narration/ch287.json",
+  "textHash": "fnv1a64:33cbbe6e62cfc6ba",
+  "jsonHash": "fnv1a64:270f4dcbc3509f3b",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C499-gostit",
+    "language": "russian",
+    "chapter": 499,
+    "sequence": 28170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8227aa7488bd673c"
+  },
+  "findings": []
+}

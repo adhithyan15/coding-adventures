@@ -5,8 +5,41 @@
 Third stage of the Rust [Twig](../../specs/TW00-twig-language.md) pipeline:
 
 ```
-Twig source --> [twig-lexer] --> tokens --> [twig-parser] --> AST --> [twig-ir-compiler] --> IIRModule
+Twig source --> [twig-lexer] --> tokens --> [twig-parser::parse_to_ast] --> GrammarASTNode (CST) --> [twig-ir-compiler] --> IIRModule
 ```
+
+## Input: the parse tree (LANG84 decision 6)
+
+The compiler's only input is the generic `GrammarASTNode` that the
+grammar-driven lexer and parser build from `code/grammars/twig/twig.tokens`
+and `twig.grammar`. There is no typed AST on the IIR path: since v0.46 the
+compiler no longer lowers `twig_parser::Program` (the typed AST that
+`twig_parser::parse` lifts out of the CST, and which stays available to the
+type checker, formatter and LSP crates).
+
+- `src/cst.rs` — **borrowed views** over the CST. `ExprNode::kind` classifies
+  one `expr` node (`IntLit`, `If`, `Apply`, …) and hands back its children as
+  further unclassified handles. Nothing is copied and no tree is built.
+  Sugar (`'x` = `(quote x)`; `(define (f x) …)` = `(define f (lambda (x) …))`)
+  is expanded by the views on the fly.
+- `src/check_cst.rs` — **`check_cst`**, the validation pass that rejects
+  exactly what the old typed-AST extractor rejected (i64 overflow,
+  `(typed bogus)`, a two-expression value `define`, nesting past
+  `MAX_AST_DEPTH`, malformed hand-built nodes), with the same messages,
+  positions and order.
+- **The TW05-B gate** for `(typed lenient|strict)` modules hands the CST to
+  `twig_type_checker::check_cst_with_globals` and reads back only position-keyed
+  diagnostics; nothing the checker computes feeds IIR emission.
+
+The emitted IIR is byte-identical to the v0.45 typed-AST pipeline.
+
+| Entry point | Input |
+|-------------|-------|
+| `compile_source(src, name)` | source text (`parse_to_ast` + `compile_ast`) |
+| `compile_ast(&cst, name)` | a `program` CST from `twig_parser::parse_to_ast` |
+| `compile_ast_with_externs(&cst, name, externs)` | … plus cross-module function names (LANG56) |
+| `compile_ast_with_externs_and_globals(&cst, name, externs, globals)` | … plus imported type-checker globals (LANG72) |
+| `compile_typed_source(src, name)` | source text, with LANG50 type-hint propagation |
 
 ## What it produces
 
@@ -105,6 +138,11 @@ let module = compile_source(
 
 assert_eq!(module.entry_point.as_deref(), Some("main"));
 // One IIRFunction for `square`, one for `main`.
+
+// Or, from a parse tree you already hold:
+let cst = twig_parser::parse_to_ast("(define (square x) (* x x)) (square 7)").unwrap();
+let same = twig_ir_compiler::compile_ast(&cst, "demo").unwrap();
+assert_eq!(format!("{same:?}"), format!("{module:?}"));
 ```
 
 ## Encoding string operands
@@ -139,6 +177,10 @@ cargo test -p twig-ir-compiler
 56+ unit tests covering every literal, every form, apply-site dispatch, free-variable
 analysis, top-level recursion, mutual recursion, error paths, and 7 LANG23 round-trip
 tests verifying that annotations survive the parse → compile → IIR pipeline.
+`tests/cst_walk.rs` pins the LANG84 contract: a source check that no compiler
+file names the typed AST, the `compile_ast*` entry points, `check_cst` errors
+matching the extractor's on hand-built malformed trees (including the depth
+guard), and the sugar / type-gate behaviour.
 
 ## Where it fits in the stack
 
@@ -147,7 +189,7 @@ LANG01  interpreter-ir         ← IIRModule format
 LANG02  vm-core                ← executes IIRModule
 LANG03  jit-core               ← JIT (hot fn → native)
 TW00    twig-lexer             ← tokens
-TW00    twig-parser            ← typed AST
+TW00    twig-parser            ← GrammarASTNode CST (+ typed AST for tooling)
 TW00    twig-ir-compiler       ← THIS CRATE
 TW02    twig-jvm-compiler      ← Twig → JVM .class (separate path)
 TW03    full Lisp surface + GC ← cross-backend roadmap

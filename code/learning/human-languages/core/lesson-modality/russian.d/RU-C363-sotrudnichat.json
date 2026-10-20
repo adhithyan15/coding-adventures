@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C363-sotrudnichat",
+    "language": "russian",
+    "chapter": 363,
+    "sequence": 21170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2468af8961a9629a"
+  },
+  "findings": []
+}
