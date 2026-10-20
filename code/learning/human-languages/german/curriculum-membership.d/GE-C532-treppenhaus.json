@@ -1,0 +1,11 @@
+{
+  "id": "GE-C532-treppenhaus",
+  "pathSegment": "GE-PATH-532-WG",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-532-WG",
+      "order": 4
+    }
+  ]
+}

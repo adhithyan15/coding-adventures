@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 496,
+  "sourceHash": "fnv1a64:19c152e0a1b620ce",
+  "lessonIds": [
+    "GE-C496-stillen",
+    "GE-C496-windel",
+    "GE-C496-wickeln",
+    "GE-C496-kinderwagen",
+    "GE-C496-schnuller"
+  ],
+  "tex": "german/book/chapters/ch496-ein-baby-im-haus.tex"
+}

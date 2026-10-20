@@ -1,0 +1,19 @@
+{
+  "chapter": 394,
+  "title": "Im Internet",
+  "label": "ch:ge-im-internet",
+  "canDo": "I can talk about uploading, websites, search engines, posting and commenting.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GE-C394-kommentieren",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 394: I can talk about uploading, websites, search engines, posting and commenting.",
+    "assesses": [
+      "GE-LEX-C394-INTERNET-03",
+      "GE-LEX-C394-INTERNET-04",
+      "GE-LEX-C394-INTERNET-05"
+    ]
+  }
+}

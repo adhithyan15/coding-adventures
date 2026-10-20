@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-480-UEBELKEIT",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GE-EXT-480-UEBELKEIT"
+  ],
+  "after": []
+}

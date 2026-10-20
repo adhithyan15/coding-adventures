@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 372,
+  "sourceHash": "fnv1a64:6d63b9cdba52e5f1",
+  "lessonIds": [
+    "GE-C372-vereinbaren",
+    "GE-C372-vereinbarung",
+    "GE-C372-ausmachen",
+    "GE-C372-zeitplan",
+    "GE-C372-umplanen"
+  ],
+  "tex": "german/book/chapters/ch372-etwas-vereinbaren.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C440-laterne",
+  "pathSegment": "GE-PATH-440-BRUNNEN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-440-BRUNNEN",
+      "order": 2
+    }
+  ]
+}

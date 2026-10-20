@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C310-fasching",
+    "language": "german",
+    "chapter": 310,
+    "sequence": 16970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f773f51c42bfb0b6"
+  },
+  "findings": []
+}

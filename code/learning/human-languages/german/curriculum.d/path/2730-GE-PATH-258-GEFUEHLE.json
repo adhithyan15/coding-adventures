@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-258-GEFUEHLE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GE-EXT-258-GEFUEHLE"
+  ],
+  "after": []
+}

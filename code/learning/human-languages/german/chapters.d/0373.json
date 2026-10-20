@@ -1,0 +1,19 @@
+{
+  "chapter": 373,
+  "title": "Mit allem rechnen",
+  "label": "ch:ge-mit-allem-rechnen",
+  "canDo": "I can talk about the unexpected and about spontaneous plans, forecasts, and what I allow for.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GE-C373-einplanen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 373: I can talk about the unexpected and about spontaneous plans, forecasts, and what I allow for.",
+    "assesses": [
+      "GE-LEX-C373-UNVORHERGESEHEN-03",
+      "GE-LEX-C373-UNVORHERGESEHEN-04",
+      "GE-LEX-C373-UNVORHERGESEHEN-05"
+    ]
+  }
+}

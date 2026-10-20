@@ -1,0 +1,19 @@
+{
+  "chapter": 353,
+  "title": "Im Betrieb",
+  "label": "ch:ge-im-betrieb",
+  "canDo": "I can talk about a firm: the company, its departments, my superior and who runs what.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GE-R353-review-346-353",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 353: I can talk about a firm: the company, its departments, my superior and who runs what.",
+    "assesses": [
+      "GE-LEX-C353-BETRIEB-03",
+      "GE-LEX-C353-BETRIEB-04",
+      "GE-LEX-C353-BETRIEB-05"
+    ]
+  }
+}

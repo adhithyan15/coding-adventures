@@ -9,6 +9,18 @@ on NaN, ±∞ and out-of-range input, so `entier(exp(exp(4)))` printed a large
 3 for trunc), converted, converted back with `cvtsi2sd` and compared with
 `ucomisd`. An unordered or unequal compare falls through to the trap.
 
+## Unreleased — LANG83 PR1a — standard operation support
+
+- **LANG83 op support.** New `op_support` module exporting `OP_SUPPORT` and
+  `op_support(name) -> OpSupport`: this backend's declaration for every entry of
+  `interpreter_ir::op_registry::STANDARD_OPS` ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)). Every existing registered op is `Lowered` by the native pipeline (twig-aot rewriting + this backend). The four PR1b ops
+  (`write_i64`, `i64_div_floor`, `i64_mod_floor`, `trap`) are
+  `Refused("not yet lowered; LANG83 PR1b")`. `lang-aot`'s `check_module_for`
+  uses the table to refuse an unsupported op at compile time.
+- Tests: every registry entry is declared exactly once; the PR1b ops are
+  refused; the Builtin rows agree with `V1_BUILTINS`.
+- Adds a direct `interpreter-ir` dependency (already a transitive one via `jit-core`).
+
 ## 0.40.0 - 2026-10-19 - stack-passed call arguments
 
 Calls and functions may now take more arguments than the ABI has integer

@@ -43,7 +43,49 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
-## Prioritization run — 2026-09-30
+## VM-078 — LANG83 standard operation registry (2026-10-19)
+
+Owner direction: the dynamic frontends need a rich operation vocabulary, and
+every backend converts those operations into instructions it supports. There is
+no portable runtime and no shared or generated IIR helper library.
+[LANG83](LANG83-iir-standard-operation-registry.md) is the contract.
+
+**PR1a — contract (implemented on `claude/lang-vm-status-4xtyw8-op-registry`).**
+`interpreter_ir::op_registry::STANDARD_OPS` registers the operations existing
+frontends already rely on: output, strings, arithmetic and comparison, `f64`
+math and conversions. It also registers the PR1b ops `write_i64`,
+`i64_div_floor`, `i64_mod_floor` and `trap`. A unit test enforces the type-first
+naming rule. All nine backend crates declare `op_support`; the PR1b ops are
+`Refused` everywhere. `lang_aot::check_module_for` refuses unsupported ops at
+compile time before lowering. `lang-aot/tests/op_conformance.rs` compiles every
+`Lowered` case on six code-generation backends. It runs the cases on WASM, VM,
+JIT, LLVM and native. WASM, VM, JIT and BEAM output is now one ordered stream.
+Evidence: the ALGOL row mixing `print_i64` and `print_str` printed `ABC` on
+WASM/VM/JIT before the fix and prints `A1\nB-2\nC` after it.
+
+**Next, in order:**
+
+1. **VM-078b / LANG83 PR1b:** lower `write_i64`, `i64_div_floor`,
+   `i64_mod_floor` and `trap` on all nine backends, with flush-before-trap, using
+   the LANG83 per-backend plan. Its cases are the sign table, a zero divisor,
+   `MIN / -1`, `MIN / 1` and print-then-trap. Port `lang_matrix`'s data-less
+   `RunResult::Trapped` to carry stdout. The work may split per backend.
+2. **VM-078c (found by the PR1a conformance suite):** the native pipeline
+   miscompiles a `bool`-typed comparison with negative operands.
+   `jit_core::specialise` names the CIR op after the result hint
+   (`cmp_lt_bool`), so x86-64 compares at `bool` width. Twig
+   `(if (< (- 0 1) 2) 7 3)` exits 3 natively and 7 elsewhere. ALGOL's
+   `i64`-typed comparisons are unaffected.
+3. **VM-078d (found by the PR1a conformance suite):** the matrix JIT column
+   interprets every function that prints. `infer_type_status` does not count
+   `"void"` as concrete, so a function containing `call_builtin … : void` is
+   `PartiallyTyped`, and `execute_with_jit` never compiles it.
+   `op_conformance` compiles `main` explicitly; the matrix runner should do the
+   same, or the type-status rule should change.
+4. Register the bitwise family (`and or xor not shl shr`) with honest
+   declarations: LLVM lacks `shl`/`shr`, and the generic JIT lacks all six.
+   Replace the older builtin tables with derivations from `OP_SUPPORT`.
+
 
 PR #16208 delivered the first VM-067 guard and merged as
 `34a8061d145849dffdb6bb7cf90ce1b8fa638fa5` after required CI passed. The
@@ -588,8 +630,11 @@ generated files and transitive dependencies in each DAG ownership audit.
 2. **LANG79 Python:** arithmetic and float-literal AST token validation are
    complete; module-level float bindings are the current slice. Integers,
    strings, control flow and functions remain open. Host Python is oracle only.
-3. **LANG78 JavaScript:** restricted numeric division is complete; general
-   lexical-goal selection and broader native semantics remain open, Node oracle only.
+3. **LANG78 JavaScript:** restricted numeric division is complete. Top-level
+   numeric `let`/`const` bindings with the early duplicate-name SyntaxError and
+   runtime TDZ/undeclared ReferenceErrors (`javascript-iir-compiler` 0.2.0) are
+   the current slice. Assignment, control flow, general lexical-goal selection
+   and broader native semantics remain open, Node oracle only.
 4. **LANG82 continued:** the partial Perl 5.004_72 contract is complete.
    Continue distinct own-release source-backed pairs; full syntax remains open.
 5. **LANG80 Ruby:** arithmetic/grouping AST token validation is complete;

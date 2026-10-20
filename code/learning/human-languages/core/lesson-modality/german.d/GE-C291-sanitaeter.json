@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C291-sanitaeter",
+    "language": "german",
+    "chapter": 291,
+    "sequence": 16010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fdbd4a46f0baff4a"
+  },
+  "findings": []
+}

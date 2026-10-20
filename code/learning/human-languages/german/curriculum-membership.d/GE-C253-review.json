@@ -1,0 +1,11 @@
+{
+  "id": "GE-C253-review",
+  "pathSegment": "GE-PATH-253-REIHENFOLGE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-253-REIHENFOLGE",
+      "order": 3
+    }
+  ]
+}

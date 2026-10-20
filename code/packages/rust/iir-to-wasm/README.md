@@ -260,3 +260,13 @@ FLOW-MATIC WASM EOF (VM-039b): modules using `input_more` import
 at EOF without consuming the next field. The peek and `env.__input_i64`
 reader must share the same input stream; repeated peeks must be stable.
 The matrix exercises the four native/LLVM input programs on WASM as well.
+
+## LANG83 operation support
+
+`iir_to_wasm::op_support::op_support(name)` (and `OP_SUPPORT`) is this backend's answer,
+`Lowered` or `Refused(reason)`, for every operation in the
+[LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) standard registry
+(`interpreter_ir::op_registry::STANDARD_OPS`). "Lowered" means `lower_iir_to_wasm` emits WebAssembly for the op. `lang-aot` refuses a
+module that uses a refused op at compile time, with a typed error. The four
+LANG83 PR1b ops (`write_i64`, `i64_div_floor`, `i64_mod_floor`, `trap`) are
+refused until PR1b lowers them.

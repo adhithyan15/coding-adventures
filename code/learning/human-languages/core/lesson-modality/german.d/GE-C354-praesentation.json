@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C354-praesentation",
+    "language": "german",
+    "chapter": 354,
+    "sequence": 19270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a3ea4b2c3174bd7"
+  },
+  "findings": []
+}

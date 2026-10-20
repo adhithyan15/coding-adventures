@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C261-wenn-ich-zeit-haette",
+    "language": "german",
+    "chapter": 261,
+    "sequence": 14430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:484c5666e9511556"
+  },
+  "findings": []
+}

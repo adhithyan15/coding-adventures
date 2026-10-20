@@ -1,0 +1,11 @@
+{
+  "id": "GE-C464-luftfeuchtigkeit",
+  "pathSegment": "GE-PATH-464-HITZEWELLE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-464-HITZEWELLE",
+      "order": 2
+    }
+  ]
+}

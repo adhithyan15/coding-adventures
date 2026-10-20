@@ -1,0 +1,11 @@
+{
+  "id": "GE-C507-verlaengerung",
+  "pathSegment": "GE-PATH-507-SPIEL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-507-SPIEL",
+      "order": 2
+    }
+  ]
+}

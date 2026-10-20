@@ -1,0 +1,11 @@
+{
+  "id": "GE-C282-rauben",
+  "pathSegment": "GE-PATH-282-UEBERFALL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-282-UEBERFALL",
+      "order": 2
+    }
+  ]
+}

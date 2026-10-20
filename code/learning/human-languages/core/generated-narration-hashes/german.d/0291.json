@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 291,
+  "sourceHash": "fnv1a64:25d1f345ab00e95d",
+  "lessonIds": [
+    "GE-C291-notruf",
+    "GE-C291-notarzt",
+    "GE-C291-hubschrauber",
+    "GE-C291-sanitaeter",
+    "GE-C291-notaufnahme"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch291.txt",
+  "json": "german/narration/ch291.json",
+  "textHash": "fnv1a64:22272f980cb12fe2",
+  "jsonHash": "fnv1a64:dcb47b282d33e87e",
+  "findings": []
+}

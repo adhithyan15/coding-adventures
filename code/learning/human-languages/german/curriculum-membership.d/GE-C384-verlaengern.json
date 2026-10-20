@@ -1,0 +1,11 @@
+{
+  "id": "GE-C384-verlaengern",
+  "pathSegment": "GE-PATH-384-GENEHMIGUNG",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-384-GENEHMIGUNG",
+      "order": 3
+    }
+  ]
+}

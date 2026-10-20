@@ -1,0 +1,11 @@
+{
+  "id": "GE-C478-verzeihen",
+  "pathSegment": "GE-PATH-478-REUE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-478-REUE",
+      "order": 2
+    }
+  ]
+}

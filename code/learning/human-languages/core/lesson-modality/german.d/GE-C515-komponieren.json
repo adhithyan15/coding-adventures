@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C515-komponieren",
+    "language": "german",
+    "chapter": 515,
+    "sequence": 27550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cf6620e4d0717d9e"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C329-knusprig",
+  "pathSegment": "GE-PATH-329-ANRICHTEN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-329-ANRICHTEN",
+      "order": 4
+    }
+  ]
+}

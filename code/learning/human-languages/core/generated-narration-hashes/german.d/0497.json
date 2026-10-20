@@ -1,0 +1,20 @@
+{
+  "language": "german",
+  "chapter": 497,
+  "sourceHash": "fnv1a64:9db09f1627d57be2",
+  "lessonIds": [
+    "GE-C497-trotzig",
+    "GE-C497-schimpfen",
+    "GE-C497-loben",
+    "GE-C497-necken",
+    "GE-C497-taschengeld",
+    "GE-R497-review-490-497"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "german/narration/ch497.txt",
+  "json": "german/narration/ch497.json",
+  "textHash": "fnv1a64:ec80d854c0f7740d",
+  "jsonHash": "fnv1a64:8a29fb6ee7ba6610",
+  "findings": []
+}

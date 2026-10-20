@@ -1,0 +1,20 @@
+{
+  "chapter": 258,
+  "title": "How It Felt — ich war froh, ich hoffe",
+  "label": "ch:ge-how-it-felt",
+  "canDo": "I can say how I felt with ich war and a reason, and say what I hope for and dream of.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C258-review",
+    "kind": "production",
+    "summary": "Complete GE-C258-review: how you felt on a journey and why, with dass or weil, and one hope or dream with zu.",
+    "assesses": [
+      "GE-LEX-FROH-01",
+      "GE-GRAMMAR-GEFUEHL-DASS-02",
+      "GE-GRAMMAR-HOFFEN-DASS-01",
+      "GE-GRAMMAR-TRAUM-ZU-02"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C525-kopfhoerer",
+  "pathSegment": "GE-PATH-525-STREAMEN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-525-STREAMEN",
+      "order": 4
+    }
+  ]
+}

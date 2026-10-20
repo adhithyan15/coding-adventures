@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-307-GASTGEBER",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GE-EXT-307-GASTGEBER"
+  ],
+  "after": []
+}

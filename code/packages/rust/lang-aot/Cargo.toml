@@ -59,6 +59,10 @@ intel8086-encoder     = { path = "../intel8086-encoder" }
 sparc-v8-backend      = { path = "../sparc-v8-backend" }
 sparc-v8-encoder      = { path = "../sparc-v8-encoder" }
 aot-core              = { path = "../aot-core" }
+# LANG83: `check_module_for` asks each native backend's `op_support` table
+# directly (both are already transitive dependencies through twig-aot).
+x86_64-backend        = { path = "../x86_64-backend" }
+aarch64-backend       = { path = "../aarch64-backend" }
 jit-core              = { path = "../jit-core" }
 # JIT McCarthy path (W15): the universal bytecode JIT (`jit-core`) executes
 # McCarthy by dispatching its `lispy_*` builtins to the shared tagged-word value

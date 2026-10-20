@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 430,
+  "sourceHash": "fnv1a64:c127c26b77d32af9",
+  "lessonIds": [
+    "GE-C430-wanze",
+    "GE-C430-kakerlake",
+    "GE-C430-muecke",
+    "GE-C430-stechen",
+    "GE-C430-krabbeln"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch430.txt",
+  "json": "german/narration/ch430.json",
+  "textHash": "fnv1a64:8f7a19e122417643",
+  "jsonHash": "fnv1a64:d93eff5079cf3163",
+  "findings": []
+}

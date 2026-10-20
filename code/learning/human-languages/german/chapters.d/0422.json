@@ -1,0 +1,19 @@
+{
+  "chapter": 422,
+  "title": "Auf See",
+  "label": "ch:ge-auf-see",
+  "canDo": "I can talk about a cruise: the cruise, docking, casting off, rocking and the captain.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C422-kapitaen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 422: I can talk about a cruise: the cruise, docking, casting off, rocking and the captain.",
+    "assesses": [
+      "GE-LEX-C422-KREUZFAHRT-03",
+      "GE-LEX-C422-KREUZFAHRT-04",
+      "GE-LEX-C422-KREUZFAHRT-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-R497-review-490-497",
+  "pathSegment": "GE-PATH-497-TROTZIG",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-497-TROTZIG",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "language": "german",
+  "chapter": 445,
+  "sourceHash": "fnv1a64:489fc664110416f3",
+  "lessonIds": [
+    "GE-C445-schuster",
+    "GE-C445-besohlen",
+    "GE-C445-polieren",
+    "GE-C445-schluesseldienst",
+    "GE-C445-aufschliessen",
+    "GE-R445-review-438-445"
+  ],
+  "tex": "german/book/chapters/ch445-schuhe-und-schlussel.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C327-koecheln",
+    "language": "german",
+    "chapter": 327,
+    "sequence": 17830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a5f78b86a032d3e5"
+  },
+  "findings": []
+}

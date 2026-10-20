@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:6728831d0e1407f1",
+  "lessonIds": [
+    "GE-C360-vorurteil",
+    "GE-C360-toleranz",
+    "GE-C360-minderheit",
+    "GE-C360-diskriminieren",
+    "GE-C360-gleichberechtigung"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch360.txt",
+  "json": "german/narration/ch360.json",
+  "textHash": "fnv1a64:194f787f8c1c143a",
+  "jsonHash": "fnv1a64:2bcd02ecc92b007c",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C473-schmunzeln",
+    "language": "german",
+    "chapter": 473,
+    "sequence": 25370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f14c63af6df3f0e6"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C481-allergisch",
+  "pathSegment": "GE-PATH-481-ALLERGIE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-481-ALLERGIE",
+      "order": 1
+    }
+  ]
+}

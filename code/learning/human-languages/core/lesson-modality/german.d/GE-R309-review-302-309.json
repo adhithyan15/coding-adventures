@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-R309-review-302-309",
+    "language": "german",
+    "chapter": 309,
+    "sequence": 16950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aae54748c08016c8"
+  },
+  "findings": []
+}

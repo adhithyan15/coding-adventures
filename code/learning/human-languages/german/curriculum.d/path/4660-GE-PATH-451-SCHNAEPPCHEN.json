@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-451-SCHNAEPPCHEN",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-451-SCHNAEPPCHEN"
+  ],
+  "after": []
+}

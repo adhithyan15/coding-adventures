@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "german",
+  "chapter": 425,
+  "title": "Auf dem Campingplatz",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:9af5c193a777d020",
+  "lessons": [
+    {
+      "id": "GE-C425-campingplatz",
+      "sequence": 22880,
+      "title": "der Campingplatz — the campsite",
+      "headword": "der Campingplatz",
+      "romanization": "der Campingplatz",
+      "gloss": "the campsite",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:79996d1cd0aea5a6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the overnight stay, then the German for the half board."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: der Campingplatz",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "der Campingplatz — \"the campsite\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Der Campingplatz liegt direkt am Fluss. The campsite is right by the river."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Campingplätze."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Campingplatz is built from Camping, borrowed from English camping, and Platz 'place', which came through Old French place from Latin platea (EtymDB). English camp goes back to Latin campus 'field' (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Campingplatz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Campingplatz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Campingplatz, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Campingplatz*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with der Campingplatz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *der Campingplatz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the overnight stay, then the German for the half board, then say der Campingplatz again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the overnight stay, then the German for the half board, then say *der Campingplatz* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does der Campingplatz mean? (\"The campsite\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C425-wohnwagen",
+      "sequence": 22890,
+      "title": "der Wohnwagen — the caravan (US: trailer)",
+      "headword": "der Wohnwagen",
+      "romanization": "der Wohnwagen",
+      "gloss": "the caravan (US: trailer)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:79f2606efc0afdcd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the half board, then the German for the campsite."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: der Wohnwagen",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "der Wohnwagen — \"the caravan (US: trailer)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Hinter dem Auto zieht er einen Wohnwagen. He is pulling a caravan behind the car."
+            },
+            {
+              "kind": "speech",
+              "text": "Same form in the plural."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Wohnwagen is built from wohnen 'to live', inherited from Old High German wonēn, and Wagen 'cart, vehicle', from Proto-Germanic wagnaz (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Wohnwagen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Wohnwagen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Wohnwagen, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Wohnwagen*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with der Wohnwagen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *der Wohnwagen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the half board, then the German for the campsite, then say der Wohnwagen again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the half board, then the German for the campsite, then say *der Wohnwagen* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does der Wohnwagen mean? (\"The caravan (US: trailer)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C425-wohnmobil",
+      "sequence": 22900,
+      "title": "das Wohnmobil — the camper van, the motorhome",
+      "headword": "das Wohnmobil",
+      "romanization": "das Wohnmobil",
+      "gloss": "the camper van, the motorhome",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a81c7dabab9a673e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the campsite, then the German for the caravan."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: das Wohnmobil",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "das Wohnmobil — \"the camper van, the motorhome\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mit dem Wohnmobil fahren sie drei Wochen durch das Land. They travel round the country for three weeks in the camper van."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Wohnmobile."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Wohnmobil is built from wohnen 'to live' and mobil 'mobile' (EtymDB), a learned borrowing from Latin mōbilis 'movable' (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "das Wohnmobil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *das Wohnmobil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "das Wohnmobil, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *das Wohnmobil*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with das Wohnmobil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *das Wohnmobil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the campsite, then the German for the caravan, then say das Wohnmobil again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the campsite, then the German for the caravan, then say *das Wohnmobil* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does das Wohnmobil mean? (\"The camper van, the motorhome\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C425-aufbauen",
+      "sequence": 22910,
+      "title": "aufbauen — to put up, to set up",
+      "headword": "aufbauen",
+      "romanization": "aufbauen",
+      "gloss": "to put up, to set up",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:43fe3e4f29e09d53",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the caravan, then the German for the camper van."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: aufbauen",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aufbauen — \"to put up, to set up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Am Abend bauen sie einen Tisch und Stühle vor dem Wohnwagen auf. In the evening they set up a table and chairs in front of the caravan."
+            },
+            {
+              "kind": "speech",
+              "text": "Separable: wir bauen auf, wir haben aufgebaut."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aufbauen is built from auf 'up' and bauen 'to build', inherited from Proto-Germanic būaną (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aufbauen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aufbauen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aufbauen, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aufbauen*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with aufbauen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *aufbauen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the caravan, then the German for the camper van, then say aufbauen again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the caravan, then the German for the camper van, then say *aufbauen* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does aufbauen mean? (\"To put up, to set up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C425-abbauen",
+      "sequence": 22920,
+      "title": "abbauen — to take down, to dismantle; to reduce",
+      "headword": "abbauen",
+      "romanization": "abbauen",
+      "gloss": "to take down, to dismantle; to reduce",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7f17983b4e62af83",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the camper van, then the German for to put up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: abbauen",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "abbauen — \"to take down, to dismantle; to reduce\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Am letzten Tag bauen wir alles wieder ab. On the last day we take everything down again."
+            },
+            {
+              "kind": "speech",
+              "text": "Separable: wir bauen ab. Stress abbauen — to reduce stress."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "abbauen is built from ab 'off, down' and bauen 'to build', inherited from Proto-Germanic būaną (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abbauen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abbauen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abbauen, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abbauen*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with abbauen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *abbauen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the camper van, then the German for to put up, then say abbauen again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the camper van, then the German for to put up, then say *abbauen* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does abbauen mean? (\"To take down, to dismantle; to reduce\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

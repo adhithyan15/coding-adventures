@@ -1,0 +1,11 @@
+{
+  "id": "GE-C359-benachteiligen",
+  "pathSegment": "GE-PATH-359-GERECHTIGKEIT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-359-GERECHTIGKEIT",
+      "order": 4
+    }
+  ]
+}

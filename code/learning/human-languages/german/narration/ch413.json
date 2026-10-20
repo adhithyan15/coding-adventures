@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "german",
+  "chapter": 413,
+  "title": "Im Nachtzug",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:adfac84b53c21bcc",
+  "lessons": [
+    {
+      "id": "GE-C413-schlafwagen",
+      "sequence": 22260,
+      "title": "der Schlafwagen — the sleeping car",
+      "headword": "der Schlafwagen",
+      "romanization": "der Schlafwagen",
+      "gloss": "the sleeping car",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6e5031cc324a2f52",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the conductor, then the German for to check."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: der Schlafwagen",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "der Schlafwagen — \"the sleeping car\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Im Schlafwagen schläft sie bis zum Morgen. In the sleeping car she sleeps until morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Same form in the plural. A cheaper car with couchettes is der Liegewagen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Schlafwagen is built from schlafen 'to sleep' and Wagen 'carriage', both inherited: Wagen goes back to Proto-Germanic wagnaz (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Schlafwagen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Schlafwagen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Schlafwagen, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Schlafwagen*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with der Schlafwagen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *der Schlafwagen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the conductor, then the German for to check, then say der Schlafwagen again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the conductor, then the German for to check, then say *der Schlafwagen* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does der Schlafwagen mean? (\"The sleeping car\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C413-speisewagen",
+      "sequence": 22270,
+      "title": "der Speisewagen — the dining car, the restaurant car",
+      "headword": "der Speisewagen",
+      "romanization": "der Speisewagen",
+      "gloss": "the dining car, the restaurant car",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cda2784f22331608",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to check, then the German for the sleeping car."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: der Speisewagen",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "der Speisewagen — \"the dining car, the restaurant car\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Im Speisewagen essen wir eine warme Suppe. In the dining car we eat a hot soup."
+            },
+            {
+              "kind": "speech",
+              "text": "Same form in the plural. Also das Bordrestaurant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Speisewagen is built from Speise 'food, dish', which goes back to Middle High German spīse (EtymDB) and is usually traced to Latin expēnsa 'outlay, expense' (Lewis & Short), and Wagen 'carriage'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Speisewagen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Speisewagen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Speisewagen, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Speisewagen*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with der Speisewagen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *der Speisewagen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to check, then the German for the sleeping car, then say der Speisewagen again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to check, then the German for the sleeping car, then say *der Speisewagen* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does der Speisewagen mean? (\"The dining car, the restaurant car\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C413-endstation",
+      "sequence": 22280,
+      "title": "die Endstation — the end of the line, the terminus",
+      "headword": "die Endstation",
+      "romanization": "die Endstation",
+      "gloss": "the end of the line, the terminus",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:49000054a447fdb0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the sleeping car, then the German for the dining car."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Endstation",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Endstation — \"the end of the line, the terminus\"."
+            },
+            {
+              "kind": "speech",
+              "text": "An der Endstation steigen alle aus. At the end of the line everyone gets off."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Endstationen. Also figurative: Endstation — this is as far as it goes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Endstation is built from End(e) 'end', inherited from Proto-Germanic andiją, and Station, from Latin statiō 'a standing, a post' (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Endstation",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Endstation*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Endstation, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Endstation*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with die Endstation",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *die Endstation*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the sleeping car, then the German for the dining car, then say die Endstation again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the sleeping car, then the German for the dining car, then say *die Endstation* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does die Endstation mean? (\"The end of the line, the terminus\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C413-reservieren",
+      "sequence": 22290,
+      "title": "reservieren — to book, to reserve",
+      "headword": "reservieren",
+      "romanization": "reservieren",
+      "gloss": "to book, to reserve",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f5a46ec61b43ae5e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the dining car, then the German for the end of the line."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: reservieren",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "reservieren — \"to book, to reserve\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Für die Nacht reserviert er ein Bett im Schlafwagen. For the night he books a bed in the sleeping car."
+            },
+            {
+              "kind": "speech",
+              "text": "Past participle without ge-: ich habe reserviert. Die Reservierung — the reservation."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "reservieren is a learned borrowing from Latin reservāre 'to keep back, to save up' (Lewis & Short), probably through French réserver."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "reservieren",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *reservieren*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "reservieren, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *reservieren*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with reservieren",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *reservieren*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the dining car, then the German for the end of the line, then say reservieren again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the dining car, then the German for the end of the line, then say *reservieren* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does reservieren mean? (\"To book, to reserve\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C413-weiterfahren",
+      "sequence": 22300,
+      "title": "weiterfahren — to travel on, to drive on",
+      "headword": "weiterfahren",
+      "romanization": "weiterfahren",
+      "gloss": "to travel on, to drive on",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7d9bda637083c0f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the end of the line, then the German for to book."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: weiterfahren",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "weiterfahren — \"to travel on, to drive on\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Nach einer kurzen Pause fahren wir weiter. After a short break we drive on."
+            },
+            {
+              "kind": "speech",
+              "text": "Separable; Perfekt with sein: wir sind weitergefahren."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "weiterfahren is built from weiter 'further, on' and the inherited verb fahren, Proto-Germanic faraną (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "weiterfahren",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *weiterfahren*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "weiterfahren, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *weiterfahren*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with weiterfahren",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *weiterfahren*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the end of the line, then the German for to book, then say weiterfahren again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the end of the line, then the German for to book, then say *weiterfahren* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does weiterfahren mean? (\"To travel on, to drive on\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-R413-review-406-413",
+      "sequence": 22310,
+      "title": "Words from chapters 406–413 — a review",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 406-413",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c38833f35e55c98d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the German for to park and to pull out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to park, to pull out, the parking space, the multi-storey car park, the parking ticket",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to park, to pull out, the parking space, the multi-storey car park, the parking ticket]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to speed, the speed camera, to catch, the fine, the penalty ticket",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to speed, the speed camera, to catch, the fine, the penalty ticket]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the right of way, to overtake, to tailgate, the oncoming traffic, to swerve",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the right of way, to overtake, to tailgate, the oncoming traffic, to swerve]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the road works, the diversion, to divert, to close, the motorway service area",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the road works, the diversion, to divert, to close, the motorway service area]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the rear-end collision, to drive into the back, to skid, the pedestrian, the cyclist",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the rear-end collision, to drive into the back, to skid, the pedestrian, the cyclist]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the ticket machine, the travel ticket, the fare, to stamp, to get a ticket",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the ticket machine, the travel ticket, the fare, to stamp, to get a ticket]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the platform, the announcement, the compartment, the conductor, to check",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the platform, the announcement, the compartment, the conductor, to check]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the sleeping car, the dining car, the end of the line, to book, to travel on",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the sleeping car, the dining car, the end of the line, to book, to travel on]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To park? (einparken.) To pull out? (ausparken.) The parking space? (die Parklücke.) The multi-storey car park? (das Parkhaus.) The parking ticket? (der Parkschein.) To speed? (rasen.) The speed camera? (der Blitzer.) To catch? (erwischen.) The fine? (das Bußgeld.) The penalty ticket? (der Strafzettel.) The right of way? (die Vorfahrt.) To overtake? (überholen.) To tailgate? (drängeln.) The oncoming traffic? (der Gegenverkehr.) To swerve? (ausweichen.) The road works? (die Baustelle.) The diversion? (die Umleitung.) To divert? (umleiten.) To close? (sperren.) The motorway service area? (die Raststätte.) The rear-end collision? (der Auffahrunfall.) To drive into the back? (auffahren.) To skid? (schleudern.) The pedestrian? (der Fußgänger.) The cyclist? (der Radfahrer.) The ticket machine? (der Fahrkartenautomat.) The travel ticket? (der Fahrschein.) The fare? (der Fahrpreis.) To stamp? (entwerten.) To get a ticket? (lösen.) The platform? (der Bahnsteig.) The announcement? (die Durchsage.) The compartment? (das Abteil.) The conductor? (der Schaffner.) To check? (kontrollieren.) The sleeping car? (der Schlafwagen.) The dining car? (der Speisewagen.) The end of the line? (die Endstation.) To book? (reservieren.) To travel on? (weiterfahren.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 490,
+  "title": "Schwiegervater und Stiefvater",
+  "label": "ch:ge-schwiegervater-und-stiefvater",
+  "canDo": "I can talk about in-laws and step-families.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C490-einzelkind",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 490: I can talk about in-laws and step-families.",
+    "assesses": [
+      "GE-LEX-C490-SCHWIEGER-03",
+      "GE-LEX-C490-SCHWIEGER-04",
+      "GE-LEX-C490-SCHWIEGER-05"
+    ]
+  }
+}

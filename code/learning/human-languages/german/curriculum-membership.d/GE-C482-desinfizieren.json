@@ -1,0 +1,11 @@
+{
+  "id": "GE-C482-desinfizieren",
+  "pathSegment": "GE-PATH-482-VERLETZUNG",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-482-VERLETZUNG",
+      "order": 3
+    }
+  ]
+}

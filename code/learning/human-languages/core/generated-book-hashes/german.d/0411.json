@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:93bf943da793ed04",
+  "lessonIds": [
+    "GE-C411-fahrkartenautomat",
+    "GE-C411-fahrschein",
+    "GE-C411-fahrpreis",
+    "GE-C411-entwerten",
+    "GE-C411-loesen"
+  ],
+  "tex": "german/book/chapters/ch411-fahrkarten-kaufen.tex"
+}

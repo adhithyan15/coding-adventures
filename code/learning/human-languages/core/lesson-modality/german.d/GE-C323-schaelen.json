@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C323-schaelen",
+    "language": "german",
+    "chapter": 323,
+    "sequence": 17620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e0664cea7e09c4f"
+  },
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "german",
+  "chapter": 277,
+  "sourceHash": "fnv1a64:b5cac077955ef753",
+  "lessonIds": [
+    "GE-C277-streik",
+    "GE-C277-streiken",
+    "GE-C277-protestieren",
+    "GE-C277-demonstrieren",
+    "GE-C277-krise",
+    "GE-R277-review-270-277"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "german/narration/ch277.txt",
+  "json": "german/narration/ch277.json",
+  "textHash": "fnv1a64:a70702b4fba6b6ce",
+  "jsonHash": "fnv1a64:c4f6fde2479f5e84",
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-530-BAD",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe my routine in the bathroom.",
+  "prerequisites": []
+}

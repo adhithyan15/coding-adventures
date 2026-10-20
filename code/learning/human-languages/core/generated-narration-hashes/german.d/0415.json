@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 415,
+  "sourceHash": "fnv1a64:ed9eeb2238e1ab54",
+  "lessonIds": [
+    "GE-C415-schliessfach",
+    "GE-C415-gepaeckaufbewahrung",
+    "GE-C415-rolltreppe",
+    "GE-C415-schwarzfahren",
+    "GE-C415-anstellen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch415.txt",
+  "json": "german/narration/ch415.json",
+  "textHash": "fnv1a64:bc9bebb2421cbd92",
+  "jsonHash": "fnv1a64:d4584079831a055a",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 288,
+  "title": "Ein Zusammenstoß",
+  "label": "ch:ge-ein-zusammensto",
+  "canDo": "I can report a road accident: to collide, a collision, to crash into, to have an accident and the damage.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C288-schaden",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 288: I can report a road accident: to collide, a collision, to crash into, to have an accident and the damage.",
+    "assesses": [
+      "GE-LEX-C288-ZUSAMMENSTOSS-03",
+      "GE-LEX-C288-ZUSAMMENSTOSS-04",
+      "GE-LEX-C288-ZUSAMMENSTOSS-05"
+    ]
+  }
+}

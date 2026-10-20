@@ -1,0 +1,11 @@
+{
+  "id": "GE-C467-verlegenheit",
+  "pathSegment": "GE-PATH-467-SCHAM",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-467-SCHAM",
+      "order": 3
+    }
+  ]
+}

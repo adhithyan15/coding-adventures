@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C372-zeitplan",
+    "language": "german",
+    "chapter": 372,
+    "sequence": 20180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:92b2516de78ab511"
+  },
+  "findings": []
+}

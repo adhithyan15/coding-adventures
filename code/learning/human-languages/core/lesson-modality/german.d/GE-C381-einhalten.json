@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C381-einhalten",
+    "language": "german",
+    "chapter": 381,
+    "sequence": 20640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1e973a848e3902ab"
+  },
+  "findings": []
+}

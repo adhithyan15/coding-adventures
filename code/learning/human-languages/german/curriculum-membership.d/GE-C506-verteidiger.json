@@ -1,0 +1,11 @@
+{
+  "id": "GE-C506-verteidiger",
+  "pathSegment": "GE-PATH-506-FUSSBALL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-506-FUSSBALL",
+      "order": 2
+    }
+  ]
+}

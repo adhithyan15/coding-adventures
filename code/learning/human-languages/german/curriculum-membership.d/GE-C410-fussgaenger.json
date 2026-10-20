@@ -1,0 +1,11 @@
+{
+  "id": "GE-C410-fussgaenger",
+  "pathSegment": "GE-PATH-410-UNFALL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-410-UNFALL",
+      "order": 3
+    }
+  ]
+}

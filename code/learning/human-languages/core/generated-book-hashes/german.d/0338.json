@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 338,
+  "sourceHash": "fnv1a64:03d6a74b00e2f24e",
+  "lessonIds": [
+    "GE-C338-vermutung",
+    "GE-C338-annahme",
+    "GE-C338-anscheinend",
+    "GE-C338-offensichtlich",
+    "GE-C338-ahnen"
+  ],
+  "tex": "german/book/chapters/ch338-vermutungen.tex"
+}

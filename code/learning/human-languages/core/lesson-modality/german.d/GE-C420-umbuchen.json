@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C420-umbuchen",
+    "language": "german",
+    "chapter": 420,
+    "sequence": 22640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d1ace02741314e59"
+  },
+  "findings": []
+}

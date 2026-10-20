@@ -1,0 +1,11 @@
+{
+  "id": "GE-C284-ermitteln",
+  "pathSegment": "GE-PATH-284-VERDACHT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-284-VERDACHT",
+      "order": 2
+    }
+  ]
+}

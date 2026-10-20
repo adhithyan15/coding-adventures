@@ -1,0 +1,19 @@
+{
+  "chapter": 379,
+  "title": "Noten und Bewertungen",
+  "label": "ch:ge-noten-und-bewertungen",
+  "canDo": "I can talk about how work is rated and graded, correcting mistakes, and making up a missed exam.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GE-C379-korrigieren",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 379: I can talk about how work is rated and graded, correcting mistakes, and making up a missed exam.",
+    "assesses": [
+      "GE-LEX-C379-BEWERTUNG-03",
+      "GE-LEX-C379-BEWERTUNG-04",
+      "GE-LEX-C379-BEWERTUNG-05"
+    ]
+  }
+}

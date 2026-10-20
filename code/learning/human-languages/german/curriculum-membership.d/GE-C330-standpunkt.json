@@ -1,0 +1,11 @@
+{
+  "id": "GE-C330-standpunkt",
+  "pathSegment": "GE-PATH-330-STANDPUNKT",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-330-STANDPUNKT",
+      "order": 0
+    }
+  ]
+}

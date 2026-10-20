@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-384-GENEHMIGUNG",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "GE-EXT-384-GENEHMIGUNG"
+  ],
+  "after": []
+}

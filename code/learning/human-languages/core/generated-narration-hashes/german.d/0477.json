@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 477,
+  "sourceHash": "fnv1a64:4246b4a4525639c4",
+  "lessonIds": [
+    "GE-C477-tapfer",
+    "GE-C477-feige",
+    "GE-C477-feigling",
+    "GE-C477-leichtsinnig",
+    "GE-C477-trauen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch477.txt",
+  "json": "german/narration/ch477.json",
+  "textHash": "fnv1a64:70065527282a326d",
+  "jsonHash": "fnv1a64:a6ec1682d33000fd",
+  "findings": []
+}

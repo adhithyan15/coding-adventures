@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:78f6c2e3474bc3c2",
+  "lessonIds": [
+    "GE-C351-teilzeit",
+    "GE-C351-vollzeit",
+    "GE-C351-schicht",
+    "GE-C351-ueberstunde",
+    "GE-C351-feierabend"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch351.txt",
+  "json": "german/narration/ch351.json",
+  "textHash": "fnv1a64:8a50f50df13d8062",
+  "jsonHash": "fnv1a64:49aefa563b9cedc1",
+  "findings": []
+}

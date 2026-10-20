@@ -1,0 +1,11 @@
+{
+  "id": "GE-C423-kentern",
+  "pathSegment": "GE-PATH-423-ANKER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-423-ANKER",
+      "order": 4
+    }
+  ]
+}

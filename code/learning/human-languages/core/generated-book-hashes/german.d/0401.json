@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 401,
+  "sourceHash": "fnv1a64:c6b8862ee3ef9b3a",
+  "lessonIds": [
+    "GE-C401-hupe",
+    "GE-C401-hupen",
+    "GE-C401-sicherheitsgurt",
+    "GE-C401-anschnallen",
+    "GE-C401-beifahrer"
+  ],
+  "tex": "german/book/chapters/ch401-sicher-unterwegs.tex"
+}

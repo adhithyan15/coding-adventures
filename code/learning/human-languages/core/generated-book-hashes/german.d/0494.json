@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 494,
+  "sourceHash": "fnv1a64:fe21b0786ef0a9b7",
+  "lessonIds": [
+    "GE-C494-zanken",
+    "GE-C494-schmollen",
+    "GE-C494-vertragen",
+    "GE-C494-versoehnen",
+    "GE-C494-versoehnung"
+  ],
+  "tex": "german/book/chapters/ch494-zanken-und-versohnen.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 459,
+  "sourceHash": "fnv1a64:b165729036379de2",
+  "lessonIds": [
+    "GE-C459-bauernhof",
+    "GE-C459-weide",
+    "GE-C459-scheune",
+    "GE-C459-grasen",
+    "GE-C459-melken"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch459.txt",
+  "json": "german/narration/ch459.json",
+  "textHash": "fnv1a64:2fef2f99a4df0c02",
+  "jsonHash": "fnv1a64:26f2e004d3a1e297",
+  "findings": []
+}

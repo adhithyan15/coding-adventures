@@ -1,0 +1,11 @@
+{
+  "id": "GE-C443-konditorei",
+  "pathSegment": "GE-PATH-443-FEINKOST",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-443-FEINKOST",
+      "order": 1
+    }
+  ]
+}

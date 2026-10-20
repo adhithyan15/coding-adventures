@@ -1,0 +1,11 @@
+{
+  "id": "GE-C338-annahme",
+  "pathSegment": "GE-PATH-338-VERMUTUNG",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-338-VERMUTUNG",
+      "order": 1
+    }
+  ]
+}

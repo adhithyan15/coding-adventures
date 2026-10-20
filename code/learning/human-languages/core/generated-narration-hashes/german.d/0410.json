@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 410,
+  "sourceHash": "fnv1a64:15aef46822f2e04a",
+  "lessonIds": [
+    "GE-C410-auffahrunfall",
+    "GE-C410-auffahren",
+    "GE-C410-schleudern",
+    "GE-C410-fussgaenger",
+    "GE-C410-radfahrer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch410.txt",
+  "json": "german/narration/ch410.json",
+  "textHash": "fnv1a64:f25f328acb16c6da",
+  "jsonHash": "fnv1a64:953e2aefe8817f22",
+  "findings": []
+}

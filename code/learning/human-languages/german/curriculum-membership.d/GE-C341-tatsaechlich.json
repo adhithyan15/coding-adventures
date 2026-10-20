@@ -1,0 +1,11 @@
+{
+  "id": "GE-C341-tatsaechlich",
+  "pathSegment": "GE-PATH-341-OBWOHL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-341-OBWOHL",
+      "order": 4
+    }
+  ]
+}

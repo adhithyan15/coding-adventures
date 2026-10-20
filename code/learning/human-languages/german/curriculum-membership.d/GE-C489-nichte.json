@@ -1,0 +1,11 @@
+{
+  "id": "GE-C489-nichte",
+  "pathSegment": "GE-PATH-489-VERWANDTE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-489-VERWANDTE",
+      "order": 3
+    }
+  ]
+}

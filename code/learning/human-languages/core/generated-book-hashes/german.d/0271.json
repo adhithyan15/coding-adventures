@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 271,
+  "sourceHash": "fnv1a64:185654f2a3ad4e17",
+  "lessonIds": [
+    "GE-C271-melden",
+    "GE-C271-meldung",
+    "GE-C271-bericht",
+    "GE-C271-schlagzeile",
+    "GE-C271-artikel"
+  ],
+  "tex": "german/book/chapters/ch271-die-meldung.tex"
+}

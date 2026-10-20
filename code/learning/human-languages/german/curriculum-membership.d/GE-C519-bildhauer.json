@@ -1,0 +1,11 @@
+{
+  "id": "GE-C519-bildhauer",
+  "pathSegment": "GE-PATH-519-GALERIE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-519-GALERIE",
+      "order": 3
+    }
+  ]
+}

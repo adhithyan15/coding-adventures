@@ -1,0 +1,11 @@
+{
+  "id": "GE-C301-befoerderung",
+  "pathSegment": "GE-PATH-301-KUENDIGEN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-301-KUENDIGEN",
+      "order": 3
+    }
+  ]
+}

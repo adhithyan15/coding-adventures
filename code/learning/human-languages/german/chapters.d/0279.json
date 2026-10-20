@@ -1,0 +1,19 @@
+{
+  "chapter": 279,
+  "title": "Was geschah",
+  "label": "ch:ge-was-geschah",
+  "canDo": "I can say that something took place: an event, to occur, to take place, to happen and an incident.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C279-vorfall",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 279: I can say that something took place: an event, to occur, to take place, to happen and an incident.",
+    "assesses": [
+      "GE-LEX-C279-EREIGNIS-03",
+      "GE-LEX-C279-EREIGNIS-04",
+      "GE-LEX-C279-EREIGNIS-05"
+    ]
+  }
+}

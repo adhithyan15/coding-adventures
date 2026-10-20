@@ -1,0 +1,11 @@
+{
+  "id": "GE-C451-flohmarkt",
+  "pathSegment": "GE-PATH-451-SCHNAEPPCHEN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-451-SCHNAEPPCHEN",
+      "order": 4
+    }
+  ]
+}

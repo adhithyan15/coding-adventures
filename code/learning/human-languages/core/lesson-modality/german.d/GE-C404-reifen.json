@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C404-reifen",
+    "language": "german",
+    "chapter": 404,
+    "sequence": 21800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7fe4949c06960776"
+  },
+  "findings": []
+}

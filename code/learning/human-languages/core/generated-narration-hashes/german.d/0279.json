@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 279,
+  "sourceHash": "fnv1a64:8c3ab5616edbb525",
+  "lessonIds": [
+    "GE-C279-ereignis",
+    "GE-C279-ereignen",
+    "GE-C279-stattfinden",
+    "GE-C279-vorkommen",
+    "GE-C279-vorfall"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch279.txt",
+  "json": "german/narration/ch279.json",
+  "textHash": "fnv1a64:7080ce579fd6dd21",
+  "jsonHash": "fnv1a64:52601607fc3da1bb",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C338-offensichtlich",
+    "language": "german",
+    "chapter": 338,
+    "sequence": 18440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c089dc13a4e3970"
+  },
+  "findings": []
+}

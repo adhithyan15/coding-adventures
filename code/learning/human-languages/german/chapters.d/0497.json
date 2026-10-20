@@ -1,0 +1,19 @@
+{
+  "chapter": 497,
+  "title": "Frech und trotzig",
+  "label": "ch:ge-frech-und-trotzig",
+  "canDo": "I can talk about children who misbehave.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-R497-review-490-497",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 497: I can talk about children who misbehave.",
+    "assesses": [
+      "GE-LEX-C497-TROTZIG-03",
+      "GE-LEX-C497-TROTZIG-04",
+      "GE-LEX-C497-TROTZIG-05"
+    ]
+  }
+}

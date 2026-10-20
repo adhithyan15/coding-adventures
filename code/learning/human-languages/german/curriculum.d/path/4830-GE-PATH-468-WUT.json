@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-468-WUT",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GE-EXT-468-WUT"
+  ],
+  "after": []
+}

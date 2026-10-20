@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C453-abhang",
+    "language": "german",
+    "chapter": 453,
+    "sequence": 24340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4fa0277935e97080"
+  },
+  "findings": []
+}

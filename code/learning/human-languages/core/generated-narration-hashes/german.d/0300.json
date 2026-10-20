@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:518f31c520addc27",
+  "lessonIds": [
+    "GE-C300-scheidung",
+    "GE-C300-scheiden",
+    "GE-C300-trennung",
+    "GE-C300-adoptieren",
+    "GE-C300-erleben"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch300.txt",
+  "json": "german/narration/ch300.json",
+  "textHash": "fnv1a64:f12e1075fb17d7e9",
+  "jsonHash": "fnv1a64:effb1b08a8641190",
+  "findings": []
+}

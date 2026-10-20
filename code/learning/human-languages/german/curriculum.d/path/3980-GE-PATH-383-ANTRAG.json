@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-383-ANTRAG",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "GE-EXT-383-ANTRAG"
+  ],
+  "after": []
+}

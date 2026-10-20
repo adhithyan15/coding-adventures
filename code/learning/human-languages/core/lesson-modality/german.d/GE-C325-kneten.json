@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C325-kneten",
+    "language": "german",
+    "chapter": 325,
+    "sequence": 17740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cee3ff420b9db8d8"
+  },
+  "findings": []
+}

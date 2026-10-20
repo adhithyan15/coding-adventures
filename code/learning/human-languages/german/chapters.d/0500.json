@@ -1,0 +1,19 @@
+{
+  "chapter": 500,
+  "title": "Sammeln und rätseln",
+  "label": "ch:ge-sammeln-und-ratseln",
+  "canDo": "I can talk about collecting, crafts and puzzles.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C500-kreuzwortraetsel",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 500: I can talk about collecting, crafts and puzzles.",
+    "assesses": [
+      "GE-LEX-C500-SAMMELN-03",
+      "GE-LEX-C500-SAMMELN-04",
+      "GE-LEX-C500-SAMMELN-05"
+    ]
+  }
+}

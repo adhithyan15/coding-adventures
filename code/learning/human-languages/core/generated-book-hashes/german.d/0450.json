@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 450,
+  "sourceHash": "fnv1a64:b473193ec9cfdc61",
+  "lessonIds": [
+    "GE-C450-geldautomat",
+    "GE-C450-geheimzahl",
+    "GE-C450-kontoauszug",
+    "GE-C450-einloesen",
+    "GE-C450-auszahlen"
+  ],
+  "tex": "german/book/chapters/ch450-geld-und-konto.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C405-motorhaube",
+  "pathSegment": "GE-PATH-405-DELLE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-405-DELLE",
+      "order": 1
+    }
+  ]
+}

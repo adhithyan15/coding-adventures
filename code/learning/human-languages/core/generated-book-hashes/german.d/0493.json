@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 493,
+  "sourceHash": "fnv1a64:f533c2dcfe77d98d",
+  "lessonIds": [
+    "GE-C493-zuneigung",
+    "GE-C493-umarmung",
+    "GE-C493-zaertlich",
+    "GE-C493-geborgenheit",
+    "GE-C493-zusammenhalt"
+  ],
+  "tex": "german/book/chapters/ch493-zuneigung-und-geborgenheit.tex"
+}

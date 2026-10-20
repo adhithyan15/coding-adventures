@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "german",
+  "chapter": 399,
+  "title": "Am Steuer",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e75ffd983d07ccb3",
+  "lessons": [
+    {
+      "id": "GE-C399-lenkrad",
+      "sequence": 21550,
+      "title": "das Lenkrad — the steering wheel",
+      "headword": "das Lenkrad",
+      "romanization": "das Lenkrad",
+      "gloss": "the steering wheel",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1ebf5f1a72deea98",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the roundabout, then the German for to turn off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: das Lenkrad",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "das Lenkrad — \"the steering wheel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mein Vater hält das Lenkrad mit beiden Händen. My father holds the steering wheel with both hands."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Lenkräder. Also das Steuer: am Steuer sitzen — to be at the wheel."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Lenkrad is a compound of lenken 'to steer' and Rad 'wheel' (EtymDB lists it under Rad). Both parts are inherited Germanic words."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "das Lenkrad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *das Lenkrad*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "das Lenkrad, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *das Lenkrad*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with das Lenkrad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *das Lenkrad*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the roundabout, then the German for to turn off, then say das Lenkrad again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the roundabout, then the German for to turn off, then say *das Lenkrad* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does das Lenkrad mean? (\"The steering wheel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C399-lenken",
+      "sequence": 21560,
+      "title": "lenken — to steer; to direct",
+      "headword": "lenken",
+      "romanization": "lenken",
+      "gloss": "to steer; to direct",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9b5434547ce3bc8e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to turn off, then the German for the steering wheel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: lenken",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lenken — \"to steer; to direct\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Auf dem Eis kann er das Auto kaum lenken. On the ice he can hardly steer the car."
+            },
+            {
+              "kind": "speech",
+              "text": "Also figurative: das Gespräch auf ein Thema lenken — to steer the talk towards a topic."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lenken is an inherited Germanic verb that first meant 'to bend, to turn' (EtymDB gives 'to turn'). EtymDB links it with English lank 'limp, thin'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lenken",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lenken*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lenken, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lenken*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with lenken",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *lenken*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to turn off, then the German for the steering wheel, then say lenken again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to turn off, then the German for the steering wheel, then say *lenken* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does lenken mean? (\"To steer; to direct\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C399-bremsen",
+      "sequence": 21570,
+      "title": "bremsen — to brake; to slow down",
+      "headword": "bremsen",
+      "romanization": "bremsen",
+      "gloss": "to brake; to slow down",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4dba5070d9883ec9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the steering wheel, then the German for to steer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: bremsen",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bremsen — \"to brake; to slow down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Der Fahrer bremst, weil ein Hund über die Straße läuft. The driver brakes because a dog runs across the road."
+            },
+            {
+              "kind": "speech",
+              "text": "Er bremst, er hat gebremst. Figurative: jemanden bremsen — to hold someone back."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bremsen is built on the noun Bremse 'brake', which is usually traced to Middle Low German premse 'a clamp'. EtymDB files the verb under its look-alike Bremse 'horsefly', so the line is hedged."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bremsen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bremsen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bremsen, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bremsen*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with bremsen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *bremsen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the steering wheel, then the German for to steer, then say bremsen again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the steering wheel, then the German for to steer, then say *bremsen* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does bremsen mean? (\"To brake; to slow down\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C399-bremse",
+      "sequence": 21580,
+      "title": "die Bremse — the brake",
+      "headword": "die Bremse",
+      "romanization": "die Bremse",
+      "gloss": "the brake",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:13fe06ba17053d0b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to steer, then the German for to brake."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Bremse",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Bremse — \"the brake\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Die Bremsen an meinem Fahrrad sind kaputt. The brakes on my bike are broken."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Bremsen. Die Bremse is also a horsefly, a different word that only looks the same."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Die Bremse 'brake' is usually traced to Middle Low German premse 'a clamp', first one put on a restless horse's nose. EtymDB only lists the look-alike Bremse 'horsefly', inherited from Middle Low and Middle High German, so the line for the brake is hedged."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Bremse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Bremse*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Bremse, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Bremse*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with die Bremse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *die Bremse*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to steer, then the German for to brake, then say die Bremse again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to steer, then the German for to brake, then say *die Bremse* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does die Bremse mean? (\"The brake\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C399-schalten",
+      "sequence": 21590,
+      "title": "schalten — to change gear; to switch",
+      "headword": "schalten",
+      "romanization": "schalten",
+      "gloss": "to change gear; to switch",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e53427135beef647",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to brake, then the German for the brake."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: schalten",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "schalten — \"to change gear; to switch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Am Berg schaltet sie in den zweiten Gang. On the hill she changes into second gear."
+            },
+            {
+              "kind": "speech",
+              "text": "Schalten also means to switch: das Licht einschalten — to switch the light on."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "schalten is inherited through Middle High German schalten from Old High German scaltan (EtymDB), usually glossed 'to push, to shove'; it is said to have first meant pushing a boat along with a pole, later a lever pushed into place."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "schalten",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *schalten*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "schalten, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *schalten*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with schalten",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *schalten*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to brake, then the German for the brake, then say schalten again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to brake, then the German for the brake, then say *schalten* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does schalten mean? (\"To change gear; to switch\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

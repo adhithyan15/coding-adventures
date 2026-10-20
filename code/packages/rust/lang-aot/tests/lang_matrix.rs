@@ -9587,12 +9587,16 @@ fn run_llvm(p: &Prog) -> Option<RunResult> {
 /// `BasicRuntime.println(J)V`, and the CLR's `Console.WriteLine(int64)`. It is *not*
 /// language-specific: any IIR that prints an integer routes through this import.
 ///
-/// `PrintFunc` is the host implementation of that import. Each call appends its single
-/// `i64` argument to a shared capture buffer (`Arc<Mutex<Vec<i64>>>`) so the test can
-/// read back exactly what the program printed. The function does no work proportional
-/// to untrusted input — it pushes one integer and returns — so there is no DoS vector.
+/// `PrintFunc` is the host implementation of that import. Each call appends the decimal
+/// text of its single `i64` argument **plus `\n`** (the `print_i64` contract) to the
+/// program's ONE shared output byte buffer — the same buffer `putchar` and `__print_str`
+/// append to — so the captured stdout is in program order (LANG83 "ordered output
+/// stream"). Before LANG83 this pushed into a separate integer list that the runner
+/// dropped whenever any byte output existed, so a program mixing `print_i64` with
+/// `putchar`/`print_str` silently lost every integer on this column. One integer's text
+/// per call (≤ 21 bytes) — no DoS vector.
 struct PrintFunc {
-    captured: std::sync::Arc<std::sync::Mutex<Vec<i64>>>,
+    bytes: std::sync::Arc<std::sync::Mutex<Vec<u8>>>,
 }
 
 impl wasm_execution::HostFunction for PrintFunc {
@@ -9617,10 +9621,10 @@ impl wasm_execution::HostFunction for PrintFunc {
             .ok_or_else(|| wasm_execution::TrapError::new("__print_i64: missing argument"))?
             .as_i64()
             .map_err(|e| wasm_execution::TrapError::new(e.message))?;
-        self.captured
+        self.bytes
             .lock()
-            .expect("lang-matrix print buffer poisoned")
-            .push(value);
+            .expect("lang-matrix output buffer poisoned")
+            .extend_from_slice(format!("{value}\n").as_bytes());
         Ok(vec![])
     }
 }
@@ -10057,14 +10061,14 @@ impl wasm_execution::HostFunction for TanFunc {
 }
 
 /// The host interface the matrix runs wasm under: it resolves the generic
-/// `env.__print_i64` import to a `PrintFunc` (integer capture, for BASIC),
+/// `env.__print_i64` import to a `PrintFunc` (decimal text + newline),
 /// `env.__print_str` to a memory-reading byte capture, and the Brainfuck I/O
 /// imports `env.putchar`/`env.getchar` to a `PutcharFunc` (byte capture) /
 /// `GetcharFunc` (EOF). Everything else resolves to nothing (the expression languages
 /// import no host functions, so the host is never consulted for them and behaviour is
 /// identical to `WasmRuntime::new`).
 struct PrintHost {
-    captured: std::sync::Arc<std::sync::Mutex<Vec<i64>>>,
+    /// The program's single ordered output stream: every output import appends here.
     bytes: std::sync::Arc<std::sync::Mutex<Vec<u8>>>,
     input: std::sync::Arc<std::sync::Mutex<std::collections::VecDeque<u8>>>,
 }
@@ -10077,7 +10081,7 @@ impl wasm_execution::HostInterface for PrintHost {
     ) -> Option<Box<dyn wasm_execution::HostFunction>> {
         match (module_name, name) {
             ("env", "__print_i64") => Some(Box::new(PrintFunc {
-                captured: std::sync::Arc::clone(&self.captured),
+                bytes: std::sync::Arc::clone(&self.bytes),
             })),
             ("env", "__print_str") => Some(Box::new(PrintStrFunc {
                 bytes: std::sync::Arc::clone(&self.bytes),
@@ -10153,14 +10157,12 @@ fn run_wasm(p: &Prog) -> Option<RunResult> {
         Ok(w) => w,
         Err(e) => cell_failed("Wasm", p, "source → wasm bytes", format!("{e:?}")),
     };
-    let captured = std::sync::Arc::new(std::sync::Mutex::new(Vec::new()));
     let byte_buf = std::sync::Arc::new(std::sync::Mutex::new(Vec::new()));
     // The program's stdin, drained by `env.getchar` (Brainfuck `,`); empty otherwise.
     let input = std::sync::Arc::new(std::sync::Mutex::new(
         program_stdin(p).iter().copied().collect::<std::collections::VecDeque<u8>>(),
     ));
     let host = PrintHost {
-        captured: std::sync::Arc::clone(&captured),
         bytes: std::sync::Arc::clone(&byte_buf),
         input: std::sync::Arc::clone(&input),
     };
@@ -10173,28 +10175,15 @@ fn run_wasm(p: &Prog) -> Option<RunResult> {
     // `main`'s single i64 result is the program's value (`& 0xFF` matches the exit
     // convention the native/LLVM columns use for the same programs).
     let code = result.first().copied().map(|v| (v as i32) & 0xFF);
-    // stdout has two shapes: Brainfuck writes raw bytes via `env.putchar` (so `.` of 65
-    // is the byte `A`); BASIC writes integers via `env.__print_i64` (one per call, joined
-    // by newlines). A program uses one or the other, so prefer the byte stream when the
-    // program wrote any. Expression languages print nothing → empty stdout.
-    let printed_bytes = byte_buf.lock().expect("lang-matrix putchar buffer poisoned");
-    let stdout = if printed_bytes.is_empty() {
-        captured
-            .lock()
-            .expect("lang-matrix print buffer poisoned")
-            .iter()
-            .map(|v| v.to_string())
-            .collect::<Vec<_>>()
-            .join("\n")
-    } else {
-        // `.trim()` to match the six sibling `run_*` functions (native/LLVM/CLR/
-        // JVM/VM/JIT all trim): BASIC's BA2 `PRINT` ends each line with a
-        // `putchar('\n')`, so the raw byte stream for `PRINT 42` is `"42\n"`.
-        // Without trimming, the Wasm column alone disagreed with the others on
-        // every BASIC `Stdout` cell (a latent inconsistency the putchar print
-        // model surfaced). Inner newlines (multi-line output) are preserved.
-        String::from_utf8_lossy(&printed_bytes).trim().to_string()
-    };
+    // stdout is the ONE ordered byte stream every output import appended to (LANG83):
+    // Brainfuck's `env.putchar` bytes, `__print_str` text and `__print_i64`'s
+    // "<value>\n" interleave in program order. Expression languages print nothing.
+    //
+    // `.trim()` to match the sibling `run_*` functions (native/LLVM/CLR/JVM/VM/JIT
+    // all trim): `print_i64` and BASIC's BA2 `PRINT` both end a line with `\n`, so
+    // the raw stream for `PRINT 42` is `"42\n"`. Inner newlines are preserved.
+    let printed_bytes = byte_buf.lock().expect("lang-matrix output buffer poisoned");
+    let stdout = String::from_utf8_lossy(&printed_bytes).trim().to_string();
     Some(RunResult::Completed { code, stdout })
 }
 
@@ -10929,17 +10918,20 @@ fn run_vm(p: &Prog) -> Option<RunResult> {
 
     let mut vm = VMCore::new();
 
-    // Capture buffer for the I/O languages. `print_i64` (BASIC) appends one integer per
-    // call, joined by newlines; `putchar` (Brainfuck) appends one byte. A program uses at
-    // most one, so a single buffer + a byte buffer suffice; expression languages print
-    // nothing. The closures push a bounded amount per call — no DoS vector.
-    let printed_ints: Arc<Mutex<Vec<i64>>> = Arc::new(Mutex::new(Vec::new()));
+    // The program's ONE ordered output stream (LANG83): `print_i64` appends its decimal
+    // text + "\n", `putchar` one byte, `print_str` the string's bytes — all into the same
+    // buffer, in call order. (Before LANG83 integers went to a separate list that was
+    // dropped whenever any byte output existed.) Expression languages print nothing.
+    // The closures push a bounded amount per call — no DoS vector.
     let printed_bytes: Arc<Mutex<Vec<u8>>> = Arc::new(Mutex::new(Vec::new()));
 
-    let ints = Arc::clone(&printed_ints);
+    let bytes = Arc::clone(&printed_bytes);
     vm.builtins_mut().register("print_i64", move |args: &[Value]| {
         let n = args.first().and_then(|v| v.as_i64()).unwrap_or(0);
-        ints.lock().expect("lang-matrix VM print buffer poisoned").push(n);
+        bytes
+            .lock()
+            .expect("lang-matrix VM output buffer poisoned")
+            .extend_from_slice(format!("{n}\n").as_bytes());
         Ok(Value::Null)
     });
     let bytes = Arc::clone(&printed_bytes);
@@ -11004,22 +10996,10 @@ fn run_vm(p: &Prog) -> Option<RunResult> {
 
     // The exit code: an expression language's `main` returns an `Int`.
     let code = result.and_then(|v| v.as_i64()).map(|n| (n as i32) & 0xFF);
-    // stdout: prefer the byte stream (Brainfuck `putchar`) when present, else the integer
-    // stream (BASIC `print_i64`) joined by newlines; empty for the expression languages.
-    let byte_buf = printed_bytes.lock().expect("lang-matrix VM putchar buffer poisoned");
-    let stdout = if byte_buf.is_empty() {
-        printed_ints
-            .lock()
-            .expect("lang-matrix VM print buffer poisoned")
-            .iter()
-            .map(|v| v.to_string())
-            .collect::<Vec<_>>()
-            .join("\n")
-    } else {
-        // `.trim()` to match the subprocess columns: BA2 BASIC `PRINT` ends
-        // each line with `putchar('\n')`, so the byte stream is e.g. `"42\n"`.
-        String::from_utf8_lossy(&byte_buf).trim().to_string()
-    };
+    // stdout: the one ordered stream, `.trim()`med to match the subprocess columns
+    // (`print_i64` and BA2 BASIC `PRINT` both end a line with `\n`).
+    let byte_buf = printed_bytes.lock().expect("lang-matrix VM output buffer poisoned");
+    let stdout = String::from_utf8_lossy(&byte_buf).trim().to_string();
     Some(RunResult::Completed { code, stdout })
 }
 
@@ -11054,15 +11034,20 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
     lower_dynamic_for_generic_engine(&mut module);
     let entry = module.entry_point.clone().unwrap_or_else(|| "main".to_string());
 
-    let printed_ints: Arc<Mutex<Vec<i64>>> = Arc::new(Mutex::new(Vec::new()));
+    // ONE ordered output stream shared by both tiers (LANG83): whichever tier a
+    // function lands on, its `print_i64`/`putchar`/`print_str` append to this buffer
+    // in call order.
     let printed_bytes: Arc<Mutex<Vec<u8>>> = Arc::new(Mutex::new(Vec::new()));
 
     // --- interpreter-fallback path: builtins on the VM (closures return Result) ---
     let mut vm = VMCore::new();
-    let ints = Arc::clone(&printed_ints);
+    let bytes = Arc::clone(&printed_bytes);
     vm.builtins_mut().register("print_i64", move |args: &[Value]| {
         let n = args.first().and_then(|v| v.as_i64()).unwrap_or(0);
-        ints.lock().expect("lang-matrix JIT print buffer poisoned").push(n);
+        bytes
+            .lock()
+            .expect("lang-matrix JIT output buffer poisoned")
+            .extend_from_slice(format!("{n}\n").as_bytes());
         Ok(Value::Null)
     });
     let bytes = Arc::clone(&printed_bytes);
@@ -11115,10 +11100,13 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
 
     // --- compiled path: the same builtins on the JIT backend (closures return Value) ---
     let backend = GenericCirJit::new();
-    let ints = Arc::clone(&printed_ints);
+    let bytes = Arc::clone(&printed_bytes);
     backend.register_builtin("print_i64", move |args: &[Value]| {
         let n = args.first().and_then(|v| v.as_i64()).unwrap_or(0);
-        ints.lock().expect("lang-matrix JIT print buffer poisoned").push(n);
+        bytes
+            .lock()
+            .expect("lang-matrix JIT output buffer poisoned")
+            .extend_from_slice(format!("{n}\n").as_bytes());
         Value::Null
     });
     let bytes = Arc::clone(&printed_bytes);
@@ -11174,20 +11162,8 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
     // Exit code / stdout extraction is identical to `run_vm` — the JIT is observably
     // equivalent to the interpreter, which is the whole point of a JIT.
     let code = result.and_then(|v| v.as_i64()).map(|n| (n as i32) & 0xFF);
-    let byte_buf = printed_bytes.lock().expect("lang-matrix JIT putchar buffer poisoned");
-    let stdout = if byte_buf.is_empty() {
-        printed_ints
-            .lock()
-            .expect("lang-matrix JIT print buffer poisoned")
-            .iter()
-            .map(|v| v.to_string())
-            .collect::<Vec<_>>()
-            .join("\n")
-    } else {
-        // `.trim()` to match the subprocess columns: BA2 BASIC `PRINT` ends
-        // each line with `putchar('\n')`, so the byte stream is e.g. `"42\n"`.
-        String::from_utf8_lossy(&byte_buf).trim().to_string()
-    };
+    let byte_buf = printed_bytes.lock().expect("lang-matrix JIT output buffer poisoned");
+    let stdout = String::from_utf8_lossy(&byte_buf).trim().to_string();
     Some(RunResult::Completed { code, stdout })
 }
 
@@ -12213,6 +12189,50 @@ fn algol_integer_output_runs_on_every_available_standard_backend() {
         };
         assert_cell(backend, program, result);
     }
+}
+
+/// LANG83 "ordered output stream": a program's `print_i64` and `print_str` output
+/// is ONE byte stream in program order, on every column.
+///
+/// ALGOL is the existing frontend that emits both in one program — integer
+/// `output(…)` lowers to `call_builtin "print_i64"` (value + newline) and a string
+/// `print(…)` to `print_str` (no newline). (No current frontend emits both
+/// `print_i64` and `putchar`; that pairing is proven at the IIR level by
+/// `op_conformance.rs::print_i64_and_putchar_share_one_ordered_stream`.)
+///
+/// Before LANG83 this program printed `ABC` on the WASM, VM and JIT columns: their
+/// harnesses kept integers in a separate list and dropped it whenever any byte
+/// output existed. It is a standalone row (not in `PROGRAMS`) so the pinned
+/// corpus counts in LANG-VM-FEATURE-COVERAGE.md are unchanged.
+const ORDERED_OUTPUT_PROGRAM: Prog = Prog {
+    lang: Language::Algol60,
+    ext: "alg",
+    // `n` is a variable on purpose: ALGOL folds `output(<integer literal>)` into a
+    // string literal (no newline), which would not exercise `print_i64` at all.
+    src: "begin integer n; n := 1; print('A'); output(n); print('B'); output(n - 3); \
+          print('C') end",
+    expect: Expect::Stdout("A1\nB-2\nC"),
+    backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+};
+
+#[test]
+fn mixed_print_i64_and_print_str_output_is_one_ordered_stream_on_every_available_backend() {
+    let program = &ORDERED_OUTPUT_PROGRAM;
+    let mut ran = Vec::new();
+    for &backend in program.backends {
+        let available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(!available, "{backend:?} toolchain is present but the ordered-output row did not run");
+            continue;
+        };
+        assert_cell(backend, program, result);
+        ran.push(backend);
+    }
+    // The in-process columns have no toolchain to be absent: they never skip.
+    for backend in [Wasm, Vm, Jit] {
+        assert!(ran.contains(&backend), "{backend:?} must run the ordered-output row");
+    }
+    eprintln!("LANG83 ordered output proven on {ran:?}");
 }
 
 #[test]

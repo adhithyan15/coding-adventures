@@ -1,0 +1,11 @@
+{
+  "id": "GE-C504-ernte",
+  "pathSegment": "GE-PATH-504-SAEEN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-504-SAEEN",
+      "order": 4
+    }
+  ]
+}

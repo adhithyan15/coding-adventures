@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C526-lappen",
+    "language": "german",
+    "chapter": 526,
+    "sequence": 28110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1ab347038cd72bfc"
+  },
+  "findings": []
+}

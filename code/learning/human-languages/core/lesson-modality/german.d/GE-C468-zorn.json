@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C468-zorn",
+    "language": "german",
+    "chapter": 468,
+    "sequence": 25110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:feb3e7132d23eb7c"
+  },
+  "findings": []
+}

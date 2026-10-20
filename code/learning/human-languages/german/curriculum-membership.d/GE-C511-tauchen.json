@@ -1,0 +1,11 @@
+{
+  "id": "GE-C511-tauchen",
+  "pathSegment": "GE-PATH-511-WASSERSPORT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-511-WASSERSPORT",
+      "order": 2
+    }
+  ]
+}

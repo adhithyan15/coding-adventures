@@ -1,0 +1,11 @@
+{
+  "id": "GE-C271-artikel",
+  "pathSegment": "GE-PATH-271-MELDUNG",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-271-MELDUNG",
+      "order": 4
+    }
+  ]
+}

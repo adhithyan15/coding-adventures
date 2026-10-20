@@ -1,0 +1,19 @@
+{
+  "chapter": 429,
+  "title": "Kleine Schäden",
+  "label": "ch:ge-kleine-schaden",
+  "canDo": "I can describe small problems in a room: mould, a flickering light, a door that sticks, a squeak and something broken.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-R429-review-422-429",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 429: I can describe small problems in a room: mould, a flickering light, a door that sticks, a squeak and something broken.",
+    "assesses": [
+      "GE-LEX-C429-SCHIMMEL-03",
+      "GE-LEX-C429-SCHIMMEL-04",
+      "GE-LEX-C429-SCHIMMEL-05"
+    ]
+  }
+}

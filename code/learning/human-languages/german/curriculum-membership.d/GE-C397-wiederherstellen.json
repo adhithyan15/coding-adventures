@@ -1,0 +1,11 @@
+{
+  "id": "GE-C397-wiederherstellen",
+  "pathSegment": "GE-PATH-397-ABSTURZ",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-397-ABSTURZ",
+      "order": 3
+    }
+  ]
+}

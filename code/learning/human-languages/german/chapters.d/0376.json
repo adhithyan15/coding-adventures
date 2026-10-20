@@ -1,0 +1,19 @@
+{
+  "chapter": 376,
+  "title": "Für die Prüfung lernen",
+  "label": "ch:ge-fur-die-prufung-lernen",
+  "canDo": "I can talk about cramming, learning by heart, concentrating and revising for an exam.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GE-C376-wiederholung",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 376: I can talk about cramming, learning by heart, concentrating and revising for an exam.",
+    "assesses": [
+      "GE-LEX-C376-LERNEN-03",
+      "GE-LEX-C376-LERNEN-04",
+      "GE-LEX-C376-LERNEN-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 362,
+  "sourceHash": "fnv1a64:242af8757de2f35f",
+  "lessonIds": [
+    "GE-C362-ehrenamt",
+    "GE-C362-ehrenamtlich",
+    "GE-C362-freiwillig",
+    "GE-C362-spenden",
+    "GE-C362-engagieren"
+  ],
+  "tex": "german/book/chapters/ch362-freiwillig-helfen.tex"
+}

@@ -1,0 +1,20 @@
+{
+  "language": "german",
+  "chapter": 481,
+  "sourceHash": "fnv1a64:8caeedcc03b0fd68",
+  "lessonIds": [
+    "GE-C481-allergie",
+    "GE-C481-allergisch",
+    "GE-C481-ausschlag",
+    "GE-C481-kratzen",
+    "GE-C481-eincremen",
+    "GE-R481-review-474-481"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "german/narration/ch481.txt",
+  "json": "german/narration/ch481.json",
+  "textHash": "fnv1a64:a10bf03bbd2bd2d4",
+  "jsonHash": "fnv1a64:164d57c50e8441e7",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 269,
+  "title": "Jahrzehnte",
+  "label": "ch:ge-jahrzehnte",
+  "canDo": "I can talk about long stretches of time: a decade, a millennium, an era, for years and for hours.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-R269-review-262-269",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 269: I can talk about long stretches of time: a decade, a millennium, an era, for years and for hours.",
+    "assesses": [
+      "GE-LEX-C269-JAHRZEHNT-03",
+      "GE-LEX-C269-JAHRZEHNT-04",
+      "GE-LEX-C269-JAHRZEHNT-05"
+    ]
+  }
+}

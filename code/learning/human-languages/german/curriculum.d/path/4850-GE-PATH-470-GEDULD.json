@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-470-GEDULD",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GE-EXT-470-GEDULD"
+  ],
+  "after": []
+}

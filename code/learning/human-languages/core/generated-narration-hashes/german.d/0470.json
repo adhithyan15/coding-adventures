@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 470,
+  "sourceHash": "fnv1a64:cc34a25c13b901b3",
+  "lessonIds": [
+    "GE-C470-geduld",
+    "GE-C470-gelassen",
+    "GE-C470-beruhigen",
+    "GE-C470-aufregung",
+    "GE-C470-zappeln"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch470.txt",
+  "json": "german/narration/ch470.json",
+  "textHash": "fnv1a64:8e0f591953aa0bcc",
+  "jsonHash": "fnv1a64:35be52c4e4f42497",
+  "findings": []
+}

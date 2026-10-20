@@ -1,0 +1,11 @@
+{
+  "id": "GE-C393-anhaengen",
+  "pathSegment": "GE-PATH-393-DATEI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-393-DATEI",
+      "order": 4
+    }
+  ]
+}

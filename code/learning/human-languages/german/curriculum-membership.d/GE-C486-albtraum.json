@@ -1,0 +1,11 @@
+{
+  "id": "GE-C486-albtraum",
+  "pathSegment": "GE-PATH-486-MUEDE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-486-MUEDE",
+      "order": 4
+    }
+  ]
+}

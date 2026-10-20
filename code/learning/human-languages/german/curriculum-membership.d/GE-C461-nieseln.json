@@ -1,0 +1,11 @@
+{
+  "id": "GE-C461-nieseln",
+  "pathSegment": "GE-PATH-461-NIESELREGEN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-461-NIESELREGEN",
+      "order": 1
+    }
+  ]
+}

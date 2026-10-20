@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-428-ABFLUSS",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-428-ABFLUSS"
+  ],
+  "after": []
+}

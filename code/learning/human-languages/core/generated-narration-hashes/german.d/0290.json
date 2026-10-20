@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 290,
+  "sourceHash": "fnv1a64:8d162066002a90d3",
+  "lessonIds": [
+    "GE-C290-bewusstlos",
+    "GE-C290-ohnmaechtig",
+    "GE-C290-bewusstsein",
+    "GE-C290-ersticken",
+    "GE-C290-ertrinken"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch290.txt",
+  "json": "german/narration/ch290.json",
+  "textHash": "fnv1a64:ddf3803722684dcc",
+  "jsonHash": "fnv1a64:8d50d2d3f199f379",
+  "findings": []
+}

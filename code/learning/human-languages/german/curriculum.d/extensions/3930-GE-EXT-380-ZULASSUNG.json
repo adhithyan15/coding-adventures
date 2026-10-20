@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-380-ZULASSUNG",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about being admitted to a course, a grant, registering and withdrawing.",
+  "prerequisites": []
+}

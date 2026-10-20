@@ -1,0 +1,11 @@
+{
+  "id": "GE-C456-moos",
+  "pathSegment": "GE-PATH-456-LICHTUNG",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-456-LICHTUNG",
+      "order": 3
+    }
+  ]
+}

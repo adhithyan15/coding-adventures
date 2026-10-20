@@ -1,0 +1,19 @@
+{
+  "chapter": 301,
+  "title": "Im Beruf",
+  "label": "ch:ge-im-beruf",
+  "canDo": "I can tell turning points at work: to quit, a notice, to promote, a promotion and a turning point.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-R301-review-294-301",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 301: I can tell turning points at work: to quit, a notice, to promote, a promotion and a turning point.",
+    "assesses": [
+      "GE-LEX-C301-KUENDIGEN-03",
+      "GE-LEX-C301-KUENDIGEN-04",
+      "GE-LEX-C301-KUENDIGEN-05"
+    ]
+  }
+}

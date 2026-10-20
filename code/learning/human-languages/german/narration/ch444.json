@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "german",
+  "chapter": 444,
+  "title": "Noch mehr Läden",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:af42dbce6485dd9b",
+  "lessons": [
+    {
+      "id": "GE-C444-baumarkt",
+      "sequence": 23850,
+      "title": "der Baumarkt — the DIY store, the hardware store",
+      "headword": "der Baumarkt",
+      "romanization": "der Baumarkt",
+      "gloss": "the DIY store, the hardware store",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:039b3d42a1e69d13",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the chemist, then the German for the health food shop."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: der Baumarkt",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "der Baumarkt — \"the DIY store, the hardware store\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Im Baumarkt kaufen wir Farbe für das Bad. We buy paint for the bathroom at the DIY store."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Baumärkte."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Baumarkt is built from Bau 'building', from bauen, inherited from Proto-Germanic būaną (EtymDB), and Markt, from Latin mercātus (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Baumarkt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Baumarkt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Baumarkt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Baumarkt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with der Baumarkt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *der Baumarkt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the chemist, then the German for the health food shop, then say der Baumarkt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the chemist, then the German for the health food shop, then say *der Baumarkt* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does der Baumarkt mean? (\"The DIY store, the hardware store\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C444-schreibwarengeschaeft",
+      "sequence": 23860,
+      "title": "das Schreibwarengeschäft — the stationer, the stationery shop",
+      "headword": "das Schreibwarengeschäft",
+      "romanization": "das Schreibwarengeschäft",
+      "gloss": "the stationer, the stationery shop",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f4d0f5e63fcf8def",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the health food shop, then the German for the DIY store."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: das Schreibwarengeschäft",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "das Schreibwarengeschäft — \"the stationer, the stationery shop\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Im Schreibwarengeschäft kauft das Kind neue Hefte. At the stationer the child buys new exercise books."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Schreibwarengeschäfte. Die Schreibwaren — paper, pens and so on."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Schreibwarengeschäft is built from schreiben 'to write', an early borrowing from Latin scrībere (Lewis & Short), Ware 'goods', from Middle Low German ware (EtymDB), and Geschäft 'shop'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "das Schreibwarengeschäft",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *das Schreibwarengeschäft*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "das Schreibwarengeschäft, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *das Schreibwarengeschäft*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with das Schreibwarengeschäft",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *das Schreibwarengeschäft*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the health food shop, then the German for the DIY store, then say das Schreibwarengeschäft again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the health food shop, then the German for the DIY store, then say *das Schreibwarengeschäft* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does das Schreibwarengeschäft mean? (\"The stationer, the stationery shop\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C444-buchhandlung",
+      "sequence": 23870,
+      "title": "die Buchhandlung — the bookshop",
+      "headword": "die Buchhandlung",
+      "romanization": "die Buchhandlung",
+      "gloss": "the bookshop",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f26b1a205d4b8a5d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the DIY store, then the German for the stationer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Buchhandlung",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Buchhandlung — \"the bookshop\"."
+            },
+            {
+              "kind": "speech",
+              "text": "In der Buchhandlung findet sie einen Reiseführer. In the bookshop she finds a travel guide."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Buchhandlungen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Buchhandlung is built from Buch 'book', inherited from Old High German buoh (EtymDB), and Handlung in the old sense 'trade, shop', from handeln 'to trade'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Buchhandlung",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Buchhandlung*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Buchhandlung, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Buchhandlung*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with die Buchhandlung",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *die Buchhandlung*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the DIY store, then the German for the stationer, then say die Buchhandlung again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the DIY store, then the German for the stationer, then say *die Buchhandlung* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does die Buchhandlung mean? (\"The bookshop\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C444-blumenladen",
+      "sequence": 23880,
+      "title": "der Blumenladen — the flower shop, the florist's",
+      "headword": "der Blumenladen",
+      "romanization": "der Blumenladen",
+      "gloss": "the flower shop, the florist's",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:884928617c9a159d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the stationer, then the German for the bookshop."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: der Blumenladen",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "der Blumenladen — \"the flower shop, the florist's\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Für den Geburtstag kauft er Rosen im Blumenladen. He buys roses at the flower shop for the birthday."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Blumenläden."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Blumenladen is built from Blume 'flower', inherited from Old High German bluomo (EtymDB), and Laden 'shop', first 'plank, shutter', from Middle High German laden (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Blumenladen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Blumenladen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Blumenladen, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Blumenladen*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with der Blumenladen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *der Blumenladen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the stationer, then the German for the bookshop, then say der Blumenladen again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the stationer, then the German for the bookshop, then say *der Blumenladen* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does der Blumenladen mean? (\"The flower shop, the florist's\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C444-kleben",
+      "sequence": 23890,
+      "title": "kleben — to stick, to glue",
+      "headword": "kleben",
+      "romanization": "kleben",
+      "gloss": "to stick, to glue",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b2081426b9d5b7c6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the bookshop, then the German for the flower shop."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: kleben",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kleben — \"to stick, to glue\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sie klebt das kaputte Bild wieder zusammen. She glues the broken picture back together."
+            },
+            {
+              "kind": "speech",
+              "text": "Der Kleber — the glue. Das klebt — that is sticky."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kleben is inherited from Old High German klebēn and Proto-Germanic klibjaną 'to stick' (EtymDB). English cleave 'to cling' is a cousin."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kleben",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kleben*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kleben, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kleben*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with kleben",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *kleben*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the bookshop, then the German for the flower shop, then say kleben again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the bookshop, then the German for the flower shop, then say *kleben* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does kleben mean? (\"To stick, to glue\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
