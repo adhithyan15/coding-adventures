@@ -672,7 +672,7 @@ fn shown(text: &str) -> String {
 }
 
 /// A rule name inside a diagnostic, bounded the same way.
-fn shown_rule(rule: &str) -> String {
+pub(crate) fn shown_rule(rule: &str) -> String {
     let mut chars = rule.chars();
     let head: String = chars.by_ref().take(64).flat_map(char::escape_debug).collect();
     if chars.next().is_some() {

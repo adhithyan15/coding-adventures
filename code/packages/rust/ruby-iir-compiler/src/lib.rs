@@ -168,7 +168,7 @@ fn finish(
         // Unreachable for trees the walker accepted; reported, not panicked.
         return Err(FrontendError::Unsupported {
             release: release.to_string(),
-            rule: ast.rule_name.chars().take(64).collect(),
+            rule: lower::shown_rule(&ast.rule_name),
             start: None,
             end: None,
             message: format!("the lowered module is not valid IIR: {}", errors.join("; ")),
