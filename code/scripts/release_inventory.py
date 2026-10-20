@@ -158,14 +158,19 @@ MATRIX_LANGUAGES = {
     "JavaScript": "ecmascript",
 }
 
-RELEASE_RE = re.compile(r"^[A-Za-z0-9._-]+$")
-DATE_RE = re.compile(r"^(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?(\?)?$")
-SHA_RE = re.compile(r"^(?:[0-9a-f]{40}|[0-9a-f]{64})$")
+RELEASE_RE = re.compile(r"^[A-Za-z0-9._-]+\Z")
+DATE_RE = re.compile(r"^(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?(\?)?\Z")
+SHA_RE = re.compile(r"^(?:[0-9a-f]{40}|[0-9a-f]{64})\Z")
 LEGACY_PAIRS_RE = re.compile(r"^#\s*legacy-minor-line-pairs:\s*(.+)$")
-SUBSET_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
-SPEC_RE = re.compile(r"^[A-Z]+[0-9]+[A-Za-z0-9]*$")
-CASE_RE = re.compile(r"^[A-Za-z0-9_-]+$")
-CLASS_RE = re.compile(r"^(?:[0-9a-f]{12,64}|rejected)$")
+SUBSET_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*\Z")
+SPEC_RE = re.compile(r"^[A-Z]+[0-9]+[A-Za-z0-9]*\Z")
+CASE_RE = re.compile(r"^[A-Za-z0-9_-]+\Z")
+CLASS_RE = re.compile(r"^(?:[0-9a-f]{12,64}|rejected)\Z")
+# `\Z`, not `$`: Python's `$` also matches before a trailing newline, so
+# `"1.0\n"` (a quoted CSV cell, or a file name) would pass as `1.0`.
+PROFILE_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*\Z")
+# A grammar directory name is the first thing on every printed line.
+DIRECTORY_RE = re.compile(r"^[a-z0-9_-]+\Z")
 
 
 @dataclass
@@ -299,6 +304,21 @@ def legacy_pairs(comments: list[str]) -> set[str]:
 # ---------------------------------------------------------------------------
 
 
+def is_plain(path: Path, root: Path) -> bool:
+    """`path` exists, and neither it nor any directory between `root` and it
+    is a symlink. A PR could otherwise commit `releases.csv` (or a corpus
+    directory) as a link to a file outside the repository, and its contents
+    would be echoed into the public CI log as "malformed rows"."""
+    current = path
+    while True:
+        if current.is_symlink():
+            return False
+        if current == root or current.parent == current:
+            break
+        current = current.parent
+    return path.exists()
+
+
 def spec_exists(name: str) -> bool:
     return (SPECS / f"{name}.md").is_file() or any(SPECS.glob(f"{name}-*.md"))
 
@@ -307,6 +327,9 @@ def read_subsets(report: Report, directory: Path) -> dict[str, dict[str, str]]:
     """Declared subsets of one grammar directory, validated, by name."""
     path = directory / "subsets.csv"
     if not path.is_file():
+        return {}
+    if not is_plain(path, directory.parent):
+        report.error("subsets.csv: must not be a symlink")
         return {}
     rows = read_table(report, path, SUBSET_COLUMNS)
     subsets: dict[str, dict[str, str]] = {}
@@ -339,7 +362,15 @@ def corpus_cases(report: Report, directory: Path, subset: str) -> set[str] | Non
     corpus = directory / "corpus" / subset
     if not corpus.is_dir():
         return None
-    files = [path.name for path in corpus.iterdir() if path.is_file()]
+    if not is_plain(corpus, directory.parent):
+        report.error(f"corpus/{subset}: must not be or sit under a symlink")
+        return None
+    files = []
+    for path in corpus.iterdir():
+        if path.is_symlink():
+            report.error(f"corpus/{subset}: {printable(repr(path.name))} is a symlink")
+        elif path.is_file():
+            files.append(path.name)
     stems: dict[str, set[str]] = {}
     for name in files:
         stem, dot, suffix = name.partition(".")
@@ -472,7 +503,9 @@ def check_status(
     named = iir | backend | ({subset} if status == "partial" else set())
     for name in sorted(named - subsets):
         report.error(f"{where}: subset {name!r} is not declared in subsets.csv")
-    if profile != "-" and not known_profile(profile):
+    if profile != "-" and not PROFILE_RE.match(profile):
+        report.error(f"{where}: profile {profile!r} is not a Rust identifier")
+    elif profile != "-" and not known_profile(profile):
         report.error(f"{where}: profile {profile!r} is not defined in any profiles.rs")
 
 
@@ -567,7 +600,7 @@ def mask_rust_literals(source: str) -> tuple[str, list[str]]:
     def stash(start: int, end: int) -> None:
         literal = source[start:end]
         strings.append(literal)
-        out.append(f"$S{len(strings) - 1}$" + "\n" * literal.count("\n"))
+        out.append(f"\x00S{len(strings) - 1}\x00" + "\n" * literal.count("\n"))
 
     while i < n:
         char = source[i]
@@ -625,7 +658,9 @@ def matrix_rows(source: str) -> list[dict[str, str]]:
     never be mistaken for a field. Only a Prog's top-level fields count: a
     nested `{ .. }` such as a struct-variant `expect` is skipped.
     """
-    text, strings = mask_rust_literals(source)
+    # The placeholders are NUL-delimited, so no text in the file can forge
+    # one: any NUL already in the source is replaced first.
+    text, strings = mask_rust_literals(source.replace("\x00", "\ufffd"))
     # Line comments may hold example rows; drop them now strings are masked.
     text = re.sub(r"//[^\n]*", "", text)
     opens = {match.end() - 1 for match in re.finditer(r"\bProg\s*\{", text)}
@@ -651,7 +686,7 @@ def matrix_rows(source: str) -> list[dict[str, str]]:
         line = bisect.bisect_left(newlines, start) + 1
         row = {"lang": language.group(1), "line": str(line)}
         for name in ("release", "case"):
-            found = re.search(rf"\b{name}\s*:\s*Some\(\s*\$S(\d+)\$\s*\)", body)
+            found = re.search(rf"\b{name}\s*:\s*Some\(\s*\x00S(\d+)\x00\s*\)", body)
             if found:
                 value = rust_string_value(strings[int(found.group(1))])
                 row[name] = value if value is not None else "\\"
@@ -749,6 +784,9 @@ def read_classes(
     path = directory / "release_classes.csv"
     if not path.is_file():
         return {}
+    if not is_plain(path, directory.parent):
+        report.error("release_classes.csv: must not be a symlink")
+        return {}
     classes: dict[tuple[str, str, str], str] = {}
     for row in read_table(report, path, CLASS_COLUMNS) or []:
         where = f"release_classes.csv line {row['__line__']}"
@@ -828,12 +866,27 @@ def check(grammars: Path, matrix_source: Path | None = None) -> int:
         if not (path.parent / "releases.csv").is_file()
     )
     for orphan in orphans:
-        print(f"{orphan}: has no releases.csv beside it", file=sys.stderr)
+        print(
+            f"release_inventory: {printable(repr(str(orphan)))} has no "
+            "releases.csv beside it",
+            file=sys.stderr,
+        )
         failed = True
     matrix = None
     if matrix_source is not None:
         matrix = matrix_rows(matrix_source.read_text(encoding="utf-8"))
     for path in paths:
+        directory = path.parent.name
+        if not DIRECTORY_RE.match(directory) or not is_plain(path, grammars):
+            # Never echo such a name at the start of a line: a directory
+            # called `::warning::x` would be read as a workflow command.
+            print(
+                "release_inventory: grammar directory "
+                f"{printable(repr(directory))} is not [a-z0-9_-]+ or is a symlink",
+                file=sys.stderr,
+            )
+            failed = True
+            continue
         report = check_inventory(path, matrix)
         name = path.relative_to(grammars)
         for message in report.errors:

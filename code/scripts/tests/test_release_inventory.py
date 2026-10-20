@@ -305,6 +305,44 @@ class InventoryTest(Fixture):
             self.assertFalse(line.startswith("::"), line)
         self.assertEqual(release_inventory.printable("a\tb"), "a\\u0009b")
 
+    def test_trailing_newline_does_not_pass_an_anchored_check(self) -> None:
+        for pattern, value in (
+            (release_inventory.RELEASE_RE, "1.0\n"),
+            (release_inventory.SUBSET_RE, "s\n"),
+            (release_inventory.CASE_RE, "add\n"),
+            (release_inventory.SPEC_RE, "LANG84\n"),
+            (release_inventory.CLASS_RE, "rejected\n"),
+            (release_inventory.SHA_RE, SHA + "\n"),
+        ):
+            self.assertIsNone(pattern.match(value), value)
+        self.assertIsNone(release_inventory.date_key("1993\n"))
+
+    def test_profile_cell_must_be_an_identifier(self) -> None:
+        lines = [HEADER, row("1.0", "1990-01-01", "", "pending,none,-,-,-, ")]
+        self.assert_error(lines, "is not a Rust identifier")
+
+    def test_unsafe_directory_name_is_never_echoed_at_line_start(self) -> None:
+        self.write("::warning::x", [HEADER, row("1.0", "1990-01-01", "")])
+        err = io.StringIO()
+        with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(err):
+            self.assertEqual(release_inventory.main(["check", str(self.root)]), 1)
+        self.assertIn("grammar directory '::warning::x' is not", err.getvalue())
+        for line in err.getvalue().splitlines():
+            self.assertFalse(line.startswith("::"), line)
+
+    def test_symlinked_inventory_files_are_refused(self) -> None:
+        outside = self.root / "outside"
+        outside.mkdir()
+        secret = outside / "secret.txt"
+        secret.write_text("token=hunter2\n", encoding="utf-8")
+        (self.root / "lang").mkdir()
+        (self.root / "lang" / "releases.csv").symlink_to(secret)
+        err = io.StringIO()
+        with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(err):
+            self.assertEqual(release_inventory.main(["check", str(self.root)]), 1)
+        self.assertNotIn("hunter2", err.getvalue())
+        self.assertIn("is a symlink", err.getvalue())
+
     def test_repository_inventories_are_valid(self) -> None:
         out, err = io.StringIO(), io.StringIO()
         with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
@@ -387,7 +425,8 @@ class SubsetsTest(Fixture):
         with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(err):
             self.assertEqual(release_inventory.main(["check", str(self.root)]), 1)
         self.assertIn(
-            "stray/subsets.csv: has no releases.csv beside it", err.getvalue()
+            "release_inventory: 'stray/subsets.csv' has no releases.csv beside it",
+            err.getvalue(),
         )
 
     @ANY_PROFILE
@@ -402,6 +441,29 @@ class SubsetsTest(Fixture):
         self.assert_error(lines, "corpus/s/ has no positive case")
         self.case("lang", "s", "add", "rb", "expect", "cite")
         self.assertEqual(self.errors("lang", lines), [])
+
+    @ANY_PROFILE
+    def test_symlinked_subsets_and_corpus_are_refused(self) -> None:
+        outside = self.root / "outside"
+        outside.mkdir()
+        (outside / "s.csv").write_text(f"{SUBSETS_HEADER}\n{subset_row('s')}\n")
+        (self.root / "lang").mkdir()
+        (self.root / "lang" / "subsets.csv").symlink_to(outside / "s.csv")
+        self.assert_error(
+            [HEADER, row("1.0", "1990-01-01", "")], "subsets.csv: must not"
+        )
+        (self.root / "lang" / "subsets.csv").unlink()
+        self.declare("lang", [SUBSETS_HEADER, subset_row("s")])
+        for suffix in ("tokens", "grammar"):
+            (self.root / "lang" / f"lang1.0.{suffix}").write_text("")
+        (self.root / "lang" / "corpus").mkdir()
+        (self.root / "lang" / "corpus" / "s").symlink_to(outside)
+        lines = [HEADER, row("1.0", "1990-01-01", "", "partial,P,s,s,-,p")]
+        self.assert_error(lines, "corpus/s: must not be or sit under a symlink")
+        (self.root / "lang" / "corpus" / "s").unlink()
+        self.case("lang", "s", "add", "rb", "expect", "cite")
+        (self.root / "lang" / "corpus" / "s" / "x.rb").symlink_to(outside / "s.csv")
+        self.assert_error(lines, "'x.rb' is a symlink")
 
     @ANY_PROFILE
     def test_corpus_cases_are_validated(self) -> None:
@@ -524,6 +586,17 @@ class MatrixTest(Fixture):
             started = time.monotonic()
             release_inventory.matrix_rows(source)
             self.assertLess(time.monotonic() - started, 5.0, source[:40])
+
+    def test_placeholder_text_in_the_source_cannot_forge_a_value(self) -> None:
+        source = (
+            'const A: &str = "9.9";\n'
+            "Prog { lang: Language::Perl, release: Some($S0$) },\n"
+            "Prog { lang: Language::Perl, release: Some(\x00S0\x00) },\n"
+            "Prog { lang: Language::Perl, release: Some($S99999999$) },\n"
+        )
+        rows = release_inventory.matrix_rows(source)
+        self.assertEqual(len(rows), 3)
+        self.assertTrue(all("release" not in r for r in rows), rows)
 
     def test_matrix_value_with_escape_is_unreadable(self) -> None:
         rows = release_inventory.matrix_rows(
