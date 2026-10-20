@@ -1479,6 +1479,10 @@ before ES2015.
   it returns `"undefined"` where `node` returns `"function"`, and at ADVANCED
   it reports `JSC_UNDEFINED_VARIABLE` for a later `g()`. Matching that is a
   parity decision; it is not taken here.
+- **Switch cases (#17879).** DCE's case truncation and constant-switch
+  collapse drop declarations that the whole switch body can see. For `var`
+  this already happens on main. With this fix, a `function`/`class` in a case
+  is a real declaration and reaches the same bug.
 - **Size.** Upstream inlines or unwraps these functions and blocks, for
   example `if(true){function g(){return 7}g()}` becomes `function(){return
   7}()` at SIMPLE and `7` at ADVANCED. closurec keeps the block.
