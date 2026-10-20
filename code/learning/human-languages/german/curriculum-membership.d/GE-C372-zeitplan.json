@@ -1,0 +1,11 @@
+{
+  "id": "GE-C372-zeitplan",
+  "pathSegment": "GE-PATH-372-VEREINBARUNG",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-372-VEREINBARUNG",
+      "order": 3
+    }
+  ]
+}

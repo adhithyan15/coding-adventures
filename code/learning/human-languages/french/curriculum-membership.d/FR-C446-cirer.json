@@ -1,0 +1,11 @@
+{
+  "id": "FR-C446-cirer",
+  "pathSegment": "FR-PATH-446-CORDONNIER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-446-CORDONNIER",
+      "order": 2
+    }
+  ]
+}

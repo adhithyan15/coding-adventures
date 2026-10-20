@@ -1,0 +1,11 @@
+{
+  "id": "GE-C269-stundenlang",
+  "pathSegment": "GE-PATH-269-JAHRZEHNT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-269-JAHRZEHNT",
+      "order": 4
+    }
+  ]
+}

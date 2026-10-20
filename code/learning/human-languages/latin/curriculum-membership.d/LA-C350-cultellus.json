@@ -1,0 +1,11 @@
+{
+  "id": "LA-C350-cultellus",
+  "pathSegment": "LA-PATH-350-OBSONO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-350-OBSONO",
+      "order": 4
+    }
+  ]
+}

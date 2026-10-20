@@ -1,0 +1,19 @@
+{
+  "chapter": 438,
+  "title": "Subir e descer",
+  "label": "ch:pt-subir-e-descer",
+  "canDo": "I can describe a route: the climb, the way down, a steep street, running alongside and coming out somewhere.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C438-desembocar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 438: I can describe a route: the climb, the way down, a steep street, running alongside and coming out somewhere.",
+    "assesses": [
+      "PT-LEX-C438-SUBIDA-03",
+      "PT-LEX-C438-SUBIDA-04",
+      "PT-LEX-C438-SUBIDA-05"
+    ]
+  }
+}

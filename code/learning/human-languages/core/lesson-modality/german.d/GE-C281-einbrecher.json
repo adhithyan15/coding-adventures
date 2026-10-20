@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C281-einbrecher",
+    "language": "german",
+    "chapter": 281,
+    "sequence": 15490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3591e7d766dd1b50"
+  },
+  "findings": []
+}

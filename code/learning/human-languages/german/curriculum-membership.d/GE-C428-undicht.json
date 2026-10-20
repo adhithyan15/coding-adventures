@@ -1,0 +1,11 @@
+{
+  "id": "GE-C428-undicht",
+  "pathSegment": "GE-PATH-428-ABFLUSS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-428-ABFLUSS",
+      "order": 3
+    }
+  ]
+}

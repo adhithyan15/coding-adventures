@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-482-ALLERGIE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-482-ALLERGIE"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C548-elegans",
+    "language": "latin",
+    "chapter": 548,
+    "sequence": 29040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:08fa39b87a8a6a35"
+  },
+  "findings": []
+}

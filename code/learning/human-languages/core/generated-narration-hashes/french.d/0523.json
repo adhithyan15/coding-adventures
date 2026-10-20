@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 523,
+  "sourceHash": "fnv1a64:4ef4c39886600130",
+  "lessonIds": [
+    "FR-C523-episode",
+    "FR-C523-saison",
+    "FR-C523-suspense",
+    "FR-C523-plateforme",
+    "FR-C523-palpitant"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch523.txt",
+  "json": "french/narration/ch523.json",
+  "textHash": "fnv1a64:ee5f999c4b4f61bb",
+  "jsonHash": "fnv1a64:c3259863f1b4d6d1",
+  "findings": []
+}

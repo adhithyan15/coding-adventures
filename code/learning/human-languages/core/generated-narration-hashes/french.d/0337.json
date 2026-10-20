@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:54828f171b4ac64b",
+  "lessonIds": [
+    "FR-C337-admettre",
+    "FR-C337-consensus",
+    "FR-C337-compromis",
+    "FR-C337-ceder",
+    "FR-C337-conceder"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch337.txt",
+  "json": "french/narration/ch337.json",
+  "textHash": "fnv1a64:397aa6b7e764ef3d",
+  "jsonHash": "fnv1a64:6be416a657cf26aa",
+  "findings": []
+}

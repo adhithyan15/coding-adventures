@@ -1,0 +1,20 @@
+{
+  "language": "portuguese",
+  "chapter": 292,
+  "sourceHash": "fnv1a64:500f0eb148fc3d0f",
+  "lessonIds": [
+    "PT-C292-fugir",
+    "PT-C292-escapar",
+    "PT-C292-fuga",
+    "PT-C292-fugitivo",
+    "PT-C292-perseguicao",
+    "PT-R292-revisao-285-292"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "portuguese/narration/ch292.txt",
+  "json": "portuguese/narration/ch292.json",
+  "textHash": "fnv1a64:1e3da754a05ccf0e",
+  "jsonHash": "fnv1a64:4955ad822a1a14e8",
+  "findings": []
+}

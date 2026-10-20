@@ -1,0 +1,11 @@
+{
+  "id": "FR-C332-assaisonner",
+  "pathSegment": "FR-PATH-332-ASSAISONNER",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-332-ASSAISONNER",
+      "order": 3
+    }
+  ]
+}

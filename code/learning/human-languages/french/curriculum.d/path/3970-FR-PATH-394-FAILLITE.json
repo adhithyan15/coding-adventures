@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-394-FAILLITE",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "FR-EXT-394-FAILLITE"
+  ],
+  "after": []
+}

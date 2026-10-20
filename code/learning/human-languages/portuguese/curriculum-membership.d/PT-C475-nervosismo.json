@@ -1,0 +1,11 @@
+{
+  "id": "PT-C475-nervosismo",
+  "pathSegment": "PT-PATH-475-NERVOS",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-475-NERVOS",
+      "order": 0
+    }
+  ]
+}

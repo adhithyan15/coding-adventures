@@ -1,0 +1,11 @@
+{
+  "id": "LA-C332-relinquo",
+  "pathSegment": "LA-PATH-332-HERES",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-332-HERES",
+      "order": 4
+    }
+  ]
+}

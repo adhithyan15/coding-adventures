@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C289-agresser",
+    "language": "french",
+    "chapter": 289,
+    "sequence": 16580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:78eb59a39dd67f1a"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C414-coima",
+  "pathSegment": "PT-PATH-414-BILHETEIRA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-414-BILHETEIRA",
+      "order": 4
+    }
+  ]
+}

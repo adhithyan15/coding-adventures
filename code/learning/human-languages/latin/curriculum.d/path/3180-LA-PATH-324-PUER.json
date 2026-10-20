@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-324-PUER",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-324-PUER"
+  ],
+  "after": []
+}

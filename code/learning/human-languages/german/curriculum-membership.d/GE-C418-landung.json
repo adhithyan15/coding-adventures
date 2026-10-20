@@ -1,0 +1,11 @@
+{
+  "id": "GE-C418-landung",
+  "pathSegment": "GE-PATH-418-BORD",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-418-BORD",
+      "order": 4
+    }
+  ]
+}

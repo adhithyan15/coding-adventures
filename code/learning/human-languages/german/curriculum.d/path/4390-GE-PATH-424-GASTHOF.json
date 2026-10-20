@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-424-GASTHOF",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-424-GASTHOF"
+  ],
+  "after": []
+}

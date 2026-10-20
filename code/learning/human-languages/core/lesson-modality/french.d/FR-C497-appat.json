@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C497-appat",
+    "language": "french",
+    "chapter": 497,
+    "sequence": 27300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:077d0790aa324e0a"
+  },
+  "findings": []
+}

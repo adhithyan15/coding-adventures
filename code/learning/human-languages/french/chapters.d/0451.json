@@ -1,0 +1,19 @@
+{
+  "chapter": 451,
+  "title": "À la banque",
+  "label": "ch:fr-a-la-banque",
+  "canDo": "I can deal with a bank account: the withdrawal, paying money in, settling a bill, the overdraft and the statement.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C451-releve",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 451: I can deal with a bank account: the withdrawal, paying money in, settling a bill, the overdraft and the statement.",
+    "assesses": [
+      "FR-LEX-C451-BANQUE-03",
+      "FR-LEX-C451-BANQUE-04",
+      "FR-LEX-C451-BANQUE-05"
+    ]
+  }
+}

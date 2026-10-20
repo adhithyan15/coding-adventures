@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 281,
+  "sourceHash": "fnv1a64:b22b24221c537548",
+  "lessonIds": [
+    "GE-C281-einbrechen",
+    "GE-C281-einbruch",
+    "GE-C281-einbrecher",
+    "GE-C281-klauen",
+    "GE-C281-beute"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch281.txt",
+  "json": "german/narration/ch281.json",
+  "textHash": "fnv1a64:dff1e4074998b085",
+  "jsonHash": "fnv1a64:c3888538cc1f95f8",
+  "findings": []
+}

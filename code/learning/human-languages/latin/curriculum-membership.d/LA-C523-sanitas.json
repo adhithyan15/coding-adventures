@@ -1,0 +1,11 @@
+{
+  "id": "LA-C523-sanitas",
+  "pathSegment": "LA-PATH-523-ROBU",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-523-ROBU",
+      "order": 3
+    }
+  ]
+}

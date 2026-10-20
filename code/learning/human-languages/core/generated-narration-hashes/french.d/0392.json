@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:e7464486177e9f7f",
+  "lessonIds": [
+    "FR-C392-especes",
+    "FR-C392-cheque",
+    "FR-C392-chequier",
+    "FR-C392-virement",
+    "FR-C392-retirer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch392.txt",
+  "json": "french/narration/ch392.json",
+  "textHash": "fnv1a64:52a9b4afee31b644",
+  "jsonHash": "fnv1a64:aebc524314ee40f8",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 522,
+  "title": "Pale, red and thin",
+  "label": "ch:la-pale-red-and-thin",
+  "canDo": "I can describe how someone looks when unwell.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C522-macies",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 522: I can describe how someone looks when unwell.",
+    "assesses": [
+      "LA-LEX-C522-PALL-03",
+      "LA-LEX-C522-PALL-04",
+      "LA-LEX-C522-PALL-05"
+    ]
+  }
+}

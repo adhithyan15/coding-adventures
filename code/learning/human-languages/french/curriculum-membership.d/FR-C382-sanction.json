@@ -1,0 +1,11 @@
+{
+  "id": "FR-C382-sanction",
+  "pathSegment": "FR-PATH-382-INFRACTION",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-382-INFRACTION",
+      "order": 3
+    }
+  ]
+}

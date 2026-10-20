@@ -1,0 +1,19 @@
+{
+  "chapter": 554,
+  "title": "Household chores",
+  "label": "ch:la-household-chores",
+  "canDo": "I can talk about chores at home.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-R554-review-final-554",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 554: I can talk about chores at home.",
+    "assesses": [
+      "LA-LEX-C554-SUBS-03",
+      "LA-LEX-C554-SUBS-04",
+      "LA-LEX-C554-SUBS-05"
+    ]
+  }
+}

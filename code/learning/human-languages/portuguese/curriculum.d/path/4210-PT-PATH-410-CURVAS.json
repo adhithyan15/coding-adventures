@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-410-CURVAS",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-410-CURVAS"
+  ],
+  "after": []
+}

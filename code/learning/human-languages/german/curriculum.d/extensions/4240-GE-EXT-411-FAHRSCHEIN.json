@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-411-FAHRSCHEIN",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can buy a ticket: the ticket machine, the travel ticket, the fare, stamping a ticket and getting one.",
+  "prerequisites": []
+}

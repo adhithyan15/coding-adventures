@@ -1,0 +1,11 @@
+{
+  "id": "LA-C359-probabilis",
+  "pathSegment": "LA-PATH-359-PONDERO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-359-PONDERO",
+      "order": 3
+    }
+  ]
+}

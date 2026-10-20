@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C404-platten",
+    "language": "german",
+    "chapter": 404,
+    "sequence": 21810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0c22e68602470efd"
+  },
+  "findings": []
+}

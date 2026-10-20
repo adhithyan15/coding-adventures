@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:b4ac8afa1d3be8d1",
+  "lessonIds": [
+    "GE-C334-zustimmen",
+    "GE-C334-zustimmung",
+    "GE-C334-einverstanden",
+    "GE-C334-zugeben",
+    "GE-C334-einraeumen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch334.txt",
+  "json": "german/narration/ch334.json",
+  "textHash": "fnv1a64:fe3830ce0b6a1540",
+  "jsonHash": "fnv1a64:354cedd89ee1657f",
+  "findings": []
+}

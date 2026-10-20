@@ -1,0 +1,11 @@
+{
+  "id": "PT-C524-poesia",
+  "pathSegment": "PT-PATH-524-POESIA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-524-POESIA",
+      "order": 0
+    }
+  ]
+}

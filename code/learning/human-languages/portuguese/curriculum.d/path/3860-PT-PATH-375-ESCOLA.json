@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-375-ESCOLA",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "PT-EXT-375-ESCOLA"
+  ],
+  "after": []
+}

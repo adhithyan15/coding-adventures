@@ -1,0 +1,11 @@
+{
+  "id": "FR-C460-thermometre",
+  "pathSegment": "FR-PATH-460-METEO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-460-METEO",
+      "order": 4
+    }
+  ]
+}

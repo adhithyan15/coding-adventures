@@ -1,0 +1,11 @@
+{
+  "id": "GE-C459-grasen",
+  "pathSegment": "GE-PATH-459-BAUERNHOF",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-459-BAUERNHOF",
+      "order": 3
+    }
+  ]
+}

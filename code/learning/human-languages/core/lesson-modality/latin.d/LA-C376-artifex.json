@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C376-artifex",
+    "language": "latin",
+    "chapter": 376,
+    "sequence": 20190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3f0a91f7a12e6670"
+  },
+  "findings": []
+}

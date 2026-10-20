@@ -1,0 +1,11 @@
+{
+  "id": "GE-R385-review-378-385",
+  "pathSegment": "GE-PATH-385-AUSNAHME",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-385-AUSNAHME",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-R465-review-462-465",
+    "language": "german",
+    "chapter": 465,
+    "sequence": 24980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3914d72762fc34e4"
+  },
+  "findings": []
+}

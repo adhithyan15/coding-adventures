@@ -1,0 +1,20 @@
+{
+  "language": "german",
+  "chapter": 393,
+  "sourceHash": "fnv1a64:70579f6aa9472c65",
+  "lessonIds": [
+    "GE-C393-datei",
+    "GE-C393-speichern",
+    "GE-C393-ordner",
+    "GE-C393-anhang",
+    "GE-C393-anhaengen",
+    "GE-R393-review-386-393"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "german/narration/ch393.txt",
+  "json": "german/narration/ch393.json",
+  "textHash": "fnv1a64:bdf462ea67e5c2b2",
+  "jsonHash": "fnv1a64:909378a66e5d9466",
+  "findings": []
+}

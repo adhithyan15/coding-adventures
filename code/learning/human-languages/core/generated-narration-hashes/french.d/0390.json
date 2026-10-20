@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 390,
+  "sourceHash": "fnv1a64:54bcfafacd0cf185",
+  "lessonIds": [
+    "FR-C390-budget",
+    "FR-C390-revenu",
+    "FR-C390-abonnement",
+    "FR-C390-depense",
+    "FR-C390-cotisation"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch390.txt",
+  "json": "french/narration/ch390.json",
+  "textHash": "fnv1a64:5526e2aa68198b37",
+  "jsonHash": "fnv1a64:db7d4f4468ebe760",
+  "findings": []
+}

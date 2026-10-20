@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 266,
+  "sourceHash": "fnv1a64:6189dfa2d14d3e22",
+  "lessonIds": [
+    "GE-C266-ploetzlich",
+    "GE-C266-unerwartet",
+    "GE-C266-allmaehlich",
+    "GE-C266-rechtzeitig",
+    "GE-C266-zugleich"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch266.txt",
+  "json": "german/narration/ch266.json",
+  "textHash": "fnv1a64:a7f974604d251c9c",
+  "jsonHash": "fnv1a64:3dd6bae46f9ea864",
+  "findings": []
+}

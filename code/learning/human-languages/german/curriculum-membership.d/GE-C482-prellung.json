@@ -1,0 +1,11 @@
+{
+  "id": "GE-C482-prellung",
+  "pathSegment": "GE-PATH-482-VERLETZUNG",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-482-VERLETZUNG",
+      "order": 1
+    }
+  ]
+}

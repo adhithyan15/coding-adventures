@@ -1,0 +1,11 @@
+{
+  "id": "FR-C274-preceder",
+  "pathSegment": "FR-PATH-274-SURVENIR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-274-SURVENIR",
+      "order": 3
+    }
+  ]
+}

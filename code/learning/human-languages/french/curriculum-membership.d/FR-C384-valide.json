@@ -1,0 +1,11 @@
+{
+  "id": "FR-C384-valide",
+  "pathSegment": "FR-PATH-384-VALABLE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-384-VALABLE",
+      "order": 2
+    }
+  ]
+}

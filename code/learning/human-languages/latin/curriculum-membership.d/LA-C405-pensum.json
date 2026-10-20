@@ -1,0 +1,11 @@
+{
+  "id": "LA-C405-pensum",
+  "pathSegment": "LA-PATH-405-CALCULUS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-405-CALCULUS",
+      "order": 4
+    }
+  ]
+}

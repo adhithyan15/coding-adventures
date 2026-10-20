@@ -1,0 +1,11 @@
+{
+  "id": "FR-C318-petard",
+  "pathSegment": "FR-PATH-318-ARTIFICE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-318-ARTIFICE",
+      "order": 1
+    }
+  ]
+}

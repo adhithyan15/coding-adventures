@@ -1,0 +1,11 @@
+{
+  "id": "PT-C326-fabula",
+  "pathSegment": "PT-PATH-326-LENDA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-326-LENDA",
+      "order": 3
+    }
+  ]
+}

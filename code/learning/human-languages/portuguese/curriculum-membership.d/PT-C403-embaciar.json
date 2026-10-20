@@ -1,0 +1,11 @@
+{
+  "id": "PT-C403-embaciar",
+  "pathSegment": "PT-PATH-403-VIDROS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-403-VIDROS",
+      "order": 4
+    }
+  ]
+}

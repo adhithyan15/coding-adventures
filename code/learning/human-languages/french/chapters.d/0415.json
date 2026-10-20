@@ -1,0 +1,19 @@
+{
+  "chapter": 415,
+  "title": "En ville sans voiture",
+  "label": "ch:fr-en-ville-sans-voiture",
+  "canDo": "I can get around town without a car: the stop, the train set on a line, the book of tickets, the tram and the scooter.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-R415-revision-408-415",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 415: I can get around town without a car: the stop, the train set on a line, the book of tickets, the tram and the scooter.",
+    "assesses": [
+      "FR-LEX-C415-METRO-03",
+      "FR-LEX-C415-METRO-04",
+      "FR-LEX-C415-METRO-05"
+    ]
+  }
+}

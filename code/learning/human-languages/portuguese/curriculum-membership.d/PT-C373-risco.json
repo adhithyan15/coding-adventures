@@ -1,0 +1,11 @@
+{
+  "id": "PT-C373-risco",
+  "pathSegment": "PT-PATH-373-RISCO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-373-RISCO",
+      "order": 0
+    }
+  ]
+}

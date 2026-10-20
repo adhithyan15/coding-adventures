@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-369-CONDICAO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "PT-EXT-369-CONDICAO"
+  ],
+  "after": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-343-ESCLARECER",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "PT-EXT-343-ESCLARECER"
+  ],
+  "after": []
+}

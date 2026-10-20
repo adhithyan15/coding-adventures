@@ -1,0 +1,11 @@
+{
+  "id": "PT-C462-insolacao",
+  "pathSegment": "PT-PATH-462-CALOR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-462-CALOR",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C411-constater",
+  "pathSegment": "FR-PATH-411-ACCIDENT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-411-ACCIDENT",
+      "order": 4
+    }
+  ]
+}

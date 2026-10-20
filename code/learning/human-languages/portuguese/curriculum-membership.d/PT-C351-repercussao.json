@@ -1,0 +1,11 @@
+{
+  "id": "PT-C351-repercussao",
+  "pathSegment": "PT-PATH-351-IMPACTO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-351-IMPACTO",
+      "order": 1
+    }
+  ]
+}

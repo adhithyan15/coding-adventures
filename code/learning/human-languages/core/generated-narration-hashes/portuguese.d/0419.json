@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 419,
+  "sourceHash": "fnv1a64:5ba977d42ef65e89",
+  "lessonIds": [
+    "PT-C419-cruzeiro",
+    "PT-C419-camarote",
+    "PT-C419-marinheiro",
+    "PT-C419-proa",
+    "PT-C419-popa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch419.txt",
+  "json": "portuguese/narration/ch419.json",
+  "textHash": "fnv1a64:2ec7579414daf102",
+  "jsonHash": "fnv1a64:5323133b983d20ac",
+  "findings": []
+}

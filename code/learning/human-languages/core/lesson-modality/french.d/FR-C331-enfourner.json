@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C331-enfourner",
+    "language": "french",
+    "chapter": 331,
+    "sequence": 18730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:668602b4e9bf658d"
+  },
+  "findings": []
+}

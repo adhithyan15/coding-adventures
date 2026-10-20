@@ -1,0 +1,11 @@
+{
+  "id": "GE-C290-ohnmaechtig",
+  "pathSegment": "GE-PATH-290-BEWUSSTLOS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-290-BEWUSSTLOS",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 470,
+  "title": "Geduld und Gelassenheit",
+  "label": "ch:ge-geduld-und-gelassenheit",
+  "canDo": "I can talk about patience and staying calm.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C470-zappeln",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 470: I can talk about patience and staying calm.",
+    "assesses": [
+      "GE-LEX-C470-GEDULD-03",
+      "GE-LEX-C470-GEDULD-04",
+      "GE-LEX-C470-GEDULD-05"
+    ]
+  }
+}

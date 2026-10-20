@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-373-DISPONIBLE",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "FR-EXT-373-DISPONIBLE"
+  ],
+  "after": []
+}

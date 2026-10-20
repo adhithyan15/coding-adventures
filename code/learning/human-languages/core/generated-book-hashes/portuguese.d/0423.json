@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 423,
+  "sourceHash": "fnv1a64:c783736f619130aa",
+  "lessonIds": [
+    "PT-C423-revistar",
+    "PT-C423-declarar",
+    "PT-C423-apreender",
+    "PT-C423-detetor",
+    "PT-C423-carimbar"
+  ],
+  "tex": "portuguese/book/chapters/ch423-no-controlo.tex"
+}

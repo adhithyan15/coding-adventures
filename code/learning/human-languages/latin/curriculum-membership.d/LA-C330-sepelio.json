@@ -1,0 +1,11 @@
+{
+  "id": "LA-C330-sepelio",
+  "pathSegment": "LA-PATH-330-FUNUS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-330-FUNUS",
+      "order": 1
+    }
+  ]
+}

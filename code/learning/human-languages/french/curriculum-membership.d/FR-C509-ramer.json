@@ -1,0 +1,11 @@
+{
+  "id": "FR-C509-ramer",
+  "pathSegment": "FR-PATH-509-EAU",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-509-EAU",
+      "order": 4
+    }
+  ]
+}

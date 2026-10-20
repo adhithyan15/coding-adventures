@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "german",
+  "chapter": 385,
+  "title": "Regeln und Ausnahmen",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:78a4521517658b69",
+  "lessons": [
+    {
+      "id": "GE-C385-ausnahme",
+      "sequence": 20810,
+      "title": "die Ausnahme — the exception",
+      "headword": "die Ausnahme",
+      "romanization": "die Ausnahme",
+      "gloss": "the exception",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cc2481da1011a411",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to extend, then the German for to expire."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Ausnahme",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Ausnahme — \"the exception\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Normalerweise arbeite ich nicht am Sonntag, aber heute ist eine Ausnahme. Normally I do not work on Sunday, but today is an exception."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Ausnahmen. Mit Ausnahme von — with the exception of."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ausnahme is the noun of ausnehmen \"to take out, to except\", built on nehmen \"to take\", Proto-Germanic nemaną (EtymDB): a case taken out of the rule."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Ausnahme",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Ausnahme*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Ausnahme, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Ausnahme*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with die Ausnahme",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *die Ausnahme*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to extend, then the German for to expire, then say die Ausnahme again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to extend, then the German for to expire, then say *die Ausnahme* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does die Ausnahme mean? (\"The exception\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C385-bestrafen",
+      "sequence": 20820,
+      "title": "bestrafen — to punish",
+      "headword": "bestrafen",
+      "romanization": "bestrafen",
+      "gloss": "to punish",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0d5bf8c138961069",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to expire, then the German for the exception."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: bestrafen",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bestrafen — \"to punish\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Der Schüler wurde für die Lüge bestraft. The pupil was punished for the lie."
+            },
+            {
+              "kind": "speech",
+              "text": "Inseparable: er bestraft, er hat bestraft. Die Strafe — the punishment, also a fine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bestrafen is built with be- on strafen \"to punish\", inherited from Middle High German strāfen (EtymDB); EtymDB lists Dutch straffen as a cousin."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bestrafen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bestrafen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bestrafen, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bestrafen*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with bestrafen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *bestrafen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to expire, then the German for the exception, then say bestrafen again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to expire, then the German for the exception, then say *bestrafen* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does bestrafen mean? (\"To punish\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C385-gesetzlich",
+      "sequence": 20830,
+      "title": "gesetzlich — legal, laid down by law",
+      "headword": "gesetzlich",
+      "romanization": "gesetzlich",
+      "gloss": "legal, laid down by law",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6125de13835b8abc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the exception, then the German for to punish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: gesetzlich",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gesetzlich — \"legal, laid down by law\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Der Mindestlohn ist gesetzlich geregelt. The minimum wage is laid down by law."
+            },
+            {
+              "kind": "speech",
+              "text": "Gesetzlich verboten — prohibited by law. Der gesetzliche Feiertag — the public holiday."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gesetzlich is built with -lich on Gesetz \"law\", which EtymDB derives from setzen \"to set\", Proto-Germanic satjaną: what has been set down."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gesetzlich",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gesetzlich*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gesetzlich, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gesetzlich*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with gesetzlich",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *gesetzlich*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the exception, then the German for to punish, then say gesetzlich again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the exception, then the German for to punish, then say *gesetzlich* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does gesetzlich mean? (\"Legal, laid down by law\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C385-rechtlich",
+      "sequence": 20840,
+      "title": "rechtlich — legally, in law",
+      "headword": "rechtlich",
+      "romanization": "rechtlich",
+      "gloss": "legally, in law",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ba2fe867f01a25e9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to punish, then the German for legal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: rechtlich",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rechtlich — \"legally, in law\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Rechtlich ist das kein Problem. Legally, that is no problem."
+            },
+            {
+              "kind": "speech",
+              "text": "Rechtlich is about the law in general; gesetzlich about what a statute says."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rechtlich is built with -lich on Recht \"law, right\", inherited from Old High German reht and Proto-Germanic rehtaz \"right, straight\" (EtymDB), a cousin of English right."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rechtlich",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rechtlich*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rechtlich, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rechtlich*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with rechtlich",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *rechtlich*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to punish, then the German for legal, then say rechtlich again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to punish, then the German for legal, then say *rechtlich* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does rechtlich mean? (\"Legally, in law\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C385-regelung",
+      "sequence": 20850,
+      "title": "die Regelung — the rule (that applies), the arrangement",
+      "headword": "die Regelung",
+      "romanization": "die Regelung",
+      "gloss": "the rule (that applies), the arrangement",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:38a9b807aa3c53bb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for legal, then the German for legally."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Regelung",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Regelung — \"the rule (that applies), the arrangement\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Für Kinder unter sechs gibt es eine besondere Regelung. There is a special rule for children under six."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Regelungen. From regeln — to regulate, to sort out."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Regelung is the noun of regeln, built on Regel \"rule\", from Old High German regula and Latin rēgula \"a straight piece of wood, a ruler, a rule\" (EtymDB; Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Regelung",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Regelung*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Regelung, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Regelung*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with die Regelung",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *die Regelung*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for legal, then the German for legally, then say die Regelung again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for legal, then the German for legally, then say *die Regelung* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does die Regelung mean? (\"The rule (that applies), the arrangement\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-R385-review-378-385",
+      "sequence": 20860,
+      "title": "Words from chapters 378–385 — a review",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 378-385",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aeaba1b4622b6a14",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the German for the term paper and the class talk."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the term paper, the class talk, the essay, the summary, to sum up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the term paper, the class talk, the essay, the summary, to sum up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to rate, the evaluation, to grade, to make up, to correct",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to rate, the evaluation, to grade, to make up, to correct]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the admission, to let in, the scholarship, the registration, to withdraw",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the admission, to let in, the scholarship, the registration, to withdraw]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the regulation, to lay down, to observe, to keep to, obliged",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the regulation, to lay down, to observe, to keep to, obliged]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the ban, permitted, punishable, to break, the violation",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the ban, permitted, punishable, to break, the violation]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the authority, the application, to apply for, the form, the signature",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the authority, the application, to apply for, the form, the signature]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the permit, to approve, valid, to extend, to expire",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the permit, to approve, valid, to extend, to expire]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the exception, to punish, legal, legally, the rule",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the exception, to punish, legal, legally, the rule]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The term paper? (die Hausarbeit.) The class talk? (das Referat.) The essay? (der Aufsatz.) The summary? (die Zusammenfassung.) To sum up? (zusammenfassen.) To rate? (bewerten.) The evaluation? (die Bewertung.) To grade? (benoten.) To make up? (nachholen.) To correct? (korrigieren.) The admission? (die Zulassung.) To let in? (zulassen.) The scholarship? (das Stipendium.) The registration? (die Anmeldung.) To withdraw? (abmelden.) The regulation? (die Vorschrift.) To lay down? (vorschreiben.) To observe? (beachten.) To keep to? (einhalten.) Obliged? (verpflichtet.) The ban? (das Verbot.) Permitted? (zulässig.) Punishable? (strafbar.) To break? (verstoßen.) The violation? (der Verstoß.) The authority? (die Behörde.) The application? (der Antrag.) To apply for? (beantragen.) The form? (das Formular.) The signature? (die Unterschrift.) The permit? (die Genehmigung.) To approve? (genehmigen.) Valid? (gültig.) To extend? (verlängern.) To expire? (ablaufen.) The exception? (die Ausnahme.) To punish? (bestrafen.) Legal? (gesetzlich.) Legally? (rechtlich.) The rule? (die Regelung.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

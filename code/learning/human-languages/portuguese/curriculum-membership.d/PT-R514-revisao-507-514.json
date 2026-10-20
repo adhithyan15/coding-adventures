@@ -1,0 +1,11 @@
+{
+  "id": "PT-R514-revisao-507-514",
+  "pathSegment": "PT-PATH-514-RINGUE",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PT-EXT-514-RINGUE",
+      "order": 5
+    }
+  ]
+}

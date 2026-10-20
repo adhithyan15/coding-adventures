@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C408-draengeln",
+    "language": "german",
+    "chapter": 408,
+    "sequence": 22030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5446af923e531d09"
+  },
+  "findings": []
+}

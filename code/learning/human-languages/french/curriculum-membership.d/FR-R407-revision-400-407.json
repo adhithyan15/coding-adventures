@@ -1,0 +1,11 @@
+{
+  "id": "FR-R407-revision-400-407",
+  "pathSegment": "FR-PATH-407-STATIONNEMENT",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FR-EXT-407-STATIONNEMENT",
+      "order": 5
+    }
+  ]
+}

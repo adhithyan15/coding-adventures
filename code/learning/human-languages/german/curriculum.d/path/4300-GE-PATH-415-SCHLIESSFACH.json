@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-415-SCHLIESSFACH",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-415-SCHLIESSFACH"
+  ],
+  "after": []
+}

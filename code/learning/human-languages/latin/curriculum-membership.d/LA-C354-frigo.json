@@ -1,0 +1,11 @@
+{
+  "id": "LA-C354-frigo",
+  "pathSegment": "LA-PATH-354-ASSUS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-354-ASSUS",
+      "order": 3
+    }
+  ]
+}

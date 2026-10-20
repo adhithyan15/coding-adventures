@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 469,
+  "sourceHash": "fnv1a64:e8f1f1a21cc9e883",
+  "lessonIds": [
+    "FR-C469-humeur",
+    "FR-C469-serein",
+    "FR-C469-lunatique",
+    "FR-C469-enerver",
+    "FR-C469-agacer"
+  ],
+  "tex": "french/book/chapters/ch469-de-quelle-humeur.tex"
+}

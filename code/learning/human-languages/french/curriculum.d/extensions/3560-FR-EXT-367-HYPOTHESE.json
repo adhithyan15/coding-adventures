@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-367-HYPOTHESE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can make a hypothesis: suppose or presume something, and say an explanation is plausible.",
+  "prerequisites": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-288-COMPARATIO",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "LA-EXT-288-COMPARATIO"
+  ],
+  "after": []
+}

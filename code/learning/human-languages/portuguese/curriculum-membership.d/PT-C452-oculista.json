@@ -1,0 +1,11 @@
+{
+  "id": "PT-C452-oculista",
+  "pathSegment": "PT-PATH-452-CUIDADOS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-452-CUIDADOS",
+      "order": 3
+    }
+  ]
+}

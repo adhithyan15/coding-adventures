@@ -1,0 +1,11 @@
+{
+  "id": "PT-C297-depoimento",
+  "pathSegment": "PT-PATH-297-TRIBUNAL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-297-TRIBUNAL",
+      "order": 1
+    }
+  ]
+}

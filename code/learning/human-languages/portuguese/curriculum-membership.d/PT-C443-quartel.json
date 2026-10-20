@@ -1,0 +1,11 @@
+{
+  "id": "PT-C443-quartel",
+  "pathSegment": "PT-PATH-443-SERVICOS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-443-SERVICOS",
+      "order": 1
+    }
+  ]
+}

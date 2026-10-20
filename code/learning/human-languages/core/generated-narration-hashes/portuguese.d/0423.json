@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 423,
+  "sourceHash": "fnv1a64:d4a3b23555fb76a6",
+  "lessonIds": [
+    "PT-C423-revistar",
+    "PT-C423-declarar",
+    "PT-C423-apreender",
+    "PT-C423-detetor",
+    "PT-C423-carimbar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch423.txt",
+  "json": "portuguese/narration/ch423.json",
+  "textHash": "fnv1a64:ffbc0aacaa9feca8",
+  "jsonHash": "fnv1a64:e19ccda0f3f740a5",
+  "findings": []
+}

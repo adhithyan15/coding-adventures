@@ -1,0 +1,19 @@
+{
+  "chapter": 370,
+  "title": "Les imprévus",
+  "label": "ch:fr-les-imprevus",
+  "canDo": "I can talk about the unexpected: a hitch, what is foreseeable or not, adapting to it and being easygoing.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FR-C370-souple",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 370: I can talk about the unexpected: a hitch, what is foreseeable or not, adapting to it and being easygoing.",
+    "assesses": [
+      "FR-LEX-C370-IMPREVU-03",
+      "FR-LEX-C370-IMPREVU-04",
+      "FR-LEX-C370-IMPREVU-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C268-par-la-suite",
+    "language": "french",
+    "chapter": 268,
+    "sequence": 15520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c569b45d8401e26b"
+  },
+  "findings": []
+}

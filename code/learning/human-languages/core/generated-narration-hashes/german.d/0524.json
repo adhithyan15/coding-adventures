@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 524,
+  "sourceHash": "fnv1a64:62f7a6a6b6509634",
+  "lessonIds": [
+    "GE-C524-komoedie",
+    "GE-C524-tragoedie",
+    "GE-C524-dokumentarfilm",
+    "GE-C524-untertitel",
+    "GE-C524-synchronisieren"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch524.txt",
+  "json": "german/narration/ch524.json",
+  "textHash": "fnv1a64:92044956a3a1de2a",
+  "jsonHash": "fnv1a64:81beef70b4f00bc9",
+  "findings": []
+}

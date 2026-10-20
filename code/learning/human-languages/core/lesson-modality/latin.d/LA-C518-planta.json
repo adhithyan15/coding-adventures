@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C518-planta",
+    "language": "latin",
+    "chapter": 518,
+    "sequence": 27510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:facfac62250f2b31"
+  },
+  "findings": []
+}

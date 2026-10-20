@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:db240ee7fdd589b7",
+  "lessonIds": [
+    "FR-C335-debat",
+    "FR-C335-debattre",
+    "FR-C335-these",
+    "FR-C335-argumentation",
+    "FR-C335-persuader"
+  ],
+  "tex": "french/book/chapters/ch335-le-debat.tex"
+}

@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-434-RECLAMACAO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can make a complaint and get it put right: complaining, the complaint, grumbling, regretting and compensation.",
+  "prerequisites": []
+}

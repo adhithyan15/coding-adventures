@@ -1,0 +1,11 @@
+{
+  "id": "GE-C313-hexe",
+  "pathSegment": "GE-PATH-313-MAERCHEN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-313-MAERCHEN",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "language": "portuguese",
+  "chapter": 506,
+  "sourceHash": "fnv1a64:e5cda2e696428b17",
+  "lessonIds": [
+    "PT-C506-mergulho",
+    "PT-C506-caiaque",
+    "PT-C506-velejar",
+    "PT-C506-prancha",
+    "PT-C506-surfar",
+    "PT-R506-revisao-499-506"
+  ],
+  "tex": "portuguese/book/chapters/ch506-desportos-de-agua.tex"
+}

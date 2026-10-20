@@ -1,0 +1,11 @@
+{
+  "id": "LA-C380-fatigo",
+  "pathSegment": "LA-PATH-380-CONDUCO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-380-CONDUCO",
+      "order": 4
+    }
+  ]
+}

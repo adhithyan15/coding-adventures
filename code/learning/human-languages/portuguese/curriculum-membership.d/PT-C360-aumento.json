@@ -1,0 +1,11 @@
+{
+  "id": "PT-C360-aumento",
+  "pathSegment": "PT-PATH-360-PROMOCAO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-360-PROMOCAO",
+      "order": 3
+    }
+  ]
+}

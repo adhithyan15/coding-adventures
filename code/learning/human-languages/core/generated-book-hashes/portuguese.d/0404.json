@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 404,
+  "sourceHash": "fnv1a64:0dff72608419b81a",
+  "lessonIds": [
+    "PT-C404-gasoleo",
+    "PT-C404-combustivel",
+    "PT-C404-mangueira",
+    "PT-C404-abastecer",
+    "PT-C404-atestar"
+  ],
+  "tex": "portuguese/book/chapters/ch404-na-bomba-de-gasolina.tex"
+}

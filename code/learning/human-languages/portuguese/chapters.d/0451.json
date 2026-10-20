@@ -1,0 +1,19 @@
+{
+  "chapter": 451,
+  "title": "Arranjar e remendar",
+  "label": "ch:pt-arranjar-e-remendar",
+  "canDo": "I can get things mended: the cobbler, the seamstress, the hem, the locksmith and patching.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C451-remendar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 451: I can get things mended: the cobbler, the seamstress, the hem, the locksmith and patching.",
+    "assesses": [
+      "PT-LEX-C451-ARRANJOS-03",
+      "PT-LEX-C451-ARRANJOS-04",
+      "PT-LEX-C451-ARRANJOS-05"
+    ]
+  }
+}

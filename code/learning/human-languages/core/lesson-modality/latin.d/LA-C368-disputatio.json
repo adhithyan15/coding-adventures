@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C368-disputatio",
+    "language": "latin",
+    "chapter": 368,
+    "sequence": 19780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4f4a3e3aa61cd500"
+  },
+  "findings": []
+}

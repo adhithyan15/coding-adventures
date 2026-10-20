@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C293-flamme",
+    "language": "german",
+    "chapter": 293,
+    "sequence": 16100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:629d035cebd2dbf7"
+  },
+  "findings": []
+}

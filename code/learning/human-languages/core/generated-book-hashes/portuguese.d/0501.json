@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:335da39f17d00b97",
+  "lessonIds": [
+    "PT-C501-jardinagem",
+    "PT-C501-semear",
+    "PT-C501-regar",
+    "PT-C501-regador",
+    "PT-C501-vaso"
+  ],
+  "tex": "portuguese/book/chapters/ch501-maos-na-terra.tex"
+}

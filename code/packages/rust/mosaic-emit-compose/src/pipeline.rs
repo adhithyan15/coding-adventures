@@ -7861,7 +7861,11 @@ fn emit_host_input(
     // this the generated field could take keystrokes but never dispatch onCommit —
     // the host's write-through / recompute was unreachable. Mirrors the SwiftUI
     // emitter's `.onSubmit { dispatch(.commit) }`.
-    if let Some(emit_name) = find_emit_ref_prop(node, "onCommit") {
+    //
+    // A multiline field keeps the IME's newline key instead: `ImeAction.Done`
+    // would replace it, so a soft keyboard could no longer start a new line,
+    // and Enter commits a text area on no backend (#15930).
+    if let Some(emit_name) = find_emit_ref_prop(node, "onCommit").filter(|_| !multiline) {
         let case = pascalize(&strip_on_prefix(emit_name));
         validate_safe_identifier(&case).map_err(PipelineEmitError::UnsafeEmitName)?;
         let emit = emits.iter().find(|e| e.name == *emit_name);
@@ -7880,9 +7884,7 @@ fn emit_host_input(
                 format!("{component_name}Event.{case}({payload})")
             }
         };
-        if !multiline {
-            writeln!(out, "{inner}singleLine = true,").unwrap();
-        }
+        writeln!(out, "{inner}singleLine = true,").unwrap();
         writeln!(
             out,
             "{inner}keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),"
@@ -11097,6 +11099,48 @@ mod tests {
         assert!(out.contains(
             "keyboardActions = KeyboardActions(onDone = { dispatch(CellEvent.Commit(editValue)) }),"
         ));
+    }
+
+    /// #15930 — `ImeAction.Done` would take the soft keyboard's newline key
+    /// away from a text area, so a multiline field with `onCommit` keeps
+    /// the default action and gets no `onDone`; a single-line one still
+    /// commits from the IME, as before.
+    #[test]
+    fn multiline_host_input_keeps_the_newline_key() {
+        let m = component(
+            "Editor",
+            vec![slot("v", SlotType::Text, true)],
+            vec![emit_decl("onSave", vec![])],
+        );
+        let make = |multiline: &str| {
+            let l = layout(
+                "Editor",
+                styled_node(
+                    "HostInput",
+                    "editor-input",
+                    vec![
+                        slot_prop("value", "v"),
+                        LayoutProp {
+                            name: "multiline".into(),
+                            value: LayoutPropValue::Keyword(multiline.into()),
+                        },
+                        LayoutProp {
+                            name: "onCommit".into(),
+                            value: LayoutPropValue::EmitRef("onSave".into()),
+                        },
+                    ],
+                    vec![],
+                ),
+            );
+            from_pipeline(&m, &l, &empty_style("Editor")).expect("emit").output
+        };
+        let multi = make("true");
+        assert!(multi.contains("singleLine = false,"), "{multi}");
+        assert!(!multi.contains("ImeAction.Done"), "{multi}");
+        assert!(!multi.contains("onDone"), "{multi}");
+        let single = make("false");
+        assert!(single.contains("singleLine = true,"), "{single}");
+        assert!(single.contains("keyboardActions = KeyboardActions(onDone = { dispatch(EditorEvent.Save) }),"), "{single}");
     }
 
     #[test]

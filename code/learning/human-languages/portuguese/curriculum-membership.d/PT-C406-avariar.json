@@ -1,0 +1,11 @@
+{
+  "id": "PT-C406-avariar",
+  "pathSegment": "PT-PATH-406-AVARIA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-406-AVARIA",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:619ef998e3fe8783",
+  "lessonIds": [
+    "PT-C420-boia",
+    "PT-C420-ancora",
+    "PT-C420-atracar",
+    "PT-C420-enjoo",
+    "PT-C420-enjoar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch420.txt",
+  "json": "portuguese/narration/ch420.json",
+  "textHash": "fnv1a64:36a234b321e11841",
+  "jsonHash": "fnv1a64:c4567680b15c6ddc",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C421-fuso",
+  "pathSegment": "PT-PATH-421-AEROPORTO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-421-AEROPORTO",
+      "order": 4
+    }
+  ]
+}

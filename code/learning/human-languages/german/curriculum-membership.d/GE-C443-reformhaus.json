@@ -1,0 +1,11 @@
+{
+  "id": "GE-C443-reformhaus",
+  "pathSegment": "GE-PATH-443-FEINKOST",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-443-FEINKOST",
+      "order": 4
+    }
+  ]
+}

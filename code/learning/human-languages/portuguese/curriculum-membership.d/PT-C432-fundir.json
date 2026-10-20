@@ -1,0 +1,11 @@
+{
+  "id": "PT-C432-fundir",
+  "pathSegment": "PT-PATH-432-LUZ",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-432-LUZ",
+      "order": 1
+    }
+  ]
+}

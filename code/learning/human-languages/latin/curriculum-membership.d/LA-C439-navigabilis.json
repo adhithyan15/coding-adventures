@@ -1,0 +1,11 @@
+{
+  "id": "LA-C439-navigabilis",
+  "pathSegment": "LA-PATH-439-EGREDIOR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-439-EGREDIOR",
+      "order": 4
+    }
+  ]
+}

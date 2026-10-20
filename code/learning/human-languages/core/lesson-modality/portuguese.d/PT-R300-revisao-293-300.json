@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-R300-revisao-293-300",
+    "language": "portuguese",
+    "chapter": 300,
+    "sequence": 17430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c61132b9668224ba"
+  },
+  "findings": []
+}

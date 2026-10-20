@@ -1,0 +1,11 @@
+{
+  "id": "PT-C417-desembarcar",
+  "pathSegment": "PT-PATH-417-PORTO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-417-PORTO",
+      "order": 3
+    }
+  ]
+}

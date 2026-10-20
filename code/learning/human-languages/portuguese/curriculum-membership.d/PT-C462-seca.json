@@ -1,0 +1,11 @@
+{
+  "id": "PT-C462-seca",
+  "pathSegment": "PT-PATH-462-CALOR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-462-CALOR",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 285,
+  "sourceHash": "fnv1a64:dbcf83a4fb68e197",
+  "lessonIds": [
+    "PT-C285-entrevistar",
+    "PT-C285-entrevistado",
+    "PT-C285-ouvinte",
+    "PT-C285-telespectador",
+    "PT-C285-leitor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch285.txt",
+  "json": "portuguese/narration/ch285.json",
+  "textHash": "fnv1a64:de5b5c01b25d0300",
+  "jsonHash": "fnv1a64:cbfdb506ea1309a0",
+  "findings": []
+}

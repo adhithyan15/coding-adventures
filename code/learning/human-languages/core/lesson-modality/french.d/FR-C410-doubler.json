@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C410-doubler",
+    "language": "french",
+    "chapter": 410,
+    "sequence": 22850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e8dfc76764d0c7c4"
+  },
+  "findings": []
+}

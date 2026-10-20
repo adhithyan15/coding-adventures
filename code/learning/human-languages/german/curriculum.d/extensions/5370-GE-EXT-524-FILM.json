@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-524-FILM",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about kinds of films.",
+  "prerequisites": []
+}

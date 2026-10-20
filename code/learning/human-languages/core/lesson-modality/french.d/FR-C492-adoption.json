@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C492-adoption",
+    "language": "french",
+    "chapter": 492,
+    "sequence": 27050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f6ed7f0ad8bd9afa"
+  },
+  "findings": []
+}

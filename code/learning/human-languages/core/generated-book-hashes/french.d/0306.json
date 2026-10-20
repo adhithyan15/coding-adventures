@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 306,
+  "sourceHash": "fnv1a64:ca04cca9f23e142c",
+  "lessonIds": [
+    "FR-C306-etouffer",
+    "FR-C306-intoxication",
+    "FR-C306-piquer",
+    "FR-C306-mordre",
+    "FR-C306-morsure"
+  ],
+  "tex": "french/book/chapters/ch306-petits-accidents.tex"
+}

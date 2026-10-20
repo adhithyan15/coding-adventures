@@ -1,0 +1,11 @@
+{
+  "id": "LA-R284-advice-and-reasons",
+  "pathSegment": "LA-PATH-284-CONSILIUM",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-284-CONSILIUM",
+      "order": 2
+    }
+  ]
+}

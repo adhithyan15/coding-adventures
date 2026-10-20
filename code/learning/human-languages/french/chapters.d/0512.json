@@ -1,0 +1,19 @@
+{
+  "chapter": 512,
+  "title": "Chanter juste",
+  "label": "ch:fr-chanter-juste",
+  "canDo": "I can talk about singing and tunes.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C512-melodie",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 512: I can talk about singing and tunes.",
+    "assesses": [
+      "FR-LEX-C512-CHANT-03",
+      "FR-LEX-C512-CHANT-04",
+      "FR-LEX-C512-CHANT-05"
+    ]
+  }
+}

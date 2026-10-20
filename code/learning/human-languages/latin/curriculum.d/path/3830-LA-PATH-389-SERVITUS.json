@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-389-SERVITUS",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "LA-EXT-389-SERVITUS"
+  ],
+  "after": []
+}

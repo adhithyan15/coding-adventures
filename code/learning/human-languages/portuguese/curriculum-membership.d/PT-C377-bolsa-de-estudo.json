@@ -1,0 +1,11 @@
+{
+  "id": "PT-C377-bolsa-de-estudo",
+  "pathSegment": "PT-PATH-377-DOCENTE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-377-DOCENTE",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C473-rus",
+    "language": "latin",
+    "chapter": 473,
+    "sequence": 25160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5e8cfdd4b8d7ba3b"
+  },
+  "findings": []
+}

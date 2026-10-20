@@ -1,0 +1,19 @@
+{
+  "chapter": 536,
+  "title": "Charm and sweet words",
+  "label": "ch:la-charm-and-sweet-words",
+  "canDo": "I can talk about charm, sweetness and gifts.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-R536-review-529-536",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 536: I can talk about charm, sweetness and gifts.",
+    "assesses": [
+      "LA-LEX-C536-BLAN-03",
+      "LA-LEX-C536-BLAN-04",
+      "LA-LEX-C536-BLAN-05"
+    ]
+  }
+}

@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "french",
+  "chapter": 307,
+  "title": "Les dégâts",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:65145429e8324963",
+  "lessons": [
+    {
+      "id": "FR-C307-degat",
+      "sequence": 17490,
+      "title": "le dégât — the damage",
+      "headword": "le dégât",
+      "romanization": "le dégât",
+      "gloss": "the damage",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9a8f7e80eaa104f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for to bite, then the French for the bite."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: le dégât",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le dégât — \"the damage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "L'orage a fait beaucoup de dégâts. The storm did a lot of damage."
+            },
+            {
+              "kind": "speech",
+              "text": "Usually plural: les dégâts."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dégât is built on Old French degaster \"to lay waste\", usually traced to Latin dēvastāre (EtymDB lists no parent), built on vastus \"empty, waste\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le dégât",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le dégât*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le dégât, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le dégât*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with le dégât",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *le dégât*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for to bite, then the French for the bite, then say le dégât again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for to bite, then the French for the bite, then say *le dégât* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does le dégât mean? (\"The damage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C307-endommager",
+      "sequence": 17500,
+      "title": "endommager — to damage",
+      "headword": "endommager",
+      "romanization": "endommager",
+      "gloss": "to damage",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6e884ebba5f73ac2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the bite, then the French for the damage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: endommager",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "endommager — \"to damage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "L'eau a endommagé la cuisine. The water damaged the kitchen."
+            },
+            {
+              "kind": "speech",
+              "text": "For things, not people."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "endommager is built on dommage \"harm\", from Old French damage, which goes back to Latin damnum \"loss\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "endommager",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *endommager*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "endommager, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *endommager*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with endommager",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *endommager*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the bite, then the French for the damage, then say endommager again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the bite, then the French for the damage, then say *endommager* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does endommager mean? (\"To damage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C307-assurance",
+      "sequence": 17510,
+      "title": "l'assurance — the insurance; self-confidence",
+      "headword": "l'assurance",
+      "romanization": "l'assurance",
+      "gloss": "the insurance; self-confidence",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a89cb31e7c250b09",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the damage, then the French for to damage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: l'assurance",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "l'assurance — \"the insurance; self-confidence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "L'assurance va tout payer. The insurance is going to pay for everything."
+            },
+            {
+              "kind": "speech",
+              "text": "Avoir de l'assurance — to be self-assured."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "assurance is built on assurer \"to make safe\", which is inherited from Vulgar Latin assēcūrāre, built on Latin sēcūrus \"safe, free from care\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'assurance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'assurance*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'assurance, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'assurance*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with l'assurance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *l'assurance*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the damage, then the French for to damage, then say l'assurance again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the damage, then the French for to damage, then say *l'assurance* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does l'assurance mean? (\"The insurance; self-confidence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C307-sinistre",
+      "sequence": 17520,
+      "title": "le sinistré — the disaster victim",
+      "headword": "le sinistré",
+      "romanization": "le sinistré",
+      "gloss": "the disaster victim",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:89263d4aecccf366",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for to damage, then the French for the insurance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: le sinistré",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le sinistré — \"the disaster victim\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Les sinistrés ont dormi dans une école. The people hit by the disaster slept in a school."
+            },
+            {
+              "kind": "speech",
+              "text": "Also an adjective: une région sinistrée."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sinistré is built on sinistre \"a disaster\", from Latin sinister \"left, unlucky\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le sinistré",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le sinistré*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le sinistré, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le sinistré*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with le sinistré",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *le sinistré*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for to damage, then the French for the insurance, then say le sinistré again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for to damage, then the French for the insurance, then say *le sinistré* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does le sinistré mean? (\"The disaster victim\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C307-rayure",
+      "sequence": 17530,
+      "title": "la rayure — the scratch; a stripe",
+      "headword": "la rayure",
+      "romanization": "la rayure",
+      "gloss": "the scratch; a stripe",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2d04a57b38034014",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for the insurance, then the French for the disaster victim."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la rayure",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la rayure — \"the scratch; a stripe\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Il y a une longue rayure sur la voiture. There is a long scratch on the car."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a stripe: une chemise à rayures."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rayure is built on rayer \"to scratch, to stripe\", from raie \"a line\", which EtymDB traces through Old French roie to Gaulish rica \"a furrow\"; the details are not fully settled (EtymDB lists no parent)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la rayure",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la rayure*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la rayure, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la rayure*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with la rayure",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *la rayure*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for the insurance, then the French for the disaster victim, then say la rayure again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for the insurance, then the French for the disaster victim, then say *la rayure* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la rayure mean? (\"The scratch; a stripe\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-R307-revision-300-307",
+      "sequence": 17540,
+      "title": "Retour sur les chapitres 300–307",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 300-307",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a0e453223b076d99",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the French for the emergency services and to rescue."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the emergency services, to rescue, to resuscitate, the tourniquet, the stretcher",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the emergency services, to rescue, to resuscitate, the tourniquet, the stretcher]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the alert, to alert, the defibrillator, the emergency exit, to evacuate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the alert, to alert, the defibrillator, the emergency exit, to evacuate]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the fire, the fire extinguisher, the explosion, to explode, the spark",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the fire, the fire extinguisher, the explosion, to explode, the spark]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the earthquake, the avalanche, the rockfall, to collapse, the rubble",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the earthquake, the avalanche, the rockfall, to collapse, the rubble]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "drowning, to drown, the rescuer, the buoy, the lifeguard",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: drowning, to drown, the rescuer, the buoy, the lifeguard]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the shipwreck, to crash, the survivor, to survive, the catastrophe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the shipwreck, to crash, the survivor, to survive, the catastrophe]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to choke, the poisoning, to sting, to bite, the bite",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to choke, the poisoning, to sting, to bite, the bite]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the damage, to damage, the insurance, the disaster victim, the scratch",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the damage, to damage, the insurance, the disaster victim, the scratch]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The emergency services? (les secours.) To rescue? (secourir.) To resuscitate? (réanimer.) The tourniquet? (le garrot.) The stretcher? (la civière.) The alert? (l'alerte.) To alert? (alerter.) The defibrillator? (le défibrillateur.) The emergency exit? (la sortie de secours.) To evacuate? (évacuer.) The fire? (l'incendie.) The fire extinguisher? (l'extincteur.) The explosion? (l'explosion.) To explode? (exploser.) The spark? (l'étincelle.) The earthquake? (le tremblement de terre.) The avalanche? (l'avalanche.) The rockfall? (l'éboulement.) To collapse? (effondrer.) The rubble? (les décombres.) Drowning? (la noyade.) To drown? (noyer.) The rescuer? (le sauveteur.) The buoy? (la bouée.) The lifeguard? (le maître-nageur.) The shipwreck? (le naufrage.) To crash? (écraser.) The survivor? (le rescapé.) To survive? (survivre.) The catastrophe? (la catastrophe.) To choke? (étouffer.) The poisoning? (l'intoxication.) To sting? (piquer.) To bite? (mordre.) The bite? (la morsure.) The damage? (le dégât.) To damage? (endommager.) The insurance? (l'assurance.) The disaster victim? (le sinistré.) The scratch? (la rayure.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

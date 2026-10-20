@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-391-ORCAMENTO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "PT-EXT-391-ORCAMENTO"
+  ],
+  "after": []
+}

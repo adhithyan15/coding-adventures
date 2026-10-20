@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "portuguese",
+  "chapter": 506,
+  "title": "Desportos de água",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:957b481b4a99836e",
+  "lessons": [
+    {
+      "id": "PT-C506-mergulho",
+      "sequence": 27990,
+      "title": "o mergulho — dive; (quick) swim",
+      "headword": "o mergulho",
+      "romanization": "o mergulho",
+      "gloss": "dive; (quick) swim",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0a9c1c084e50dc2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for easel, then the Portuguese for (picture) frame."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: o mergulho",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "o mergulho — \"dive; (quick) swim\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Demos um mergulho no mar antes do almoço. We had a quick swim in the sea before lunch."
+            },
+            {
+              "kind": "speech",
+              "text": "Dar um mergulho — to have a dip."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mergulho comes from mergulhar \"to dive\", which is usually traced to a Vulgar Latin form built on Latin mergere \"to plunge, to dip\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o mergulho",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o mergulho*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o mergulho, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o mergulho*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with o mergulho",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *o mergulho*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for easel, then the Portuguese for (picture) frame, then say o mergulho again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for easel, then the Portuguese for (picture) frame, then say *o mergulho* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does o mergulho mean? (\"Dive; (quick) swim\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C506-caiaque",
+      "sequence": 28000,
+      "title": "o caiaque — kayak",
+      "headword": "o caiaque",
+      "romanization": "o caiaque",
+      "gloss": "kayak",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:864c86238d0049a2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for (picture) frame, then the Portuguese for dive."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: o caiaque",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "o caiaque — \"kayak\"."
+            },
+            {
+              "kind": "speech",
+              "text": "No verão andamos de caiaque no rio. In summer we go kayaking on the river."
+            },
+            {
+              "kind": "speech",
+              "text": "Andar de caiaque — to go kayaking."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "caiaque is usually traced to an Inuit word for a small hunting boat, probably through French or English."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o caiaque",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o caiaque*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o caiaque, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o caiaque*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with o caiaque",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *o caiaque*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for (picture) frame, then the Portuguese for dive, then say o caiaque again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for (picture) frame, then the Portuguese for dive, then say *o caiaque* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does o caiaque mean? (\"Kayak\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C506-velejar",
+      "sequence": 28010,
+      "title": "velejar — to sail",
+      "headword": "velejar",
+      "romanization": "velejar",
+      "gloss": "to sail",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:92c30af12eca5beb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for dive, then the Portuguese for kayak."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: velejar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "velejar — \"to sail\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Aos fins de semana, velejamos na baía. At weekends, we sail in the bay."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on a vela — a sail."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "velejar is built on vela \"sail\", which is inherited from Latin vēla, plural of vēlum \"a sail, a cloth\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "velejar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *velejar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "velejar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *velejar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with velejar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *velejar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for dive, then the Portuguese for kayak, then say velejar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for dive, then the Portuguese for kayak, then say *velejar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does velejar mean? (\"To sail\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C506-prancha",
+      "sequence": 28020,
+      "title": "a prancha — board (for surfing); plank",
+      "headword": "a prancha",
+      "romanization": "a prancha",
+      "gloss": "board (for surfing); plank",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c48a9f86aa3fb75d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for kayak, then the Portuguese for to sail."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: a prancha",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a prancha — \"board (for surfing); plank\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Levou a prancha para a praia. He took his board to the beach."
+            },
+            {
+              "kind": "speech",
+              "text": "Prancha de surf — surfboard."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "prancha comes from French planche \"a board\" (EtymDB), from Late Latin planca \"a plank\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a prancha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a prancha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a prancha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a prancha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with a prancha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *a prancha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for kayak, then the Portuguese for to sail, then say a prancha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for kayak, then the Portuguese for to sail, then say *a prancha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does a prancha mean? (\"Board (for surfing); plank\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C506-surfar",
+      "sequence": 28030,
+      "title": "surfar — to surf",
+      "headword": "surfar",
+      "romanization": "surfar",
+      "gloss": "to surf",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4f1415ba20c521df",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for to sail, then the Portuguese for board."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: surfar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "surfar — \"to surf\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Os meus primos surfam todo o ano. My cousins surf all year round."
+            },
+            {
+              "kind": "speech",
+              "text": "Also fazer surf."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "surfar is built on surf, borrowed from English."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "surfar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *surfar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "surfar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *surfar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with surfar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *surfar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for to sail, then the Portuguese for board, then say surfar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for to sail, then the Portuguese for board, then say *surfar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does surfar mean? (\"To surf\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-R506-revisao-499-506",
+      "sequence": 28040,
+      "title": "Revisão dos capítulos 499–506",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 499-506",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:770b52b3e6bd4076",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Portuguese for grateful and gratitude."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grateful, gratitude, ungrateful, faithful, faithfulness",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: grateful, gratitude, ungrateful, faithful, faithfulness]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sewing, to sew, knitting, to knit, to embroider",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: sewing, to sew, knitting, to knit, to embroider]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gardening, to sow, to water, watering can, flowerpot",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: gardening, to sow, to water, watering can, flowerpot]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to fish, fishing, bait, fish hook, to hunt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to fish, fishing, bait, fish hook, to hunt]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chess, pack of cards, (game) board, jigsaw puzzle, crossword",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: chess, pack of cards, (game) board, jigsaw puzzle, crossword]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "collection, to collect, handicrafts, clay, pottery",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: collection, to collect, handicrafts, clay, pottery]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paintbrush, watercolour, canvas, easel, (picture) frame",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: paintbrush, watercolour, canvas, easel, (picture) frame]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dive, kayak, to sail, board, to surf",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: dive, kayak, to sail, board, to surf]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Grateful? (grato.) Gratitude? (a gratidão.) Ungrateful? (ingrato.) Faithful? (fiel.) Faithfulness? (a fidelidade.) Sewing? (a costura.) To sew? (costurar.) Knitting? (o tricô.) To knit? (tricotar.) To embroider? (bordar.) Gardening? (a jardinagem.) To sow? (semear.) To water? (regar.) Watering can? (o regador.) Flowerpot? (o vaso.) To fish? (pescar.) Fishing? (a pesca.) Bait? (a isca.) Fish hook? (o anzol.) To hunt? (caçar.) Chess? (o xadrez.) Pack of cards? (o baralho.) (game) board? (o tabuleiro.) Jigsaw puzzle? (o puzzle.) Crossword? (as palavras cruzadas.) Collection? (a coleção.) To collect? (colecionar.) Handicrafts? (o artesanato.) Clay? (o barro.) Pottery? (a olaria.) Paintbrush? (o pincel.) Watercolour? (a aguarela.) Canvas? (a tela.) Easel? (o cavalete.) (picture) frame? (a moldura.) Dive? (o mergulho.) Kayak? (o caiaque.) To sail? (velejar.) Board? (a prancha.) To surf? (surfar.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

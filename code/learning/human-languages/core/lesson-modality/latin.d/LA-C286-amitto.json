@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C286-amitto",
+    "language": "latin",
+    "chapter": 286,
+    "sequence": 15620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f5dd4d44b2f29c11"
+  },
+  "findings": []
+}

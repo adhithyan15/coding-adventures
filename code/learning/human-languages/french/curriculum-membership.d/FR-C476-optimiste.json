@@ -1,0 +1,11 @@
+{
+  "id": "FR-C476-optimiste",
+  "pathSegment": "FR-PATH-476-INQUIETUDE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-476-INQUIETUDE",
+      "order": 3
+    }
+  ]
+}

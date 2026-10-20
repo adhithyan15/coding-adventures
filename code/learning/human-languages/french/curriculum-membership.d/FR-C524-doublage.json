@@ -1,0 +1,11 @@
+{
+  "id": "FR-C524-doublage",
+  "pathSegment": "FR-PATH-524-CINEMA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-524-CINEMA",
+      "order": 2
+    }
+  ]
+}

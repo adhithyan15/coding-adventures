@@ -1,0 +1,11 @@
+{
+  "id": "GE-C394-kommentieren",
+  "pathSegment": "GE-PATH-394-INTERNET",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-394-INTERNET",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-530-SENHORIO",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "PT-EXT-530-SENHORIO"
+  ],
+  "after": []
+}

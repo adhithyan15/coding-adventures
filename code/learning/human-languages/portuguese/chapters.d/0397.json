@@ -1,0 +1,19 @@
+{
+  "chapter": 397,
+  "title": "Descarregar uma aplicação",
+  "label": "ch:pt-descarregar-uma-aplicacao",
+  "canDo": "I can install, update and uninstall apps on my laptop and my other devices.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "PT-C397-atualizar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 397: I can install, update and uninstall apps on my laptop and my other devices.",
+    "assesses": [
+      "PT-LEX-C397-INSTALAR-03",
+      "PT-LEX-C397-INSTALAR-04",
+      "PT-LEX-C397-INSTALAR-05"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-520-LIBRAIRE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about browsing in a bookshop.",
+  "prerequisites": []
+}

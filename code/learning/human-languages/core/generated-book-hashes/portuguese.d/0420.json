@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:92fa48db9b2b716c",
+  "lessonIds": [
+    "PT-C420-boia",
+    "PT-C420-ancora",
+    "PT-C420-atracar",
+    "PT-C420-enjoo",
+    "PT-C420-enjoar"
+  ],
+  "tex": "portuguese/book/chapters/ch420-chegar-a-terra.tex"
+}

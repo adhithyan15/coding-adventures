@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C479-schweiss",
+    "language": "german",
+    "chapter": 479,
+    "sequence": 25690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09331a6d5312e729"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C365-immigration",
+  "pathSegment": "FR-PATH-365-PAUVRETE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-365-PAUVRETE",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 338,
+  "title": "Vermutungen",
+  "label": "ch:ge-vermutungen",
+  "canDo": "I can make a guess, state an assumption, and say how things seem or plainly are.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C338-ahnen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 338: I can make a guess, state an assumption, and say how things seem or plainly are.",
+    "assesses": [
+      "GE-LEX-C338-VERMUTUNG-03",
+      "GE-LEX-C338-VERMUTUNG-04",
+      "GE-LEX-C338-VERMUTUNG-05"
+    ]
+  }
+}

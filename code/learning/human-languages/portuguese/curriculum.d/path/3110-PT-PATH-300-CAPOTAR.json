@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-300-CAPOTAR",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-300-CAPOTAR"
+  ],
+  "after": []
+}

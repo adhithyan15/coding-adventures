@@ -1,0 +1,11 @@
+{
+  "id": "PT-C286-vandalismo",
+  "pathSegment": "PT-PATH-286-DELITO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-286-DELITO",
+      "order": 2
+    }
+  ]
+}

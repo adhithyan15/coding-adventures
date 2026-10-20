@@ -1,0 +1,11 @@
+{
+  "id": "LA-C477-grex",
+  "pathSegment": "LA-PATH-477-PECUS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-477-PECUS",
+      "order": 1
+    }
+  ]
+}

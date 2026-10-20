@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 314,
+  "title": "Cāsus in viā",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:f139254141a958cf",
+  "lessons": [
+    {
+      "id": "LA-C314-offendo",
+      "sequence": 16970,
+      "title": "offendō, offendere — to strike against, to stumble; to offend",
+      "headword": "offendō, offendere",
+      "romanization": "offendō, offendere",
+      "gloss": "to strike against, to stumble; to offend",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8e1b66ae4f611f16",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to fall in, then the Latin for to fall down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: offendō, offendere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "offendō, offendere — \"to strike against, to stumble; to offend\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Nocte pedem ad saxum offendī et cecidī. At night I struck my foot against a stone and fell."
+            },
+            {
+              "kind": "speech",
+              "text": "offendō, offendere, offendī, offēnsum. First a knock against something, then hurt feelings. English offend."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "offendō joins ob-, \"against\", and an old verb fendō, \"to strike\" (EtymDB), also seen in dēfendō, \"to ward off\". English offend comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "offendō, offendere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *offendō, offendere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "offendō, offendere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *offendō, offendere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with offendō, offendere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *offendō, offendere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to fall in, then the Latin for to fall down, then say offendō, offendere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to fall in, then the Latin for to fall down, then say *offendō, offendere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does offendō, offendere mean? (\"To strike against, to stumble; to offend\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C314-praeceps",
+      "sequence": 16980,
+      "title": "praeceps, praecipitis — headlong; steep",
+      "headword": "praeceps, praecipitis",
+      "romanization": "praeceps, praecipitis",
+      "gloss": "headlong; steep",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:100608f3a7c0409a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to fall down, then the Latin for to strike against."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: praeceps, praecipitis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "praeceps, praecipitis — \"headlong; steep\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Senex praeceps per scālās cecidit. The old man fell headlong down the stairs."
+            },
+            {
+              "kind": "speech",
+              "text": "One ending, genitive praecipitis: head first. Also 'steep': locus praeceps."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "praeceps joins prae, \"in front\", and caput, \"head\" (EtymDB): head first. English precipice comes from its family."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "praeceps, praecipitis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *praeceps, praecipitis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "praeceps, praecipitis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *praeceps, praecipitis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with praeceps, praecipitis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *praeceps, praecipitis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to fall down, then the Latin for to strike against, then say praeceps, praecipitis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to fall down, then the Latin for to strike against, then say *praeceps, praecipitis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does praeceps, praecipitis mean? (\"Headlong; steep\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C314-praecipito",
+      "sequence": 16990,
+      "title": "praecipitō, praecipitāre — to hurl headlong; to fall headlong",
+      "headword": "praecipitō, praecipitāre",
+      "romanization": "praecipitō, praecipitāre",
+      "gloss": "to hurl headlong; to fall headlong",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1cc856547095e8b4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to strike against, then the Latin for headlong."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: praecipitō, praecipitāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "praecipitō, praecipitāre — \"to hurl headlong; to fall headlong\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Equus subitō sē in fossam praecipitāvit. The horse suddenly threw itself headlong into the ditch."
+            },
+            {
+              "kind": "speech",
+              "text": "praecipitō, praecipitāre, praecipitāvī, praecipitātum, from praeceps. English precipitate."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "praecipitō is built on praeceps, \"headlong\" (EtymDB): to throw head first. English precipitate comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "praecipitō, praecipitāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *praecipitō, praecipitāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "praecipitō, praecipitāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *praecipitō, praecipitāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with praecipitō, praecipitāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *praecipitō, praecipitāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to strike against, then the Latin for headlong, then say praecipitō, praecipitāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to strike against, then the Latin for headlong, then say *praecipitō, praecipitāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does praecipitō, praecipitāre mean? (\"To hurl headlong; to fall headlong\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C314-plaga",
+      "sequence": 17000,
+      "title": "plāga, plāgae — a blow, a wound",
+      "headword": "plāga, plāgae",
+      "romanization": "plāga, plāgae",
+      "gloss": "a blow, a wound",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5a767a4dba108c2a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for headlong, then the Latin for to hurl headlong."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: plāga, plāgae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "plāga, plāgae — \"a blow, a wound\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Plāga in capite gravis erat. The blow on the head was serious."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, with a long ā. Do not confuse plaga, 'a region' or 'a hunting net'. English plague comes from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "plāga belongs with plangō, \"to strike, to beat\" (EtymDB), and matches Greek plēgē, \"a blow\" (Lewis & Short). English plague, a blow from heaven, comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "plāga, plāgae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *plāga, plāgae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "plāga, plāgae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *plāga, plāgae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with plāga, plāgae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *plāga, plāgae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for headlong, then the Latin for to hurl headlong, then say plāga, plāgae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for headlong, then the Latin for to hurl headlong, then say *plāga, plāgae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does plāga, plāgae mean? (\"A blow, a wound\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C314-saucius",
+      "sequence": 17010,
+      "title": "saucius, saucia, saucium — wounded, hurt",
+      "headword": "saucius, saucia, saucium",
+      "romanization": "saucius, saucia, saucium",
+      "gloss": "wounded, hurt",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:69b419f80e38c651",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to hurl headlong, then the Latin for a blow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: saucius, saucia, saucium",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "saucius, saucia, saucium — \"wounded, hurt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Medicus mīlitēs sauciōs cūrābat. The doctor was looking after the wounded soldiers."
+            },
+            {
+              "kind": "speech",
+              "text": "Wounded but alive; vulnus (taught) is the wound itself. Caesar counts the sauciī after a battle."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "saucius is a Latin word whose origin is not settled (Lewis & Short, EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saucius, saucia, saucium",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saucius, saucia, saucium*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saucius, saucia, saucium, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saucius, saucia, saucium*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with saucius, saucia, saucium",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *saucius, saucia, saucium*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to hurl headlong, then the Latin for a blow, then say saucius, saucia, saucium again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to hurl headlong, then the Latin for a blow, then say *saucius, saucia, saucium* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does saucius, saucia, saucium mean? (\"Wounded, hurt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-R314-review-307-314",
+      "sequence": 17020,
+      "title": "Words from chapters 307–314 — a review",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 307-314",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:54cfa5d8e17df120",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Latin for poison and a poisoner."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poison, a poisoner, an ambush, a conspiracy, a traitor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: poison, a poisoner, an ambush, a conspiracy, a traitor]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a judge, a trial, to judge, a law, law",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a judge, a trial, to judge, a law, law]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to accuse, a prosecutor, a supporter in court, a patron, evidence",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to accuse, a prosecutor, a supporter in court, a patron, evidence]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to swear, perjury, to lie, to prove, information",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to swear, perjury, to lie, to prove, information]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to condemn, to acquit, guilty, innocent, fault",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to condemn, to acquit, guilty, innocent, fault]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to admit, to punish, punishment, exile, a chain",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to admit, to punish, punishment, exile, a chain]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to rush, a collapse, to collapse, to fall in, to fall down",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to rush, a collapse, to collapse, to fall in, to fall down]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to strike against, headlong, to hurl headlong, a blow, wounded",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to strike against, headlong, to hurl headlong, a blow, wounded]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Poison? (venēnum, venēnī.) A poisoner? (venēficus, venēficī.) An ambush? (īnsidiae, īnsidiārum.) A conspiracy? (coniūrātiō, coniūrātiōnis.) A traitor? (prōditor, prōditōris.) A judge? (iūdex, iūdicis.) A trial? (iūdicium, iūdiciī.) To judge? (iūdicō, iūdicāre.) A law? (lēx, lēgis.) Law? (iūs, iūris.) To accuse? (accūsō, accūsāre.) A prosecutor? (accūsātor, accūsātōris.) A supporter in court? (advocātus, advocātī.) A patron? (patrōnus, patrōnī.) Evidence? (testimōnium, testimōniī.) To swear? (iūrō, iūrāre.) Perjury? (periūrium, periūriī.) To lie? (mentior, mentīrī.) To prove? (arguō, arguere.) Information? (indicium, indiciī.) To condemn? (damnō, damnāre.) To acquit? (absolvō, absolvere.) Guilty? (nocēns, nocentis.) Innocent? (innocēns, innocentis.) Fault? (culpa, culpae.) To admit? (fateor, fatērī.) To punish? (pūniō, pūnīre.) Punishment? (supplicium, suppliciī.) Exile? (exsilium, exsiliī.) A chain? (vinculum, vinculī.) To rush? (ruō, ruere.) A collapse? (ruīna, ruīnae.) To collapse? (corruō, corruere.) To fall in? (collābor, collābī.) To fall down? (dēcidō, dēcidere.) To strike against? (offendō, offendere.) Headlong? (praeceps, praecipitis.) To hurl headlong? (praecipitō, praecipitāre.) A blow? (plāga, plāgae.) Wounded? (saucius, saucia, saucium.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

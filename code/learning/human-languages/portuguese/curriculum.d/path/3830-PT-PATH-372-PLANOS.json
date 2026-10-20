@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-372-PLANOS",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "PT-EXT-372-PLANOS"
+  ],
+  "after": []
+}

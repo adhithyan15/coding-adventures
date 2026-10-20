@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 430,
+  "sourceHash": "fnv1a64:1073df674e617440",
+  "lessonIds": [
+    "FR-C430-punaise",
+    "FR-C430-cafard",
+    "FR-C430-moustiquaire",
+    "FR-C430-volet",
+    "FR-C430-store"
+  ],
+  "tex": "french/book/chapters/ch430-bestioles-et-volets.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:642bde13a1c606e9",
+  "lessonIds": [
+    "FR-C324-envahir",
+    "FR-C324-invasion",
+    "FR-C324-conquerir",
+    "FR-C324-conquete",
+    "FR-C324-vaincre"
+  ],
+  "tex": "french/book/chapters/ch324-la-conquete.tex"
+}

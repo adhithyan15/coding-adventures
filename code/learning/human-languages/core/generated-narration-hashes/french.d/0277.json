@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 277,
+  "sourceHash": "fnv1a64:83d39f6784c13250",
+  "lessonIds": [
+    "FR-C277-etape",
+    "FR-C277-phase",
+    "FR-C277-chronologie",
+    "FR-C277-instant",
+    "FR-C277-a-l-issue-de"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch277.txt",
+  "json": "french/narration/ch277.json",
+  "textHash": "fnv1a64:42a8cee6a6cc03e7",
+  "jsonHash": "fnv1a64:aabd11a9a3679453",
+  "findings": []
+}

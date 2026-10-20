@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C502-iocor",
+    "language": "latin",
+    "chapter": 502,
+    "sequence": 26670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3d0ce638e875611c"
+  },
+  "findings": []
+}

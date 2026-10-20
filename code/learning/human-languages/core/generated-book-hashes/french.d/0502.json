@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:51065458c35b48ec",
+  "lessonIds": [
+    "FR-C502-flou",
+    "FR-C502-net",
+    "FR-C502-cliche",
+    "FR-C502-cadrer",
+    "FR-C502-trepied"
+  ],
+  "tex": "french/book/chapters/ch502-prendre-des-photos.tex"
+}

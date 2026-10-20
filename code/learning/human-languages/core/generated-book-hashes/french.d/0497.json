@@ -1,0 +1,14 @@
+{
+  "language": "french",
+  "chapter": 497,
+  "sourceHash": "fnv1a64:39e725917d9cf898",
+  "lessonIds": [
+    "FR-C497-canne-a-peche",
+    "FR-C497-hamecon",
+    "FR-C497-appat",
+    "FR-C497-pecher",
+    "FR-C497-pecheur",
+    "FR-R497-revision-490-497"
+  ],
+  "tex": "french/book/chapters/ch497-une-journee-de-peche.tex"
+}

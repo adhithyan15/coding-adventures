@@ -1,0 +1,11 @@
+{
+  "id": "FR-C515-applaudissements",
+  "pathSegment": "FR-PATH-515-SCENE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-515-SCENE",
+      "order": 4
+    }
+  ]
+}

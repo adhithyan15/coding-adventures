@@ -1,0 +1,11 @@
+{
+  "id": "PT-C288-arrombar",
+  "pathSegment": "PT-PATH-288-ASSALTO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-288-ASSALTO",
+      "order": 3
+    }
+  ]
+}

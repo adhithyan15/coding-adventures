@@ -1,0 +1,11 @@
+{
+  "id": "LA-C469-follis",
+  "pathSegment": "LA-PATH-469-INCUS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-469-INCUS",
+      "order": 1
+    }
+  ]
+}

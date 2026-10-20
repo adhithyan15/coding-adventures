@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:4e1c03a1a0bd2268",
+  "lessonIds": [
+    "GE-C417-sicherheitskontrolle",
+    "GE-C417-durchsuchen",
+    "GE-C417-zoll",
+    "GE-C417-verzollen",
+    "GE-C417-reisepass"
+  ],
+  "tex": "german/book/chapters/ch417-kontrolle-und-zoll.tex"
+}

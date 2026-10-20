@@ -1,0 +1,19 @@
+{
+  "chapter": 324,
+  "title": "Era uma vez",
+  "label": "ch:pt-era-uma-vez",
+  "canDo": "I can talk about stories: tales, narrating, the narrative, the narrator and the plot.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-R324-revisao-317-324",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 324: I can talk about stories: tales, narrating, the narrative, the narrator and the plot.",
+    "assesses": [
+      "PT-LEX-C324-CONTO-03",
+      "PT-LEX-C324-CONTO-04",
+      "PT-LEX-C324-CONTO-05"
+    ]
+  }
+}

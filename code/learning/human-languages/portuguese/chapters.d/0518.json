@@ -1,0 +1,19 @@
+{
+  "chapter": 518,
+  "title": "Cantar em coro",
+  "label": "ch:pt-cantar-em-coro",
+  "canDo": "I can talk about choirs, melodies and humming.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C518-assobiar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 518: I can talk about choirs, melodies and humming.",
+    "assesses": [
+      "PT-LEX-C518-CORO-03",
+      "PT-LEX-C518-CORO-04",
+      "PT-LEX-C518-CORO-05"
+    ]
+  }
+}

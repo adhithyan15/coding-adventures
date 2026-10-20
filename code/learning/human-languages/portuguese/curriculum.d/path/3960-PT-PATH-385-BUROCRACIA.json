@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-385-BUROCRACIA",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "PT-EXT-385-BUROCRACIA"
+  ],
+  "after": []
+}

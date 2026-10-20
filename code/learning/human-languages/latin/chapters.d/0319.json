@@ -1,0 +1,19 @@
+{
+  "chapter": 319,
+  "title": "Vigilēs",
+  "label": "ch:la-vigiles",
+  "canDo": "I can tell how a fire was fought: the fire pump, the fire bucket, to put out, the night watch and to scorch.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C319-amburo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 319: I can tell how a fire was fought: the fire pump, the fire bucket, to put out, the night watch and to scorch.",
+    "assesses": [
+      "LA-LEX-C319-SIPHO-03",
+      "LA-LEX-C319-SIPHO-04",
+      "LA-LEX-C319-SIPHO-05"
+    ]
+  }
+}

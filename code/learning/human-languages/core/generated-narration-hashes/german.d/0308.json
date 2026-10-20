@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:f4b81e2cb073e238",
+  "lessonIds": [
+    "GE-C308-anstossen",
+    "GE-C308-sekt",
+    "GE-C308-jubeln",
+    "GE-C308-beifall",
+    "GE-C308-applaudieren"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch308.txt",
+  "json": "german/narration/ch308.json",
+  "textHash": "fnv1a64:80cf6941ee525603",
+  "jsonHash": "fnv1a64:c56f1fc81f0abda5",
+  "findings": []
+}

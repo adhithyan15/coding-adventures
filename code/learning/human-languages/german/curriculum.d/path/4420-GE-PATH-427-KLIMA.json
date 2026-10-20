@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-427-KLIMA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-427-KLIMA"
+  ],
+  "after": []
+}

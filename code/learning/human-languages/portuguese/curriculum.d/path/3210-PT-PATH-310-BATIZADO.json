@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-310-BATIZADO",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "PT-EXT-310-BATIZADO"
+  ],
+  "after": []
+}

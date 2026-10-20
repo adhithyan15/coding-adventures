@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 368,
+  "sourceHash": "fnv1a64:40d921750b2ad3a5",
+  "lessonIds": [
+    "LA-C368-orator",
+    "LA-C368-eloquentia",
+    "LA-C368-disputatio",
+    "LA-C368-dissero",
+    "LA-C368-eloquor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch368.txt",
+  "json": "latin/narration/ch368.json",
+  "textHash": "fnv1a64:b453f48286a5c5c9",
+  "jsonHash": "fnv1a64:26048c161ef5d0d5",
+  "findings": []
+}

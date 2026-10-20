@@ -1,0 +1,11 @@
+{
+  "id": "LA-C508-pigritia",
+  "pathSegment": "LA-PATH-508-IGNA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-508-IGNA",
+      "order": 1
+    }
+  ]
+}

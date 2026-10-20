@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C538-vaco",
+    "language": "latin",
+    "chapter": 538,
+    "sequence": 28520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c59204f5d3b104e"
+  },
+  "findings": []
+}

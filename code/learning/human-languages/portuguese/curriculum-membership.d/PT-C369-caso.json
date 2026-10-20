@@ -1,0 +1,11 @@
+{
+  "id": "PT-C369-caso",
+  "pathSegment": "PT-PATH-369-CONDICAO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-369-CONDICAO",
+      "order": 3
+    }
+  ]
+}

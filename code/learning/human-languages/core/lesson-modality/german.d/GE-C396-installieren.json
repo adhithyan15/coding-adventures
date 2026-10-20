@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C396-installieren",
+    "language": "german",
+    "chapter": 396,
+    "sequence": 21410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b6ad466ff12c976b"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 528,
+  "title": "Dia de limpezas",
+  "label": "ch:pt-dia-de-limpezas",
+  "canDo": "I can talk about cleaning the house.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C528-esfregona",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 528: I can talk about cleaning the house.",
+    "assesses": [
+      "PT-LEX-C528-LIMPEZA-03",
+      "PT-LEX-C528-LIMPEZA-04",
+      "PT-LEX-C528-LIMPEZA-05"
+    ]
+  }
+}

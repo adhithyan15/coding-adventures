@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 454,
+  "sourceHash": "fnv1a64:74284bb562380bbe",
+  "lessonIds": [
+    "PT-C454-remetente",
+    "PT-C454-destinatario",
+    "PT-C454-portes",
+    "PT-C454-expedir",
+    "PT-C454-registar"
+  ],
+  "tex": "portuguese/book/chapters/ch454-nos-correios.tex"
+}

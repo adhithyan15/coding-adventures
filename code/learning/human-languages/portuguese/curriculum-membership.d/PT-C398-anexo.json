@@ -1,0 +1,11 @@
+{
+  "id": "PT-C398-anexo",
+  "pathSegment": "PT-PATH-398-FICHEIRO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-398-FICHEIRO",
+      "order": 3
+    }
+  ]
+}

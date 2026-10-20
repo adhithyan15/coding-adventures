@@ -1,0 +1,19 @@
+{
+  "chapter": 354,
+  "title": "Melhor ou pior",
+  "label": "ch:pt-melhor-ou-pior",
+  "canDo": "I can say how something influences a situation, makes it worse, eases it or makes up for it.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C354-compensar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 354: I can say how something influences a situation, makes it worse, eases it or makes up for it.",
+    "assesses": [
+      "PT-LEX-C354-INFLUENCIA-03",
+      "PT-LEX-C354-INFLUENCIA-04",
+      "PT-LEX-C354-INFLUENCIA-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C321-fee",
+  "pathSegment": "FR-PATH-321-CONTE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-321-CONTE",
+      "order": 1
+    }
+  ]
+}

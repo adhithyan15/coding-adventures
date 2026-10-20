@@ -1,0 +1,11 @@
+{
+  "id": "PT-C273-fase",
+  "pathSegment": "PT-PATH-273-ETAPA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-273-ETAPA",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C478-melancolia",
+  "pathSegment": "PT-PATH-478-SOLIDAO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-478-SOLIDAO",
+      "order": 1
+    }
+  ]
+}

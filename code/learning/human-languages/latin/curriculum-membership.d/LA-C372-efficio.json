@@ -1,0 +1,11 @@
+{
+  "id": "LA-C372-efficio",
+  "pathSegment": "LA-PATH-372-AUCTOR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-372-AUCTOR",
+      "order": 2
+    }
+  ]
+}

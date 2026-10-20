@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C360-diskriminieren",
+    "language": "german",
+    "chapter": 360,
+    "sequence": 19560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dabe7c5ca114b5bf"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-430-BANHO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-430-BANHO"
+  ],
+  "after": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:9dce7ed4f697fde8",
+  "lessonIds": [
+    "FR-C382-enfreindre",
+    "FR-C382-infraction",
+    "FR-C382-transgresser",
+    "FR-C382-sanction",
+    "FR-C382-sanctionner"
+  ],
+  "tex": "french/book/chapters/ch382-enfreindre-les-regles.tex"
+}

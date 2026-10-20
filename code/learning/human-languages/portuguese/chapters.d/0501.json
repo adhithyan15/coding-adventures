@@ -1,0 +1,19 @@
+{
+  "chapter": 501,
+  "title": "Mãos na terra",
+  "label": "ch:pt-maos-na-terra",
+  "canDo": "I can talk about gardening.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C501-vaso",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 501: I can talk about gardening.",
+    "assesses": [
+      "PT-LEX-C501-JARDIM-03",
+      "PT-LEX-C501-JARDIM-04",
+      "PT-LEX-C501-JARDIM-05"
+    ]
+  }
+}

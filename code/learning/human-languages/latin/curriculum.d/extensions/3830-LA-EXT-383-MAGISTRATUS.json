@@ -1,0 +1,8 @@
+{
+  "id": "LA-EXT-383-MAGISTRATUS",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a magistrate, a praetor, an aedile, a quaestor and a censor, and say what each one does.",
+  "prerequisites": []
+}

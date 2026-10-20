@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C478-caulae",
+    "language": "latin",
+    "chapter": 478,
+    "sequence": 25430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3db8d49e94f229f0"
+  },
+  "findings": []
+}

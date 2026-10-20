@@ -1,0 +1,19 @@
+{
+  "chapter": 526,
+  "title": "Séries e telenovelas",
+  "label": "ch:pt-series-e-telenovelas",
+  "canDo": "I can talk about series, seasons, subtitles and dubbing.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C526-dobragem",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 526: I can talk about series, seasons, subtitles and dubbing.",
+    "assesses": [
+      "PT-LEX-C526-SERIES-03",
+      "PT-LEX-C526-SERIES-04",
+      "PT-LEX-C526-SERIES-05"
+    ]
+  }
+}

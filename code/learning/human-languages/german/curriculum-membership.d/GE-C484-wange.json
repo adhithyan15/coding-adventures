@@ -1,0 +1,11 @@
+{
+  "id": "GE-C484-wange",
+  "pathSegment": "GE-PATH-484-GESICHT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-484-GESICHT",
+      "order": 1
+    }
+  ]
+}

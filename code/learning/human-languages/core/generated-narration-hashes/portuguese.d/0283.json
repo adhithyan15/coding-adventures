@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 283,
+  "sourceHash": "fnv1a64:f38159bcec3da30a",
+  "lessonIds": [
+    "PT-C283-boato",
+    "PT-C283-rumor",
+    "PT-C283-desmentir",
+    "PT-C283-desmentido",
+    "PT-C283-porta-voz"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch283.txt",
+  "json": "portuguese/narration/ch283.json",
+  "textHash": "fnv1a64:52107b7a0917b78e",
+  "jsonHash": "fnv1a64:1e11fd61ac5fc782",
+  "findings": []
+}

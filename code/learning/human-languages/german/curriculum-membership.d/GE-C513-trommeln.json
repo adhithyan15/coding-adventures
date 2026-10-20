@@ -1,0 +1,11 @@
+{
+  "id": "GE-C513-trommeln",
+  "pathSegment": "GE-PATH-513-INSTRUMENTE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-513-INSTRUMENTE",
+      "order": 4
+    }
+  ]
+}

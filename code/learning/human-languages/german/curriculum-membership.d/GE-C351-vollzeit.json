@@ -1,0 +1,11 @@
+{
+  "id": "GE-C351-vollzeit",
+  "pathSegment": "GE-PATH-351-ARBEITSZEIT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-351-ARBEITSZEIT",
+      "order": 1
+    }
+  ]
+}

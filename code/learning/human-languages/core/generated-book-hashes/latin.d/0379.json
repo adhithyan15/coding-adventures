@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 379,
+  "sourceHash": "fnv1a64:ffa4bda300488920",
+  "lessonIds": [
+    "LA-C379-quaestus",
+    "LA-C379-stipendium",
+    "LA-C379-mercenarius",
+    "LA-C379-laboriosus",
+    "LA-C379-diligentia"
+  ],
+  "tex": "latin/book/chapters/ch379-earning-a-living.tex"
+}

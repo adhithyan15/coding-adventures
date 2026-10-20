@@ -1,0 +1,11 @@
+{
+  "id": "FR-C516-chevalet",
+  "pathSegment": "FR-PATH-516-PEINTURE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-516-PEINTURE",
+      "order": 3
+    }
+  ]
+}

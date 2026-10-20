@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-402-VOLANTE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-402-VOLANTE"
+  ],
+  "after": []
+}

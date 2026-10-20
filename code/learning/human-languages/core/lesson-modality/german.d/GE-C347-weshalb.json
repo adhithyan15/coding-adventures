@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C347-weshalb",
+    "language": "german",
+    "chapter": 347,
+    "sequence": 18910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:026414106eed5f53"
+  },
+  "findings": []
+}

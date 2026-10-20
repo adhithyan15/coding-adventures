@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:0fd05ecaf068a948",
+  "lessonIds": [
+    "GE-C522-ausleihen",
+    "GE-C522-blaettern",
+    "GE-C522-lesezeichen",
+    "GE-C522-verlag",
+    "GE-C522-uebersetzung"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch522.txt",
+  "json": "german/narration/ch522.json",
+  "textHash": "fnv1a64:52f78b51f418e931",
+  "jsonHash": "fnv1a64:7f384215483a2bb0",
+  "findings": []
+}

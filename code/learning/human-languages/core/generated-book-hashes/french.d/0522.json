@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:26585fdbba359acf",
+  "lessonIds": [
+    "FR-C522-poesie",
+    "FR-C522-bande-dessinee",
+    "FR-C522-polar",
+    "FR-C522-biographie",
+    "FR-C522-conte"
+  ],
+  "tex": "french/book/chapters/ch522-quel-genre-de-livres.tex"
+}

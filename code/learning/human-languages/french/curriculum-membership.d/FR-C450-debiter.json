@@ -1,0 +1,11 @@
+{
+  "id": "FR-C450-debiter",
+  "pathSegment": "FR-PATH-450-CAISSE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-450-CAISSE",
+      "order": 2
+    }
+  ]
+}

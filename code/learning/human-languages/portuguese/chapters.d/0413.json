@@ -1,0 +1,19 @@
+{
+  "chapter": 413,
+  "title": "Na paragem",
+  "label": "ch:pt-na-paragem",
+  "canDo": "I can wait for a bus or a coach: the shelter, the terminus, the coach, the route and getting off.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C413-apear",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 413: I can wait for a bus or a coach: the shelter, the terminus, the coach, the route and getting off.",
+    "assesses": [
+      "PT-LEX-C413-PARAGEM-03",
+      "PT-LEX-C413-PARAGEM-04",
+      "PT-LEX-C413-PARAGEM-05"
+    ]
+  }
+}

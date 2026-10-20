@@ -1,0 +1,19 @@
+{
+  "chapter": 463,
+  "title": "Le grand froid",
+  "label": "ch:fr-le-grand-froid",
+  "canDo": "I can talk about freezing weather: black ice, frost, freezing, thawing and shivering.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-R463-revision-456-463",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 463: I can talk about freezing weather: black ice, frost, freezing, thawing and shivering.",
+    "assesses": [
+      "FR-LEX-C463-FROID-03",
+      "FR-LEX-C463-FROID-04",
+      "FR-LEX-C463-FROID-05"
+    ]
+  }
+}

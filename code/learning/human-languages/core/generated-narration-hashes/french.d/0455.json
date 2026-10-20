@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 455,
+  "sourceHash": "fnv1a64:7e976466d25a35e9",
+  "lessonIds": [
+    "FR-C455-randonnee",
+    "FR-C455-randonneur",
+    "FR-C455-pente",
+    "FR-C455-gravir",
+    "FR-C455-trebucher",
+    "FR-R455-revision-448-455"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch455.txt",
+  "json": "french/narration/ch455.json",
+  "textHash": "fnv1a64:fa249f4aa8825781",
+  "jsonHash": "fnv1a64:c94d1d8d25309eac",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 493,
+  "title": "Bisavós, bisnetos e adoção",
+  "label": "ch:pt-bisavos-bisnetos-e-adocao",
+  "canDo": "I can talk about great-grandparents, great-grandchildren, orphans and adoption.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C493-adocao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 493: I can talk about great-grandparents, great-grandchildren, orphans and adoption.",
+    "assesses": [
+      "PT-LEX-C493-GERACOES-03",
+      "PT-LEX-C493-GERACOES-04",
+      "PT-LEX-C493-GERACOES-05"
+    ]
+  }
+}

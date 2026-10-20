@@ -1,0 +1,19 @@
+{
+  "chapter": 402,
+  "title": "Bien voir la route",
+  "label": "ch:fr-bien-voir-la-route",
+  "canDo": "I can talk about seeing clearly from a car: the windscreen, the rear-view mirror, the horn, honking and windows that mist up.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C402-embuer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 402: I can talk about seeing clearly from a car: the windscreen, the rear-view mirror, the horn, honking and windows that mist up.",
+    "assesses": [
+      "FR-LEX-C402-VITRES-03",
+      "FR-LEX-C402-VITRES-04",
+      "FR-LEX-C402-VITRES-05"
+    ]
+  }
+}

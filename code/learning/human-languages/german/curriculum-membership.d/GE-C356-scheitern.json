@@ -1,0 +1,11 @@
+{
+  "id": "GE-C356-scheitern",
+  "pathSegment": "GE-PATH-356-KARRIERE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-356-KARRIERE",
+      "order": 4
+    }
+  ]
+}

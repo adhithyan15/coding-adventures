@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C428-progredior",
+    "language": "latin",
+    "chapter": 428,
+    "sequence": 22890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f70aebf8b9377e4e"
+  },
+  "findings": []
+}

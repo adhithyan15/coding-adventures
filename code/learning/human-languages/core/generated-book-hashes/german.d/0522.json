@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:91bbd094bcb5a226",
+  "lessonIds": [
+    "GE-C522-ausleihen",
+    "GE-C522-blaettern",
+    "GE-C522-lesezeichen",
+    "GE-C522-verlag",
+    "GE-C522-uebersetzung"
+  ],
+  "tex": "german/book/chapters/ch522-bucher-leihen.tex"
+}

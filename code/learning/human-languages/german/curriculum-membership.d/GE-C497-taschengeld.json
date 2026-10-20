@@ -1,0 +1,11 @@
+{
+  "id": "GE-C497-taschengeld",
+  "pathSegment": "GE-PATH-497-TROTZIG",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-497-TROTZIG",
+      "order": 4
+    }
+  ]
+}

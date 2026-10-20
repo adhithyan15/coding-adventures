@@ -1,0 +1,20 @@
+{
+  "chapter": 262,
+  "title": "Devia --- What You Should Do, and Explaining Why",
+  "label": "ch:pt-should-and-explaining",
+  "canDo": "I can give soft advice with devia and deveria, and explain myself in four moves: an opinion, a cause, a consequence and advice.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C262-revisao-explicacao",
+    "kind": "production",
+    "summary": "Complete PT-C262-revisao-explicacao: answer a why-question with an opinion, a cause, a consequence and advice.",
+    "assesses": [
+      "PT-LEX-DEVIA-01",
+      "PT-ETYMON-DEBERE-02",
+      "PT-GRAMMAR-EXPLICACAO-01",
+      "PT-ETYMON-EXPLICAR-02"
+    ]
+  }
+}

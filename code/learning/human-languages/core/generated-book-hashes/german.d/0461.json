@@ -1,0 +1,14 @@
+{
+  "language": "german",
+  "chapter": 461,
+  "sourceHash": "fnv1a64:e7a8473b2d48076f",
+  "lessonIds": [
+    "GE-C461-nieselregen",
+    "GE-C461-nieseln",
+    "GE-C461-schauer",
+    "GE-C461-aufheiterung",
+    "GE-C461-aufklaren",
+    "GE-R461-review-454-461"
+  ],
+  "tex": "german/book/chapters/ch461-schauer-und-nieselregen.tex"
+}

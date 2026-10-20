@@ -1,0 +1,11 @@
+{
+  "id": "GE-C484-wimper",
+  "pathSegment": "GE-PATH-484-GESICHT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-484-GESICHT",
+      "order": 4
+    }
+  ]
+}

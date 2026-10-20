@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:c42a82071b96509a",
+  "lessonIds": [
+    "GE-C321-erfinden",
+    "GE-C321-erfindung",
+    "GE-C321-gruenden",
+    "GE-C321-entstehen",
+    "GE-C321-zurueckkehren"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch321.txt",
+  "json": "german/narration/ch321.json",
+  "textHash": "fnv1a64:3f720f87746c9ce0",
+  "jsonHash": "fnv1a64:668d03a0f52ac8d5",
+  "findings": []
+}

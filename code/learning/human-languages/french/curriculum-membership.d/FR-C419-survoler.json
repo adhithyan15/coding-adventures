@@ -1,0 +1,11 @@
+{
+  "id": "FR-C419-survoler",
+  "pathSegment": "FR-PATH-419-DECOLLAGE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-419-DECOLLAGE",
+      "order": 4
+    }
+  ]
+}

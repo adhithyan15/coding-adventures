@@ -1,0 +1,19 @@
+{
+  "chapter": 378,
+  "title": "Antes do exame",
+  "label": "ch:pt-antes-do-exame",
+  "canDo": "I can talk about getting ready for an exam: revising my notes and the textbook, learning by heart, and tests.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "PT-C378-teste",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 378: I can talk about getting ready for an exam: revising my notes and the textbook, learning by heart, and tests.",
+    "assesses": [
+      "PT-LEX-C378-REVER-03",
+      "PT-LEX-C378-REVER-04",
+      "PT-LEX-C378-REVER-05"
+    ]
+  }
+}

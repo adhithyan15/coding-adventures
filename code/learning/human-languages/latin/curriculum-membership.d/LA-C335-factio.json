@@ -1,0 +1,11 @@
+{
+  "id": "LA-C335-factio",
+  "pathSegment": "LA-PATH-335-AURIGA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-335-AURIGA",
+      "order": 3
+    }
+  ]
+}

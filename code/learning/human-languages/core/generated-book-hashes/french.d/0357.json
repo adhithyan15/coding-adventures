@@ -1,0 +1,14 @@
+{
+  "language": "french",
+  "chapter": 357,
+  "sourceHash": "fnv1a64:cdc7d98f8631cf84",
+  "lessonIds": [
+    "FR-C357-stage",
+    "FR-C357-stagiaire",
+    "FR-C357-apprenti",
+    "FR-C357-apprentissage",
+    "FR-C357-employeur",
+    "FR-R357-revision-350-357"
+  ],
+  "tex": "french/book/chapters/ch357-le-premier-poste.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:7cb2b5a3889ff3d2",
+  "lessonIds": [
+    "GE-C346-zweck",
+    "GE-C346-absicht",
+    "GE-C346-damit",
+    "GE-C346-absichtlich",
+    "GE-C346-anlass"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch346.txt",
+  "json": "german/narration/ch346.json",
+  "textHash": "fnv1a64:61192610b1de6649",
+  "jsonHash": "fnv1a64:bce9369249b089e1",
+  "findings": []
+}

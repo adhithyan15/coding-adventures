@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 523,
+  "sourceHash": "fnv1a64:45407c2d1f1293a0",
+  "lessonIds": [
+    "LA-C523-robustus",
+    "LA-C523-obesus",
+    "LA-C523-gracilis",
+    "LA-C523-sanitas",
+    "LA-C523-salubris"
+  ],
+  "tex": "latin/book/chapters/ch523-build-and-health.tex"
+}

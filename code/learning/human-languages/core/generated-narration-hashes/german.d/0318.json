@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 318,
+  "sourceHash": "fnv1a64:3fc48406451ebd85",
+  "lessonIds": [
+    "GE-C318-krieg",
+    "GE-C318-frieden",
+    "GE-C318-schlacht",
+    "GE-C318-besiegen",
+    "GE-C318-niederlage"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch318.txt",
+  "json": "german/narration/ch318.json",
+  "textHash": "fnv1a64:1b983e1ace9afaa8",
+  "jsonHash": "fnv1a64:23bf967be1ee6440",
+  "findings": []
+}

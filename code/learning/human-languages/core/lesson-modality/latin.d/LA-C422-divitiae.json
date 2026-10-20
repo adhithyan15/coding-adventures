@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C422-divitiae",
+    "language": "latin",
+    "chapter": 422,
+    "sequence": 22530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:da5dbcc6142dfdda"
+  },
+  "findings": []
+}

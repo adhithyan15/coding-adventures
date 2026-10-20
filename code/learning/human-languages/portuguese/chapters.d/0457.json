@@ -1,0 +1,19 @@
+{
+  "chapter": 457,
+  "title": "As árvores",
+  "label": "ch:pt-as-arvores",
+  "canDo": "I can name trees and care for them: the oak, the pine, the cork oak, cork and pruning.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-C457-podar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 457: I can name trees and care for them: the oak, the pine, the cork oak, cork and pruning.",
+    "assesses": [
+      "PT-LEX-C457-ARVORES-03",
+      "PT-LEX-C457-ARVORES-04",
+      "PT-LEX-C457-ARVORES-05"
+    ]
+  }
+}

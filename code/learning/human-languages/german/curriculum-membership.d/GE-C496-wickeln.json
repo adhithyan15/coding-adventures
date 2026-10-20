@@ -1,0 +1,11 @@
+{
+  "id": "GE-C496-wickeln",
+  "pathSegment": "GE-PATH-496-BABY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-496-BABY",
+      "order": 2
+    }
+  ]
+}

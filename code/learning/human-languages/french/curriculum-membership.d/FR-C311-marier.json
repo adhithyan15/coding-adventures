@@ -1,0 +1,11 @@
+{
+  "id": "FR-C311-marier",
+  "pathSegment": "FR-PATH-311-OUI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-311-OUI",
+      "order": 2
+    }
+  ]
+}

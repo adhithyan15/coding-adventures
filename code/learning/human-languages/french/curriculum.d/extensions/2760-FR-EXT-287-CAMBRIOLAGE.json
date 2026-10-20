@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-287-CAMBRIOLAGE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can tell the story of a burglary: breaking in, the burglar, the burglary, the forced entry and the loot.",
+  "prerequisites": []
+}

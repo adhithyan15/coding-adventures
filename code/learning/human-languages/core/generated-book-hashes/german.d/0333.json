@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:2e936f9bef35f6f8",
+  "lessonIds": [
+    "GE-C333-widersprechen",
+    "GE-C333-widerspruch",
+    "GE-C333-einwand",
+    "GE-C333-einwenden",
+    "GE-C333-bestreiten"
+  ],
+  "tex": "german/book/chapters/ch333-widersprechen.tex"
+}

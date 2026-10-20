@@ -1,0 +1,19 @@
+{
+  "chapter": 485,
+  "title": "Arranhões e nódoas negras",
+  "label": "ch:pt-arranhoes-e-nodoas-negras",
+  "canDo": "I can describe small injuries.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C485-inchado",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 485: I can describe small injuries.",
+    "assesses": [
+      "PT-LEX-C485-ARRANHAO-03",
+      "PT-LEX-C485-ARRANHAO-04",
+      "PT-LEX-C485-ARRANHAO-05"
+    ]
+  }
+}

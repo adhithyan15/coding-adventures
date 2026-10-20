@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-380-POLITICA",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "PT-EXT-380-POLITICA"
+  ],
+  "after": []
+}

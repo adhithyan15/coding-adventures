@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-436-RACCOURCI",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-436-RACCOURCI"
+  ],
+  "after": []
+}

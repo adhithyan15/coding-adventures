@@ -1,0 +1,19 @@
+{
+  "chapter": 316,
+  "title": "A herança",
+  "label": "ch:pt-a-heranca",
+  "canDo": "I can talk about inheritance, heirs and wills, and about living on a pension.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-R316-revisao-309-316",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 316: I can talk about inheritance, heirs and wills, and about living on a pension.",
+    "assesses": [
+      "PT-LEX-C316-HERANCA-03",
+      "PT-LEX-C316-HERANCA-04",
+      "PT-LEX-C316-HERANCA-05"
+    ]
+  }
+}

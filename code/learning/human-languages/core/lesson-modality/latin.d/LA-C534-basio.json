@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C534-basio",
+    "language": "latin",
+    "chapter": 534,
+    "sequence": 28320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3bb4b57fe68a0c69"
+  },
+  "findings": []
+}

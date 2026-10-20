@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 342,
+  "sourceHash": "fnv1a64:4943157317bc68de",
+  "lessonIds": [
+    "GE-C342-wirkung",
+    "GE-C342-wirken",
+    "GE-C342-verursachen",
+    "GE-C342-ausloesen",
+    "GE-C342-ausloeser"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch342.txt",
+  "json": "german/narration/ch342.json",
+  "textHash": "fnv1a64:a8d8e6788edc7ae4",
+  "jsonHash": "fnv1a64:16d1d1236225e22f",
+  "findings": []
+}

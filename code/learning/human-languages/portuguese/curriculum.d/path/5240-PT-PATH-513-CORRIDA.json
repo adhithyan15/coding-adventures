@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-513-CORRIDA",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "PT-EXT-513-CORRIDA"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 514,
+  "sourceHash": "fnv1a64:2577a1d48d794440",
+  "lessonIds": [
+    "FR-C514-troupe",
+    "FR-C514-coulisses",
+    "FR-C514-decor",
+    "FR-C514-costume",
+    "FR-C514-entracte"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch514.txt",
+  "json": "french/narration/ch514.json",
+  "textHash": "fnv1a64:20fc377d2f316e8c",
+  "jsonHash": "fnv1a64:83f7cc0c1243c3b7",
+  "findings": []
+}

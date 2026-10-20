@@ -1,0 +1,19 @@
+{
+  "chapter": 330,
+  "title": "Sur le feu",
+  "label": "ch:fr-sur-le-feu",
+  "canDo": "I can describe cooking on the hob: boiling, the boil, a big pot, simmering and the cast-iron pot.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C330-cocotte",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 330: I can describe cooking on the hob: boiling, the boil, a big pot, simmering and the cast-iron pot.",
+    "assesses": [
+      "FR-LEX-C330-MIJOTER-03",
+      "FR-LEX-C330-MIJOTER-04",
+      "FR-LEX-C330-MIJOTER-05"
+    ]
+  }
+}

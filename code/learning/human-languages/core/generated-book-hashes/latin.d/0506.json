@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 506,
+  "sourceHash": "fnv1a64:e5ef26b5539934a3",
+  "lessonIds": [
+    "LA-C506-comis",
+    "LA-C506-comitas",
+    "LA-C506-urbanitas",
+    "LA-C506-rusticitas",
+    "LA-C506-liberalitas"
+  ],
+  "tex": "latin/book/chapters/ch506-manners.tex"
+}

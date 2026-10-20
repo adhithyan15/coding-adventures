@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 476,
+  "sourceHash": "fnv1a64:f523030fbba2f670",
+  "lessonIds": [
+    "FR-C476-inquietude",
+    "FR-C476-anxieux",
+    "FR-C476-mefier",
+    "FR-C476-optimiste",
+    "FR-C476-pessimiste"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch476.txt",
+  "json": "french/narration/ch476.json",
+  "textHash": "fnv1a64:bb51e53318c2387d",
+  "jsonHash": "fnv1a64:6d59396391a25bc4",
+  "findings": []
+}

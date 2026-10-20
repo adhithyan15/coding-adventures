@@ -1,0 +1,13 @@
+[package]
+name = "rsa-public-operation"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded RFC 8017 RSA public operation over previously validated public keys"
+
+[dependencies]
+bignum-core = { path = "../bignum-core" }
+x509-rsa-public-key = { path = "../x509-rsa-public-key" }
+
+[dev-dependencies]
+der-asn1 = { path = "../der-asn1" }
+x509-subject-public-key-info = { path = "../x509-subject-public-key-info" }

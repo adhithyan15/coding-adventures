@@ -1,0 +1,11 @@
+{
+  "id": "FR-C422-gilet",
+  "pathSegment": "FR-PATH-422-TRAVERSEE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-422-TRAVERSEE",
+      "order": 3
+    }
+  ]
+}

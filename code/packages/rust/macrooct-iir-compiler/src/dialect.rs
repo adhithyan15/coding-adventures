@@ -59,6 +59,13 @@ use lexer::token::{Token, TokenType};
 /// engine owns all the state there is (the include stack, the conditional
 /// stack, the spend counters), which is what lets one `MacroOctDialect` be
 /// shared across translation units without leaking anything between them.
+///
+/// **No input budget.** [`Dialect::lex`] here lexes whatever it is given, and
+/// the lexer builds a whole file's tokens (about 260 bytes each) before the
+/// engine's token limit can fire. For untrusted source, use this crate's
+/// `compile_source*` / `preprocess_source`, or hand the engine a
+/// [`BudgetedMacroOct`](crate::BudgetedMacroOct), which charges each file's
+/// bytes against `Bounds` before lexing.
 #[derive(Debug, Default, Clone, Copy)]
 pub struct MacroOctDialect;
 

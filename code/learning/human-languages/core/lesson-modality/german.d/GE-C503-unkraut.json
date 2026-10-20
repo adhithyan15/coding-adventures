@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C503-unkraut",
+    "language": "german",
+    "chapter": 503,
+    "sequence": 26900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:013e8dffff2f9dce"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C287-cambrioler",
+    "language": "french",
+    "chapter": 287,
+    "sequence": 16470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6ab542635654061b"
+  },
+  "findings": []
+}

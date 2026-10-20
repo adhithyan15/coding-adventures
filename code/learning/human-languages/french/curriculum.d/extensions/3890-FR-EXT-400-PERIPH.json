@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-400-PERIPH",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about the big roads round a town: the ring road, the outskirts, the interchange, the slip road and turning off.",
+  "prerequisites": []
+}

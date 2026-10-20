@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-261-OPINIAO",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "PT-EXT-261-OPINIAO"
+  ],
+  "after": []
+}

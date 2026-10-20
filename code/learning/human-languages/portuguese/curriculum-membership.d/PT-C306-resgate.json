@@ -1,0 +1,11 @@
+{
+  "id": "PT-C306-resgate",
+  "pathSegment": "PT-PATH-306-RESGATE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-306-RESGATE",
+      "order": 2
+    }
+  ]
+}

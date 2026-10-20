@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C411-lis",
+    "language": "latin",
+    "chapter": 411,
+    "sequence": 21970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cbd0fc52f5a1d03e"
+  },
+  "findings": []
+}

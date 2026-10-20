@@ -1,0 +1,11 @@
+{
+  "id": "PT-C415-locomotiva",
+  "pathSegment": "PT-PATH-415-CARRUAGEM",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-415-CARRUAGEM",
+      "order": 4
+    }
+  ]
+}

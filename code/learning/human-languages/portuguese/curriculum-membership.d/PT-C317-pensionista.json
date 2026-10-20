@@ -1,0 +1,11 @@
+{
+  "id": "PT-C317-pensionista",
+  "pathSegment": "PT-PATH-317-REFORMA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-317-REFORMA",
+      "order": 1
+    }
+  ]
+}

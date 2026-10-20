@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-446-CORDONNIER",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can get things mended: the cobbler, resoling, polishing, the locksmith and sewing back.",
+  "prerequisites": []
+}

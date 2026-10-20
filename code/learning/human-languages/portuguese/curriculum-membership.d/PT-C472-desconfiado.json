@@ -1,0 +1,11 @@
+{
+  "id": "PT-C472-desconfiado",
+  "pathSegment": "PT-PATH-472-ESPERTO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-472-ESPERTO",
+      "order": 4
+    }
+  ]
+}

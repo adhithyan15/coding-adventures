@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C481-entorse",
+    "language": "french",
+    "chapter": 481,
+    "sequence": 26460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9df724595dd030e9"
+  },
+  "findings": []
+}

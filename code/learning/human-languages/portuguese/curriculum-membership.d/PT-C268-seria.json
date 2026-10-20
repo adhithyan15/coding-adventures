@@ -1,0 +1,11 @@
+{
+  "id": "PT-C268-seria",
+  "pathSegment": "PT-PATH-268-CONDICIONAL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-268-CONDICIONAL",
+      "order": 1
+    }
+  ]
+}

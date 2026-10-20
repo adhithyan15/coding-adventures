@@ -1,0 +1,11 @@
+{
+  "id": "LA-C477-pasco",
+  "pathSegment": "LA-PATH-477-PECUS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-477-PECUS",
+      "order": 3
+    }
+  ]
+}

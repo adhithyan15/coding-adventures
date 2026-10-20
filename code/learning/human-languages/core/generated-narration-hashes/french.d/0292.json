@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 292,
+  "sourceHash": "fnv1a64:6e694a7b2d178ac8",
+  "lessonIds": [
+    "FR-C292-enqueteur",
+    "FR-C292-inspecteur",
+    "FR-C292-detective",
+    "FR-C292-indice",
+    "FR-C292-empreinte"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch292.txt",
+  "json": "french/narration/ch292.json",
+  "textHash": "fnv1a64:73668464b3f5cb97",
+  "jsonHash": "fnv1a64:c4b7a11a12451e7d",
+  "findings": []
+}

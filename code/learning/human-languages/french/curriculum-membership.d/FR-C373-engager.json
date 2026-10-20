@@ -1,0 +1,11 @@
+{
+  "id": "FR-C373-engager",
+  "pathSegment": "FR-PATH-373-DISPONIBLE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-373-DISPONIBLE",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "language": "german",
+  "chapter": 513,
+  "sourceHash": "fnv1a64:886cb1ec54d123a7",
+  "lessonIds": [
+    "GE-C513-klavier",
+    "GE-C513-geige",
+    "GE-C513-floete",
+    "GE-C513-schlagzeug",
+    "GE-C513-trommeln",
+    "GE-R513-review-506-513"
+  ],
+  "tex": "german/book/chapters/ch513-klavier-und-geige.tex"
+}

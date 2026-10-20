@@ -1,0 +1,11 @@
+{
+  "id": "PT-C323-folar",
+  "pathSegment": "PT-PATH-323-CONSOADA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-323-CONSOADA",
+      "order": 3
+    }
+  ]
+}

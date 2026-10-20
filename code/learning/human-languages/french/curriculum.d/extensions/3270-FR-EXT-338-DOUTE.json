@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-338-DOUTE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say I doubt something, that I am sceptical, deny a claim and say an idea is absurd or debatable.",
+  "prerequisites": []
+}

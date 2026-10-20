@@ -1,0 +1,19 @@
+{
+  "chapter": 308,
+  "title": "Que susto!",
+  "label": "ch:pt-que-susto",
+  "canDo": "I can talk about frights and panic, fainting, and twisting an ankle.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-R308-revisao-301-308",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 308: I can talk about frights and panic, fainting, and twisting an ankle.",
+    "assesses": [
+      "PT-LEX-C308-SUSTO-03",
+      "PT-LEX-C308-SUSTO-04",
+      "PT-LEX-C308-SUSTO-05"
+    ]
+  }
+}

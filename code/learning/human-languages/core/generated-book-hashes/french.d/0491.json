@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 491,
+  "sourceHash": "fnv1a64:be8e683fea04ca5f",
+  "lessonIds": [
+    "FR-C491-conjoint",
+    "FR-C491-separer",
+    "FR-C491-separation",
+    "FR-C491-rompre",
+    "FR-C491-rupture"
+  ],
+  "tex": "french/book/chapters/ch491-quand-ca-se-termine.tex"
+}

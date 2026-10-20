@@ -1,0 +1,11 @@
+{
+  "id": "LA-C451-sciscitor",
+  "pathSegment": "LA-PATH-451-PERCONTOR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-451-PERCONTOR",
+      "order": 1
+    }
+  ]
+}

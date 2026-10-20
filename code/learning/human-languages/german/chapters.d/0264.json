@@ -1,0 +1,19 @@
+{
+  "chapter": 264,
+  "title": "Damals und neulich",
+  "label": "ch:ge-damals-und-neulich",
+  "canDo": "I can place events in time: back then, long ago, the other day, recently and the day before yesterday.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C264-vorgestern",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 264: I can place events in time: back then, long ago, the other day, recently and the day before yesterday.",
+    "assesses": [
+      "GE-LEX-C264-DAMALS-03",
+      "GE-LEX-C264-DAMALS-04",
+      "GE-LEX-C264-DAMALS-05"
+    ]
+  }
+}

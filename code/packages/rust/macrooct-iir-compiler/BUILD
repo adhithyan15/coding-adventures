@@ -8,4 +8,4 @@
 # criterion, and a suite that compiles but never runs is worse than no suite,
 # because it reads as coverage.
 cargo build -p coding-adventures-macrooct-iir-compiler
-cargo test -p coding-adventures-macrooct-iir-compiler --lib --test iir_identity
+cargo test -p coding-adventures-macrooct-iir-compiler --lib --test iir_identity --test prelex_budget

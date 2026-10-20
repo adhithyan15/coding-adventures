@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C352-fermentum",
+    "language": "latin",
+    "chapter": 352,
+    "sequence": 18950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4fb1c05f926a1921"
+  },
+  "findings": []
+}

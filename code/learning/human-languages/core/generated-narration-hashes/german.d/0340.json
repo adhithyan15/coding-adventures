@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:0d4165d1aa253748",
+  "lessonIds": [
+    "GE-C340-beurteilen",
+    "GE-C340-einschaetzen",
+    "GE-C340-einschaetzung",
+    "GE-C340-kritisieren",
+    "GE-C340-kritik"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch340.txt",
+  "json": "german/narration/ch340.json",
+  "textHash": "fnv1a64:9fa9416ea60e55c9",
+  "jsonHash": "fnv1a64:b769b9df8e417721",
+  "findings": []
+}

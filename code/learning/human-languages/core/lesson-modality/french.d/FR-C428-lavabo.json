@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C428-lavabo",
+    "language": "french",
+    "chapter": 428,
+    "sequence": 23750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c5c27472f232d826"
+  },
+  "findings": []
+}

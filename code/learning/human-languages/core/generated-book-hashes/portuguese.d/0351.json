@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:7193c9559070eedb",
+  "lessonIds": [
+    "PT-C351-impacto",
+    "PT-C351-repercussao",
+    "PT-C351-implicar",
+    "PT-C351-acarretar",
+    "PT-C351-desencadear"
+  ],
+  "tex": "portuguese/book/chapters/ch351-as-repercussoes.tex"
+}

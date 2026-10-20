@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:ec79be8e3baa504c",
+  "lessonIds": [
+    "PT-C336-tema",
+    "PT-C336-questao",
+    "PT-C336-debate",
+    "PT-C336-debater",
+    "PT-C336-argumento"
+  ],
+  "tex": "portuguese/book/chapters/ch336-o-debate.tex"
+}

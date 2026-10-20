@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-446-ARRAIAL",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-446-ARRAIAL"
+  ],
+  "after": []
+}

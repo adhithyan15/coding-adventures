@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 449,
+  "sourceHash": "fnv1a64:ef5ccd6290b4773f",
+  "lessonIds": [
+    "LA-C449-vappa",
+    "LA-C449-merum",
+    "LA-C449-diluo",
+    "LA-C449-putidus",
+    "LA-C449-copa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch449.txt",
+  "json": "latin/narration/ch449.json",
+  "textHash": "fnv1a64:2586ac2397bef493",
+  "jsonHash": "fnv1a64:a3e14eca1a45f45d",
+  "findings": []
+}

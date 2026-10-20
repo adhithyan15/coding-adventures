@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 451,
+  "sourceHash": "fnv1a64:d6c182905f306d2b",
+  "lessonIds": [
+    "PT-C451-sapateiro",
+    "PT-C451-costureira",
+    "PT-C451-bainha",
+    "PT-C451-serralheiro",
+    "PT-C451-remendar"
+  ],
+  "tex": "portuguese/book/chapters/ch451-arranjar-e-remendar.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 429,
+  "title": "Petits soucis dans la chambre",
+  "label": "ch:fr-petits-soucis-dans-la-chambre",
+  "canDo": "I can describe small problems in a room: the light bulb, the socket, the minibar, the carpet and a stain.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C429-tache-stain",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 429: I can describe small problems in a room: the light bulb, the socket, the minibar, the carpet and a stain.",
+    "assesses": [
+      "FR-LEX-C429-AMPOULE-03",
+      "FR-LEX-C429-AMPOULE-04",
+      "FR-LEX-C429-AMPOULE-05"
+    ]
+  }
+}

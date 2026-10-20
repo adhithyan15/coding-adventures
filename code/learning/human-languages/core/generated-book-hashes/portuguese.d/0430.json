@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 430,
+  "sourceHash": "fnv1a64:877361d10913b4ad",
+  "lessonIds": [
+    "PT-C430-pingar",
+    "PT-C430-ralo",
+    "PT-C430-entupir",
+    "PT-C430-desentupir",
+    "PT-C430-autoclismo"
+  ],
+  "tex": "portuguese/book/chapters/ch430-a-casa-de-banho-nao-funciona.tex"
+}

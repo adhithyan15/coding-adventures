@@ -1,0 +1,11 @@
+{
+  "id": "GE-C377-dozent",
+  "pathSegment": "GE-PATH-377-HOCHSCHULE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-377-HOCHSCHULE",
+      "order": 2
+    }
+  ]
+}

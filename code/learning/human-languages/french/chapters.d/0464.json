@@ -1,0 +1,19 @@
+{
+  "chapter": 464,
+  "title": "La canicule",
+  "label": "ch:fr-la-canicule",
+  "canDo": "I can talk about a heatwave: the heatwave, the drought, the humidity, clammy air and sweating.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C464-transpirer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 464: I can talk about a heatwave: the heatwave, the drought, the humidity, clammy air and sweating.",
+    "assesses": [
+      "FR-LEX-C464-CANICULE-03",
+      "FR-LEX-C464-CANICULE-04",
+      "FR-LEX-C464-CANICULE-05"
+    ]
+  }
+}

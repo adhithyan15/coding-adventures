@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-506-FUSSBALL",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about the players on a football pitch.",
+  "prerequisites": []
+}

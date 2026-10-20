@@ -1,0 +1,19 @@
+{
+  "chapter": 365,
+  "title": "Es sei denn …",
+  "label": "ch:ge-es-sei-denn",
+  "canDo": "I can name an exception to a plan and say unless, except when, otherwise and if need be.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GE-C365-notfalls",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 365: I can name an exception to a plan and say unless, except when, otherwise and if need be.",
+    "assesses": [
+      "GE-LEX-C365-ESSEIDENN-03",
+      "GE-LEX-C365-ESSEIDENN-04",
+      "GE-LEX-C365-ESSEIDENN-05"
+    ]
+  }
+}

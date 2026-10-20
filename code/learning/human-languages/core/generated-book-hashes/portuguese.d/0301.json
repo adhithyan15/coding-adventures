@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:8780990856aeee42",
+  "lessonIds": [
+    "PT-C301-incendio",
+    "PT-C301-explosao",
+    "PT-C301-explodir",
+    "PT-C301-extintor",
+    "PT-C301-queimadura"
+  ],
+  "tex": "portuguese/book/chapters/ch301-fogo.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 507,
+  "sourceHash": "fnv1a64:0b50ea898de91fa9",
+  "lessonIds": [
+    "GE-C507-halbzeit",
+    "GE-C507-elfmeter",
+    "GE-C507-verlaengerung",
+    "GE-C507-unentschieden",
+    "GE-C507-abseits"
+  ],
+  "tex": "german/book/chapters/ch507-halbzeit-und-elfmeter.tex"
+}

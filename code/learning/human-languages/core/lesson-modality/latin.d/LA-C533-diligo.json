@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C533-diligo",
+    "language": "latin",
+    "chapter": 533,
+    "sequence": 28280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5e4742ddebff9913"
+  },
+  "findings": []
+}

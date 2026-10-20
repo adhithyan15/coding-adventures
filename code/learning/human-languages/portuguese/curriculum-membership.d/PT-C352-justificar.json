@@ -1,0 +1,11 @@
+{
+  "id": "PT-C352-justificar",
+  "pathSegment": "PT-PATH-352-REACAO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-352-REACAO",
+      "order": 4
+    }
+  ]
+}

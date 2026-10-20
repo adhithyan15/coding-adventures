@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:625f30eda0d6ccb5",
+  "lessonIds": [
+    "FR-C325-historien",
+    "FR-C325-ancetre",
+    "FR-C325-patrimoine",
+    "FR-C325-archeologue",
+    "FR-C325-fouille"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch325.txt",
+  "json": "french/narration/ch325.json",
+  "textHash": "fnv1a64:7eb3e2aa442dce39",
+  "jsonHash": "fnv1a64:13d43e1bf05c5a42",
+  "findings": []
+}

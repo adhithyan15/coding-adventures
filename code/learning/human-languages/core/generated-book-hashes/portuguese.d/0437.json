@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 437,
+  "sourceHash": "fnv1a64:2e6a6e92f43d3b3d",
+  "lessonIds": [
+    "PT-C437-avenida",
+    "PT-C437-travessa",
+    "PT-C437-beco",
+    "PT-C437-viela",
+    "PT-C437-bifurcacao"
+  ],
+  "tex": "portuguese/book/chapters/ch437-ruas-e-becos.tex"
+}

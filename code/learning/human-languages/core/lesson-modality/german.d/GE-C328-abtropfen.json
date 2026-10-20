@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C328-abtropfen",
+    "language": "german",
+    "chapter": 328,
+    "sequence": 17900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c3bce5453bf67981"
+  },
+  "findings": []
+}

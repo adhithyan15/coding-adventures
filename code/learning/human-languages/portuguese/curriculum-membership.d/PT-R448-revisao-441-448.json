@@ -1,0 +1,11 @@
+{
+  "id": "PT-R448-revisao-441-448",
+  "pathSegment": "PT-PATH-448-TABACARIA",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PT-EXT-448-TABACARIA",
+      "order": 5
+    }
+  ]
+}

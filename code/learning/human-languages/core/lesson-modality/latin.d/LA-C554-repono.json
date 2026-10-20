@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C554-repono",
+    "language": "latin",
+    "chapter": 554,
+    "sequence": 29350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0da2a46af8fddabc"
+  },
+  "findings": []
+}

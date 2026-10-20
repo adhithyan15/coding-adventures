@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 294,
+  "sourceHash": "fnv1a64:b2c923353f6301f5",
+  "lessonIds": [
+    "PT-C294-investigacao",
+    "PT-C294-investigar",
+    "PT-C294-inspetor",
+    "PT-C294-detetive",
+    "PT-C294-indicio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch294.txt",
+  "json": "portuguese/narration/ch294.json",
+  "textHash": "fnv1a64:0b3ca87d5a51e95b",
+  "jsonHash": "fnv1a64:d886034082d42bba",
+  "findings": []
+}

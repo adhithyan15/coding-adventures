@@ -1,0 +1,11 @@
+{
+  "id": "PT-C385-legal",
+  "pathSegment": "PT-PATH-385-BUROCRACIA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-385-BUROCRACIA",
+      "order": 3
+    }
+  ]
+}

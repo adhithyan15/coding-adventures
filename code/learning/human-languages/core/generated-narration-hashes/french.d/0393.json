@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 393,
+  "sourceHash": "fnv1a64:3ba497390c97bbe8",
+  "lessonIds": [
+    "FR-C393-garantie",
+    "FR-C393-garantir",
+    "FR-C393-devis",
+    "FR-C393-rentable",
+    "FR-C393-avantageux"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch393.txt",
+  "json": "french/narration/ch393.json",
+  "textHash": "fnv1a64:55419af07b2fb4a9",
+  "jsonHash": "fnv1a64:dacc73bfe419c10f",
+  "findings": []
+}

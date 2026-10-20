@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 364,
+  "sourceHash": "fnv1a64:d7be8cfc4987b319",
+  "lessonIds": [
+    "FR-C364-justice",
+    "FR-C364-injuste",
+    "FR-C364-injustice",
+    "FR-C364-prejuge",
+    "FR-C364-stereotype"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch364.txt",
+  "json": "french/narration/ch364.json",
+  "textHash": "fnv1a64:cbaaa323ab973f07",
+  "jsonHash": "fnv1a64:784f4a6ea34b0dd5",
+  "findings": []
+}

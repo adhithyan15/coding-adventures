@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C378-redoubler",
+    "language": "french",
+    "chapter": 378,
+    "sequence": 21160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0513e93b89131bdb"
+  },
+  "findings": []
+}

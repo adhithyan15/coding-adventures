@@ -1,0 +1,19 @@
+{
+  "chapter": 301,
+  "title": "Rūmor et susurrus",
+  "label": "ch:la-rumor-et-susurrus",
+  "canDo": "I can tell how a rumour spread: a whisper, to whisper, to spread abroad, to grow stronger and they say.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C301-perhibeo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 301: I can tell how a rumour spread: a whisper, to whisper, to spread abroad, to grow stronger and they say.",
+    "assesses": [
+      "LA-LEX-C301-SUSURRUS-03",
+      "LA-LEX-C301-SUSURRUS-04",
+      "LA-LEX-C301-SUSURRUS-05"
+    ]
+  }
+}

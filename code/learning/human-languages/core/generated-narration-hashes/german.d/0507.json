@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 507,
+  "sourceHash": "fnv1a64:fdddc35c3bec6d1c",
+  "lessonIds": [
+    "GE-C507-halbzeit",
+    "GE-C507-elfmeter",
+    "GE-C507-verlaengerung",
+    "GE-C507-unentschieden",
+    "GE-C507-abseits"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch507.txt",
+  "json": "german/narration/ch507.json",
+  "textHash": "fnv1a64:3428faa61ee60d21",
+  "jsonHash": "fnv1a64:97ef03e239fc1c37",
+  "findings": []
+}

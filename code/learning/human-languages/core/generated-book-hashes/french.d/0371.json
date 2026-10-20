@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:16476c855071ce2c",
+  "lessonIds": [
+    "FR-C371-annuler",
+    "FR-C371-reporter",
+    "FR-C371-provisoire",
+    "FR-C371-definitif",
+    "FR-C371-programmer"
+  ],
+  "tex": "french/book/chapters/ch371-changement-de-programme.tex"
+}

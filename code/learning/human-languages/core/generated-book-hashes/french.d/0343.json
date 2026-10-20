@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:7c1cf410ae0517c3",
+  "lessonIds": [
+    "FR-C343-avantage",
+    "FR-C343-inconvenient",
+    "FR-C343-aspect",
+    "FR-C343-critique",
+    "FR-C343-souligner"
+  ],
+  "tex": "french/book/chapters/ch343-le-pour-et-le-contre.tex"
+}

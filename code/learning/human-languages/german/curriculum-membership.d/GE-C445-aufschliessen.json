@@ -1,0 +1,11 @@
+{
+  "id": "GE-C445-aufschliessen",
+  "pathSegment": "GE-PATH-445-SCHUSTER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-445-SCHUSTER",
+      "order": 4
+    }
+  ]
+}

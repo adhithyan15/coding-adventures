@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:70690120eda52a21",
+  "lessonIds": [
+    "PT-C340-duvidar",
+    "PT-C340-cetico",
+    "PT-C340-negar",
+    "PT-C340-absurdo",
+    "PT-C340-discutivel"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch340.txt",
+  "json": "portuguese/narration/ch340.json",
+  "textHash": "fnv1a64:efea20e934e1d4e4",
+  "jsonHash": "fnv1a64:67d4e9d0831220d2",
+  "findings": []
+}

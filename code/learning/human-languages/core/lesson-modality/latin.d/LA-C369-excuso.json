@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C369-excuso",
+    "language": "latin",
+    "chapter": 369,
+    "sequence": 19840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b306e623123009d5"
+  },
+  "findings": []
+}

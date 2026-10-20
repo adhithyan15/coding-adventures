@@ -1,0 +1,11 @@
+{
+  "id": "PT-C521-bailarina",
+  "pathSegment": "PT-PATH-521-GENEROS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-521-GENEROS",
+      "order": 3
+    }
+  ]
+}

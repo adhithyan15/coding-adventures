@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C365-ansonsten",
+    "language": "german",
+    "chapter": 365,
+    "sequence": 19820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:debccbafa7302737"
+  },
+  "findings": []
+}

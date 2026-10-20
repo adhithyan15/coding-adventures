@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 399,
+  "sourceHash": "fnv1a64:d4aae1c592ed2be2",
+  "lessonIds": [
+    "LA-C399-perfidia",
+    "LA-C399-perfidus",
+    "LA-C399-fallacia",
+    "LA-C399-decipio",
+    "LA-C399-testor"
+  ],
+  "tex": "latin/book/chapters/ch399-trust-and-betrayal.tex"
+}

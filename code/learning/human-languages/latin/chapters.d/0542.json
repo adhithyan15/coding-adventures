@@ -1,0 +1,19 @@
+{
+  "chapter": 542,
+  "title": "Oil, walks and the country",
+  "label": "ch:la-oil-walks-and-the-country",
+  "canDo": "I can describe what Romans did after the baths.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C542-amoenus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 542: I can describe what Romans did after the baths.",
+    "assesses": [
+      "LA-LEX-C542-STRI-03",
+      "LA-LEX-C542-STRI-04",
+      "LA-LEX-C542-STRI-05"
+    ]
+  }
+}

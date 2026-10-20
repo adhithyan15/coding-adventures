@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C379-avaliacao",
+    "language": "portuguese",
+    "chapter": 379,
+    "sequence": 21470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:59cc7ba3139c5035"
+  },
+  "findings": []
+}

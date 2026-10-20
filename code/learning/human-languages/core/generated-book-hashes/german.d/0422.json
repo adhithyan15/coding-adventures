@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:cab1e5f5e1925be8",
+  "lessonIds": [
+    "GE-C422-kreuzfahrt",
+    "GE-C422-anlegen",
+    "GE-C422-ablegen",
+    "GE-C422-schaukeln",
+    "GE-C422-kapitaen"
+  ],
+  "tex": "german/book/chapters/ch422-auf-see.tex"
+}

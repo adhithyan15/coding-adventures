@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-446-CORDONNIER",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-446-CORDONNIER"
+  ],
+  "after": []
+}

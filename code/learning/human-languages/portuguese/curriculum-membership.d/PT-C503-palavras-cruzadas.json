@@ -1,0 +1,11 @@
+{
+  "id": "PT-C503-palavras-cruzadas",
+  "pathSegment": "PT-PATH-503-JOGOS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-503-JOGOS",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-384-GENEHMIGUNG",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about permits: getting approval, how long a document is valid, renewing it and when it expires.",
+  "prerequisites": []
+}

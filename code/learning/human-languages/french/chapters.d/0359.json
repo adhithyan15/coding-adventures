@@ -1,0 +1,19 @@
+{
+  "chapter": 359,
+  "title": "Au bureau",
+  "label": "ch:fr-au-bureau",
+  "canDo": "I can describe my place at work: an executive, my tasks, a deadline, an extension and a delivery.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C359-livraison",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 359: I can describe my place at work: an executive, my tasks, a deadline, an extension and a delivery.",
+    "assesses": [
+      "FR-LEX-C359-TACHE-03",
+      "FR-LEX-C359-TACHE-04",
+      "FR-LEX-C359-TACHE-05"
+    ]
+  }
+}

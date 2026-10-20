@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-413-PARAGEM",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can wait for a bus or a coach: the shelter, the terminus, the coach, the route and getting off.",
+  "prerequisites": []
+}

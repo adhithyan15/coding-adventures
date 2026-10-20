@@ -1,0 +1,11 @@
+{
+  "id": "LA-C478-caulae",
+  "pathSegment": "LA-PATH-478-OPILIO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-478-OPILIO",
+      "order": 2
+    }
+  ]
+}

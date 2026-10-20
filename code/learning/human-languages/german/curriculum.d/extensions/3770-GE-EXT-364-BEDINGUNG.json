@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-364-BEDINGUNG",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can set a condition, name what has to be true first, and say provided that with sofern and as far as with soweit.",
+  "prerequisites": []
+}

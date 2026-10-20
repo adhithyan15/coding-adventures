@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 395,
+  "sourceHash": "fnv1a64:7a7dd2e027e6fa43",
+  "lessonIds": [
+    "GE-C395-passwort",
+    "GE-C395-einloggen",
+    "GE-C395-zugang",
+    "GE-C395-datenschutz",
+    "GE-C395-verschluesseln"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch395.txt",
+  "json": "german/narration/ch395.json",
+  "textHash": "fnv1a64:665c85b090074644",
+  "jsonHash": "fnv1a64:066533ce0ee723bf",
+  "findings": []
+}

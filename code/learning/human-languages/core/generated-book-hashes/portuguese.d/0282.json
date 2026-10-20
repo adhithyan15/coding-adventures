@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 282,
+  "sourceHash": "fnv1a64:316861584ac9253f",
+  "lessonIds": [
+    "PT-C282-declaracao",
+    "PT-C282-comentario",
+    "PT-C282-confirmar",
+    "PT-C282-comunicado",
+    "PT-C282-comentador"
+  ],
+  "tex": "portuguese/book/chapters/ch282-o-que-foi-dito.tex"
+}

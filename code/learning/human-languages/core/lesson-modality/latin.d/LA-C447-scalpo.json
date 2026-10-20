@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C447-scalpo",
+    "language": "latin",
+    "chapter": 447,
+    "sequence": 23850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e80e2fc3a47a151c"
+  },
+  "findings": []
+}

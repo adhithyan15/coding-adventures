@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C266-si",
+    "language": "french",
+    "chapter": 266,
+    "sequence": 15380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:396087abdb55571d"
+  },
+  "findings": []
+}

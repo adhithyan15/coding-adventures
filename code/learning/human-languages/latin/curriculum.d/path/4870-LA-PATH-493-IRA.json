@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-493-IRA",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "LA-EXT-493-IRA"
+  ],
+  "after": []
+}

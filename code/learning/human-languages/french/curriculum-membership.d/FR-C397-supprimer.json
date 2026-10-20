@@ -1,0 +1,11 @@
+{
+  "id": "FR-C397-supprimer",
+  "pathSegment": "FR-PATH-397-FICHIER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-397-FICHIER",
+      "order": 1
+    }
+  ]
+}

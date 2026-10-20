@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C489-nichte",
+    "language": "german",
+    "chapter": 489,
+    "sequence": 26200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ec32074aa8dd9ed5"
+  },
+  "findings": []
+}

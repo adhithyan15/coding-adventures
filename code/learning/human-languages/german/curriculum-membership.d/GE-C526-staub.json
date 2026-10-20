@@ -1,0 +1,11 @@
+{
+  "id": "GE-C526-staub",
+  "pathSegment": "GE-PATH-526-PUTZEN",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-526-PUTZEN",
+      "order": 0
+    }
+  ]
+}

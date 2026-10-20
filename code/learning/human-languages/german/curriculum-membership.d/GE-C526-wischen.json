@@ -1,0 +1,11 @@
+{
+  "id": "GE-C526-wischen",
+  "pathSegment": "GE-PATH-526-PUTZEN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-526-PUTZEN",
+      "order": 1
+    }
+  ]
+}

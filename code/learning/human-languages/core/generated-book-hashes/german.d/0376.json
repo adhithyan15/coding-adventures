@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 376,
+  "sourceHash": "fnv1a64:050c069e342dfe4e",
+  "lessonIds": [
+    "GE-C376-pauken",
+    "GE-C376-auswendig",
+    "GE-C376-konzentrieren",
+    "GE-C376-konzentration",
+    "GE-C376-wiederholung"
+  ],
+  "tex": "german/book/chapters/ch376-fur-die-prufung-lernen.tex"
+}

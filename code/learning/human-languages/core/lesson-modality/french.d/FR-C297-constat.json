@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C297-constat",
+    "language": "french",
+    "chapter": 297,
+    "sequence": 17010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d1df6ed58bb1a62"
+  },
+  "findings": []
+}

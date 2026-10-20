@@ -1,0 +1,20 @@
+{
+  "language": "portuguese",
+  "chapter": 530,
+  "sourceHash": "fnv1a64:556f067e1eeb1516",
+  "lessonIds": [
+    "PT-C530-senhorio",
+    "PT-C530-inquilino",
+    "PT-C530-mobilar",
+    "PT-C530-despensa",
+    "PT-C530-humidade",
+    "PT-R530-revisao-523-530"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "portuguese/narration/ch530.txt",
+  "json": "portuguese/narration/ch530.json",
+  "textHash": "fnv1a64:1eebac65892a7a2d",
+  "jsonHash": "fnv1a64:e04ef6c666d302d9",
+  "findings": []
+}

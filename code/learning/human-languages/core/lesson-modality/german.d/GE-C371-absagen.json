@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C371-absagen",
+    "language": "german",
+    "chapter": 371,
+    "sequence": 20120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b53837c9651f6f25"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C405-pneu",
+    "language": "portuguese",
+    "chapter": 405,
+    "sequence": 22800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e5051273beb63127"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C318-brindar",
+  "pathSegment": "PT-PATH-318-FESTEJAR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-318-FESTEJAR",
+      "order": 4
+    }
+  ]
+}

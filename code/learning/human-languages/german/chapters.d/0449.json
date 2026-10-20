@@ -1,0 +1,19 @@
+{
+  "chapter": 449,
+  "title": "An der Kasse",
+  "label": "ch:ge-an-der-kasse",
+  "canDo": "I can pay at the till: the cashier, taking payment, cash, the card reader and the change.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C449-wechselgeld",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 449: I can pay at the till: the cashier, taking payment, cash, the card reader and the change.",
+    "assesses": [
+      "GE-LEX-C449-KASSE-03",
+      "GE-LEX-C449-KASSE-04",
+      "GE-LEX-C449-KASSE-05"
+    ]
+  }
+}

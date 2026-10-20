@@ -1,0 +1,11 @@
+{
+  "id": "GE-C381-vorschrift",
+  "pathSegment": "GE-PATH-381-VORSCHRIFT",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-381-VORSCHRIFT",
+      "order": 0
+    }
+  ]
+}

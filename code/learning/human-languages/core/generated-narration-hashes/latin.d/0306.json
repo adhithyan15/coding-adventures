@@ -1,0 +1,20 @@
+{
+  "language": "latin",
+  "chapter": 306,
+  "sourceHash": "fnv1a64:52385cc192892d23",
+  "lessonIds": [
+    "LA-C306-caedes",
+    "LA-C306-homicida",
+    "LA-C306-sicarius",
+    "LA-C306-pugio",
+    "LA-C306-occido",
+    "LA-R306-review-299-306"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "latin/narration/ch306.txt",
+  "json": "latin/narration/ch306.json",
+  "textHash": "fnv1a64:0589c52c5a0d6082",
+  "jsonHash": "fnv1a64:dbd14efd5748c361",
+  "findings": []
+}

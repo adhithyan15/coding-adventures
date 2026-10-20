@@ -1,0 +1,11 @@
+{
+  "id": "PT-C425-campismo",
+  "pathSegment": "PT-PATH-425-DORMIR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-425-DORMIR",
+      "order": 4
+    }
+  ]
+}

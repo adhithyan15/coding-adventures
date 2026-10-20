@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C428-hospedar",
+    "language": "portuguese",
+    "chapter": 428,
+    "sequence": 24010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0fe44f1edc915bbb"
+  },
+  "findings": []
+}

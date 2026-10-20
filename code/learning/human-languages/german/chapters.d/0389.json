@@ -1,0 +1,19 @@
+{
+  "chapter": 389,
+  "title": "Sich etwas leisten",
+  "label": "ch:ge-sich-etwas-leisten",
+  "canDo": "I can say what I can afford, whether something is worth it, how I pay for it, and what goes out and comes in.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GE-C389-einnahme",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 389: I can say what I can afford, whether something is worth it, how I pay for it, and what goes out and comes in.",
+    "assesses": [
+      "GE-LEX-C389-LEISTEN-03",
+      "GE-LEX-C389-LEISTEN-04",
+      "GE-LEX-C389-LEISTEN-05"
+    ]
+  }
+}

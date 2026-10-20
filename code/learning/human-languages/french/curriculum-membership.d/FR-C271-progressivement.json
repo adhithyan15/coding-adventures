@@ -1,0 +1,11 @@
+{
+  "id": "FR-C271-progressivement",
+  "pathSegment": "FR-PATH-271-PEU",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-271-PEU",
+      "order": 1
+    }
+  ]
+}

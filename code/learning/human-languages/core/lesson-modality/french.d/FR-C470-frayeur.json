@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C470-frayeur",
+    "language": "french",
+    "chapter": 470,
+    "sequence": 25900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3f5c35fde4fe05f6"
+  },
+  "findings": []
+}

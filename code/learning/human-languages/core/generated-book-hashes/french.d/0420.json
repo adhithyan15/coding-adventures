@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:16afb4c6ad106259",
+  "lessonIds": [
+    "FR-C420-turbulence",
+    "FR-C420-escale",
+    "FR-C420-decaler",
+    "FR-C420-decalage",
+    "FR-C420-retarder"
+  ],
+  "tex": "french/book/chapters/ch420-escale-et-retard.tex"
+}

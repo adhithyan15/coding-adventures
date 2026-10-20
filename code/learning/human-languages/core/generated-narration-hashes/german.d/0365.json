@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:bb898d080a082349",
+  "lessonIds": [
+    "GE-C365-es-sei-denn",
+    "GE-C365-ausser-wenn",
+    "GE-C365-andernfalls",
+    "GE-C365-ansonsten",
+    "GE-C365-notfalls"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch365.txt",
+  "json": "german/narration/ch365.json",
+  "textHash": "fnv1a64:89d42c2f9371e70e",
+  "jsonHash": "fnv1a64:9661d83316769ac8",
+  "findings": []
+}

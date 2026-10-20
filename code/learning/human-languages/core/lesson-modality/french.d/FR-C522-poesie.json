@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C522-poesie",
+    "language": "french",
+    "chapter": 522,
+    "sequence": 28570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:91f9197bc81598b9"
+  },
+  "findings": []
+}

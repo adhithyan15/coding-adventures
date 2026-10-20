@@ -1,0 +1,11 @@
+{
+  "id": "PT-C290-ameacar",
+  "pathSegment": "PT-PATH-290-ARMA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-290-ARMA",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C464-penso",
+  "pathSegment": "LA-PATH-464-STATERA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-464-STATERA",
+      "order": 4
+    }
+  ]
+}

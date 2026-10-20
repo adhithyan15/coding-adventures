@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C420-venditor",
+    "language": "latin",
+    "chapter": 420,
+    "sequence": 22460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2882c7046174e4d4"
+  },
+  "findings": []
+}

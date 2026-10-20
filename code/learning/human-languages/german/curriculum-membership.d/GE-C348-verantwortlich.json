@@ -1,0 +1,11 @@
+{
+  "id": "GE-C348-verantwortlich",
+  "pathSegment": "GE-PATH-348-VERANTWORTUNG",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-348-VERANTWORTUNG",
+      "order": 1
+    }
+  ]
+}

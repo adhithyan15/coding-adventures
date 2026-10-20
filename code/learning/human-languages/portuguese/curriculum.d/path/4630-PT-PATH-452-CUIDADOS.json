@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-452-CUIDADOS",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-452-CUIDADOS"
+  ],
+  "after": []
+}

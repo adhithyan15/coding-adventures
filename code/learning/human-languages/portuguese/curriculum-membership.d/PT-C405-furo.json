@@ -1,0 +1,11 @@
+{
+  "id": "PT-C405-furo",
+  "pathSegment": "PT-PATH-405-PNEU",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-405-PNEU",
+      "order": 2
+    }
+  ]
+}

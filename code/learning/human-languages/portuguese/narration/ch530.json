@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "portuguese",
+  "chapter": 530,
+  "title": "Senhorios e inquilinos",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:556f067e1eeb1516",
+  "lessons": [
+    {
+      "id": "PT-C530-senhorio",
+      "sequence": 29220,
+      "title": "o senhorio — landlord",
+      "headword": "o senhorio",
+      "romanization": "o senhorio",
+      "gloss": "landlord",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:46d7b93c14757ef1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for clothes peg, then the Portuguese for to iron."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: o senhorio",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "o senhorio — \"landlord\"."
+            },
+            {
+              "kind": "speech",
+              "text": "O senhorio aumentou a renda. The landlord put up the rent."
+            },
+            {
+              "kind": "speech",
+              "text": "A senhoria — landlady."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "senhorio is inherited from Old Portuguese sennorio \"lordship\" (EtymDB), built on senhor, from Latin senior \"older\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o senhorio",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o senhorio*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o senhorio, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o senhorio*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with o senhorio",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *o senhorio*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for clothes peg, then the Portuguese for to iron, then say o senhorio again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for clothes peg, then the Portuguese for to iron, then say *o senhorio* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does o senhorio mean? (\"Landlord\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C530-inquilino",
+      "sequence": 29230,
+      "title": "o inquilino — tenant",
+      "headword": "o inquilino",
+      "romanization": "o inquilino",
+      "gloss": "tenant",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:08e5299f9a7e203d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for to iron, then the Portuguese for landlord."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: o inquilino",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "o inquilino — \"tenant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Os inquilinos do segundo andar são muito simpáticos. The tenants on the second floor are very friendly."
+            },
+            {
+              "kind": "speech",
+              "text": "A woman is a inquilina."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "inquilino is a learned borrowing from Latin inquilīnus \"a tenant, a lodger\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o inquilino",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o inquilino*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o inquilino, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *o inquilino*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with o inquilino",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *o inquilino*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for to iron, then the Portuguese for landlord, then say o inquilino again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for to iron, then the Portuguese for landlord, then say *o inquilino* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does o inquilino mean? (\"Tenant\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C530-mobilar",
+      "sequence": 29240,
+      "title": "mobilar — to furnish",
+      "headword": "mobilar",
+      "romanization": "mobilar",
+      "gloss": "to furnish",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d345a7ab597376ab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for landlord, then the Portuguese for tenant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: mobilar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mobilar — \"to furnish\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mobilámos a casa com móveis usados. We furnished the house with second-hand furniture."
+            },
+            {
+              "kind": "speech",
+              "text": "In Brazil: mobiliar."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mobilar is built on mobília \"furniture\", from Latin mōbilis \"movable\" (Lewis & Short), from movēre \"to move\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mobilar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mobilar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mobilar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mobilar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with mobilar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *mobilar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for landlord, then the Portuguese for tenant, then say mobilar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for landlord, then the Portuguese for tenant, then say *mobilar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does mobilar mean? (\"To furnish\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C530-despensa",
+      "sequence": 29250,
+      "title": "a despensa — pantry, larder",
+      "headword": "a despensa",
+      "romanization": "a despensa",
+      "gloss": "pantry, larder",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eb1bd10e9aabf16a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for tenant, then the Portuguese for to furnish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: a despensa",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a despensa — \"pantry, larder\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Guardamos o arroz e as latas na despensa. We keep the rice and the tins in the pantry."
+            },
+            {
+              "kind": "speech",
+              "text": "Not to be mixed up with a dispensa, an exemption."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "despensa is usually traced to Medieval Latin dispēnsa \"a store of provisions\", from dispendere \"to weigh out\", built on pendere \"to weigh\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a despensa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a despensa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a despensa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a despensa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with a despensa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *a despensa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for tenant, then the Portuguese for to furnish, then say a despensa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for tenant, then the Portuguese for to furnish, then say *a despensa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does a despensa mean? (\"Pantry, larder\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C530-humidade",
+      "sequence": 29260,
+      "title": "a humidade — damp, humidity",
+      "headword": "a humidade",
+      "romanization": "a humidade",
+      "gloss": "damp, humidity",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4eb1275b088dfa41",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for to furnish, then the Portuguese for pantry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: a humidade",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a humidade — \"damp, humidity\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Há humidade nas paredes do quarto. There is damp on the bedroom walls."
+            },
+            {
+              "kind": "speech",
+              "text": "In Brazil: a umidade."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "humidade is built on húmido \"damp\", a learned borrowing from Latin ūmidus \"moist\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a humidade",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a humidade*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a humidade, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *a humidade*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with a humidade",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *a humidade*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for to furnish, then the Portuguese for pantry, then say a humidade again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for to furnish, then the Portuguese for pantry, then say *a humidade* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does a humidade mean? (\"Damp, humidity\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-R530-revisao-523-530",
+      "sequence": 29270,
+      "title": "Revisão dos capítulos 523–530",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 523-530",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fbee0ea0937ee144",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Portuguese for chapter and novelist."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chapter, novelist, biography, to reread, bookmark",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: chapter, novelist, biography, to reread, bookmark]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poetry, poet, line, rhyme, to recite",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: poetry, poet, line, rhyme, to recite]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "librarian, to borrow, publisher, translation, translator",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: librarian, to borrow, publisher, translation, translator]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "episode, season, soap opera, subtitled, dubbing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: episode, season, soap opera, subtitled, dubbing]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "(film) director, to film, script, documentary, cast",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: (film) director, to film, script, documentary, cast]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to vacuum, vacuum cleaner, to sweep, to scrub, mop",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to vacuum, vacuum cleaner, to sweep, to scrub, mop]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "detergent, to hang out, clothes horse, clothes peg, to iron",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: detergent, to hang out, clothes horse, clothes peg, to iron]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "landlord, tenant, to furnish, pantry, damp",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: landlord, tenant, to furnish, pantry, damp]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter? (o capítulo.) Novelist? (o romancista.) Biography? (a biografia.) To reread? (reler.) Bookmark? (o marcador.) Poetry? (a poesia.) Poet? (o poeta.) Line? (o verso.) Rhyme? (a rima.) To recite? (declamar.) Librarian? (o bibliotecário.) To borrow? (requisitar.) Publisher? (a editora.) Translation? (a tradução.) Translator? (o tradutor.) Episode? (o episódio.) Season? (a temporada.) Soap opera? (a telenovela.) Subtitled? (legendado.) Dubbing? (a dobragem.) (film) director? (o realizador.) To film? (filmar.) Script? (o guião.) Documentary? (o documentário.) Cast? (o elenco.) To vacuum? (aspirar.) Vacuum cleaner? (o aspirador.) To sweep? (varrer.) To scrub? (esfregar.) Mop? (a esfregona.) Detergent? (o detergente.) To hang out? (estender.) Clothes horse? (o estendal.) Clothes peg? (a mola.) To iron? (engomar.) Landlord? (o senhorio.) Tenant? (o inquilino.) To furnish? (mobilar.) Pantry? (a despensa.) Damp? (a humidade.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

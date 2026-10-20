@@ -1,0 +1,19 @@
+{
+  "chapter": 346,
+  "title": "Wozu?",
+  "label": "ch:ge-wozu",
+  "canDo": "I can say what something is for, what someone intends, and name the aim of an action with damit.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C346-anlass",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 346: I can say what something is for, what someone intends, and name the aim of an action with damit.",
+    "assesses": [
+      "GE-LEX-C346-ZWECK-03",
+      "GE-LEX-C346-ZWECK-04",
+      "GE-LEX-C346-ZWECK-05"
+    ]
+  }
+}

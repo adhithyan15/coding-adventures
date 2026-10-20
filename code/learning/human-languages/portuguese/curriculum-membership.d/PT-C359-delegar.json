@@ -1,0 +1,11 @@
+{
+  "id": "PT-C359-delegar",
+  "pathSegment": "PT-PATH-359-DEPARTAMENTO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-359-DEPARTAMENTO",
+      "order": 4
+    }
+  ]
+}

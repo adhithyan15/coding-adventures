@@ -1,0 +1,19 @@
+{
+  "chapter": 276,
+  "title": "Quinzenas e trimestres",
+  "label": "ch:pt-quinzenas-e-trimestres",
+  "canDo": "I can count time in fortnights, terms, months and millennia, and say that something came later.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-R276-revisao-269-276",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 276: I can count time in fortnights, terms, months and millennia, and say that something came later.",
+    "assesses": [
+      "PT-LEX-C276-QUINZENA-03",
+      "PT-LEX-C276-QUINZENA-04",
+      "PT-LEX-C276-QUINZENA-05"
+    ]
+  }
+}

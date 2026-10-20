@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C511-podio",
+    "language": "portuguese",
+    "chapter": 511,
+    "sequence": 28280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2b2927d4a7faffb6"
+  },
+  "findings": []
+}

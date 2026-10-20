@@ -1,0 +1,11 @@
+{
+  "id": "FR-C334-pretendre",
+  "pathSegment": "FR-PATH-334-POINTDEVUE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-334-POINTDEVUE",
+      "order": 2
+    }
+  ]
+}

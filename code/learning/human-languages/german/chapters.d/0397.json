@@ -1,0 +1,19 @@
+{
+  "chapter": 397,
+  "title": "Der Computer stürzt ab",
+  "label": "ch:ge-der-computer-sturzt-ab",
+  "canDo": "I can say that a computer has crashed or needs updating, read out an error message, and say how data was restored from a backup.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GE-R397-review-final-397",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 397: I can say that a computer has crashed or needs updating, read out an error message, and say how data was restored from a backup.",
+    "assesses": [
+      "GE-LEX-C397-ABSTURZ-03",
+      "GE-LEX-C397-ABSTURZ-04",
+      "GE-LEX-C397-ABSTURZ-05"
+    ]
+  }
+}

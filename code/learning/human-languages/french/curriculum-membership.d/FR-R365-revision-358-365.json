@@ -1,0 +1,11 @@
+{
+  "id": "FR-R365-revision-358-365",
+  "pathSegment": "FR-PATH-365-PAUVRETE",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FR-EXT-365-PAUVRETE",
+      "order": 5
+    }
+  ]
+}

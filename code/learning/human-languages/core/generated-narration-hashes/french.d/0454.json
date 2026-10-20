@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 454,
+  "sourceHash": "fnv1a64:94e82107c4483b55",
+  "lessonIds": [
+    "FR-C454-falaise",
+    "FR-C454-plateau",
+    "FR-C454-sommet",
+    "FR-C454-col",
+    "FR-C454-versant"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch454.txt",
+  "json": "french/narration/ch454.json",
+  "textHash": "fnv1a64:8468adcb039a908d",
+  "jsonHash": "fnv1a64:ea45ac1e155f110c",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 365,
+  "title": "Justo e injusto",
+  "label": "ch:pt-justo-e-injusto",
+  "canDo": "I can talk about justice and injustice, prejudice and stereotypes.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C365-estereotipo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 365: I can talk about justice and injustice, prejudice and stereotypes.",
+    "assesses": [
+      "PT-LEX-C365-JUSTICA-03",
+      "PT-LEX-C365-JUSTICA-04",
+      "PT-LEX-C365-JUSTICA-05"
+    ]
+  }
+}

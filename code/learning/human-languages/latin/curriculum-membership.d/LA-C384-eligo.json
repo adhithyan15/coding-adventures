@@ -1,0 +1,11 @@
+{
+  "id": "LA-C384-eligo",
+  "pathSegment": "LA-PATH-384-SUFFRAGIUM",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-384-SUFFRAGIUM",
+      "order": 4
+    }
+  ]
+}

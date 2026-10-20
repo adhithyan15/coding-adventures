@@ -1,0 +1,11 @@
+{
+  "id": "FR-C378-concours",
+  "pathSegment": "FR-PATH-378-ECHOUER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-378-ECHOUER",
+      "order": 2
+    }
+  ]
+}

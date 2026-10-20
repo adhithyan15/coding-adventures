@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 329,
+  "sourceHash": "fnv1a64:6a49eb4957774170",
+  "lessonIds": [
+    "LA-C329-mors",
+    "LA-C329-mortuus",
+    "LA-C329-exspiro",
+    "LA-C329-obeo",
+    "LA-C329-decedo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch329.txt",
+  "json": "latin/narration/ch329.json",
+  "textHash": "fnv1a64:dea971eec1815b10",
+  "jsonHash": "fnv1a64:6f0511da9409e60d",
+  "findings": []
+}

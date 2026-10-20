@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 451,
+  "sourceHash": "fnv1a64:f18de1a2206c3d27",
+  "lessonIds": [
+    "PT-C451-sapateiro",
+    "PT-C451-costureira",
+    "PT-C451-bainha",
+    "PT-C451-serralheiro",
+    "PT-C451-remendar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch451.txt",
+  "json": "portuguese/narration/ch451.json",
+  "textHash": "fnv1a64:958101fccfef47f2",
+  "jsonHash": "fnv1a64:93aea779f222beaf",
+  "findings": []
+}

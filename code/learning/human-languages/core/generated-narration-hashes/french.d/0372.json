@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 372,
+  "sourceHash": "fnv1a64:434e4eb401b2dee5",
+  "lessonIds": [
+    "FR-C372-risque",
+    "FR-C372-hasardeux",
+    "FR-C372-improbable",
+    "FR-C372-probabilite",
+    "FR-C372-quitte-a"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch372.txt",
+  "json": "french/narration/ch372.json",
+  "textHash": "fnv1a64:938f0d856dc8b00a",
+  "jsonHash": "fnv1a64:e4e7a7fda2e8ee86",
+  "findings": []
+}

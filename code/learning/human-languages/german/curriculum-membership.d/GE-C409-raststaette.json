@@ -1,0 +1,11 @@
+{
+  "id": "GE-C409-raststaette",
+  "pathSegment": "GE-PATH-409-UMLEITUNG",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-409-UMLEITUNG",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C284-verdaechtig",
+  "pathSegment": "GE-PATH-284-VERDACHT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-284-VERDACHT",
+      "order": 1
+    }
+  ]
+}

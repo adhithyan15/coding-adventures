@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C520-feuilleter",
+    "language": "french",
+    "chapter": 520,
+    "sequence": 28480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5152c5480d1df114"
+  },
+  "findings": []
+}

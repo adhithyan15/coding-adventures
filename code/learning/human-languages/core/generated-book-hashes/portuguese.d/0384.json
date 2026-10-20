@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 384,
+  "sourceHash": "fnv1a64:4eaeffce24f3cf65",
+  "lessonIds": [
+    "PT-C384-valido",
+    "PT-C384-caducar",
+    "PT-C384-expirar",
+    "PT-C384-renovar",
+    "PT-C384-certificado"
+  ],
+  "tex": "portuguese/book/chapters/ch384-documentos-em-dia.tex"
+}

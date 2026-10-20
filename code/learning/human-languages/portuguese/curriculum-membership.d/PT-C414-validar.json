@@ -1,0 +1,11 @@
+{
+  "id": "PT-C414-validar",
+  "pathSegment": "PT-PATH-414-BILHETEIRA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-414-BILHETEIRA",
+      "order": 2
+    }
+  ]
+}

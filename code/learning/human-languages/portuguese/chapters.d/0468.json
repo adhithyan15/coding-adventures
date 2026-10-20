@@ -1,0 +1,19 @@
+{
+  "chapter": 468,
+  "title": "Inveja e egoísmo",
+  "label": "ch:pt-inveja-e-egoismo",
+  "canDo": "I can talk about envy and selfishness.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C468-egoismo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 468: I can talk about envy and selfishness.",
+    "assesses": [
+      "PT-LEX-C468-INVEJA-03",
+      "PT-LEX-C468-INVEJA-04",
+      "PT-LEX-C468-INVEJA-05"
+    ]
+  }
+}

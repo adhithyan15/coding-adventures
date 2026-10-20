@@ -1,0 +1,11 @@
+{
+  "id": "GE-C342-wirken",
+  "pathSegment": "GE-PATH-342-WIRKUNG",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-342-WIRKUNG",
+      "order": 1
+    }
+  ]
+}

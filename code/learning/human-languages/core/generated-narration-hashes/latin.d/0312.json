@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:14a974d5eaaafc50",
+  "lessonIds": [
+    "LA-C312-fateor",
+    "LA-C312-punio",
+    "LA-C312-supplicium",
+    "LA-C312-exsilium",
+    "LA-C312-vinculum"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch312.txt",
+  "json": "latin/narration/ch312.json",
+  "textHash": "fnv1a64:bb1e28d3de4ee69f",
+  "jsonHash": "fnv1a64:ed7efa0dff3e097a",
+  "findings": []
+}

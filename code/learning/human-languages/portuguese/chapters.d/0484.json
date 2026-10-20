@@ -1,0 +1,19 @@
+{
+  "chapter": 484,
+  "title": "Dores de cabeça e náuseas",
+  "label": "ch:pt-dores-de-cabeca-e-nauseas",
+  "canDo": "I can describe headaches, dizziness and nausea.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C484-vomitar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 484: I can describe headaches, dizziness and nausea.",
+    "assesses": [
+      "PT-LEX-C484-ENXAQUECA-03",
+      "PT-LEX-C484-ENXAQUECA-04",
+      "PT-LEX-C484-ENXAQUECA-05"
+    ]
+  }
+}

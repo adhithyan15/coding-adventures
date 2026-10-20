@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 460,
+  "sourceHash": "fnv1a64:55867f1da89df763",
+  "lessonIds": [
+    "FR-C460-meteo",
+    "FR-C460-previsions",
+    "FR-C460-nuageux",
+    "FR-C460-ensoleille",
+    "FR-C460-thermometre"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch460.txt",
+  "json": "french/narration/ch460.json",
+  "textHash": "fnv1a64:2e26959c259af67b",
+  "jsonHash": "fnv1a64:5a7d746b05c3a652",
+  "findings": []
+}

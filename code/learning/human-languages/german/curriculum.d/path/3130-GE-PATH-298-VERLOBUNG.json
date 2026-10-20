@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-298-VERLOBUNG",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GE-EXT-298-VERLOBUNG"
+  ],
+  "after": []
+}

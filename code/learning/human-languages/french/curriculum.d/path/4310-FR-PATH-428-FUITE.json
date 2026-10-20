@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-428-FUITE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-428-FUITE"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C361-esgotado",
+  "pathSegment": "PT-PATH-361-STRESS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-361-STRESS",
+      "order": 1
+    }
+  ]
+}

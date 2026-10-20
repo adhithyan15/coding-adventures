@@ -1,0 +1,11 @@
+{
+  "id": "FR-C390-cotisation",
+  "pathSegment": "FR-PATH-390-BUDGET",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-390-BUDGET",
+      "order": 4
+    }
+  ]
+}

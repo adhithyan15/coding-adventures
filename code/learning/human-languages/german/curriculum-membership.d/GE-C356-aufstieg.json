@@ -1,0 +1,11 @@
+{
+  "id": "GE-C356-aufstieg",
+  "pathSegment": "GE-PATH-356-KARRIERE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-356-KARRIERE",
+      "order": 1
+    }
+  ]
+}

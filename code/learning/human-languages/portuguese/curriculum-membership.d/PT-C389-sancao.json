@@ -1,0 +1,11 @@
+{
+  "id": "PT-C389-sancao",
+  "pathSegment": "PT-PATH-389-CRIME",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-389-CRIME",
+      "order": 3
+    }
+  ]
+}

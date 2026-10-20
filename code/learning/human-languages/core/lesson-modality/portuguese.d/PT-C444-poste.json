@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C444-poste",
+    "language": "portuguese",
+    "chapter": 444,
+    "sequence": 24800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8032a1cb866a94f6"
+  },
+  "findings": []
+}

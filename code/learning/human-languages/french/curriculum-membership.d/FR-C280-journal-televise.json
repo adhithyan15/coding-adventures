@@ -1,0 +1,11 @@
+{
+  "id": "FR-C280-journal-televise",
+  "pathSegment": "FR-PATH-280-TELE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-280-TELE",
+      "order": 0
+    }
+  ]
+}

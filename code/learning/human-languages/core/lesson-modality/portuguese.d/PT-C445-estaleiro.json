@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C445-estaleiro",
+    "language": "portuguese",
+    "chapter": 445,
+    "sequence": 24870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c026a2719e19b0ad"
+  },
+  "findings": []
+}

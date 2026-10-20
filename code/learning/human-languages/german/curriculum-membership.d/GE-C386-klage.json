@@ -1,0 +1,11 @@
+{
+  "id": "GE-C386-klage",
+  "pathSegment": "GE-PATH-386-KLAGE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-386-KLAGE",
+      "order": 1
+    }
+  ]
+}

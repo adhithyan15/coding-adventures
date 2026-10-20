@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 523,
+  "sourceHash": "fnv1a64:e918a4a6ad3dd9c2",
+  "lessonIds": [
+    "LA-C523-robustus",
+    "LA-C523-obesus",
+    "LA-C523-gracilis",
+    "LA-C523-sanitas",
+    "LA-C523-salubris"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch523.txt",
+  "json": "latin/narration/ch523.json",
+  "textHash": "fnv1a64:ec2cec3d76c8e2f0",
+  "jsonHash": "fnv1a64:86d756c5cf9fef31",
+  "findings": []
+}

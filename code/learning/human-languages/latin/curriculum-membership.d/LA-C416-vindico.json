@@ -1,0 +1,11 @@
+{
+  "id": "LA-C416-vindico",
+  "pathSegment": "LA-PATH-416-IUSTITIA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-416-IUSTITIA",
+      "order": 4
+    }
+  ]
+}

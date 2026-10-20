@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C428-fuite",
+    "language": "french",
+    "chapter": 428,
+    "sequence": 23730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e03c4beb7031c65b"
+  },
+  "findings": []
+}

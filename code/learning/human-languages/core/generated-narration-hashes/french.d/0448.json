@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 448,
+  "sourceHash": "fnv1a64:37ede9cd656350f9",
+  "lessonIds": [
+    "FR-C448-coiffeur",
+    "FR-C448-raser",
+    "FR-C448-opticien",
+    "FR-C448-horloger",
+    "FR-C448-bijoutier"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch448.txt",
+  "json": "french/narration/ch448.json",
+  "textHash": "fnv1a64:feae07135fbeec91",
+  "jsonHash": "fnv1a64:061dde9be629f8b8",
+  "findings": []
+}

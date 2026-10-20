@@ -1,0 +1,11 @@
+{
+  "id": "PT-C449-retrosaria",
+  "pathSegment": "PT-PATH-449-LOJAS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-449-LOJAS",
+      "order": 1
+    }
+  ]
+}

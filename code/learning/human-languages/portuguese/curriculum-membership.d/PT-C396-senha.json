@@ -1,0 +1,11 @@
+{
+  "id": "PT-C396-senha",
+  "pathSegment": "PT-PATH-396-CONTA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-396-CONTA",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C463-geler",
+    "language": "french",
+    "chapter": 463,
+    "sequence": 25540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f62475c195042372"
+  },
+  "findings": []
+}

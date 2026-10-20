@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:bbfb14223b5b87b5",
+  "lessonIds": [
+    "LA-C500-cupido",
+    "LA-C500-cupidus",
+    "LA-C500-avidus",
+    "LA-C500-invideo",
+    "LA-C500-rivalis"
+  ],
+  "tex": "latin/book/chapters/ch500-desire-and-envy.tex"
+}

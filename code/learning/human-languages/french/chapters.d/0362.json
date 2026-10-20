@@ -1,0 +1,19 @@
+{
+  "chapter": 362,
+  "title": "Citoyens",
+  "label": "ch:fr-citoyens",
+  "canDo": "I can talk about citizens, citizenship, nationality, freedom and equality.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C362-egalite",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 362: I can talk about citizens, citizenship, nationality, freedom and equality.",
+    "assesses": [
+      "FR-LEX-C362-CITOYEN-03",
+      "FR-LEX-C362-CITOYEN-04",
+      "FR-LEX-C362-CITOYEN-05"
+    ]
+  }
+}

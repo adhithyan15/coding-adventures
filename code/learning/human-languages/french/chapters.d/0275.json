@@ -1,0 +1,19 @@
+{
+  "chapter": 275,
+  "title": "Le temps passe",
+  "label": "ch:fr-le-temps-passe",
+  "canDo": "I can say that time went by, that something was put off or came to a result, and name a hitch and a deadline.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-R275-revision-268-275",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 275: I can say that time went by, that something was put off or came to a result, and name a hitch and a deadline.",
+    "assesses": [
+      "FR-LEX-C275-DELAI-03",
+      "FR-LEX-C275-DELAI-04",
+      "FR-LEX-C275-DELAI-05"
+    ]
+  }
+}

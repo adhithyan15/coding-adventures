@@ -1,0 +1,11 @@
+{
+  "id": "LA-C450-fraudo",
+  "pathSegment": "LA-PATH-450-QUERELA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-450-QUERELA",
+      "order": 2
+    }
+  ]
+}

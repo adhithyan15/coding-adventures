@@ -1,0 +1,11 @@
+{
+  "id": "LA-C462-mercimonium",
+  "pathSegment": "LA-PATH-462-NUNDINOR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-462-NUNDINOR",
+      "order": 3
+    }
+  ]
+}

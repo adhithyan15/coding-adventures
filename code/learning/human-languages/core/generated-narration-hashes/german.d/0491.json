@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 491,
+  "sourceHash": "fnv1a64:b236ee4f78431367",
+  "lessonIds": [
+    "GE-C491-halbbruder",
+    "GE-C491-pate",
+    "GE-C491-patenkind",
+    "GE-C491-ehepartner",
+    "GE-C491-nachwuchs"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch491.txt",
+  "json": "german/narration/ch491.json",
+  "textHash": "fnv1a64:bc21dfbc25f4661c",
+  "jsonHash": "fnv1a64:13b59714a930d53f",
+  "findings": []
+}

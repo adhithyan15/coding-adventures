@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C451-sonderangebot",
+    "language": "german",
+    "chapter": 451,
+    "sequence": 24220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e27c1cd8627f42ab"
+  },
+  "findings": []
+}

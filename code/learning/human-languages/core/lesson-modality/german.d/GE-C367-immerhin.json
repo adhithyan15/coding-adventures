@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C367-immerhin",
+    "language": "german",
+    "chapter": 367,
+    "sequence": 19920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5500c00c95b4494b"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 298,
+  "title": "Le choc",
+  "label": "ch:fr-le-choc",
+  "canDo": "I can describe a crash: knocking someone over, an injured person, the shock, the airbag and a dent.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C298-cabosser",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 298: I can describe a crash: knocking someone over, an injured person, the shock, the airbag and a dent.",
+    "assesses": [
+      "FR-LEX-C298-CHOC-03",
+      "FR-LEX-C298-CHOC-04",
+      "FR-LEX-C298-CHOC-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C518-galerie",
+  "pathSegment": "FR-PATH-518-EXPOSITION",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-518-EXPOSITION",
+      "order": 2
+    }
+  ]
+}

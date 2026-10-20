@@ -1,0 +1,11 @@
+{
+  "id": "PT-C279-reporter",
+  "pathSegment": "PT-PATH-279-IMPRENSA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-279-IMPRENSA",
+      "order": 2
+    }
+  ]
+}

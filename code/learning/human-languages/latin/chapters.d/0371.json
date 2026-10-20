@@ -1,0 +1,19 @@
+{
+  "chapter": 371,
+  "title": "At the Speakers' Platform",
+  "label": "ch:la-at-the-speakers-platform",
+  "canDo": "I can talk about the speakers' platform and a public meeting, and say that someone announced, read aloud or spoke rashly.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C371-temere",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 371: I can talk about the speakers' platform and a public meeting, and say that someone announced, read aloud or spoke rashly.",
+    "assesses": [
+      "LA-LEX-C371-ROSTRA-03",
+      "LA-LEX-C371-ROSTRA-04",
+      "LA-LEX-C371-ROSTRA-05"
+    ]
+  }
+}

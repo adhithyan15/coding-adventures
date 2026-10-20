@@ -1,0 +1,11 @@
+{
+  "id": "FR-C426-sejour",
+  "pathSegment": "FR-PATH-426-RECEPTION",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-426-RECEPTION",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 466,
+  "sourceHash": "fnv1a64:c06e2cef50131662",
+  "lessonIds": [
+    "LA-C466-annona",
+    "LA-C466-caritas",
+    "LA-C466-vilitas",
+    "LA-C466-aestimo",
+    "LA-C466-veneo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch466.txt",
+  "json": "latin/narration/ch466.json",
+  "textHash": "fnv1a64:8cb87fe05b6ceaa6",
+  "jsonHash": "fnv1a64:be52bfacefad5b70",
+  "findings": []
+}

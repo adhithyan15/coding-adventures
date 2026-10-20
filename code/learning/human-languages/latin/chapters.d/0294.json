@@ -1,0 +1,19 @@
+{
+  "chapter": 294,
+  "title": "Identidem",
+  "label": "ch:la-identidem",
+  "canDo": "I can say how often things happened: again and again, immediately after, frequently, mostly and as often as.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C294-quotiens",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 294: I can say how often things happened: again and again, immediately after, frequently, mostly and as often as.",
+    "assesses": [
+      "LA-LEX-C294-IDENTIDEM-03",
+      "LA-LEX-C294-IDENTIDEM-04",
+      "LA-LEX-C294-IDENTIDEM-05"
+    ]
+  }
+}

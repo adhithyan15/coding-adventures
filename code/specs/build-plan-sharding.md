@@ -27,9 +27,64 @@ the build tool expands those roots with their transitive prerequisites. This
 means each CI runner receives a prerequisite-closed DAG slice and does not need
 artifacts from another runner.
 
-Shards may duplicate prerequisite packages. That is intentional for the first
-version: correctness and runner isolation are more important than perfect work
-deduplication. A later artifact-sharing layer can remove duplicate work.
+Shards may duplicate prerequisite packages. Correctness and runner isolation
+come first, so duplication is always permitted. How much of it there is depends
+on the assignment strategy below, and in practice it decides whether a shard
+fits its time and disk budget.
+
+## Assignment strategies
+
+### v1: packages by heuristic cost
+
+The original strategy, pinned by the cross-port conformance fixtures
+(`build-tool-conformance.md`, "Sharding"): scheduled packages are sorted by a
+heuristic cost and each goes to the shard with the lowest direct-root cost.
+Prerequisites are added afterwards. Nothing steers a package towards the shard
+that already holds its prerequisites, so every shard ends up rebuilding a large
+share of the shared core. On main's 2026-10-18 plan (5,327 packages, 15
+shards) every shard was assigned ~355 packages and expanded to 872-1,131,
+for 14,878 package builds: 2.8x the repository.
+
+### v2: closures by measured duration (`-shard-weights`)
+
+Selected by passing a `ci-package-durations-v1` file
+(`code/specs/data/ci-package-durations.json`, produced by
+`code/scripts/ci_package_durations.py` from the Build Report each shard prints):
+
+```json
+{
+  "schema": "ci-package-durations-v1",
+  "unit": "seconds",
+  "source": { "runs": ["39139594621"], "statistic": "median of BUILT rows" },
+  "durations": { "rust/regex-engine": 1150.0, "python/zstd": 289.3 }
+}
+```
+
+1. Each package weighs its measured seconds. An unmeasured package weighs its
+   toolchain's median; a toolchain with no measurement falls back to the v1
+   cost scaled by the median seconds-per-cost-unit. Every weight is at least
+   0.1s.
+2. The *fair share* is the summed weight of every package some root needs,
+   divided by the shard count, plus 5%.
+3. Scheduled packages are visited heaviest prerequisite closure first (ties by
+   name). A package already present in a shard is assigned directly to the
+   lightest such shard. Otherwise, among shards that stay within the fair share
+   after adding the closure members they lack, the one lacking the least weight
+   wins (then the lighter shard, then the lower index). If none stays within
+   it, the shard with the lowest resulting load wins.
+4. `package_names` is the union of the closures placed on the shard;
+   `estimated_cost` is its load in whole seconds.
+
+The result keeps every v1 guarantee: deterministic, exactly one direct
+assignment per scheduled package, prerequisite-closed, toolchains computed from
+the closed shard, stable indexes and names. On the same 2026-10-18 plan it
+makes 5,908 package builds, with every shard at 69 serial minutes (v1:
+134-233). An unreadable or malformed weights file is an error
+(`SHARD_WEIGHTS_UNREADABLE`, `SHARD_WEIGHTS_INVALID`), never a silent return to
+v1.
+
+v2 is implemented by the Go build tool only. Other ports conform to v1;
+porting v2 is not a parity requirement until its fixtures exist.
 
 ## Plan Fields
 
@@ -85,10 +140,12 @@ affected package list and rebuilds the selected shard.
 
 ## CI Shape
 
-Sharding is reserved for forced full builds on `main`. Pull requests and
-ordinary branch pushes continue to run the normal affected-package build plan
-without a shard index, because those builds are already narrow and should not
-wait on multiple macOS/Windows shard jobs.
+Sharding is reserved for forced full builds: every `main` push, and a pull
+request carrying the `ci-full-build` label (so a change to the main build itself
+can be proven before it merges; label, then push). Other pull requests and
+branch pushes continue to run the normal affected-package build plan without a
+shard index, because those builds are already narrow and should not wait on
+multiple macOS/Windows shard jobs.
 
 For `main` pushes, the detect job emits `build_shards`, a compact JSON array
 for a GitHub Actions matrix. The CI workflow turns those shard entries into
@@ -110,8 +167,8 @@ Each sharded main job downloads the same `build-plan.json` and passes
 - Preserve a scheduled/manual full build path, but run it through shards.
 - Keep per-runner cleanup as defense in depth; sharding is the real capacity
   fix.
-- Future versions can use historical durations and artifact exchange to reduce
-  duplicate prerequisite work.
+- Historical durations now drive assignment (v2). Artifact exchange between
+  shards could remove the remaining duplicate prerequisite work.
 
 ## Conformance
 

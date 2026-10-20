@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 439,
+  "sourceHash": "fnv1a64:a1571a256f94198d",
+  "lessonIds": [
+    "PT-C439-nordeste",
+    "PT-C439-noroeste",
+    "PT-C439-sudeste",
+    "PT-C439-sudoeste",
+    "PT-C439-marco"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch439.txt",
+  "json": "portuguese/narration/ch439.json",
+  "textHash": "fnv1a64:5b6802c6bb8960b4",
+  "jsonHash": "fnv1a64:394f2a627f190942",
+  "findings": []
+}

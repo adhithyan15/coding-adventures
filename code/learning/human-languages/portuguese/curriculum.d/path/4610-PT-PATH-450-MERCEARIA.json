@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-450-MERCEARIA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-450-MERCEARIA"
+  ],
+  "after": []
+}

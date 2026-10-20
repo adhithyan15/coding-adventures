@@ -1,0 +1,20 @@
+{
+  "language": "german",
+  "chapter": 429,
+  "sourceHash": "fnv1a64:3752168fdf04ae6e",
+  "lessonIds": [
+    "GE-C429-schimmel",
+    "GE-C429-flackern",
+    "GE-C429-klemmen",
+    "GE-C429-quietschen",
+    "GE-C429-defekt",
+    "GE-R429-review-422-429"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "german/narration/ch429.txt",
+  "json": "german/narration/ch429.json",
+  "textHash": "fnv1a64:45b9baa7b22f129f",
+  "jsonHash": "fnv1a64:9f8e3fb4c8b65b0b",
+  "findings": []
+}

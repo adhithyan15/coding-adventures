@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 274,
+  "sourceHash": "fnv1a64:a6a654af3fd00da7",
+  "lessonIds": [
+    "FR-C274-survenir",
+    "FR-C274-derouler",
+    "FR-C274-avoir-lieu",
+    "FR-C274-preceder",
+    "FR-C274-durer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch274.txt",
+  "json": "french/narration/ch274.json",
+  "textHash": "fnv1a64:1ab92d08346650a6",
+  "jsonHash": "fnv1a64:f8c7cdebe661405f",
+  "findings": []
+}

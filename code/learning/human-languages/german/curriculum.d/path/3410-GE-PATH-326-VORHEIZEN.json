@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-326-VORHEIZEN",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GE-EXT-326-VORHEIZEN"
+  ],
+  "after": []
+}

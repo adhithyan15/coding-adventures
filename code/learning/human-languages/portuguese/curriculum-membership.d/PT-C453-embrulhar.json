@@ -1,0 +1,11 @@
+{
+  "id": "PT-C453-embrulhar",
+  "pathSegment": "PT-PATH-453-CAIXA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-453-CAIXA",
+      "order": 4
+    }
+  ]
+}

@@ -196,6 +196,44 @@ C1 out 0 1u IC=0
 }
 
 #[test]
+fn builds_and_runs_engine_backed_sensitivity_and_noise_cards() {
+    let deck = r#"
+V1 in 0 DC 1 AC 1
+R1 in out 1k
+R2 out 0 1k
+.sens V(out)
+.noise V(out) V1
+.end
+"#;
+    let parsed = parse_netlist(deck).unwrap();
+
+    assert_eq!(
+        parsed
+            .analysis_plan()
+            .iter()
+            .map(|step| (step.index, step.kind))
+            .collect::<Vec<_>>(),
+        vec![(0, AnalysisKind::Sens), (1, AnalysisKind::Noise)]
+    );
+    let results = parsed.run_analysis_plan().unwrap();
+    assert_eq!(
+        results.iter().map(|result| result.kind).collect::<Vec<_>>(),
+        vec![AnalysisKind::Sens, AnalysisKind::Noise]
+    );
+    let AnalysisResult::Sens(sensitivity) = &results[0].result else {
+        panic!("expected .sens result");
+    };
+    assert_close(sensitivity.nominal_voltage, 0.5);
+    assert!(!sensitivity.entries.is_empty());
+    let AnalysisResult::Noise(noise) = &results[1].result else {
+        panic!("expected .noise result");
+    };
+    assert_eq!(noise.points.len(), 50);
+    assert_close(noise.points[0].frequency_hz, 1.0);
+    assert_eq!(run_netlist(deck).unwrap().len(), 2);
+}
+
+#[test]
 fn runs_two_axis_dc_sweep_with_second_source_as_outer_axis() {
     let corpus: serde_json::Value = serde_json::from_str(include_str!(
         "../../../../grammars/spice/nested-dc-sweep-v1-corpus.json"
@@ -268,9 +306,9 @@ fn runs_shared_berkeley_v1_core_corpus() {
             .map(|case| case["analysis"].as_str().unwrap())
             .collect::<Vec<_>>(),
         vec![
-            "op", "op", "op", "op", "op", "op", "op", "ac", "ac", "ac", "ac", "ac", "ac",
-            "ac", "tran", "tran", "tran", "tran", "tran", "tran", "tran", "dc", "dc", "dc",
-            "dc", "dc", "dc", "dc", "dc", "tf", "tf", "tf", "tf", "tf", "tf", "tf", "tf"
+            "op", "op", "op", "op", "op", "op", "op", "op", "op", "ac", "ac", "ac", "ac", "ac",
+            "ac", "ac", "ac", "tran", "tran", "tran", "tran", "tran", "tran", "tran", "dc", "dc",
+            "dc", "dc", "dc", "dc", "dc", "dc", "tf", "tf", "tf", "tf", "tf", "tf", "tf", "tf"
         ]
     );
 
@@ -1443,6 +1481,26 @@ Rbot out 0 1k
             .unwrap(),
         323.15,
     );
+}
+
+#[test]
+fn parses_canonical_noise_sweeps() {
+    let parsed = parse_netlist(
+        r#"
+Vin in 0 DC 1
+Rtop in out 1k
+Rbot out 0 1k
+.noise V(out) Vin LIN 2 1k 2k
+.noise V(out) Vin DEC 1 1 1k
+.noise V(out) Vin OCT 1 1 8
+"#,
+    )
+    .unwrap();
+
+    let cards = parsed.noise_cards();
+    assert_eq!(cards[0].frequencies_hz, vec![1e3, 2e3]);
+    assert_eq!(cards[1].frequencies_hz, vec![1.0, 10.0, 100.0, 1e3]);
+    assert_eq!(cards[2].frequencies_hz, vec![1.0, 2.0, 4.0, 8.0]);
 }
 
 #[test]

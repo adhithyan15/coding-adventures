@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C422-kapitaen",
+    "language": "german",
+    "chapter": 422,
+    "sequence": 22770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e5a63d5cf351a9ff"
+  },
+  "findings": []
+}

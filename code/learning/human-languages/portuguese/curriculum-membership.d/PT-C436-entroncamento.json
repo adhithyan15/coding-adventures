@@ -1,0 +1,11 @@
+{
+  "id": "PT-C436-entroncamento",
+  "pathSegment": "PT-PATH-436-INDICACOES",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-436-INDICACOES",
+      "order": 3
+    }
+  ]
+}

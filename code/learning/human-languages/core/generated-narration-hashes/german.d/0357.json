@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 357,
+  "sourceHash": "fnv1a64:e6465b5786e69894",
+  "lessonIds": [
+    "GE-C357-gewerkschaft",
+    "GE-C357-betriebsrat",
+    "GE-C357-forderung",
+    "GE-C357-unterstuetzen",
+    "GE-C357-unterstuetzung"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch357.txt",
+  "json": "german/narration/ch357.json",
+  "textHash": "fnv1a64:f85540d9407305cd",
+  "jsonHash": "fnv1a64:a079a2e713f62bb3",
+  "findings": []
+}

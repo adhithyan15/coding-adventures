@@ -1,0 +1,19 @@
+{
+  "chapter": 499,
+  "title": "Stricken und sticken",
+  "label": "ch:ge-stricken-und-sticken",
+  "canDo": "I can talk about knitting and needlework.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C499-sticken",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 499: I can talk about knitting and needlework.",
+    "assesses": [
+      "GE-LEX-C499-HANDARBEIT-03",
+      "GE-LEX-C499-HANDARBEIT-04",
+      "GE-LEX-C499-HANDARBEIT-05"
+    ]
+  }
+}

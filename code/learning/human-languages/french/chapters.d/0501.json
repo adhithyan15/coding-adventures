@@ -1,0 +1,19 @@
+{
+  "chapter": 501,
+  "title": "Collectionneurs",
+  "label": "ch:fr-collectionneurs",
+  "canDo": "I can talk about collecting and building models.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C501-assembler",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 501: I can talk about collecting and building models.",
+    "assesses": [
+      "FR-LEX-C501-COLLECTIONS-03",
+      "FR-LEX-C501-COLLECTIONS-04",
+      "FR-LEX-C501-COLLECTIONS-05"
+    ]
+  }
+}

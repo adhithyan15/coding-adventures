@@ -1,0 +1,19 @@
+{
+  "chapter": 524,
+  "title": "En version originale",
+  "label": "ch:fr-en-version-originale",
+  "canDo": "I can talk about how a film is made and shown.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C524-tournage",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 524: I can talk about how a film is made and shown.",
+    "assesses": [
+      "FR-LEX-C524-CINEMA-03",
+      "FR-LEX-C524-CINEMA-04",
+      "FR-LEX-C524-CINEMA-05"
+    ]
+  }
+}

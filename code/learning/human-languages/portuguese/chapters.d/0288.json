@@ -1,0 +1,19 @@
+{
+  "chapter": 288,
+  "title": "Um assalto",
+  "label": "ch:pt-um-assalto",
+  "canDo": "I can describe a hold-up and a break-in: who robbed, who forced the door.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C288-arrombamento",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 288: I can describe a hold-up and a break-in: who robbed, who forced the door.",
+    "assesses": [
+      "PT-LEX-C288-ASSALTO-03",
+      "PT-LEX-C288-ASSALTO-04",
+      "PT-LEX-C288-ASSALTO-05"
+    ]
+  }
+}

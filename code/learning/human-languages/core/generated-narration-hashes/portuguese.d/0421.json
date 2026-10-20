@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 421,
+  "sourceHash": "fnv1a64:82848c1f49b9b1b3",
+  "lessonIds": [
+    "PT-C421-escala",
+    "PT-C421-embarque",
+    "PT-C421-vaivem",
+    "PT-C421-pista",
+    "PT-C421-fuso"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch421.txt",
+  "json": "portuguese/narration/ch421.json",
+  "textHash": "fnv1a64:a8e33ea440bcd25e",
+  "jsonHash": "fnv1a64:2c46f55d5f3c1680",
+  "findings": []
+}

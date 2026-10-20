@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 363,
+  "sourceHash": "fnv1a64:eb7a10a1b9262c3a",
+  "lessonIds": [
+    "GE-C363-umweltschutz",
+    "GE-C363-klimawandel",
+    "GE-C363-nachhaltig",
+    "GE-C363-recyceln",
+    "GE-C363-verbrauchen"
+  ],
+  "tex": "german/book/chapters/ch363-die-umwelt-schutzen.tex"
+}

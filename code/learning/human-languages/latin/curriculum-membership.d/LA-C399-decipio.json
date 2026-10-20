@@ -1,0 +1,11 @@
+{
+  "id": "LA-C399-decipio",
+  "pathSegment": "LA-PATH-399-PERFIDIA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-399-PERFIDIA",
+      "order": 3
+    }
+  ]
+}

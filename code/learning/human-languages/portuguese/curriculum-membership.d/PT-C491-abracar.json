@@ -1,0 +1,11 @@
+{
+  "id": "PT-C491-abracar",
+  "pathSegment": "PT-PATH-491-NAMORO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-491-NAMORO",
+      "order": 4
+    }
+  ]
+}

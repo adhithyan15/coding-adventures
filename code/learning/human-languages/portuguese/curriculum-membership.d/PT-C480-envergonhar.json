@@ -1,0 +1,11 @@
+{
+  "id": "PT-C480-envergonhar",
+  "pathSegment": "PT-PATH-480-REMORSO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-480-REMORSO",
+      "order": 3
+    }
+  ]
+}

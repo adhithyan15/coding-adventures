@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C409-virage",
+    "language": "french",
+    "chapter": 409,
+    "sequence": 22780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea6ad6d79440b0d3"
+  },
+  "findings": []
+}

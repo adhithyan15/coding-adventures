@@ -1,0 +1,11 @@
+{
+  "id": "PT-C485-inchar",
+  "pathSegment": "PT-PATH-485-ARRANHAO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-485-ARRANHAO",
+      "order": 3
+    }
+  ]
+}

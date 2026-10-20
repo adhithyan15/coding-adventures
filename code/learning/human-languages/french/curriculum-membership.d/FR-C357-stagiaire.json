@@ -1,0 +1,11 @@
+{
+  "id": "FR-C357-stagiaire",
+  "pathSegment": "FR-PATH-357-STAGE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-357-STAGE",
+      "order": 1
+    }
+  ]
+}

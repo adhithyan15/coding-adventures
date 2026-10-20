@@ -1,0 +1,11 @@
+{
+  "id": "GE-C374-entschluss",
+  "pathSegment": "GE-PATH-374-ENTSCHLUSS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-374-ENTSCHLUSS",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C403-carburant",
+  "pathSegment": "FR-PATH-403-POMPE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-403-POMPE",
+      "order": 2
+    }
+  ]
+}

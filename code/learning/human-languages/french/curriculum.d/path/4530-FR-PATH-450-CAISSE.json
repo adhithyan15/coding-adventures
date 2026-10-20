@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-450-CAISSE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-450-CAISSE"
+  ],
+  "after": []
+}

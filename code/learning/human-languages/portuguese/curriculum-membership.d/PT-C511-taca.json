@@ -1,0 +1,11 @@
+{
+  "id": "PT-C511-taca",
+  "pathSegment": "PT-PATH-511-TORNEIO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-511-TORNEIO",
+      "order": 1
+    }
+  ]
+}

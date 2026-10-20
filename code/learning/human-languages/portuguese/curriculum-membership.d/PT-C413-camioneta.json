@@ -1,0 +1,11 @@
+{
+  "id": "PT-C413-camioneta",
+  "pathSegment": "PT-PATH-413-PARAGEM",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-413-PARAGEM",
+      "order": 2
+    }
+  ]
+}

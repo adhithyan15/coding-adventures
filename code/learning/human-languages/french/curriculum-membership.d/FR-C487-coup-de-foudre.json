@@ -1,0 +1,11 @@
+{
+  "id": "FR-C487-coup-de-foudre",
+  "pathSegment": "FR-PATH-487-AMOUREUX",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-487-AMOUREUX",
+      "order": 1
+    }
+  ]
+}

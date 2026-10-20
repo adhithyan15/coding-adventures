@@ -1,0 +1,19 @@
+{
+  "chapter": 405,
+  "title": "La dépanneuse arrive",
+  "label": "ch:fr-la-depanneuse-arrive",
+  "canDo": "I can get help after a breakdown: the tow truck, the mechanic who comes, fixing the car on the spot, towing and the garage owner.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C405-garagiste",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 405: I can get help after a breakdown: the tow truck, the mechanic who comes, fixing the car on the spot, towing and the garage owner.",
+    "assesses": [
+      "FR-LEX-C405-DEPANNEUSE-03",
+      "FR-LEX-C405-DEPANNEUSE-04",
+      "FR-LEX-C405-DEPANNEUSE-05"
+    ]
+  }
+}

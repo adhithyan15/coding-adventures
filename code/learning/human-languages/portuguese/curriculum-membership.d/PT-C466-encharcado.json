@@ -1,0 +1,11 @@
+{
+  "id": "PT-C466-encharcado",
+  "pathSegment": "PT-PATH-466-CHUVA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-466-CHUVA",
+      "order": 3
+    }
+  ]
+}

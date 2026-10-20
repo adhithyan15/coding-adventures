@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 389,
+  "sourceHash": "fnv1a64:6e9d6fb5a3c0593b",
+  "lessonIds": [
+    "LA-C389-servitus",
+    "LA-C389-manumitto",
+    "LA-C389-pietas",
+    "LA-C389-onus",
+    "LA-C389-obsequium"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch389.txt",
+  "json": "latin/narration/ch389.json",
+  "textHash": "fnv1a64:e99ce603956ab9e2",
+  "jsonHash": "fnv1a64:8d5ba89ac57d0276",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C270-assim-que",
+    "language": "portuguese",
+    "chapter": 270,
+    "sequence": 15870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:128af71f853d1a66"
+  },
+  "findings": []
+}

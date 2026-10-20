@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-453-EMBALLAGE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FR-EXT-453-EMBALLAGE"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 366,
+  "title": "Theorie und Praxis",
+  "label": "ch:ge-theorie-und-praxis",
+  "canDo": "I can state a hypothesis, say what is true in theory, name the circumstances and say if applicable and at least.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GE-C366-wenigstens",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 366: I can state a hypothesis, say what is true in theory, name the circumstances and say if applicable and at least.",
+    "assesses": [
+      "GE-LEX-C366-HYPOTHESE-03",
+      "GE-LEX-C366-HYPOTHESE-04",
+      "GE-LEX-C366-HYPOTHESE-05"
+    ]
+  }
+}

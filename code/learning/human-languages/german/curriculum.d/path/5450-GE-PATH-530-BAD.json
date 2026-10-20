@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-530-BAD",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GE-EXT-530-BAD"
+  ],
+  "after": []
+}

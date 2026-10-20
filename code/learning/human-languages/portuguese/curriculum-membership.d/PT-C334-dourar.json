@@ -1,0 +1,11 @@
+{
+  "id": "PT-C334-dourar",
+  "pathSegment": "PT-PATH-334-GRATINAR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-334-GRATINAR",
+      "order": 2
+    }
+  ]
+}

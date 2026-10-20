@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 530,
+  "sourceHash": "fnv1a64:0fe661a79e4b30af",
+  "lessonIds": [
+    "LA-C530-erus",
+    "LA-C530-verna",
+    "LA-C530-ancillula",
+    "LA-C530-servilis",
+    "LA-C530-pedisequus"
+  ],
+  "tex": "latin/book/chapters/ch530-masters-and-slaves.tex"
+}

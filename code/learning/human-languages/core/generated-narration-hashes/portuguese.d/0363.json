@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 363,
+  "sourceHash": "fnv1a64:d76e861e3b039d4a",
+  "lessonIds": [
+    "PT-C363-cidadao",
+    "PT-C363-cidadania",
+    "PT-C363-direito",
+    "PT-C363-liberdade",
+    "PT-C363-igualdade"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch363.txt",
+  "json": "portuguese/narration/ch363.json",
+  "textHash": "fnv1a64:09dd313a1efacd31",
+  "jsonHash": "fnv1a64:82cf1c1559ec39e1",
+  "findings": []
+}

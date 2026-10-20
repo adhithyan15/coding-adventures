@@ -1,0 +1,11 @@
+{
+  "id": "PT-C477-solucar",
+  "pathSegment": "PT-PATH-477-CHORO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-477-CHORO",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 440,
+  "title": "A morada",
+  "label": "ch:pt-a-morada",
+  "canDo": "I can find an address: the address, the outskirts, the parish, the municipality and the entry phone.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "PT-R440-revisao-433-440",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 440: I can find an address: the address, the outskirts, the parish, the municipality and the entry phone.",
+    "assesses": [
+      "PT-LEX-C440-MORADA-03",
+      "PT-LEX-C440-MORADA-04",
+      "PT-LEX-C440-MORADA-05"
+    ]
+  }
+}

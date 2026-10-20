@@ -1,0 +1,11 @@
+{
+  "id": "PT-C452-esteticista",
+  "pathSegment": "PT-PATH-452-CUIDADOS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-452-CUIDADOS",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:e2403204b93021a8",
+  "lessonIds": [
+    "GE-C303-tod",
+    "GE-C303-beerdigen",
+    "GE-C303-beerdigung",
+    "GE-C303-sarg",
+    "GE-C303-friedhof"
+  ],
+  "tex": "german/book/chapters/ch303-die-beerdigung.tex"
+}

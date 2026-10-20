@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-309-SCHMUECKEN",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GE-EXT-309-SCHMUECKEN"
+  ],
+  "after": []
+}

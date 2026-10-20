@@ -1,0 +1,11 @@
+{
+  "id": "LA-C426-vestigium",
+  "pathSegment": "LA-PATH-426-LUTULENTUS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-426-LUTULENTUS",
+      "order": 2
+    }
+  ]
+}

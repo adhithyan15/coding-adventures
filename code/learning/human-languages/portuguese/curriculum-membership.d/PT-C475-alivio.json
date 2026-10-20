@@ -1,0 +1,11 @@
+{
+  "id": "PT-C475-alivio",
+  "pathSegment": "PT-PATH-475-NERVOS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-475-NERVOS",
+      "order": 4
+    }
+  ]
+}

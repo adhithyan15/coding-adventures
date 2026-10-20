@@ -1,0 +1,11 @@
+{
+  "id": "FR-C454-sommet",
+  "pathSegment": "FR-PATH-454-RELIEF",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-454-RELIEF",
+      "order": 2
+    }
+  ]
+}

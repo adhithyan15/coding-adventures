@@ -1,0 +1,19 @@
+{
+  "chapter": 495,
+  "title": "Disputes et trahisons",
+  "label": "ch:fr-disputes-et-trahisons",
+  "canDo": "I can talk about quarrels, betrayal and falling out.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C495-trahison",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 495: I can talk about quarrels, betrayal and falling out.",
+    "assesses": [
+      "FR-LEX-C495-DISPUTES-03",
+      "FR-LEX-C495-DISPUTES-04",
+      "FR-LEX-C495-DISPUTES-05"
+    ]
+  }
+}

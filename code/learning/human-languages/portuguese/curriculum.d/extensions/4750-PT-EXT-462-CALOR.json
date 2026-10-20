@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-462-CALOR",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about hot weather: muggy days, the drought, a light breeze, sunstroke and sweating.",
+  "prerequisites": []
+}

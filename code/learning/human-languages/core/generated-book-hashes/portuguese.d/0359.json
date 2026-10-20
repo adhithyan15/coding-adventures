@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 359,
+  "sourceHash": "fnv1a64:bc42769651a8137b",
+  "lessonIds": [
+    "PT-C359-gerente",
+    "PT-C359-departamento",
+    "PT-C359-tarefa",
+    "PT-C359-colaborador",
+    "PT-C359-delegar"
+  ],
+  "tex": "portuguese/book/chapters/ch359-no-escritorio.tex"
+}

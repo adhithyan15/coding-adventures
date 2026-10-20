@@ -1,0 +1,11 @@
+{
+  "id": "PT-C387-defesa",
+  "pathSegment": "PT-PATH-387-TRIBUNAL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-387-TRIBUNAL",
+      "order": 3
+    }
+  ]
+}

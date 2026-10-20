@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C330-ebullition",
+    "language": "french",
+    "chapter": 330,
+    "sequence": 18680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9664dbc2e93ebe39"
+  },
+  "findings": []
+}

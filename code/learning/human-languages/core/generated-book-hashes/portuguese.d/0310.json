@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 310,
+  "sourceHash": "fnv1a64:6f20bccc3c3a9086",
+  "lessonIds": [
+    "PT-C310-batizado",
+    "PT-C310-batizar",
+    "PT-C310-padrinho",
+    "PT-C310-madrinha",
+    "PT-C310-amamentar"
+  ],
+  "tex": "portuguese/book/chapters/ch310-o-batizado.tex"
+}

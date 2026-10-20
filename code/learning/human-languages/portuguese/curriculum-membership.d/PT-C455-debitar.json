@@ -1,0 +1,11 @@
+{
+  "id": "PT-C455-debitar",
+  "pathSegment": "PT-PATH-455-BANCO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-455-BANCO",
+      "order": 2
+    }
+  ]
+}

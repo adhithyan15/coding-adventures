@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:b5bc416df27f0e87",
+  "lessonIds": [
+    "GE-C305-feier",
+    "GE-C305-feierlich",
+    "GE-C305-feiertag",
+    "GE-C305-zeremonie",
+    "GE-C305-einweihen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch305.txt",
+  "json": "german/narration/ch305.json",
+  "textHash": "fnv1a64:4da2c831b1909e7c",
+  "jsonHash": "fnv1a64:016323a5101fc243",
+  "findings": []
+}

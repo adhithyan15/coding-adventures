@@ -1,0 +1,11 @@
+{
+  "id": "GE-C286-schuldig",
+  "pathSegment": "GE-PATH-286-URTEIL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-286-URTEIL",
+      "order": 3
+    }
+  ]
+}

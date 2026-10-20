@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C321-dragon",
+    "language": "french",
+    "chapter": 321,
+    "sequence": 18240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:15712b8333238ba9"
+  },
+  "findings": []
+}

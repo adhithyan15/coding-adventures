@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 338,
+  "sourceHash": "fnv1a64:08ab9ca270a5dae5",
+  "lessonIds": [
+    "FR-C338-douter",
+    "FR-C338-sceptique",
+    "FR-C338-nier",
+    "FR-C338-absurde",
+    "FR-C338-discutable"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch338.txt",
+  "json": "french/narration/ch338.json",
+  "textHash": "fnv1a64:863d5718a81cc55d",
+  "jsonHash": "fnv1a64:3ea2f235c98c89a6",
+  "findings": []
+}

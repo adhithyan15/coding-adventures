@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-279-EREIGNIS",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that something took place: an event, to occur, to take place, to happen and an incident.",
+  "prerequisites": []
+}

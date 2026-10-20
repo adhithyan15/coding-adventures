@@ -1,0 +1,19 @@
+{
+  "chapter": 362,
+  "title": "O ordenado e a reforma",
+  "label": "ch:pt-o-ordenado-e-a-reforma",
+  "canDo": "I can talk about pay and pensions: salary, allowances, negotiating and retirement.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C362-reformado",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 362: I can talk about pay and pensions: salary, allowances, negotiating and retirement.",
+    "assesses": [
+      "PT-LEX-C362-ORDENADO-03",
+      "PT-LEX-C362-ORDENADO-04",
+      "PT-LEX-C362-ORDENADO-05"
+    ]
+  }
+}

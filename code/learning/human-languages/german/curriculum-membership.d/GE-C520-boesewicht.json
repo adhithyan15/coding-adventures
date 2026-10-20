@@ -1,0 +1,11 @@
+{
+  "id": "GE-C520-boesewicht",
+  "pathSegment": "GE-PATH-520-BUECHER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-520-BUECHER",
+      "order": 4
+    }
+  ]
+}

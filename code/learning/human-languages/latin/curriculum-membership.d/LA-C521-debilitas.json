@@ -1,0 +1,11 @@
+{
+  "id": "LA-C521-debilitas",
+  "pathSegment": "LA-PATH-521-AEGR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-521-AEGR",
+      "order": 4
+    }
+  ]
+}

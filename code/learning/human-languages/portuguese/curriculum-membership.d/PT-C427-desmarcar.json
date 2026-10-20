@@ -1,0 +1,11 @@
+{
+  "id": "PT-C427-desmarcar",
+  "pathSegment": "PT-PATH-427-RESERVA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-427-RESERVA",
+      "order": 1
+    }
+  ]
+}

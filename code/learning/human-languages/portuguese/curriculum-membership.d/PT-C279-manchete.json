@@ -1,0 +1,11 @@
+{
+  "id": "PT-C279-manchete",
+  "pathSegment": "PT-PATH-279-IMPRENSA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-279-IMPRENSA",
+      "order": 4
+    }
+  ]
+}

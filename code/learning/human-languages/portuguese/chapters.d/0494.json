@@ -1,0 +1,19 @@
+{
+  "chapter": 494,
+  "title": "Fraldas e biberões",
+  "label": "ch:pt-fraldas-e-biberoes",
+  "canDo": "I can talk about looking after a baby.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "PT-C494-embalar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 494: I can talk about looking after a baby.",
+    "assesses": [
+      "PT-LEX-C494-BEBE-03",
+      "PT-LEX-C494-BEBE-04",
+      "PT-LEX-C494-BEBE-05"
+    ]
+  }
+}

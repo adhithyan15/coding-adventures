@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-361-ARGUMENTUM",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "LA-EXT-361-ARGUMENTUM"
+  ],
+  "after": []
+}

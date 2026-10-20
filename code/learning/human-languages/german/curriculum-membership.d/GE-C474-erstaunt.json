@@ -1,0 +1,11 @@
+{
+  "id": "GE-C474-erstaunt",
+  "pathSegment": "GE-PATH-474-STAUNEN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-474-STAUNEN",
+      "order": 1
+    }
+  ]
+}

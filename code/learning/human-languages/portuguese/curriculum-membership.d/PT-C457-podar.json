@@ -1,0 +1,11 @@
+{
+  "id": "PT-C457-podar",
+  "pathSegment": "PT-PATH-457-ARVORES",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-457-ARVORES",
+      "order": 4
+    }
+  ]
+}

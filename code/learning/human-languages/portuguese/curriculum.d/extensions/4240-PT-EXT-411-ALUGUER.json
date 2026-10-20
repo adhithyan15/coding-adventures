@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-411-ALUGUER",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can hire a car: the hire, the driver, the number plate, the mileage and the insurance excess.",
+  "prerequisites": []
+}

@@ -1,0 +1,17 @@
+{
+  "language": "portuguese",
+  "chapter": 265,
+  "sourceHash": "fnv1a64:c26b6a720bc9fa1f",
+  "lessonIds": [
+    "PT-C265-estava-contente",
+    "PT-C265-espero-voltar",
+    "PT-C265-revisao-sentimentos"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "portuguese/narration/ch265.txt",
+  "json": "portuguese/narration/ch265.json",
+  "textHash": "fnv1a64:aa069103359a3b8f",
+  "jsonHash": "fnv1a64:30355d5a65d1ee30",
+  "findings": []
+}

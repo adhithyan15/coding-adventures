@@ -1,0 +1,11 @@
+{
+  "id": "PT-R332-revisao-325-332",
+  "pathSegment": "PT-PATH-332-FRITAR",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PT-EXT-332-FRITAR",
+      "order": 5
+    }
+  ]
+}

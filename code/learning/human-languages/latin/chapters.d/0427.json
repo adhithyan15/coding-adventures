@@ -1,0 +1,19 @@
+{
+  "chapter": 427,
+  "title": "Overnight stop, Coachman, Post, Travel money, To set out on",
+  "label": "ch:la-overnight-stop-coachman-post-travel-money-to-set-out-on",
+  "canDo": "I can talk about stopping and setting off on a long road: the overnight stop, the coachman, the post, travel money, and setting out.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C427-ingredior",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 427: I can talk about stopping and setting off on a long road: the overnight stop, the coachman, the post, travel money, and setting out.",
+    "assesses": [
+      "LA-LEX-C427-MANSIO-03",
+      "LA-LEX-C427-MANSIO-04",
+      "LA-LEX-C427-MANSIO-05"
+    ]
+  }
+}

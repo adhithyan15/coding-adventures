@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-310-KARNEVAL",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GE-EXT-310-KARNEVAL"
+  ],
+  "after": []
+}

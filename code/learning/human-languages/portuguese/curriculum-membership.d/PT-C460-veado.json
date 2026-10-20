@@ -1,0 +1,11 @@
+{
+  "id": "PT-C460-veado",
+  "pathSegment": "PT-PATH-460-SELVAGENS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-460-SELVAGENS",
+      "order": 1
+    }
+  ]
+}

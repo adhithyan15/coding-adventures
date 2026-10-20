@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 389,
+  "sourceHash": "fnv1a64:5ac4d678ec31ff14",
+  "lessonIds": [
+    "PT-C389-crime",
+    "PT-C389-criminoso",
+    "PT-C389-corrupcao",
+    "PT-C389-sancao",
+    "PT-C389-multar"
+  ],
+  "tex": "portuguese/book/chapters/ch389-o-crime-nao-compensa.tex"
+}

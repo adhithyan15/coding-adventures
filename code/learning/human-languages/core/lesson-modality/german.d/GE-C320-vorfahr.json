@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C320-vorfahr",
+    "language": "german",
+    "chapter": 320,
+    "sequence": 17500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8910e993f8811053"
+  },
+  "findings": []
+}

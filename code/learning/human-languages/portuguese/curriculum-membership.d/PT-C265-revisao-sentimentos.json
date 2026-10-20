@@ -1,0 +1,11 @@
+{
+  "id": "PT-C265-revisao-sentimentos",
+  "pathSegment": "PT-PATH-265-SENTIMENTOS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-265-SENTIMENTOS",
+      "order": 2
+    }
+  ]
+}

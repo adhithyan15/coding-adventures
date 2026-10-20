@@ -617,6 +617,12 @@ full token budget apiece. The primary
 file also obeys the tightened file and aggregate byte budgets; included files
 retain the engine's read guards. The in-memory include API checks unused files,
 names, count, and aggregate bytes before copying them into `MemoryFs`.
+MacroOct, the first consumer, predates that rule and did not enforce it until
+2026-10-19. A dense 8 MB MacroOct file used about 2 GB before the engine's
+token budget fired, and a 17 MB primary file compiled despite
+`bytes_per_file`. The same pre-lex contract (per-file and aggregate caps
+checked before lexing, plus the in-memory bundle checks) now applies to every
+PREP01 consumer. A new dialect must adopt it before it is wired into a driver.
 
 **Slice 4 — the C dialect, and real C.**
 The first publishable stage establishes the directive lexer, bounded token

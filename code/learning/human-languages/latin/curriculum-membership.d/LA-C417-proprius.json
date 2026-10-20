@@ -1,0 +1,11 @@
+{
+  "id": "LA-C417-proprius",
+  "pathSegment": "LA-PATH-417-POSSESSIO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-417-POSSESSIO",
+      "order": 1
+    }
+  ]
+}

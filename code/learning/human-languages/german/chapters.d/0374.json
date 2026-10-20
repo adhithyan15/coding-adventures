@@ -1,0 +1,19 @@
+{
+  "chapter": 374,
+  "title": "Sich entschließen",
+  "label": "ch:ge-sich-entschlie-en",
+  "canDo": "I can say that I have made up my mind, find a way out and plan in a flexible way.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GE-C374-planung",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 374: I can say that I have made up my mind, find a way out and plan in a flexible way.",
+    "assesses": [
+      "GE-LEX-C374-ENTSCHLUSS-03",
+      "GE-LEX-C374-ENTSCHLUSS-04",
+      "GE-LEX-C374-ENTSCHLUSS-05"
+    ]
+  }
+}

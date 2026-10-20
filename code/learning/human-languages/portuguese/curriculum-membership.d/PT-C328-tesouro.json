@@ -1,0 +1,11 @@
+{
+  "id": "PT-C328-tesouro",
+  "pathSegment": "PT-PATH-328-NAVEGAR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-328-NAVEGAR",
+      "order": 4
+    }
+  ]
+}

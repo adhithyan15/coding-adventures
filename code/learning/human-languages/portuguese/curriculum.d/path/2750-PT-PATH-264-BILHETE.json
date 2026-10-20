@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-264-BILHETE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-264-BILHETE"
+  ],
+  "after": []
+}

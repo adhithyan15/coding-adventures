@@ -4632,12 +4632,14 @@ fn emit_view_tree(
         // primitives backed by SwiftUI's `TextField` and `Button`
         // respectively. They read slot/emit refs off the node props; see
         // the per-function doc comments below for the full mapping.
-        // UI25's legacy `Input` remains the only authored primitive with a
-        // multiline contract. Keep accepting it until the kernel grows a
-        // dedicated multiline control; single-line Input shares HostInput's
-        // native lowering while multiline Input uses TextEditor.
-        "Input" => emit_legacy_input(node, indent, emits)?,
-        "HostInput" => emit_host_input(node, indent, emits)?,
+        // Both text primitives take `multiline: true` (UI29 §2.1, #15930):
+        // a multiline field is a `TextEditor`, a single-line one a
+        // `TextField`. HostInput used to go straight to the `TextField`
+        // path, so every multiline HostInput was drawn as one line here.
+        "Input" | "HostInput" if find_keyword_prop(node, "multiline") == Some("true") => {
+            emit_text_editor(node, indent)?
+        }
+        "Input" | "HostInput" => emit_host_input(node, indent, emits)?,
         "HostButton" => emit_host_button(node, indent, emits, for_payload)?,
         "HostSurface" => emit_host_surface(node, indent),
 
@@ -5797,9 +5799,6 @@ fn swift_collection_index_expr(
 // UI29 kernel partial — HostInput / HostButton emitters
 // =====================================================================
 
-/// Lower the still-supported UI25 `Input` primitive. `HostInput` deliberately
-/// covers only the single-line kernel surface, while UI25 `Input` also carries
-/// the multiline text-editor contract used by Trestle Notes.
 /// The `.disabled(...)` modifier for a text field, shared by `HostInput`'s
 /// `TextField` and the legacy multiline `TextEditor`.
 ///
@@ -5822,19 +5821,93 @@ fn text_field_disabled_modifier(node: &LayoutNode) -> Result<Option<String>, Pip
     Ok(None)
 }
 
-fn emit_legacy_input(
-    node: &LayoutNode,
-    indent: usize,
-    emits: &[EmitDecl],
-) -> Result<String, PipelineEmitError> {
-    if find_keyword_prop(node, "multiline") != Some("true") {
-        return emit_host_input(node, indent, emits);
+/// A text field's `placeholder`, as it reaches SwiftUI.
+///
+/// | authored form          | `TextField` title / `TextEditor` overlay                  |
+/// |------------------------|-----------------------------------------------------------|
+/// | `placeholder : "Text"` | `"Text"` / `Text("Text")` (a `LocalizedStringKey`, as before) |
+/// | `placeholder : 3`      | `"3"` / `Text("3")`                                       |
+/// | `placeholder : slot: s`| `String(describing: s)` / `Text(verbatim: …)`             |
+/// | `placeholder : item`   | `String(describing: item)` (a `For` binding)              |
+/// | `placeholder : ( e )`  | `String(describing: ( e ))`                               |
+///
+/// `String(describing:)` makes the bound forms a `String` whatever the slot
+/// or binding's Swift type is, which is what `TextField`'s
+/// `StringProtocol` title and `Text(verbatim:)` take. This read string
+/// literals only, so every bound placeholder was dropped without a report.
+enum SwiftPlaceholder {
+    /// A Swift string literal, quotes included.
+    Literal(String),
+    /// A Swift expression of type `String`.
+    Bound(String),
+}
+
+impl SwiftPlaceholder {
+    /// The first argument of `TextField(_:text:)`.
+    fn title(&self) -> String {
+        match self {
+            SwiftPlaceholder::Literal(literal) => literal.clone(),
+            SwiftPlaceholder::Bound(expr) => expr.clone(),
+        }
     }
 
+    /// The `Text` view a `TextEditor` overlays while its value is empty.
+    fn text(&self) -> String {
+        match self {
+            SwiftPlaceholder::Literal(literal) => format!("Text({literal})"),
+            SwiftPlaceholder::Bound(expr) => format!("Text(verbatim: {expr})"),
+        }
+    }
+
+    /// The argument of `.accessibilityLabel(...)` when the placeholder
+    /// names an otherwise unlabelled `TextEditor`.
+    fn accessibility_label(&self) -> String {
+        match self {
+            SwiftPlaceholder::Literal(literal) => literal.clone(),
+            SwiftPlaceholder::Bound(_) => self.text(),
+        }
+    }
+}
+
+/// Read a text field's `placeholder` (see [`SwiftPlaceholder`]). An empty
+/// literal is no placeholder; a slot or binding name that is not a Swift
+/// identifier is an `UnsafeSlotName` error, never spliced into the source.
+fn swift_placeholder(node: &LayoutNode) -> Result<Option<SwiftPlaceholder>, PipelineEmitError> {
+    Ok(match find_prop_value(node, "placeholder") {
+        Some(LayoutPropValue::String(text)) if !text.is_empty() => Some(
+            SwiftPlaceholder::Literal(format!("\"{}\"", escape_swift_string(text))),
+        ),
+        Some(LayoutPropValue::Number(number)) => {
+            Some(SwiftPlaceholder::Literal(format!("\"{number}\"")))
+        }
+        Some(LayoutPropValue::SlotRef(name)) | Some(LayoutPropValue::Keyword(name)) => {
+            let camel = to_camel_case_first_lower(name);
+            validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+            Some(SwiftPlaceholder::Bound(format!("String(describing: {camel})")))
+        }
+        Some(LayoutPropValue::Expr(expr)) if !expr.trim().is_empty() => Some(
+            SwiftPlaceholder::Bound(format!("String(describing: {})", expr.trim())),
+        ),
+        _ => None,
+    })
+}
+
+/// Lower a multiline text field — `HostInput` or the legacy `Input` with
+/// `multiline: true` — to a SwiftUI `TextEditor`.
+///
+/// | Moslayout prop        | SwiftUI surface                                        |
+/// |-----------------------|--------------------------------------------------------|
+/// | `value` + `onChange`  | `TextEditor(text: Binding(get:set:))`, as `TextField`   |
+/// | `placeholder: "..."`  | a `Text` overlay shown while the value is empty         |
+/// | `placeholder: slot: x`| the same overlay, `Text(verbatim: String(describing: x))` |
+/// | `a11y-label`          | `.accessibilityLabel(...)` (placeholder as a fallback)  |
+/// | `disabled`/`read-only`| `.disabled(...)`, shared with `TextField`               |
+/// | `onCommit`            | none: Return inserts a newline in a `TextEditor`        |
+/// | `onCancel`            | `.onExitCommand` on macOS, as `TextField`               |
+fn emit_text_editor(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let child_pad = " ".repeat(indent + 4);
-    let placeholder = find_string_prop(node, "placeholder").unwrap_or("");
-    let placeholder_lit = format!("\"{}\"", escape_swift_string(placeholder));
+    let placeholder = swift_placeholder(node)?;
 
     let value_expr = match node.props.iter().find(|p| p.name == "value") {
         Some(p) => match &p.value {
@@ -5874,9 +5947,10 @@ fn emit_legacy_input(
     };
 
     let mut output = format!("{pad}ZStack(alignment: .topLeading) {{\n");
-    if !placeholder.is_empty() {
+    if let Some(placeholder) = &placeholder {
+        let overlay = placeholder.text();
         output.push_str(&format!(
-            "{child_pad}if {value_expr}.isEmpty {{\n{child_pad}    Text({placeholder_lit})\n{child_pad}        .foregroundColor(.secondary)\n{child_pad}        .padding(.horizontal, 5)\n{child_pad}        .padding(.vertical, 8)\n{child_pad}        .allowsHitTesting(false)\n{child_pad}        .accessibilityHidden(true)\n{child_pad}}}\n"
+            "{child_pad}if {value_expr}.isEmpty {{\n{child_pad}    {overlay}\n{child_pad}        .foregroundColor(.secondary)\n{child_pad}        .padding(.horizontal, 5)\n{child_pad}        .padding(.vertical, 8)\n{child_pad}        .allowsHitTesting(false)\n{child_pad}        .accessibilityHidden(true)\n{child_pad}}}\n"
         ));
     }
     output.push_str(&format!("{child_pad}TextEditor(text: {text_binding})"));
@@ -5885,8 +5959,8 @@ fn emit_legacy_input(
     // placeholder unconditionally and drop the authored name (J3b-pre).
     if let Some(label) = swift_accessibility_label(node) {
         output.push_str(&format!(".accessibilityLabel({label})"));
-    } else if !placeholder.is_empty() {
-        output.push_str(&format!(".accessibilityLabel({placeholder_lit})"));
+    } else if let Some(placeholder) = &placeholder {
+        output.push_str(&format!(".accessibilityLabel({})", placeholder.accessibility_label()));
     }
     if let Some(part_name) = &node.part_name {
         output.push_str(&format!(
@@ -5899,6 +5973,16 @@ fn emit_legacy_input(
     if let Some(modifier) = text_field_disabled_modifier(node)? {
         output.push_str(&modifier);
     }
+    // Escape cancels, as on the single-line `TextField`; macOS-only, so it is
+    // guarded exactly as there. There is no `onCommit` counterpart: Return
+    // is a line break in a `TextEditor` (#15930).
+    if let Some(emit_name) = find_emit_ref_prop(node, "onCancel") {
+        let case_name = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+        validate_emit_name(&case_name)?;
+        output.push_str(&format!(
+            "\n{child_pad}#if os(macOS)\n{child_pad}.onExitCommand {{ dispatch(.{case_name}) }}\n{child_pad}#endif"
+        ));
+    }
     output.push_str(&format!("\n{pad}}}\n"));
     Ok(output)
 }
@@ -5910,6 +5994,7 @@ fn emit_legacy_input(
 /// | Moslayout prop                | SwiftUI surface                                 |
 /// |-------------------------------|-------------------------------------------------|
 /// | `placeholder: "..."`          | First arg of `TextField("placeholder", ...)`    |
+/// | `placeholder: slot: x`        | `TextField(String(describing: x), ...)`         |
 /// | `value: slot: x`              | `text: .constant(x)` (see binding nuance below) |
 /// | `read-only: slot: x`          | `.disabled(x)` modifier                         |
 /// | `read-only: true` / `false`   | `.disabled(true)` / `.disabled(false)` modifier |
@@ -5948,10 +6033,11 @@ fn emit_host_input(
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
-    // First arg: the placeholder string literal. We escape `\` and `"`
-    // per Swift string-literal rules; everything else passes through.
-    let placeholder = find_string_prop(node, "placeholder").unwrap_or("");
-    let placeholder_lit = format!("\"{}\"", escape_swift_string(placeholder));
+    // First arg: the title — the placeholder, literal or bound (see
+    // `swift_placeholder`), or `""` when there is none.
+    let placeholder_arg = swift_placeholder(node)?
+        .map(|placeholder| placeholder.title())
+        .unwrap_or_else(|| "\"\"".to_string());
 
     // `value: slot: x` -> `text: .constant(x)`. If `value` is an Expr
     // (e.g. `value: ( v )` where `v` is a For-loop binding from the
@@ -5999,7 +6085,7 @@ fn emit_host_input(
     };
 
     // The opening `TextField` expression.
-    let mut line = format!("{pad}TextField({placeholder_lit}, text: {text_binding})");
+    let mut line = format!("{pad}TextField({placeholder_arg}, text: {text_binding})");
 
     // Keep the author-owned MLL part identity on the native control. This is
     // the stable cross-platform handle for accessibility and interaction
@@ -8952,6 +9038,24 @@ mod tests {
     use mosmodel_compiler::EmitParam;
     use mosstyle_compiler::{PartStyle, StateStyle, StyleDef, StyleProp, StyleTransition};
 
+    /// A scratch-name nonce that is unique for every call in this process.
+    ///
+    /// The clock alone is not: macOS reports `SystemTime` in whole microseconds,
+    /// so two tests running in parallel threads could read the same "nanos" and
+    /// be handed the same directory, each seeing the other's files (this made
+    /// `compose_fixtures` fail about one run in five). The counter makes every
+    /// call distinct; the clock keeps names from a previous run apart.
+    #[cfg(target_os = "macos")] // its only caller type-checks with the macOS SDK
+    fn unique_nonce() -> String {
+        static NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+        let n = NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+        let nanos = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .expect("system clock after epoch")
+            .as_nanos();
+        format!("{nanos}-{n}")
+    }
+
     // --- Story fixtures (#14459) ---------------------------------------
 
     /// A fixture value is written as a Swift literal of the slot's declared
@@ -9054,7 +9158,7 @@ mod tests {
     #[test]
     fn generated_typography_typechecks_with_swiftui() {
         let directory = std::env::temp_dir().join(format!("mosaic-swift-font-{}-{}", std::process::id(),
-            std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_nanos()));
+            unique_nonce()));
         std::fs::create_dir(&directory).unwrap();
         let mut paths = Vec::new();
         for name in ["ScaledFirst", "ScaledSecond"] {
@@ -10106,6 +10210,190 @@ mod tests {
         assert!(out.contains("Text(\"Write something…\")"));
         assert!(out.contains(".accessibilityLabel(\"Write something…\")"));
         assert!(out.contains(".accessibilityIdentifier(\"notes-body-input\")"));
+    }
+
+    /// #15930 — a multiline `HostInput` is a `TextEditor`, like the legacy
+    /// `Input`. SwiftUI sent every HostInput to the `TextField` path, so the
+    /// note-type editor's card templates were single-line here.
+    #[test]
+    fn a_multiline_host_input_emits_a_text_editor_keeping_its_contract() {
+        let input = LayoutNode {
+            tag: "HostInput".to_string(),
+            part_name: Some("front-template-input".to_string()),
+            props: vec![
+                prop_slot_ref("value", "front-template"),
+                prop_keyword("multiline", "true"),
+                prop_string("placeholder", "{{Front}}"),
+                prop_string("a11y-label", "Front template"),
+                prop_keyword("auto-focus", "true"),
+                prop_emit_ref("onChange", "onFrontChange"),
+                prop_emit_ref("onCommit", "onSave"),
+                prop_emit_ref("onCancel", "onDiscard"),
+            ],
+            children: vec![],
+        };
+        let out = from_pipeline(
+            &component(
+                "Editor",
+                vec![slot("front-template", SlotType::Text, true)],
+                vec![
+                    emit("onFrontChange", vec![param("value", EmitPayloadType::Text)]),
+                    emit("onSave", vec![]),
+                    emit("onDiscard", vec![]),
+                ],
+            ),
+            &layout_with("Editor", container_node("Box", vec![input])),
+            &empty_style("Editor"),
+        )
+        .unwrap()
+        .output;
+
+        assert!(
+            out.contains("TextEditor(text: Binding(get: { frontTemplate }, set: { dispatch(.frontChange(value: $0)) }))"),
+            "got:\n{out}"
+        );
+        assert!(!out.contains("TextField("), "got:\n{out}");
+        assert!(out.contains("Text(\"{{Front}}\")"), "placeholder overlay:\n{out}");
+        assert!(
+            out.contains(".accessibilityLabel(Text(verbatim: \"Front template\"))"),
+            "got:\n{out}"
+        );
+        assert!(
+            out.contains(".accessibilityIdentifier(\"front-template-input\")"),
+            "got:\n{out}"
+        );
+        // Return is a line break in a TextEditor, so nothing commits on it.
+        assert!(!out.contains(".onSubmit"), "got:\n{out}");
+        // Escape still cancels, guarded to macOS as on TextField.
+        assert!(
+            out.contains("#if os(macOS)\n") && out.contains(".onExitCommand { dispatch(.discard) }"),
+            "got:\n{out}"
+        );
+        // `auto-focus` is keyed on the HostInput tag, not on TextField.
+        assert!(out.contains(".focused($isFocused)"), "got:\n{out}");
+    }
+
+    /// Lower one text field with a slot-bound placeholder and return the
+    /// generated Swift.
+    fn text_field_with_placeholder(tag: &str, multiline: bool, placeholder: LayoutProp) -> String {
+        let mut props = vec![prop_slot_ref("value", "front-template"), placeholder];
+        if multiline {
+            props.push(prop_keyword("multiline", "true"));
+        }
+        let input = LayoutNode {
+            tag: tag.to_string(),
+            part_name: Some("front-template-input".to_string()),
+            props,
+            children: vec![],
+        };
+        from_pipeline(
+            &component(
+                "Editor",
+                vec![
+                    slot("front-template", SlotType::Text, true),
+                    slot("front-template-placeholder", SlotType::Text, true),
+                ],
+                vec![],
+            ),
+            &layout_with("Editor", container_node("Box", vec![input])),
+            &empty_style("Editor"),
+        )
+        .unwrap()
+        .output
+    }
+
+    /// A slot-bound placeholder is the `TextField` title. `TextField` takes
+    /// any `StringProtocol` title, and `String(describing:)` makes that hold
+    /// for whatever type the slot or binding has. This path read string
+    /// literals only, so `placeholder : slot: x` (every toolkit `Input`)
+    /// produced `TextField("", …)`, silently.
+    #[test]
+    fn a_slot_bound_placeholder_is_the_text_field_title() {
+        for tag in ["HostInput", "Input"] {
+            let out = text_field_with_placeholder(
+                tag,
+                false,
+                prop_slot_ref("placeholder", "front-template-placeholder"),
+            );
+            assert!(
+                out.contains(
+                    "TextField(String(describing: frontTemplatePlaceholder), text: .constant(frontTemplate))"
+                ),
+                "{tag}:\n{out}"
+            );
+        }
+    }
+
+    /// The multiline (`TextEditor`) shape has no title, so the placeholder
+    /// is an overlay shown while the value is empty, and the fallback
+    /// accessible name. Both now come from the bound value; before, a
+    /// slot-bound placeholder left the editor with neither
+    /// (mosaic-pkg-note-type-editor's card templates).
+    #[test]
+    fn a_slot_bound_placeholder_is_the_text_editor_overlay_and_fallback_name() {
+        for tag in ["HostInput", "Input"] {
+            let out = text_field_with_placeholder(
+                tag,
+                true,
+                prop_slot_ref("placeholder", "front-template-placeholder"),
+            );
+            assert!(
+                out.contains("if frontTemplate.isEmpty {"),
+                "{tag} overlay condition:\n{out}"
+            );
+            assert!(
+                out.contains("Text(verbatim: String(describing: frontTemplatePlaceholder))\n"),
+                "{tag} overlay text:\n{out}"
+            );
+            assert!(
+                out.contains(
+                    ".accessibilityLabel(Text(verbatim: String(describing: frontTemplatePlaceholder)))"
+                ),
+                "{tag} fallback name:\n{out}"
+            );
+        }
+    }
+
+    /// A `For` binding and a parenthesised expression reach the title the
+    /// same way: `String(describing:)` around the authored expression.
+    #[test]
+    fn a_binding_or_expression_placeholder_is_the_text_field_title() {
+        let out = text_field_with_placeholder("HostInput", false, prop_keyword("placeholder", "hint"));
+        assert!(
+            out.contains("TextField(String(describing: hint), text:"),
+            "{out}"
+        );
+        let out = text_field_with_placeholder(
+            "HostInput",
+            false,
+            prop_expr("placeholder", "( hints[0] )"),
+        );
+        assert!(
+            out.contains("TextField(String(describing: ( hints[0] )), text:"),
+            "{out}"
+        );
+    }
+
+    /// A slot name that is not a Swift identifier is refused loudly, never
+    /// spliced into the generated expression.
+    #[test]
+    fn an_unsafe_placeholder_slot_name_is_rejected() {
+        let input = LayoutNode {
+            tag: "HostInput".to_string(),
+            part_name: None,
+            props: vec![prop_slot_ref("placeholder", "x), text: y); evil(")],
+            children: vec![],
+        };
+        let err = from_pipeline(
+            &component("Editor", vec![], vec![]),
+            &layout_with("Editor", container_node("Box", vec![input])),
+            &empty_style("Editor"),
+        )
+        .unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnsafeSlotName(_)),
+            "got {err:?}"
+        );
     }
 
     #[test]

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C363-obicio",
+  "pathSegment": "LA-PATH-363-CONCEDO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-363-CONCEDO",
+      "order": 3
+    }
+  ]
+}

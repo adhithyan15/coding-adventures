@@ -1,0 +1,11 @@
+{
+  "id": "PT-C394-garantir",
+  "pathSegment": "PT-PATH-394-GARANTIA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-394-GARANTIA",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C304-witwe",
+    "language": "german",
+    "chapter": 304,
+    "sequence": 16680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9d5ab1267ce5ba2e"
+  },
+  "findings": []
+}

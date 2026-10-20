@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:79f7affd88186ac5",
+  "lessonIds": [
+    "PT-C345-vantagem",
+    "PT-C345-desvantagem",
+    "PT-C345-aspeto",
+    "PT-C345-critica",
+    "PT-C345-ponderar"
+  ],
+  "tex": "portuguese/book/chapters/ch345-pros-e-contras.tex"
+}

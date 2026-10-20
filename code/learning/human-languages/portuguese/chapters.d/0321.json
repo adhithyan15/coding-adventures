@@ -1,0 +1,19 @@
+{
+  "chapter": 321,
+  "title": "No Carnaval",
+  "label": "ch:pt-no-carnaval",
+  "canDo": "I can describe carnival: the parade, masks and disguises.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C321-disfarcar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 321: I can describe carnival: the parade, masks and disguises.",
+    "assesses": [
+      "PT-LEX-C321-CARNAVAL-03",
+      "PT-LEX-C321-CARNAVAL-04",
+      "PT-LEX-C321-CARNAVAL-05"
+    ]
+  }
+}

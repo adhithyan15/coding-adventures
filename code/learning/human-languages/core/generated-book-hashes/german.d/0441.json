@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:24c31266101b3b3e",
+  "lessonIds": [
+    "GE-C441-fassade",
+    "GE-C441-schaufenster",
+    "GE-C441-dachrinne",
+    "GE-C441-markthalle",
+    "GE-C441-saeule"
+  ],
+  "tex": "german/book/chapters/ch441-hauser-und-laden.tex"
+}

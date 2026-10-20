@@ -1,0 +1,11 @@
+{
+  "id": "GE-C382-strafbar",
+  "pathSegment": "GE-PATH-382-VERSTOSS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-382-VERSTOSS",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C489-ressonar",
+  "pathSegment": "PT-PATH-489-SONO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-489-SONO",
+      "order": 1
+    }
+  ]
+}

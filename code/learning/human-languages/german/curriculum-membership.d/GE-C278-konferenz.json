@@ -1,0 +1,11 @@
+{
+  "id": "GE-C278-konferenz",
+  "pathSegment": "GE-PATH-278-VERHANDELN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-278-VERHANDELN",
+      "order": 4
+    }
+  ]
+}

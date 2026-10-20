@@ -1,0 +1,11 @@
+{
+  "id": "PT-C442-fortaleza",
+  "pathSegment": "PT-PATH-442-HISTORICO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-442-HISTORICO",
+      "order": 1
+    }
+  ]
+}

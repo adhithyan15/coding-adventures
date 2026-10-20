@@ -1,0 +1,11 @@
+{
+  "id": "LA-C402-meditor",
+  "pathSegment": "LA-PATH-402-EDISCO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-402-EDISCO",
+      "order": 3
+    }
+  ]
+}

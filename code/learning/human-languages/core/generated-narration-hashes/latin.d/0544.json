@@ -1,0 +1,20 @@
+{
+  "language": "latin",
+  "chapter": 544,
+  "sourceHash": "fnv1a64:7d20428e7e0a5d2d",
+  "lessonIds": [
+    "LA-C544-cithara",
+    "LA-C544-citharoedus",
+    "LA-C544-chorda",
+    "LA-C544-fidicen",
+    "LA-C544-psallo",
+    "LA-R544-review-537-544"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "latin/narration/ch544.txt",
+  "json": "latin/narration/ch544.json",
+  "textHash": "fnv1a64:0ab7570293f4949b",
+  "jsonHash": "fnv1a64:3e49953ac03afab3",
+  "findings": []
+}

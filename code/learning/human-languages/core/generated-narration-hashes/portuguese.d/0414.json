@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:ec23308b449c06e9",
+  "lessonIds": [
+    "PT-C414-bilheteira",
+    "PT-C414-passe",
+    "PT-C414-validar",
+    "PT-C414-revisor",
+    "PT-C414-coima"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch414.txt",
+  "json": "portuguese/narration/ch414.json",
+  "textHash": "fnv1a64:45ef712541383a99",
+  "jsonHash": "fnv1a64:f9708a4e73acd1e7",
+  "findings": []
+}

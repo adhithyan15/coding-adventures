@@ -1,0 +1,11 @@
+{
+  "id": "FR-C525-rediffuser",
+  "pathSegment": "FR-PATH-525-ECRAN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-525-ECRAN",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-381-AUTORISER",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "FR-EXT-381-AUTORISER"
+  ],
+  "after": []
+}

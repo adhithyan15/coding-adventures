@@ -1,0 +1,11 @@
+{
+  "id": "LA-C298-orior",
+  "pathSegment": "LA-PATH-298-EVENIO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-298-EVENIO",
+      "order": 2
+    }
+  ]
+}

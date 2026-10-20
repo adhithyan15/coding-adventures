@@ -1,0 +1,19 @@
+{
+  "chapter": 299,
+  "title": "Um acidente na estrada",
+  "label": "ch:pt-um-acidente-na-estrada",
+  "canDo": "I can describe a road accident: the crash, what collided with what, and the mishap.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "PT-C299-sinistro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 299: I can describe a road accident: the crash, what collided with what, and the mishap.",
+    "assesses": [
+      "PT-LEX-C299-ACIDENTE-03",
+      "PT-LEX-C299-ACIDENTE-04",
+      "PT-LEX-C299-ACIDENTE-05"
+    ]
+  }
+}

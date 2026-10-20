@@ -1,0 +1,11 @@
+{
+  "id": "LA-C519-tactus",
+  "pathSegment": "LA-PATH-519-SENS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-519-SENS",
+      "order": 2
+    }
+  ]
+}

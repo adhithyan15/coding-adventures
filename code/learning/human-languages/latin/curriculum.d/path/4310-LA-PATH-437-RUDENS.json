@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-437-RUDENS",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "LA-EXT-437-RUDENS"
+  ],
+  "after": []
+}

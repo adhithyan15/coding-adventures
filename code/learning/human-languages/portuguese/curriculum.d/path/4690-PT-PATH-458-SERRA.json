@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-458-SERRA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "PT-EXT-458-SERRA"
+  ],
+  "after": []
+}

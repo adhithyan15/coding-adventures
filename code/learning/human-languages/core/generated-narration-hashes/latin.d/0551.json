@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 551,
+  "sourceHash": "fnv1a64:5e05a340f22666f2",
+  "lessonIds": [
+    "LA-C551-capsa",
+    "LA-C551-scrinium",
+    "LA-C551-membrana",
+    "LA-C551-pugillares",
+    "LA-C551-rescribo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch551.txt",
+  "json": "latin/narration/ch551.json",
+  "textHash": "fnv1a64:47b0749bddee8b98",
+  "jsonHash": "fnv1a64:d4e33a34a77886aa",
+  "findings": []
+}

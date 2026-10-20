@@ -1,0 +1,11 @@
+{
+  "id": "GE-C335-debatte",
+  "pathSegment": "GE-PATH-335-DISKUSSION",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-335-DISKUSSION",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C407-capo",
+    "language": "portuguese",
+    "chapter": 407,
+    "sequence": 22900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:da69238b0e46a8a9"
+  },
+  "findings": []
+}

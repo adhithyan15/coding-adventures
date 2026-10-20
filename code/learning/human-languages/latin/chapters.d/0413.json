@@ -1,0 +1,19 @@
+{
+  "chapter": 413,
+  "title": "The Verdict",
+  "label": "ch:la-the-verdict",
+  "canDo": "I can say that someone was found guilty or acquitted, talk about a conviction and an acquittal, and plead to be spared.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "LA-C413-patrocinium",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 413: I can say that someone was found guilty or acquitted, talk about a conviction and an acquittal, and plead to be spared.",
+    "assesses": [
+      "LA-LEX-C413-CONDEMNO-03",
+      "LA-LEX-C413-CONDEMNO-04",
+      "LA-LEX-C413-CONDEMNO-05"
+    ]
+  }
+}

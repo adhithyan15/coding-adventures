@@ -1,0 +1,11 @@
+{
+  "id": "FR-C310-adolescent",
+  "pathSegment": "FR-PATH-310-JEUNESSE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-310-JEUNESSE",
+      "order": 1
+    }
+  ]
+}

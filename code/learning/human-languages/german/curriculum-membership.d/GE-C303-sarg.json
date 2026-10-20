@@ -1,0 +1,11 @@
+{
+  "id": "GE-C303-sarg",
+  "pathSegment": "GE-PATH-303-BEERDIGUNG",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-303-BEERDIGUNG",
+      "order": 3
+    }
+  ]
+}

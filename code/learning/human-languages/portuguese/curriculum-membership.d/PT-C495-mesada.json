@@ -1,0 +1,11 @@
+{
+  "id": "PT-C495-mesada",
+  "pathSegment": "PT-PATH-495-EDUCAR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-495-EDUCAR",
+      "order": 3
+    }
+  ]
+}
