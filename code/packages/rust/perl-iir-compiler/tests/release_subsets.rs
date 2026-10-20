@@ -255,7 +255,10 @@ fn corpus_agrees_with_the_host_perl_oracle() {
     for case in corpus() {
         assert!(case.cite.contains(&format!("host perl {version} ")), "{}: .cite names {version}", case.name);
         let out = run_host_perl(&dir.join(format!("{}.pl", case.name)));
-        let stdout = String::from_utf8_lossy(&out.stdout).into_owned();
+        // Perl on Windows prints through a `:crlf` layer, so "\n" reaches
+        // the pipe as "\r\n". The `.expect` files record the language's
+        // output, so fold the platform's line ending back first.
+        let stdout = String::from_utf8_lossy(&out.stdout).replace("\r\n", "\n");
         match &case.outcome {
             Outcome::Prints(want) => {
                 assert!(out.status.success(), "{version}: {} failed", case.name);
