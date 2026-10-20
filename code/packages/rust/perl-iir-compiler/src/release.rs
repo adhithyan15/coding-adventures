@@ -208,6 +208,14 @@ mod tests {
             "{nearest:?}"
         );
 
+        // No normalisation: spellings that "mean" 5.38.0 are not its ID.
+        for near_miss in ["v5.38.0", "5.038.0", "5.38.0 ", " 5.38.0", "5.38.0\0", "perl5.38.0"] {
+            assert!(
+                matches!(resolve_release(Some(near_miss)), Err(FrontendError::UnknownRelease { .. })),
+                "{near_miss:?}"
+            );
+        }
+
         let FrontendError::UnknownRelease { nearest, .. } =
             resolve_release(Some("ruby")).unwrap_err()
         else {

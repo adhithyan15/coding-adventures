@@ -7,7 +7,8 @@
   `Some("5.38.0")` for Perl; `None` for frontends without an inventory and
   for `IIRModule::new`. Backends never read it. It is not part of the binary
   format: `serialise` output is unchanged (still 1.1) and `deserialise`
-  returns `None`.
+  returns `None`, which consumers must read as "unknown", never as a
+  language's default release.
 - Breaking for struct literals: every `IIRModule { .. }` literal in the
   repository (161 of them, across 14 crates) now names `release: None`.
 

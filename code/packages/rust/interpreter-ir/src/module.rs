@@ -74,7 +74,9 @@ pub struct IIRModule {
     /// that differ only in `release` lower to identical code, which is what
     /// lets LANG84's CI group releases into IIR identity classes. It is not
     /// part of the binary wire format (`serialise`), so a deserialised module
-    /// has `None`, like the transient profiling fields.
+    /// has `None`, like the transient profiling fields. Read `None` as
+    /// "unknown", never as a language's default release: a Perl module that
+    /// went through `serialise` also has `None`.
     pub release: Option<String>,
 }
 

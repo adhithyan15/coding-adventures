@@ -180,6 +180,20 @@ fn the_default_is_the_5_38_0_inventory_pair_and_is_recorded() {
     );
 }
 
+/// Untrusted source reaches the terminal only escaped: the lexer reports an
+/// offending ESC or bidi override as `\u{..}` text, never the character.
+#[test]
+fn lex_errors_never_echo_control_or_bidi_characters() {
+    let budgets = FrontendBudgets::default();
+    for source in ["print(1);\u{1b}[2J", "print(\u{202e}1);", "print(1);\r\u{7}"] {
+        let message = compile_source_at(source, None, "m", &budgets).unwrap_err().to_string();
+        assert!(
+            !message.chars().any(|c| c.is_control() || ('\u{202a}'..='\u{202e}').contains(&c)),
+            "{message:?}"
+        );
+    }
+}
+
 #[test]
 fn release_errors_are_typed_and_never_fall_back() {
     let budgets = FrontendBudgets::default();
@@ -560,7 +574,9 @@ mod cst_contract {
 /// ```
 mod hostile_probes {
     use super::*;
-    use std::process::Command;
+    use std::io::Read;
+    use std::process::{Command, Stdio};
+    use std::time::{Duration, Instant};
 
     const CHILD_ENV: &str = "PERL_IIR_HOSTILE_PROBE_CHILD";
     const CHILD_TEST: &str = "tests::hostile_probes::child_runs_every_probe";
@@ -683,28 +699,61 @@ mod hostile_probes {
         println!("{DONE_MARKER} {count}");
     }
 
+    /// How long the child may run. A probe that made the frontend
+    /// quadratic (or hang) must fail this test, not stall CI; the child
+    /// normally finishes in seconds.
+    const CHILD_DEADLINE: Duration = Duration::from_secs(600);
+
+    /// Drain a child pipe on its own thread, so a chatty child can never
+    /// block on a full pipe while the parent is waiting for it to exit.
+    fn drain(mut pipe: impl Read + Send + 'static) -> std::thread::JoinHandle<String> {
+        std::thread::spawn(move || {
+            let mut bytes = Vec::new();
+            let _ = pipe.read_to_end(&mut bytes);
+            String::from_utf8_lossy(&bytes).into_owned()
+        })
+    }
+
     #[test]
     fn hostile_inputs_end_in_typed_errors_in_a_child_process() {
-        let output = Command::new(std::env::current_exe().unwrap())
+        let mut child = Command::new(std::env::current_exe().unwrap())
             .args([CHILD_TEST, "--exact", "--ignored", "--nocapture", "--test-threads=1"])
             .env(CHILD_ENV, "1")
-            .output()
+            // The deep-nesting probes must run on the default 2 MiB test
+            // stack: an inherited RUST_MIN_STACK would give them a deeper
+            // stack than a real caller is guaranteed.
+            .env_remove("RUST_MIN_STACK")
+            .stdout(Stdio::piped())
+            .stderr(Stdio::piped())
+            .spawn()
             .unwrap();
-        let stdout = String::from_utf8_lossy(&output.stdout);
-        let stderr = String::from_utf8_lossy(&output.stderr);
+        let stdout = drain(child.stdout.take().unwrap());
+        let stderr = drain(child.stderr.take().unwrap());
+        let started = Instant::now();
+        let status = loop {
+            if let Some(status) = child.try_wait().unwrap() {
+                break status;
+            }
+            if started.elapsed() > CHILD_DEADLINE {
+                let _ = child.kill();
+                let _ = child.wait();
+                panic!("hostile probe child still running after {CHILD_DEADLINE:?}; killed");
+            }
+            std::thread::sleep(Duration::from_millis(20));
+        };
+        let (stdout, stderr) = (stdout.join().unwrap(), stderr.join().unwrap());
         #[cfg(unix)]
         {
             use std::os::unix::process::ExitStatusExt;
             assert!(
-                output.status.signal().is_none(),
+                status.signal().is_none(),
                 "hostile probe child ABORTED by signal {:?} (stack overflow or abort):\n{stderr}",
-                output.status.signal()
+                status.signal()
             );
         }
         assert!(
-            output.status.success(),
-            "hostile probe child failed ({}):\n{stdout}\n{stderr}",
-            output.status
+            status.success(),
+            "hostile probe child failed ({status}):\n{stdout}\n{stderr}"
         );
         // libtest prints "test <name> ... " before the test's own output, so
         // the marker shares a line with it.

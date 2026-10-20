@@ -23,7 +23,13 @@
   chains, decrement runs, unterminated constructs, statement floods,
   foreign characters, the source and IIR budgets, the 250/251-digit
   boundary and deep/wide caller-supplied trees, across three releases. The
-  parent reports a signal (stack overflow, abort) as an abort.
+  parent reports a signal (stack overflow, abort) as an abort, kills a child
+  that runs past 600 s, drains both pipes on threads, and clears
+  `RUST_MIN_STACK` so the probes run on the default test stack.
+- Security-review follow-ups: `lex_errors_never_echo_control_or_bidi_characters`
+  pins that untrusted source reaches diagnostics only escaped, and
+  `resolve_release` is tested against near-miss spellings (`v5.38.0`,
+  `5.038.0`, padded, NUL-suffixed, `perl5.38.0`), all `UnknownRelease`.
 
 - LANG84 phase 4a: release selection. `compile_source_at(source, release,
   module_name, &FrontendBudgets)` compiles against exactly one checked

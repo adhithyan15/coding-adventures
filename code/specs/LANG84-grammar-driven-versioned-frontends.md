@@ -1139,7 +1139,15 @@ selectable and recorded end to end.
 - **C5.** `tests::hostile_probes` re-runs the test binary as a child (77
   probes over the default, 1.000 and 5.004_72). The parent fails on a signal
   (verified by planting an unbounded-depth parse, which the child reported as
-  SIGABRT), on a non-zero exit, or on a missing completion marker.
+  SIGABRT), on a non-zero exit, or on a missing completion marker. It kills
+  a child still running after 600 s, and it clears `RUST_MIN_STACK` so the
+  probes run on the default test stack.
+- **Security review.** A sibling session reviewed the change and found
+  nothing exploitable: three low and three informational findings, all
+  addressed. `LangAotError`'s `Display` neutralizes release text a caller
+  built itself, without escaping twice. `Language::parse` bounds what it
+  echoes. New tests show that lex errors never echo control or bidi
+  characters, and that near-miss release spellings are `UnknownRelease`.
 
 Divergences from this spec in 4b:
 

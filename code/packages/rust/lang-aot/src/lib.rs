@@ -185,12 +185,12 @@ impl Language {
             "macsyma" | "mac" => Ok(Self::Macsyma),
             "perl" | "pl" => Ok(Self::Perl),
             other => Err(format!(
-                "unknown language {other:?}; expected one of: twig, nib, \
+                "unknown language \"{}\"; expected one of: twig, nib, \
                  brainfuck (or bf), dartmouth-basic (or basic / bas), oct, macrooct, \
                  mccarthy-lisp (or mccarthy / mcl / lisp), algol60 \
                  (or algol / algol-60 / a60), flow-matic (or fm / b0), \
                  cobol60 (or cobol / cobol-60 / cob), macsyma (or mac), \
-                 perl (or pl)")),
+                 perl (or pl)", echo_release(other))),
         }
     }
 }
@@ -278,6 +278,39 @@ fn echo_release(release: &str) -> String {
     } else {
         head
     }
+}
+
+/// Make text from a public error field safe to print, whoever built it.
+///
+/// [`LangAotError::UnknownRelease`] and [`LangAotError::ReleaseNotAvailable`]
+/// have public `String` fields, so `Display` cannot assume a constructor
+/// already ran [`echo_release`]. This pass is the backstop: it escapes any
+/// character that is still a control or invisible format character (ESC, CR,
+/// the bidi overrides U+202A–U+202E and U+2066–U+2069, …) and caps the
+/// length. It is idempotent on text that `echo_release` already produced —
+/// that text has no such characters left — so nothing is escaped twice.
+fn neutralize(text: &str) -> String {
+    const MAX_SHOWN_CHARS: usize = 512;
+    let mut chars = text.chars();
+    let mut shown = String::new();
+    for c in chars.by_ref().take(MAX_SHOWN_CHARS) {
+        if c.is_control() || is_invisible_format(c) {
+            shown.extend(c.escape_unicode());
+        } else {
+            shown.push(c);
+        }
+    }
+    if chars.next().is_some() {
+        shown.push('…');
+    }
+    shown
+}
+
+/// Unicode format characters that can reorder or hide terminal text.
+fn is_invisible_format(c: char) -> bool {
+    matches!(c,
+        '\u{00AD}' | '\u{061C}' | '\u{180E}' | '\u{200B}'..='\u{200F}'
+        | '\u{202A}'..='\u{202E}' | '\u{2060}'..='\u{2069}' | '\u{FEFF}')
 }
 
 /// Detect a [`Language`] from a file extension.  Returns `None` if the
@@ -498,19 +531,23 @@ impl fmt::Display for LangAotError {
             LangAotError::UnsupportedLanguage { language, guidance } => write!(f,
                 "lang-aot: no Rust IIR frontend for {language} yet — {guidance}"),
             LangAotError::UnknownRelease { language, release, nearest } => {
-                // `release` is already escaped (`echo_release` or the
-                // frontend's own echo), so quote it rather than `{:?}` it,
-                // which would escape its backslashes a second time.
-                write!(f, "{language}: unknown release \"{release}\"")?;
+                // Every constructor here escapes `release` (`echo_release`,
+                // or the frontend's own echo), so it is quoted rather than
+                // `{:?}`-formatted, which would escape its backslashes a
+                // second time; `neutralize` is the backstop for a value
+                // built elsewhere, and is a no-op on escaped text.
+                write!(f, "{language}: unknown release \"{}\"", neutralize(release))?;
                 if !language.has_release_inventory() {
                     write!(f, " ({language} has no release inventory)")?;
                 } else if !nearest.is_empty() {
+                    let nearest: Vec<_> = nearest.iter().map(|id| neutralize(id)).collect();
                     write!(f, "; nearest inventory IDs: {}", nearest.join(", "))?;
                 }
                 Ok(())
             }
             LangAotError::ReleaseNotAvailable { language, release, stage } => write!(f,
-                "{language}: release {release} has no grammar pair yet ({stage})"),
+                "{language}: release {} has no grammar pair yet ({})",
+                neutralize(release), neutralize(stage)),
             LangAotError::FrontendError { language, message } => write!(f,
                 "{language}: {message}"),
             LangAotError::AotError(e) => write!(f, "{e}"),
@@ -3263,6 +3300,34 @@ mod tests {
             .unwrap_err()
             .to_string();
         assert!(parse.starts_with("perl: Perl 5.004_72: "), "{parse}");
+    }
+
+    /// Security review (LANG84 4b): `Display` escapes release text even when
+    /// a caller builds the public error variants directly, without escaping
+    /// twice what `echo_release` already escaped; `Language::parse` bounds
+    /// what it echoes.
+    #[test]
+    fn release_errors_neutralize_text_built_outside_this_crate() {
+        let forged = LangAotError::ReleaseNotAvailable {
+            language: Language::Perl,
+            release: "1\u{1b}[2J\u{202e}".into(),
+            stage: "\r\n".into(),
+        }
+        .to_string();
+        assert!(!forged.chars().any(|c| c.is_control() || is_invisible_format(c)), "{forged:?}");
+        assert!(forged.contains("\\u{1b}") && forged.contains("\\u{202e}"), "{forged}");
+        let forged = LangAotError::UnknownRelease {
+            language: Language::Perl,
+            release: "x".repeat(10_000),
+            nearest: vec!["\u{7}".into()],
+        }
+        .to_string();
+        assert!(forged.len() < 1_000 && !forged.chars().any(char::is_control), "{forged:?}");
+        // Already-escaped text passes through unchanged (no double escape).
+        assert_eq!(neutralize(&echo_release("a\nb")), "a\\nb");
+        let long = format!("{}\u{1b}", "q".repeat(100_000));
+        let error = Language::parse(&long).unwrap_err();
+        assert!(error.len() < 1_000 && !error.chars().any(char::is_control), "{}", error.len());
     }
 
     #[test]
