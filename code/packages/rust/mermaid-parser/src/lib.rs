@@ -6986,7 +6986,7 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
     let optimize_ranks_by_crossings = parse_swimlane_optimize_ranks_by_crossings(source)?;
     let flowchart_config = parse_swimlane_flowchart_config(source)?;
     let theme = parse_swimlane_theme(source);
-    let prepared = prepare_line_grammar_source(source)?;
+    let prepared = collapse_swimlane_markdown_lines(&prepare_line_grammar_source(source)?)?;
     let tokens = try_tokenize_mermaid_swimlane(&prepared).map_err(|message| ParseError {
         message,
         line: 1,
@@ -8329,6 +8329,36 @@ fn split_swimlane_class_decorators(value: &str) -> (&str, Vec<String>) {
     }
     classes.reverse();
     (source.trim_end(), classes)
+}
+
+fn collapse_swimlane_markdown_lines(source: &str) -> Result<String, ParseError> {
+    let mut output = Vec::new();
+    let mut pending: Option<String> = None;
+    let mut start_line = 0;
+
+    for (index, line) in source.lines().enumerate() {
+        if let Some(current) = &mut pending {
+            current.push_str("\\n");
+            current.push_str(line.trim());
+            if line.contains("`\"") {
+                output.push(pending.take().expect("pending Markdown line exists"));
+            }
+        } else if line.contains("\"`") && !line.contains("`\"") {
+            pending = Some(line.to_string());
+            start_line = index + 1;
+        } else {
+            output.push(line.to_string());
+        }
+    }
+
+    if pending.is_some() {
+        return Err(ParseError {
+            message: "unterminated Swimlane Markdown string".into(),
+            line: start_line,
+            col: 1,
+        });
+    }
+    Ok(output.join("\n"))
 }
 
 fn normalize_swimlane_text(value: &str) -> String {
