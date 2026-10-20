@@ -253,3 +253,31 @@ fn write_i64_formats_without_a_newline_through_the_io_server() {
         .collect();
     assert_eq!(chars, [u64::from(b'w'), u64::from(b'~')], "\"~w\" — no ~n");
 }
+
+/// Security review (LANG83 PR1b, LOW): the floor expansion's scratch register
+/// used to be looked up by the name `__lang83_floor_tmp` and reused if a user
+/// variable already had that name — so the expansion clobbered it
+/// (`__lang83_floor_tmp = 42; q = i64_div_floor(7, 2)` left the variable
+/// holding the remainder, 1). The scratch register is now anonymous; a user
+/// variable of exactly that name keeps its value.
+#[test]
+fn user_variable_named_like_the_floor_temp_is_not_clobbered() {
+    for op in ["i64_div_floor", "i64_mod_floor"] {
+        let m = lower(
+            "f",
+            vec![("a".into(), "i64".into()), ("b".into(), "i64".into())],
+            "i64",
+            vec![
+                IIRInstr::new("const", Some("__lang83_floor_tmp".into()), vec![Operand::Int(42)], "i64"),
+                IIRInstr::new(op, Some("q".into()), vec![v("a"), v("b")], "i64"),
+                IIRInstr::new("add", Some("r".into()), vec![v("q"), v("__lang83_floor_tmp")], "i64"),
+                IIRInstr::new("ret", None, vec![v("r")], "i64"),
+            ],
+        );
+        // 7 // 2 = 3 and 7 mod 2 = 1, plus the untouched 42. (-7, 2) takes the
+        // adjust path, where the remainder register is read twice.
+        let (q, q_neg) = if op == "i64_div_floor" { (3, -4) } else { (1, 1) };
+        assert_eq!(run(&m, &[7, 2]), Outcome::Returned(q + 42), "{op}(7, 2)");
+        assert_eq!(run(&m, &[-7, 2]), Outcome::Returned(q_neg + 42), "{op}(-7, 2)");
+    }
+}

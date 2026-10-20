@@ -188,10 +188,6 @@ fn array_substrate_map(
 /// `{label, {u,N}}` — defines label N at this position in the code stream.
 const OP_LABEL: u8 = 1;
 
-/// The register name `lower_iir_to_beam` allocates for the truncating
-/// remainder of `i64_div_floor` / `i64_mod_floor` (LANG83 PR1b). The leading
-/// `__lang83_` keeps it out of any frontend's identifier space.
-const LANG83_FLOOR_TMP: &str = "__lang83_floor_tmp";
 /// `{func_info, {a,Mod}, {a,Fun}, {u,Arity}}` — function entry metadata.
 /// The BEAM loader uses this to build the function-info table for stack traces.
 const OP_FUNC_INFO: u8 = 2;
@@ -1067,6 +1063,13 @@ pub fn lower_iir_to_beam(
         live_across: HashMap<usize, Vec<String>>,
         n_yregs: u8,
         transient_call_slot: Option<u8>,
+        // LANG83 PR1b: the x-register holding the truncating remainder inside
+        // an `i64_div_floor` / `i64_mod_floor` expansion, or `None` when the
+        // function uses neither. It is an *anonymous* register: allocated
+        // below `next_reg` but never entered in `reg_map`, so no IIR variable
+        // name — not even one spelled like a compiler temporary — can map to
+        // it and be clobbered by the expansion.
+        floor_tmp: Option<u8>,
     }
 
     let mut fn_metas: Vec<FnMeta> = Vec::with_capacity(module.functions.len());
@@ -1156,11 +1159,28 @@ pub fn lower_iir_to_beam(
         // initialised to `[]` by the prologue — a scratch register *above*
         // `live` would not survive a GC, and `div`/`rem` of an i64 near
         // `MIN`/`MAX` allocate a bignum, which can collect.
-        if func.instructions.iter().any(|i| matches!(i.op.as_str(), "i64_div_floor" | "i64_mod_floor"))
-            && !reg_map.contains_key(LANG83_FLOOR_TMP)
+        //
+        // The register is anonymous — it is *not* inserted into `reg_map`.
+        // (An earlier version keyed it by a reserved-looking name,
+        // `__lang83_floor_tmp`, and reused a user variable of that name if one
+        // existed — so `__lang83_floor_tmp = 42; q = i64_div_floor(7, 2)`
+        // silently overwrote the user's variable. A register no name can reach
+        // cannot collide.)
+        let floor_tmp = if func.instructions.iter()
+            .any(|i| matches!(i.op.as_str(), "i64_div_floor" | "i64_mod_floor"))
         {
-            alloc_reg!(LANG83_FLOOR_TMP.to_string());
-        }
+            if next_reg >= 255 {
+                return Err(IIRBeamError::UnsupportedOp {
+                    function: func.name.clone(),
+                    op: "too many distinct variables (>255); BEAM x-registers are 0..254".to_string(),
+                });
+            }
+            let r = next_reg as u8;
+            next_reg += 1;
+            Some(r)
+        } else {
+            None
+        };
 
         // Build the label map: scan for `label` instructions and assign
         // globally-unique BEAM label numbers.
@@ -1476,6 +1496,7 @@ pub fn lower_iir_to_beam(
             live_across,
             n_yregs,
             transient_call_slot,
+            floor_tmp,
         });
     }
 
@@ -2513,8 +2534,8 @@ pub fn lower_iir_to_beam(
                 // Erlang's `div`/`rem` truncate, raise `badarith` (no kind) on a
                 // zero divisor, and never overflow — `MIN div -1` is the bignum
                 // 2^63. So both edges are tested explicitly, then the floor
-                // fix-up is done with branches (`tmp` is the dedicated
-                // `LANG83_FLOOR_TMP` register, a GC root):
+                // fix-up is done with branches (`tmp` is the function's
+                // anonymous `floor_tmp` register, a GC root):
                 //
                 //   is_eq_exact {f,NZ} b 0        ; b == 0 → trap Trap.DivZero
                 // NZ:
@@ -2549,7 +2570,13 @@ pub fn lower_iir_to_beam(
                     };
                     let a = integer_operand!(get_src!(instr, 0));
                     let b = integer_operand!(get_src!(instr, 1));
-                    let tmp = var_reg!(LANG83_FLOOR_TMP.to_string());
+                    // Allocated in the first pass whenever the function
+                    // contains this op, so `None` is an internal invariant
+                    // violation — reported, never panicked on.
+                    let tmp = meta.floor_tmp.ok_or_else(|| IIRBeamError::InvalidOperand {
+                        function: fn_name.clone(),
+                        detail: format!("{}: floor scratch register was not allocated", instr.op),
+                    })?;
                     let l_nz = alloc_synth_label!("floor division labels");
                     let l_ok = alloc_synth_label!("floor division labels");
                     let l_nzr = alloc_synth_label!("floor division labels");

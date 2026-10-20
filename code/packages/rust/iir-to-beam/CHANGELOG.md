@@ -7,10 +7,14 @@
   never overflow (`MIN div -1` is the bignum 2^63), so both edges are tested
   with `is_eq_exact` first (`Trap.DivZero`; div `Trap.Overflow`; mod returns 0
   for any `b == -1`), then the floor fix-up is done with `is_eq_exact`/`is_lt`
-  branches. The truncating remainder lives in a dedicated register
-  (`__lang83_floor_tmp`) allocated **below** `next_reg`, so it is a GC root at
-  every `gc_bif` (a bignum `div`/`rem` can collect) and is nil-initialised by
-  the prologue. A dest that aliases an operand stays correct.
+  branches. The truncating remainder lives in a dedicated **anonymous**
+  register (`FnMeta::floor_tmp`) allocated **below** `next_reg`, so it is a GC
+  root at every `gc_bif` (a bignum `div`/`rem` can collect) and is
+  nil-initialised by the prologue. A dest that aliases an operand stays
+  correct. (Security review, LOW: the register was first keyed by the name
+  `__lang83_floor_tmp` in `reg_map` and reused a user variable of that name,
+  which the expansion then clobbered; it is no longer reachable from any IIR
+  name — test `user_variable_named_like_the_floor_temp_is_not_clobbered`.)
 - **`trap "<kind>"`** → `move {atom,'<kind>'} x0; call_ext erlang:error/1`.
   The error reason is the kind atom itself (LANG83 updated: no
   `{iir_trap, Kind}` tuple — this backend has no tuple-construction opcodes,
