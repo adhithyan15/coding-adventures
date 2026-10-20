@@ -1,0 +1,11 @@
+{
+  "id": "RU-C439-razvilka",
+  "pathSegment": "RU-PATH-439-RAZVILKA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-439-RAZVILKA",
+      "order": 1
+    }
+  ]
+}

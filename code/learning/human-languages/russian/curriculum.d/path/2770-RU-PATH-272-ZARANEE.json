@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-272-ZARANEE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-272-ZARANEE"
+  ],
+  "after": []
+}

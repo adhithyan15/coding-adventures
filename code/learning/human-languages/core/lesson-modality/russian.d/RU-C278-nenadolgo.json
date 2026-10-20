@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C278-nenadolgo",
+    "language": "russian",
+    "chapter": 278,
+    "sequence": 16770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:55f442e537f4e8a9"
+  },
+  "findings": []
+}

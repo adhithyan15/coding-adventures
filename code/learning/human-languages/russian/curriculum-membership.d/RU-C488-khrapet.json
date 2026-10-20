@@ -1,0 +1,11 @@
+{
+  "id": "RU-C488-khrapet",
+  "pathSegment": "RU-PATH-488-NIGHT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-488-NIGHT",
+      "order": 1
+    }
+  ]
+}

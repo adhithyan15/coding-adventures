@@ -1,0 +1,11 @@
+{
+  "id": "RU-C279-sensatsiya",
+  "pathSegment": "RU-PATH-279-IZVESTIYE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-279-IZVESTIYE",
+      "order": 4
+    }
+  ]
+}

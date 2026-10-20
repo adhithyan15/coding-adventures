@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/ir-to-jvm-class-file",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Lower compiler-ir programs into conservative JVM class files",
   "type": "module",
   "main": "src/index.ts",

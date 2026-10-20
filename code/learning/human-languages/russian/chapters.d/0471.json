@@ -1,0 +1,19 @@
+{
+  "chapter": 471,
+  "title": "Hurt Feelings",
+  "label": "ch:ru-hurt-feelings",
+  "canDo": "I can talk about hurt feelings and forgiving.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C471-proshchat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 471: I can talk about hurt feelings and forgiving.",
+    "assesses": [
+      "RU-LEX-C471-HURT-03",
+      "RU-LEX-C471-HURT-04",
+      "RU-LEX-C471-HURT-05"
+    ]
+  }
+}

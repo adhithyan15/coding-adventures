@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:312f23b38e1798b0",
+  "lessonIds": [
+    "RU-C304-detstvo",
+    "RU-C304-yunost",
+    "RU-C304-molodost",
+    "RU-C304-starost",
+    "RU-C304-vzroslet"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch304.txt",
+  "json": "russian/narration/ch304.json",
+  "textHash": "fnv1a64:7ee4d0a04ea64aaf",
+  "jsonHash": "fnv1a64:b010394d283c40ac",
+  "findings": []
+}

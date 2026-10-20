@@ -1,0 +1,19 @@
+{
+  "chapter": 356,
+  "title": "Despite everything",
+  "label": "ch:ru-despite-everything",
+  "canDo": "I can say despite, nevertheless and however, and set one side of a question against the other.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C356-s-drugoy-storony",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 356: I can say despite, nevertheless and however, and set one side of a question against the other.",
+    "assesses": [
+      "RU-LEX-C356-NESMOTRYA-03",
+      "RU-LEX-C356-NESMOTRYA-04",
+      "RU-LEX-C356-NESMOTRYA-05"
+    ]
+  }
+}

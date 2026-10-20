@@ -1,0 +1,19 @@
+{
+  "chapter": 289,
+  "title": "Robbery and attack",
+  "label": "ch:ru-robbery-and-attack",
+  "canDo": "I can talk about a robbery: a robbery, a robber, robbing, an attack and attacking.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C289-napadat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 289: I can talk about a robbery: a robbery, a robber, robbing, an attack and attacking.",
+    "assesses": [
+      "RU-LEX-C289-OGRABLENIYE-03",
+      "RU-LEX-C289-OGRABLENIYE-04",
+      "RU-LEX-C289-OGRABLENIYE-05"
+    ]
+  }
+}

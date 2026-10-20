@@ -1,0 +1,11 @@
+{
+  "id": "RU-C498-priyatel",
+  "pathSegment": "RU-PATH-498-FRIENDS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-498-FRIENDS",
+      "order": 2
+    }
+  ]
+}

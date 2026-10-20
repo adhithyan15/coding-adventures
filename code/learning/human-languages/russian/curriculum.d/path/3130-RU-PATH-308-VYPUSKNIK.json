@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-308-VYPUSKNIK",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-308-VYPUSKNIK"
+  ],
+  "after": []
+}

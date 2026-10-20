@@ -1,0 +1,19 @@
+{
+  "chapter": 316,
+  "title": "Carnival and parade",
+  "label": "ch:ru-carnival-and-parade",
+  "canDo": "I can talk about a carnival, a masquerade, a parade, a procession and a fair.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C316-yarmarka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 316: I can talk about a carnival, a masquerade, a parade, a procession and a fair.",
+    "assesses": [
+      "RU-LEX-C316-KARNAVAL-03",
+      "RU-LEX-C316-KARNAVAL-04",
+      "RU-LEX-C316-KARNAVAL-05"
+    ]
+  }
+}

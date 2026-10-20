@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C264-prichina-v-tom",
+    "language": "russian",
+    "chapter": 264,
+    "sequence": 16120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:553552caa87eefe9"
+  },
+  "findings": []
+}

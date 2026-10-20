@@ -1,0 +1,11 @@
+{
+  "id": "RU-C319-legenda",
+  "pathSegment": "RU-PATH-319-LEGENDA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-319-LEGENDA",
+      "order": 0
+    }
+  ]
+}

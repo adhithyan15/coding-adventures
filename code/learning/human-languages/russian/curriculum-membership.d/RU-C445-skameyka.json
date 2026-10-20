@@ -1,0 +1,11 @@
+{
+  "id": "RU-C445-skameyka",
+  "pathSegment": "RU-PATH-445-FONAR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-445-FONAR",
+      "order": 1
+    }
+  ]
+}

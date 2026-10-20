@@ -1,0 +1,11 @@
+{
+  "id": "RU-C508-svistok",
+  "pathSegment": "RU-PATH-508-FANS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-508-FANS",
+      "order": 2
+    }
+  ]
+}

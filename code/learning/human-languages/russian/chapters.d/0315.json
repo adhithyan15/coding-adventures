@@ -1,0 +1,19 @@
+{
+  "chapter": 315,
+  "title": "Treats and feasts",
+  "label": "ch:ru-treats-and-feasts",
+  "canDo": "I can talk about treats, treating guests, a feast, clinking glasses and champagne.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C315-shampanskoye",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 315: I can talk about treats, treating guests, a feast, clinking glasses and champagne.",
+    "assesses": [
+      "RU-LEX-C315-UGOSHCHENIYE-03",
+      "RU-LEX-C315-UGOSHCHENIYE-04",
+      "RU-LEX-C315-UGOSHCHENIYE-05"
+    ]
+  }
+}

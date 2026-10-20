@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:f36a22d789710adb",
+  "lessonIds": [
+    "RU-C325-imperiya",
+    "RU-C325-revolyutsiya",
+    "RU-C325-vosstaniye",
+    "RU-C325-zavoyovyvat",
+    "RU-C325-pravit"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch325.txt",
+  "json": "russian/narration/ch325.json",
+  "textHash": "fnv1a64:a351d91893af11d8",
+  "jsonHash": "fnv1a64:43e35ef4b5c9aa59",
+  "findings": []
+}

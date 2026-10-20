@@ -1,0 +1,19 @@
+{
+  "chapter": 286,
+  "title": "Covering a story",
+  "label": "ch:ru-covering-a-story",
+  "canDo": "I can say that a story was broadcast, covered and brought to light, and talk about a publication and its print run.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-R286-review-279-286",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 286: I can say that a story was broadcast, covered and brought to light, and talk about a publication and its print run.",
+    "assesses": [
+      "RU-LEX-C286-OSVESHCHAT-03",
+      "RU-LEX-C286-OSVESHCHAT-04",
+      "RU-LEX-C286-OSVESHCHAT-05"
+    ]
+  }
+}

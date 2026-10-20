@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 366,
+  "sourceHash": "fnv1a64:af1766a84f8bd4e8",
+  "lessonIds": [
+    "RU-C366-vybory",
+    "RU-C366-golosovat",
+    "RU-C366-partiya",
+    "RU-C366-protest",
+    "RU-C366-protestovat"
+  ],
+  "tex": "russian/book/chapters/ch366-elections.tex"
+}

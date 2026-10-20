@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-318-TRADITSIYA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-318-TRADITSIYA"
+  ],
+  "after": []
+}

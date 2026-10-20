@@ -13,12 +13,18 @@ use parser::grammar_parser::{GrammarASTNode, GrammarParser};
 
 mod _grammar;
 
-/// Every release in `code/grammars/perl/releases.csv`, pending rows included,
-/// in canonical inventory order.
-pub use _grammar::INVENTORY_RELEASES;
+/// Every release in `code/grammars/perl/releases.csv` as `(release,
+/// grammar_stage)`, pending rows included, in canonical inventory order. A
+/// release here but not in [`SUPPORTED_RELEASES`] is known but has no pair
+/// yet (stage `none`); a release in neither is unknown.
+pub use _grammar::INVENTORY;
 
 /// Every release with a compiled parser grammar, in inventory order.
 pub use _grammar::SUPPORTED_RELEASES;
+
+/// The deduplicated module (`g_<12 hex>`) that holds a release's parser
+/// table, or `None` for a release without one.
+pub use _grammar::grammar_class;
 
 /// The parser's rule-depth cap. `GrammarParser`'s default is `usize::MAX`,
 /// so every Perl parse sets this explicitly (LANG84 C5). The bounded grammar
@@ -917,12 +923,15 @@ mod tests {
         let mut compiled = Vec::new();
         for row in rows {
             let fields: Vec<_> = row.split(',').collect();
-            all.push(fields[release_col]);
-            if fields[status_col] != "pending" {
+            // Until the LANG84 schema migration the stage is derived from the
+            // status: pending -> none, otherwise P.
+            let pending = fields[status_col] == "pending";
+            all.push((fields[release_col], if pending { "none" } else { "P" }));
+            if !pending {
                 compiled.push(fields[release_col]);
             }
         }
-        assert_eq!(INVENTORY_RELEASES, all.as_slice());
+        assert_eq!(INVENTORY, all.as_slice());
         assert_eq!(SUPPORTED_RELEASES, compiled.as_slice());
         assert_eq!(
             SUPPORTED_RELEASES,
@@ -938,7 +947,11 @@ mod tests {
                 "{release}: compiled table is stale"
             );
         }
-        for release in INVENTORY_RELEASES {
+        for (release, _) in INVENTORY {
+            assert_eq!(
+                grammar_class(release).is_some(),
+                SUPPORTED_RELEASES.contains(release)
+            );
             assert_eq!(
                 release_parser_grammar(release).is_some(),
                 SUPPORTED_RELEASES.contains(release),

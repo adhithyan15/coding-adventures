@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-265-WAY",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "RU-EXT-265-WAY"
+  ],
+  "after": []
+}

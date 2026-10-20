@@ -1,0 +1,19 @@
+{
+  "chapter": 405,
+  "title": "A flat tyre",
+  "label": "ch:ru-a-flat-tyre",
+  "canDo": "I can deal with a flat tyre: the tyre, the puncture, the pump, pumping it up and wheels that spin.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C405-buksovat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 405: I can deal with a flat tyre: the tyre, the puncture, the pump, pumping it up and wheels that spin.",
+    "assesses": [
+      "RU-LEX-C405-SHINA-03",
+      "RU-LEX-C405-SHINA-04",
+      "RU-LEX-C405-SHINA-05"
+    ]
+  }
+}

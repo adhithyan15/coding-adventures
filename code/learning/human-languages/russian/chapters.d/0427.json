@@ -1,0 +1,19 @@
+{
+  "chapter": 427,
+  "title": "In the harbour",
+  "label": "ch:ru-in-the-harbour",
+  "canDo": "I can talk about a harbour: the harbour, the lighthouse, the sailor, the captain and a boat that sinks.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C427-tonut",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 427: I can talk about a harbour: the harbour, the lighthouse, the sailor, the captain and a boat that sinks.",
+    "assesses": [
+      "RU-LEX-C427-MAYAK-03",
+      "RU-LEX-C427-MAYAK-04",
+      "RU-LEX-C427-MAYAK-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 285,
+  "title": "Events and incidents",
+  "label": "ch:ru-events-and-incidents",
+  "canDo": "I can talk about what happened: an event, an incident, a news round-up, a summary and the outcome.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C285-itog",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 285: I can talk about what happened: an event, an incident, a news round-up, a summary and the outcome.",
+    "assesses": [
+      "RU-LEX-C285-SOBYTIYE-03",
+      "RU-LEX-C285-SOBYTIYE-04",
+      "RU-LEX-C285-SOBYTIYE-05"
+    ]
+  }
+}

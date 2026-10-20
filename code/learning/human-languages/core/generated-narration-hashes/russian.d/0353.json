@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 353,
+  "sourceHash": "fnv1a64:964ce4c6ac708c04",
+  "lessonIds": [
+    "RU-C353-ushcherb",
+    "RU-C353-prichinyat",
+    "RU-C353-vredit",
+    "RU-C353-stradat",
+    "RU-C353-ukhudshat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch353.txt",
+  "json": "russian/narration/ch353.json",
+  "textHash": "fnv1a64:e55d44087e4b0be9",
+  "jsonHash": "fnv1a64:e6dd8c6434d3d383",
+  "findings": []
+}

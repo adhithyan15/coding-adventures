@@ -1,0 +1,19 @@
+{
+  "chapter": 363,
+  "title": "Negotiations and contracts",
+  "label": "ch:ru-negotiations-and-contracts",
+  "canDo": "I can talk about negotiations, a contract, a client and a competitor, and say that two firms cooperate.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C363-sotrudnichat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 363: I can talk about negotiations, a contract, a client and a competitor, and say that two firms cooperate.",
+    "assesses": [
+      "RU-LEX-C363-PEREGOVORY-03",
+      "RU-LEX-C363-PEREGOVORY-04",
+      "RU-LEX-C363-PEREGOVORY-05"
+    ]
+  }
+}

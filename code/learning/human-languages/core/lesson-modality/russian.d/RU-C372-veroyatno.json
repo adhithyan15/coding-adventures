@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C372-veroyatno",
+    "language": "russian",
+    "chapter": 372,
+    "sequence": 21590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82bdc331f5799203"
+  },
+  "findings": []
+}

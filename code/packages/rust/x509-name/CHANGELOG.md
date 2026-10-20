@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Exposed the exact borrowed canonical contents of the decoded Name sequence
+  for trust-anchor identity matching without reparsing.
+
 ## 0.1.0 — 2026-09-20
 
 - Added allocation-free RFC 5280 `Name`, RDN, and attribute decoding.

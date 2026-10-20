@@ -1,0 +1,19 @@
+{
+  "chapter": 483,
+  "title": "Scratches and Grazes",
+  "label": "ch:ru-scratches-and-grazes",
+  "canDo": "I can talk about small injuries and how they heal.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C483-zazhivat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 483: I can talk about small injuries and how they heal.",
+    "assesses": [
+      "RU-LEX-C483-SCRATCHES-03",
+      "RU-LEX-C483-SCRATCHES-04",
+      "RU-LEX-C483-SCRATCHES-05"
+    ]
+  }
+}

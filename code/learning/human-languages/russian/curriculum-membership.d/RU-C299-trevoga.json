@@ -1,0 +1,11 @@
+{
+  "id": "RU-C299-trevoga",
+  "pathSegment": "RU-PATH-299-SIRENA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-299-SIRENA",
+      "order": 2
+    }
+  ]
+}

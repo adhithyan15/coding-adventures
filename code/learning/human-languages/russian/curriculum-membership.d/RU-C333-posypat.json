@@ -1,0 +1,11 @@
+{
+  "id": "RU-C333-posypat",
+  "pathSegment": "RU-PATH-333-SOLIT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-333-SOLIT",
+      "order": 2
+    }
+  ]
+}

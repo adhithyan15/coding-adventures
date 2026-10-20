@@ -1,87 +1,32 @@
 {
   "upstream_version": "11.16.1",
   "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
-  "scope": "documented native subset of the external @zenuml/core language",
-  "fixtures": [
-    {
-      "name": "async messages with title",
-      "compatible": true,
-      "source": "zenuml\n  title Demo\n  Alice->John: Hello John\n  John->Alice: Great!"
-    },
-    {
-      "name": "participant ordering and aliases",
-      "compatible": true,
-      "source": "zenuml\nBob\nA as Alice\nA->Bob: Hi Bob"
-    },
-    {
-      "name": "actor and database annotators",
-      "compatible": true,
-      "source": "zenuml\n@Actor Alice\n@Database Store\nAlice->Store: Query"
-    },
-    {
-      "name": "front matter before header",
-      "compatible": true,
-      "source": "---\ntitle: Host metadata\n---\nzenuml\nAlice->Bob: Hello"
-    },
-    {
-      "name": "nested synchronous message",
-      "compatible": true,
-      "source": "zenuml\nA.SyncMessage() {\n  B.nestedSyncMessage()\n}"
-    },
-    {
-      "name": "control fragment",
-      "compatible": true,
-      "source": "zenuml\nwhile(true) {\n  Alice->Bob: Hello\n}"
-    },
-    {
-      "name": "creation message",
-      "compatible": true,
-      "source": "zenuml\nnew A1"
-    },
-    {
-      "name": "reply assignments and annotator",
-      "compatible": true,
-      "source": "zenuml\nClient->A.SyncMessage() {\n  a = B.lookup()\n  SomeType result = B.compute()\n  @return\n  A->Client: result\n}"
-    },
-    {
-      "name": "if else-if else branches",
-      "compatible": true,
-      "source": "zenuml\nif(condition1) {\n  A->B: one\n} else if(condition2) {\n  A->B: two\n} else {\n  A->B: three\n}"
-    },
-    {
-      "name": "try catch finally branches",
-      "compatible": true,
-      "source": "zenuml\ntry {\n  Consumer->API: Book\n} catch {\n  API->Consumer: failure\n} finally {\n  API->Service: rollback\n}"
-    },
-    {
-      "name": "comments above messages",
-      "compatible": true,
-      "source": "zenuml\nA\n// **Markdown** comment\nA.method()"
-    },
-    {
-      "name": "documented participant annotators",
-      "compatible": true,
-      "source": "zenuml\n@Boundary API\n@Control Controller\n@Entity Order\n@Collections Items\n@Queue Jobs\n@Starter Client\nClient->API: begin"
-    },
-    {
-      "name": "assigned and typed creation",
-      "compatible": true,
-      "source": "zenuml\nClient.start() {\n  worker = new Worker(config)\n  Worker helper = new Worker() {\n    helper.init()\n  }\n}"
-    },
-    {
-      "name": "semicolon terminators",
-      "compatible": true,
-      "source": "zenuml\n@Actor Client;\nClient->API: request;\nAPI.handle();\nreturn result;"
-    },
-    {
-      "name": "custom participant annotator",
-      "compatible": true,
-      "source": "zenuml\n@Service API\nClient->API: request"
-    },
-    {
-      "name": "inline message comment",
-      "compatible": true,
-      "source": "zenuml\nClient->API: request // traced request\nAPI.handle() // handler invocation"
-    }
+  "source": "packages/mermaid/src/docs/syntax/zenuml.md",
+  "scope": "complete documented mermaid@11.16.1 ZenUML syntax corpus",
+  "valid": [
+    {"id": "demo", "source": "zenuml\ntitle Demo\nAlice->John: Hello John, how are you?\nJohn->Alice: Great!\nAlice->John: See you later!"},
+    {"id": "participant-order", "source": "zenuml\ntitle Declare participant (optional)\nBob\nAlice\nAlice->Bob: Hi Bob\nBob->Alice: Hi Alice"},
+    {"id": "annotators", "source": "zenuml\ntitle Annotators\n@Actor Alice\n@Database Bob\nAlice->Bob: Hi Bob\nBob->Alice: Hi Alice"},
+    {"id": "aliases", "source": "zenuml\ntitle Aliases\nA as Alice\nJ as John\nA->J: Hello John, how are you?\nJ->A: Great!"},
+    {"id": "sync-messages", "source": "zenuml\ntitle Sync message\nA.SyncMessage\nA.SyncMessage(with, parameters) {\n  B.nestedSyncMessage()\n}"},
+    {"id": "async-message", "source": "zenuml\ntitle Async message\nAlice->Bob: How are you?"},
+    {"id": "creation-messages", "source": "zenuml\nnew A1\nnew A2(with, parameters)"},
+    {"id": "reply-forms", "source": "zenuml\na = A.SyncMessage()\nSomeType a = A.SyncMessage()\nA.SyncMessage() {\n  return result\n}\n@return\nA->B: result"},
+    {"id": "nested-reply", "source": "zenuml\ntitle Reply message\nClient->A.method() {\n  B.method() {\n    if(condition) {\n      return x1\n      // return early\n      @return\n      A->Client: x11\n    }\n  }\n  return x2\n}"},
+    {"id": "nesting", "source": "zenuml\nA.method() {\n  B.nested_sync_method()\n  B->C: nested async message\n}"},
+    {"id": "comments", "source": "zenuml\n// a comment on a participant will not be rendered\nBookService\n// a comment on a message.\n// **Markdown** is supported.\nBookService.getBook()"},
+    {"id": "loops", "source": "zenuml\nAlice->John: Hello John, how are you?\nwhile(true) {\n  John->Alice: Great!\n}"},
+    {"id": "alternatives", "source": "zenuml\nAlice->Bob: Hello Bob, how are you?\nif(is_sick) {\n  Bob->Alice: Not so good :(\n} else {\n  Bob->Alice: Feeling fresh like a daisy\n}"},
+    {"id": "optional-fragment", "source": "zenuml\nAlice->Bob: Hello Bob, how are you?\nBob->Alice: Not so good :(\nopt {\n  Bob->Alice: Thanks for asking\n}"},
+    {"id": "parallel-fragment", "source": "zenuml\npar {\n  Alice->Bob: Hello guys!\n  Alice->John: Hello guys!\n}"},
+    {"id": "try-catch-finally", "source": "zenuml\ntry {\n  Consumer->API: Book something\n  API->BookingService: Start booking process\n} catch {\n  API->Consumer: show failure\n} finally {\n  API->BookingService: rollback status\n}"}
+  ],
+  "extensions": [
+    {"id": "front-matter", "source": "---\ntitle: Host metadata\n---\nzenuml\nAlice->Bob: Hello"},
+    {"id": "else-if", "source": "zenuml\nif(condition1) {\n  A->B: one\n} else if(condition2) {\n  A->B: two\n} else {\n  A->B: three\n}"},
+    {"id": "assigned-creation", "source": "zenuml\nClient.start() {\n  worker = new Worker(config)\n  Worker helper = new Worker() {\n    helper.init()\n  }\n}"},
+    {"id": "semicolon-terminators", "source": "zenuml\n@Actor Client;\nClient->API: request;\nAPI.handle();\nreturn result;"},
+    {"id": "custom-annotator", "source": "zenuml\n@Service API\nClient->API: request"},
+    {"id": "inline-comments", "source": "zenuml\nClient->API: request // traced request\nAPI.handle() // handler invocation"}
   ]
 }

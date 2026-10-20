@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 283,
+  "sourceHash": "fnv1a64:6bfd1499da29c67c",
+  "lessonIds": [
+    "RU-C283-utverzhdat",
+    "RU-C283-upominat",
+    "RU-C283-utochnyat",
+    "RU-C283-vyyasnyat",
+    "RU-C283-preduprezhdat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch283.txt",
+  "json": "russian/narration/ch283.json",
+  "textHash": "fnv1a64:49a305d6b3edfaf4",
+  "jsonHash": "fnv1a64:1860bb30acd12956",
+  "findings": []
+}

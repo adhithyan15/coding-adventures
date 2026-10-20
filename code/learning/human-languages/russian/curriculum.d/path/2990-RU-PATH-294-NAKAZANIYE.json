@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-294-NAKAZANIYE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-294-NAKAZANIYE"
+  ],
+  "after": []
+}

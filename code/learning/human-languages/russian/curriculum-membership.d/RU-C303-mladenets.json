@@ -1,0 +1,11 @@
+{
+  "id": "RU-C303-mladenets",
+  "pathSegment": "RU-PATH-303-ROZHDENIYE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-303-ROZHDENIYE",
+      "order": 2
+    }
+  ]
+}

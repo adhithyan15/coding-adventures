@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 450,
+  "title": "Certificates and forms",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:2714ed835f50375d",
+  "lessons": [
+    {
+      "id": "RU-C450-spravka",
+      "sequence": 25600,
+      "title": "справка (správka) — a certificate, an official note; information",
+      "headword": "справка",
+      "romanization": "správka",
+      "gloss": "a certificate, an official note; information",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9143647aae06f334",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to shave, then the Russian for a fringe."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: справка",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "справка (správka) — \"a certificate, an official note; information\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Для визы нужна справка с работы. Dlya vízy nuzhná správka s rabóty. For the visa you need a letter from your employer."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine. Справочное бюро — an information desk."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "справка (správka) is built on справиться 'to inquire', from править 'to set right, to put in order'. EtymDB lists справка (správka) without a deeper source."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "správka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *správka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "správka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *správka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with správka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *správka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to shave, then the Russian for a fringe, then say správka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to shave, then the Russian for a fringe, then say *správka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does справка (správka) mean? (\"A certificate, an official note; information\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C450-blank",
+      "sequence": 25610,
+      "title": "бланк (blank) — a form (to fill in)",
+      "headword": "бланк",
+      "romanization": "blank",
+      "gloss": "a form (to fill in)",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c7aa5ebf96ca5182",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a fringe, then the Russian for a certificate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: бланк",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "бланк (blank) — \"a form (to fill in)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "В банке мне дали бланк. V bánke mne dáli blank. At the bank they gave me a form."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine. Заполнить бланк (blank) — to fill in a form."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "бланк is usually traced, probably through German, to French blanc 'white, blank' (EtymDB lists the French word): a sheet left blank to be filled in."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "blank",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *blank*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "blank, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *blank*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with blank",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *blank*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a fringe, then the Russian for a certificate, then say blank again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a fringe, then the Russian for a certificate, then say *blank* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does бланк (blank) mean? (\"A form (to fill in)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C450-ochered",
+      "sequence": 25620,
+      "title": "очередь (óchered) — a queue; a turn",
+      "headword": "очередь",
+      "romanization": "óchered",
+      "gloss": "a queue; a turn",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d543064b13f298ed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a certificate, then the Russian for a form."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: очередь",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "очередь (óchered) — \"a queue; a turn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "На почте была длинная очередь. Na póchte bylá dlínnaya óchered. There was a long queue at the post office."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine. Стоять в очереди — to stand in a queue; моя очередь (óchered) — my turn."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "очередь (óchered) is usually linked with череда 'a row, a turn in order'. EtymDB lists очередь (óchered) without a source, so the line is hedged."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "óchered",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *óchered*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "óchered, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *óchered*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with óchered",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *óchered*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a certificate, then the Russian for a form, then say óchered again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a certificate, then the Russian for a form, then say *óchered* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does очередь (óchered) mean? (\"A queue; a turn\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C450-oformlyat",
+      "sequence": 25630,
+      "title": "оформлять (oformlyát) — to get (documents) done, to process; to design",
+      "headword": "оформлять",
+      "romanization": "oformlyát",
+      "gloss": "to get (documents) done, to process; to design",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:275386504fb3535f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a form, then the Russian for a queue."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: оформлять",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "оформлять (oformlyát) — \"to get (documents) done, to process; to design\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Мы три дня оформляли визу. My tri dnya oformlyáli vízu. It took us three days to get the visa done."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; perfective оформить (оформлю, оформишь)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "оформлять (oformlyát) is built from о- and форма 'a form, a shape', which is usually traced to Latin forma 'a shape' (Lewis & Short; EtymDB lists форма without a source): to give a matter its proper form."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oformlyát",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oformlyát*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oformlyát, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oformlyát*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with oformlyát",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *oformlyát*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a form, then the Russian for a queue, then say oformlyát again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a form, then the Russian for a queue, then say *oformlyát* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does оформлять (oformlyát) mean? (\"To get (documents) done, to process; to design\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C450-zaveryat",
+      "sequence": 25640,
+      "title": "заверять (zaveryát) — to certify; to assure",
+      "headword": "заверять",
+      "romanization": "zaveryát",
+      "gloss": "to certify; to assure",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:09307248a529eded",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a queue, then the Russian for to get."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: заверять",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "заверять (zaveryát) — \"to certify; to assure\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Нотариус заверяет копию паспорта. Notárius zaveryáyet kópiyu pásporta. The notary certifies a copy of the passport."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; perfective заверить. Заверить копию — to certify a copy."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "заверять (zaveryát) is built from за- and -верять, from верить 'to believe', on вера 'faith'. EtymDB lists верить without a deeper source."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zaveryát",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zaveryát*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zaveryát, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zaveryát*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with zaveryát",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *zaveryát*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a queue, then the Russian for to get, then say zaveryát again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a queue, then the Russian for to get, then say *zaveryát* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does заверять (zaveryát) mean? (\"To certify; to assure\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-R450-review-443-450",
+      "sequence": 25650,
+      "title": "Words from chapters 443–450 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 443-450",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f06241266b36e608",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Russian for to wander and to take a stroll."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to wander, to take a stroll, a block, a suburb, a roadway",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to wander, to take a stroll, a block, a suburb, a roadway]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a town hall, a cathedral, a bell tower, a fortress, a city hall",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a town hall, a cathedral, a bell tower, a fortress, a city hall]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a street lamp, a bench, a litter bin, a kiosk, a flower bed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a street lamp, a bench, a litter bin, a kiosk, a flower bed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a small public garden, a shop sign, a shop window, a drainpipe, a stall",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a small public garden, a shop sign, a shop window, a drainpipe, a stall]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a workshop, a shoemaker, a watchmaker, a locksmith, repairs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a workshop, a shoemaker, a watchmaker, a locksmith, repairs]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a laundry, a dry cleaner's, to darn, to sew up, to sew on",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a laundry, a dry cleaner's, to darn, to sew up, to sew on]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a hairdresser's, a haircut, to cut, to shave, a fringe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a hairdresser's, a haircut, to cut, to shave, a fringe]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a certificate, a form, a queue, to get, to certify",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a certificate, a form, a queue, to get, to certify]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To wander? (бродить.) To take a stroll? (прогуливаться.) A block? (квартал.) A suburb? (пригород.) A roadway? (мостовая.) A town hall? (ратуша.) A cathedral? (собор.) A bell tower? (колокольня.) A fortress? (крепость.) A city hall? (мэрия.) A street lamp? (фонарь.) A bench? (скамейка.) A litter bin? (урна.) A kiosk? (киоск.) A flower bed? (клумба.) A small public garden? (сквер.) A shop sign? (вывеска.) A shop window? (витрина.) A drainpipe? (водосток.) A stall? (ларёк.) A workshop? (мастерская.) A shoemaker? (сапожник.) A watchmaker? (часовщик.) A locksmith? (слесарь.) Repairs? (ремонт.) A laundry? (прачечная.) A dry cleaner's? (химчистка.) To darn? (штопать.) To sew up? (зашивать.) To sew on? (пришивать.) A hairdresser's? (парикмахерская.) A haircut? (стрижка.) To cut? (стричь.) To shave? (бриться.) A fringe? (чёлка.) A certificate? (справка (správka).) A form? (бланк (blank).) A queue? (очередь (óchered).) To get? (оформлять (oformlyát).) To certify? (заверять (zaveryát).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

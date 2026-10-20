@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-490-RECOVERY",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about recovering after an illness.",
+  "prerequisites": []
+}

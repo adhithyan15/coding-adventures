@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 297,
+  "sourceHash": "fnv1a64:f1cb20d763ff6ee9",
+  "lessonIds": [
+    "RU-C297-travma",
+    "RU-C297-ushib",
+    "RU-C297-soznaniye",
+    "RU-C297-postradat",
+    "RU-C297-ranit"
+  ],
+  "tex": "russian/book/chapters/ch297-injuries.tex"
+}

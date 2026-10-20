@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 283,
+  "sourceHash": "fnv1a64:40aa7e30fd05ce86",
+  "lessonIds": [
+    "RU-C283-utverzhdat",
+    "RU-C283-upominat",
+    "RU-C283-utochnyat",
+    "RU-C283-vyyasnyat",
+    "RU-C283-preduprezhdat"
+  ],
+  "tex": "russian/book/chapters/ch283-claiming-and-checking.tex"
+}

@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-443-BRODIT",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "RU-EXT-443-BRODIT"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C368-posobie",
+  "pathSegment": "RU-PATH-368-POMOSHCH",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-368-POMOSHCH",
+      "order": 2
+    }
+  ]
+}

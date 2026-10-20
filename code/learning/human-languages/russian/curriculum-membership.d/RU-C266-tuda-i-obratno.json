@@ -1,0 +1,11 @@
+{
+  "id": "RU-C266-tuda-i-obratno",
+  "pathSegment": "RU-PATH-266-TICKET",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-266-TICKET",
+      "order": 0
+    }
+  ]
+}

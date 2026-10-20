@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C293-obvinyat",
+    "language": "russian",
+    "chapter": 293,
+    "sequence": 17560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:189403a74454c908"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 353,
+  "sourceHash": "fnv1a64:266eb130d7544e7a",
+  "lessonIds": [
+    "RU-C353-ushcherb",
+    "RU-C353-prichinyat",
+    "RU-C353-vredit",
+    "RU-C353-stradat",
+    "RU-C353-ukhudshat"
+  ],
+  "tex": "russian/book/chapters/ch353-damage-and-harm.tex"
+}

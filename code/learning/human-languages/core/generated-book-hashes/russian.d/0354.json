@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 354,
+  "sourceHash": "fnv1a64:5448ec936be8f621",
+  "lessonIds": [
+    "RU-C354-uluchshat",
+    "RU-C354-uvelichivatsya",
+    "RU-C354-umenshatsya",
+    "RU-C354-snizhat",
+    "RU-C354-povyshat"
+  ],
+  "tex": "russian/book/chapters/ch354-better-or-worse.tex"
+}

@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-377-PLANY",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can move a meeting to another day, change my mind, turn something down, fix a time and say what I am going to do.",
+  "prerequisites": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C440-naberezhnaya",
+    "language": "russian",
+    "chapter": 440,
+    "sequence": 25110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d1ec06a833d022d7"
+  },
+  "findings": []
+}

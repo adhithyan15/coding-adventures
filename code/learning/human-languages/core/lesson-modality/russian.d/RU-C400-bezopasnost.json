@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C400-bezopasnost",
+    "language": "russian",
+    "chapter": 400,
+    "sequence": 23030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:657ba9ca5933de6c"
+  },
+  "findings": []
+}

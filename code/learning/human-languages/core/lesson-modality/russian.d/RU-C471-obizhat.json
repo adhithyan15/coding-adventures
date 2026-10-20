@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C471-obizhat",
+    "language": "russian",
+    "chapter": 471,
+    "sequence": 26720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2e7b6e5f29b83f00"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C445-urna",
+  "pathSegment": "RU-PATH-445-FONAR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-445-FONAR",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C496-soska",
+  "pathSegment": "RU-PATH-496-BABY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-496-BABY",
+      "order": 1
+    }
+  ]
+}

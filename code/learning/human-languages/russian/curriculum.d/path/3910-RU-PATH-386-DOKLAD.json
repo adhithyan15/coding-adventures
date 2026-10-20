@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-386-DOKLAD",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "RU-EXT-386-DOKLAD"
+  ],
+  "after": []
+}

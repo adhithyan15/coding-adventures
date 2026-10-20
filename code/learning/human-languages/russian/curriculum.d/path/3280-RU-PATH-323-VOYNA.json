@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-323-VOYNA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-323-VOYNA"
+  ],
+  "after": []
+}

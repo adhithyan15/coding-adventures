@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 518,
+  "sourceHash": "fnv1a64:c8cbd5f2e2fc060e",
+  "lessonIds": [
+    "RU-C518-ispolnyat",
+    "RU-C518-ispolnitel",
+    "RU-C518-repetitsiya",
+    "RU-C518-repetirovat",
+    "RU-C518-gastroli"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch518.txt",
+  "json": "russian/narration/ch518.json",
+  "textHash": "fnv1a64:dd8465884b510e75",
+  "jsonHash": "fnv1a64:cefc63a005240d80",
+  "findings": []
+}

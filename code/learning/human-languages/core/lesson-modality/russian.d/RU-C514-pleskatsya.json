@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C514-pleskatsya",
+    "language": "russian",
+    "chapter": 514,
+    "sequence": 28940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5d5bd128d6ef0bf2"
+  },
+  "findings": []
+}

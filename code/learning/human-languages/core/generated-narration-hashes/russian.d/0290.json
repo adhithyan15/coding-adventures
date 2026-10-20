@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 290,
+  "sourceHash": "fnv1a64:518c1d4fa3e7b936",
+  "lessonIds": [
+    "RU-C290-moshennik",
+    "RU-C290-obmanyvat",
+    "RU-C290-ugonyat",
+    "RU-C290-pokhishchat",
+    "RU-C290-pryatatsya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch290.txt",
+  "json": "russian/narration/ch290.json",
+  "textHash": "fnv1a64:3a14f004426a8d55",
+  "jsonHash": "fnv1a64:f4af4d84a027e765",
+  "findings": []
+}

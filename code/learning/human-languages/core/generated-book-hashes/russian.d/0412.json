@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 412,
+  "sourceHash": "fnv1a64:8ae76da66978e5bc",
+  "lessonIds": [
+    "RU-C412-peshekhod",
+    "RU-C412-velosipedist",
+    "RU-C412-ustupat",
+    "RU-C412-propuskat",
+    "RU-C412-razmetka"
+  ],
+  "tex": "russian/book/chapters/ch412-pedestrians-and-cyclists.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 267,
+  "title": "Glad, Tired, Hopeful",
+  "label": "ch:ru-glad-tired-hopeful",
+  "canDo": "I can say how I felt with я был рад, я устал and мне было скучно, and what I hope for and dream of with я надеюсь, что and я мечтаю.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C267-review",
+    "kind": "production",
+    "summary": "Complete RU-C267-review: how a trip felt, in the past, and one hope and one dream for the next one.",
+    "assesses": [
+      "RU-GRAMMAR-RAD-SHORT-01",
+      "RU-GRAMMAR-USTAL-STATE-01",
+      "RU-GRAMMAR-MNE-BYLO-01",
+      "RU-LEX-MECHTAT-01",
+      "RU-GRAMMAR-NADEYUS-CHTO-01"
+    ]
+  }
+}

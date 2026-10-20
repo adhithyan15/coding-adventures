@@ -1,0 +1,19 @@
+{
+  "chapter": 330,
+  "title": "Mixing and stirring",
+  "label": "ch:ru-mixing-and-stirring",
+  "canDo": "I can describe mixing food: mixing, whisking, a whisk, stirring and a ladle.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C330-polovnik",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 330: I can describe mixing food: mixing, whisking, a whisk, stirring and a ladle.",
+    "assesses": [
+      "RU-LEX-C330-SMESHIVAT-03",
+      "RU-LEX-C330-SMESHIVAT-04",
+      "RU-LEX-C330-SMESHIVAT-05"
+    ]
+  }
+}

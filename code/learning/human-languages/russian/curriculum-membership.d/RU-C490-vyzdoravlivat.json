@@ -1,0 +1,11 @@
+{
+  "id": "RU-C490-vyzdoravlivat",
+  "pathSegment": "RU-PATH-490-RECOVERY",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-490-RECOVERY",
+      "order": 0
+    }
+  ]
+}

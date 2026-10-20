@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 307,
+  "sourceHash": "fnv1a64:53f25db96f7bdf1e",
+  "lessonIds": [
+    "RU-C307-razvod",
+    "RU-C307-razvoditsya",
+    "RU-C307-pereyezd",
+    "RU-C307-uvolnyatsya",
+    "RU-C307-nasledstvo"
+  ],
+  "tex": "russian/book/chapters/ch307-divorce-and-moving-on.tex"
+}

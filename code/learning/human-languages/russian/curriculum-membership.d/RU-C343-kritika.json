@@ -1,0 +1,11 @@
+{
+  "id": "RU-C343-kritika",
+  "pathSegment": "RU-PATH-343-KRITIKA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-343-KRITIKA",
+      "order": 1
+    }
+  ]
+}

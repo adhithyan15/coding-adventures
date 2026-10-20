@@ -1,0 +1,11 @@
+{
+  "id": "RU-C378-dogovoryonnost",
+  "pathSegment": "RU-PATH-378-DOGOVORILIS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-378-DOGOVORILIS",
+      "order": 1
+    }
+  ]
+}

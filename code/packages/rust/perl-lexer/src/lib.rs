@@ -24,12 +24,15 @@ use lexer::token::Token;
 
 mod _grammar;
 
-/// Every release in `code/grammars/perl/releases.csv`, pending rows included,
-/// in canonical inventory order.
-pub use _grammar::INVENTORY_RELEASES;
-
-/// Every release with a compiled token grammar, in inventory order.
+/// Every release with a compiled token grammar, in inventory order. The full
+/// inventory, pending rows included, is `coding_adventures_perl_parser::INVENTORY`
+/// (the generator emits it once, in the parser table).
 pub use _grammar::SUPPORTED_RELEASES;
+
+/// The deduplicated module (`g_<12 hex>`) that holds a release's table, or
+/// `None` for a release without one. Two releases share a class exactly when
+/// their compiled token grammars are equal apart from line numbers.
+pub use _grammar::grammar_class;
 
 /// Maximum source bytes before lexing the initial Perl subset.
 pub const MAX_SOURCE_BYTES: usize = 64 * 1024;
@@ -146,16 +149,23 @@ mod tests {
                 compiled.push(fields[release_col]);
             }
         }
-        assert_eq!(INVENTORY_RELEASES, all.as_slice());
         assert_eq!(SUPPORTED_RELEASES, compiled.as_slice());
         for release in SUPPORTED_RELEASES {
+            assert!(
+                grammar_class(release).unwrap().starts_with("g_"),
+                "{release}"
+            );
             let text =
                 std::fs::read_to_string(directory.join(format!("perl{release}.tokens"))).unwrap();
             let expected = without_line_numbers(parse_token_grammar(&text).unwrap());
             let actual = without_line_numbers(release_token_grammar(release).unwrap());
             assert_eq!(actual, expected, "{release}: compiled table is stale");
         }
-        for release in INVENTORY_RELEASES {
+        for release in &all {
+            assert_eq!(
+                grammar_class(release).is_some(),
+                SUPPORTED_RELEASES.contains(release)
+            );
             assert_eq!(
                 release_token_grammar(release).is_some(),
                 SUPPORTED_RELEASES.contains(release),

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 355,
+  "sourceHash": "fnv1a64:e6ded5192739e54a",
+  "lessonIds": [
+    "RU-C355-sluchaynyy",
+    "RU-C355-sluchaynost",
+    "RU-C355-sovpadenie",
+    "RU-C355-neizbezhnyy",
+    "RU-C355-voznikat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch355.txt",
+  "json": "russian/narration/ch355.json",
+  "textHash": "fnv1a64:ba684bbcb05125ee",
+  "jsonHash": "fnv1a64:848c7400a50a7418",
+  "findings": []
+}

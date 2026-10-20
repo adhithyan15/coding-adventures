@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 280,
+  "sourceHash": "fnv1a64:783d75266713a000",
+  "lessonIds": [
+    "RU-C280-soobshchat",
+    "RU-C280-otritsat",
+    "RU-C280-publikovat",
+    "RU-C280-podtverzhdat",
+    "RU-C280-oprovergat"
+  ],
+  "tex": "russian/book/chapters/ch280-reporting-and-denying.tex"
+}

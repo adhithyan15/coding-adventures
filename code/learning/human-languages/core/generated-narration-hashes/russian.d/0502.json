@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:6f3cba7e97722b8f",
+  "lessonIds": [
+    "RU-C502-glina",
+    "RU-C502-plastilin",
+    "RU-C502-gonchar",
+    "RU-C502-masterit",
+    "RU-C502-podelka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch502.txt",
+  "json": "russian/narration/ch502.json",
+  "textHash": "fnv1a64:73d87c0e6a07cff2",
+  "jsonHash": "fnv1a64:4876772151d0b7af",
+  "findings": []
+}
