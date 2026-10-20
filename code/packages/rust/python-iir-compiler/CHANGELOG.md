@@ -1,5 +1,48 @@
 # Changelog
 
+## 0.3.0 — 2026-10-20
+
+### Added — LANG84 phase 7a: `py-int-print` on the release path
+- `compile_source_at(source, release, module_name, &FrontendBudgets)`
+  resolves an exact `code/grammars/python/releases.csv` ID (`None` =
+  `DEFAULT_RELEASE`, `3.13.16`). It looks up the release's `ReleaseProfile`
+  (`profiles.rs`, profile `py3`), parses with that release's pair through
+  `python-parser::parse_python_at`, and walks the CST in place (`int_lower.rs`).
+  The walk uses borrowed nodes and no owned AST; the flat `arith`/`term`
+  chains and runs of unary signs are folded in loops. `compile_cst` takes a
+  caller-supplied tree after measuring it (items, depth, text).
+- LANG83 ops only, plus `const`/`ret`:
+  - `+ - *` and unary `-` → `i64_add_ovf`, `i64_sub_ovf`, `i64_mul_ovf`,
+    `i64_neg_ovf`. A result outside `i64` traps `Trap.Overflow` where
+    CPython would make a bigger `int` (stated divergence; bignum promotion
+    is later).
+  - `//` and `%` → `i64_div_floor` and `i64_mod_floor`. A zero divisor
+    traps `Trap.DivZero`.
+  - `print(x)` → `print_i64`, `print()` → `putchar 10`.
+  - `main` returns `i64` 0, not `ret_void`, the void-entry lesson from the
+    CLR and BEAM.
+- A divisor known to be `-1` is folded: `a // -1` → `i64_neg_ovf a`,
+  `a % -1` → `const 0`. So `i64::MIN // -1` and `i64::MIN % -1` never reach
+  a backend's divide.
+- Refusals, as typed `Unsupported` errors naming the rule and position:
+  - `/` (true division, `Slash::True` in the profile);
+  - names, another callee, more than one argument;
+  - a call used as a value, or a bare expression statement;
+  - a literal outside `i64`.
+- `FrontendError`: the LANG84 C6 categories.
+- `run_source_at` / `run_module`: run on vm-core, keeping the output before
+  a trap and its kind.
+- Tests: `release_subsets` (stage I, IIR identity, CSV/profile agreement,
+  host CPython oracle), `release_lowering`, `cst_contract` (C8),
+  `hostile_release` (C5, child process), `iir_path` (C2/C4.5).
+
+### Unchanged
+- LANG79's float pilot: `compile_source`, `compile_ast`, `run_source` and
+  `pyvm` keep their API, behaviour and the legacy `"3.12"` minor-line
+  grammar. LANG84 wants `compile_source` to delegate to
+  `compile_source_at`. That waits until the float subset moves to release
+  pairs (7b/7c, after LANG83 float formatting).
+
 ## 0.2.0 — 2026-10-19
 
 ### Module-level float bindings
