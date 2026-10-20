@@ -172,6 +172,7 @@
 
 import { createHash, randomBytes } from "node:crypto";
 import {
+  type BigIntStats,
   closeSync,
   constants as fsConstants,
   existsSync,
@@ -359,8 +360,13 @@ export function lessonCacheKey(input: LessonCacheKeyInput, sourceDigest: string)
  * cannot drift apart the way four hand-written copies of `TRACK_ID` once did
  * in `loader.ts`.
  */
-export function privatelyOwned(stats: { uid: number; mode: number }, uid: number): boolean {
-  return stats.uid === uid && (stats.mode & GROUP_OR_OTHER) === 0;
+export function privatelyOwned(
+  stats: { uid: number | bigint; mode: number | bigint },
+  uid: number,
+): boolean {
+  // `Number()` because entry stats are BigInt (see `sameFile`); a uid and a
+  // mode both fit comfortably in a double, so nothing is lost converting them.
+  return Number(stats.uid) === uid && (Number(stats.mode) & GROUP_OR_OTHER) === 0;
 }
 
 /**
@@ -374,45 +380,73 @@ export function privatelyOwned(stats: { uid: number; mode: number }, uid: number
  *
  * `noFollow` is the O_NOFOLLOW flag where the platform has one and 0 where it
  * does not (Windows); the `lstat` + same-file checks run either way, so a
- * platform without the flag loses no protection. `rename` is a seam so the
- * Windows rename collision can be produced on demand.
+ * platform without the flag loses no protection.
+ *
+ * `open`, `fstat` and `rename` are seams. Production passes Node's own; the
+ * tests pass wrappers that do what another process could do at the worst
+ * moment — swap the entry between the look and the open, report a zero file
+ * id, collide on rename — because none of those can be produced on demand
+ * any other way.
  */
+interface CachePlatformOps {
+  noFollow: number;
+  open: (path: string, flags: number, mode?: number) => number;
+  /** Always BigInt stats: an NTFS file id is 64 bits and a `number` rounds it. */
+  fstat: (fd: number) => BigIntStats;
+  rename: (from: string, to: string) => void;
+}
+
 export type CachePlatform =
-  | {
-      kind: "posix";
-      uid: number;
-      noFollow: number;
-      rename: (from: string, to: string) => void;
-    }
-  | {
-      kind: "win32";
-      defaultDirectory: string;
-      noFollow: number;
-      rename: (from: string, to: string) => void;
-    };
+  | ({ kind: "posix"; uid: number } & CachePlatformOps)
+  | ({ kind: "win32"; defaultDirectory: string } & CachePlatformOps);
 
 /** The platform this process runs on, or `undefined` where neither rule set applies. */
 export function hostCachePlatform(): CachePlatform | undefined {
   // `?? 0`: Node exposes no O_NOFOLLOW on Windows, and OR-ing `undefined` into
   // a flag word would silently become 0 anyway — this just says so.
-  const noFollow = fsConstants.O_NOFOLLOW ?? 0;
+  const ops: CachePlatformOps = {
+    noFollow: fsConstants.O_NOFOLLOW ?? 0,
+    open: openSync,
+    fstat: (fd) => fstatSync(fd, { bigint: true }),
+    rename: renameSync,
+  };
   if (typeof process.getuid === "function") {
-    return { kind: "posix", uid: process.getuid(), noFollow, rename: renameSync };
+    return { kind: "posix", uid: process.getuid(), ...ops };
   }
   if (process.platform === "win32") {
-    return {
-      kind: "win32",
-      defaultDirectory: defaultLessonCacheDirectory(),
-      noFollow,
-      rename: renameSync,
-    };
+    return { kind: "win32", defaultDirectory: defaultLessonCacheDirectory(), ...ops };
   }
   return undefined;
 }
 
 /** POSIX: owned by us and private. Windows: nothing to check (see the header). */
-function ownedHere(stats: { uid: number; mode: number }, platform: CachePlatform): boolean {
+function ownedHere(
+  stats: { uid: number | bigint; mode: number | bigint },
+  platform: CachePlatform,
+): boolean {
   return platform.kind === "win32" || privatelyOwned(stats, platform.uid);
+}
+
+/**
+ * Are these two stats the same file — and can we even tell?
+ *
+ * BigInt on both sides, always. NTFS file ids are 64-bit, and as a `number`
+ * two different files above 2^53 can round to the same id, which would let a
+ * swapped-in file pass for the one that was checked.
+ *
+ * Zero is "unknown", not an id. ReFS, Dev Drive and SMB shares can report a
+ * zero file id or volume serial for every file, and `0n === 0n` would then
+ * approve any swap at all. A check that cannot distinguish files is no check,
+ * so it fails closed: a miss, and the lessons are parsed from disk.
+ */
+export function sameFile(
+  opened: { dev: bigint; ino: bigint },
+  checked: { dev: bigint; ino: bigint },
+): boolean {
+  if (opened.dev === 0n || opened.ino === 0n || checked.dev === 0n || checked.ino === 0n) {
+    return false;
+  }
+  return opened.dev === checked.dev && opened.ino === checked.ino;
 }
 
 /**
@@ -536,17 +570,17 @@ function readEntry(
   const name = entryName(language, key);
   if (name === undefined) return undefined;
   const path = join(directory, name);
-  let checked: ReturnType<typeof lstatSync>;
+  let checked: BigIntStats;
   let fd: number;
   try {
     // Look before opening: a link (or junction) under an entry's name is a
     // miss, and so is anything whose real path is not `<directory>/<name>`.
     // This is the whole defence on Windows, which has no O_NOFOLLOW.
-    checked = lstatSync(path);
+    checked = lstatSync(path, { bigint: true });
     if (!checked.isFile() || checked.isSymbolicLink() || !realPathIs(path, path)) return undefined;
     // O_NOFOLLOW where it exists: if a link was swapped in after the look, the
     // kernel refuses it (ELOOP) rather than following it.
-    fd = openSync(path, fsConstants.O_RDONLY | platform.noFollow);
+    fd = platform.open(path, fsConstants.O_RDONLY | platform.noFollow);
   } catch {
     return undefined; // ENOENT is the ordinary miss; anything else is one too.
   }
@@ -556,8 +590,8 @@ function readEntry(
     // the file that is OPEN. It must be the very file `lstat` approved — same
     // device, same inode — so a swap between the look and the open, which
     // O_NOFOLLOW cannot catch where it does not exist, is refused here.
-    const stats = fstatSync(fd);
-    if (stats.dev !== checked.dev || stats.ino !== checked.ino) return undefined;
+    const stats = platform.fstat(fd);
+    if (!sameFile(stats, checked)) return undefined;
     if (!stats.isFile() || !ownedHere(stats, platform)) return undefined;
     bytes = readFileSync(fd);
   } catch {
@@ -655,12 +689,16 @@ function writeEntry(
   const tempName = `${name}.${process.pid}.${randomBytes(8).toString("hex")}.tmp`;
   const temp = join(directory, tempName);
   let fd: number | undefined;
+  // Set only once the temp file is complete and closed. Without it, an EPERM
+  // or EACCES from CREATING the temp file would look exactly like a rename
+  // collision — both leave `fd` undefined — and be reported as written.
+  let renaming = false;
   try {
     const bytes = encodeEntry(lessons);
     // O_EXCL is the guard that matters on every platform: it maps to
     // CREATE_NEW on Windows, which fails if ANYTHING — file, link, junction —
     // already has the name, so a pre-planted temp name is never opened.
-    fd = openSync(
+    fd = platform.open(
       temp,
       fsConstants.O_WRONLY | fsConstants.O_CREAT | fsConstants.O_EXCL | platform.noFollow,
       0o600,
@@ -669,6 +707,7 @@ function writeEntry(
     while (offset < bytes.length) offset += writeSync(fd, bytes, offset);
     closeSync(fd);
     fd = undefined;
+    renaming = true;
     platform.rename(temp, target);
   } catch (error) {
     // Disk full, read-only checkout, a racing sweep, or (Windows) a rename
@@ -686,7 +725,7 @@ function writeEntry(
     // A collision is not a failure, but it is not this writer's entry either,
     // so it does not sweep: the winner already did.
     const code = (error as NodeJS.ErrnoException | undefined)?.code ?? "";
-    return fd === undefined && RENAME_COLLISION.has(code) && existsSync(target)
+    return renaming && RENAME_COLLISION.has(code) && existsSync(target)
       ? "already-written"
       : "not-written";
   }

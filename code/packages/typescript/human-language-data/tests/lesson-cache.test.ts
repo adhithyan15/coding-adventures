@@ -22,7 +22,11 @@
 import { spawn } from "node:child_process";
 import { createHash } from "node:crypto";
 import {
+  type BigIntStats,
   chmodSync,
+  constants as fsConstants,
+  fstatSync,
+  openSync,
   existsSync,
   mkdirSync,
   mkdtempSync,
@@ -51,6 +55,7 @@ import {
   lessonCacheKey,
   openLessonCache,
   privatelyOwned,
+  sameFile,
   suiteLessonCacheOptions,
   type CachePlatform,
   type LessonCache,
@@ -403,6 +408,15 @@ describe.runIf(POSIX)("the security boundary", () => {
     expect(decodeEntry(readFileSync(elsewhere))).toStrictEqual(sentinel);
   });
 
+  it("treats two stats as one file only on equal, nonzero, full-width ids", () => {
+    const big = 2n ** 60n; // past 2^53: a `number` would round these together
+    expect(sameFile({ dev: 7n, ino: big + 1n }, { dev: 7n, ino: big + 1n })).toBe(true);
+    expect(sameFile({ dev: 7n, ino: big + 1n }, { dev: 7n, ino: big + 2n })).toBe(false);
+    expect(sameFile({ dev: 7n, ino: 5n }, { dev: 8n, ino: 5n })).toBe(false);
+    expect(sameFile({ dev: 7n, ino: 0n }, { dev: 7n, ino: 0n })).toBe(false);
+    expect(sameFile({ dev: 0n, ino: 5n }, { dev: 0n, ino: 5n })).toBe(false);
+  });
+
   it("only trusts files owned by the current user with no group/other bits", () => {
     const uid = process.getuid!();
     expect(privatelyOwned({ uid, mode: 0o100600 }, uid)).toBe(true);
@@ -456,15 +470,23 @@ describe.runIf(POSIX)("the Windows rules, simulated", () => {
   // entries. Symlinks stand in for junctions — Node's `lstat` reports both as
   // links, and the real-path checks treat every reparse point alike.
   let renameHook: ((from: string, to: string) => void) | undefined;
+  let openHook: ((path: string, flags: number, mode?: number) => number) | undefined;
+  let fstatHook: ((fd: number) => BigIntStats) | undefined;
+  const realOpen = (path: string, flags: number, mode?: number) => openSync(path, flags, mode);
+  const realFstat = (fd: number) => fstatSync(fd, { bigint: true });
   const win32 = (): CachePlatform => ({
     kind: "win32",
     defaultDirectory: cacheDir,
     noFollow: 0,
+    open: (path, flags, mode) => (openHook ?? realOpen)(path, flags, mode),
+    fstat: (fd) => (fstatHook ?? realFstat)(fd),
     rename: (from, to) => (renameHook ?? renameSync)(from, to),
   });
 
   beforeEach(() => {
     renameHook = undefined;
+    openHook = undefined;
+    fstatHook = undefined;
     writeLesson("spanish", "001-uno.md", lesson("uno", "uno", 1));
     writeLesson("spanish", "002-dos.md", lesson("dos", "dos"));
   });
@@ -551,6 +573,65 @@ describe.runIf(POSIX)("the Windows rules, simulated", () => {
     };
     expect(cache.write("spanish", "c".repeat(64), [])).toBe("not-written");
     expect(readdirSync(cacheDir)).toEqual([]);
+  });
+
+  it("refuses an entry swapped for another file between the look and the open", () => {
+    configureLessonCache({ root, directory: cacheDir }, win32());
+    loadTrackLessons("spanish", root);
+    const entry = join(cacheDir, entries()[0]!);
+    // A complete, correctly digested entry with different content and the
+    // same lesson count: everything but the same-file check would accept it.
+    const impostor = join(scratch, "impostor.v8");
+    writeFileSync(
+      impostor,
+      encodeEntry([
+        parseLesson(lesson("impostor", "impostor"), "spanish"),
+        parseLesson(lesson("impostor-two", "impostor"), "spanish"),
+      ]),
+    );
+    let swapped = false;
+    openHook = (path, flags, mode) => {
+      if (path === entry && (flags & fsConstants.O_CREAT) === 0) {
+        renameSync(impostor, entry); // another process, at the worst moment
+        swapped = true;
+      }
+      return realOpen(path, flags, mode);
+    };
+    expect(loadTrackLessons("spanish", root)).toStrictEqual(freshParse("spanish"));
+    expect(swapped).toBe(true);
+  });
+
+  it("fails closed when the filesystem reports a zero file id", () => {
+    configureLessonCache({ root, directory: cacheDir }, win32());
+    loadTrackLessons("spanish", root);
+    const sentinel = [
+      parseLesson(lesson("sentinel", "centinela"), "spanish"),
+      parseLesson(lesson("sentinel-two", "centinela"), "spanish"),
+    ];
+    activeCache().write("spanish", keyFor("spanish"), sentinel);
+    expect(loadTrackLessons("spanish", root)).toStrictEqual(sentinel); // a real hit first
+    // ReFS / Dev Drive / SMB: the id the open file reports is 0.
+    fstatHook = (fd) => {
+      const stats = realFstat(fd);
+      return Object.assign(Object.create(Object.getPrototypeOf(stats)), stats, { ino: 0n });
+    };
+    expect(loadTrackLessons("spanish", root)).toStrictEqual(freshParse("spanish"));
+  });
+
+  it("does not mistake a failure to CREATE the temp file for a rename collision", () => {
+    const cache = openLessonCache(cacheDir, win32())!;
+    const key = "f".repeat(64);
+    // The target exists — the one condition a collision also has — so only
+    // the "were we renaming?" flag can tell the two apart.
+    cache.write("spanish", key, []);
+    openHook = (path, flags, mode) => {
+      if ((flags & fsConstants.O_CREAT) !== 0) {
+        throw Object.assign(new Error("EACCES: permission denied, open"), { code: "EACCES" });
+      }
+      return realOpen(path, flags, mode);
+    };
+    expect(cache.write("spanish", key, [])).toBe("not-written");
+    expect(readdirSync(cacheDir)).toEqual([`spanish-${key}.v8`]);
   });
 
   it("deletes nothing in the directory but its own entry and temp names", () => {

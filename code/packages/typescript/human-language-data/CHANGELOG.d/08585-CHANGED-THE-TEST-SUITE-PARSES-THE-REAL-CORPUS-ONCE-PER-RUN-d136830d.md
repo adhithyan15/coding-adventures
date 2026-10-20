@@ -58,3 +58,11 @@
 - `required_capabilities.json` declares the test-only cache directory
   (`node_modules/.cache/human-language-data/**`: create, write, read, list,
   delete), and its summary says the CLI never enables the cache.
+- Security re-check follow-ups:
+  - The same-file check now compares BigInt `dev`/`ino`, so 64-bit NTFS file
+    ids keep full precision, and it treats a zero id as a miss, because ReFS,
+    Dev Drive and SMB can report 0 for every file.
+  - A write is reported as `already-written` only when the RENAME failed. A
+    failed temp-file create is now `not-written`.
+  - New `open`/`fstat` seams on `CachePlatform` let the tests swap an entry
+    between `lstat` and open, report a zero file id, and fail the create.
