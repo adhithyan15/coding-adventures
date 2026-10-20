@@ -1,0 +1,11 @@
+{
+  "id": "GE-C485-ellbogen",
+  "pathSegment": "GE-PATH-485-GELENKE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-485-GELENKE",
+      "order": 1
+    }
+  ]
+}

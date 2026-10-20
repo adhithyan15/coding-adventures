@@ -1,0 +1,11 @@
+{
+  "id": "GE-C308-anstossen",
+  "pathSegment": "GE-PATH-308-ANSTOSSEN",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-308-ANSTOSSEN",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C334-einraeumen",
+  "pathSegment": "GE-PATH-334-ZUSTIMMEN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-334-ZUSTIMMEN",
+      "order": 4
+    }
+  ]
+}

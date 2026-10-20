@@ -1,0 +1,20 @@
+{
+  "language": "german",
+  "chapter": 453,
+  "sourceHash": "fnv1a64:f5ab411595a0e7a0",
+  "lessonIds": [
+    "GE-C453-klippe",
+    "GE-C453-hochebene",
+    "GE-C453-gipfel",
+    "GE-C453-abhang",
+    "GE-C453-schlucht",
+    "GE-R453-review-446-453"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "german/narration/ch453.txt",
+  "json": "german/narration/ch453.json",
+  "textHash": "fnv1a64:f1c9e4e1a79bee5d",
+  "jsonHash": "fnv1a64:9e669fb9e4f2e9bd",
+  "findings": []
+}

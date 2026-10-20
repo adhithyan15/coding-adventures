@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 287,
+  "sourceHash": "fnv1a64:a3ced5b928523ecb",
+  "lessonIds": [
+    "GE-C287-gestehen",
+    "GE-C287-gestaendnis",
+    "GE-C287-gefaengnis",
+    "GE-C287-verschwinden",
+    "GE-C287-fliehen"
+  ],
+  "tex": "german/book/chapters/ch287-das-gefangnis.tex"
+}

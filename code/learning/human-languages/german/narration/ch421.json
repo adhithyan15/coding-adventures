@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "german",
+  "chapter": 421,
+  "title": "Mit der Fähre",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:3a2fe73b53001ecb",
+  "lessons": [
+    {
+      "id": "GE-C421-faehre",
+      "sequence": 22670,
+      "title": "die Fähre — the ferry",
+      "headword": "die Fähre",
+      "romanization": "die Fähre",
+      "gloss": "the ferry",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:16cb2f3465501a26",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to refund, then the German for the refund."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Fähre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Fähre — \"the ferry\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Die Fähre fährt jede Stunde zur Insel. The ferry goes to the island every hour."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Fähren."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Fähre is built on the inherited verb fahren 'to travel' (EtymDB lists Fähre); English ferry comes from the same Germanic family."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Fähre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Fähre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Fähre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Fähre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with die Fähre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *die Fähre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to refund, then the German for the refund, then say die Fähre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to refund, then the German for the refund, then say *die Fähre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does die Fähre mean? (\"The ferry\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C421-ueberfahrt",
+      "sequence": 22680,
+      "title": "die Überfahrt — the crossing (by sea)",
+      "headword": "die Überfahrt",
+      "romanization": "die Überfahrt",
+      "gloss": "the crossing (by sea)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d5b18dcef812fd76",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the refund, then the German for the ferry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Überfahrt",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Überfahrt — \"the crossing (by sea)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Die Überfahrt dauert eine Stunde. The crossing takes an hour."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Überfahrten."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Überfahrt is built from über 'over, across' and Fahrt 'journey', from the inherited verb fahren (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Überfahrt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Überfahrt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Überfahrt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Überfahrt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with die Überfahrt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *die Überfahrt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the refund, then the German for the ferry, then say die Überfahrt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the refund, then the German for the ferry, then say *die Überfahrt* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does die Überfahrt mean? (\"The crossing (by sea)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C421-kabine",
+      "sequence": 22690,
+      "title": "die Kabine — the cabin; the changing cubicle",
+      "headword": "die Kabine",
+      "romanization": "die Kabine",
+      "gloss": "the cabin; the changing cubicle",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0fc2e78b5b5c9abb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the ferry, then the German for the crossing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Kabine",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Kabine — \"the cabin; the changing cubicle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Unsere Kabine hat ein kleines rundes Fenster. Our cabin has a small round window."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Kabinen. In a clothes shop, die Kabine is the changing cubicle."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Kabine was borrowed from French cabine, a word linked with English cabin; both are usually traced to Late Latin capanna 'hut'. EtymDB lists the German word without a source, so the line is hedged."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Kabine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Kabine*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Kabine, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Kabine*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with die Kabine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *die Kabine*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the ferry, then the German for the crossing, then say die Kabine again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the ferry, then the German for the crossing, then say *die Kabine* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does die Kabine mean? (\"The cabin; the changing cubicle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C421-schwimmweste",
+      "sequence": 22700,
+      "title": "die Schwimmweste — the life jacket",
+      "headword": "die Schwimmweste",
+      "romanization": "die Schwimmweste",
+      "gloss": "the life jacket",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1d7a17688153f2ba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the crossing, then the German for the cabin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Schwimmweste",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Schwimmweste — \"the life jacket\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Unter jedem Sitz liegt eine Schwimmweste. There is a life jacket under every seat."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Schwimmwesten."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Schwimmweste is built from schwimmen 'to swim, to float', inherited from Proto-Germanic swimmaną, and Weste 'waistcoat', which came through French and Italian veste from Latin vestis 'clothing' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Schwimmweste",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Schwimmweste*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Schwimmweste, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Schwimmweste*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with die Schwimmweste",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *die Schwimmweste*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the crossing, then the German for the cabin, then say die Schwimmweste again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the crossing, then the German for the cabin, then say *die Schwimmweste* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does die Schwimmweste mean? (\"The life jacket\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C421-seekrank",
+      "sequence": 22710,
+      "title": "seekrank — seasick",
+      "headword": "seekrank",
+      "romanization": "seekrank",
+      "gloss": "seasick",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:70b5c4364567eafc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the cabin, then the German for the life jacket."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: seekrank",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "seekrank — \"seasick\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Bei hohen Wellen wird sie schnell seekrank. When the waves are high she quickly gets seasick."
+            },
+            {
+              "kind": "speech",
+              "text": "Die Seekrankheit — seasickness."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "seekrank is built from See 'sea, lake' and krank 'ill', both inherited: krank comes through Middle High German from Old High German krank (EtymDB), a word usually said to have first meant 'weak'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seekrank",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seekrank*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seekrank, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seekrank*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with seekrank",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *seekrank*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the cabin, then the German for the life jacket, then say seekrank again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the cabin, then the German for the life jacket, then say *seekrank* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does seekrank mean? (\"Seasick\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-R421-review-414-421",
+      "sequence": 22720,
+      "title": "Words from chapters 414–421 — a review",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 414-421",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f62684ace02c6704",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the German for the connection and the local transport."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the connection, the local transport, the long-distance transport, to commute, the commuter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the connection, the local transport, the long-distance transport, to commute, the commuter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the locker, the left-luggage office, the escalator, to ride without a ticket, to queue",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the locker, the left-luggage office, the escalator, to ride without a ticket, to queue]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to check in, the boarding pass, the gate, the hand luggage, to give up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to check in, the boarding pass, the gate, the hand luggage, to give up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the security check, to search, the customs, to declare, the passport",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the security check, to search, the customs, to declare, the passport]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the flight attendant, the window seat, the aisle seat, to take off, the landing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the flight attendant, the window seat, the aisle seat, to take off, the landing]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the stopover, the time difference, to be late, to be stuck, to make an emergency landing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the stopover, the time difference, to be late, to be stuck, to make an emergency landing]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to cancel, the cancellation, to rebook, to refund, the refund",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to cancel, the cancellation, to rebook, to refund, the refund]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the ferry, the crossing, the cabin, the life jacket, seasick",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the ferry, the crossing, the cabin, the life jacket, seasick]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The connection? (der Anschluss.) The local transport? (der Nahverkehr.) The long-distance transport? (der Fernverkehr.) To commute? (pendeln.) The commuter? (der Pendler.) The locker? (das Schließfach.) The left-luggage office? (die Gepäckaufbewahrung.) The escalator? (die Rolltreppe.) To ride without a ticket? (schwarzfahren.) To queue? (anstellen.) To check in? (einchecken.) The boarding pass? (die Bordkarte.) The gate? (der Flugsteig.) The hand luggage? (das Handgepäck.) To give up? (aufgeben.) The security check? (die Sicherheitskontrolle.) To search? (durchsuchen.) The customs? (der Zoll.) To declare? (verzollen.) The passport? (der Reisepass.) The flight attendant? (der Flugbegleiter.) The window seat? (der Fensterplatz.) The aisle seat? (der Gangplatz.) To take off? (abfliegen.) The landing? (die Landung.) The stopover? (die Zwischenlandung.) The time difference? (die Zeitverschiebung.) To be late? (verspäten.) To be stuck? (festsitzen.) To make an emergency landing? (notlanden.) To cancel? (stornieren.) The cancellation? (die Stornierung.) To rebook? (umbuchen.) To refund? (erstatten.) The refund? (die Erstattung.) The ferry? (die Fähre.) The crossing? (die Überfahrt.) The cabin? (die Kabine.) The life jacket? (die Schwimmweste.) Seasick? (seekrank.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

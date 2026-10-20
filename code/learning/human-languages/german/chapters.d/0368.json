@@ -1,0 +1,19 @@
+{
+  "chapter": 368,
+  "title": "Stattdessen",
+  "label": "ch:ge-stattdessen",
+  "canDo": "I can say what happens instead, do without something and replace one thing with another.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GE-C368-ersetzen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 368: I can say what happens instead, do without something and replace one thing with another.",
+    "assesses": [
+      "GE-LEX-C368-STATTDESSEN-03",
+      "GE-LEX-C368-STATTDESSEN-04",
+      "GE-LEX-C368-STATTDESSEN-05"
+    ]
+  }
+}

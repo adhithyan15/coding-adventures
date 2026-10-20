@@ -1,0 +1,11 @@
+{
+  "id": "GE-C324-umruehren",
+  "pathSegment": "GE-PATH-324-RUEHREN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-324-RUEHREN",
+      "order": 1
+    }
+  ]
+}

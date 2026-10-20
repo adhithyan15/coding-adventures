@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 439,
+  "sourceHash": "fnv1a64:52f815f406fd7cae",
+  "lessonIds": [
+    "GE-C439-stadtteil",
+    "GE-C439-viertel",
+    "GE-C439-vorort",
+    "GE-C439-polizeirevier",
+    "GE-C439-kaserne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch439.txt",
+  "json": "german/narration/ch439.json",
+  "textHash": "fnv1a64:d2e70a6004e4ad16",
+  "jsonHash": "fnv1a64:8a5314f00d58a355",
+  "findings": []
+}

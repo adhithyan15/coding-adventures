@@ -1,0 +1,160 @@
+German, chapter 252: The Told Story — ging, kam, las, als.
+4 lessons. All 4 can be done entirely by ear.
+
+
+Lesson 1 of 4.
+ich ging, ich kam — the past a story is told in.
+
+Warm-up.
+[pause 2 seconds]
+Say "I said" in one word. (Ich sagte.) Now "I made". (Ich machte.)
+[pause 1 second]
+That -te is the Präteritum, the past a German book or a fairy tale is told in. But the verbs a story leans on hardest, going, coming, seeing, do not take -te at all.
+
+Grammar Lens: the vowel changes, and nothing is added.
+Six verbs you already own, and their one-word past:
+gehen — ich ging, I went kommen — ich kam, I came sehen — ich sah, I saw fahren — ich fuhr, I travelled, I drove nehmen — ich nahm, I took stehen — ich stand, I stood.
+No -te anywhere. The stem's vowel changes instead, and for ich and for er or sie nothing is added: ich ging, er ging, just as ich sagte, er sagte. The plural adds -en: wir gingen, sie sahen. And du adds -st: du gingst.
+These are the strong verbs. Which vowel each one takes is learned verb by verb, like English went, came and saw.
+A separable verb splits in the Präteritum as it does in the present: ankommen, ich kam in Berlin an.
+
+The word, taken apart: why the vowel changes.
+Changing the vowel to make a past is older than German. The Germanic languages inherited it, and English kept it too: sing, sang; come, came. German calls it Ablaut, "off-sound".
+Kommen goes back to Old High German kweman and sehen to sehan, which EtymDB 2.1 traces to the Proto-Germanic parents of English come and see. EtymDB does not list the past forms, so this is the usual account, given as one: Old High German already said quam, "came", and sah, "saw". Ging is usually traced to a second old verb of going, gangan.
+The -te of sagte is the younger Germanic invention from chapter twenty-five, and new verbs still take it.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: gehen, ich ging; kommen, ich kam]
+[pause 8 seconds for the answer]
+[your turn — say: sehen, ich sah; fahren, ich fuhr]
+[pause 8 seconds for the answer]
+[your turn — say: nehmen, ich nahm; stehen, ich stand]
+[pause 8 seconds for the answer]
+[your turn — say: ich ging, er ging, wir gingen: nothing, nothing, then -en]
+[pause 8 seconds for the answer]
+[your turn — say: Ich kam in Berlin an. The prefix still goes last]
+[pause 8 seconds for the answer]
+[your turn — say: ich sagte, then ich sah: one with -te, one with a new vowel]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+"I travelled"? (Ich fuhr.) "He took"? (Er nahm, the same as ich nahm.) "We came"? (Wir kamen.) What changes in a strong verb's past, if not the ending? (The vowel.) And what is the old name for that change? (Ablaut.)
+
+
+Lesson 2 of 4.
+ich las — the reading, and the having read.
+
+Warm-up.
+[pause 2 seconds]
+Say "I went" and "I saw". (Ich ging. Ich sah.)
+[pause 1 second]
+Lesen is strong too. Its past is ich las.
+
+Grammar Lens: one past, two English meanings.
+English has two pasts for one verb: "I read", finished, and "I was reading", still going on. German has no "-ing" past. Ich las is both:
+Ich las die Nachricht. — I read the message. Ich las, und es regnete. — I was reading, and it was raining.
+The sentence around the verb tells you which. A message gets read and is done. A rainy afternoon of reading is a scene: it was going on while something else happened.
+That is how a German story sets its scene. Es war Samstag. Es regnete. Ich las. Three Präteritum verbs, and none of them is finished yet. The weather verb takes the plain -te, with one extra e to make it sayable: es regnet, es regnete. Warten does the same: ich wartete, I waited, I was waiting.
+
+Why it's said this way: während holds the scene open.
+When German wants to say plainly that one thing was still going on, it reaches for während, "while". It works like weil: the verb goes to the end of its clause.
+Während ich las, klingelte das Telefon. — While I was reading, the phone rang.
+The reading is the scene; the phone is the event that cut into it.
+In conversation the same afternoon comes out in the Perfekt: ich habe gelesen. The book and the story keep ich las. You may also hear ich war am Lesen, "I was at the reading", in everyday speech, especially in the west; it is colloquial, and a written story keeps the plain ich las.
+
+The word, taken apart.
+lesen from Old High German lesan from Proto-Germanic lesaną, "to gather" (EtymDB 2.1), and it still means "to pick" in Weinlese, the grape harvest. Las is its past by the vowel change of the last lesson, already las in Old High German by the usual account.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: ich las, then "I read" and "I was reading": one German form]
+[pause 8 seconds for the answer]
+[your turn — say: a scene in three: Es war Samstag. Es regnete. Ich las.]
+[pause 8 seconds for the answer]
+[your turn — say: Während ich las, klingelte das Telefon.]
+[pause 8 seconds for the answer]
+[your turn — say: ich wartete: the extra e after the t]
+[pause 8 seconds for the answer]
+[your turn — say: the conversation version: Ich habe gelesen.]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How does German say "I was reading" in a story? (Ich las, the same as "I read".) Which word holds a scene open? (Während.) And where does the verb go after it? (To the end.) "It was raining"? (Es regnete.)
+
+
+Lesson 3 of 4.
+als and wenn — once, or every time.
+
+Warm-up.
+[pause 2 seconds]
+Say "while I was reading". (Während ich las.) Then ask "when are you coming?" (Wann kommst du?)
+[pause 1 second]
+Wann asks. Inside a story, German has two other words for "when", and it chooses by counting.
+
+Grammar Lens: one occasion, or every occasion.
+For one occasion in the past, German says als:
+Als ich in Berlin war, sah ich meine Großmutter. — When I was in Berlin (that one time), I saw my grandmother.
+For something that happened every time, it says wenn, "whenever":
+Wenn ich in Berlin war, besuchte ich meine Großmutter. — Whenever I was in Berlin, I visited my grandmother.
+English says "when" for both. Both German words work like weil: the verb goes to the end of its clause, als ich in Berlin war.
+
+Why it's said this way: verb, comma, verb.
+In the first sentence two verbs meet at the comma: … in Berlin war, sah ich. The whole als clause is the first piece of the sentence, and the main verb comes second, so it follows the comma at once, with the subject behind it.
+Turn the sentence round and the meeting disappears: Ich sah meine Großmutter, als ich in Berlin war.
+With the present, wenn means "when" or "whenever": Wenn ich in Berlin bin, besuche ich sie. Als belongs to one occasion that is over.
+
+The word, taken apart.
+wenn and wann were one word in Old High German, wanne or wenne; EtymDB 2.1 traces wann to Proto-Germanic hwannē, the parent of English when. It lists no parent for wenn, so the split of one old word into a question word and a joining word is given as the usual account.
+als from Old High German alsō (EtymDB 2.1), worn down to one syllable. EtymDB gives no meaning for it; by the usual account it was al + sō, "all so, just so".
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: Als ich in Berlin war, sah ich meine Großmutter. One time]
+[pause 8 seconds for the answer]
+[your turn — say: Wenn ich in Berlin war, besuchte ich meine Großmutter. Every time]
+[pause 8 seconds for the answer]
+[your turn — say: the two verbs at the comma: war, sah]
+[pause 8 seconds for the answer]
+[your turn — say: turned round: Ich sah meine Großmutter, als ich in Berlin war.]
+[pause 8 seconds for the answer]
+[your turn — say: Als ich las, klingelte das Telefon. One time]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+One time in the past: which word? (Als.) Every time? (Wenn.) A question about time? (Wann.) Where does the verb go after als? (To the end.) And what comes straight after the comma when the als clause goes first? (The main verb.)
+
+
+Lesson 4 of 4.
+Review — the scene, and what cut into it.
+
+Warm-up.
+[pause 2 seconds]
+Say "I went", "I came" and "I saw". (Ich ging. Ich kam. Ich sah.) Then "I waited". (Ich wartete.)
+
+What you've built.
+Three lessons, and the past of a story is in your hands. Two ways to make it: the -te of sagte and wartete, and the vowel change of ging, kam, sah, fuhr, nahm, stand and las. One form for "I read" and "I was reading", with the sentence around it deciding which. And während to hold a scene open while something happens.
+[pause 2 seconds]
+Then the moment itself: als for one occasion, wenn for every time.
+Während ich las, klingelte das Telefon. Als ich in Berlin ankam, regnete es.
+The second one is worth hearing twice. Ankommen splits in a main clause: ich kam an. After als, the verb goes to the end, and the prefix joins it again: als ich in Berlin ankam. Then verb, comma, verb: ankam, regnete.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: a scene in three: Es war Samstag. Es regnete. Ich las.]
+[pause 8 seconds for the answer]
+[your turn — say: Während ich las, klingelte das Telefon.]
+[pause 8 seconds for the answer]
+[your turn — say: Ich kam in Berlin an, then Als ich in Berlin ankam, regnete es.]
+[pause 8 seconds for the answer]
+[your turn — say: every time: Wenn ich in Berlin war, besuchte ich meine Großmutter.]
+[pause 8 seconds for the answer]
+[your turn — say: one of your own: a scene with während, and one thing that happened, with als]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+"I took"? (Ich nahm.) "I was reading"? (Ich las.) One occasion in the past: als or wenn? (Als.) What happens to the an of ankommen after als? (It joins the verb again, at the end: ankam.)

@@ -1,0 +1,19 @@
+{
+  "chapter": 479,
+  "title": "Schnupfen und Gänsehaut",
+  "label": "ch:ge-schnupfen-und-gansehaut",
+  "canDo": "I can talk about colds, sweat and shivers.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C479-gaensehaut",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 479: I can talk about colds, sweat and shivers.",
+    "assesses": [
+      "GE-LEX-C479-SCHNUPFEN-03",
+      "GE-LEX-C479-SCHNUPFEN-04",
+      "GE-LEX-C479-SCHNUPFEN-05"
+    ]
+  }
+}

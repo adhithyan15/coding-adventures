@@ -102,16 +102,22 @@ use interpreter_ir::{IIRModule, Operand};
 // - `call_closure`  — lowered to get_list + call_ext erlang:'++'/2 +
 //                     call_ext erlang:apply/3.
 
-/// McCarthy W10: the `call_builtin` names the BEAM backend lowers (the predicate
-/// set → `is_nonempty_list`/`is_eq_exact` 0/1 synthesis). `call_builtin` with any
-/// OTHER name is rejected by the validator (Check 6b) so that validation stays in
-/// sync with the lowering arm — `IIRBeamCodeGenerator::generate` assumes a
-/// validated module never reaches an unsupported op.
-const BEAM_PREDICATE_BUILTINS: &[&str] = &["pair?", "equal?", "not"];
+/// Every `call_builtin` name the BEAM backend lowers: the McCarthy W10 predicates
+/// (`pair?`/`equal?`/`not` → `is_nonempty_list`/`is_eq_exact` 0/1 synthesis),
+/// integer output (`print_i64`), byte I/O (`putchar`/`getchar`) and the BEAM07
+/// host-input builtins. Check 6b rejects any other name — so that validation
+/// stays in sync with the lowering arm, since `IIRBeamCodeGenerator::generate`
+/// assumes a validated module never reaches an unsupported op — and the LANG83
+/// `op_support` table is checked against this list, so the validator, the
+/// lowering and the declaration cannot drift apart.
+pub(crate) const CALL_BUILTIN_SUPPORTED_NAMES: &[&str] = &[
+    "pair?", "equal?", "not", "print_i64", "putchar", "getchar", "input_more", "input_i64",
+    "input_str",
+];
 
 const UNSUPPORTED_OPS: &[&str] = &[
     // "call_builtin"  — McCarthy W10: conditionally supported (see Check 6b /
-    //   BEAM_PREDICATE_BUILTINS). Handled below, not via this blanket list.
+    //   CALL_BUILTIN_SUPPORTED_NAMES). Handled below, not via this blanket list.
     "io_in",
     // "io_out"       — LANG32: now supported (erlang:display/1).
     // "global_store" — LANG32: now supported (erlang:put/2).
@@ -660,9 +666,7 @@ pub fn validate_for_beam(module: &IIRModule) -> Vec<String> {
             if instr.op == "call_builtin" {
                 let supported = matches!(
                     instr.srcs.first(),
-                    Some(Operand::Var(n)) if BEAM_PREDICATE_BUILTINS.contains(&n.as_str())
-                        || matches!(n.as_str(), "print_i64" | "putchar" | "getchar"
-                            | "input_more" | "input_i64" | "input_str")
+                    Some(Operand::Var(n)) if CALL_BUILTIN_SUPPORTED_NAMES.contains(&n.as_str())
                 );
                 if !supported {
                     errors.push(format!(

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C426-aufenthalt",
+  "pathSegment": "GE-PATH-426-REZEPTION",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-426-REZEPTION",
+      "order": 3
+    }
+  ]
+}

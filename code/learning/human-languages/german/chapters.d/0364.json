@@ -1,0 +1,19 @@
+{
+  "chapter": 364,
+  "title": "Unter einer Bedingung",
+  "label": "ch:ge-unter-einer-bedingung",
+  "canDo": "I can set a condition, name what has to be true first, and say provided that with sofern and as far as with soweit.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GE-C364-soweit",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 364: I can set a condition, name what has to be true first, and say provided that with sofern and as far as with soweit.",
+    "assesses": [
+      "GE-LEX-C364-BEDINGUNG-03",
+      "GE-LEX-C364-BEDINGUNG-04",
+      "GE-LEX-C364-BEDINGUNG-05"
+    ]
+  }
+}

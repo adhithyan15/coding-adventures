@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 295,
+  "sourceHash": "fnv1a64:200d42589fd4260c",
+  "lessonIds": [
+    "GE-C295-panne",
+    "GE-C295-pannendienst",
+    "GE-C295-abschleppen",
+    "GE-C295-beschaedigen",
+    "GE-C295-zerstoeren"
+  ],
+  "tex": "german/book/chapters/ch295-eine-panne.tex"
+}

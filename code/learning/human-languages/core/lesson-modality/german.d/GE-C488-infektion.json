@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C488-infektion",
+    "language": "german",
+    "chapter": 488,
+    "sequence": 26130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:438aef8ac12f430d"
+  },
+  "findings": []
+}

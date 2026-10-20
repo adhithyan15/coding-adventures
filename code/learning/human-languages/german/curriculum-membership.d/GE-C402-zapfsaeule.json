@@ -1,0 +1,11 @@
+{
+  "id": "GE-C402-zapfsaeule",
+  "pathSegment": "GE-PATH-402-TANKEN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-402-TANKEN",
+      "order": 3
+    }
+  ]
+}

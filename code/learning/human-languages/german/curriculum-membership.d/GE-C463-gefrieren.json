@@ -1,0 +1,11 @@
+{
+  "id": "GE-C463-gefrieren",
+  "pathSegment": "GE-PATH-463-RAUREIF",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-463-RAUREIF",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C404-wagenheber",
+  "pathSegment": "GE-PATH-404-REIFEN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-404-REIFEN",
+      "order": 3
+    }
+  ]
+}

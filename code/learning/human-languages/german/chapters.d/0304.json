@@ -1,0 +1,19 @@
+{
+  "chapter": 304,
+  "title": "Die Trauer",
+  "label": "ch:ge-die-trauer",
+  "canDo": "I can talk about mourning: grief, to mourn, condolences, a widow and to inherit.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C304-erben",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 304: I can talk about mourning: grief, to mourn, condolences, a widow and to inherit.",
+    "assesses": [
+      "GE-LEX-C304-TRAUER-03",
+      "GE-LEX-C304-TRAUER-04",
+      "GE-LEX-C304-TRAUER-05"
+    ]
+  }
+}

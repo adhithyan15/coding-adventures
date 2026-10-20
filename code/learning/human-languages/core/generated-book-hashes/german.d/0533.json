@@ -1,0 +1,15 @@
+{
+  "language": "german",
+  "chapter": 533,
+  "sourceHash": "fnv1a64:7f77a3c28173030b",
+  "lessonIds": [
+    "GE-C533-kamin",
+    "GE-C533-kommode",
+    "GE-C533-schublade",
+    "GE-C533-bettdecke",
+    "GE-C533-gemuetlichkeit",
+    "GE-R533-review-530-533",
+    "GE-R533-review-final-533"
+  ],
+  "tex": "german/book/chapters/ch533-ein-gemutliches-zuhause.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C429-klemmen",
+  "pathSegment": "GE-PATH-429-SCHIMMEL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-429-SCHIMMEL",
+      "order": 2
+    }
+  ]
+}

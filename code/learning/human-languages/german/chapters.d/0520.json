@@ -1,0 +1,19 @@
+{
+  "chapter": 520,
+  "title": "Krimis und Biografien",
+  "label": "ch:ge-krimis-und-biografien",
+  "canDo": "I can talk about kinds of books.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C520-boesewicht",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 520: I can talk about kinds of books.",
+    "assesses": [
+      "GE-LEX-C520-BUECHER-03",
+      "GE-LEX-C520-BUECHER-04",
+      "GE-LEX-C520-BUECHER-05"
+    ]
+  }
+}

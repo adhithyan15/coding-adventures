@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-294-ERDBEBEN",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can report a natural disaster: a disaster, an earthquake, a flood, high water and to collapse.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 495,
+  "title": "Kinder erziehen",
+  "label": "ch:ge-kinder-erziehen",
+  "canDo": "I can talk about bringing up children.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C495-pubertaet",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 495: I can talk about bringing up children.",
+    "assesses": [
+      "GE-LEX-C495-ERZIEHUNG-03",
+      "GE-LEX-C495-ERZIEHUNG-04",
+      "GE-LEX-C495-ERZIEHUNG-05"
+    ]
+  }
+}

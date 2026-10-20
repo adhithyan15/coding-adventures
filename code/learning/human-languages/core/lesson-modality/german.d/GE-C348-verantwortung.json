@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C348-verantwortung",
+    "language": "german",
+    "chapter": 348,
+    "sequence": 18920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cbf5e36230b4b194"
+  },
+  "findings": []
+}

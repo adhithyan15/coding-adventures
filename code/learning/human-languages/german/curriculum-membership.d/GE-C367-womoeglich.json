@@ -1,0 +1,11 @@
+{
+  "id": "GE-C367-womoeglich",
+  "pathSegment": "GE-PATH-367-EVENTUELL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-367-EVENTUELL",
+      "order": 4
+    }
+  ]
+}

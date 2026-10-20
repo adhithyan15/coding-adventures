@@ -1,0 +1,19 @@
+{
+  "chapter": 320,
+  "title": "Im Mittelalter",
+  "label": "ch:ge-im-mittelalter",
+  "canDo": "I can place stories in history: the Middle Ages, antiquity, a chronicle, an ancestor and the downfall.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C320-untergang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 320: I can place stories in history: the Middle Ages, antiquity, a chronicle, an ancestor and the downfall.",
+    "assesses": [
+      "GE-LEX-C320-MITTELALTER-03",
+      "GE-LEX-C320-MITTELALTER-04",
+      "GE-LEX-C320-MITTELALTER-05"
+    ]
+  }
+}

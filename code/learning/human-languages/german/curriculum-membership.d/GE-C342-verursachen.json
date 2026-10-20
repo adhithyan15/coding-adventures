@@ -1,0 +1,11 @@
+{
+  "id": "GE-C342-verursachen",
+  "pathSegment": "GE-PATH-342-WIRKUNG",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-342-WIRKUNG",
+      "order": 2
+    }
+  ]
+}

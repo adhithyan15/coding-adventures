@@ -1,0 +1,11 @@
+{
+  "id": "GE-C263-bevor",
+  "pathSegment": "GE-PATH-263-NACHDEM",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-263-NACHDEM",
+      "order": 1
+    }
+  ]
+}

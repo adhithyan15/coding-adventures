@@ -1,0 +1,11 @@
+{
+  "id": "GE-C453-schlucht",
+  "pathSegment": "GE-PATH-453-GIPFEL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-453-GIPFEL",
+      "order": 4
+    }
+  ]
+}

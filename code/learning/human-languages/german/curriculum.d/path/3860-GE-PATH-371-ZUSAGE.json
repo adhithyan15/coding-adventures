@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-371-ZUSAGE",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "GE-EXT-371-ZUSAGE"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C271-melden",
+  "pathSegment": "GE-PATH-271-MELDUNG",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-271-MELDUNG",
+      "order": 0
+    }
+  ]
+}

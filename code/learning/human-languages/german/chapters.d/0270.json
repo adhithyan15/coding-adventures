@@ -1,0 +1,19 @@
+{
+  "chapter": 270,
+  "title": "Abwarten",
+  "label": "ch:ge-abwarten",
+  "canDo": "I can describe waiting and delays: to hesitate, to wait and see, to delay, how things went and the sequence of events.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C270-ablauf",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 270: I can describe waiting and delays: to hesitate, to wait and see, to delay, how things went and the sequence of events.",
+    "assesses": [
+      "GE-LEX-C270-ABWARTEN-03",
+      "GE-LEX-C270-ABWARTEN-04",
+      "GE-LEX-C270-ABWARTEN-05"
+    ]
+  }
+}

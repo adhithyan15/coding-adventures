@@ -1,0 +1,11 @@
+{
+  "id": "GE-C325-ausrollen",
+  "pathSegment": "GE-PATH-325-TEIG",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-325-TEIG",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 371,
+  "title": "Zusagen und absagen",
+  "label": "ch:ge-zusagen-und-absagen",
+  "canDo": "I can accept or turn down an invitation or an offer, call something off, and talk about a confirmation.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GE-C371-bestaetigung",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 371: I can accept or turn down an invitation or an offer, call something off, and talk about a confirmation.",
+    "assesses": [
+      "GE-LEX-C371-ZUSAGE-03",
+      "GE-LEX-C371-ZUSAGE-04",
+      "GE-LEX-C371-ZUSAGE-05"
+    ]
+  }
+}

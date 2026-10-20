@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-506-FUSSBALL",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GE-EXT-506-FUSSBALL"
+  ],
+  "after": []
+}

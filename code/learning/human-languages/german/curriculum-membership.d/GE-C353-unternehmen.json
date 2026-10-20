@@ -1,0 +1,11 @@
+{
+  "id": "GE-C353-unternehmen",
+  "pathSegment": "GE-PATH-353-BETRIEB",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-353-BETRIEB",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:d3792caddc9b3631",
+  "lessonIds": [
+    "GE-C500-sammlung",
+    "GE-C500-muenze",
+    "GE-C500-basteln",
+    "GE-C500-raetsel",
+    "GE-C500-kreuzwortraetsel"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch500.txt",
+  "json": "german/narration/ch500.json",
+  "textHash": "fnv1a64:a8e455a48c0c3ba4",
+  "jsonHash": "fnv1a64:ee2248e03adf7687",
+  "findings": []
+}

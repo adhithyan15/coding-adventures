@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C416-handgepaeck",
+    "language": "german",
+    "chapter": 416,
+    "sequence": 22450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e5d6a82c6196c602"
+  },
+  "findings": []
+}

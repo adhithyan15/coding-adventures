@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C341-obwohl",
+    "language": "german",
+    "chapter": 341,
+    "sequence": 18560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3bdafb3c331f59b3"
+  },
+  "findings": []
+}

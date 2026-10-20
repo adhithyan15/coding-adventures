@@ -1,0 +1,11 @@
+{
+  "id": "GE-C518-staffelei",
+  "pathSegment": "GE-PATH-518-MALEN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-518-MALEN",
+      "order": 3
+    }
+  ]
+}

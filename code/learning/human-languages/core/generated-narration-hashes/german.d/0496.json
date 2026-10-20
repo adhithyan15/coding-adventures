@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 496,
+  "sourceHash": "fnv1a64:21f9bbac274a3c82",
+  "lessonIds": [
+    "GE-C496-stillen",
+    "GE-C496-windel",
+    "GE-C496-wickeln",
+    "GE-C496-kinderwagen",
+    "GE-C496-schnuller"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch496.txt",
+  "json": "german/narration/ch496.json",
+  "textHash": "fnv1a64:8d4cad179c05a331",
+  "jsonHash": "fnv1a64:a9cbf93c1b16b909",
+  "findings": []
+}

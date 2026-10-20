@@ -1,0 +1,19 @@
+{
+  "chapter": 276,
+  "title": "Zahlen in den Nachrichten",
+  "label": "ch:ge-zahlen-in-den-nachrichten",
+  "canDo": "I can report numbers in the news: a survey, statistics, a share, to increase and to fall.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C276-sinken",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 276: I can report numbers in the news: a survey, statistics, a share, to increase and to fall.",
+    "assesses": [
+      "GE-LEX-C276-UMFRAGE-03",
+      "GE-LEX-C276-UMFRAGE-04",
+      "GE-LEX-C276-UMFRAGE-05"
+    ]
+  }
+}

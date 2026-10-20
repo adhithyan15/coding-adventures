@@ -73,6 +73,8 @@ pub mod cir;
 pub mod core;
 pub mod errors;
 pub mod generic_jit;
+/// LANG83: which standard operations `GenericCirJit` compiles (see the module docs).
+pub mod op_support;
 pub mod optimizer;
 pub mod specialise;
 

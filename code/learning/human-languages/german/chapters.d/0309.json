@@ -1,0 +1,19 @@
+{
+  "chapter": 309,
+  "title": "Alles ist geschmückt",
+  "label": "ch:ge-alles-ist-geschmuckt",
+  "canDo": "I can describe decorations: to decorate, a garland, to hang up, a balloon and fireworks.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-R309-review-302-309",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 309: I can describe decorations: to decorate, a garland, to hang up, a balloon and fireworks.",
+    "assesses": [
+      "GE-LEX-C309-SCHMUECKEN-03",
+      "GE-LEX-C309-SCHMUECKEN-04",
+      "GE-LEX-C309-SCHMUECKEN-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C435-umweg",
+  "pathSegment": "GE-PATH-435-UMWEG",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-435-UMWEG",
+      "order": 2
+    }
+  ]
+}

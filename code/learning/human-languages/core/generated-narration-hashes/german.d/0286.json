@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 286,
+  "sourceHash": "fnv1a64:deab98d91afcbeee",
+  "lessonIds": [
+    "GE-C286-urteil",
+    "GE-C286-richter",
+    "GE-C286-verurteilen",
+    "GE-C286-schuldig",
+    "GE-C286-unschuldig"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch286.txt",
+  "json": "german/narration/ch286.json",
+  "textHash": "fnv1a64:d070601374949621",
+  "jsonHash": "fnv1a64:a5ab32eb09c0f31a",
+  "findings": []
+}

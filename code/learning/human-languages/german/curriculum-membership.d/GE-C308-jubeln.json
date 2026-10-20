@@ -1,0 +1,11 @@
+{
+  "id": "GE-C308-jubeln",
+  "pathSegment": "GE-PATH-308-ANSTOSSEN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-308-ANSTOSSEN",
+      "order": 2
+    }
+  ]
+}

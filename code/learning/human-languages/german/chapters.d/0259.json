@@ -1,0 +1,20 @@
+{
+  "chapter": 259,
+  "title": "Older Than, Since When — älter als, seit, vor",
+  "label": "ch:ge-older-than-since-when",
+  "canDo": "I can compare two things with -er als and so … wie, and say how long with seit and how long ago with vor.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C259-review",
+    "kind": "production",
+    "summary": "Complete GE-C259-review: compare two places or people, and say since when and how long ago, each with the right case.",
+    "assesses": [
+      "GE-GRAMMAR-KOMPARATIV-ALS-01",
+      "GE-GRAMMAR-SO-WIE-02",
+      "GE-GRAMMAR-SEIT-PRAESENS-01",
+      "GE-GRAMMAR-VOR-AGO-02"
+    ]
+  }
+}

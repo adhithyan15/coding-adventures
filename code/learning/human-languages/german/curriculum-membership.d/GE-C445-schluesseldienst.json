@@ -1,0 +1,11 @@
+{
+  "id": "GE-C445-schluesseldienst",
+  "pathSegment": "GE-PATH-445-SCHUSTER",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-445-SCHUSTER",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-322-ZUTAT",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can get ready to cook: an ingredient, a pinch, a tablespoon, to measure out and a bowl.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 284,
+  "sourceHash": "fnv1a64:d697a6ece682733c",
+  "lessonIds": [
+    "GE-C284-verdacht",
+    "GE-C284-verdaechtig",
+    "GE-C284-ermitteln",
+    "GE-C284-ermittlung",
+    "GE-C284-festnehmen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch284.txt",
+  "json": "german/narration/ch284.json",
+  "textHash": "fnv1a64:40fc4d0821ae3742",
+  "jsonHash": "fnv1a64:7df2477c55db3c32",
+  "findings": []
+}

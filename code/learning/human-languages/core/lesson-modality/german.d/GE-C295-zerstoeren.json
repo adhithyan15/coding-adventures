@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C295-zerstoeren",
+    "language": "german",
+    "chapter": 295,
+    "sequence": 16230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9cb46c6e1be186f"
+  },
+  "findings": []
+}

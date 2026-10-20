@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C453-gipfel",
+    "language": "german",
+    "chapter": 453,
+    "sequence": 24330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e6e07057aef784b0"
+  },
+  "findings": []
+}

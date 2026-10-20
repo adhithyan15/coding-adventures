@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C512-piste",
+    "language": "german",
+    "chapter": 512,
+    "sequence": 27380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eb6ac867c7e300f0"
+  },
+  "findings": []
+}

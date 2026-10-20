@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 447,
+  "sourceHash": "fnv1a64:e2075cabf4958dd1",
+  "lessonIds": [
+    "GE-C447-friseur",
+    "GE-C447-foehnen",
+    "GE-C447-optiker",
+    "GE-C447-uhrmacher",
+    "GE-C447-juwelier"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch447.txt",
+  "json": "german/narration/ch447.json",
+  "textHash": "fnv1a64:cd37c4cc9456356a",
+  "jsonHash": "fnv1a64:694ea828ce211951",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C487-verschreiben",
+  "pathSegment": "GE-PATH-487-HAUSARZT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-487-HAUSARZT",
+      "order": 4
+    }
+  ]
+}

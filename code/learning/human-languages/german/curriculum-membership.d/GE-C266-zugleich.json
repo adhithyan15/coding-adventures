@@ -1,0 +1,11 @@
+{
+  "id": "GE-C266-zugleich",
+  "pathSegment": "GE-PATH-266-PLOETZLICH",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-266-PLOETZLICH",
+      "order": 4
+    }
+  ]
+}

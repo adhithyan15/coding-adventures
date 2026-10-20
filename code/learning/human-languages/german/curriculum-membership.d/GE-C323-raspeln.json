@@ -1,0 +1,11 @@
+{
+  "id": "GE-C323-raspeln",
+  "pathSegment": "GE-PATH-323-SCHAELEN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-323-SCHAELEN",
+      "order": 3
+    }
+  ]
+}

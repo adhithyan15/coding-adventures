@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C263-seitdem",
+    "language": "german",
+    "chapter": 263,
+    "sequence": 14590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:44f40765e54f31e4"
+  },
+  "findings": []
+}

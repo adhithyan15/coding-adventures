@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 373,
+  "sourceHash": "fnv1a64:6dc53d35e1c5c028",
+  "lessonIds": [
+    "GE-C373-unvorhergesehen",
+    "GE-C373-spontan",
+    "GE-C373-beruecksichtigen",
+    "GE-C373-prognose",
+    "GE-C373-einplanen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch373.txt",
+  "json": "german/narration/ch373.json",
+  "textHash": "fnv1a64:6eaa80c41a4b92ac",
+  "jsonHash": "fnv1a64:9d4cb5aa5a7565eb",
+  "findings": []
+}

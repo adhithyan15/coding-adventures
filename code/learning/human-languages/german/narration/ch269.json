@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "german",
+  "chapter": 269,
+  "title": "Jahrzehnte",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:c9f5da33e703f4cc",
+  "lessons": [
+    {
+      "id": "GE-C269-jahrzehnt",
+      "sequence": 14850,
+      "title": "das Jahrzehnt — the decade",
+      "headword": "das Jahrzehnt",
+      "romanization": "das Jahrzehnt",
+      "gloss": "the decade",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:af63bfcb04d11f2a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the length, then the German for the deadline."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: das Jahrzehnt",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "das Jahrzehnt — \"the decade\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Das Dorf hat sich in einem Jahrzehnt sehr verändert. The village changed a lot in a decade."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Jahrzehnte. Ten years, as a Jahrhundert is a hundred."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Jahrzehnt joins Jahr \"year\" and -zehnt, built on zehn \"ten\"; EtymDB lists Dutch jaartien \"decade\" as its cousin. Both parts are inherited Germanic words."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "das Jahrzehnt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *das Jahrzehnt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "das Jahrzehnt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *das Jahrzehnt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with das Jahrzehnt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *das Jahrzehnt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the length, then the German for the deadline, then say das Jahrzehnt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the length, then the German for the deadline, then say *das Jahrzehnt* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does das Jahrzehnt mean? (\"The decade\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C269-jahrtausend",
+      "sequence": 14860,
+      "title": "das Jahrtausend — the millennium",
+      "headword": "das Jahrtausend",
+      "romanization": "das Jahrtausend",
+      "gloss": "the millennium",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ff8d27fae8f7a906",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the deadline, then the German for the decade."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: das Jahrtausend",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "das Jahrtausend — \"the millennium\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Die Kirche ist fast ein Jahrtausend alt. The church is almost a thousand years old."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Jahrtausende."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Jahrtausend joins Jahr \"year\" and tausend \"thousand\", from Old High German dūsunt, Proto-Germanic þūsundī (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "das Jahrtausend",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *das Jahrtausend*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "das Jahrtausend, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *das Jahrtausend*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with das Jahrtausend",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *das Jahrtausend*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the deadline, then the German for the decade, then say das Jahrtausend again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the deadline, then the German for the decade, then say *das Jahrtausend* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does das Jahrtausend mean? (\"The millennium\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C269-epoche",
+      "sequence": 14870,
+      "title": "die Epoche — the era, the epoch",
+      "headword": "die Epoche",
+      "romanization": "die Epoche",
+      "gloss": "the era, the epoch",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4b019e4369bfda10",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the decade, then the German for the millennium."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Epoche",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Epoche — \"the era, the epoch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Das war eine schwierige Epoche für das Land. That was a difficult era for the country."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Epochen. Three syllables: E-po-che."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Epoche was borrowed, through Late Latin epocha, from Greek epokhē \"a holding back, a fixed point in time\"; EtymDB lists no parent, so this follows the usual account."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Epoche",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Epoche*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Epoche, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Epoche*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with die Epoche",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *die Epoche*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the decade, then the German for the millennium, then say die Epoche again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the decade, then the German for the millennium, then say *die Epoche* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does die Epoche mean? (\"The era, the epoch\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C269-jahrelang",
+      "sequence": 14880,
+      "title": "jahrelang — for years",
+      "headword": "jahrelang",
+      "romanization": "jahrelang",
+      "gloss": "for years",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:13a2ff55d293f0af",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the millennium, then the German for the era."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: jahrelang",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jahrelang — \"for years\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Er arbeitete jahrelang in einer Fabrik. He worked in a factory for years."
+            },
+            {
+              "kind": "speech",
+              "text": "Built the same way: tagelang, wochenlang, monatelang — for days, weeks, months."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jahrelang joins Jahre \"years\" and lang \"long\", both inherited Germanic words (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jahrelang",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jahrelang*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jahrelang, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jahrelang*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with jahrelang",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *jahrelang*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the millennium, then the German for the era, then say jahrelang again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the millennium, then the German for the era, then say *jahrelang* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does jahrelang mean? (\"For years\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C269-stundenlang",
+      "sequence": 14890,
+      "title": "stundenlang — for hours",
+      "headword": "stundenlang",
+      "romanization": "stundenlang",
+      "gloss": "for hours",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7b4f9fac7a36b536",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the era, then the German for for years."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: stundenlang",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "stundenlang — \"for hours\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Wir haben stundenlang auf den Bus gewartet. We waited for the bus for hours."
+            },
+            {
+              "kind": "speech",
+              "text": "An adverb: it answers wie lange?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "stundenlang joins Stunden \"hours\" and lang \"long\". Stunde is inherited and has the old English cousin stound \"a while\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stundenlang",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *stundenlang*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stundenlang, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *stundenlang*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with stundenlang",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *stundenlang*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the era, then the German for for years, then say stundenlang again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the era, then the German for for years, then say *stundenlang* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does stundenlang mean? (\"For hours\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-R269-review-262-269",
+      "sequence": 14900,
+      "title": "Ein erster Rückblick",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 262-269",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:96906c32bc7d4fed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the German for at first and afterwards."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "at first, afterwards, as a result, last of all, the order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: at first, afterwards, as a result, last of all, the order]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "after, before, as soon as, as long as, since then",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: after, before, as soon as, as long as, since then]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "back then, once, the other day, recently, the day before yesterday",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: back then, once, the other day, recently, the day before yesterday]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meanwhile, by now, in the meantime, so far, long ago",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: meanwhile, by now, in the meantime, so far, long ago]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suddenly, unexpectedly, gradually, in time, at once",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: suddenly, unexpectedly, gradually, in time, at once]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to last, to pass, to go on, to continue, to interrupt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to last, to pass, to go on, to continue, to interrupt]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the moment, the point in time, the period, the length, the deadline",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the moment, the point in time, the period, the length, the deadline]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the decade, the millennium, the era, for years, for hours",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the decade, the millennium, the era, for years, for hours]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "At first? (zunächst.) Afterwards? (anschließend.) As a result? (daraufhin.) Last of all? (zuletzt.) The order? (die Reihenfolge.) After? (nachdem.) Before? (bevor.) As soon as? (sobald.) As long as? (solange.) Since then? (seitdem.) Back then? (damals.) Once? (einst.) The other day? (neulich.) Recently? (kürzlich.) The day before yesterday? (vorgestern.) Meanwhile? (inzwischen.) By now? (mittlerweile.) In the meantime? (währenddessen.) So far? (bisher.) Long ago? (längst.) Suddenly? (plötzlich.) Unexpectedly? (unerwartet.) Gradually? (allmählich.) In time? (rechtzeitig.) At once? (zugleich.) To last? (dauern.) To pass? (vergehen.) To go on? (andauern.) To continue? (fortsetzen.) To interrupt? (unterbrechen.) The moment? (der Augenblick.) The point in time? (der Zeitpunkt.) The period? (der Zeitraum.) The length? (die Dauer.) The deadline? (die Frist.) The decade? (das Jahrzehnt.) The millennium? (das Jahrtausend.) The era? (die Epoche.) For years? (jahrelang.) For hours? (stundenlang.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

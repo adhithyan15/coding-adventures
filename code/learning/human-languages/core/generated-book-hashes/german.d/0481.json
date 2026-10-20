@@ -1,0 +1,14 @@
+{
+  "language": "german",
+  "chapter": 481,
+  "sourceHash": "fnv1a64:4f91b71c58622cc0",
+  "lessonIds": [
+    "GE-C481-allergie",
+    "GE-C481-allergisch",
+    "GE-C481-ausschlag",
+    "GE-C481-kratzen",
+    "GE-C481-eincremen",
+    "GE-R481-review-474-481"
+  ],
+  "tex": "german/book/chapters/ch481-allergien-und-ausschlag.tex"
+}

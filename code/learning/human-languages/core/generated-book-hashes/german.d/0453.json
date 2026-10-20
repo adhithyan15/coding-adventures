@@ -1,0 +1,14 @@
+{
+  "language": "german",
+  "chapter": 453,
+  "sourceHash": "fnv1a64:765c9f1d161ca73b",
+  "lessonIds": [
+    "GE-C453-klippe",
+    "GE-C453-hochebene",
+    "GE-C453-gipfel",
+    "GE-C453-abhang",
+    "GE-C453-schlucht",
+    "GE-R453-review-446-453"
+  ],
+  "tex": "german/book/chapters/ch453-berge-und-taler.tex"
+}

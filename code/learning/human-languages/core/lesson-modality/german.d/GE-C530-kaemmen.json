@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C530-kaemmen",
+    "language": "german",
+    "chapter": 530,
+    "sequence": 28280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d9b8422f9a77b977"
+  },
+  "findings": []
+}

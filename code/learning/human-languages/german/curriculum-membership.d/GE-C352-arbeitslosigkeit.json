@@ -1,0 +1,11 @@
+{
+  "id": "GE-C352-arbeitslosigkeit",
+  "pathSegment": "GE-PATH-352-ARBEITSLOS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-352-ARBEITSLOS",
+      "order": 2
+    }
+  ]
+}

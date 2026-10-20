@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C530-schminken",
+    "language": "german",
+    "chapter": 530,
+    "sequence": 28300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:31afecf59ef4ced2"
+  },
+  "findings": []
+}

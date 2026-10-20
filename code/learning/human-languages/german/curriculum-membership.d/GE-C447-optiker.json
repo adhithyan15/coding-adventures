@@ -1,0 +1,11 @@
+{
+  "id": "GE-C447-optiker",
+  "pathSegment": "GE-PATH-447-FRISEUR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-447-FRISEUR",
+      "order": 2
+    }
+  ]
+}

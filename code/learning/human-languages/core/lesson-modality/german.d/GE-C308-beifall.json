@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C308-beifall",
+    "language": "german",
+    "chapter": 308,
+    "sequence": 16880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e50bff819c8cb413"
+  },
+  "findings": []
+}

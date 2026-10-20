@@ -1,0 +1,11 @@
+{
+  "id": "GE-C257-hin-und-zurueck",
+  "pathSegment": "GE-PATH-257-FAHRKARTE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-257-FAHRKARTE",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 364,
+  "sourceHash": "fnv1a64:ca5aef6c2498c344",
+  "lessonIds": [
+    "GE-C364-bedingung",
+    "GE-C364-voraussetzung",
+    "GE-C364-voraussetzen",
+    "GE-C364-sofern",
+    "GE-C364-soweit"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch364.txt",
+  "json": "german/narration/ch364.json",
+  "textHash": "fnv1a64:34b9ea07b827b5dc",
+  "jsonHash": "fnv1a64:0da16a7c3a76d012",
+  "findings": []
+}

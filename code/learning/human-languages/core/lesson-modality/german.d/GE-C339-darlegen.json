@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C339-darlegen",
+    "language": "german",
+    "chapter": 339,
+    "sequence": 18500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2243e97bad09b139"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C533-schublade",
+    "language": "german",
+    "chapter": 533,
+    "sequence": 28450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:500b6736bf3a9676"
+  },
+  "findings": []
+}

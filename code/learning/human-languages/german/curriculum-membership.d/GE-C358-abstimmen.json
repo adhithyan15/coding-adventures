@@ -1,0 +1,11 @@
+{
+  "id": "GE-C358-abstimmen",
+  "pathSegment": "GE-PATH-358-GESELLSCHAFT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-358-GESELLSCHAFT",
+      "order": 2
+    }
+  ]
+}

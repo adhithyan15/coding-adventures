@@ -166,3 +166,13 @@ LANG02  vm-core         — register interpreter
 LANG03  jit-core        — THIS PACKAGE: JIT specialisation + compilation
 LANG04  (future)        — codegen-core bridge
 ```
+
+## LANG83 operation support
+
+`jit_core::op_support::op_support(name)` (and `OP_SUPPORT`) is this backend's answer,
+`Lowered` or `Refused(reason)`, for every operation in the
+[LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) standard registry
+(`interpreter_ir::op_registry::STANDARD_OPS`). "Lowered" means `GenericCirJit` compiles the op to JIT bytecode. An op that only runs because `JITCore` falls back to the vm-core interpreter is declared `Refused`, so interpreter fallback cannot pass as JIT support. A test checks every row against the real compiler. `lang-aot` refuses a
+module that uses a refused op at compile time, with a typed error. The four
+LANG83 PR1b ops (`write_i64`, `i64_div_floor`, `i64_mod_floor`, `trap`) are
+refused until PR1b lowers them.

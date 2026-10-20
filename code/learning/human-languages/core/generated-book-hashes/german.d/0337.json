@@ -1,0 +1,14 @@
+{
+  "language": "german",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:752275593934f9b1",
+  "lessonIds": [
+    "GE-C337-irren",
+    "GE-C337-irrtum",
+    "GE-C337-zweifel",
+    "GE-C337-zweifeln",
+    "GE-C337-bezweifeln",
+    "GE-R337-review-330-337"
+  ],
+  "tex": "german/book/chapters/ch337-sich-irren.tex"
+}

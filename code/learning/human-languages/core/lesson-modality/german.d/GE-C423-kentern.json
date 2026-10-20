@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C423-kentern",
+    "language": "german",
+    "chapter": 423,
+    "sequence": 22820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a6df9bfdf867d50"
+  },
+  "findings": []
+}

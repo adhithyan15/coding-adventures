@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 518,
+  "sourceHash": "fnv1a64:d90152bccad1080c",
+  "lessonIds": [
+    "GE-C518-gemaelde",
+    "GE-C518-pinsel",
+    "GE-C518-leinwand",
+    "GE-C518-staffelei",
+    "GE-C518-aquarell"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch518.txt",
+  "json": "german/narration/ch518.json",
+  "textHash": "fnv1a64:30d8c47de17fc314",
+  "jsonHash": "fnv1a64:dcb72937aafde065",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C457-flut",
+  "pathSegment": "GE-PATH-457-KUESTE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-457-KUESTE",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 531,
+  "sourceHash": "fnv1a64:7f1793161083ff7b",
+  "lessonIds": [
+    "GE-C531-aufwaermen",
+    "GE-C531-mikrowelle",
+    "GE-C531-wasserkocher",
+    "GE-C531-abwaschen",
+    "GE-C531-abtrocknen"
+  ],
+  "tex": "german/book/chapters/ch531-aufwarmen-und-abwaschen.tex"
+}

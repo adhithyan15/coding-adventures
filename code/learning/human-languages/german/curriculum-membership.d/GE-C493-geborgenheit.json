@@ -1,0 +1,11 @@
+{
+  "id": "GE-C493-geborgenheit",
+  "pathSegment": "GE-PATH-493-ZUNEIGUNG",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-493-ZUNEIGUNG",
+      "order": 3
+    }
+  ]
+}

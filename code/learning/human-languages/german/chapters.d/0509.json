@@ -1,0 +1,19 @@
+{
+  "chapter": 509,
+  "title": "Pokal und Medaille",
+  "label": "ch:ge-pokal-und-medaille",
+  "canDo": "I can talk about competitions and prizes.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C509-siegerehrung",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 509: I can talk about competitions and prizes.",
+    "assesses": [
+      "GE-LEX-C509-WETTKAMPF-03",
+      "GE-LEX-C509-WETTKAMPF-04",
+      "GE-LEX-C509-WETTKAMPF-05"
+    ]
+  }
+}

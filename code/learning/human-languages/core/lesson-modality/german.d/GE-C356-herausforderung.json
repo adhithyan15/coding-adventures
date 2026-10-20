@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C356-herausforderung",
+    "language": "german",
+    "chapter": 356,
+    "sequence": 19350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e8137cc6996bf3a2"
+  },
+  "findings": []
+}

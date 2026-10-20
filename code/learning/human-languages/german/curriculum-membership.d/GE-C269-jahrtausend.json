@@ -1,0 +1,11 @@
+{
+  "id": "GE-C269-jahrtausend",
+  "pathSegment": "GE-PATH-269-JAHRZEHNT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-269-JAHRZEHNT",
+      "order": 1
+    }
+  ]
+}

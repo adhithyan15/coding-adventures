@@ -1,0 +1,11 @@
+{
+  "id": "GE-C326-auflaufform",
+  "pathSegment": "GE-PATH-326-VORHEIZEN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-326-VORHEIZEN",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 517,
+  "title": "Im Theater",
+  "label": "ch:ge-im-theater",
+  "canDo": "I can talk about plays, actors and audiences.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C517-applaus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 517: I can talk about plays, actors and audiences.",
+    "assesses": [
+      "GE-LEX-C517-THEATER-03",
+      "GE-LEX-C517-THEATER-04",
+      "GE-LEX-C517-THEATER-05"
+    ]
+  }
+}

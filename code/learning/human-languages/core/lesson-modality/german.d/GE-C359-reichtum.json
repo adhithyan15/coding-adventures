@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C359-reichtum",
+    "language": "german",
+    "chapter": 359,
+    "sequence": 19510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8867681467a7c967"
+  },
+  "findings": []
+}

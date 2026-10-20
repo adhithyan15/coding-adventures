@@ -1,0 +1,11 @@
+{
+  "id": "GE-C416-handgepaeck",
+  "pathSegment": "GE-PATH-416-FLUGSTEIG",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-416-FLUGSTEIG",
+      "order": 3
+    }
+  ]
+}

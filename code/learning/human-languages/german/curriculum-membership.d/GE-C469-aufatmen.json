@@ -1,0 +1,11 @@
+{
+  "id": "GE-C469-aufatmen",
+  "pathSegment": "GE-PATH-469-ENTTAEUSCHUNG",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-469-ENTTAEUSCHUNG",
+      "order": 3
+    }
+  ]
+}

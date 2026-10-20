@@ -1,0 +1,11 @@
+{
+  "id": "GE-C302-rentner",
+  "pathSegment": "GE-PATH-302-RUHESTAND",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-302-RUHESTAND",
+      "order": 2
+    }
+  ]
+}

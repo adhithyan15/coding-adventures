@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 373,
+  "sourceHash": "fnv1a64:3e845330221e5515",
+  "lessonIds": [
+    "GE-C373-unvorhergesehen",
+    "GE-C373-spontan",
+    "GE-C373-beruecksichtigen",
+    "GE-C373-prognose",
+    "GE-C373-einplanen"
+  ],
+  "tex": "german/book/chapters/ch373-mit-allem-rechnen.tex"
+}

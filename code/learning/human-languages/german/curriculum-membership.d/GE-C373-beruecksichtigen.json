@@ -1,0 +1,11 @@
+{
+  "id": "GE-C373-beruecksichtigen",
+  "pathSegment": "GE-PATH-373-UNVORHERGESEHEN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-373-UNVORHERGESEHEN",
+      "order": 2
+    }
+  ]
+}

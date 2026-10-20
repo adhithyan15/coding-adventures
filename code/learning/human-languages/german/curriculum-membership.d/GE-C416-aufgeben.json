@@ -1,0 +1,11 @@
+{
+  "id": "GE-C416-aufgeben",
+  "pathSegment": "GE-PATH-416-FLUGSTEIG",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-416-FLUGSTEIG",
+      "order": 4
+    }
+  ]
+}

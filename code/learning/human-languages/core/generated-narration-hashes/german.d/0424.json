@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 424,
+  "sourceHash": "fnv1a64:63cc4872480461d3",
+  "lessonIds": [
+    "GE-C424-gasthof",
+    "GE-C424-ferienwohnung",
+    "GE-C424-uebernachten",
+    "GE-C424-uebernachtung",
+    "GE-C424-halbpension"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch424.txt",
+  "json": "german/narration/ch424.json",
+  "textHash": "fnv1a64:bfdaecf0208eb66b",
+  "jsonHash": "fnv1a64:1077563bfed6e57d",
+  "findings": []
+}

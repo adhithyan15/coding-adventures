@@ -1,0 +1,11 @@
+{
+  "id": "GE-C412-schaffner",
+  "pathSegment": "GE-PATH-412-BAHNSTEIG",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-412-BAHNSTEIG",
+      "order": 3
+    }
+  ]
+}

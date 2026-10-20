@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 515,
+  "sourceHash": "fnv1a64:715624b290f067da",
+  "lessonIds": [
+    "GE-C515-chor",
+    "GE-C515-orchester",
+    "GE-C515-dirigent",
+    "GE-C515-dirigieren",
+    "GE-C515-komponieren"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch515.txt",
+  "json": "german/narration/ch515.json",
+  "textHash": "fnv1a64:7d3da87f5cb537e9",
+  "jsonHash": "fnv1a64:1fe9ec27c3d64aae",
+  "findings": []
+}

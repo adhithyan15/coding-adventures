@@ -1,0 +1,19 @@
+{
+  "chapter": 339,
+  "title": "Etwas hervorheben",
+  "label": "ch:ge-etwas-hervorheben",
+  "canDo": "I can make a remark, call attention to something, single it out and set out my reasons.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C339-darlegen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 339: I can make a remark, call attention to something, single it out and set out my reasons.",
+    "assesses": [
+      "GE-LEX-C339-HINWEIS-03",
+      "GE-LEX-C339-HINWEIS-04",
+      "GE-LEX-C339-HINWEIS-05"
+    ]
+  }
+}

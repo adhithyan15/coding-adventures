@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C518-aquarell",
+    "language": "german",
+    "chapter": 518,
+    "sequence": 27700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f8a0fce94880cc7e"
+  },
+  "findings": []
+}

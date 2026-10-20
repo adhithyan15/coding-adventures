@@ -1,0 +1,11 @@
+{
+  "id": "GE-C367-immerhin",
+  "pathSegment": "GE-PATH-367-EVENTUELL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-367-EVENTUELL",
+      "order": 3
+    }
+  ]
+}

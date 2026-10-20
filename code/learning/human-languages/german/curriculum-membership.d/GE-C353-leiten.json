@@ -1,0 +1,11 @@
+{
+  "id": "GE-C353-leiten",
+  "pathSegment": "GE-PATH-353-BETRIEB",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-353-BETRIEB",
+      "order": 4
+    }
+  ]
+}

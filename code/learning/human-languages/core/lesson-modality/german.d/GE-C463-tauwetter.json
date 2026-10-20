@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C463-tauwetter",
+    "language": "german",
+    "chapter": 463,
+    "sequence": 24860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8a7a2d647593b2b7"
+  },
+  "findings": []
+}

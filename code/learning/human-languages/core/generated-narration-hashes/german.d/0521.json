@@ -1,0 +1,20 @@
+{
+  "language": "german",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:b2fa3bb8af052325",
+  "lessonIds": [
+    "GE-C521-gedicht",
+    "GE-C521-dichter",
+    "GE-C521-reim",
+    "GE-C521-reimen",
+    "GE-C521-schriftsteller",
+    "GE-R521-review-514-521"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "german/narration/ch521.txt",
+  "json": "german/narration/ch521.json",
+  "textHash": "fnv1a64:3e15c53f0722468e",
+  "jsonHash": "fnv1a64:b431e37418536500",
+  "findings": []
+}

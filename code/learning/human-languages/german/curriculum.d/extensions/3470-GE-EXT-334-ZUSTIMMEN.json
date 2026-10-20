@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-334-ZUSTIMMEN",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can agree with someone, say I am happy with a plan, admit a mistake and concede a point.",
+  "prerequisites": []
+}

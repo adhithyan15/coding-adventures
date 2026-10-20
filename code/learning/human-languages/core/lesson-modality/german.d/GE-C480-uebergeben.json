@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C480-uebergeben",
+    "language": "german",
+    "chapter": 480,
+    "sequence": 25720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0b9f1f9d7322c0d0"
+  },
+  "findings": []
+}

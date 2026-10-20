@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 490,
+  "sourceHash": "fnv1a64:e6c6daa779574713",
+  "lessonIds": [
+    "GE-C490-schwiegervater",
+    "GE-C490-stiefvater",
+    "GE-C490-urgrossvater",
+    "GE-C490-zwilling",
+    "GE-C490-einzelkind"
+  ],
+  "tex": "german/book/chapters/ch490-schwiegervater-und-stiefvater.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 292,
+  "sourceHash": "fnv1a64:e69ff1e4aa15f3fe",
+  "lessonIds": [
+    "GE-C292-warnen",
+    "GE-C292-rettung",
+    "GE-C292-bergen",
+    "GE-C292-evakuieren",
+    "GE-C292-ueberleben"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch292.txt",
+  "json": "german/narration/ch292.json",
+  "textHash": "fnv1a64:94bdcffddf438e4e",
+  "jsonHash": "fnv1a64:8db1f98661fd7de9",
+  "findings": []
+}

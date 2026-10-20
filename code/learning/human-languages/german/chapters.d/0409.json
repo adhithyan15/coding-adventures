@@ -1,0 +1,19 @@
+{
+  "chapter": 409,
+  "title": "Bauarbeiten",
+  "label": "ch:ge-bauarbeiten",
+  "canDo": "I can follow road works and diversions: the road works, the diversion, diverting traffic, closing a road and the service area.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C409-raststaette",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 409: I can follow road works and diversions: the road works, the diversion, diverting traffic, closing a road and the service area.",
+    "assesses": [
+      "GE-LEX-C409-UMLEITUNG-03",
+      "GE-LEX-C409-UMLEITUNG-04",
+      "GE-LEX-C409-UMLEITUNG-05"
+    ]
+  }
+}

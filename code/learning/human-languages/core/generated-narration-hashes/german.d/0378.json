@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 378,
+  "sourceHash": "fnv1a64:2591d474f8bdcf50",
+  "lessonIds": [
+    "GE-C378-hausarbeit",
+    "GE-C378-referat",
+    "GE-C378-aufsatz",
+    "GE-C378-zusammenfassung",
+    "GE-C378-zusammenfassen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch378.txt",
+  "json": "german/narration/ch378.json",
+  "textHash": "fnv1a64:162ba4e49269ff64",
+  "jsonHash": "fnv1a64:d2534779a12176d1",
+  "findings": []
+}

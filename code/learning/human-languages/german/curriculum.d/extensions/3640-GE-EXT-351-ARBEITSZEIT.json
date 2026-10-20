@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-351-ARBEITSZEIT",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about working hours: part-time and full-time, shifts, overtime and the end of the working day.",
+  "prerequisites": []
+}

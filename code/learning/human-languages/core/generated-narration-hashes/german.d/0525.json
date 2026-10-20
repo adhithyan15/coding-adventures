@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:f872913a0d5bef16",
+  "lessonIds": [
+    "GE-C525-streamen",
+    "GE-C525-abonnieren",
+    "GE-C525-videospiel",
+    "GE-C525-zocken",
+    "GE-C525-kopfhoerer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch525.txt",
+  "json": "german/narration/ch525.json",
+  "textHash": "fnv1a64:fab3bd5088e8e58a",
+  "jsonHash": "fnv1a64:ab65ee694c3afd64",
+  "findings": []
+}

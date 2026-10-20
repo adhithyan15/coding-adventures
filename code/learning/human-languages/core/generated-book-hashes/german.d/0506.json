@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 506,
+  "sourceHash": "fnv1a64:8e293f4ffefd9e83",
+  "lessonIds": [
+    "GE-C506-torwart",
+    "GE-C506-stuermer",
+    "GE-C506-verteidiger",
+    "GE-C506-schiedsrichter",
+    "GE-C506-pfeifen"
+  ],
+  "tex": "german/book/chapters/ch506-auf-dem-platz.tex"
+}

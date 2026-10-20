@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 367,
+  "sourceHash": "fnv1a64:446b0a34c9baf024",
+  "lessonIds": [
+    "GE-C367-eventuell",
+    "GE-C367-moeglicherweise",
+    "GE-C367-zumindest",
+    "GE-C367-immerhin",
+    "GE-C367-womoeglich"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch367.txt",
+  "json": "german/narration/ch367.json",
+  "textHash": "fnv1a64:24ec20421f2b03f1",
+  "jsonHash": "fnv1a64:5783418887b5d97d",
+  "findings": []
+}

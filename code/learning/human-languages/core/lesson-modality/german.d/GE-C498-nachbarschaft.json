@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C498-nachbarschaft",
+    "language": "german",
+    "chapter": 498,
+    "sequence": 26670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5131d115a87e5fb6"
+  },
+  "findings": []
+}

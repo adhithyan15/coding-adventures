@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C362-spenden",
+    "language": "german",
+    "chapter": 362,
+    "sequence": 19670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:272520389703a9c7"
+  },
+  "findings": []
+}

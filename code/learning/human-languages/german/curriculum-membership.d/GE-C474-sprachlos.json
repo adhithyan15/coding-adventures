@@ -1,0 +1,11 @@
+{
+  "id": "GE-C474-sprachlos",
+  "pathSegment": "GE-PATH-474-STAUNEN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-474-STAUNEN",
+      "order": 4
+    }
+  ]
+}

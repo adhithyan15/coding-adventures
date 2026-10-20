@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:e50a375d01e94ce8",
+  "lessonIds": [
+    "GE-C411-fahrkartenautomat",
+    "GE-C411-fahrschein",
+    "GE-C411-fahrpreis",
+    "GE-C411-entwerten",
+    "GE-C411-loesen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch411.txt",
+  "json": "german/narration/ch411.json",
+  "textHash": "fnv1a64:4c15d74c761d76a5",
+  "jsonHash": "fnv1a64:a95a8dea0cecf18d",
+  "findings": []
+}
