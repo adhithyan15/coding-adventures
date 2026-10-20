@@ -6540,7 +6540,7 @@ fn inherits_enclosing_font(node: &LayoutNode, part_styles: &HashMap<String, Stri
 }
 
 /// A text field's `placeholder` as the Dart expression `hintText:` takes,
-/// for `HostInput` and the legacy `Input` alike.
+/// for `HostInput`, the legacy `Input` and `HostNumberInput` alike.
 ///
 /// | authored form          | `hintText:`                          |
 /// |------------------------|--------------------------------------|
@@ -9182,12 +9182,14 @@ fn emit_host_number_input(
         None
     };
 
-    // Build decoration. hintText if placeholder present; helperText
+    // Build decoration. hintText if placeholder present -- a literal or a
+    // bound value, through the same lowering as HostInput
+    // (`host_input_hint_expr`; EM-14: this read literals only); helperText
     // carries the min/max/step hint comment (visible in dev; cleared
     // in production via a follow-up theme).
     let mut decoration_parts: Vec<String> = Vec::new();
-    if let Some(p) = find_string_prop(node, "placeholder") {
-        decoration_parts.push(format!("hintText: \"{}\"", escape_dart_string(p)));
+    if let Some(hint) = host_input_hint_expr(node)? {
+        decoration_parts.push(format!("hintText: {hint}"));
     }
 
     // Compose the range hint as a single comment so unit tests can
@@ -14875,6 +14877,81 @@ mod tests {
         assert!(
             !out.contains("/* TODO: dispatch ValueChange"),
             "expected no TODO placeholder, got:\n{out}"
+        );
+    }
+
+    /// EM-14 — a bound `placeholder` is the number field's `hintText`, as
+    /// on `HostInput`. This read string literals only, so
+    /// mosaic-pkg-toolkit's `NumberInput` (`placeholder : slot:
+    /// placeholder`) showed no hint on Flutter, with nothing reported. The
+    /// literal form is unchanged.
+    #[test]
+    fn host_number_input_bound_placeholder_is_the_hint_text() {
+        let m = component(
+            "X",
+            vec![
+                slot("n", SlotType::Number, true),
+                slot("amount-hint", SlotType::Text, false),
+            ],
+            vec![],
+        );
+        for (value, expected) in [
+            (
+                LayoutPropValue::SlotRef("amount-hint".into()),
+                "hintText: amountHint",
+            ),
+            (LayoutPropValue::Keyword("hint".into()), "hintText: hint"),
+            (
+                LayoutPropValue::Expr("( hints[0] )".into()),
+                "hintText: ( hints[0] )",
+            ),
+            (
+                LayoutPropValue::String("Amount".into()),
+                "hintText: \"Amount\"",
+            ),
+        ] {
+            let l = layout(
+                "X",
+                node_with(
+                    "HostNumberInput",
+                    vec![
+                        LayoutProp {
+                            name: "value".into(),
+                            value: LayoutPropValue::SlotRef("n".into()),
+                        },
+                        LayoutProp {
+                            name: "placeholder".into(),
+                            value,
+                        },
+                    ],
+                    vec![],
+                ),
+            );
+            let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+            assert!(out.contains(expected), "expected `{expected}` in:\n{out}");
+        }
+    }
+
+    /// EM-14 — a slot name that is not a Dart identifier is refused loudly,
+    /// never spliced into the decoration.
+    #[test]
+    fn host_number_input_placeholder_unsafe_slot_name_is_rejected() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node_with(
+                "HostNumberInput",
+                vec![LayoutProp {
+                    name: "placeholder".into(),
+                    value: LayoutPropValue::SlotRef("x), evil(".into()),
+                }],
+                vec![],
+            ),
+        );
+        let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnsafeSlotName(_)),
+            "got {err:?}"
         );
     }
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-19 (slot-bound number placeholder)
+
+- **`HostNumberInput ( placeholder : slot: x )` reaches the field (EM-14).** The number field read `placeholder` with a string-literal-only lookup, so `mosaic-pkg-toolkit`'s `NumberInput` emitted no placeholder at all, and the degradation report said nothing. It now uses `push_text_field_placeholder`, as `HostInput` does: a literal is `placeholder="..."`, a slot is `placeholder={x}`, and a `For` binding or expression passes through. A name that is not a JavaScript identifier is an `UnsafeSlotName` error.
+
 ## 2026-10-19 (slot-bound placeholder)
 
 - **`placeholder : slot: x` reaches the field.** `HostInput` and the legacy `Input` read `placeholder` with a string-literal-only lookup, so a bound placeholder (every toolkit `Input`, the note-type editor's fields, the SPICE netlist editor) emitted no attribute at all, and the degradation report said nothing. Both paths, on `<input>` and `<textarea>`, now share `push_text_field_placeholder`: a literal is `placeholder="..."` (expression form when it needs escaping), a slot is `placeholder={x}`, and a `For` binding or expression passes through as `a11y-label` does. A slot or binding name that is not a JavaScript identifier is an `UnsafeSlotName` error.

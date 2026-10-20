@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-10-19 (Every text field binds its placeholder)
+
+- `HostNumberInput ( placeholder : slot: x )` binds `placeholderText: x`
+  (EM-14). The number field read `placeholder` with a string-literal-only
+  lookup, so `mosaic-pkg-toolkit`'s `NumberInput` had no placeholder on Qt and
+  nothing reported it. It now shares `build_placeholder_text_attribute` with
+  `HostInput` and the legacy `Input`.
+- That helper had two silent drops of its own, now fixed for all three
+  primitives. A bare name (`placeholder : hint` inside `For ( as: hint )`) was
+  quoted, so the field showed the word `hint`; it is now the binding, as on
+  every other backend. A slot or binding name that is not a QML identifier
+  became `placeholderText: ""`; it is now an `UnsafeSlotName` error.
+
 ## 2026-10-19 (A multiline HostInput is a TextArea)
 
 - `HostInput ( multiline : true )` lowers to Qt Quick Controls' `TextArea`, as

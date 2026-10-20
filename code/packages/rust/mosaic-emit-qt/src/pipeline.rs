@@ -6070,7 +6070,7 @@ fn emit_text_input_qml(
     let inner_pad = "    ".repeat(depth + 1);
     let mut out = String::new();
     let typography = typography_lines(node, ctx);
-    let placeholder_line = build_placeholder_text_attribute(node);
+    let placeholder_line = build_placeholder_text_attribute(node)?;
     let control_tag = if multiline {
         "TextArea"
     } else if placeholder_line.is_some() {
@@ -7808,7 +7808,7 @@ fn emit_host_navigation_split_qml(
 /// | moslayout prop  | QML output                                |
 /// |---|---|
 /// | `value: slot|n` | `text: String(<bare-identifier>|n)`          |
-/// | `placeholder`   | `placeholderText: "..."`                    |
+/// | `placeholder`   | `placeholderText: "..."` / `placeholderText: x` |
 /// | `min: <n>`      | `validator.bottom: <n>`                     |
 /// | `max: <n>`      | `validator.top: <n>`                        |
 /// | `disabled: ...` | `enabled: !d` (polarity flip)               |
@@ -7841,9 +7841,10 @@ fn emit_host_number_input_qml(
         writeln!(out, "{inner}text: String({n})").unwrap();
     }
 
-    if let Some(placeholder) = find_string_prop(node, "placeholder") {
-        let escaped = escape_qml_string(placeholder);
-        writeln!(out, "{inner}placeholderText: \"{escaped}\"").unwrap();
+    // placeholder — a literal or a bound value, through the same lowering
+    // as HostInput (EM-14: this read literals only).
+    if let Some(line) = build_placeholder_text_attribute(node)? {
+        writeln!(out, "{inner}{line}").unwrap();
     }
     writeln!(out, "{inner}inputMethodHints: Qt.ImhFormattedNumbersOnly").unwrap();
     writeln!(out, "{inner}validator: DoubleValidator {{").unwrap();
@@ -8057,7 +8058,7 @@ fn tree_needs_controls_import(node: &LayoutNode) -> bool {
     // load error, not a degraded field.
     if matches!(node.tag.as_str(), "Input" | "HostInput")
         && (find_keyword_prop(node, "multiline") == Some("true")
-            || build_placeholder_text_attribute(node).is_some())
+            || node.props.iter().any(|p| p.name == "placeholder"))
     {
         return true;
     }
@@ -9181,26 +9182,40 @@ fn build_read_only_attribute(node: &LayoutNode) -> Option<String> {
     })
 }
 
-/// Build the `placeholderText: ...` attribute for a `HostInput`.
-fn build_placeholder_text_attribute(node: &LayoutNode) -> Option<String> {
-    let prop = node.props.iter().find(|p| p.name == "placeholder")?;
-    Some(match &prop.value {
+/// Build the `placeholderText: ...` attribute for a text field: `HostInput`,
+/// the legacy `Input` (as `TextField` or `TextArea`) and `HostNumberInput`.
+///
+/// | authored form          | QML                                         |
+/// |------------------------|---------------------------------------------|
+/// | `placeholder : "Text"` | `placeholderText: "Text"` (escaped)         |
+/// | `placeholder : 3`      | `placeholderText: "3"`                      |
+/// | `placeholder : slot: s`| `placeholderText: s` (camelCased, validated) |
+/// | `placeholder : item`   | `placeholderText: item` (a `For` binding)   |
+/// | `placeholder : ( e )`  | `placeholderText: ( e )`, verbatim          |
+///
+/// A slot or binding name that is not a QML identifier is an
+/// `UnsafeSlotName` error. Until EM-14 an unsafe name silently became
+/// `placeholderText: ""`, and a bare binding name was quoted, so a `For`
+/// row's hint showed the binding's own name as text.
+fn build_placeholder_text_attribute(
+    node: &LayoutNode,
+) -> Result<Option<String>, PipelineEmitError> {
+    let Some(prop) = node.props.iter().find(|p| p.name == "placeholder") else {
+        return Ok(None);
+    };
+    Ok(Some(match &prop.value {
         LayoutPropValue::String(s) => {
             format!("placeholderText: \"{}\"", escape_qml_string(s))
         }
-        LayoutPropValue::SlotRef(s) => {
-            let camel = to_camel_case_first_lower(s);
-            if is_safe_identifier(&camel) {
-                format!("placeholderText: {camel}")
-            } else {
-                "placeholderText: \"\"".to_string()
-            }
+        LayoutPropValue::SlotRef(name) | LayoutPropValue::Keyword(name) => {
+            let camel = to_camel_case_first_lower(name);
+            validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+            format!("placeholderText: {camel}")
         }
-        LayoutPropValue::Keyword(k) => format!("placeholderText: \"{k}\""),
         LayoutPropValue::Number(n) => format!("placeholderText: \"{n}\""),
         LayoutPropValue::Expr(text) => format!("placeholderText: {text}"),
         LayoutPropValue::EmitRef(_) => "placeholderText: \"\"".to_string(),
-    })
+    }))
 }
 
 /// Build the `text: ...` attribute for a `HostButton` from its `label` prop.
@@ -15837,6 +15852,102 @@ mod tests {
             "expected QtQuick.Controls import, got:\n{}",
             r.output
         );
+    }
+
+    fn placeholder_layout(tag: &str, value: LayoutPropValue) -> LayoutDef {
+        LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: tag.to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "placeholder".to_string(),
+                    value,
+                }],
+                children: Vec::new(),
+            },
+        }
+    }
+
+    /// EM-14 — a bound `placeholder` is the number field's
+    /// `placeholderText`. This read string literals only, so
+    /// mosaic-pkg-toolkit's `NumberInput` (`placeholder : slot:
+    /// placeholder`) had no placeholder on Qt, with nothing reported. The
+    /// literal form is unchanged.
+    #[test]
+    fn host_number_input_bound_placeholder_is_the_placeholder_text() {
+        let m = component(
+            "X",
+            vec![slot("amount-hint", SlotType::Text, false)],
+            vec![],
+        );
+        for (value, expected) in [
+            (
+                LayoutPropValue::SlotRef("amount-hint".to_string()),
+                "placeholderText: amountHint",
+            ),
+            (
+                LayoutPropValue::Keyword("hint".to_string()),
+                "placeholderText: hint",
+            ),
+            (
+                LayoutPropValue::Expr("( hints[0] )".to_string()),
+                "placeholderText: ( hints[0] )",
+            ),
+            (
+                LayoutPropValue::String("Amount".to_string()),
+                "placeholderText: \"Amount\"",
+            ),
+        ] {
+            let out = from_pipeline(
+                &m,
+                &placeholder_layout("HostNumberInput", value),
+                &empty_style("X"),
+            )
+            .unwrap()
+            .output;
+            assert!(out.contains(expected), "expected `{expected}` in:\n{out}");
+        }
+    }
+
+    /// EM-14 — the shared placeholder lowering treats a bare name as what
+    /// the layout compiler means by it, a `For` binding, on every text
+    /// field. It used to quote it, so `placeholder : hint` inside
+    /// `For ( as: hint )` showed the word "hint" on Qt alone.
+    #[test]
+    fn host_input_placeholder_binding_is_not_quoted() {
+        let m = component("X", vec![], vec![]);
+        for tag in ["HostInput", "Input", "HostNumberInput"] {
+            let out = from_pipeline(
+                &m,
+                &placeholder_layout(tag, LayoutPropValue::Keyword("hint".to_string())),
+                &empty_style("X"),
+            )
+            .unwrap()
+            .output;
+            assert!(out.contains("placeholderText: hint"), "{tag}:\n{out}");
+            assert!(!out.contains("placeholderText: \"hint\""), "{tag}:\n{out}");
+        }
+    }
+
+    /// EM-14 — a slot name that is not a QML identifier is an
+    /// `UnsafeSlotName` error on every text field. It used to become
+    /// `placeholderText: ""`, a silent drop.
+    #[test]
+    fn placeholder_unsafe_slot_name_is_rejected() {
+        let m = component("X", vec![], vec![]);
+        for tag in ["HostInput", "Input", "HostNumberInput"] {
+            let err = from_pipeline(
+                &m,
+                &placeholder_layout(tag, LayoutPropValue::SlotRef("x; evil()".to_string())),
+                &empty_style("X"),
+            )
+            .unwrap_err();
+            assert!(
+                matches!(err, PipelineEmitError::UnsafeSlotName(_)),
+                "{tag}: got {err:?}"
+            );
+        }
     }
 
     /// UI29-4 Qt test 5 — `min`/`max` numeric literals map to

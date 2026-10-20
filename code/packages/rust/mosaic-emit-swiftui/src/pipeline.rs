@@ -7442,6 +7442,9 @@ fn emit_host_tooltip(
 ///     .disabled(disabled)
 /// ```
 ///
+/// A bound placeholder (`placeholder : slot: p`) is the title as
+/// `String(describing: p)`, the same lowering `HostInput` uses.
+///
 /// `.constant(value)` is used when there is no `onChange` handler.
 /// When `value` and `onChange` are both present, the field uses a
 /// writable `Binding(get:set:)` whose setter dispatches the new
@@ -7450,8 +7453,11 @@ fn emit_host_number_input(node: &LayoutNode, indent: usize) -> Result<String, Pi
     let pad = " ".repeat(indent);
     let mod_pad = " ".repeat(indent + 4);
 
-    let placeholder = find_string_prop(node, "placeholder").unwrap_or("");
-    let escaped_placeholder = escape_swift_string(placeholder);
+    // The title is the placeholder, literal or bound (see
+    // `swift_placeholder`; EM-14: this read literals only), or `""`.
+    let title = swift_placeholder(node)?
+        .map(|placeholder| placeholder.title())
+        .unwrap_or_else(|| "\"\"".to_string());
 
     let value_prop = find_prop_value(node, "value");
     let value_expr: String = match value_prop {
@@ -7484,7 +7490,7 @@ fn emit_host_number_input(node: &LayoutNode, indent: usize) -> Result<String, Pi
     let mut out = String::new();
     writeln!(
         out,
-        "{pad}TextField(\"{escaped_placeholder}\", value: {value_binding}, format: .number)"
+        "{pad}TextField({title}, value: {value_binding}, format: .number)"
     )
     .unwrap();
 
@@ -13530,6 +13536,67 @@ mod tests {
             r.contains("TextField(\"Enter a number\", value: .constant(count), format: .number)"),
             "expected TextField with .number format, got:\n{r}"
         );
+    }
+
+    /// EM-14 — a bound `placeholder` is the `TextField` title, as a
+    /// `String` (`String(describing:)`), so `init(_:value:format:)` takes
+    /// it through its `StringProtocol` overload. This read string literals
+    /// only, so mosaic-pkg-toolkit's `NumberInput` (`placeholder : slot:
+    /// placeholder`) emitted `TextField("", …)` with nothing reported.
+    #[test]
+    fn host_number_input_bound_placeholder_is_the_textfield_title() {
+        let m = component(
+            "X",
+            vec![
+                slot("count", SlotType::Number, true),
+                slot("amount-hint", SlotType::Text, false),
+            ],
+            vec![],
+        );
+        for (placeholder, title) in [
+            (
+                prop_slot_ref("placeholder", "amount-hint"),
+                "String(describing: amountHint)",
+            ),
+            (prop_keyword("placeholder", "hint"), "String(describing: hint)"),
+            (
+                prop_expr("placeholder", "( hints[0] )"),
+                "String(describing: ( hints[0] ))",
+            ),
+        ] {
+            let l = layout_with(
+                "X",
+                container_node(
+                    "Box",
+                    vec![leaf(
+                        "HostNumberInput",
+                        vec![placeholder, prop_slot_ref("value", "count")],
+                    )],
+                ),
+            );
+            let r = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+            let expected = format!("TextField({title}, value: .constant(count), format: .number)");
+            assert!(r.contains(&expected), "expected `{expected}`, got:\n{r}");
+        }
+    }
+
+    /// EM-14 — a slot name that is not a Swift identifier is refused
+    /// instead of being spliced into the title expression.
+    #[test]
+    fn host_number_input_placeholder_unsafe_slot_name_is_rejected() {
+        let m = component("X", vec![], vec![]);
+        let l = layout_with(
+            "X",
+            container_node(
+                "Box",
+                vec![leaf(
+                    "HostNumberInput",
+                    vec![prop_slot_ref("placeholder", "x) + evil(")],
+                )],
+            ),
+        );
+        let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+        assert!(matches!(err, PipelineEmitError::UnsafeSlotName(_)), "got {err:?}");
     }
 
     /// UI29-4 SwiftUI test 5 — `onChange: emit: onSet` makes the
