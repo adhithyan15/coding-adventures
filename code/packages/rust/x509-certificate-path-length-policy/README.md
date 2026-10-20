@@ -9,12 +9,19 @@ A non-self-issued intermediate consumes one unit; a self-issued intermediate
 does not. The intermediate's decoded `pathLenConstraint`, when present, can
 only tighten the remaining maximum.
 
+An evidence-bound entry point accepts a non-copyable self-issued classification
+for one exact decoded certificate and derives the issuing-CA role check from
+that same certificate before applying the transition. This prevents accidental
+mixing of one certificate's self-issued result with another certificate's role
+evidence. The lower-level transition remains available when a larger caller
+already owns those bindings.
+
 The caller remains responsible for deciding whether a certificate is
-self-issued and for supplying the correct path order. The target certificate
-and trust anchor are not passed through this transition. This crate does not
-construct, link, authenticate, or trust a path; process trust-anchor or name
-constraints; verify signatures, names, validity, purpose, or revocation; or
-provide TLS, HTTP, OAuth transport, or network authority.
+self-issued through its Name policy and for supplying the correct path order.
+The target certificate and trust anchor are not passed through this transition.
+This crate does not construct, link, authenticate, or trust a path; process
+trust-anchor or name constraints; verify signatures, names, validity, purpose,
+or revocation; or provide TLS, HTTP, OAuth transport, or network authority.
 
 ## Validation
 

@@ -733,6 +733,16 @@ the target certificate and trust anchor are outside this transition. Path
 construction, complete path validation, trust-anchor constraints, name
 constraints, revocation, TLS, HTTP, and network effects remain separate
 blockers, so concrete HTTPS remains unavailable.
+A bounded evidence-binding follow-up now invokes one caller-supplied Name
+comparator exactly once with an exact certificate's issuer followed by its
+subject and retains a non-copyable reference to that certificate with the
+self-issued result. The path-length package can consume that evidence, derive
+the issuing-CA role check from the same certificate, and then apply the state
+transition, preventing accidental cross-certificate mixing. The comparator
+still owns all RFC 5280 Name normalization and equality semantics; the result
+does not prove self-signature, construct a path, or grant trust. Complete Name
+comparison, path construction and validation, trust-anchor constraints, name
+constraints, revocation, TLS, HTTP, and network effects remain blockers.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns

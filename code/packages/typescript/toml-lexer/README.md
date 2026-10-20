@@ -33,6 +33,9 @@ import { tokenizeTOML } from "@coding-adventures/toml-lexer";
 
 const tokens = tokenizeTOML('[server]\nhost = "localhost"\nport = 8080');
 
+// The optional second argument caps emitted tokens, including EOF.
+const boundedTokens = tokenizeTOML(untrustedSource, 50_000);
+
 for (const token of tokens) {
   console.log(`${token.type}: ${token.value} (line ${token.line}, col ${token.column})`);
 }

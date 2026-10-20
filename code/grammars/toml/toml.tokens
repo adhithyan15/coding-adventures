@@ -25,7 +25,7 @@
 # Whitespace: spaces and tabs only. Newlines are significant.
 
 skip:
-  COMMENT    = /#[^\n]*/
+  COMMENT    = /#[^\u0000-\u0008\u000A-\u001F\u007F\r\n]*/
   WHITESPACE = /[ \t]+/
 
 # ============================================================================
@@ -53,12 +53,16 @@ escapes: none
 # Without this ordering, `"""hello"""` would match as `""` (empty BASIC_STRING)
 # followed by `"hello"` (BASIC_STRING) followed by `""`.
 #
-# ML_BASIC_STRING allows escape sequences inside (backslash + any char).
-# ML_LITERAL_STRING allows everything literally, including backslashes.
-# Both use non-greedy matching (*?) to find the closest closing delimiter.
+# ML_BASIC_STRING uses mutually exclusive branches for ordinary characters,
+# escapes, and one/two non-closing quotes. Keeping those branches disjoint is
+# important: overlapping newline alternatives make unterminated input
+# catastrophically backtrack before callers can enforce their size limits.
+# ML_LITERAL_STRING allows everything except lone carriage returns literally,
+# including backslashes. The bounded quote suffix preserves one or two quotes
+# immediately before the closing delimiter without ambiguous backtracking.
 
-ML_BASIC_STRING   = /"""([^\\]|\\(.|\n)|\n)*?"""/
-ML_LITERAL_STRING = /'''[\s\S]*?'''/
+ML_BASIC_STRING   = /"""(?:[^"\\\r]|\\(?:\r\n|[^\r])|\r\n|"(?!")|""(?!"))*"{0,2}"""/
+ML_LITERAL_STRING = /'''(?:[^'\r]|\r\n|'(?!')|''(?!'))*'{0,2}'''/
 
 # ============================================================================
 # Single-Line Strings
@@ -67,8 +71,8 @@ ML_LITERAL_STRING = /'''[\s\S]*?'''/
 # Basic strings support escape sequences. Literal strings do not.
 # Neither can contain unescaped newlines.
 
-BASIC_STRING   = /"([^"\\\n]|\\.)*"/
-LITERAL_STRING = /'[^'\n]*'/
+BASIC_STRING   = /"([^"\\\r\n]|\\[^\r\n])*"/
+LITERAL_STRING = /'[^'\r\n]*'/
 
 # ============================================================================
 # Date/Time Literals (MUST come before BARE_KEY and numbers)
@@ -113,8 +117,8 @@ LOCAL_TIME      = /\d{2}:\d{2}:\d{2}/
 
 FLOAT_INF     = /[+-]?inf/ -> FLOAT
 FLOAT_NAN     = /[+-]?nan/ -> FLOAT
-FLOAT_EXP     = /[+-]?[0-9][0-9_]*\.?[0-9_]*[eE][+-]?[0-9][0-9_]*/ -> FLOAT
-FLOAT_DEC     = /[+-]?[0-9][0-9_]*\.[0-9][0-9_]*/ -> FLOAT
+FLOAT_EXP     = /[+-]?(?:0|[1-9](?:_?[0-9])*)(?:\.[0-9](?:_?[0-9])*)?[eE][+-]?[0-9](?:_?[0-9])*/ -> FLOAT
+FLOAT_DEC     = /[+-]?(?:0|[1-9](?:_?[0-9])*)\.[0-9](?:_?[0-9])*/ -> FLOAT
 
 # ============================================================================
 # Integer Literals (hex/oct/bin BEFORE decimal)
@@ -126,10 +130,10 @@ FLOAT_DEC     = /[+-]?[0-9][0-9_]*\.[0-9][0-9_]*/ -> FLOAT
 # All integer variants emit the same INTEGER token type.
 # Underscore separators are allowed between digits: 1_000
 
-HEX_INTEGER = /0x[0-9a-fA-F][0-9a-fA-F_]*/ -> INTEGER
-OCT_INTEGER = /0o[0-7][0-7_]*/ -> INTEGER
-BIN_INTEGER = /0b[01][01_]*/ -> INTEGER
-INTEGER     = /[+-]?[0-9][0-9_]*/
+HEX_INTEGER = /0x[0-9a-fA-F](?:_?[0-9a-fA-F])*/ -> INTEGER
+OCT_INTEGER = /0o[0-7](?:_?[0-7])*/ -> INTEGER
+BIN_INTEGER = /0b[01](?:_?[01])*/ -> INTEGER
+INTEGER     = /[+-]?(?:0|[1-9](?:_?[0-9])*)/
 
 # ============================================================================
 # Boolean Literals

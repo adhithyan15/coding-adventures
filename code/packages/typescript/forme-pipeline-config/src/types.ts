@@ -3,10 +3,8 @@
  * to build* (FM03 §2).
  *
  * Two surface forms in the spec — TypeScript and TOML — share this
- * single underlying type.  v0 implements the TypeScript form only
- * (`loadTsConfig`); the TOML loader lives in a sibling that compiles
- * to the same shape and is gated behind FM03's "TOML-only feature is
- * a feature gap" rule.
+ * single underlying type. `loadTsConfig` evaluates the canonical executable
+ * form; `parseTomlConfig` lowers the bounded declarative form to this shape.
  *
  * === Stages by value vs. by reference ===
  *
@@ -15,9 +13,9 @@
  *
  * In the TOML form (and in plugin-host flows generally), `stage` is a
  * `StageRef` naming a package; FM02's plugin host resolves it to a
- * loaded Stage at typecheck time.  v0 doesn't ship FM02, so the
- * default-direct-import host (FM03 §12) treats every direct value as
- * already-loaded and refuses to honour `StageRef`s.
+ * loaded Stage at typecheck time. The product CLI composes FM02 whenever a
+ * config contains a `StageRef`; direct-only TypeScript configs retain the
+ * process-free path.
  *
  * === Why optional `id`, `wires`, `outputs`, and `capabilities` ===
  *

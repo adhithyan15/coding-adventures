@@ -1,4 +1,12 @@
 # build-tool: deps=typescript/forme-sandbox-core
+cd ../directed-graph && npm install --silent
+cd ../state-machine && npm install --silent
+cd ../cli-builder && npm install --silent
+cd ../grammar-tools && npm install --silent
+cd ../lexer && npm install --silent
+cd ../toml-lexer && npm install --silent
+cd ../parser && npm install --silent
+cd ../toml-parser && npm install --silent
 cd ../document-ast && npm install --silent
 cd ../blake2b && npm install --silent
 cd ../sha512 && npm install --silent
