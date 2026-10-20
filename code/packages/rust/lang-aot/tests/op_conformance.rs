@@ -12,6 +12,8 @@
 //! | `every_lowered_op_runs_on_every_backend` | a `Lowered` declaration is true: the case compiles on every code-generation backend that declares it, and runs with the expected output on every executable column |
 //! | `refused_ops_are_rejected_at_compile_time` | a `Refused` declaration is enforced: `check_module_for` *and* the backend's own compile entry point reject the case with a typed `UnsupportedOps` error |
 //! | `print_i64_and_putchar_share_one_ordered_stream` | the LANG83 ordered-output contract for the one builtin pair no frontend emits together today |
+//! | `pr1b_ops_are_lowered_on_every_backend` | LANG83 PR1b landed everywhere: no backend still refuses `write_i64`, `i64_div_floor`, `i64_mod_floor` or `trap` |
+//! | `flush_before_trap_is_proven_on_every_executable_column` | a program that writes (unflushed) output and then traps keeps that output, and the trap kind is observed, on every column that can run it |
 //!
 //! # The case corpus is IIR, not source
 //!
@@ -31,7 +33,8 @@
 //! | JIT | execute (`jit-core`), and `main` must really be JIT-compiled | never (cases whose ops the JIT refuses are not JIT cases) |
 //! | LLVM | compile + `clang` + execute | `clang` absent |
 //! | native | compile + link + execute (Linux host) | not Linux |
-//! | JVM, CLR, BEAM | compile to the artifact the column runs | never — execution of those columns stays in `lang_matrix` (JVM) or CI (CLR/BEAM) |
+//! | JVM | compile + `java` (verifier on) + execute | `java`/`javac` absent |
+//! | CLR, BEAM | compile to the artifact the column runs | never — their execution stays in CI's `lang_matrix` columns (no local `dotnet`/`erl`) |
 //!
 //! The in-process columns follow `lang_matrix::proven_columns_do_not_silently_skip`:
 //! they have no toolchain to be absent, so they never skip.
@@ -40,9 +43,15 @@
 //!
 //! [`Expect::StdoutThenTrap`] and [`RunResult::Trapped`]'s `stdout` exist so a
 //! "print, then trap" case can assert both the output written before the trap and
-//! the trap kind. In PR1a no backend lowers `trap` (it is a PR1b op), so the one
-//! such case is exercised only by the refusal test; PR1b turns it into a running
-//! case on every column.
+//! the trap kind. Since LANG83 PR1b every column lowers `trap`, so those cases
+//! run everywhere; each column reports the kind its own way (native/LLVM
+//! `trap: <kind>` on stderr, JVM `RuntimeException: <kind>`, WASM the
+//! `env.__trap` kind id, VM `VMError::Trap`, JIT `trap: <kind>` in the error
+//! slot), and every column must report it — `None` is a failure, not a skip.
+//!
+//! `StdoutThenTrap` / stdout-carrying `Trapped` live here, not in `lang_matrix`
+//! yet: no language row emits a PR1b op. The first frontend that does (LANG83
+//! PR2, Ruby) ports them there with its rows.
 
 use std::process::Command;
 use std::sync::{Arc, Mutex};
@@ -83,9 +92,7 @@ fn assert_outcome(column: &str, case: &Case, result: RunResult) {
         }
         (Expect::StdoutThenTrap(want, kind), RunResult::Trapped { stdout, kind: got }) => {
             assert_eq!(stdout.replace("\r\n", "\n"), want, "{column}: case `{}` stdout before trap", case.name);
-            if let Some(got) = got {
-                assert_eq!(got, kind, "{column}: case `{}` trap kind", case.name);
-            }
+            assert_eq!(got.as_deref(), Some(kind), "{column}: case `{}` trap kind", case.name);
         }
         (expect, other) => panic!("{column}: case `{}` expected {expect:?}, got {other:?}", case.name),
     }
@@ -169,6 +176,36 @@ fn int_binop(name: &str, a: i64, b: i64) -> IIRModule {
     program(vec![int("a", a), int("b", b), op(name, "r", &["a", "b"], "i64"), print_i64("r")])
 }
 
+/// `name(a, b)` for every pair, each result printed with `print_i64`.
+fn floor_table(name: &str, pairs: &[(i64, i64)]) -> IIRModule {
+    let mut body = Vec::new();
+    for (i, (a, b)) in pairs.iter().enumerate() {
+        let (x, y, r) = (format!("a{i}"), format!("b{i}"), format!("r{i}"));
+        body.push(int(&x, *a));
+        body.push(int(&y, *b));
+        body.push(op(name, &r, &[&x, &y], "i64"));
+        body.push(print_i64(&r));
+    }
+    program(body)
+}
+
+/// Print `before`, then evaluate `name(a, b)` — which must trap — then print
+/// its result (never reached).
+fn floor_then_trap(name: &str, before: i64, a: i64, b: i64) -> IIRModule {
+    program(vec![
+        int("p", before),
+        print_i64("p"),
+        int("a", a),
+        int("b", b),
+        op(name, "r", &["a", "b"], "i64"),
+        print_i64("r"),
+    ])
+}
+
+fn trap_instr(kind: &str) -> IIRInstr {
+    IIRInstr::new("trap", None, vec![Operand::Str(kind.into())], "void")
+}
+
 /// Comparison `name(a, b)`, printed as 1/0 through a branch (the result is
 /// never printed directly, so no backend's bool-to-integer convention matters).
 ///
@@ -240,6 +277,27 @@ fn cases() -> Vec<Case> {
             build: || program(vec![int("a", 4), int("b", 2), builtin("write_i64", "a"), builtin("write_i64", "b")]),
             expect: Expect::Stdout("42"),
         },
+        Case {
+            name: "write_i64 of 0, a negative, MIN and MAX interleaves with putchar and print_i64",
+            build: || {
+                program(vec![
+                    int("z", 0),
+                    int("n", -12),
+                    int("lo", i64::MIN),
+                    int("hi", i64::MAX),
+                    int("sp", 32),
+                    int("one", 1),
+                    builtin("write_i64", "z"),
+                    builtin("putchar", "sp"),
+                    builtin("write_i64", "n"),
+                    print_i64("one"),
+                    builtin("write_i64", "lo"),
+                    builtin("putchar", "sp"),
+                    builtin("write_i64", "hi"),
+                ])
+            },
+            expect: Expect::Stdout("0 -121\n-9223372036854775808 9223372036854775807"),
+        },
         // ── Strings ─────────────────────────────────────────────────────────
         Case {
             name: "str_len counts bytes",
@@ -308,6 +366,65 @@ fn cases() -> Vec<Case> {
             build: || int_binop("i64_mod_floor", -7, 2),
             expect: Expect::Stdout("1"),
         },
+        Case {
+            name: "i64_div_floor sign table (+-7, +-2)",
+            build: || floor_table("i64_div_floor", &[(7, 2), (-7, 2), (7, -2), (-7, -2)]),
+            expect: Expect::Stdout("3\n-4\n-4\n3"),
+        },
+        Case {
+            name: "i64_mod_floor sign table (+-7, +-2)",
+            build: || floor_table("i64_mod_floor", &[(7, 2), (-7, 2), (7, -2), (-7, -2)]),
+            expect: Expect::Stdout("1\n1\n-1\n-1"),
+        },
+        Case {
+            name: "i64 floor ops of MIN by 1",
+            build: || {
+                program(vec![
+                    int("a", i64::MIN),
+                    int("b", 1),
+                    op("i64_div_floor", "q", &["a", "b"], "i64"),
+                    op("i64_mod_floor", "r", &["a", "b"], "i64"),
+                    print_i64("q"),
+                    print_i64("r"),
+                ])
+            },
+            expect: Expect::Stdout("-9223372036854775808\n0"),
+        },
+        Case {
+            name: "i64_mod_floor of MIN by -1 is 0",
+            build: || int_binop("i64_mod_floor", i64::MIN, -1),
+            expect: Expect::Stdout("0"),
+        },
+        Case {
+            name: "i64_div_floor of MIN by -1 traps Trap.Overflow",
+            build: || floor_then_trap("i64_div_floor", 7, i64::MIN, -1),
+            expect: Expect::StdoutThenTrap("7", "Trap.Overflow"),
+        },
+        Case {
+            name: "i64_div_floor by zero traps Trap.DivZero",
+            build: || floor_then_trap("i64_div_floor", 5, 7, 0),
+            expect: Expect::StdoutThenTrap("5", "Trap.DivZero"),
+        },
+        Case {
+            name: "i64_mod_floor by zero traps Trap.DivZero",
+            build: || floor_then_trap("i64_mod_floor", 6, -7, 0),
+            expect: Expect::StdoutThenTrap("6", "Trap.DivZero"),
+        },
+        Case {
+            // The quotient is never read: an optimiser that treated the op as
+            // pure would delete it, and its trap with it.
+            name: "an i64_div_floor whose result is unused still traps",
+            build: || {
+                program(vec![
+                    int("a", 1),
+                    int("z", 0),
+                    builtin("write_i64", "a"),
+                    op("i64_div_floor", "dead", &["a", "z"], "i64"),
+                    builtin("write_i64", "a"),
+                ])
+            },
+            expect: Expect::StdoutThenTrap("1", "Trap.DivZero"),
+        },
         // ── Comparison ──────────────────────────────────────────────────────
         Case { name: "cmp_eq", build: || compare("cmp_eq", 3, 3), expect: Expect::Stdout("1") },
         Case { name: "cmp_ne", build: || compare("cmp_ne", 3, 3), expect: Expect::Stdout("0") },
@@ -371,6 +488,22 @@ fn cases() -> Vec<Case> {
             },
             expect: Expect::StdoutThenTrap("before", "Trap.User"),
         },
+        Case {
+            // `write_i64`/`putchar` do not flush per call on the native and LLVM
+            // columns (libc stdout is block-buffered on a pipe), so this output
+            // reaches the reader only if the trap flushes it first.
+            name: "trap keeps unflushed write_i64 and putchar output (PR1b)",
+            build: || {
+                program(vec![
+                    int("n", -3),
+                    int("bang", 33),
+                    builtin("write_i64", "n"),
+                    builtin("putchar", "bang"),
+                    trap_instr("Trap.User"),
+                ])
+            },
+            expect: Expect::StdoutThenTrap("-3!", "Trap.User"),
+        },
     ]
 }
 
@@ -431,6 +564,12 @@ fn register_vm_output(vm: &mut vm_core::VMCore, sink: &Sink) {
         Ok(Value::Null)
     });
     let s = Arc::clone(sink);
+    vm.builtins_mut().register("write_i64", move |args: &[Value]| {
+        let n = args.first().and_then(Value::as_i64).unwrap_or(0);
+        s.lock().expect("sink").extend_from_slice(n.to_string().as_bytes());
+        Ok(Value::Null)
+    });
+    let s = Arc::clone(sink);
     vm.builtins_mut().register("print_str", move |args: &[Value]| {
         let text = args.first().and_then(Value::as_str).unwrap_or("");
         s.lock().expect("sink").extend_from_slice(text.as_bytes());
@@ -445,6 +584,7 @@ fn run_vm(module: IIRModule) -> RunResult {
     register_vm_output(&mut vm, &sink);
     match vm.execute(&mut module, "main", &[]) {
         Ok(_) => RunResult::Completed { stdout: sink_text(&sink) },
+        Err(vm_core::errors::VMError::Trap { kind }) => RunResult::Trapped { stdout: sink_text(&sink), kind: Some(kind) },
         Err(_) => RunResult::Trapped { stdout: sink_text(&sink), kind: None },
     }
 }
@@ -481,6 +621,12 @@ fn run_jit(module: IIRModule, case: &Case) -> RunResult {
         s.lock().expect("sink").push(b);
         Value::Null
     });
+    let s = Arc::clone(&sink);
+    backend.register_builtin("write_i64", move |args: &[Value]| {
+        let n = args.first().and_then(Value::as_i64).unwrap_or(0);
+        s.lock().expect("sink").extend_from_slice(n.to_string().as_bytes());
+        Value::Null
+    });
     // `run` cannot return an error, so a JIT-side trap lands in this slot.
     let error_slot = Arc::clone(&backend.error);
     let mut jit = JITCore::new(&mut vm, Box::new(backend));
@@ -494,7 +640,16 @@ fn run_jit(module: IIRModule, case: &Case) -> RunResult {
     let jit_error = error_slot.lock().expect("jit error slot").take();
     match (result, jit_error) {
         (Ok(_), None) => RunResult::Completed { stdout: sink_text(&sink) },
-        _ => RunResult::Trapped { stdout: sink_text(&sink), kind: None },
+        // `GenericCirJit` records a LANG83 trap as `trap: <kind>`
+        // (`generic_jit::trap_message`).
+        (_, Some(e)) => {
+            let kind = e.strip_prefix("trap: ").map(str::to_string);
+            RunResult::Trapped { stdout: sink_text(&sink), kind }
+        }
+        (Err(vm_core::errors::VMError::Trap { kind }), None) => {
+            RunResult::Trapped { stdout: sink_text(&sink), kind: Some(kind) }
+        }
+        (Err(_), None) => RunResult::Trapped { stdout: sink_text(&sink), kind: None },
     }
 }
 
@@ -529,6 +684,8 @@ impl wasm_execution::HostFunction for HostFn {
 /// math imports are libm through Rust's `f64` methods.
 struct ConformanceHost {
     sink: Sink,
+    /// The kind id `env.__trap` received, if the program trapped (LANG83).
+    trap_kind: Arc<Mutex<Option<u32>>>,
 }
 
 fn trap(msg: &str) -> wasm_execution::TrapError {
@@ -558,6 +715,7 @@ impl wasm_execution::HostInterface for ConformanceHost {
             return None;
         }
         let sink = Arc::clone(&self.sink);
+        let trap_kind = Arc::clone(&self.trap_kind);
         let unary = |g: fn(f64) -> f64| -> Option<Box<dyn wasm_execution::HostFunction>> {
             Some(Box::new(HostFn {
                 ty: FuncType { params: vec![F64], results: vec![F64] },
@@ -570,6 +728,25 @@ impl wasm_execution::HostInterface for ConformanceHost {
                 f: Box::new(move |a, _| {
                     let n = arg_i64(a, 0)?;
                     sink.lock().expect("sink").extend_from_slice(format!("{n}\n").as_bytes());
+                    Ok(vec![])
+                }),
+            })),
+            // LANG83 PR1b: decimal, no newline, into the same ordered sink.
+            "__write_i64" => Some(Box::new(HostFn {
+                ty: FuncType { params: vec![I64], results: vec![] },
+                f: Box::new(move |a, _| {
+                    let n = arg_i64(a, 0)?;
+                    sink.lock().expect("sink").extend_from_slice(n.to_string().as_bytes());
+                    Ok(vec![])
+                }),
+            })),
+            // LANG83 PR1b: record the kind id and return; the module's own
+            // `unreachable` must then stop the program.
+            "__trap" => Some(Box::new(HostFn {
+                ty: FuncType { params: vec![I32], results: vec![] },
+                f: Box::new(move |a, _| {
+                    let id = u32::try_from(arg_i64(a, 0)?).map_err(|_| trap("__trap: bad kind id"))?;
+                    *trap_kind.lock().expect("trap slot") = Some(id);
                     Ok(vec![])
                 }),
             })),
@@ -629,10 +806,21 @@ fn run_wasm(module: IIRModule, case: &Case) -> RunResult {
     let bytes = lang_aot::compile_iir_to_wasm(module)
         .unwrap_or_else(|e| panic!("Wasm: case `{}` failed to compile: {e}", case.name));
     let sink: Sink = Arc::default();
-    let rt = wasm_runtime::WasmRuntime::with_host(Box::new(ConformanceHost { sink: Arc::clone(&sink) }));
-    match rt.load_and_run(&bytes, "main", &[]) {
-        Ok(_) => RunResult::Completed { stdout: sink_text(&sink) },
-        Err(_) => RunResult::Trapped { stdout: sink_text(&sink), kind: None },
+    let trap_kind: Arc<Mutex<Option<u32>>> = Arc::default();
+    let rt = wasm_runtime::WasmRuntime::with_host(Box::new(ConformanceHost {
+        sink: Arc::clone(&sink),
+        trap_kind: Arc::clone(&trap_kind),
+    }));
+    let result = rt.load_and_run(&bytes, "main", &[]);
+    let kind = trap_kind
+        .lock()
+        .expect("trap slot")
+        .and_then(interpreter_ir::exception_kind::trap_kind_name)
+        .map(str::to_string);
+    match (result, kind) {
+        (Ok(_), None) => RunResult::Completed { stdout: sink_text(&sink) },
+        (Ok(_), Some(kind)) => panic!("Wasm: case `{}` returned after env.__trap({kind})", case.name),
+        (Err(_), kind) => RunResult::Trapped { stdout: sink_text(&sink), kind },
     }
 }
 
@@ -685,6 +873,116 @@ fn run_llvm(module: IIRModule, case: &Case) -> Option<RunResult> {
     Some(run_process(Command::new(&exe)))
 }
 
+fn java_ok() -> bool {
+    ["java", "javac"]
+        .iter()
+        .all(|tool| Command::new(tool).arg("-version").output().map(|o| o.status.success()).unwrap_or(false))
+}
+
+/// The two host classes the JVM backend's `print_i64` / `putchar` call (the
+/// same contract as `lang_matrix`'s `BASIC_RUNTIME_JAVA` / `BF_RUNTIME_JAVA`),
+/// both writing to `System.out` like `write_i64` and `print_str` do.
+const ENV_RUNTIME_JAVA: &[(&str, &str)] = &[
+    (
+        "BasicRuntime.java",
+        "package env; public final class BasicRuntime { \
+         public static void println(long x) { System.out.println(x); } }",
+    ),
+    (
+        "BFRuntime.java",
+        "package env; public final class BFRuntime { public static byte[] __tape = new byte[30000]; \
+         public static void putchar(int c) { System.out.write(c & 0xFF); System.out.flush(); } \
+         public static int getchar() { return 0; } }",
+    ),
+];
+
+/// Compile the `env.*` host classes once per test process; `None` if that fails.
+fn env_classes_dir() -> Option<&'static std::path::Path> {
+    static DIR: std::sync::OnceLock<Option<tempfile::TempDir>> = std::sync::OnceLock::new();
+    DIR.get_or_init(|| {
+        let dir = tempfile::tempdir().ok()?;
+        let mut javac = Command::new("javac");
+        javac.arg("-d").arg(dir.path());
+        for (file, source) in ENV_RUNTIME_JAVA {
+            let path = dir.path().join(file);
+            std::fs::write(&path, source).ok()?;
+            javac.arg(path);
+        }
+        let out = javac.output().ok()?;
+        assert!(out.status.success(), "javac env runtime: {}", String::from_utf8_lossy(&out.stderr));
+        Some(dir)
+    })
+    .as_ref()
+    .map(|d| d.path())
+}
+
+/// The JVM column: compile through lang-aot, add a `main(String[])` launcher
+/// that calls the entry and discards its result, and run it on real `java` with
+/// the class-file verifier ON (no `-Xverify:none`) — so the PR1b bytecode
+/// (guards, `athrow` and the dead code after it) is verified, not just run.
+fn run_jvm(module: IIRModule, case: &Case) -> Option<RunResult> {
+    use jvm_class_file::{
+        JvmCodeAttribute, JvmConstantPoolEntry as Cp, JvmMethodAttribute, JvmMethodInfo, ACC_PUBLIC, ACC_STATIC,
+    };
+    if !java_ok() {
+        return None;
+    }
+    let env_dir = env_classes_dir()?;
+    let mut class = lang_aot::compile_iir_to_jvm_class(module, "Main")
+        .unwrap_or_else(|e| panic!("Jvm: case `{}` failed to compile: {e}", case.name));
+    let entry_desc = class.methods.iter().find(|m| m.name == "main").expect("entry `main`").descriptor.clone();
+    let ret = entry_desc.rsplit(')').next().unwrap_or("V").to_string();
+    let cp = &mut class.constant_pool;
+    let mut add = |e: Cp| {
+        cp.push(Some(e));
+        (cp.len() - 1) as u16
+    };
+    let class_utf8 = add(Cp::Utf8("Main".into()));
+    let class_ref = add(Cp::Class { name_index: class_utf8 });
+    let name = add(Cp::Utf8("main".into()));
+    let desc = add(Cp::Utf8(entry_desc.clone()));
+    let nat = add(Cp::NameAndType { name_index: name, descriptor_index: desc });
+    let entry_ref = add(Cp::Methodref { class_index: class_ref, name_and_type_index: nat });
+    let _ = add(Cp::Utf8("([Ljava/lang/String;)V".into()));
+    let [hi, lo] = entry_ref.to_be_bytes();
+    let mut code = vec![0xB8, hi, lo]; // invokestatic Main.main()<R>
+    let width: u16 = match ret.as_str() {
+        "J" | "D" => {
+            code.push(0x58); // pop2
+            2
+        }
+        "V" => 0,
+        _ => {
+            code.push(0x57); // pop
+            1
+        }
+    };
+    code.push(0xB1); // return
+    class.methods.push(JvmMethodInfo {
+        access_flags: ACC_PUBLIC | ACC_STATIC,
+        name: "main".into(),
+        descriptor: "([Ljava/lang/String;)V".into(),
+        attributes: vec![JvmMethodAttribute::Code(JvmCodeAttribute {
+            name: "Code".into(),
+            max_stack: width.max(1),
+            max_locals: 1,
+            code,
+            nested_attributes: vec![],
+        })],
+    });
+    let dir = tempfile::tempdir().expect("jvm: temp dir");
+    std::fs::write(dir.path().join("Main.class"), iir_to_jvm_class_file::serialize_jvm_class_file(&class))
+        .expect("jvm: write Main.class");
+    let classpath = std::env::join_paths([dir.path(), env_dir]).expect("jvm: classpath");
+    let mut cmd = Command::new("java");
+    cmd.arg("-cp").arg(classpath).arg("Main");
+    let result = run_process(cmd);
+    if let RunResult::Trapped { kind: None, .. } = &result {
+        panic!("Jvm: case `{}` failed without a LANG83 trap kind: {result:?}", case.name);
+    }
+    Some(result)
+}
+
 fn run_process(mut cmd: Command) -> RunResult {
     let out = cmd.output().expect("spawn compiled program");
     let stdout = String::from_utf8_lossy(&out.stdout).trim().to_string();
@@ -692,7 +990,13 @@ fn run_process(mut cmd: Command) -> RunResult {
         RunResult::Completed { stdout }
     } else {
         let stderr = String::from_utf8_lossy(&out.stderr);
-        let kind = stderr.split_whitespace().find(|w| w.contains("Trap.")).map(str::to_string);
+        // `trap: Trap.DivZero` (native, LLVM) or
+        // `java.lang.RuntimeException: Trap.DivZero` (JVM): the first word that
+        // names a kind, without surrounding punctuation.
+        let kind = stderr
+            .split(|c: char| c.is_whitespace() || matches!(c, '\'' | '"' | ',' | '{' | '}' | '(' | ')'))
+            .find(|w| w.starts_with("Trap."))
+            .map(str::to_string);
         RunResult::Trapped { stdout, kind }
     }
 }
@@ -737,6 +1041,12 @@ fn execute_everywhere(case: &Case) -> Vec<&'static str> {
         if let Some(result) = run_native(case.module(), case) {
             assert_outcome("NativeAot", case, result);
             ran.push("NativeAot");
+        }
+    }
+    if case.lowered_on(Backend::Jvm) {
+        if let Some(result) = run_jvm(case.module(), case) {
+            assert_outcome("Jvm", case, result);
+            ran.push("Jvm");
         }
     }
     ran
@@ -822,8 +1132,61 @@ fn refused_ops_are_rejected_at_compile_time() {
             refusals += 1;
         }
     }
-    // Every PR1b op is refused on all nine backends today.
-    assert!(refusals >= 4 * Backend::ALL.len(), "only {refusals} refusals exercised");
+    // Since PR1b no backend refuses a PR1b op; the refusals left are the
+    // generic JIT's interpreter-tier-only ops (strings, `f64` math,
+    // conversions, `mod`, `print_str`), each of which has a case. Derive the
+    // bound from that rather than pinning a count.
+    let jit_refused_cases =
+        cases().iter().filter(|c| c.registry_ops().iter().any(|op| !Backend::Jit.op_support(op).is_lowered())).count();
+    assert!(jit_refused_cases > 0, "the JIT refuses interpreter-tier ops, so some case must exercise a refusal");
+    assert!(refusals >= jit_refused_cases, "only {refusals} refusals exercised (JIT alone has {jit_refused_cases})");
+}
+
+#[test]
+fn pr1b_ops_are_lowered_on_every_backend() {
+    for spec in STANDARD_OPS.iter().filter(|s| s.is_pr1b()) {
+        for backend in Backend::ALL {
+            assert!(
+                backend.op_support(spec.name).is_lowered(),
+                "{backend} still refuses {}: {:?}",
+                spec.name,
+                backend.op_support(spec.name)
+            );
+        }
+    }
+}
+
+#[test]
+fn flush_before_trap_is_proven_on_every_executable_column() {
+    let corpus = cases();
+    let traps: Vec<&Case> = corpus
+        .iter()
+        .filter(|c| matches!(c.expect, Expect::StdoutThenTrap(out, _) if !out.is_empty()))
+        .collect();
+    assert!(!traps.is_empty());
+    let mut proven: Vec<&str> = Vec::new();
+    for case in traps {
+        for column in execute_everywhere(case) {
+            if !proven.contains(&column) {
+                proven.push(column);
+            }
+        }
+    }
+    // In-process columns never skip; toolchain columns only when the tool is absent.
+    let mut required = vec!["Wasm", "Vm", "Jit"];
+    if clang_ok() {
+        required.push("Llvm");
+    }
+    if cfg!(target_os = "linux") {
+        required.push("NativeAot");
+    }
+    if java_ok() {
+        required.push("Jvm");
+    }
+    for column in required {
+        assert!(proven.contains(&column), "flush-before-trap not proven on {column} (proven: {proven:?})");
+    }
+    eprintln!("LANG83 flush-before-trap proven on {proven:?}");
 }
 
 #[test]
