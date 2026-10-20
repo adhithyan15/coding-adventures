@@ -628,7 +628,7 @@ fn fold_tagged_statement(stmt: &TaggedStatement, st: &mut FoldState) -> Statemen
 /// Folds `BlockStatement.body` by recursing into each statement
 /// AND dropping everything after a `ReturnStatement` (dead code
 /// after a definite terminator) — when that dead tail is safe to
-/// drop (#17841, [`dead_tail_is_safe_to_drop`]).
+/// drop (#17841, [`is_droppable_dead_statement`]). Linear in the block length.
 fn fold_block_statement(b: &BlockStatement, st: &mut FoldState) -> BlockStatement {
     let mut new_body = Vec::with_capacity(b.body.len());
     let mut hit_terminator = false;
@@ -636,12 +636,17 @@ fn fold_block_statement(b: &BlockStatement, st: &mut FoldState) -> BlockStatemen
     // Capture each dead-after-terminator statement's CV id so it can be
     // tombstoned (see the `record_fold_deleting` call below).
     let mut removed_cvs: Vec<Option<String>> = Vec::new();
+    // Index of the last statement that must never be dropped (#17841). A tail
+    // starting at `i` is droppable iff that index is before `i`, an O(1)
+    // test. Re-scanning the suffix after every `return` was quadratic on
+    // `return;` × N followed by a declaration.
+    let last_undroppable = b.body.iter().rposition(|s| !is_droppable_dead_statement(s));
     for (i, s) in b.body.iter().enumerate() {
         if hit_terminator {
             // The rest of the block is unreachable. Drop it as a unit, but
             // only if nothing in it hoists or shadows a name (#17841);
             // otherwise keep folding it as ordinary statements.
-            if dead_tail_is_safe_to_drop(&b.body[i..]) {
+            if last_undroppable.is_none_or(|u| u < i) {
                 for dead in &b.body[i..] {
                     dropped_count += 1;
                     removed_cvs.push(statement_cv(dead));
@@ -928,8 +933,8 @@ fn coalesce_var_decls<T: VarDeclCarrier>(items: Vec<T>, st: &mut FoldState) -> V
     out
 }
 
-/// Can the unreachable tail after a `return` be deleted without changing
-/// behaviour? (#17841)
+/// May this statement be deleted when it is unreachable (after a `return`)?
+/// A dead tail is dropped only when every statement in it passes (#17841).
 ///
 /// Unreachable is not the same as unobservable. Three kinds of dead
 /// statement still affect the code *before* the `return`:
@@ -950,21 +955,22 @@ fn coalesce_var_decls<T: VarDeclCarrier>(items: Vec<T>, st: &mut FoldState) -> V
 /// `debugger` statement. A `class`, any declaration and any compound statement,
 /// which could wrap a `var`, keep the whole tail. Keeping dead code is never a
 /// miscompile; DCE and remove-unused-vars still clean up what they can prove.
-fn dead_tail_is_safe_to_drop(stmts: &[Statement]) -> bool {
-    stmts.iter().all(|s| {
-        matches!(
-            s,
-            Statement::Tagged(
-                TaggedStatement::ExpressionStatement(_)
-                    | TaggedStatement::EmptyStatement(_)
-                    | TaggedStatement::BreakStatement(_)
-                    | TaggedStatement::ContinueStatement(_)
-                    | TaggedStatement::ReturnStatement(_)
-                    | TaggedStatement::ThrowStatement(_)
-                    | TaggedStatement::DebuggerStatement(_)
-            )
+///
+/// [`fold_block_statement`] precomputes the index of the last statement that
+/// fails this test, so "is the tail from `i` droppable?" is an O(1) check.
+fn is_droppable_dead_statement(s: &Statement) -> bool {
+    matches!(
+        s,
+        Statement::Tagged(
+            TaggedStatement::ExpressionStatement(_)
+                | TaggedStatement::EmptyStatement(_)
+                | TaggedStatement::BreakStatement(_)
+                | TaggedStatement::ContinueStatement(_)
+                | TaggedStatement::ReturnStatement(_)
+                | TaggedStatement::ThrowStatement(_)
+                | TaggedStatement::DebuggerStatement(_)
         )
-    })
+    )
 }
 
 /// A statement that unconditionally transfers control out of the

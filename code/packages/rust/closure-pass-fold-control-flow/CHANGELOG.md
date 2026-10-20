@@ -13,7 +13,8 @@ hoisting guard. That produced two miscompiles:
 - `function g(){x=3;return x;var x}` lost `var x`, so `g` overwrote the
   global `x`.
 
-The dead tail is now dropped only when `dead_tail_is_safe_to_drop` agrees. It
+The dead tail is now dropped only when every statement passes
+`is_droppable_dead_statement`, which is decided in linear time. It
 uses the same whitelist as `closure-pass-dce`: expression, empty, jump and
 `debugger` statements only. Any `function`, `var`, `let`, `const` or `class`
 declaration, or compound statement, keeps the whole tail. Four new unit tests

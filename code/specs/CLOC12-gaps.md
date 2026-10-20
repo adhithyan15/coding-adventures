@@ -1400,7 +1400,7 @@ deleted:
 - a hoisted `var x`, so the function's local leaked to the global;
 - a TDZ-shadowing `let x`.
 
-`dead_tail_is_safe_to_drop` now applies the same whitelist as DCE's
+`is_droppable_dead_statement` now applies, per statement, the same whitelist as DCE's
 `tail_is_safe_to_truncate`. The `let`/`const` case also needs DCE to keep
 such tails, which is the CCR-082 review fix.
 

@@ -10,7 +10,7 @@
 //! no hoisting guard. The first program then threw `ReferenceError: h is not
 //! defined`. In the second, `g`'s local `x` became the global, so the program
 //! printed 3 instead of 7. The drop now uses the same whitelist as
-//! `closure-pass-dce` (`dead_tail_is_safe_to_drop`).
+//! `closure-pass-dce` (`is_droppable_dead_statement`).
 //!
 //! For each input under `tests/regression/hoisted-after-return/input/`, at
 //! SIMPLE and ADVANCED, the declaration survives and the output bytes are
