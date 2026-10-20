@@ -6207,7 +6207,11 @@ fn throw_terminators(kept: &[&lexer::token::Token]) -> Vec<bool> {
         } else if is_structural_punct(t, ";") {
             if pending.last() == Some(&depth) {
                 marks[i] = true;
-                pending.pop();
+                // Every throw waiting at this depth ends here. Two can only
+                // pile up when ASI couldn't run and the first had no `;`.
+                while pending.last() == Some(&depth) {
+                    pending.pop();
+                }
             }
         } else if t.value == "throw" && is_word_like(t) {
             let after_dot = i > 0
