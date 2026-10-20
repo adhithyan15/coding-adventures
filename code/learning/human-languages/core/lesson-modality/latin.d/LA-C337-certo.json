@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C337-certo",
+    "language": "latin",
+    "chapter": 337,
+    "sequence": 18170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:19a9224c732be58d"
+  },
+  "findings": []
+}

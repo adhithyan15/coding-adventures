@@ -1,0 +1,11 @@
+{
+  "id": "LA-C552-supellex",
+  "pathSegment": "LA-PATH-552-DOMI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-552-DOMI",
+      "order": 2
+    }
+  ]
+}

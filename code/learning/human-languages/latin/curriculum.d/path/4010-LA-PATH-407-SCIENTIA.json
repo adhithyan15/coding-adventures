@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-407-SCIENTIA",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "LA-EXT-407-SCIENTIA"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C500-rivalis",
+    "language": "latin",
+    "chapter": 500,
+    "sequence": 26600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8652a1a181e6889e"
+  },
+  "findings": []
+}

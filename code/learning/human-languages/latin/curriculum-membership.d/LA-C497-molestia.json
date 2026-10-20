@@ -1,0 +1,11 @@
+{
+  "id": "LA-C497-molestia",
+  "pathSegment": "LA-PATH-497-SOLL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-497-SOLL",
+      "order": 3
+    }
+  ]
+}

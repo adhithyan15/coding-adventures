@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 307,
+  "title": "Venēnum",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:142b243ce7148bfe",
+  "lessons": [
+    {
+      "id": "LA-C307-venenum",
+      "sequence": 16620,
+      "title": "venēnum, venēnī — poison; a drug",
+      "headword": "venēnum, venēnī",
+      "romanization": "venēnum, venēnī",
+      "gloss": "poison; a drug",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6896169d62da7cfe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a dagger, then the Latin for to kill."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: venēnum, venēnī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "venēnum, venēnī — \"poison; a drug\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Medicus venēnum in pōculō invēnit. The doctor found poison in the cup."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter. First any strong drug or charm, then poison. English venom comes from it through French."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "venēnum is inherited; EtymDB traces it to Proto-Italic wenesnom, from a root meaning \"to desire\", so first a love potion. English venom comes from it through French."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "venēnum, venēnī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *venēnum, venēnī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "venēnum, venēnī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *venēnum, venēnī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with venēnum, venēnī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *venēnum, venēnī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a dagger, then the Latin for to kill, then say venēnum, venēnī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a dagger, then the Latin for to kill, then say *venēnum, venēnī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does venēnum, venēnī mean? (\"Poison; a drug\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C307-veneficus",
+      "sequence": 16630,
+      "title": "venēficus, venēficī — a poisoner; a sorcerer",
+      "headword": "venēficus, venēficī",
+      "romanization": "venēficus, venēficī",
+      "gloss": "a poisoner; a sorcerer",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e31278192a53f08f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to kill, then the Latin for poison."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: venēficus, venēficī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "venēficus, venēficī — \"a poisoner; a sorcerer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Venēficus herbās perīculōsās in hortō alēbat. The poisoner grew dangerous herbs in his garden."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine; the feminine venēfica is the witch of Roman stories."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "venēficus joins venēnum, \"poison\", and faciō, \"to make\" (EtymDB, Lewis & Short): a maker of poisons and charms."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "venēficus, venēficī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *venēficus, venēficī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "venēficus, venēficī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *venēficus, venēficī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with venēficus, venēficī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *venēficus, venēficī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to kill, then the Latin for poison, then say venēficus, venēficī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to kill, then the Latin for poison, then say *venēficus, venēficī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does venēficus, venēficī mean? (\"A poisoner; a sorcerer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C307-insidiae",
+      "sequence": 16640,
+      "title": "īnsidiae, īnsidiārum — an ambush; a plot",
+      "headword": "īnsidiae, īnsidiārum",
+      "romanization": "īnsidiae, īnsidiārum",
+      "gloss": "an ambush; a plot",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4501af85e3efc929",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for poison, then the Latin for a poisoner."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: īnsidiae, īnsidiārum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "īnsidiae, īnsidiārum — \"an ambush; a plot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Hostēs in silvā īnsidiās parāvērunt. The enemy prepared an ambush in the forest."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, plural only: men sitting hidden, waiting. English insidious."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "īnsidiae is built on īnsideō, \"to sit in, to occupy\" (Lewis & Short), from in and sedeō, \"to sit\": a lying in wait. English insidious comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "īnsidiae, īnsidiārum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *īnsidiae, īnsidiārum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "īnsidiae, īnsidiārum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *īnsidiae, īnsidiārum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with īnsidiae, īnsidiārum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *īnsidiae, īnsidiārum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for poison, then the Latin for a poisoner, then say īnsidiae, īnsidiārum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for poison, then the Latin for a poisoner, then say *īnsidiae, īnsidiārum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does īnsidiae, īnsidiārum mean? (\"An ambush; a plot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C307-coniuratio",
+      "sequence": 16650,
+      "title": "coniūrātiō, coniūrātiōnis — a conspiracy",
+      "headword": "coniūrātiō, coniūrātiōnis",
+      "romanization": "coniūrātiō, coniūrātiōnis",
+      "gloss": "a conspiracy",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cc583e770fb98fa6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a poisoner, then the Latin for an ambush."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: coniūrātiō, coniūrātiōnis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "coniūrātiō, coniūrātiōnis — \"a conspiracy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Cōnsul coniūrātiōnem in senātū patefēcit. The consul exposed the conspiracy in the senate."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, 3rd declension. Cicero brought one to light in 63 BC."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "coniūrātiō is built on coniūrō, \"to swear together\", from con- and iūrō, \"to swear\" (Lewis & Short): a band bound by a shared oath."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "coniūrātiō, coniūrātiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *coniūrātiō, coniūrātiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "coniūrātiō, coniūrātiōnis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *coniūrātiō, coniūrātiōnis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with coniūrātiō, coniūrātiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *coniūrātiō, coniūrātiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a poisoner, then the Latin for an ambush, then say coniūrātiō, coniūrātiōnis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a poisoner, then the Latin for an ambush, then say *coniūrātiō, coniūrātiōnis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does coniūrātiō, coniūrātiōnis mean? (\"A conspiracy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C307-proditor",
+      "sequence": 16660,
+      "title": "prōditor, prōditōris — a traitor",
+      "headword": "prōditor, prōditōris",
+      "romanization": "prōditor, prōditōris",
+      "gloss": "a traitor",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b21601e0e74bac0c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for an ambush, then the Latin for a conspiracy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: prōditor, prōditōris",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "prōditor, prōditōris — \"a traitor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Prōditor portās hostibus aperuit. The traitor opened the gates to the enemy."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine, 3rd declension, from prōdō, 'to betray'. Prōditor patriae: a traitor to his country."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "prōditor is built on prōdō, \"to give up, to betray\" (Lewis & Short), with the ending -tor."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prōditor, prōditōris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prōditor, prōditōris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prōditor, prōditōris, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prōditor, prōditōris*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with prōditor, prōditōris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *prōditor, prōditōris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for an ambush, then the Latin for a conspiracy, then say prōditor, prōditōris again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for an ambush, then the Latin for a conspiracy, then say *prōditor, prōditōris* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does prōditor, prōditōris mean? (\"A traitor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

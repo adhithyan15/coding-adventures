@@ -1,0 +1,19 @@
+{
+  "chapter": 415,
+  "title": "Punishment",
+  "label": "ch:la-punishment",
+  "canDo": "I can say that someone was punished, banished or outlawed, and talk about the whip and custody.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "LA-C415-custodia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 415: I can say that someone was punished, banished or outlawed, and talk about the whip and custody.",
+    "assesses": [
+      "LA-LEX-C415-CASTIGO-03",
+      "LA-LEX-C415-CASTIGO-04",
+      "LA-LEX-C415-CASTIGO-05"
+    ]
+  }
+}

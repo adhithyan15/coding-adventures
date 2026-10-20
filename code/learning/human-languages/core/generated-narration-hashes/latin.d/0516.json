@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 516,
+  "sourceHash": "fnv1a64:c21083523cae4108",
+  "lessonIds": [
+    "LA-C516-guttur",
+    "LA-C516-fauces",
+    "LA-C516-cervix",
+    "LA-C516-membrum",
+    "LA-C516-artus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch516.txt",
+  "json": "latin/narration/ch516.json",
+  "textHash": "fnv1a64:48042f17aa519b8a",
+  "jsonHash": "fnv1a64:c6b8ca163a78ab81",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C345-tyrannus",
+  "pathSegment": "LA-PATH-345-REX",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-345-REX",
+      "order": 2
+    }
+  ]
+}

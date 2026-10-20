@@ -1,0 +1,11 @@
+{
+  "id": "LA-C343-foedus",
+  "pathSegment": "LA-PATH-343-TRIUMPHUS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-343-TRIUMPHUS",
+      "order": 3
+    }
+  ]
+}

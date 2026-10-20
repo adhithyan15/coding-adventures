@@ -1,0 +1,19 @@
+{
+  "chapter": 323,
+  "title": "Īnfāns nātus est",
+  "label": "ch:la-infans-natus-est",
+  "canDo": "I can talk about a birth: to give birth, the birth, the midwife, to suckle and the nurse.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C323-nutrix",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 323: I can talk about a birth: to give birth, the birth, the midwife, to suckle and the nurse.",
+    "assesses": [
+      "LA-LEX-C323-PARTUS-03",
+      "LA-LEX-C323-PARTUS-04",
+      "LA-LEX-C323-PARTUS-05"
+    ]
+  }
+}

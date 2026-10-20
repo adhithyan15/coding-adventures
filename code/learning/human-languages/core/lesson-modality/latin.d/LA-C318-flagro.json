@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C318-flagro",
+    "language": "latin",
+    "chapter": 318,
+    "sequence": 17200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0fd17854eac013a8"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C471-lapicida",
+    "language": "latin",
+    "chapter": 471,
+    "sequence": 25100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:da6af6c51d7128bc"
+  },
+  "findings": []
+}

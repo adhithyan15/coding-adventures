@@ -1,0 +1,20 @@
+{
+  "language": "latin",
+  "chapter": 470,
+  "sourceHash": "fnv1a64:e0c11321a53708f7",
+  "lessonIds": [
+    "LA-C470-ascia",
+    "LA-C470-terebra",
+    "LA-C470-runcina",
+    "LA-C470-lima",
+    "LA-C470-dolo",
+    "LA-R470-review-463-470"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "latin/narration/ch470.txt",
+  "json": "latin/narration/ch470.json",
+  "textHash": "fnv1a64:0b900ec1c46e24fa",
+  "jsonHash": "fnv1a64:f984a248074478f9",
+  "findings": []
+}

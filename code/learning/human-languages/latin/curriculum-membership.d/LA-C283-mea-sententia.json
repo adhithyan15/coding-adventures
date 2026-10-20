@@ -1,0 +1,11 @@
+{
+  "id": "LA-C283-mea-sententia",
+  "pathSegment": "LA-PATH-283-SENTENTIA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-283-SENTENTIA",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-313-RUINA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-313-RUINA"
+  ],
+  "after": []
+}

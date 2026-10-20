@@ -1,0 +1,11 @@
+{
+  "id": "LA-C328-matrona",
+  "pathSegment": "LA-PATH-328-FLAMMEUM",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-328-FLAMMEUM",
+      "order": 3
+    }
+  ]
+}

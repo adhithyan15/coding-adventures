@@ -1,0 +1,11 @@
+{
+  "id": "LA-C456-oppidanus",
+  "pathSegment": "LA-PATH-456-INCOLA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-456-INCOLA",
+      "order": 1
+    }
+  ]
+}

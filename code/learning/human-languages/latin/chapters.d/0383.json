@@ -1,0 +1,19 @@
+{
+  "chapter": 383,
+  "title": "The Magistrates",
+  "label": "ch:la-the-magistrates",
+  "canDo": "I can name a magistrate, a praetor, an aedile, a quaestor and a censor, and say what each one does.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C383-censor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 383: I can name a magistrate, a praetor, an aedile, a quaestor and a censor, and say what each one does.",
+    "assesses": [
+      "LA-LEX-C383-MAGISTRATUS-03",
+      "LA-LEX-C383-MAGISTRATUS-04",
+      "LA-LEX-C383-MAGISTRATUS-05"
+    ]
+  }
+}

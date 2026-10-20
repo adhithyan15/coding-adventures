@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C551-capsa",
+    "language": "latin",
+    "chapter": 551,
+    "sequence": 29170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:794f1a0c2e79c777"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 468,
+  "sourceHash": "fnv1a64:3605d4e34869a4f1",
+  "lessonIds": [
+    "LA-C468-tingo",
+    "LA-C468-murex",
+    "LA-C468-ostrum",
+    "LA-C468-pigmentum",
+    "LA-C468-penicillus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch468.txt",
+  "json": "latin/narration/ch468.json",
+  "textHash": "fnv1a64:e2eaa6011abeeca6",
+  "jsonHash": "fnv1a64:32fcf9af8dcc9f62",
+  "findings": []
+}

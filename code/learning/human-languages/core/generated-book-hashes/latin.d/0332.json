@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 332,
+  "sourceHash": "fnv1a64:c8b6d5102d7e8846",
+  "lessonIds": [
+    "LA-C332-heres",
+    "LA-C332-hereditas",
+    "LA-C332-testamentum",
+    "LA-C332-obsigno",
+    "LA-C332-relinquo"
+  ],
+  "tex": "latin/book/chapters/ch332-testamentum.tex"
+}

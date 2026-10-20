@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:337b1142f6e54e58",
+  "lessonIds": [
+    "LA-C321-minae",
+    "LA-C321-minitor",
+    "LA-C321-terreo",
+    "LA-C321-tumultus",
+    "LA-C321-clamor"
+  ],
+  "tex": "latin/book/chapters/ch321-minae-et-tumultus.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:4bfee304323952dc",
+  "lessonIds": [
+    "LA-C360-manifestus",
+    "LA-C360-perspicuus",
+    "LA-C360-absurdus",
+    "LA-C360-stultitia",
+    "LA-C360-constantia"
+  ],
+  "tex": "latin/book/chapters/ch360-plain-clear-and-absurd.tex"
+}

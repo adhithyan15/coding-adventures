@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 307,
+  "sourceHash": "fnv1a64:6944da716e4fff24",
+  "lessonIds": [
+    "LA-C307-venenum",
+    "LA-C307-veneficus",
+    "LA-C307-insidiae",
+    "LA-C307-coniuratio",
+    "LA-C307-proditor"
+  ],
+  "tex": "latin/book/chapters/ch307-venenum.tex"
+}

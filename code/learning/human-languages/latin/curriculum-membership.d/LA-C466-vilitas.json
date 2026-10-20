@@ -1,0 +1,11 @@
+{
+  "id": "LA-C466-vilitas",
+  "pathSegment": "LA-PATH-466-ANNONA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-466-ANNONA",
+      "order": 2
+    }
+  ]
+}

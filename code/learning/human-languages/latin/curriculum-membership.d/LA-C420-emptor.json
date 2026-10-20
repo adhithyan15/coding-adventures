@@ -1,0 +1,11 @@
+{
+  "id": "LA-C420-emptor",
+  "pathSegment": "LA-PATH-420-AUCTIO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-420-AUCTIO",
+      "order": 3
+    }
+  ]
+}

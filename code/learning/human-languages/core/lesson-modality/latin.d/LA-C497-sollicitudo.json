@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C497-sollicitudo",
+    "language": "latin",
+    "chapter": 497,
+    "sequence": 26410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed1b8e139fd4dc0e"
+  },
+  "findings": []
+}

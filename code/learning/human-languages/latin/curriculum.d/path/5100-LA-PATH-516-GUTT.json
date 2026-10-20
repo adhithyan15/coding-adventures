@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-516-GUTT",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "LA-EXT-516-GUTT"
+  ],
+  "after": []
+}

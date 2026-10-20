@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C552-domicilium",
+    "language": "latin",
+    "chapter": 552,
+    "sequence": 29220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b32655a18d9cc5df"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C311-culpa",
+    "language": "latin",
+    "chapter": 311,
+    "sequence": 16860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:11226c1a279ed35c"
+  },
+  "findings": []
+}

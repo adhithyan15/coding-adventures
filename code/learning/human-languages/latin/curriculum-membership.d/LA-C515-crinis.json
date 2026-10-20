@@ -1,0 +1,11 @@
+{
+  "id": "LA-C515-crinis",
+  "pathSegment": "LA-PATH-515-VULT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-515-VULT",
+      "order": 2
+    }
+  ]
+}

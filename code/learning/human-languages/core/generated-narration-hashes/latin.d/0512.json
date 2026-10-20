@@ -1,0 +1,20 @@
+{
+  "language": "latin",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:f07c9e70c88efbbb",
+  "lessonIds": [
+    "LA-C512-gratus",
+    "LA-C512-ingratus",
+    "LA-C512-meritum",
+    "LA-C512-laus",
+    "LA-C512-vitupero",
+    "LA-R512-review-505-512"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "latin/narration/ch512.txt",
+  "json": "latin/narration/ch512.json",
+  "textHash": "fnv1a64:3ce7587e96f2b0f0",
+  "jsonHash": "fnv1a64:afaa0e79d3fef3ac",
+  "findings": []
+}

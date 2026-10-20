@@ -1,0 +1,11 @@
+{
+  "id": "LA-C511-laedo",
+  "pathSegment": "LA-PATH-511-CRUD",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-511-CRUD",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 518,
+  "title": "Side, hip and foot",
+  "label": "ch:la-side-hip-and-foot",
+  "canDo": "I can name the side, the hip, the heel and the sole.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C518-umbilicus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 518: I can name the side, the hip, the heel and the sole.",
+    "assesses": [
+      "LA-LEX-C518-LATU-03",
+      "LA-LEX-C518-LATU-04",
+      "LA-LEX-C518-LATU-05"
+    ]
+  }
+}

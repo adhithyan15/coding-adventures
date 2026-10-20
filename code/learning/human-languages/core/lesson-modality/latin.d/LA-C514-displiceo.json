@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C514-displiceo",
+    "language": "latin",
+    "chapter": 514,
+    "sequence": 27320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9a45076fc61a0a71"
+  },
+  "findings": []
+}

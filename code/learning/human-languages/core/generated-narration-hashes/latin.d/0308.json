@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:0f9e895989a34eb5",
+  "lessonIds": [
+    "LA-C308-iudex",
+    "LA-C308-iudicium",
+    "LA-C308-iudico",
+    "LA-C308-lex",
+    "LA-C308-ius"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch308.txt",
+  "json": "latin/narration/ch308.json",
+  "textHash": "fnv1a64:9cc8ff5c1a245f94",
+  "jsonHash": "fnv1a64:9c713fc0cbb50fb2",
+  "findings": []
+}

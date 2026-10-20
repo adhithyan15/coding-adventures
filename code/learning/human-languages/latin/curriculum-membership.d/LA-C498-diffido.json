@@ -1,0 +1,11 @@
+{
+  "id": "LA-C498-diffido",
+  "pathSegment": "LA-PATH-498-SPES",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-498-SPES",
+      "order": 3
+    }
+  ]
+}

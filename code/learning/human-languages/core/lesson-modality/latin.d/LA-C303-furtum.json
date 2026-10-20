@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C303-furtum",
+    "language": "latin",
+    "chapter": 303,
+    "sequence": 16410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:da5d9c0da69e809f"
+  },
+  "findings": []
+}

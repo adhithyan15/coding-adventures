@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C410-rogatio",
+    "language": "latin",
+    "chapter": 410,
+    "sequence": 21910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:37d08b29b0998543"
+  },
+  "findings": []
+}

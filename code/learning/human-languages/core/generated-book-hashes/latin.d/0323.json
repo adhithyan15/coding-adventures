@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:80a047b2a5ca3fe0",
+  "lessonIds": [
+    "LA-C323-pario",
+    "LA-C323-partus",
+    "LA-C323-obstetrix",
+    "LA-C323-nutrio",
+    "LA-C323-nutrix"
+  ],
+  "tex": "latin/book/chapters/ch323-infans-natus-est.tex"
+}

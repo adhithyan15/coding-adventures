@@ -1,0 +1,11 @@
+{
+  "id": "LA-C325-cognomen",
+  "pathSegment": "LA-PATH-325-BULLA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-325-BULLA",
+      "order": 3
+    }
+  ]
+}

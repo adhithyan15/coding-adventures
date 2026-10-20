@@ -1,0 +1,11 @@
+{
+  "id": "LA-C529-vitricus",
+  "pathSegment": "LA-PATH-529-NOVE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-529-NOVE",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C489-laetor",
+  "pathSegment": "LA-PATH-489-GAUD",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-489-GAUD",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C333-sollemnis",
+  "pathSegment": "LA-PATH-333-FESTUS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-333-FESTUS",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C308-iudicium",
+    "language": "latin",
+    "chapter": 308,
+    "sequence": 16680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1dbbdcc53e25a7ab"
+  },
+  "findings": []
+}

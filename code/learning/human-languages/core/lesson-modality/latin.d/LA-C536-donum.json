@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C536-donum",
+    "language": "latin",
+    "chapter": 536,
+    "sequence": 28440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eb3fda966f885c4f"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C419-pignus",
+  "pathSegment": "LA-PATH-419-PERSOLVO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-419-PERSOLVO",
+      "order": 2
+    }
+  ]
+}

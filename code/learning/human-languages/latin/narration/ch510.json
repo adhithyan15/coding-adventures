@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 510,
+  "title": "Folly and madness",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:9dd82ac9ab083c6f",
+  "lessons": [
+    {
+      "id": "LA-C510-ineptus",
+      "sequence": 27070,
+      "title": "ineptus, inepta, ineptum — silly, foolish; tactless",
+      "headword": "ineptus, inepta, ineptum",
+      "romanization": "ineptus, inepta, ineptum",
+      "gloss": "silly, foolish; tactless",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1a1c1193d6e78140",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for steadfast, then the Latin for good sense."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ineptus, inepta, ineptum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ineptus, inepta, ineptum — \"silly, foolish; tactless\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Fābula inepta est, sed puerī rīdent. The story is silly, but the children laugh."
+            },
+            {
+              "kind": "speech",
+              "text": "in- 'not' + aptus 'fitting': someone who says the wrong thing at the wrong time. English inept."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ineptus is built on in- \"not\" and aptus \"fitting\" (Lewis & Short). English inept comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ineptus, inepta, ineptum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ineptus, inepta, ineptum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ineptus, inepta, ineptum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ineptus, inepta, ineptum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ineptus, inepta, ineptum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ineptus, inepta, ineptum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for steadfast, then the Latin for good sense, then say ineptus, inepta, ineptum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for steadfast, then the Latin for good sense, then say *ineptus, inepta, ineptum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ineptus, inepta, ineptum mean? (\"Silly, foolish; tactless\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C510-insanus",
+      "sequence": 27080,
+      "title": "īnsānus, īnsāna, īnsānum — mad, insane",
+      "headword": "īnsānus, īnsāna, īnsānum",
+      "romanization": "īnsānus, īnsāna, īnsānum",
+      "gloss": "mad, insane",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:24fe4823a0fd90e7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for good sense, then the Latin for silly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: īnsānus, īnsāna, īnsānum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "īnsānus, īnsāna, īnsānum — \"mad, insane\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Vir īnsānus in viā clāmat. A madman is shouting in the street."
+            },
+            {
+              "kind": "speech",
+              "text": "in- 'not' + sānus 'healthy'. Also of wild, crazy plans. English insane."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "īnsānus is built on in- \"not\" and sānus \"sound, healthy\" (Lewis & Short; EtymDB). English insane comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "īnsānus, īnsāna, īnsānum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *īnsānus, īnsāna, īnsānum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "īnsānus, īnsāna, īnsānum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *īnsānus, īnsāna, īnsānum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with īnsānus, īnsāna, īnsānum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *īnsānus, īnsāna, īnsānum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for good sense, then the Latin for silly, then say īnsānus, īnsāna, īnsānum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for good sense, then the Latin for silly, then say *īnsānus, īnsāna, īnsānum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does īnsānus, īnsāna, īnsānum mean? (\"Mad, insane\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C510-insania",
+      "sequence": 27090,
+      "title": "īnsānia, īnsāniae — madness, folly",
+      "headword": "īnsānia, īnsāniae",
+      "romanization": "īnsānia, īnsāniae",
+      "gloss": "madness, folly",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0ed38175b40fa266",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for silly, then the Latin for mad."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: īnsānia, īnsāniae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "īnsānia, īnsāniae — \"madness, folly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Haec īnsānia est, nōn cōnsilium. This is madness, not a plan."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, first declension, from īnsānus."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "īnsānia is built on īnsānus \"mad\" (Lewis & Short). English insanity comes from the related īnsānitās."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "īnsānia, īnsāniae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *īnsānia, īnsāniae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "īnsānia, īnsāniae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *īnsānia, īnsāniae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with īnsānia, īnsāniae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *īnsānia, īnsāniae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for silly, then the Latin for mad, then say īnsānia, īnsāniae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for silly, then the Latin for mad, then say *īnsānia, īnsāniae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does īnsānia, īnsāniae mean? (\"Madness, folly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C510-demens",
+      "sequence": 27100,
+      "title": "dēmēns, dēmentis — out of one's mind, crazy",
+      "headword": "dēmēns, dēmentis",
+      "romanization": "dēmēns, dēmentis",
+      "gloss": "out of one's mind, crazy",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a8f294411a0398d0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for mad, then the Latin for madness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dēmēns, dēmentis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēmēns, dēmentis — \"out of one's mind, crazy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Dēmēns es, sī in tempestāte nāvigās. You are out of your mind if you sail in a storm."
+            },
+            {
+              "kind": "speech",
+              "text": "One ending. dē- 'away from' + mēns 'mind'. English demented."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēmēns is built on dē- \"away from\" and mēns \"mind\" (Lewis & Short; EtymDB). English demented comes from the related Late Latin verb dēmentō."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēmēns, dēmentis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēmēns, dēmentis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēmēns, dēmentis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēmēns, dēmentis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dēmēns, dēmentis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dēmēns, dēmentis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for mad, then the Latin for madness, then say dēmēns, dēmentis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for mad, then the Latin for madness, then say *dēmēns, dēmentis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dēmēns, dēmentis mean? (\"Out of one's mind, crazy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C510-deliro",
+      "sequence": 27110,
+      "title": "dēlīrō, dēlīrāre — to be delirious, talk nonsense",
+      "headword": "dēlīrō, dēlīrāre",
+      "romanization": "dēlīrō, dēlīrāre",
+      "gloss": "to be delirious, talk nonsense",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9de427622f8ee5a5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for madness, then the Latin for out of one's mind."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dēlīrō, dēlīrāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēlīrō, dēlīrāre — \"to be delirious, talk nonsense\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Aeger febrī dēlīrat. The patient is delirious with fever."
+            },
+            {
+              "kind": "speech",
+              "text": "dēlīrō, dēlīrāre, dēlīrāvī: dē 'out of' + līra 'furrow' — to plough crooked, then to wander in mind. English delirium."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēlīrō is built on dē- \"away from\" and līra \"a furrow\" (Lewis & Short; EtymDB): first to plough out of the line, then to wander in mind. English delirious and delirium come from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēlīrō, dēlīrāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēlīrō, dēlīrāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēlīrō, dēlīrāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēlīrō, dēlīrāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dēlīrō, dēlīrāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dēlīrō, dēlīrāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for madness, then the Latin for out of one's mind, then say dēlīrō, dēlīrāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for madness, then the Latin for out of one's mind, then say *dēlīrō, dēlīrāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dēlīrō, dēlīrāre mean? (\"To be delirious, talk nonsense\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

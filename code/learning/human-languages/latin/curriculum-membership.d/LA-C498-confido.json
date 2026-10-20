@@ -1,0 +1,11 @@
+{
+  "id": "LA-C498-confido",
+  "pathSegment": "LA-PATH-498-SPES",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-498-SPES",
+      "order": 2
+    }
+  ]
+}

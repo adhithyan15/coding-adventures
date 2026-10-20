@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-370-AUCTORITAS",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "LA-EXT-370-AUCTORITAS"
+  ],
+  "after": []
+}

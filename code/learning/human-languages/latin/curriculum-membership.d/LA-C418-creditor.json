@@ -1,0 +1,11 @@
+{
+  "id": "LA-C418-creditor",
+  "pathSegment": "LA-PATH-418-AESALIENUM",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-418-AESALIENUM",
+      "order": 2
+    }
+  ]
+}

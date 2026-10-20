@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 469,
+  "sourceHash": "fnv1a64:2f239645ae4086fe",
+  "lessonIds": [
+    "LA-C469-incus",
+    "LA-C469-follis",
+    "LA-C469-caminus",
+    "LA-C469-ferrarius",
+    "LA-C469-cudo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch469.txt",
+  "json": "latin/narration/ch469.json",
+  "textHash": "fnv1a64:66f6d66ccb2a575e",
+  "jsonHash": "fnv1a64:85dd1ec78d181101",
+  "findings": []
+}

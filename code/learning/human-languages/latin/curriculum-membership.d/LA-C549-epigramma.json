@@ -1,0 +1,11 @@
+{
+  "id": "LA-C549-epigramma",
+  "pathSegment": "LA-PATH-549-POEM",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-549-POEM",
+      "order": 1
+    }
+  ]
+}

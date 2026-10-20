@@ -1,0 +1,11 @@
+{
+  "id": "LA-C324-cunae",
+  "pathSegment": "LA-PATH-324-PUER",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-324-PUER",
+      "order": 0
+    }
+  ]
+}

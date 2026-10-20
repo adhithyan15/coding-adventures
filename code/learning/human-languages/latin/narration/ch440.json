@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 440,
+  "title": "To toss on the waves, To be seasick, To carry down, To take across, To swim to safety",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:23b4ff4f96f59dfe",
+  "lessons": [
+    {
+      "id": "LA-C440-fluctuo",
+      "sequence": 23470,
+      "title": "flūctuō, flūctuāre — to toss on the waves, to rise in waves; to waver",
+      "headword": "flūctuō, flūctuāre",
+      "romanization": "flūctuō, flūctuāre",
+      "gloss": "to toss on the waves, to rise in waves; to waver",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:001a44762dc0ca50",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to launch, then the Latin for navigable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: flūctuō, flūctuāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "flūctuō, flūctuāre — \"to toss on the waves, to rise in waves; to waver\"."
+            },
+            {
+              "kind": "speech",
+              "text": "In tempestāte nāvis diū flūctuat. In the storm the ship tosses on the waves for a long time."
+            },
+            {
+              "kind": "speech",
+              "text": "flūctuō, flūctuāre, flūctuāvī; also a deponent flūctuor. Of the mind: to waver. English fluctuate comes from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "flūctuō is built on flūctus 'wave' (EtymDB; Lewis & Short), which comes from fluō 'to flow'. English fluctuate comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "flūctuō, flūctuāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *flūctuō, flūctuāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "flūctuō, flūctuāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *flūctuō, flūctuāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with flūctuō, flūctuāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *flūctuō, flūctuāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to launch, then the Latin for navigable, then say flūctuō, flūctuāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to launch, then the Latin for navigable, then say *flūctuō, flūctuāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does flūctuō, flūctuāre mean? (\"To toss on the waves, to rise in waves; to waver\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C440-nauseo",
+      "sequence": 23480,
+      "title": "nauseō, nauseāre — to be seasick; to feel sick",
+      "headword": "nauseō, nauseāre",
+      "romanization": "nauseō, nauseāre",
+      "gloss": "to be seasick; to feel sick",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8d380355c1b661aa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for navigable, then the Latin for to toss on the waves."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: nauseō, nauseāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nauseō, nauseāre — \"to be seasick; to feel sick\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mare asperum est, et multī viātōrēs nauseant. The sea is rough, and many travellers are seasick."
+            },
+            {
+              "kind": "speech",
+              "text": "nauseō, nauseāre, nauseāvī, nauseātum, from nausea 'seasickness'. English nauseate comes from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nauseō is built on nausea 'seasickness' (Lewis & Short), which was borrowed from Greek nausiā, built on naus 'ship'. English nauseate comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nauseō, nauseāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nauseō, nauseāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nauseō, nauseāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nauseō, nauseāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with nauseō, nauseāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *nauseō, nauseāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for navigable, then the Latin for to toss on the waves, then say nauseō, nauseāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for navigable, then the Latin for to toss on the waves, then say *nauseō, nauseāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does nauseō, nauseāre mean? (\"To be seasick; to feel sick\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C440-defero",
+      "sequence": 23490,
+      "title": "dēferō, dēferre — to carry down, to carry off; (of ships) to drive off course; to report",
+      "headword": "dēferō, dēferre",
+      "romanization": "dēferō, dēferre",
+      "gloss": "to carry down, to carry off; (of ships) to drive off course; to report",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5245bec140d20591",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to toss on the waves, then the Latin for to be seasick."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dēferō, dēferre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēferō, dēferre — \"to carry down, to carry off; (of ships) to drive off course; to report\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ventus nāvem ad ignōtum lītus dēfert. The wind drives the ship off course to an unknown shore."
+            },
+            {
+              "kind": "speech",
+              "text": "Irregular: dēferō, dēferre, dētulī, dēlātum. In the passive, dēferrī, of a ship carried off its course. English defer comes from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēferō is built from dē- 'down, away' and ferō 'to carry' (EtymDB; Lewis & Short). English defer comes from it through French."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēferō, dēferre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēferō, dēferre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēferō, dēferre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēferō, dēferre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dēferō, dēferre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dēferō, dēferre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to toss on the waves, then the Latin for to be seasick, then say dēferō, dēferre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to toss on the waves, then the Latin for to be seasick, then say *dēferō, dēferre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dēferō, dēferre mean? (\"To carry down, to carry off; (of ships) to drive off course; to report\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C440-traicio",
+      "sequence": 23500,
+      "title": "trāiciō, trāicere — to take across, to cross over; to throw across",
+      "headword": "trāiciō, trāicere",
+      "romanization": "trāiciō, trāicere",
+      "gloss": "to take across, to cross over; to throw across",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8cda96624962e9b8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to be seasick, then the Latin for to carry down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: trāiciō, trāicere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "trāiciō, trāicere — \"to take across, to cross over; to throw across\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mīlitēs equōs nāvibus trāns flūmen trāiciunt. The soldiers take their horses across the river in boats."
+            },
+            {
+              "kind": "speech",
+              "text": "trāiciō, trāicere, trāiēcī, trāiectum. Mare trāicere, to cross the sea. English trajectory comes from its participle."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "trāiciō is built from trāns 'across' and iaciō 'to throw' (Lewis & Short). English trajectory comes from its participle trāiectus."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "trāiciō, trāicere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *trāiciō, trāicere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "trāiciō, trāicere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *trāiciō, trāicere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with trāiciō, trāicere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *trāiciō, trāicere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to be seasick, then the Latin for to carry down, then say trāiciō, trāicere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to be seasick, then the Latin for to carry down, then say *trāiciō, trāicere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does trāiciō, trāicere mean? (\"To take across, to cross over; to throw across\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C440-enato",
+      "sequence": 23510,
+      "title": "ēnatō, ēnatāre — to swim to safety, to swim out",
+      "headword": "ēnatō, ēnatāre",
+      "romanization": "ēnatō, ēnatāre",
+      "gloss": "to swim to safety, to swim out",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:11b8a868423c7727",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to carry down, then the Latin for to take across."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ēnatō, ēnatāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ēnatō, ēnatāre — \"to swim to safety, to swim out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Nāvis frangitur, sed nauta ad lītus ēnatat. The ship breaks up, but the sailor swims to the shore and is safe."
+            },
+            {
+              "kind": "speech",
+              "text": "ēnatō, ēnatāre, ēnatāvī. From ē- 'out' and natō 'to swim': to swim out of danger."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ēnatō is built from ē(x)- 'out' and natō 'to swim' (Lewis & Short): to swim out of the water, to escape by swimming."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēnatō, ēnatāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēnatō, ēnatāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēnatō, ēnatāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēnatō, ēnatāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ēnatō, ēnatāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ēnatō, ēnatāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to carry down, then the Latin for to take across, then say ēnatō, ēnatāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to carry down, then the Latin for to take across, then say *ēnatō, ēnatāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ēnatō, ēnatāre mean? (\"To swim to safety, to swim out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

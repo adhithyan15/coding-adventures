@@ -1,0 +1,11 @@
+{
+  "id": "LA-C326-pupillus",
+  "pathSegment": "LA-PATH-326-SENECTUS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-326-SENECTUS",
+      "order": 4
+    }
+  ]
+}

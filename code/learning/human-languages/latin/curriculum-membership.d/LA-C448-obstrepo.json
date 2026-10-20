@@ -1,0 +1,11 @@
+{
+  "id": "LA-C448-obstrepo",
+  "pathSegment": "LA-PATH-448-STERTO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-448-STERTO",
+      "order": 2
+    }
+  ]
+}

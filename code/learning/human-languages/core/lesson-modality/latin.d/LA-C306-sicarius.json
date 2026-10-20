@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C306-sicarius",
+    "language": "latin",
+    "chapter": 306,
+    "sequence": 16580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf48df1c876a5fc3"
+  },
+  "findings": []
+}

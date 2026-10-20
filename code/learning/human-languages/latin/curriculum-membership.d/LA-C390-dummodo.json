@@ -1,0 +1,11 @@
+{
+  "id": "LA-C390-dummodo",
+  "pathSegment": "LA-PATH-390-CONDICIO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-390-CONDICIO",
+      "order": 2
+    }
+  ]
+}

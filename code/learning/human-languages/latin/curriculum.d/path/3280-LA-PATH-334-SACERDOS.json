@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-334-SACERDOS",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "LA-EXT-334-SACERDOS"
+  ],
+  "after": []
+}

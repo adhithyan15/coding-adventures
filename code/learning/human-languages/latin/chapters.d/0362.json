@@ -1,0 +1,19 @@
+{
+  "chapter": 362,
+  "title": "Proving Someone Wrong",
+  "label": "ch:la-proving-someone-wrong",
+  "canDo": "I can refute a claim, prove someone wrong and say that a case rests only on a guess.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C362-coniectura",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 362: I can refute a claim, prove someone wrong and say that a case rests only on a guess.",
+    "assesses": [
+      "LA-LEX-C362-REFELLO-03",
+      "LA-LEX-C362-REFELLO-04",
+      "LA-LEX-C362-REFELLO-05"
+    ]
+  }
+}

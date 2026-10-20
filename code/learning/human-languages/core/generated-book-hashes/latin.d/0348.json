@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 348,
+  "sourceHash": "fnv1a64:c60cd12a46179c88",
+  "lessonIds": [
+    "LA-C348-oraculum",
+    "LA-C348-vates",
+    "LA-C348-prodigium",
+    "LA-C348-omen",
+    "LA-C348-vaticinor"
+  ],
+  "tex": "latin/book/chapters/ch348-oraculum.tex"
+}

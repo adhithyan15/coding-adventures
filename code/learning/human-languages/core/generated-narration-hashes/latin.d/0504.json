@@ -1,0 +1,20 @@
+{
+  "language": "latin",
+  "chapter": 504,
+  "sourceHash": "fnv1a64:510bb39e7e19bf13",
+  "lessonIds": [
+    "LA-C504-probitas",
+    "LA-C504-sincerus",
+    "LA-C504-mendax",
+    "LA-C504-simulo",
+    "LA-C504-dissimulo",
+    "LA-R504-review-497-504"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "latin/narration/ch504.txt",
+  "json": "latin/narration/ch504.json",
+  "textHash": "fnv1a64:0bca8e61e11eec5b",
+  "jsonHash": "fnv1a64:5d8f5272eecfc1d6",
+  "findings": []
+}

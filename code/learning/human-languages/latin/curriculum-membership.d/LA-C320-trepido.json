@@ -1,0 +1,11 @@
+{
+  "id": "LA-C320-trepido",
+  "pathSegment": "LA-PATH-320-PAVOR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-320-PAVOR",
+      "order": 4
+    }
+  ]
+}

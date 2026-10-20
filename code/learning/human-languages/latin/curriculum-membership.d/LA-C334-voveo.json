@@ -1,0 +1,11 @@
+{
+  "id": "LA-C334-voveo",
+  "pathSegment": "LA-PATH-334-SACERDOS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-334-SACERDOS",
+      "order": 3
+    }
+  ]
+}

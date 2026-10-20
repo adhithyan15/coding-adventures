@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 526,
+  "sourceHash": "fnv1a64:2db925e215923be7",
+  "lessonIds": [
+    "LA-C526-sano",
+    "LA-C526-medeor",
+    "LA-C526-convalesco",
+    "LA-C526-recreo",
+    "LA-C526-potio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch526.txt",
+  "json": "latin/narration/ch526.json",
+  "textHash": "fnv1a64:d515318254cfadc8",
+  "jsonHash": "fnv1a64:fa49fbe4690612f8",
+  "findings": []
+}

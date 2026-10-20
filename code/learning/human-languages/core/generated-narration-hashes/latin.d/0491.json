@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 491,
+  "sourceHash": "fnv1a64:9de66220ce039bdc",
+  "lessonIds": [
+    "LA-C491-lacrimo",
+    "LA-C491-ploro",
+    "LA-C491-gemo",
+    "LA-C491-gemitus",
+    "LA-C491-suspiro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch491.txt",
+  "json": "latin/narration/ch491.json",
+  "textHash": "fnv1a64:4c4c2016e08c6ac9",
+  "jsonHash": "fnv1a64:823b21b8e904b09a",
+  "findings": []
+}

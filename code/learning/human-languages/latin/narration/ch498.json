@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 498,
+  "title": "Hope, despair and trust",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c46ab986fa36290c",
+  "lessons": [
+    {
+      "id": "LA-C498-despero",
+      "sequence": 26460,
+      "title": "dēspērō, dēspērāre — to despair (of)",
+      "headword": "dēspērō, dēspērāre",
+      "romanization": "dēspērō, dēspērāre",
+      "gloss": "to despair (of)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eb8664414fa39cb0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for annoyance, then the Latin for to torment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dēspērō, dēspērāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēspērō, dēspērāre — \"to despair (of)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Medicus dē salūte aegrī dēspērat. The doctor despairs of the patient's recovery."
+            },
+            {
+              "kind": "speech",
+              "text": "dēspērō, dēspērāre, dēspērāvī, dēspērātum: dē- 'away from' + spērō 'to hope'. With dē and the ablative, or the accusative. English despair, desperate."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēspērō is built on dē- \"away from\" and spērō \"to hope\", from spēs \"hope\" (Lewis & Short). English despair and desperate come from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēspērō, dēspērāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēspērō, dēspērāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēspērō, dēspērāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēspērō, dēspērāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dēspērō, dēspērāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dēspērō, dēspērāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for annoyance, then the Latin for to torment, then say dēspērō, dēspērāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for annoyance, then the Latin for to torment, then say *dēspērō, dēspērāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dēspērō, dēspērāre mean? (\"To despair (of)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C498-desperatio",
+      "sequence": 26470,
+      "title": "dēspērātiō, dēspērātiōnis — despair, hopelessness",
+      "headword": "dēspērātiō, dēspērātiōnis",
+      "romanization": "dēspērātiō, dēspērātiōnis",
+      "gloss": "despair, hopelessness",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:988f85af1e4b15f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to torment, then the Latin for to despair."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dēspērātiō, dēspērātiōnis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēspērātiō, dēspērātiōnis — \"despair, hopelessness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "In dēspērātiōne nautae deōs ōrant. In their despair the sailors pray to the gods."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, third declension. English desperation."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēspērātiō is the action noun of dēspērō \"to despair\" (Lewis & Short). English desperation comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēspērātiō, dēspērātiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēspērātiō, dēspērātiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēspērātiō, dēspērātiōnis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēspērātiō, dēspērātiōnis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dēspērātiō, dēspērātiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dēspērātiō, dēspērātiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to torment, then the Latin for to despair, then say dēspērātiō, dēspērātiōnis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to torment, then the Latin for to despair, then say *dēspērātiō, dēspērātiōnis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dēspērātiō, dēspērātiōnis mean? (\"Despair, hopelessness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C498-confido",
+      "sequence": 26480,
+      "title": "cōnfīdō, cōnfīdere — to trust, rely on; to be confident",
+      "headword": "cōnfīdō, cōnfīdere",
+      "romanization": "cōnfīdō, cōnfīdere",
+      "gloss": "to trust, rely on; to be confident",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a8eca43009bbf04f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to despair, then the Latin for despair."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: cōnfīdō, cōnfīdere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cōnfīdō, cōnfīdere — \"to trust, rely on; to be confident\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Amīcō meō omnīnō cōnfīdō. I trust my friend completely."
+            },
+            {
+              "kind": "speech",
+              "text": "Semi-deponent: cōnfīdō, cōnfīdere, cōnfīsus sum, with the dative of a person. English confide, confident."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cōnfīdō is built on con- and fīdō \"to trust\" (Lewis & Short); EtymDB traces fīdō through Proto-Italic to a Proto-Indo-European root meaning \"to trust\". English confide and confident come from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cōnfīdō, cōnfīdere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cōnfīdō, cōnfīdere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cōnfīdō, cōnfīdere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cōnfīdō, cōnfīdere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with cōnfīdō, cōnfīdere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *cōnfīdō, cōnfīdere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to despair, then the Latin for despair, then say cōnfīdō, cōnfīdere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to despair, then the Latin for despair, then say *cōnfīdō, cōnfīdere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does cōnfīdō, cōnfīdere mean? (\"To trust, rely on; to be confident\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C498-diffido",
+      "sequence": 26490,
+      "title": "diffīdō, diffīdere — to distrust; to lose hope",
+      "headword": "diffīdō, diffīdere",
+      "romanization": "diffīdō, diffīdere",
+      "gloss": "to distrust; to lose hope",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ced1ac3ccc8d3bc6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for despair, then the Latin for to trust."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: diffīdō, diffīdere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "diffīdō, diffīdere — \"to distrust; to lose hope\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mercātor nautīs diffīdit. The merchant distrusts the sailors."
+            },
+            {
+              "kind": "speech",
+              "text": "Semi-deponent: diffīdō, diffīdere, diffīsus sum, with the dative. The opposite of cōnfīdō. English diffident."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "diffīdō is built on dis- \"apart, not\" and fīdō \"to trust\" (Lewis & Short; EtymDB). English diffident comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "diffīdō, diffīdere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *diffīdō, diffīdere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "diffīdō, diffīdere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *diffīdō, diffīdere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with diffīdō, diffīdere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *diffīdō, diffīdere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for despair, then the Latin for to trust, then say diffīdō, diffīdere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for despair, then the Latin for to trust, then say *diffīdō, diffīdere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does diffīdō, diffīdere mean? (\"To distrust; to lose hope\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C498-credulus",
+      "sequence": 26500,
+      "title": "crēdulus, crēdula, crēdulum — trusting, credulous",
+      "headword": "crēdulus, crēdula, crēdulum",
+      "romanization": "crēdulus, crēdula, crēdulum",
+      "gloss": "trusting, credulous",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:be837cef97840244",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to trust, then the Latin for to distrust."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: crēdulus, crēdula, crēdulum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "crēdulus, crēdula, crēdulum — \"trusting, credulous\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Puer crēdulus omnia crēdit, quae audit. The trusting boy believes everything he hears."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on crēdō — to believe. English credulous."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "crēdulus is built on crēdō \"to believe\" with -ulus (Lewis & Short; EtymDB), and EtymDB traces crēdō to a Proto-Indo-European phrase meaning \"to put one’s heart\". English credulous comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "crēdulus, crēdula, crēdulum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *crēdulus, crēdula, crēdulum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "crēdulus, crēdula, crēdulum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *crēdulus, crēdula, crēdulum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with crēdulus, crēdula, crēdulum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *crēdulus, crēdula, crēdulum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to trust, then the Latin for to distrust, then say crēdulus, crēdula, crēdulum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to trust, then the Latin for to distrust, then say *crēdulus, crēdula, crēdulum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does crēdulus, crēdula, crēdulum mean? (\"Trusting, credulous\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

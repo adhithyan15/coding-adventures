@@ -1,0 +1,19 @@
+{
+  "chapter": 532,
+  "title": "Freedom",
+  "label": "ch:la-freedom",
+  "canDo": "I can talk about freeing slaves and freed people.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C532-pilleus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 532: I can talk about freeing slaves and freed people.",
+    "assesses": [
+      "LA-LEX-C532-LIBT-03",
+      "LA-LEX-C532-LIBT-04",
+      "LA-LEX-C532-LIBT-05"
+    ]
+  }
+}

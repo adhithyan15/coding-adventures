@@ -1,0 +1,11 @@
+{
+  "id": "LA-C507-insolens",
+  "pathSegment": "LA-PATH-507-SUPB",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-507-SUPB",
+      "order": 3
+    }
+  ]
+}

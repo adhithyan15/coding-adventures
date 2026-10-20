@@ -1,0 +1,19 @@
+{
+  "chapter": 313,
+  "title": "Ruīna",
+  "label": "ch:la-ruina",
+  "canDo": "I can tell of a building falling: to rush down, a collapse, to tumble down, to fall in and to fall off.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C313-decido",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 313: I can tell of a building falling: to rush down, a collapse, to tumble down, to fall in and to fall off.",
+    "assesses": [
+      "LA-LEX-C313-RUINA-03",
+      "LA-LEX-C313-RUINA-04",
+      "LA-LEX-C313-RUINA-05"
+    ]
+  }
+}

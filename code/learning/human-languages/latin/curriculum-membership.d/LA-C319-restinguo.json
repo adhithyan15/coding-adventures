@@ -1,0 +1,11 @@
+{
+  "id": "LA-C319-restinguo",
+  "pathSegment": "LA-PATH-319-SIPHO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-319-SIPHO",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 462,
+  "title": "To trade at market, To keep shouting, To offer for sale, Goods, Hawker",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:250c67259179d17b",
+  "lessons": [
+    {
+      "id": "LA-C462-nundinor",
+      "sequence": 24590,
+      "title": "nūndinor, nūndinārī — to trade at market, to buy and sell",
+      "headword": "nūndinor, nūndinārī",
+      "romanization": "nūndinor, nūndinārī",
+      "gloss": "to trade at market, to buy and sell",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:832f08879f7c46cf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for smoky, then the Latin for filthy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: nūndinor, nūndinārī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nūndinor, nūndinārī — \"to trade at market, to buy and sell\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Agricolae nōnō quōque diē in oppidō nūndinantur. Every ninth day the farmers trade at the market in the town."
+            },
+            {
+              "kind": "speech",
+              "text": "Deponent: nūndinor, nūndinārī, nūndinātus sum. The market day, nūndinae, came every ninth day, counting both ends."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nūndinor is built on nūndinae 'market day' (Lewis & Short), which comes from novem 'nine' and diēs 'day': the market held every ninth day."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nūndinor, nūndinārī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nūndinor, nūndinārī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nūndinor, nūndinārī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nūndinor, nūndinārī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with nūndinor, nūndinārī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *nūndinor, nūndinārī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for smoky, then the Latin for filthy, then say nūndinor, nūndinārī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for smoky, then the Latin for filthy, then say *nūndinor, nūndinārī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does nūndinor, nūndinārī mean? (\"To trade at market, to buy and sell\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C462-clamito",
+      "sequence": 24600,
+      "title": "clāmitō, clāmitāre — to keep shouting, to cry out again and again",
+      "headword": "clāmitō, clāmitāre",
+      "romanization": "clāmitō, clāmitāre",
+      "gloss": "to keep shouting, to cry out again and again",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:630766c5755e5c80",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for filthy, then the Latin for to trade at market."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: clāmitō, clāmitāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "clāmitō, clāmitāre — \"to keep shouting, to cry out again and again\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mercātōrēs in forō clāmitant. The merchants in the forum keep shouting."
+            },
+            {
+              "kind": "speech",
+              "text": "clāmitō, clāmitāre, clāmitāvī, clāmitātum, a frequentative of clāmō: the -itō means 'again and again'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "clāmitō is built on clāmō 'to shout' with the frequentative ending -itō (EtymDB; Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "clāmitō, clāmitāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *clāmitō, clāmitāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "clāmitō, clāmitāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *clāmitō, clāmitāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with clāmitō, clāmitāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *clāmitō, clāmitāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for filthy, then the Latin for to trade at market, then say clāmitō, clāmitāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for filthy, then the Latin for to trade at market, then say *clāmitō, clāmitāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does clāmitō, clāmitāre mean? (\"To keep shouting, to cry out again and again\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C462-vendito",
+      "sequence": 24610,
+      "title": "vēnditō, vēnditāre — to offer for sale, to try to sell",
+      "headword": "vēnditō, vēnditāre",
+      "romanization": "vēnditō, vēnditāre",
+      "gloss": "to offer for sale, to try to sell",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b609f9fb6bc6e2ec",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to trade at market, then the Latin for to keep shouting."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: vēnditō, vēnditāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vēnditō, vēnditāre — \"to offer for sale, to try to sell\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mercātor vīnum suum omnibus vēnditat. The merchant tries to sell his wine to everyone."
+            },
+            {
+              "kind": "speech",
+              "text": "vēnditō, vēnditāre, vēnditāvī, vēnditātum, a frequentative of vendō: offering again and again, praising your goods."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vēnditō is built on vendō 'to sell' with the frequentative ending -itō (Lewis & Short). English vend and vendor come from vendō."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēnditō, vēnditāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēnditō, vēnditāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēnditō, vēnditāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēnditō, vēnditāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with vēnditō, vēnditāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *vēnditō, vēnditāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to trade at market, then the Latin for to keep shouting, then say vēnditō, vēnditāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to trade at market, then the Latin for to keep shouting, then say *vēnditō, vēnditāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does vēnditō, vēnditāre mean? (\"To offer for sale, to try to sell\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C462-mercimonium",
+      "sequence": 24620,
+      "title": "mercimōnium, mercimōniī — goods, wares, merchandise",
+      "headword": "mercimōnium, mercimōniī",
+      "romanization": "mercimōnium, mercimōniī",
+      "gloss": "goods, wares, merchandise",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:62d42ef544cc2bfa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to keep shouting, then the Latin for to offer for sale."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: mercimōnium, mercimōniī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mercimōnium, mercimōniī — \"goods, wares, merchandise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mercātor mercimōnia in nāve ad urbem vehit. The merchant carries his goods by ship to the city."
+            },
+            {
+              "kind": "speech",
+              "text": "Second declension, neuter: mercimōnium, mercimōniī n., mostly plural. A word of comedy, from merx 'goods'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mercimōnium is built on merx, mercis 'merchandise' with the suffix -mōnium (Lewis & Short). English merchant and commerce come from the same family."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mercimōnium, mercimōniī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mercimōnium, mercimōniī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mercimōnium, mercimōniī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mercimōnium, mercimōniī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with mercimōnium, mercimōniī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *mercimōnium, mercimōniī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to keep shouting, then the Latin for to offer for sale, then say mercimōnium, mercimōniī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to keep shouting, then the Latin for to offer for sale, then say *mercimōnium, mercimōniī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does mercimōnium, mercimōniī mean? (\"Goods, wares, merchandise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C462-institor",
+      "sequence": 24630,
+      "title": "īnstitor, īnstitōris — a hawker, a pedlar; a shop agent",
+      "headword": "īnstitor, īnstitōris",
+      "romanization": "īnstitor, īnstitōris",
+      "gloss": "a hawker, a pedlar; a shop agent",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ae2d6d60942c543e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to offer for sale, then the Latin for goods."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: īnstitor, īnstitōris",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "īnstitor, īnstitōris — \"a hawker, a pedlar; a shop agent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Īnstitor per viās it et mercēs suās clāmat. The hawker goes through the streets and calls out his goods."
+            },
+            {
+              "kind": "speech",
+              "text": "Third declension, masculine: īnstitor, īnstitōris m. A man who sells for someone else, often on the street."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "īnstitor is built on īnsistō 'to stand on, to keep at a thing' (Lewis & Short), from in- and sistō 'to stand'. EtymDB lists it without a parent."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "īnstitor, īnstitōris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *īnstitor, īnstitōris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "īnstitor, īnstitōris, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *īnstitor, īnstitōris*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with īnstitor, īnstitōris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *īnstitor, īnstitōris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to offer for sale, then the Latin for goods, then say īnstitor, īnstitōris again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to offer for sale, then the Latin for goods, then say *īnstitor, īnstitōris* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does īnstitor, īnstitōris mean? (\"A hawker, a pedlar; a shop agent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-R462-review-455-462",
+      "sequence": 24640,
+      "title": "Words from chapters 455–462 — a review",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 455-462",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:717966b37d9654de",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Latin for to catch sight of and to come near."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to catch sight of, to come near, to turn back, to delay, to stop for a while",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to catch sight of, to come near, to turn back, to delay, to stop for a while]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a tenant, a townsman, a resident, to live in, an occupant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a tenant, a townsman, a resident, to live in, an occupant]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a block of flats, an upper room, a storey, a timber, a beam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a block of flats, an upper room, a storey, a timber, a beam]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an alley, a neighbourhood, a latrine, a sewer, a water tower",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an alley, a neighbourhood, a latrine, a sewer, a water tower]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a colonnade, a temple, a shrine, the sacred boundary, to build up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a colonnade, a temple, a shrine, the sacred boundary, to build up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a crowd, crowded, to throng, to go back and forth, near the city",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a crowd, crowded, to throng, to go back and forth, near the city]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a hot-drinks bar, hot water, to drink, smoky, filthy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a hot-drinks bar, hot water, to drink, smoky, filthy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to trade at market, to keep shouting, to offer for sale, goods, a hawker",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to trade at market, to keep shouting, to offer for sale, goods, a hawker]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To catch sight of? (cōnspicor, cōnspicārī.) To come near? (accēdō, accēdere.) To turn back? (revertor, revertī.) To delay? (moror, morārī.) To stop for a while? (commoror, commorārī.) A tenant? (inquilīnus, inquilīnī.) A townsman? (oppidānus, oppidānī.) A resident? (incola, incolae.) To live in? (incolō, incolere.) An occupant? (habitātor, habitātōris.) A block of flats? (īnsula, īnsulae.) An upper room? (cēnāculum, cēnāculī.) A storey? (contignātiō, contignātiōnis.) A timber? (tignum, tignī.) A beam? (trabs, trabis.) An alley? (angiportum, angiportī.) A neighbourhood? (vīcīnia, vīcīniae.) A latrine? (lātrīna, lātrīnae.) A sewer? (cloāca, cloācae.) A water tower? (castellum, castellī.) A colonnade? (porticus, porticūs.) A temple? (aedēs, aedis.) A shrine? (aedicula, aediculae.) The sacred boundary? (pōmērium, pōmēriī.) To build up? (exstruō, exstruere.) A crowd? (turba, turbae.) Crowded? (frequēns, frequentis.) To throng? (frequentō, frequentāre.) To go back and forth? (commeō, commeāre.) Near the city? (suburbānus, suburbāna, suburbānum.) A hot-drinks bar? (thermopōlium, thermopōliī.) Hot water? (calda, caldae.) To drink? (pōtō, pōtāre.) Smoky? (fūmōsus, fūmōsa, fūmōsum.) Filthy? (immundus, immunda, immundum.) To trade at market? (nūndinor, nūndinārī.) To keep shouting? (clāmitō, clāmitāre.) To offer for sale? (vēnditō, vēnditāre.) Goods? (mercimōnium, mercimōniī.) A hawker? (īnstitor, īnstitōris.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C484-fraxinus",
+  "pathSegment": "LA-PATH-484-FAGUS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-484-FAGUS",
+      "order": 3
+    }
+  ]
+}

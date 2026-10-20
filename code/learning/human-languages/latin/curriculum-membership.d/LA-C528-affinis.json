@@ -1,0 +1,11 @@
+{
+  "id": "LA-C528-affinis",
+  "pathSegment": "LA-PATH-528-GENS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-528-GENS",
+      "order": 2
+    }
+  ]
+}

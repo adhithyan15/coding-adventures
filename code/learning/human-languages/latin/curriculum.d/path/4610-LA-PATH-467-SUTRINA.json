@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-467-SUTRINA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "LA-EXT-467-SUTRINA"
+  ],
+  "after": []
+}

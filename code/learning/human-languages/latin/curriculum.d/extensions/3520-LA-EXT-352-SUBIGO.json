@@ -1,0 +1,8 @@
+{
+  "id": "LA-EXT-352-SUBIGO",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can tell how bread was made: the millstone, the sieve, to knead, the yeast and the baking pot.",
+  "prerequisites": []
+}

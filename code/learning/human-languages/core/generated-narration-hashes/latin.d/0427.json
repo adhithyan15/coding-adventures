@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 427,
+  "sourceHash": "fnv1a64:bc5f11eb0ce12959",
+  "lessonIds": [
+    "LA-C427-mansio",
+    "LA-C427-raedarius",
+    "LA-C427-statio",
+    "LA-C427-viaticum",
+    "LA-C427-ingredior"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch427.txt",
+  "json": "latin/narration/ch427.json",
+  "textHash": "fnv1a64:afde98a79194d3be",
+  "jsonHash": "fnv1a64:0e64616cdb94e5db",
+  "findings": []
+}

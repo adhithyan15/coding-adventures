@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:e567360cef3e9ffe",
+  "lessonIds": [
+    "LA-C340-arma",
+    "LA-C340-eques",
+    "LA-C340-pedes",
+    "LA-C340-lorica",
+    "LA-C340-clipeus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch340.txt",
+  "json": "latin/narration/ch340.json",
+  "textHash": "fnv1a64:3cba12da4c1fc70f",
+  "jsonHash": "fnv1a64:6dc9389b0e9d7561",
+  "findings": []
+}

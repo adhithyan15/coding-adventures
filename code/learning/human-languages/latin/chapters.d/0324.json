@@ -1,0 +1,19 @@
+{
+  "chapter": 324,
+  "title": "Puer et pueritia",
+  "label": "ch:la-puer-et-pueritia",
+  "canDo": "I can talk about childhood: the cradle, a boy, infancy, childhood and to bring up.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C324-educo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 324: I can talk about childhood: the cradle, a boy, infancy, childhood and to bring up.",
+    "assesses": [
+      "LA-LEX-C324-PUER-03",
+      "LA-LEX-C324-PUER-04",
+      "LA-LEX-C324-PUER-05"
+    ]
+  }
+}

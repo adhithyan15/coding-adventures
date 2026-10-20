@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 421,
+  "sourceHash": "fnv1a64:40d85e7e74bd9176",
+  "lessonIds": [
+    "LA-C421-commercium",
+    "LA-C421-negotior",
+    "LA-C421-nundinae",
+    "LA-C421-portorium",
+    "LA-C421-lucror"
+  ],
+  "tex": "latin/book/chapters/ch421-trade.tex"
+}

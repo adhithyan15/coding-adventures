@@ -1,0 +1,11 @@
+{
+  "id": "LA-C416-obtempero",
+  "pathSegment": "LA-PATH-416-IUSTITIA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-416-IUSTITIA",
+      "order": 2
+    }
+  ]
+}

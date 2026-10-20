@@ -1,0 +1,11 @@
+{
+  "id": "LA-C484-ulmus",
+  "pathSegment": "LA-PATH-484-FAGUS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-484-FAGUS",
+      "order": 2
+    }
+  ]
+}

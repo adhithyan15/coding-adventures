@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C445-stabularius",
+    "language": "latin",
+    "chapter": 445,
+    "sequence": 23750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cc61d1d453775204"
+  },
+  "findings": []
+}

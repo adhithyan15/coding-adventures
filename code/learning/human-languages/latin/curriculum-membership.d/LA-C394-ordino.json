@@ -1,0 +1,11 @@
+{
+  "id": "LA-C394-ordino",
+  "pathSegment": "LA-PATH-394-APPARO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-394-APPARO",
+      "order": 2
+    }
+  ]
+}

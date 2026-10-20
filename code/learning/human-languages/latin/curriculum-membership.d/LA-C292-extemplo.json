@@ -1,0 +1,11 @@
+{
+  "id": "LA-C292-extemplo",
+  "pathSegment": "LA-PATH-292-REPENTE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-292-REPENTE",
+      "order": 3
+    }
+  ]
+}

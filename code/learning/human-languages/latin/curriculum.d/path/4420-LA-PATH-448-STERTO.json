@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-448-STERTO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "LA-EXT-448-STERTO"
+  ],
+  "after": []
+}

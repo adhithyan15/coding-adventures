@@ -1,0 +1,11 @@
+{
+  "id": "LA-R536-review-529-536",
+  "pathSegment": "LA-PATH-536-BLAN",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "LA-EXT-536-BLAN",
+      "order": 5
+    }
+  ]
+}

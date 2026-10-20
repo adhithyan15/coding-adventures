@@ -1,0 +1,11 @@
+{
+  "id": "LA-C541-frigidarium",
+  "pathSegment": "LA-PATH-541-BALN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-541-BALN",
+      "order": 3
+    }
+  ]
+}

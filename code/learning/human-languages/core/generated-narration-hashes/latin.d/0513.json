@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 513,
+  "sourceHash": "fnv1a64:38ba109e4f7d273e",
+  "lessonIds": [
+    "LA-C513-misericors",
+    "LA-C513-misericordia",
+    "LA-C513-misereor",
+    "LA-C513-pudet",
+    "LA-C513-verecundia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch513.txt",
+  "json": "latin/narration/ch513.json",
+  "textHash": "fnv1a64:aaa8df9f3039e039",
+  "jsonHash": "fnv1a64:bc6add74a66c6f3a",
+  "findings": []
+}

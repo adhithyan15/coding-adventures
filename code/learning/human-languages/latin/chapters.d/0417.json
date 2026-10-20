@@ -1,0 +1,19 @@
+{
+  "chapter": 417,
+  "title": "Property",
+  "label": "ch:la-property",
+  "canDo": "I can talk about possession and what is mine or another's, ownership and formal purchase.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "LA-C417-mancipium",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 417: I can talk about possession and what is mine or another's, ownership and formal purchase.",
+    "assesses": [
+      "LA-LEX-C417-POSSESSIO-03",
+      "LA-LEX-C417-POSSESSIO-04",
+      "LA-LEX-C417-POSSESSIO-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 399,
+  "title": "Trust and Betrayal",
+  "label": "ch:la-trust-and-betrayal",
+  "canDo": "I can talk about bad faith and a treacherous friend, a trick and a deception, and call the gods to witness.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "LA-C399-testor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 399: I can talk about bad faith and a treacherous friend, a trick and a deception, and call the gods to witness.",
+    "assesses": [
+      "LA-LEX-C399-PERFIDIA-03",
+      "LA-LEX-C399-PERFIDIA-04",
+      "LA-LEX-C399-PERFIDIA-05"
+    ]
+  }
+}

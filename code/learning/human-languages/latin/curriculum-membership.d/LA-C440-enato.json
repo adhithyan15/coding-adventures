@@ -1,0 +1,11 @@
+{
+  "id": "LA-C440-enato",
+  "pathSegment": "LA-PATH-440-FLUCTUO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-440-FLUCTUO",
+      "order": 4
+    }
+  ]
+}

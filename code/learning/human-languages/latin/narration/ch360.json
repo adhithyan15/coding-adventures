@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 360,
+  "title": "Plain, Clear and Absurd",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8c4e8ee463728f9f",
+  "lessons": [
+    {
+      "id": "LA-C360-manifestus",
+      "sequence": 19350,
+      "title": "manifestus, manifesta, manifestum — evident, plain; caught in the act",
+      "headword": "manifestus, manifesta, manifestum",
+      "romanization": "manifestus, manifesta, manifestum",
+      "gloss": "evident, plain; caught in the act",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8eeeb8d123b623db",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for likely, then the Latin for probable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: manifestus, manifesta, manifestum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "manifestus, manifesta, manifestum — \"evident, plain; caught in the act\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Rēs manifesta est: fūr pecūniam habet. The matter is plain: the thief has the money."
+            },
+            {
+              "kind": "speech",
+              "text": "manifestus, manifesta, manifestum. A thief manifestus is caught red-handed. English manifest."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "manifestus is built from manus \"hand\" and an old verb fendō \"to strike\", the one in dēfendō and offendō (EtymDB; Lewis & Short): a thing you could strike with your hand, so plain to see. English manifest comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manifestus, manifesta, manifestum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manifestus, manifesta, manifestum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manifestus, manifesta, manifestum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manifestus, manifesta, manifestum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with manifestus, manifesta, manifestum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *manifestus, manifesta, manifestum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for likely, then the Latin for probable, then say manifestus, manifesta, manifestum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for likely, then the Latin for probable, then say *manifestus, manifesta, manifestum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does manifestus, manifesta, manifestum mean? (\"Evident, plain; caught in the act\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C360-perspicuus",
+      "sequence": 19360,
+      "title": "perspicuus, perspicua, perspicuum — clear, transparent; evident",
+      "headword": "perspicuus, perspicua, perspicuum",
+      "romanization": "perspicuus, perspicua, perspicuum",
+      "gloss": "clear, transparent; evident",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b74505cfcbde91bb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for probable, then the Latin for evident."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: perspicuus, perspicua, perspicuum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "perspicuus, perspicua, perspicuum — \"clear, transparent; evident\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Haec ratiō perspicua est omnibus. This reasoning is clear to everyone."
+            },
+            {
+              "kind": "speech",
+              "text": "perspicuus, perspicua, perspicuum. Water or glass you see through, and an argument you see through to the end. English perspicuous."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "perspicuus is built on perspiciō \"to see through\" (EtymDB; Lewis & Short), from per \"through\" and the old verb speciō \"to look\". English perspicuous comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "perspicuus, perspicua, perspicuum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *perspicuus, perspicua, perspicuum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "perspicuus, perspicua, perspicuum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *perspicuus, perspicua, perspicuum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with perspicuus, perspicua, perspicuum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *perspicuus, perspicua, perspicuum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for probable, then the Latin for evident, then say perspicuus, perspicua, perspicuum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for probable, then the Latin for evident, then say *perspicuus, perspicua, perspicuum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does perspicuus, perspicua, perspicuum mean? (\"Clear, transparent; evident\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C360-absurdus",
+      "sequence": 19370,
+      "title": "absurdus, absurda, absurdum — absurd, foolish; out of tune",
+      "headword": "absurdus, absurda, absurdum",
+      "romanization": "absurdus, absurda, absurdum",
+      "gloss": "absurd, foolish; out of tune",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2328de3158a9e5da",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for evident, then the Latin for clear."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: absurdus, absurda, absurdum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "absurdus, absurda, absurdum — \"absurd, foolish; out of tune\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Absurdum est hoc dīcere. It is absurd to say this."
+            },
+            {
+              "kind": "speech",
+              "text": "absurdus, absurda, absurdum. First a voice out of tune, then anything that jars with sense. English absurd."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "absurdus is built from ab \"away from\" and surdus \"deaf, dull-sounding\" (EtymDB; Lewis & Short): a note that sounds wrong. English absurd comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "absurdus, absurda, absurdum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *absurdus, absurda, absurdum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "absurdus, absurda, absurdum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *absurdus, absurda, absurdum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with absurdus, absurda, absurdum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *absurdus, absurda, absurdum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for evident, then the Latin for clear, then say absurdus, absurda, absurdum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for evident, then the Latin for clear, then say *absurdus, absurda, absurdum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does absurdus, absurda, absurdum mean? (\"Absurd, foolish; out of tune\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C360-stultitia",
+      "sequence": 19380,
+      "title": "stultitia, stultitiae — foolishness, folly",
+      "headword": "stultitia, stultitiae",
+      "romanization": "stultitia, stultitiae",
+      "gloss": "foolishness, folly",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:edbfe9430c7f97b7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for clear, then the Latin for absurd."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: stultitia, stultitiae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "stultitia, stultitiae — \"foolishness, folly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Magna stultitia est hostī crēdere. It is great folly to trust an enemy."
+            },
+            {
+              "kind": "speech",
+              "text": "stultitia, stultitiae f., the noun of stultus, foolish. Its opposite is sapientia."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "stultitia is the noun built on stultus \"foolish\" (EtymDB; Lewis & Short), with the ending -itia that makes a quality."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stultitia, stultitiae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *stultitia, stultitiae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stultitia, stultitiae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *stultitia, stultitiae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with stultitia, stultitiae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *stultitia, stultitiae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for clear, then the Latin for absurd, then say stultitia, stultitiae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for clear, then the Latin for absurd, then say *stultitia, stultitiae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does stultitia, stultitiae mean? (\"Foolishness, folly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C360-constantia",
+      "sequence": 19390,
+      "title": "cōnstantia, cōnstantiae — steadiness, firmness, consistency",
+      "headword": "cōnstantia, cōnstantiae",
+      "romanization": "cōnstantia, cōnstantiae",
+      "gloss": "steadiness, firmness, consistency",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b59b89ffa0c4e191",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for absurd, then the Latin for foolishness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: cōnstantia, cōnstantiae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cōnstantia, cōnstantiae — \"steadiness, firmness, consistency\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Cōnstantiam eius omnēs laudant. Everyone praises his steadiness."
+            },
+            {
+              "kind": "speech",
+              "text": "cōnstantia, cōnstantiae f. A person of cōnstantia holds the same view today as yesterday. English constancy."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cōnstantia is the noun made from the present participle of a verb built on con- \"together\" and stō \"to stand\" (Lewis & Short): standing firm. English constancy and constant come from the same family."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cōnstantia, cōnstantiae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cōnstantia, cōnstantiae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cōnstantia, cōnstantiae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cōnstantia, cōnstantiae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with cōnstantia, cōnstantiae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *cōnstantia, cōnstantiae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for absurd, then the Latin for foolishness, then say cōnstantia, cōnstantiae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for absurd, then the Latin for foolishness, then say *cōnstantia, cōnstantiae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does cōnstantia, cōnstantiae mean? (\"Steadiness, firmness, consistency\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C340-lorica",
+  "pathSegment": "LA-PATH-340-ARMA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-340-ARMA",
+      "order": 3
+    }
+  ]
+}

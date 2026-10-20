@@ -1,0 +1,694 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 282,
+  "title": "A Story in Order",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:1d5ddef27c637983",
+  "lessons": [
+    {
+      "id": "LA-C282-primum-deinde",
+      "sequence": 15450,
+      "title": "prīmum, deinde, tum, postrēmō — the rungs of a story",
+      "headword": "prīmum, deinde, tum, postrēmō",
+      "romanization": "prīmum, deinde, tum, postrēmō",
+      "gloss": "four words you own, used as the rungs of a story — first, next, then, last — with a perfect on each rung",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:016011565a8371d7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I came\" and \"I saw\". (Vēnī. Vīdī.) The verb for \"to win\" is vincō, and its perfect is vīcī, \"I won\"."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Suetonius reports that when Caesar celebrated his victory in Pontus, a placard carried three words: vēnī, vīdī, vīcī. Three events, three perfects, and not one joining word."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: four rungs",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Caesar could leave the order bare because three short perfects explain themselves. A longer story names its rungs, with four words you already own:"
+            },
+            {
+              "kind": "speech",
+              "text": "Prīmum ad forum ambulāvī. — First I walked to the forum. Deinde amīcum vīdī. — Next I saw a friend. Tum in caupōnam intrāvimus. — Then we went into the inn. Postrēmō domum ambulāvī. — Last of all I walked home."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Each rung carries a perfect, because each is an event."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Deinde and tum both come out as \"then\", and they are not twins. Deinde is \"next\", the following step. Tum is \"then, at that moment\": it points at a time, and the scene can stand there with it. Tum pluēbat, at that moment it was raining."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: prīmum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "prīmum is the neuter of prīmus, \"first\", standing alone as an adverb (Lewis & Short list it under primus): \"as the first thing\". Postrēmō comes from postrēmus, \"last\", too, though it is the ablative, \"at the last\", and deinde is built from dē and inde, \"from there\": from that point on."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēnī, vīdī, vīcī — three events, no joiners",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēnī, vīdī, vīcī* — three events, no joiners]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Prīmum ad forum ambulāvī. Deinde amīcum vīdī.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Prīmum ad forum ambulāvī. Deinde amīcum vīdī.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Tum in caupōnam intrāvimus. Postrēmō domum ambulāvī.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Tum in caupōnam intrāvimus. Postrēmō domum ambulāvī.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a rung with a scene on it — Tum pluēbat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a rung with a scene on it — *Tum pluēbat.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Amīcī in caupōnam intrāvērunt et vīnum bibērunt. — then Amīca fābulam nārrāvit.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Amīcī in caupōnam intrāvērunt et vīnum bibērunt.* — then *Amīca fābulam nārrāvit.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "your own morning in four rungs — prīmum, deinde, tum, postrēmō, with a perfect on each",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: your own morning in four rungs — *prīmum*, *deinde*, *tum*, *postrēmō*, with a perfect on each]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"First\", \"next\", \"then\", \"lastly\"? (Prīmum, deinde, tum, postrēmō.) Which \"then\" points at a moment and can hold a scene? (Tum.) Which tense goes on each rung? (The perfect: each is an event.) What did Caesar's three words say? (Vēnī, vīdī, vīcī: I came, I saw, I won.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C282-dum",
+      "sequence": 15460,
+      "title": "dum — while",
+      "headword": "dum",
+      "romanization": "dum",
+      "gloss": "while — the word that holds one thing open while another happens",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8840e6476faf1029",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"first I walked to the forum\". (Prīmum ad forum ambulāvī.) Then a scene: \"it was raining\". (Pluēbat.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dum — \"while\". It opens a stretch of time, and something happens inside it:"
+            },
+            {
+              "kind": "speech",
+              "text": "Dum in forō ambulant, amīcam vīdērunt. — While they were walking in the forum, they saw a friend."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The seeing is an event, so it is a perfect, vīdērunt. The walking is the stretch it happened in, and dum holds it open."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: dum keeps the present",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Listen to ambulant. The story is in the past, and the verb after dum is the present: \"they walk\". When dum means \"while\", a past story usually keeps the present after it, and English turns it into \"were walking\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Dum mercātōrēs pānem vendunt, amīca vēnit. — While the merchants were selling bread, my friend came."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Caesar writes it that way: dum haec geruntur, \"while these things are being done\", and then the event in the perfect (Lewis & Short quote it from his war in Gaul). In the main sentence, the scene still takes the imperfect: mercātōrēs pānem vendēbant."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart: dum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of dum is not settled. Lewis & Short connect it with diū, \"for a long time\", the word whose own lesson traced it to the root of diēs, \"day\"; EtymDB 2.1 traces dum to a Proto-Indo-European particle de. Either way it is a small, old word, and its meaning has stayed \"for the stretch of time that\"."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Dum in forō ambulant, amīcam vīdērunt.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Dum in forō ambulant, amīcam vīdērunt.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Dum mercātōrēs pānem vendunt, amīca vēnit.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Dum mercātōrēs pānem vendunt, amīca vēnit.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the scene without dum — Mercātōrēs pānem vendēbant.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the scene without *dum* — *Mercātōrēs pānem vendēbant.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one of your own — Dum plus a present, then a perfect",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one of your own — *Dum* plus a present, then a perfect]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dum mean? (While.) In a past story, which tense follows dum? (The present: dum ambulant.) And the event inside the stretch? (The perfect: vīdērunt.) Is the origin of dum settled? (No.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C282-lectio",
+      "sequence": 15470,
+      "title": "(reading) — a rainy day, told in both pasts",
+      "headword": "(reading)",
+      "romanization": "(reading)",
+      "gloss": "a rainy day in eighty-seven words — the first story this book tells in both pasts, and every word of it already met",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "reading-type"
+      ],
+      "sourceHash": "fnv1a64:7b8aea995dfb97b2",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Your first passage gave you forty-two words in a row, all in the present. This one is twice as long, and it happened yesterday."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Every word in it has come up before this lesson."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Herī māne caelum obscūrum erat, et pluēbat. Mārcus in vīllā sedēbat et librum legēbat. Subitō amīcus ad portam vēnit et clāmāvit: \"Venī ad forum!\" Prīmum Mārcus nōn volēbat, quia fessus erat. Deinde tamen vēnit, et ad forum ambulāvērunt. Dum ambulant, amīcam vīdērunt, et amīca quoque vēnit. In forō mercātōrēs pānem et vīnum vendēbant et multum clāmābant. Tum amīcī in caupōnam intrāvērunt. In caupōnā calor erat. Ibi cēnāvērunt et vīnum bibērunt, et amīca fābulam nārrāvit. Postrēmō domum ambulāvērunt. Iam nōn pluēbat, caelum serēnum erat, et Mārcus laetus erat."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage once without stopping; do not translate as you go",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage once without stopping; do not translate as you go]"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage again, and sort every verb into one of two piles: the scene, or what happened",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage again, and sort every verb into one of two piles: the scene, or what happened]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The events pile is the perfects: vēnit, clāmāvit, vēnit, ambulāvērunt, vīdērunt, vēnit, intrāvērunt, cēnāvērunt, bibērunt, nārrāvit, ambulāvērunt. Eleven things happened, and prīmum, deinde, tum and postrēmō keep them in order."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Everything else is scene: the dark sky, the rain, Marcus reading, the merchants shouting, the warmth of the inn. A story is mostly background."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And dum ambulant is a present inside a past story, the stretch of time the meeting happened in."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the passage aloud, once, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the passage aloud, once, without stopping]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "LA-C282-lectio-quia",
+              "prompt": "Why did Marcus not want to come at first?",
+              "assesses": [
+                "LA-SKILL-READ-NARRATIVE-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "because he was tired",
+                "quia fessus erat",
+                "he was tired"
+              ],
+              "feedback": {
+                "correct": "Quia fessus erat.",
+                "incorrect": "Quia fessus erat -- because he was tired."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why is legēbat in the imperfect? (The reading was already going on when the friend came: it is scene.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why is ambulant in the present? (It follows dum.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How did the day end? (Iam nōn pluēbat: the rain had stopped, and Marcus was happy.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-R282-a-story-in-order",
+      "sequence": 15480,
+      "title": "Review — a story, told in order",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "a whole story out loud — the rungs prīmum to postrēmō, dum for the stretch in between, and both pasts",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:48dcf0eff4d4bb5b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say Caesar's three words. (Vēnī, vīdī, vīcī.) Then the four rungs. (Prīmum, deinde, tum, postrēmō.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two chapters, and you can nārrāre, tell a story. The scene in the imperfect, erat, pluēbat, sedēbat. The events in the perfect, one per rung, from prīmum to postrēmō. And dum with a present for the stretch an event happened in."
+            },
+            {
+              "kind": "speech",
+              "text": "Dum in forō ambulō, amīcum vīdī. Prīmum nōn clāmāvī, quia fessus eram. — While I was walking in the forum, I saw a friend. At first I did not call out, because I was tired."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "In that last sentence the event is negative, nōn clāmāvī, and it is still an event; the tiredness around it is scene, fessus eram."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the rainy day in four rungs, from memory — prīmum, deinde, tum, postrēmō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the rainy day in four rungs, from memory — *prīmum*, *deinde*, *tum*, *postrēmō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Dum in forō ambulō, amīcum vīdī.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Dum in forō ambulō, amīcum vīdī.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the day's last scene — Iam nōn pluēbat, et Mārcus laetus erat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the day's last scene — *Iam nōn pluēbat, et Mārcus laetus erat.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a day of your own: one line of scene, then three events in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a day of your own: one line of scene, then three events in order]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which rung comes last? (Postrēmō.) Which tense follows dum in a past story? (The present.) Which tense goes on each rung? (The perfect.) And what did Marcus do first, when his friend called? (He did not want to come: nōn volēbat.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
