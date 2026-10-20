@@ -1824,8 +1824,9 @@ fn push_text_field_aria_label(
     push_text_field_text_attr(node, "a11y-label", "aria-label", attrs)
 }
 
-/// Append `placeholder` for a text field. Shared by `HostInput` and the
-/// legacy `Input`, on both the `<input>` and the `<textarea>` shape.
+/// Append `placeholder` for a text field. Shared by `HostInput`, the
+/// legacy `Input` (on both the `<input>` and the `<textarea>` shape) and
+/// `HostNumberInput`.
 ///
 /// This used to read string literals only, so `placeholder : slot: x` — the
 /// shape every toolkit `Input` and the note-type editor's template fields
@@ -3975,6 +3976,7 @@ fn emit_host_navigation_split_jsx(
 /// | `max: <number>`         | `max={<n>}`                                            |
 /// | `step: <number>`        | `step={<n>}`                                           |
 /// | `placeholder: "..."`    | `placeholder="..."`                                    |
+/// | `placeholder: slot: p`  | `placeholder={p}` (any `push_text_field_placeholder` form) |
 /// | `disabled: slot|bool`   | `disabled={...}`                                       |
 /// | `onChange: emit: onX`   | `onChange={e => dispatch({type:"x", value: e.target.valueAsNumber})}` |
 ///
@@ -4015,10 +4017,10 @@ fn emit_host_number_input_jsx(
         }
     }
 
-    // placeholder.
-    if let Some(s) = find_string_prop(node, "placeholder") {
-        attrs.push_str(&jsx_string_attr("placeholder", s));
-    }
+    // placeholder — a literal or a bound value, through the same lowering
+    // as HostInput (EM-14: this read literals only, so the toolkit
+    // `NumberInput`'s `placeholder : slot: placeholder` vanished).
+    push_text_field_placeholder(node, &mut attrs)?;
 
     // disabled.
     if let Some(slot) = find_slot_ref_prop(node, "disabled") {
@@ -11595,6 +11597,56 @@ mod tests {
             ),
             "expected onChange with e.target.valueAsNumber payload, got:\n{out}"
         );
+    }
+
+    /// EM-14 — `placeholder : slot: placeholder`, the shape
+    /// mosaic-pkg-toolkit's `NumberInput` uses, binds as a JSX expression
+    /// attribute. This path read string literals only, so the toolkit's
+    /// number field lost its placeholder on React with nothing reported.
+    /// A loop binding and an expression reach the attribute the same way,
+    /// and the literal form is unchanged.
+    #[test]
+    fn host_number_input_placeholder_binds_slot_binding_and_expression() {
+        let m = component(
+            "X",
+            vec![slot("placeholder", SlotType::Text, false)],
+            vec![],
+        );
+        for (value, expected) in [
+            (
+                LayoutPropValue::SlotRef("placeholder".into()),
+                " placeholder={placeholder}",
+            ),
+            (LayoutPropValue::Keyword("hint".into()), " placeholder={hint}"),
+            (
+                LayoutPropValue::Expr("( hints[0] )".into()),
+                " placeholder={( hints[0] )}",
+            ),
+            (
+                LayoutPropValue::String("Amount".into()),
+                " placeholder=\"Amount\"",
+            ),
+        ] {
+            let l = host_number_input_layout(vec![LayoutProp {
+                name: "placeholder".into(),
+                value,
+            }]);
+            let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+            assert!(out.contains(expected), "expected `{expected}`, got:\n{out}");
+        }
+    }
+
+    /// EM-14 — a slot name that is not a JavaScript identifier is refused
+    /// loudly instead of being spliced into the JSX expression.
+    #[test]
+    fn host_number_input_placeholder_unsafe_slot_name_is_rejected() {
+        let m = component("X", vec![], vec![]);
+        let l = host_number_input_layout(vec![LayoutProp {
+            name: "placeholder".into(),
+            value: LayoutPropValue::SlotRef("x}{alert(1)".into()),
+        }]);
+        let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+        assert!(matches!(err, PipelineEmitError::UnsafeSlotName(_)), "got {err:?}");
     }
 
     #[test]
