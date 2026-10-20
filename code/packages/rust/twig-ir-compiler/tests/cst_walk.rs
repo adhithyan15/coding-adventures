@@ -375,3 +375,28 @@ fn imported_globals_reach_the_type_gate() {
     globals.insert("add-one".to_string(), twig_type_checker::TwigKind::Function { arity: 1 });
     assert!(compile_ast_with_externs_and_globals(&cst, "m", &["add-one"], &globals).is_ok());
 }
+
+// ============================================================
+// Wide `and` / `or` (security review of the CST rewrite)
+// ============================================================
+
+/// A wide `(and 1 1 … 1)` used to recurse once per argument inside the
+/// compiler — argument count is bounded by neither the parser's nesting
+/// limit nor `MAX_COMPILE_DEPTH` — and overflowed the stack at about
+/// 20,000 arguments.  The lowering is now a loop: 50,000 arguments compile
+/// on a 1 MiB thread.
+#[test]
+fn wide_and_or_compile_in_constant_stack() {
+    std::thread::Builder::new()
+        .stack_size(1 << 20)
+        .spawn(|| {
+            for form in ["and", "or"] {
+                let src = format!("({form}{})", " 1".repeat(50_000));
+                twig_ir_compiler::compile_source(&src, "m")
+                    .unwrap_or_else(|e| panic!("({form} …×50000): {e:?}"));
+            }
+        })
+        .unwrap()
+        .join()
+        .unwrap();
+}

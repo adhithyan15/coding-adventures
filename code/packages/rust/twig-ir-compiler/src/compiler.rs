@@ -1748,59 +1748,82 @@ impl Compiler {
     /// The result register holds the value of the last evaluated sub-expression,
     /// or `#f` if any sub-expression was falsy.  This matches Scheme semantics.
     ///
-    /// IIR pattern (mirrors `compile_if`):
+    /// IIR pattern for one step (mirrors `compile_if`):
     ///   `jmp_if_false cond, else_label`
     ///   then-path: compile rest, _move into dest, jmp end
     ///   else-path: label else_label; const #f, _move into dest
     ///   label end_label
+    ///
+    /// ### Why a loop, not recursion
+    ///
+    /// The rules above nest: `(and e1 e2 e3)` is `e1 ? (e2 ? e3 : #f) : #f`.
+    /// Lowering that by re-entering `compile_and` once per argument used one
+    /// native stack frame per argument, and argument *count* is bounded by
+    /// neither the parser's nesting limit nor `MAX_COMPILE_DEPTH` — a 40 KB
+    /// `(and 1 1 … 1)` overflowed the stack.  So the nesting is unrolled by
+    /// hand into two passes over one collected argument slice:
+    ///
+    /// ```text
+    ///   pass 1 (k = 1 … n-1):  compile e_k, open step k  (jmp_if_false)
+    ///   middle:                compile e_n  → v
+    ///   pass 2 (k = n-1 … 1):  close step k (move dest_k ← inner, else/end
+    ///                          labels), where inner = v for the innermost
+    ///                          step and dest_{k+1} otherwise
+    /// ```
+    ///
+    /// Emission and fresh-name order are exactly what the recursion produced,
+    /// so the IIR is byte-identical; stack use is constant in the argument
+    /// count and the arguments are walked once (linear, not quadratic).
     fn compile_and(&mut self, args: Exprs<'_>, ctx: &mut FnCtx, loc: SourceLoc) -> Result<String, TwigCompileError> {
-        let mut it = args.iter();
-        match (it.next(), it.next()) {
-            (None, _) => {
-                // (and) → #t
-                let v = ctx.fresh_var("and");
-                ctx.emit(IIRInstr::new("const", Some(v.clone()), vec![Operand::Bool(true)], "any"), loc);
-                Ok(v)
-            }
-            (Some(e), None) => {
-                // (and e) → e
-                self.compile_expr(e, ctx)
-            }
-            (Some(first), Some(_)) => {
-                let rest = args.rest();
-                // (and e1 e2 …) → if e1 then (and e2 …) else #f
-                let cond = self.compile_expr(first, ctx)?;
-                let dest = ctx.fresh_var("and");
-                let else_label = ctx.fresh_label("and_else");
-                let end_label  = ctx.fresh_label("and_end");
+        let args: Vec<ExprNode<'_>> = args.iter().collect();
+        let Some((last, init)) = args.split_last() else {
+            // (and) → #t
+            let v = ctx.fresh_var("and");
+            ctx.emit(IIRInstr::new("const", Some(v.clone()), vec![Operand::Bool(true)], "any"), loc);
+            return Ok(v);
+        };
 
-                // jmp_if_false cond → else_label
-                ctx.emit(IIRInstr::new("jmp_if_false", None,
-                    vec![Operand::Var(cond), Operand::Var(else_label.clone())],
-                    "void"), loc);
-
-                // Then path: compile rest, copy to dest via typed `mov`,
-                // jump to end.  Path-A increment 4.
-                let then_val = self.compile_and(rest, ctx, loc)?;
-                ctx.emit_move(&dest, &then_val, loc);
-                ctx.emit(IIRInstr::new("jmp", None, vec![Operand::Var(end_label.clone())], "void"), loc);
-
-                // Else path: dest ← #f (typed `mov` from a `const_bool`-
-                // typed temporary so the dest carries `"bool"`).
-                ctx.emit(IIRInstr::new("label", None, vec![Operand::Var(else_label)], "void"), loc);
-                let false_tmp = ctx.fresh_var("f");
-                // The false literal site uses the same typed `const`
-                // shape that a `#f` literal emits — see compile_expr
-                // path-A increment 1.
-                ctx.emit(IIRInstr::new("const", Some(false_tmp.clone()),
-                    vec![Operand::Bool(false)], "bool"), loc);
-                ctx.record_type(&false_tmp, "bool");
-                ctx.emit_move(&dest, &false_tmp, loc);
-
-                ctx.emit(IIRInstr::new("label", None, vec![Operand::Var(end_label)], "void"), loc);
-                Ok(dest)
-            }
+        // Pass 1: open one step per non-final argument.
+        let mut open: Vec<(String, String, String)> = Vec::with_capacity(init.len());
+        for &e in init {
+            let cond = self.compile_expr(e, ctx)?;
+            let dest = ctx.fresh_var("and");
+            let else_label = ctx.fresh_label("and_else");
+            let end_label  = ctx.fresh_label("and_end");
+            // jmp_if_false cond → else_label
+            ctx.emit(IIRInstr::new("jmp_if_false", None,
+                vec![Operand::Var(cond), Operand::Var(else_label.clone())],
+                "void"), loc);
+            open.push((dest, else_label, end_label));
         }
+
+        // Middle: the final argument is the value of the innermost step
+        // (and the whole result when there is only one argument).
+        let mut inner = self.compile_expr(*last, ctx)?;
+
+        // Pass 2: close the steps innermost-first.
+        while let Some((dest, else_label, end_label)) = open.pop() {
+            // Then path: copy the inner value to dest via typed `mov`,
+            // jump to end.  Path-A increment 4.
+            ctx.emit_move(&dest, &inner, loc);
+            ctx.emit(IIRInstr::new("jmp", None, vec![Operand::Var(end_label.clone())], "void"), loc);
+
+            // Else path: dest ← #f (typed `mov` from a `const_bool`-
+            // typed temporary so the dest carries `"bool"`).
+            ctx.emit(IIRInstr::new("label", None, vec![Operand::Var(else_label)], "void"), loc);
+            let false_tmp = ctx.fresh_var("f");
+            // The false literal site uses the same typed `const`
+            // shape that a `#f` literal emits — see compile_expr
+            // path-A increment 1.
+            ctx.emit(IIRInstr::new("const", Some(false_tmp.clone()),
+                vec![Operand::Bool(false)], "bool"), loc);
+            ctx.record_type(&false_tmp, "bool");
+            ctx.emit_move(&dest, &false_tmp, loc);
+
+            ctx.emit(IIRInstr::new("label", None, vec![Operand::Var(end_label)], "void"), loc);
+            inner = dest;
+        }
+        Ok(inner)
     }
 
     /// Compile `(or args…)` with short-circuit semantics.
@@ -1812,46 +1835,54 @@ impl Compiler {
     ///
     /// The result register holds the first truthy value, or the value of the
     /// last sub-expression if all were falsy.  This matches Scheme semantics.
+    ///
+    /// Lowered with the same two-pass loop as [`Self::compile_and`] (see
+    /// "Why a loop, not recursion" there): each step's truthy path is
+    /// complete before the next argument is compiled, so pass 2 only has to
+    /// move the inner value into each `dest` and place the end labels.
     fn compile_or(&mut self, args: Exprs<'_>, ctx: &mut FnCtx, loc: SourceLoc) -> Result<String, TwigCompileError> {
-        let mut it = args.iter();
-        match (it.next(), it.next()) {
-            (None, _) => {
-                // (or) → #f
-                let v = ctx.fresh_var("or");
-                ctx.emit(IIRInstr::new("const", Some(v.clone()), vec![Operand::Bool(false)], "any"), loc);
-                Ok(v)
-            }
-            (Some(e), None) => {
-                // (or e) → e
-                self.compile_expr(e, ctx)
-            }
-            (Some(first), Some(_)) => {
-                let rest = args.rest();
-                // (or e1 e2 …): if e1 is truthy return e1, else (or e2 …)
-                let cond = self.compile_expr(first, ctx)?;
-                let dest = ctx.fresh_var("or");
-                let falsy_label = ctx.fresh_label("or_falsy");
-                let end_label   = ctx.fresh_label("or_end");
+        let args: Vec<ExprNode<'_>> = args.iter().collect();
+        let Some((last, init)) = args.split_last() else {
+            // (or) → #f
+            let v = ctx.fresh_var("or");
+            ctx.emit(IIRInstr::new("const", Some(v.clone()), vec![Operand::Bool(false)], "any"), loc);
+            return Ok(v);
+        };
 
-                // jmp_if_false cond → falsy_label (i.e. if cond is FALSE, skip)
-                ctx.emit(IIRInstr::new("jmp_if_false", None,
-                    vec![Operand::Var(cond.clone()), Operand::Var(falsy_label.clone())],
-                    "void"), loc);
+        // Pass 1: one step per non-final argument.
+        let mut open: Vec<(String, String)> = Vec::with_capacity(init.len());
+        for &e in init {
+            let cond = self.compile_expr(e, ctx)?;
+            let dest = ctx.fresh_var("or");
+            let falsy_label = ctx.fresh_label("or_falsy");
+            let end_label   = ctx.fresh_label("or_end");
 
-                // Truthy path: dest ← cond via typed `mov`, jump to end.
-                // Path-A increment 4.
-                ctx.emit_move(&dest, &cond, loc);
-                ctx.emit(IIRInstr::new("jmp", None, vec![Operand::Var(end_label.clone())], "void"), loc);
+            // jmp_if_false cond → falsy_label (i.e. if cond is FALSE, skip)
+            ctx.emit(IIRInstr::new("jmp_if_false", None,
+                vec![Operand::Var(cond.clone()), Operand::Var(falsy_label.clone())],
+                "void"), loc);
 
-                // Falsy path: evaluate rest, copy via typed `mov`.
-                ctx.emit(IIRInstr::new("label", None, vec![Operand::Var(falsy_label)], "void"), loc);
-                let rest_val = self.compile_or(rest, ctx, loc)?;
-                ctx.emit_move(&dest, &rest_val, loc);
+            // Truthy path: dest ← cond via typed `mov`, jump to end.
+            // Path-A increment 4.
+            ctx.emit_move(&dest, &cond, loc);
+            ctx.emit(IIRInstr::new("jmp", None, vec![Operand::Var(end_label.clone())], "void"), loc);
 
-                ctx.emit(IIRInstr::new("label", None, vec![Operand::Var(end_label)], "void"), loc);
-                Ok(dest)
-            }
+            // Falsy path: the rest of the `or` follows this label.
+            ctx.emit(IIRInstr::new("label", None, vec![Operand::Var(falsy_label)], "void"), loc);
+            open.push((dest, end_label));
         }
+
+        // Middle: the final argument.
+        let mut inner = self.compile_expr(*last, ctx)?;
+
+        // Pass 2: close the steps innermost-first — copy the falsy-path
+        // value via typed `mov`, then the step's end label.
+        while let Some((dest, end_label)) = open.pop() {
+            ctx.emit_move(&dest, &inner, loc);
+            ctx.emit(IIRInstr::new("label", None, vec![Operand::Var(end_label)], "void"), loc);
+            inner = dest;
+        }
+        Ok(inner)
     }
 
     fn is_known_main_value_type(&self, name: &str, ctx: &FnCtx, ty: &str) -> bool {
@@ -2110,8 +2141,10 @@ impl Compiler {
         // | (or e)          | e                                 |
         // | (or e1 e2 …)    | emit cond-reg; if cond-reg return |
         //
-        // The expansions are done recursively by re-entering compile_apply
-        // so the depth counter naturally bounds them.
+        // The nesting is unrolled into a loop over the arguments (see
+        // `compile_and`), so a wide `(and …)`/`(or …)` uses constant native
+        // stack: argument count is bounded by neither the parser's nesting
+        // limit nor MAX_COMPILE_DEPTH.
         if let Some(fn_name) = expr.fn_name() {
             if fn_name == "and" {
                 return self.compile_and(args, ctx, loc);

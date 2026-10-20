@@ -9,6 +9,18 @@ builds by running `ast_extract.rs` over the `GrammarParser` output. The
 compiler's only input is now the `GrammarASTNode` from
 `twig_parser::parse_to_ast`.
 
+### Fixed (security review)
+
+- **A wide `(and …)` or `(or …)` no longer overflows the stack.**
+  - `compile_and` and `compile_or` used to call themselves once per argument.
+  - The number of arguments is not limited by the parser's nesting limit or by `MAX_COMPILE_DEPTH`.
+  - So a 40 KB `(and 1 1 … 1)` with about 20,000 arguments aborted the process.
+  - Both are now a two-pass loop over the arguments, collected once.
+  - Stack use stays constant however many arguments there are, and the work grows linearly. Under the borrowed `Exprs` cursor this rewrite introduced, it would otherwise have grown quadratically.
+  - The emitted IIR is byte-identical to the recursive lowering.
+  - The stale comment claiming the depth counter bounded this recursion is corrected.
+  - New test `wide_and_or_compile_in_constant_stack`: 50,000 arguments on a 1 MiB thread.
+
 ### Changed (breaking)
 
 - **New CST entry points.** `compile_ast(&GrammarASTNode, name)`,
