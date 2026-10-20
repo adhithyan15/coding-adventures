@@ -1,4 +1,21 @@
 # Changelog — `twig-aot`
+## [0.57.0] — 2026-10-20 (LANG83 PR6a — native runtime float writers)
+
+- **`__twig_write_f64_py(int64_t bits)` / `__twig_write_f64_js(int64_t bits)`**
+  ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR6a): print a double the way Python's `repr` / JavaScript's
+  `Number#toString` do, with no newline, on the same `stdout` `FILE*` as every
+  other output helper. The argument is the raw bit pattern (the native backends
+  pass an `f64` slot's 8 bytes in `rdi` / `x0`).
+- The digits are the shortest decimal that reads back as exactly the value,
+  closest on a length tie, even on an exact tie. They come from a
+  self-contained Burger–Dybvig free-format core over fixed 40-limb (1280-bit)
+  big integers (`twig_f64_digits`), not from `printf`, whose `%.17g` is not
+  shortest. This C is the commented reference that the LLVM IR and WASM ports
+  follow.
+- Checked against host `python3` on 535 432 values and `node` on 402 112
+  values (every power of two, the subnormal range, random bit patterns,
+  integers and short decimals): no mismatch. Clean under gcc ASan/UBSan.
+
 ## [0.56.0] — 2026-10-19 (LANG83 PR1b — native runtime `write_i64` and `trap`)
 
 - **`__twig_write_i64(int64_t)`** — decimal, no newline, on the same `stdout`
