@@ -286,7 +286,9 @@ fn corpus_agrees_with_the_host_cpython_oracles() {
         for case in corpus() {
             // The file path as one argument: no shell, no interpolation.
             let out = Command::new(host).arg("-I").arg(dir.join(format!("{}.py", case.name))).output().unwrap();
-            let stdout = String::from_utf8_lossy(&out.stdout).into_owned();
+            // Windows Python prints in text mode ("\r\n"); the `.expect` files
+            // record the language's output, so fold the line ending back.
+            let stdout = String::from_utf8_lossy(&out.stdout).replace("\r\n", "\n");
             let stderr = String::from_utf8_lossy(&out.stderr);
             match case.outcome_on(release) {
                 Outcome::Runs { stdout: want, trap } => match trap.as_deref() {

@@ -33,7 +33,8 @@
 - `run_source_at` / `run_module`: run on vm-core, keeping the output before
   a trap and its kind.
 - Tests: `release_subsets` (stage I, IIR identity, CSV/profile agreement,
-  host CPython oracle), `release_lowering`, `cst_contract` (C8),
+  host CPython oracle, folding Windows' `\r\n` stdout to `\n`),
+  `release_lowering`, `cst_contract` (C8),
   `hostile_release` (C5, child process), `iir_path` (C2/C4.5).
 
 ### Unchanged

@@ -7,3 +7,5 @@
   - BEAM rows run under a `try … catch error:K` launcher.
 
   There are four named tests: `python_rows_run_on_every_available_backend`, `python_rows_are_py_int_print_corpus_cases`, `python_rows_agree_with_the_host_python_oracle` (host CPython 3.13, skipped otherwise) and `python_rows_pass_the_lang83_check_on_all_nine_backends`. All are in BUILD with `-- --exact`. `feature_coverage_doc_counts_match_programs_source` pins Python at 18 rows / 144 cells. Locally (no `dotnet`, no `erl`), 108 Python cells executed and 54 of them trapped as expected; the 36 CLR/BEAM cells were skipped, and CI runs those.
+
+- The host-python oracle test folds Windows' text-mode `\r\n` stdout back to `\n` before comparing, as the Ruby oracle had to on `build (windows-2025)`.

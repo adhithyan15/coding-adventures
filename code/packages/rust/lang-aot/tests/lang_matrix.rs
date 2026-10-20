@@ -25608,7 +25608,9 @@ fn python_rows_agree_with_the_host_python_oracle() {
     for program in python_rows() {
         // `-c` with the source as its own argument: no shell, no temp file.
         let out = Command::new("python3").args(["-I", "-c", program.src]).output().expect("python3 ran once already");
-        let stdout = String::from_utf8_lossy(&out.stdout);
+        // Windows interpreters write text-mode stdout ("\r\n"); the rows
+        // record the language's output, so fold the line ending back.
+        let stdout = String::from_utf8_lossy(&out.stdout).replace("\r\n", "\n");
         match program.expect {
             Expect::Stdout(want) => {
                 assert!(out.status.success(), "{version} failed {:?}", program.src);
